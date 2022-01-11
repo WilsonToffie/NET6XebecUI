@@ -1,0 +1,135 @@
+﻿@inherits LayoutComponentBase
+<style>
+    .page {
+        background-color: #a7a9ab;
+    }
+
+    .header {
+        background-color: #003340;
+        height: 10vh;
+    }
+
+    .main {
+        height: 80vh;
+    }
+
+    .footer {
+        background-color: #003340;
+        height: 10vh;
+    }
+
+    .heading {
+        font-weight: 600;
+        font-family: sans-serif;
+        color: white;
+        font-size: 1.2rem;
+    }
+
+    .icon{
+        color: white;
+        font-size: 1.8rem;
+    }
+    .nav {
+        background-color: black;
+        opacity: 1;
+    }
+
+</style>
+<div class="page">
+    <div class="header">
+        <div class="d-flex justify-content-between align-items-center p-4">
+            <h1 class="heading">xebec</h1>
+            <div>
+                <i class="fa fa-user icon mr-4" data-bs-toggle="offcanvas" data-bs-target="#showUser" aria-controls="offcanvasRight"></i>
+                <i class="fa fa-bars icon mr-2" data-bs-toggle="offcanvas" data-bs-target="#showNav" aria-controls="offcanvasRight"></i>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end nav" tabindex="-1" id="showUser" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+            <h5 id="offcanvasRightLabel">User Profile</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            
+            @{
+                if (mainmodel.isHR)
+                {
+
+                }
+                else if (mainmodel.isApplicant)
+                {
+
+                }
+                else if (mainmodel.isDeveloper)
+                {
+
+                }
+            }
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-end nav" tabindex="-1" id="showNav" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+            <h5 id="offcanvasRightLabel">Nav Information</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            @{
+                if (mainmodel.isHR)
+                {
+                    <NavLink class="nav-link" href="hrapplicantcontroltool">
+                        <i class="fa fa-table icon" aria-hidden="true"></i>Applicant Control Tool
+                    </NavLink>
+                    <NavLink class="nav-link" href="applicantportal">
+                        <i class="fa fa-users icon" aria-hidden="true"></i>Applicant Portal
+                    </NavLink>
+
+
+                    <NavLink class="nav-link" href="candidaterecommendiontool">
+                        <i class="fas fa-lightbulb icon" aria-hidden="true"></i>Candidate Recommendation Tool
+                    </NavLink>
+
+                    <NavLink class="nav-link" href="dataanalyticstool">
+                        <i class="fa fa-chart-bar icon" aria-hidden="true"></i>Data Analytics Tool
+                    </NavLink>
+                    <NavLink class="nav-link" href="hrjobportal">
+                        <i class="fa fa-briefcase icon" aria-hidden="true"></i>Job Portal
+                    </NavLink>
+                }
+                else if (mainmodel.isApplicant)
+                {
+                    <NavLink class="nav-link" href="applicationprofile">
+                        <i class="fa fa-book icon" aria-hidden="true"></i>Application Profile
+                    </NavLink>
+
+                    <NavLink class="nav-link" href="applicantjobportal">
+                        <i class="fa fa-file icon" aria-hidden="true"></i>Job Portal
+                    </NavLink>
+                    <NavLink class="nav-link" href="myjobs">
+                        <i class="fa fa-users icon" aria-hidden="true"></i>My Jobs
+                    </NavLink>
+                }
+                else if (mainmodel.isDeveloper)
+                {
+
+                }
+            }
+        </div>
+    </div>
+    <div class="main">
+        @Body
+
+    </div>
+    <div class="footer">
+
+    </div>
+</div>
+
+@code{
+    private MainModel mainmodel { get; set; } = new MainModel();
+
+    private string role = "";
+}
