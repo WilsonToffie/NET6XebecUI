@@ -1,0 +1,382 @@
+@page "/"
+@inject NavigationManager Navigation
+@layout EmptyLayout
+
+<style>
+@@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');    
+
+* 
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    
+}
+
+body
+{
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #777;
+}
+
+body::-webkit-scrollbar {
+    width: 0.5em;
+}
+
+body::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: #a9baba;
+}
+
+.header
+{
+    height: 100vh;
+    background-image: linear-gradient(rgba(0, 51, 64, 0.8), rgba(4, 78, 91, 0.8)), url(/img/home_1.jpg);
+    background-size: cover;
+    background-position: top;
+    position: relative;
+    
+    @* clip-path: polygon(0 0, 100% 0, 100% 75%, 0 100%); *@
+}
+
+.logo-box
+{
+    position: absolute;
+    top: 40px;
+    left: 40px;
+}
+
+.text-box
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.heading-primary
+{
+    color: #fff;
+    text-transform: uppercase;
+
+    backface-visibility: hidden;
+    margin-bottom: 60px;
+}
+
+.heading-primary-main
+{
+    display: block;
+    font-size: 60px;
+    font-weight: 400;
+    letter-spacing: 35px;
+   
+
+    animation: moveInLeft 0.5s ease-in-out;
+
+}
+
+@@keyframes moveInLeft
+{
+   0%
+    {
+        opacity: 0;
+        transform: translateX(150px);
+    }
+
+   
+    100%
+    {
+        opacity: 1;
+        transform: translate(0);
+    }
+}
+
+.btn:link,
+.btn:visited
+{
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 10px 30px;
+    display: inline-block;
+    border-radius: 100px;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.btn:hover
+{
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active
+{
+     transform: translateY(-1px);
+     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-white
+{
+    background-color: #fff;
+    color: #777;
+}
+
+.btn:after
+{
+    content: "";
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    border-radius: 100px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    transition: all 0.4s;
+}
+
+.btn-white:after
+{
+    background-color: #fff;
+}
+
+.btn:hover:after
+{
+    transform: scaleX(1.4) scaleY(1.6);
+    opacity: 0;
+}
+
+.btn-animated
+{
+    animation: moveInBottom 0.5s ease-out 0.75s;
+    animation-fill-mode: backwards;
+}
+
+@@keyframes moveInBottom
+{
+   0%
+    {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    100%
+    {
+        opacity: 1;
+        transform: translate(0);
+    }
+}
+
+.main, .main-sub
+{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    background-size: cover;
+    background-position: top;
+    position: relative;
+}
+
+.main
+{
+    background-image: linear-gradient(rgba(0, 51, 64, 0.9), rgba(4, 78, 91, 0.9)), url(/img/code_1.jpg);   
+    justify-content: center;
+    color: #fff;
+    font-size: 50px;
+    font-weight: 800;
+    text-align: center;
+    padding: 50px;
+}
+
+
+.main-sub
+{
+    justify-content: space-evenly;    
+    flex-wrap: wrap;
+    background-image: linear-gradient(rgba(0, 51, 64, 0.9), rgba(4, 78, 91, 0.9)), url(/img/code_2.jpg);
+}
+
+
+.box
+{
+    height: 80%;
+    width: 35%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    border-radius: 5px;
+    text-align: center;
+    background-color: transparent;
+    color: #fff;
+    perspective: 1000px;
+    cursor: pointer;
+    
+} 
+
+.box-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  border-radius: 5px;
+}
+
+.box:hover .box-inner {
+  transform: rotateY(180deg);
+}
+
+.front, .back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 5px;  
+}
+
+.front {
+  background: linear-gradient(rgba(0, 51, 64, 0.9), rgba(4, 78, 91, 0.9));  
+  color: black;
+}
+
+.front img
+{
+    width: inherit;
+    height: inherit;
+    border-radius: 5px;
+    opacity: 0.6;
+    border: 5px solid #fff;
+}
+
+.back {
+  background: linear-gradient(rgba(0, 51, 64, 0.5), rgba(4, 78, 91, 0.5));
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  transform: rotateY(180deg);
+  padding: 15px;
+  font-size: 25px;
+}
+
+</style>
+
+
+<header class="header">
+    <div class="logo-box">
+       <span class="iconify" data-icon="fa-solid:user-astronaut" style="color: rgba(255, 255, 255, 0.8);" data-width="50"></span>
+    </div>
+
+    <div class="text-box">
+    
+        <h1 class="heading-primary">
+
+            <span class="heading-primary-main">Xebec</span>
+            @* <span class="heading-primary-sub">A unified recruitment eco-system</span> *@
+
+        </h1>
+
+        <a href="/login" class="btn btn-white btn-animated">Explore</a>
+    
+    </div>
+
+</header>
+
+<section class="main">
+
+    <p>
+        We expose you to a sea of talent.
+    </p>
+   
+</section>
+
+<section class="main-sub">
+
+    <div class="box">
+            <div class="box-inner">
+                <div class="front">
+
+                   <img src="img\christina.jpg" alt="christina">     
+
+                </div>
+                <div class="back">
+
+                    "Amazing company. Awesome managers. Great pay with regular raises. Super fun work environment and I adore my coworkers."
+                    <br/>
+                    - Christina, Developer.
+
+                </div>
+            </div>        
+    </div>
+
+    <div class="box">
+         <div class="box-inner">
+                <div class="front">
+                   <img src="img\ben-min.jpg" alt="ben">   
+                </div>
+                <div class="back">
+                    "I've worked at Nebula for two years, and I am so grateful I was hired. The company truly cares about your career and where you want to go."
+                    <br/>
+                    - Ben, HR Admin.
+                </div>
+            </div>
+        
+    </div>
+
+</section>
+
+<section class="main">
+
+    <p>
+        We streamline the recruitment experience with analytical feedback in a unified space. 
+    </p>
+   
+</section>
+
+<section class="main-sub">
+
+    <div class="box">
+            <div class="box-inner">
+                <div class="front">
+
+                   <img src="img\roland.jpg" alt="roland">     
+
+                </div>
+                <div class="back">
+
+                    "This is by far the best company I've worked for. They offer amazing benefits/PTO and really care about the culture."
+                    <br/>
+                    - Roland, Developer.
+
+                </div>
+            </div>        
+    </div>
+
+    <div class="box">
+         <div class="box-inner">
+                <div class="front">
+                   <img src="img\zoe.jpg" alt="zoe">   
+                </div>
+                <div class="back">
+                    "Management encourages your advancement and career growth. Everyone works as a team, and this is felt even when working remotely."
+                    <br/>
+                    - Zoe, Legal.
+                </div>
+            </div>
+        
+    </div>
+
+</section>
