@@ -153,7 +153,9 @@
                 <h2 class="profile-name">Brian Kemunto</h2>
             </div>
             <div class="infodiv">
-                <h2 class="profile-role">Developer</h2>
+                <h2 class="profile-role" hidden="@mainmodel.HRIsHidden">HR administrator</h2>
+                <h2 class="profile-role" hidden="@mainmodel.ApplicantIsHidden">Applicant</h2>
+                <h2 class="profile-role" hidden="@mainmodel.DeveloperIsHidden">Developer</h2>
             </div>
             <div class="infodiv">
                <h2 class="profile-email">brian.kemunto@gmail.com</h2>
@@ -208,4 +210,6 @@
 
 @code{
     private MainModel mainmodel { get; set; } = new MainModel();
+    
+   
 }
