@@ -1,7 +1,19 @@
 ﻿@page "/developerapplicantcontroltool"
 
-<h3>ApplicantControlTool</h3>
+
+<div hidden="@mainmodel.DeveloperIsHidden">
+    <h3>ApplicantControlTool</h3>
+</div>
+<div hidden="@mainmodel.HRIsHidden">
+    <h3>You are not authorised to view this page.</h3>
+</div>
+<div hidden="@mainmodel.ApplicantIsHidden">
+    <h3>You are not authorised to view this page.</h3>
+</div>
+
 
 @code {
+
+    private MainModel mainmodel { get; set; } = new MainModel();
 
 }
