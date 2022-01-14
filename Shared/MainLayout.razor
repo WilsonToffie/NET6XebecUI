@@ -29,94 +29,172 @@
         color: white;
         font-size: 1.8rem;
     }
+
     .nav {
-        background-color: black;
-        opacity: 1;
+        background-color: white;
+    }
+    .nav-link {
+        width: 100%;
+        height: 10vh;
+        margin-bottom: 0.1rem;
+        display: flex;
+        vertical-align: middle;
+        border-radius: 2rem;
+        background-color: white;
+        color: #003340;
     }
 
+    .icons {
+        font-size: 1.8rem;
+        display: inline-block;
+        width: 20%;
+        height: 100%;
+        padding-top: 0.25rem;
+    }
+
+    .nav-link-text {
+        font-size: 1rem;
+        display: inline-block;
+        padding-top: 2.5vh;
+        width: 90%;
+        height: 100%;
+    }
+
+    .nav-link:hover {
+        background-color: #003340;
+        color: white;
+    }
+    .nav-link:focus {
+        background-color: #003340;
+        color: white;
+    }
+    .image {
+        width: 100%;
+        margin-top: 5rem;
+        margin-bottom: 2rem;
+        height: 20vh;
+    }
+    img {
+        width: 100%;
+        height: inherit;
+        border-radius: 100%;
+        border: 0.3rem #003340 solid;
+        object-fit: fill;
+    }
+
+    .infodiv{
+        height: 5vh;
+        width: 100%;
+        padding-bottom: 1rem;
+        display: flex;
+    }
+    .profile-div{
+        height: 60%;
+        width: 70%;
+        margin-left: 15%;
+        margin-top: 10%;
+    }
+    .profile-name {
+        color: #003340;
+        font-size: 2rem;
+        font-weight: 800;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+    }
+    .profile-role {
+        color: #a7a9ab;
+        font-size: 1rem;
+        font-weight: 800;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+    }
+    .profile-icon {
+        color: #003340;
+        font-size: 2rem;
+        display: inline-block;
+        height: 100%;
+    }
+    .profile-email {
+        color: #003340;
+        font-size: 1rem;
+        display: inline-block;
+        height: 100%;
+    }
 </style>
 <div class="page">
     <div class="header">
         <div class="d-flex justify-content-between align-items-center p-4">
             <h1 class="heading">xebec</h1>
-            <div>
+            <div hidden="@mainmodel.DeveloperIsHidden">
+                <i class="fa fa-user icon mr-4" data-bs-toggle="offcanvas" data-bs-target="#showUser" aria-controls="offcanvasRight"></i>
+            </div>
+            <div hidden="@mainmodel.ApplicantIsHidden">
                 <i class="fa fa-user icon mr-4" data-bs-toggle="offcanvas" data-bs-target="#showUser" aria-controls="offcanvasRight"></i>
                 <i class="fa fa-bars icon mr-2" data-bs-toggle="offcanvas" data-bs-target="#showNav" aria-controls="offcanvasRight"></i>
             </div>
-
+            <div hidden="@mainmodel.HRIsHidden">
+                <i class="fa fa-user icon mr-4" data-bs-toggle="offcanvas" data-bs-target="#showUser" aria-controls="offcanvasRight"></i>
+                <i class="fa fa-bars icon mr-2" data-bs-toggle="offcanvas" data-bs-target="#showNav" aria-controls="offcanvasRight"></i>
+            </div>
         </div>
     </div>
 
     <div class="offcanvas offcanvas-end nav" tabindex="-1" id="showUser" aria-labelledby="offcanvasRightLabel">
         <div class="offcanvas-header">
-            <h5 id="offcanvasRightLabel">User Profile</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body">
-            
-            @{
-                if (mainmodel.isHR)
-                {
+        <div class="offcanvas-body profile-div">
+            <div class="image">
+                <img asp-append-version="true" src="css/img/person.png" />
+            </div>
+            <div class="infodiv">
+                <h2 class="profile-name">Brian Kemunto</h2>
+            </div>
+            <div class="infodiv">
+                <h2 class="profile-role">Developer</h2>
+            </div>
+            <div class="infodiv">
+               <h2 class="profile-email">brian.kemunto@gmail.com</h2>
+            </div>
 
-                }
-                else if (mainmodel.isApplicant)
-                {
-
-                }
-                else if (mainmodel.isDeveloper)
-                {
-
-                }
-            }
         </div>
     </div>
 
     <div class="offcanvas offcanvas-end nav" tabindex="-1" id="showNav" aria-labelledby="offcanvasRightLabel">
         <div class="offcanvas-header">
-            <h5 id="offcanvasRightLabel">Nav Information</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body">
-            @{
-                if (mainmodel.isHR)
-                {
-                    <NavLink class="nav-link" href="hrapplicantcontroltool">
-                        <i class="fa fa-table icon" aria-hidden="true"></i>Applicant Control Tool
-                    </NavLink>
-                    <NavLink class="nav-link" href="applicantportal">
-                        <i class="fa fa-users icon" aria-hidden="true"></i>Applicant Portal
-                    </NavLink>
+        <div hidden="@mainmodel.HRIsHidden" class="offcanvas-body">           
+            <NavLink class="nav-link" href="hrapplicantcontroltool">
+                <div class="icons"><i class="fa fa-table" aria-hidden="true"></i></div><h2 class="nav-link-text">Applicant Control Tool</h2>
+            </NavLink>
+            <NavLink class="nav-link" href="applicantportal">
+                <div class="icons"><i class="fa fa-users" aria-hidden="true"></i></div><h2 class="nav-link-text">Applicant Portal</h2>
+            </NavLink>
+            <NavLink class="nav-link" href="candidaterecommendationtool">
+                <div class="icons"><i class="fas fa-lightbulb" aria-hidden="true"></i></div><h2 class="nav-link-text">Candidate Recommendation Tool</h2>
+            </NavLink>
 
+            <NavLink class="nav-link" href="dataanalyticstool">
+                <div class="icons"><i class="fa fa-chart-bar" aria-hidden="true"></i></div><h2 class="nav-link-text">Data Analytics Tool</h2>
+            </NavLink>
+            <NavLink class="nav-link" href="hrjobportal">
+                <div class="icons"><i class="fa fa-briefcase" aria-hidden="true"></i></div><h2 class="nav-link-text">Job Portal</h2>
+            </NavLink>                
+        </div>
+        <div hidden="@mainmodel.ApplicantIsHidden" class="offcanvas-body">           
+            <NavLink class="nav-link" href="applicationprofile">
+                <div class="icons"><i class="fa fa-book" aria-hidden="true"></i></div><h2 class="nav-link-text">Application Profile</h2>
+            </NavLink>
 
-                    <NavLink class="nav-link" href="candidaterecommendiontool">
-                        <i class="fas fa-lightbulb icon" aria-hidden="true"></i>Candidate Recommendation Tool
-                    </NavLink>
-
-                    <NavLink class="nav-link" href="dataanalyticstool">
-                        <i class="fa fa-chart-bar icon" aria-hidden="true"></i>Data Analytics Tool
-                    </NavLink>
-                    <NavLink class="nav-link" href="hrjobportal">
-                        <i class="fa fa-briefcase icon" aria-hidden="true"></i>Job Portal
-                    </NavLink>
-                }
-                else if (mainmodel.isApplicant)
-                {
-                    <NavLink class="nav-link" href="applicationprofile">
-                        <i class="fa fa-book icon" aria-hidden="true"></i>Application Profile
-                    </NavLink>
-
-                    <NavLink class="nav-link" href="applicantjobportal">
-                        <i class="fa fa-file icon" aria-hidden="true"></i>Job Portal
-                    </NavLink>
-                    <NavLink class="nav-link" href="myjobs">
-                        <i class="fa fa-users icon" aria-hidden="true"></i>My Jobs
-                    </NavLink>
-                }
-                else if (mainmodel.isDeveloper)
-                {
-
-                }
-            }
+            <NavLink class="nav-link" href="applicantjobportal">
+                <div class="icons"><i class="fa fa-file" aria-hidden="true"></i></div><h2 class="nav-link-text">Job Portal</h2>
+            </NavLink>
+            <NavLink class="nav-link" href="myjobs">
+                <div class="icons"><i class="fa fa-users" aria-hidden="true"></i></div><h2 class="nav-link-text">My Jobs</h2>
+            </NavLink>
         </div>
     </div>
     <div class="main">
@@ -130,6 +208,4 @@
 
 @code{
     private MainModel mainmodel { get; set; } = new MainModel();
-
-    private string role = "";
 }

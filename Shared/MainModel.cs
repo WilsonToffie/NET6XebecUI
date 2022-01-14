@@ -7,8 +7,8 @@ namespace XebecPortal.UI.Shared
 {
     public class MainModel
     {
-        public bool isDeveloper { get; set; } = false;
-        public bool isHR { get; set; } = false;
-        public bool isApplicant { get; set; } = true;
+        public bool DeveloperIsHidden { get; set; } = true;
+        public bool HRIsHidden { get; set; } = false;
+        public bool ApplicantIsHidden { get; set; } = true;
     }
 }
