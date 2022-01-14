@@ -1,24 +1,25 @@
 ﻿@page "/hrapplicantcontroltool"
 
 @inject HttpClient httpClient
-@using Newtonsoft.Json
 
 <!--Heading Page-->
-<br />
+<br/>
 <h1 class="text-center" style="height: 5vh; color: #003340">Applicant Control Tool</h1>
-<br />
+<br/>
 
 <div class="container">
     <!--Search-Box-->
     <div class="row" style="height:5vh">
         <div class="col">
             <div class="input-group center d-flex justify-content-center">
-                <span class="input-group-text hand_pointer" @onclick="() => SearchString(stringSearch)"><i class="fa fa-search"></i></span>
-                <input class="form-control" @bind="stringSearch" style="max-width: 50%" type="text" placeholder="Search" />
+                <span class="input-group-text hand_pointer" @onclick="() => SearchString(stringSearch)">
+                    <i class="fa fa-search"></i>
+                </span>
+                <input class="form-control" @bind="stringSearch" style="max-width: 50%" type="text" placeholder="Search"/>
             </div>
         </div>
     </div>
-    <br />
+    <br/>
 
     <!--Table-->
     <div class="row overflow-auto" style="height: 57vh">
@@ -27,31 +28,74 @@
 
                 <!--15% 15% 10% 20% 10% 20% 10% widths-->
                 <thead class="sticky-top" style="background-color: #003340; color: white">
-                    <tr class="text-center" style="border-top: solid 0px black">
-                        <th scope="col" style="width: 15%">Name</th>
-                        <th scope="col" style="width: 15%">Surname</th>
-                        <th scope="col" style="width: 10%">CST <br /> (% Mark)</th>
-                        <th scope="col" style="width: 20%">CST <br /> (Comment)</th>
-                        <th scope="col" style="width: 10%">Interview <br /> (Rating 1 - 5)</th>
-                        <th scope="col" style="width: 20%">Interview <br /> (Comment)</th>
-                        <th scope="col" style="width: 10%">Phase</th>
-                    </tr>
+                <tr class="text-center" style="border-top: solid 0px black">
+                    <th scope="col" style="width: 15%">Name</th>
+                    <th scope="col" style="width: 15%">Surname</th>
+                    <th scope="col" style="width: 9%">CST <br/> (% Mark)</th>
+                    <th scope="col" style="width: 20%">CST <br/> (Comment)</th>
+                    <th scope="col" style="width: 10%">Interview <br/> (Rating 1 - 5)</th>
+                    <th scope="col" style="width: 17%">Interview <br/> (Comment)</th>
+                    <th scope="col" style="width: 9%">Phase</th>
+                    <th scope="col" style="width: 5%">Action</th>
+                </tr>
                 </thead>
 
                 <tbody style="background-color:white">
-                    @foreach (var items in applicantDatas)
-                    {
-                        <tr>
-                            <td>@items.first_name</td>
-                            <td>@items.last_name</td>
-                            <td>@items.cst_mark</td>
-                            <td>@items.cst_comment</td>
-                            <td>@items.interview_rating</td>
-                            <td>@items.interview_comment</td>
-                            <td>@items.phase</td>
-                        </tr>
+                @foreach (var items in applicantDatas)
+                {
+                    bool editMode = false;
+                    <tr>
+                        <td>@items.first_name</td>
+                        <td>@items.last_name</td>
+                        <td>@items.cst_mark</td>
+                        <td>@items.cst_comment</td>
 
-                    }
+                        <td>
+                            @if (tempPerson != null && items == tempPerson)
+                            {
+                                <input type="text" @bind="@items.interview_rating"/>
+                            }
+                            else
+                            {
+                                @items.interview_rating
+                            }
+                        </td>
+                        <td>
+                            @if (tempPerson != null && items == tempPerson)
+                            {
+                                <textarea rows="5"  type="text" @bind="@items.interview_comment"/>
+                            }
+                            else
+                            {
+                                @items.interview_comment;
+                            }
+                        </td>
+                        <td>
+                            @if (tempPerson != null && items == tempPerson)
+                            {
+                                <input type="text" @bind="@items.phase"/>
+                            }
+                            else
+                            {
+                                @items.phase;
+                            }
+                        </td>
+
+                        
+                        <div class="controls">
+                            @if (tempPerson != null && tempPerson == items)
+                            {
+                                <button @onclick="() => Save(items)">Save</button>
+                                <button @onclick="() => CancelUpdate(items)">Cancel</button>
+                            }
+                            else
+                            {
+                                <button @onclick="() => ToggleUpdate(items)">Update</button>
+                            }
+                        </div>
+                        
+                    </tr>
+                }
                 </tbody>
             </table>
         </div>
@@ -63,6 +107,7 @@
     IList<ApplicantData> applicantDatas = new List<ApplicantData>();
     IList<ApplicantData> storeInitializedData = new List<ApplicantData>();
     string stringSearch { get; set; }
+    ApplicantData tempPerson = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -85,9 +130,38 @@
     public void SearchString(string value)
     {
         if (value != "" && value != " ")
-            applicantDatas = storeInitializedData.ToList().FindAll(x =>  $"{x.first_name} {x.last_name} {x.cst_mark} {x.cst_comment} {x.interview_rating} {x.interview_comment} {x.phase}".ToLower().Contains(value.ToLower()));
+            applicantDatas = storeInitializedData.ToList().FindAll(x => $"{x.first_name} {x.last_name} {x.cst_mark} {x.cst_comment} {x.interview_rating} {x.interview_comment} {x.phase}".ToLower().Contains(value.ToLower()));
 
         else
             applicantDatas = storeInitializedData;
     }
+
+    //update
+    private void ToggleUpdate(ApplicantData user)
+    {
+        tempPerson = user;
+    }
+
+    private async Task Save(ApplicantData newPerson)
+    {
+        applicantDatas = applicantDatas.Select(i =>
+        {
+            if (i.id == newPerson.id)
+            {
+                i.interview_comment = newPerson.interview_comment;
+                i.interview_rating = newPerson.interview_rating;
+                i.phase = newPerson.phase;
+            }
+            return i;
+        }).ToList();
+        tempPerson = null;
+    //await httpClient.PutAsJsonAsync("/api/user", newPerson);
+    }
+
+    private async Task CancelUpdate(ApplicantData person)
+    {
+        //MyUsers = await httpClient.GetFromJsonAsync<List<User>>("/api/user");
+        tempPerson = null;
+    }
+
 }

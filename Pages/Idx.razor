@@ -8,24 +8,6 @@
 @layout EmptyLayout
 
 <style>
-    .valid.modified:not([type=checkbox]) {
-        outline: none;
-        border-radius: 55px;
-        padding-left: 0.4rem;
-    }
-
-    .invalid {
-        outline: 1px solid red;
-        border-radius: 55px;
-    }
-
-    .validation-message {
-        color: red;
-        list-style: none;
-        text-decoration: none;
-    }
-
-
     .container-main {
         position: relative;
         width: 100%;
@@ -61,8 +43,8 @@
 
     .signin-signup {
         position: absolute;
-        left: 55%;
-        top: 25%;
+        left: 60%;
+        top: 19%;
         transform: translate(-50%, -50%);
         display: flex;
         background: black;
@@ -153,7 +135,29 @@
             }
 
         
-
+.navigate{ 
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 4px;
+    margin-top: 5px;
+}
+.navigate a{
+    text-decoration: none;
+    color: #fff;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+}
+.navigate a:after{
+content: "•";
+color: #fff;
+text-align: center;
+border-bottom: 10px;
+}
+.navigate a:hover{
+    color:  rgba(47,79,79,0.68);
+}
     .sign-in-form {
         z-index: 2;
     }
@@ -162,46 +166,6 @@
         z-index: 1;
         opacity: 0;
     }
-
-    .title {
-        font-size: 2.2rem;
-        color: #444;
-        margin-bottom: 10px;
-    }
-
-    .input-field {
-        max-width: 380px;
-        width: 100%;
-        height: 55px;
-        background-color: #f0f0f0;
-        margin: 10px 0;
-        border-radius: 55px;
-        display: grid;
-        grid-template-columns: 15% 85%;
-        padding: 0 0.4rem;
-    }
-
-        .input-field i {
-            text-align: center;
-            line-height: 55px;
-            color: #acacac;
-            font-size: 1.1rem;
-        }
-
-        .input-field input {
-            background: none;
-            outline: none;
-            border: none;
-            line-height: 1;
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: #333;
-        }
-
-            .input-field input::placeholder {
-                color: #aaa;
-                font-weight: 500;
-            }
 
     .btn {
         width: 150px;
@@ -224,38 +188,6 @@
         }
 
 
-    .social-text {
-        padding: 0.7rem 0;
-        font-size: 1rem;
-    }
-
-    .social-media {
-        display: flex;
-        justify-content: center;
-    }
-
-    .social-icon {
-        width: 46px;
-        height: 46px;
-        border: 1px solid #333;
-        margin: 0 0.45rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-decoration: none;
-        color: #333;
-        font-size: 1.1rem;
-        border-radius: 50%;
-        transition: 0.3s;
-        cursor: pointer;
-    }
-
-        .social-icon:hover {
-            color: #00BCAE;
-            border-color: #00BCAE;
-        }
-
-
    
 
     form.sign-in-form {
@@ -267,97 +199,6 @@
         opacity: 0;
     }
 
-    .title {
-        font-size: 2.2rem;
-        color: #444;
-        margin-bottom: 10px;
-    }
-
-    .input-field {
-        max-width: 380px;
-        width: 100%;
-        height: 55px;
-        background-color: #f0f0f0;
-        margin: 10px 0;
-        border-radius: 55px;
-        display: grid;
-        grid-template-columns: 15% 85%;
-        padding: 0 0.4rem;
-    }
-
-    .input-field i {
-        text-align: center;
-        line-height: 55px;
-        color: #acacac;
-        font-size: 1.1rem;
-    }
-
-    .input-field input,
-    ::deep input {
-        background: none;
-        outline: none;
-        border: none;
-        line-height: 1;
-        font-weight: 600;
-        font-size: 1.1rem;
-        color: #333;
-    }
-
-    .input-field input::placeholder {
-        color: #aaa;
-        font-weight: 500;
-    }
-
-    .btn {
-        width: 150px;
-        height: 49px;
-        border: none;
-        outline: none;
-        border-radius: 49px;
-        color: #fff;
-        cursor: pointer;
-        background-color: #44c1e6; /**/
-        text-transform: uppercase;
-        font-weight: 600;
-        margin: 10px 0;
-        transition: 0.5s;
-    }
-
-        .btn:hover {
-            background-color: #00BCAE;
-        }
-
-
-    .social-text {
-        padding: 0.7rem 0;
-        font-size: 1rem;
-    }
-
-    .social-media {
-        display: flex;
-        justify-content: center;
-    }
-
-    .social-icon {
-        width: 46px;
-        height: 46px;
-        border: 1px solid #333;
-        margin: 0 0.45rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-decoration: none;
-        color: #333;
-        font-size: 1.1rem;
-        border-radius: 50%;
-        transition: 0.3s;
-        cursor: pointer;
-    }
-
-        .social-icon:hover {
-            color: #00BCAE;
-            border-color: #00BCAE;
-        }
 
 
     .panels-container {
@@ -613,10 +454,18 @@
 
                 <button>Log In</button>
                 <div class="social">
-                    <div class="go"><i class="fab fa-google"></i></div>
-                    <div class="fb"><i class="fab fa-microsoft"></i></div>
+                    <div class="go">
+                        <i class="fab fa-google"></i>
+                    </div>
+                    <div class="fb">
+                        <i class="fab fa-microsoft"></i>
+                    </div>
                 </div>
-
+                <div class="navigate">
+                    <a href="/hrapplicantcontroltool">HR Admin</a>
+                    <a href="/applicantjobportal">Candidate</a>
+                    <a href="/developerapplicantcontroltool">Recruitment</a>
+                </div>
             </EditForm>
 
             <!-- sign up -->
@@ -637,8 +486,17 @@
                 <input type="password" placeholder="*********" id="confirm-password">
                 <button>Register</button>
                 <div class="social">
-                    <div class="go"><i class="fab fa-google"></i></div>
-                    <div class="fb"><i class="fab fa-microsoft"></i></div>
+                    <div class="go">
+                        <i class="fab fa-google"></i>
+                    </div>
+                    <div class="fb">
+                        <i class="fab fa-microsoft"></i>
+                    </div>
+                </div>
+                <div class="navigate">
+                    <a href="/hrapplicantcontroltool">HR Admin</a>
+                    <a href="/applicantjobportal">Candidate</a>
+                    <a href="/developerapplicantcontroltool">Recruitment</a>
                 </div>
             </EditForm>
 
