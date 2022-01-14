@@ -1,0 +1,10 @@
+﻿.hand_pointer{
+    cursor:pointer;
+}
+
+.controls{
+    display: flex;
+}
+.controls button{
+ 
+}

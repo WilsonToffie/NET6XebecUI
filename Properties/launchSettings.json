@@ -14,6 +14,15 @@
       "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "my webapp Watch": {
+        "commandName": "Executable",
+        "executablePath": "dotnet",
+        "workingDirectory": "$(ProjectDir)",
+        "commandLineArgs": "watch run --local-kestrel=1",
+        "environmentVariables": {
+          "ASPNETCORE_ENVIRONMENT": "Development"
+        }
       }
     },
     "XebecPortal.UI": {
