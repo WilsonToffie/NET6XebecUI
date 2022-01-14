@@ -1,6 +1,93 @@
 ﻿@page "/hrapplicantcontroltool"
-<h3>ApplicantControlTool</h3>
+
+@inject HttpClient httpClient
+@using Newtonsoft.Json
+
+<!--Heading Page-->
+<br />
+<h1 class="text-center" style="height: 5vh; color: #003340">Applicant Control Tool</h1>
+<br />
+
+<div class="container">
+    <!--Search-Box-->
+    <div class="row" style="height:5vh">
+        <div class="col">
+            <div class="input-group center d-flex justify-content-center">
+                <span class="input-group-text hand_pointer" @onclick="() => SearchString(stringSearch)"><i class="fa fa-search"></i></span>
+                <input class="form-control" @bind="stringSearch" style="max-width: 50%" type="text" placeholder="Search" />
+            </div>
+        </div>
+    </div>
+    <br />
+
+    <!--Table-->
+    <div class="row overflow-auto" style="height: 57vh">
+        <div class="col">
+            <table class="table table-responsive table-hover table-bordered">
+
+                <!--15% 15% 10% 20% 10% 20% 10% widths-->
+                <thead class="sticky-top" style="background-color: #003340; color: white">
+                    <tr class="text-center" style="border-top: solid 0px black">
+                        <th scope="col" style="width: 15%">Name</th>
+                        <th scope="col" style="width: 15%">Surname</th>
+                        <th scope="col" style="width: 10%">CST <br /> (% Mark)</th>
+                        <th scope="col" style="width: 20%">CST <br /> (Comment)</th>
+                        <th scope="col" style="width: 10%">Interview <br /> (Rating 1 - 5)</th>
+                        <th scope="col" style="width: 20%">Interview <br /> (Comment)</th>
+                        <th scope="col" style="width: 10%">Phase</th>
+                    </tr>
+                </thead>
+
+                <tbody style="background-color:white">
+                    @foreach (var items in applicantDatas)
+                    {
+                        <tr>
+                            <td>@items.first_name</td>
+                            <td>@items.last_name</td>
+                            <td>@items.cst_mark</td>
+                            <td>@items.cst_comment</td>
+                            <td>@items.interview_rating</td>
+                            <td>@items.interview_comment</td>
+                            <td>@items.phase</td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 @code {
 
+    IList<ApplicantData> applicantDatas = new List<ApplicantData>();
+    IList<ApplicantData> storeInitializedData = new List<ApplicantData>();
+    string stringSearch { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        storeInitializedData = await httpClient.GetFromJsonAsync<List<ApplicantData>>("https://my-json-server.typicode.com/DanielOneNebula/mockjson/ApplicantToolHr");
+        applicantDatas = storeInitializedData;
+    }
+
+    class ApplicantData
+    {
+        public int id { get; set; }
+        public string first_name { get; set; }
+        public string last_name { get; set; }
+        public int cst_mark { get; set; }
+        public string cst_comment { get; set; }
+        public int interview_rating { get; set; }
+        public string interview_comment { get; set; }
+        public string phase { get; set; }
+    }
+
+    public void SearchString(string value)
+    {
+        if (value != "" && value != " ")
+            applicantDatas = storeInitializedData.ToList().FindAll(x =>  $"{x.first_name} {x.last_name} {x.cst_mark} {x.cst_comment} {x.interview_rating} {x.interview_comment} {x.phase}".ToLower().Contains(value.ToLower()));
+
+        else
+            applicantDatas = storeInitializedData;
+    }
 }
