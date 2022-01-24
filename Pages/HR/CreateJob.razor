@@ -1,7 +1,116 @@
 ﻿@page "/createjob"
+@inject HttpClient HttpClient
+@inject IJSRuntime jsRuntime
+@inject NavigationManager nav
+
+<style>
+    .headingPage {
+        height: 5vh;
+        color: #003340
+    }
+    
+    .formContener {
+        background-color: lightgray
+    }
+
+    .formButton {
+        background-color: #00BCAE;
+        color: white;
+        font-weight: 600;
+    }
+    .select2 {
+        width: 100% !important;
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+    }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+</style>
 
 <div hidden="@mainmodel.HRIsHidden">
-    <h3>CreateJob</h3>
+
+    <!--Heading Page-->
+    <br />
+    <h1 class="headingPage text-center">Create A Job</h1>
+    <br />
+
+    <!--Body Page-->
+    <div class="container">
+
+        <!--The Form for creating a job-->
+        <div class="row p-3 formContener overflow-auto" style="height:420px">
+            <div class="col-12">
+                <form>
+                    <div class="row">
+                        <div class="col-12 p-1 d-flex justify-content-center">
+                            <input type="text" class="form-control text-center" placeholder="Job Name" style="width: 50%" />
+                        </div>
+                        <div class="col-6 p-2">
+                            <input type="text" class="form-control" placeholder="Company Name" />
+                        </div>
+                        <div class="col-6 p-2">
+                            <select class="form-select">
+                                <option>Location</option>
+                            </select>
+                        </div>
+                        <div class="col-6 p-2">
+                            <select class="form-select selectMultiOptions1" multiple="multiple">
+                                <option>Full-time/Part-time (Select2)</option>
+                                <option>Full-time/Part-time (Select2)</option>
+                                <option>Full-time/Part-time (Select2)</option>
+                                <option>Full-time/Part-time (Select2)</option>
+                            </select>
+                        </div>
+                        <div class="col-6 p-2">
+                            <select class="form-select">
+                                <option>Department</option>
+                            </select>
+                        </div>
+                        <div class="col-12 p-2">
+                            <textarea class="form-control" style="resize: none" placeholder="Description" rows="4">
+                            </textarea>
+                        </div>
+                        <div class="col-6 p-2">
+                            <select class="form-select selectMultiOptions2" multiple="multiple">
+                                <option>Social Media (Select1)</option>
+                                <option>Social Media (Select2)</option>
+                                <option>Social Media (Select3)</option>
+                                <option>Social Media (Select4)</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-12 p-2">
+                                    <input class="form-control" type="text" placeholder="Date Advertised" onfocus="(this.type='date')" onblur="(this.type='text')" />
+                                </div>
+                                <div class="col-12 p-2">
+                                    <input class="form-control" type="text" placeholder="Due Date" onfocus="(this.type='date')" onblur="(this.type='text')" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!--Button-->
+        <br />
+        <div class="d-flex justify-content-center"><button class="btn formButton" @onclick="pageRedirect">Application Form</button></div>
+    </div>
 </div>
 <div hidden="@mainmodel.DeveloperIsHidden">
     <h3>You are not authorised to view this page.</h3>
@@ -12,7 +121,5 @@
 
 
 @code {
-
     private MainModel mainmodel { get; set; } = new MainModel();
-
 }
