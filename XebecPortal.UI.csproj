@@ -10,16 +10,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Pages\HR\ApplicantControlTool.razor.css" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Blazored.Localisation" Version="2.0.0" />
     <PackageReference Include="Bogus" Version="34.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.13" PrivateAssets="all" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.Net.Http.Json" Version="5.0.0" />
+    <PackageReference Include="X.PagedList" Version="8.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,7 +25,6 @@
 
   <ItemGroup>
     <Folder Include="Pages\Developer\Models\" />
-    <Folder Include="Pages\HR\Models\" />
   </ItemGroup>
 
 </Project>

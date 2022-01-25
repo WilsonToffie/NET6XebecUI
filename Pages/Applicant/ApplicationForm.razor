@@ -48,54 +48,39 @@
 </style>
 
 
-<div hidden="@mainmodel.ApplicantIsHidden">
-
-</div>
-<div hidden="@mainmodel.DeveloperIsHidden">
-    <h3>You are not authorised to view this page.</h3>
-</div>
-<div hidden="@mainmodel.HRIsHidden">
-    <!-- <h3>You are not authorised to view this page. 123213213</h3> -->
-
-    <div class="wrapper">
-        <div class="application-form">
-            <div class="application-form-title">
-                <h4>Application Form</h4>
-            </div>
-            <div class="application-form-question-area">
-                <table class="table">
-                    <tbody>
-                        @if(ApplicantQuestions != null)
+<div class="wrapper">
+    <div class="application-form">
+        <div class="application-form-title">
+            <h4>Application Form</h4>
+        </div>
+        <div class="application-form-question-area">
+            <table class="table">
+                <tbody>
+                    @if(ApplicantQuestions != null)
+                    {
+                        @foreach(var customquestion in ApplicantQuestions)
                         {
-                            @foreach(var customquestion in ApplicantQuestions)
-                            {
-                            <tr>
-                                <td>
-                                    <div class="application-form-question">
-                                        <h6 class="form-text text-muted" style="font-size: 14px; width: 90%;">@customquestion</h6>
-                                        <input type="text" class="form-control" placeholder="Answer..." style="width: 80%">
-                                    </div>
-                                </td>
-                            </tr>
-                            }
+                        <tr>
+                            <td>
+                                <div class="application-form-question">
+                                    <h6 class="form-text text-muted" style="font-size: 14px; width: 90%;">@customquestion</h6>
+                                    <input type="text" class="form-control" placeholder="Answer..." style="width: 80%">
+                                </div>
+                            </td>
+                        </tr>
                         }
-                    </tbody>
-                </table>
-            </div>
-            <div class="application-form-button">
-                <button class="btn btn-danger" @onclick="Submit">Submit</button>
-            </div>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="application-form-button">
+            <button class="btn btn-danger" @onclick="Submit">Submit</button>
         </div>
     </div>
-
-
-
 </div>
-
 
 @code {
 
-    private MainModel mainmodel { get; set; } = new MainModel();
 
     List<string> ApplicantQuestions = new List<string>();
     //list of question objects

@@ -43,123 +43,109 @@
         }
 </style>
 
-<div hidden="@mainmodel.ApplicantIsHidden">
+<div class="container">
 
-    <!--Heading Page-->
-    <br />
-    <h1 class="headingPage text-center">Job Portal</h1>
-    <br />
-
-    <div class="container">
-
-        <!--Search-Box-->
-        <div class="row" style="height:5vh">
-            <div class="col">
-                <div class="input-group d-flex justify-content-center">
-                    <span class="input-group-text handPointer">
-                        <i class="fa fa-search"></i>
-                    </span>
-                    <input class="form-control" style="max-width: 50%" type="text" placeholder="Search" />
-                </div>
-            </div>
-        </div>
-        <br />
-
-        <div class="row" style="height:355px">
-            <div class="col-4 overflow-auto" style="height:355px">
-
-                <!--Card list for jobs-->
-                @for (int i = 0; i < 5; i++)
-                {
-                    <div class="card">
-                        <div class="card-body">
-                            <h3 class="card-title">Front-end Developer</h3>
-                            <h5 class="card-subtitle text-muted">1Nebula</h5>
-                            <br />
-                            <p class="card-text">
-                                Cape Town, South Africa
-                                <br />
-                                05 January 2022
-                            </p>
-                        </div>
-                    </div>
-                    <br />
-                }
-            </div>
-
-            <div class="col-8 overflow-auto" style="height:355px">
-
-                <!--The Form for applying for a job-->
-                <div class="row formContainer sticky-top" style="height: auto">
-                    <div class="col-12">
-                        <form>
-                            <div class="row p-3">
-                                <div class="col-6 p-2">
-                                    <h3>Front-end Developer</h3>
-                                </div>
-                                <div class="col-6 p-2 d-flex justify-content-end">
-                                    <button class="btn formButton">Apply</button>
-                                </div>
-                                <div class="col-6 p-2">
-                                    <h5 class="text-muted">1Nebula</h5>
-                                </div>
-                                <div class="col-6 p-2 d-flex justify-content-end">
-                                    <p>Cape Town, South Africa</p>
-                                </div>
-                                <div class="col-6 p-2">
-                                    <p>Full-Time</p>
-                                </div>
-                                <div class="col-6 p-2 d-flex justify-content-end">
-                                    <p>Software Developer</p>
-                                </div>
-                                <div class="col-12 p-2">
-                                    <p class="text-center">A Front End Developer, or Front End Web Developer, is responsible for using their knowledge of programming languages to code user-side applications, including visual elements like menu bars, clickable buttons and the overall layout of websites or web applications.</p>
-                                </div>
-                                <div class="col-6 p-2">
-                                    <p>Advertised On: 05 January 2022</p>
-                                </div>
-                                <div class="col-6 p-2 d-flex justify-content-end">
-                                    <p>Applied On: 05 January 2022</p>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row p-3">
-            <div class="col-4 d-flex justify-content-center">
-                <nav>
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link">
-                                <span>&laquo;</span>
-                            </a>
-                        </li>
-                        <li class="page-item"><a class="page-link">1</a></li>
-                        <li class="page-item"><a class="page-link">2</a></li>
-                        <li class="page-item"><a class="page-link">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link">
-                                <span>&raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
+    <!--Search-Box-->
+    <div class="row" style="height:5vh">
+        <div class="col">
+            <div class="input-group d-flex justify-content-center">
+                <span class="input-group-text handPointer">
+                    <i class="fa fa-search"></i>
+                </span>
+                <input class="form-control" style="max-width: 50%" type="text" placeholder="Search" />
             </div>
         </div>
     </div>
-</div>
-<div hidden="@mainmodel.DeveloperIsHidden">
-    <h3>You are not authorised to view this page.</h3>
-</div>
-<div hidden="@mainmodel.HRIsHidden">
-    <h3>You are not authorised to view this page.</h3>
+    <br />
+
+    <div class="row" style="height:355px">
+        <div class="col-4 overflow-auto" style="height:355px">
+
+            <!--Card list for jobs-->
+            @for (int i = 0; i < 5; i++)
+            {
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Front-end Developer</h3>
+                        <h5 class="card-subtitle text-muted">1Nebula</h5>
+                        <br />
+                        <p class="card-text">
+                            Cape Town, South Africa
+                            <br />
+                            05 January 2022
+                        </p>
+                    </div>
+                </div>
+                <br />
+            }
+        </div>
+
+        <div class="col-8 overflow-auto" style="height:355px">
+
+            <!--The Form for applying for a job-->
+            <div class="row formContainer sticky-top" style="height: auto">
+                <div class="col-12">
+                    <form>
+                        <div class="row p-3">
+                            <div class="col-6 p-2">
+                                <h3>Front-end Developer</h3>
+                            </div>
+                            <div class="col-6 p-2 d-flex justify-content-end">
+                                <button class="btn formButton">Apply</button>
+                            </div>
+                            <div class="col-6 p-2">
+                                <h5 class="text-muted">1Nebula</h5>
+                            </div>
+                            <div class="col-6 p-2 d-flex justify-content-end">
+                                <p>Cape Town, South Africa</p>
+                            </div>
+                            <div class="col-6 p-2">
+                                <p>Full-Time</p>
+                            </div>
+                            <div class="col-6 p-2 d-flex justify-content-end">
+                                <p>Software Developer</p>
+                            </div>
+                            <div class="col-12 p-2">
+                                <p class="text-center">A Front End Developer, or Front End Web Developer, is responsible for using their knowledge of programming languages to code user-side applications, including visual elements like menu bars, clickable buttons and the overall layout of websites or web applications.</p>
+                            </div>
+                            <div class="col-6 p-2">
+                                <p>Advertised On: 05 January 2022</p>
+                            </div>
+                            <div class="col-6 p-2 d-flex justify-content-end">
+                                <p>Applied On: 05 January 2022</p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row p-3">
+        <div class="col-4 d-flex justify-content-center">
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link">
+                            <span>&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item"><a class="page-link">1</a></li>
+                    <li class="page-item"><a class="page-link">2</a></li>
+                    <li class="page-item"><a class="page-link">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link">
+                            <span>&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 </div>
 
 @code {
 
-    private MainModel mainmodel { get; set; } = new MainModel();
+   
 
 }

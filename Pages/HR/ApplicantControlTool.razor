@@ -250,25 +250,6 @@
         _tempApplicant = null;
     }
 
-    private Dictionary<string, List<Job>> CatergorizeJobsToDepartment(List<Job> jobs)
-    {
-        var map = new Dictionary<string, List<Job>>();
-        foreach (var job in jobs)
-        {
-            if (!map.ContainsKey(job.Department))
-            {
-                var j = new List<Job>();
-                j.Add(job);
-                map.Add(job.Department, j);
-            }
-            else
-            {
-                map[job.Department].Add(job);
-            }
-        }
-        return map;
-    }
-
 
     private void ChangePhase(Applicant applicant, ChangeEventArgs e)
     {

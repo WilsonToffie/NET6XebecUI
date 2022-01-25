@@ -119,21 +119,6 @@
     }
 </style>
 
-<div hidden="@mainmodel.HRIsHidden">
-
-    <br />
-    <h2 class="text-center" style="height: 5vh; color: #003340; width: 100%">Phase Control Tool</h2>
-    <br />
-
-</div>
-<div hidden="@mainmodel.DeveloperIsHidden">
-    <h3>You are not authorised to view this page.</h3>
-</div>
-<div hidden="@mainmodel.ApplicantIsHidden">
-    <h3>You are not authorised to view this page.</h3>
-</div>
-
-
 <div class="container">
     <div class="select-phase row overflow-auto">
 
@@ -154,18 +139,22 @@
 
                 @foreach (var phase in phases)
                 {
-    <tr>
-        <td style="font-weight: bold" @onclick="() => AddPhase(phase)">@phase.description</td>
-        <td class="close-phase" @onclick="() => DeletePhase(phase)">&times;</td>
-    </tr>
+                    <tr>
+                        <td style="font-weight: bold" @onclick="() => AddPhase(phase)">@phase.description</td>
+                        <td class="close-phase" @onclick="() => DeletePhase(phase)">&times;</td>
+                    </tr>
                     @foreach (var subphase in subphases)
                     {
                         @if (phase.id == subphase.applicationPhaseId)
                         {
-    <tr>
-        <td style="font-weight: bold" @onclick="() => AddSubPhase(phase,subphase)">@subphase.description</td>
-        <td class="close-phase" @onclick="() => DeleteSubPhase(subphase)">&times;</td>
-    </tr>}}}
+                            <tr>
+                                <td style="font-weight: bold" @onclick="() => AddSubPhase(phase,subphase)">@subphase.description</td>
+                                <td class="close-phase" @onclick="() => DeleteSubPhase(subphase)">&times;</td>
+                            </tr>
+                        }
+                    
+                    }
+                }
 
             </tbody>
 
@@ -174,9 +163,6 @@
             <button @onclick="ToggleModalSubmitPhase" class="button-content">Add Phase</button>
         </div>
     </div>
-
-
-
 
     <div class="phase-order row overflow-auto">
 
@@ -196,228 +182,224 @@
 
                 @foreach (var phase in phasesAdded)
                 {
-    <tr class="align-text-top">
-    <tr>
-        <td class="text-left" style="font-weight: bold">@phase.description</td>
-    </tr>
-    @foreach (var subphase in SubPhasesAdded)
-    {
-        @if (phase.id == subphase.applicationPhaseId)
-        {
-<tr>
-    <td style="font-weight: bold">@subphase.description</td>
-    <td><button type="button" @onclick="() => DeletePhaseOrderSubPhase(subphase)" class="button-content" btn>Remove</button></td>
-    @if (subphase.description.ToLower() == "developer interview")
-    {
-<td>@developerAssigned</td>}
-</tr>
-}
-    }
+                    <tr class="align-text-top">
+                        <tr>
+                            <td class="text-left" style="font-weight: bold">@phase.description</td>
+                        </tr>
+                        @foreach (var subphase in SubPhasesAdded)
+                        {
+                            @if (phase.id == subphase.applicationPhaseId)
+                            {
+                                <tr>
+                                    <td style="font-weight: bold">@subphase.description</td>
+                                    <td><button type="button" @onclick="() => DeletePhaseOrderSubPhase(subphase)" class="button-content" btn>Remove</button></td>
+                                    @if (subphase.description.ToLower() == "developer interview")
+                                    {
+                                        <td>@developerAssigned</td>
+                                    }
+                                </tr>
+                            }
+                        }
 
-<td><button type="button" @onclick="() => DeletePhaseOrderPhase(phase)" class="button-content" btn>Remove</button></td>
-                    </tr>}
-
-                </tbody>
-
-            </table>
-
-            <div class="button">
-                <a href="https://localhost:44364/"><button class="button-content">Add Phase</button></a>
-            </div>
-        </div>
-
-
-
-    </div>
-
-    @if (showModalSubmitPhase)
-    {
-<div class="modalbox">
-    <div class="modal-content">
-        <span class="close" @onclick="ToggleModalSubmitPhase">&times;</span>
-        <p>Phase:</p>
-        <input type="text" @bind="@phaseValue.description" />
-        <div class="button">
-            <button type="submit" @onclick="AddPhase" class="button-content">Submit Phase</button>
-        </div>
-    </div>
-</div>}
-
-
-    @if (showModalAssign)
-    {
-<div class="modalbox">
-    <div class="modal-content">
-
-        <span class="close" @onclick="ToggleModalAssign">&times;</span>
-
-        <table class="table-bordered position-relative" style="background-color: white; padding-right: 10px; margin-top: 20px">
-            <thead style="background-color: #003340">
-                <tr>
-                    <td style="color: white">Select Developer</td>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                @foreach (var developer in developers)
-                {
-@if (developer.role == "Developer")
-{
-    <tr>
-        <td @onclick="() => AssignDeveloper(developer)">@developer.name</td>
-    </tr>
-}}
+                        <td><button type="button" @onclick="() => DeletePhaseOrderPhase(phase)" class="button-content" btn>Remove</button></td>
+                    </tr>
+                }
 
             </tbody>
 
         </table>
-        @*<div class="button">
-                <button @onclick="ToggleModalAssign" class="button-content">Assign</button>
-            </div>*@
+
+        <div class="button">
+            <a href="https://localhost:44364/"><button class="button-content">Add Phase</button></a>
+        </div>
     </div>
-</div>}
+ </div>
 
-
-
-
-
-    @code
+@if (showModalSubmitPhase)
 {
-        private IList<Phase> phases = new List<Phase>();
-        private IList<SubPhase> subphases = new List<SubPhase>();
-        private IList<SubPhase> SubPhasesAdded = new List<SubPhase>();
-        private IList<Phase> phasesAdded = new List<Phase>();
-        private IList<AppUser> developers = new List<AppUser>();
-        Phase phaseValue = new Phase();
+    <div class="modalbox">
+        <div class="modal-content">
+            <span class="close" @onclick="ToggleModalSubmitPhase">&times;</span>
+            <p>Phase:</p>
+            <input type="text" @bind="@phaseValue.description" />
+            <div class="button">
+                <button type="submit" @onclick="AddPhase" class="button-content">Submit Phase</button>
+            </div>
+        </div>
+    </div>
+}
 
-        private string developerAssigned = "";
+@if (showModalAssign)
+{
+    <div class="modalbox">
+        <div class="modal-content">
 
-        private MainModel mainmodel { get; set; } = new MainModel();
+            <span class="close" @onclick="ToggleModalAssign">&times;</span>
 
-        private bool showModalSubmitPhase = false;
-        private bool showModalAssign = false;
+            <table class="table-bordered position-relative" style="background-color: white; padding-right: 10px; margin-top: 20px">
+                <thead style="background-color: #003340">
+                    <tr>
+                        <td style="color: white">Select Developer</td>
+                    </tr>
+                </thead>
 
-        protected override async Task OnInitializedAsync()
-        {
-            phases = await httpClient.GetFromJsonAsync<List<Phase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
-            subphases = await httpClient.GetFromJsonAsync<List<SubPhase>>("https://xebecapi.azurewebsites.net/api/applicationsubphase");
-            developers = await httpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
-        }
+                <tbody>
 
-        private void ToggleModalSubmitPhase()
-        {
-            showModalSubmitPhase = !showModalSubmitPhase;
-        }
+                    @foreach (var developer in developers)
+                    {
+                        @if (developer.role == "Developer")
+                        {
+                            <tr>
+                                <td @onclick="() => AssignDeveloper(developer)">@developer.name</td>
+                            </tr>
+                        }
+                    }
 
-        private void ToggleModalAssign()
-        {
-            showModalAssign = !showModalAssign;
-        }
+                </tbody>
 
-        private async Task DeletePhase(Phase phase)
-        {
-            await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/applicationphase/{phase.id}");
-            phases = await httpClient.GetFromJsonAsync<List<Phase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
+            </table>
+            @*<div class="button">
+                    <button @onclick="ToggleModalAssign" class="button-content">Assign</button>
+                </div>*@
+        </div>
+    </div>
+}
+@code
+{
+    private IList<Phase> phases = new List<Phase>();
+    private IList<SubPhase> subphases = new List<SubPhase>();
+    private IList<SubPhase> SubPhasesAdded = new List<SubPhase>();
+    private IList<Phase> phasesAdded = new List<Phase>();
+    private IList<AppUser> developers = new List<AppUser>();
+    Phase phaseValue = new Phase();
 
-            await jsr.InvokeVoidAsync("alert", "Deleted!");
-        }
+    private string developerAssigned = "";
 
-        private async Task DeleteSubPhase(SubPhase subPhase)
-        {
-            await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/applicationsubphase/{subPhase.id}");
-            subphases = await httpClient.GetFromJsonAsync<List<SubPhase>>("https://xebecapi.azurewebsites.net/api/applicationsubphase");
+    private MainModel mainmodel { get; set; } = new MainModel();
 
-            await jsr.InvokeVoidAsync("alert", "Deleted!");
-        }
+    private bool showModalSubmitPhase = false;
+    private bool showModalAssign = false;
 
-        private async Task AddPhase()
-        {
-
-            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/applicationphase", phaseValue);
-
-            phases = await httpClient.GetFromJsonAsync<List<Phase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
-
-            showModalSubmitPhase = !showModalSubmitPhase;
-        }
-
-        private void AddPhase(Phase phase)
-        {
-            if (!phasesAdded.Contains(phase))
-            {
-                phasesAdded.Add(phase);
-            }
-
-        }
-
-        private void AddSubPhase(Phase phase, SubPhase subPhase)
-        {
-            if (!phasesAdded.Contains(phase) && !SubPhasesAdded.Contains(subPhase))
-            {
-                phasesAdded.Add(phase);
-                SubPhasesAdded.Add(subPhase);
-            }
-            else if (!SubPhasesAdded.Contains(subPhase))
-            {
-                SubPhasesAdded.Add(subPhase);
-            }
-
-            if (subPhase.description.ToLower() == "developer interview")
-            {
-                ToggleModalAssign();
-            }
-
-        }
-
-        private void AssignDeveloper(AppUser developer)
-        {
-            developerAssigned = developer.name;
-        }
-
-        private void DeletePhaseOrderPhase(Phase phase)
-        {
-            phasesAdded.Remove(phase);
-        }
-
-        private void DeletePhaseOrderSubPhase(SubPhase subPhase)
-        {
-            SubPhasesAdded.Remove(subPhase);
-        }
-
-        class Phase
-        {
-            public int id { get; set; }
-
-            public string description { get; set; }
-        }
-
-        class SubPhase
-        {
-            public int id { get; set; }
-
-            public int applicationPhaseId { get; set; }
-
-            public string description { get; set; }
-        }
-
-        class AppUser
-        {
-            public int id { get; set; }
-
-            public string email { get; set; }
-
-            public string role { get; set; }
-
-            public string passwordhash { get; set; }
-
-            public string name { get; set; }
-
-            public string surname { get; set; }
-
-            public string key { get; set; }
-
-            public bool registered { get; set; }
-
-            public int linkVisits { get; set; }
-        }
+    protected override async Task OnInitializedAsync()
+    {
+        phases = await httpClient.GetFromJsonAsync<List<Phase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
+        subphases = await httpClient.GetFromJsonAsync<List<SubPhase>>("https://xebecapi.azurewebsites.net/api/applicationsubphase");
+        developers = await httpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
     }
+
+    private void ToggleModalSubmitPhase()
+    {
+        showModalSubmitPhase = !showModalSubmitPhase;
+    }
+
+    private void ToggleModalAssign()
+    {
+        showModalAssign = !showModalAssign;
+    }
+
+    private async Task DeletePhase(Phase phase)
+    {
+        await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/applicationphase/{phase.id}");
+        phases = await httpClient.GetFromJsonAsync<List<Phase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
+
+        await jsr.InvokeVoidAsync("alert", "Deleted!");
+    }
+
+    private async Task DeleteSubPhase(SubPhase subPhase)
+    {
+        await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/applicationsubphase/{subPhase.id}");
+        subphases = await httpClient.GetFromJsonAsync<List<SubPhase>>("https://xebecapi.azurewebsites.net/api/applicationsubphase");
+
+        await jsr.InvokeVoidAsync("alert", "Deleted!");
+    }
+
+    private async Task AddPhase()
+    {
+
+        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/applicationphase", phaseValue);
+
+        phases = await httpClient.GetFromJsonAsync<List<Phase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
+
+        showModalSubmitPhase = !showModalSubmitPhase;
+    }
+
+    private void AddPhase(Phase phase)
+    {
+        if (!phasesAdded.Contains(phase))
+        {
+            phasesAdded.Add(phase);
+        }
+
+    }
+
+    private void AddSubPhase(Phase phase, SubPhase subPhase)
+    {
+        if (!phasesAdded.Contains(phase) && !SubPhasesAdded.Contains(subPhase))
+        {
+            phasesAdded.Add(phase);
+            SubPhasesAdded.Add(subPhase);
+        }
+        else if (!SubPhasesAdded.Contains(subPhase))
+        {
+            SubPhasesAdded.Add(subPhase);
+        }
+
+        if (subPhase.description.ToLower() == "developer interview")
+        {
+            ToggleModalAssign();
+        }
+
+    }
+
+    private void AssignDeveloper(AppUser developer)
+    {
+        developerAssigned = developer.name;
+    }
+
+    private void DeletePhaseOrderPhase(Phase phase)
+    {
+        phasesAdded.Remove(phase);
+    }
+
+    private void DeletePhaseOrderSubPhase(SubPhase subPhase)
+    {
+        SubPhasesAdded.Remove(subPhase);
+    }
+
+    class Phase
+    {
+        public int id { get; set; }
+
+        public string description { get; set; }
+    }
+
+    class SubPhase
+    {
+        public int id { get; set; }
+
+        public int applicationPhaseId { get; set; }
+
+        public string description { get; set; }
+    }
+
+    class AppUser
+    {
+        public int id { get; set; }
+
+        public string email { get; set; }
+
+        public string role { get; set; }
+
+        public string passwordhash { get; set; }
+
+        public string name { get; set; }
+
+        public string surname { get; set; }
+
+        public string key { get; set; }
+
+        public bool registered { get; set; }
+
+        public int linkVisits { get; set; }
+    }
+}

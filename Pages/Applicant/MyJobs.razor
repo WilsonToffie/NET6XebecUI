@@ -194,10 +194,6 @@
     }
 </style>
 <div class="main-wrapper">
-    <header class="main-wrapper-child heading">
-        <h1>My Jobs</h1>
-        <small>This page shows a detailed history of the jobs you have applied for.</small>
-    </header>
     <div class="main-wrapper-child search-panel d-flex justify-content-end align-content-center">
         <i class="fas fa-search"></i><input placeholder="search for job">
     </div>
@@ -277,7 +273,6 @@
 </div>
 
 @code {
-    private MainModel mainmodel { get; set; } = new MainModel();
 
     List<MyJob> AllJobs;
     List<MyJob> Applications;

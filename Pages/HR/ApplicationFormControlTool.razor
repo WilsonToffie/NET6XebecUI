@@ -153,27 +153,105 @@
 
 </style>
 
+<div class="wrapper">
+    <div class="question-select scrollbar-winter-neva">
+        <div class="question-area">
+            <table class="table">
+                @if (Questions == null)
+                {
+                    <div>Loading...</div>
+                }
+                else
+                {
 
-<div hidden="@mainmodel.HRIsHidden">
-
-    <div class="page-title">
-        <h3 style="color: #044E5B;">Application Form Control</h3>
+                <thead style="background-color: #003340; color: white;">
+                    <tr>
+                        <th style="width: 80%">Select Questions</th>
+                        <th style="background-color: #003340; width: 20%;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Questions != null)
+                    {
+                        @foreach (var question in Questions)
+                        {
+                            <tr>
+                                <td class="question-description">@question.questionDescription</td>
+                                <td style="max-width: 20%">
+                                    <button class="btn btn-small" style="background-color: #00BCAE; color: white;" @onclick="() => AddToForm(question.questionDescription)">Add</button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+                }
+            </table>
+        </div>
+        <div class="question-button">
+            <button class="btn" style="background-color: #00BCAE; color:white;" @onclick="OpenDeletePopup">Delete questions</button>
+            <button class="btn" style="background-color: #00BCAE; color:white;" @onclick="OpenAddPopup">Add question</button>
+        </div>
     </div>
 
-    <div class="wrapper">
-        <div class="question-select scrollbar-winter-neva">
-            <div class="question-area">
-                <table class="table">
-                    @if (Questions == null)
+    <div class="form-preview">
+        <div class="form-title">
+            <div style="font-size: 30px; color: #003340">Application Form</div>
+        </div>
+        <div class="form-questions">
+            <table class="table">
+                <tbody>
+                    @if (Questions != null)
                     {
-                        <div>Loading...</div>
+                        @foreach (var formquestion in FormQuestions)
+                        {
+                            <tr>
+                                <td class="form-question-description">
+                                    <div class="form-preview-question">
+                                        <h6 class="form-text text-muted" style="font-size: 14px;">@formquestion.question</h6>
+                                        <input type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="formquestion.answer">
+                                    </div>
+                                </td>
+                                <td style="width: 10%;">
+                                    <button class="btn-close" @onclick="() => DeleteFormQuestion(formquestion.question)"></button>
+                                </td>
+                            </tr>
+                        }
                     }
-                    else
-                    {
+                </tbody>
+            </table>
+        </div>
+        <div class="form-button">
+            <button class="btn" style="background-color: #00BCAE; color: white;" @onclick="CompileForm">Compile form</button>
+        </div>
+    </div>
 
+    @if (ShowAddPopup)
+    {
+        <div class="add-popup">
+            <div class="add-popup-header">
+                <h4 style="margin-left: 20px;">Add Question:</h4>
+                <button class="btn-close" style="margin-left: 57%" @onclick="CloseAddPopup"></button>
+            </div>
+            <div class="add-popup-body">
+                <textarea style="width: 80%; border: 2px solid grey" @bind="tempQuestion.questionDescription"></textarea>
+            </div>
+            <div class="add-popup-button">
+                <button class="btn" style="background-color: #00BCAE; color:white;" @onclick="AddQuestion">Submit question</button>
+            </div>
+        </div>
+    }
+    @if (ShowDeletePopup)
+    {
+        <div class="delete-popup">
+            <div class="delete-popup-header">
+                <h4 style="margin-left: 20px;">Delete:</h4>
+                <button class="btn-close" style="margin-left: 57%" @onclick="CloseDeletePopup"></button>
+            </div>
+            <div class="delete-popup-body">
+                <table class="table">
                     <thead style="background-color: #003340; color: white;">
                         <tr>
-                            <th style="width: 80%">Select Questions</th>
+                            <th style="width: 90%">Questions</th>
                             <th style="background-color: #003340; width: 20%;"></th>
                         </tr>
                     </thead>
@@ -184,42 +262,8 @@
                             {
                                 <tr>
                                     <td class="question-description">@question.questionDescription</td>
-                                    <td style="max-width: 20%">
-                                        <button class="btn btn-small" style="background-color: #00BCAE; color: white;" @onclick="() => AddToForm(question.questionDescription)">Add</button>
-                                    </td>
-                                </tr>
-                            }
-                        }
-                    </tbody>
-                    }
-                </table>
-            </div>
-            <div class="question-button">
-                <button class="btn" style="background-color: #00BCAE; color:white;" @onclick="OpenDeletePopup">Delete questions</button>
-                <button class="btn" style="background-color: #00BCAE; color:white;" @onclick="OpenAddPopup">Add question</button>
-            </div>
-        </div>
-
-        <div class="form-preview">
-            <div class="form-title">
-                <div style="font-size: 30px; color: #003340">Application Form</div>
-            </div>
-            <div class="form-questions">
-                <table class="table">
-                    <tbody>
-                        @if (Questions != null)
-                        {
-                            @foreach (var formquestion in FormQuestions)
-                            {
-                                <tr>
-                                    <td class="form-question-description">
-                                        <div class="form-preview-question">
-                                            <h6 class="form-text text-muted" style="font-size: 14px;">@formquestion.question</h6>
-                                            <input type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="formquestion.answer">
-                                        </div>
-                                    </td>
-                                    <td style="width: 10%;">
-                                        <button class="btn-close" @onclick="() => DeleteFormQuestion(formquestion.question)"></button>
+                                    <td style="max-width: 10%">
+                                        <button class="btn-close" @onclick="() => DeleteQuestion(question)"></button>
                                     </td>
                                 </tr>
                             }
@@ -227,76 +271,13 @@
                     </tbody>
                 </table>
             </div>
-            <div class="form-button">
-                <button class="btn" style="background-color: #00BCAE; color: white;" @onclick="CompileForm">Compile form</button>
-            </div>
         </div>
-
-        @if (ShowAddPopup)
-        {
-            <div class="add-popup">
-                <div class="add-popup-header">
-                    <h4 style="margin-left: 20px;">Add Question:</h4>
-                    <button class="btn-close" style="margin-left: 57%" @onclick="CloseAddPopup"></button>
-                </div>
-                <div class="add-popup-body">
-                    <textarea style="width: 80%; border: 2px solid grey" @bind="tempQuestion.questionDescription"></textarea>
-                </div>
-                <div class="add-popup-button">
-                    <button class="btn" style="background-color: #00BCAE; color:white;" @onclick="AddQuestion">Submit question</button>
-                </div>
-            </div>
-        }
-        @if (ShowDeletePopup)
-        {
-            <div class="delete-popup">
-                <div class="delete-popup-header">
-                    <h4 style="margin-left: 20px;">Delete:</h4>
-                    <button class="btn-close" style="margin-left: 57%" @onclick="CloseDeletePopup"></button>
-                </div>
-                <div class="delete-popup-body">
-                    <table class="table">
-                        <thead style="background-color: #003340; color: white;">
-                            <tr>
-                                <th style="width: 90%">Questions</th>
-                                <th style="background-color: #003340; width: 20%;"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Questions != null)
-                            {
-                                @foreach (var question in Questions)
-                                {
-                                    <tr>
-                                        <td class="question-description">@question.questionDescription</td>
-                                        <td style="max-width: 10%">
-                                            <button class="btn-close" @onclick="() => DeleteQuestion(question)"></button>
-                                        </td>
-                                    </tr>
-                                }
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        }
-    </div>
-
-
-</div>
-
-
-<div hidden="@mainmodel.DeveloperIsHidden" style="position:absolute">
-    <h3>You are not authorised to view this page.</h3>
-</div>
-<div hidden="@mainmodel.ApplicantIsHidden" style="position:absolute">
-    <h3>You are not authorised to view this page.</h3>
+    }
 </div>
 
 
 @code {
 
-    private MainModel mainmodel { get; set; } = new MainModel();
 
     List<CustomQuestion> Questions = null;
     List<FormQuestion> FormQuestions = new List<FormQuestion>();
@@ -319,9 +300,8 @@
         Jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
         Job tempJob = Jobs.LastOrDefault<Job>();
 
-        CurrentJobId = tempJob.Id;
-        CurrentJobDescription = tempJob.Description;
-
+        CurrentJobId = tempJob.id;
+        CurrentJobDescription = tempJob.description;
         //use parameter in future
     }
 
