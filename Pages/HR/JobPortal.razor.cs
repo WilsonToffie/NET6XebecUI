@@ -13,6 +13,7 @@ namespace XebecPortal.UI.Pages.HR
     {
         private bool changeForm;
         private string searchJob;
+
         private List<int> pageNum = new List<int>();
         private IList<Job> jobList = new List<Job>();
         private IList<Job> jobListFilter = new List<Job>();
@@ -21,6 +22,7 @@ namespace XebecPortal.UI.Pages.HR
         private IList<MockDepartment> mockDepartments = new List<MockDepartment>();
         private IList<MockLocation> mockLocations = new List<MockLocation>();
         private IList<MockSocialMedia> mockSocialMedia = new List<MockSocialMedia>();
+
 
         protected override async Task OnInitializedAsync()
         {

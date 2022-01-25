@@ -1,4 +1,5 @@
 ﻿@page "/applicantjobportal"
+@inject NavigationManager navmanager;
 
 <style>
     .handPointer {
@@ -43,7 +44,7 @@
         }
 </style>
 
-<div class="container">
+<div class="container" hidden="@jobPortalIsHidden">
 
     <!--Search-Box-->
     <div class="row" style="height:5vh">
@@ -91,7 +92,7 @@
                                 <h3>Front-end Developer</h3>
                             </div>
                             <div class="col-6 p-2 d-flex justify-content-end">
-                                <button class="btn formButton">Apply</button>
+                                <button class="btn formButton" @onclick="GoToApplicationForm">Apply</button>
                             </div>
                             <div class="col-6 p-2">
                                 <h5 class="text-muted">1Nebula</h5>
@@ -144,8 +145,19 @@
     </div>
 </div>
 
+<div class="container" hidden="@applicationFormIsHidden">
+    <XebecPortal.UI.Pages.Applicant.ApplicationForm/>
+</div>
+
 @code {
 
-   
+    private bool jobPortalIsHidden = false;
+    private bool applicationFormIsHidden =true;
+
+    private void GoToApplicationForm()
+    {
+        applicationFormIsHidden = false;
+        jobPortalIsHidden = true;
+    }
 
 }
