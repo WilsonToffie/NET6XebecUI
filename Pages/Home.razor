@@ -1,4 +1,4 @@
-@page "/"
+@page "/home"
 @inject NavigationManager Navigation
 @layout EmptyLayout
 
@@ -18,7 +18,6 @@ body
     font-family: 'Open Sans', sans-serif;
     font-weight: 400;
     font-size: 16px;
-    line-height: 1.7;
     color: #777;
 }
 
@@ -34,16 +33,14 @@ body::-webkit-scrollbar-thumb {
     background-color: #a9baba;
 }
 
-.header
-{
-    height: 100vh;
-    background-image: linear-gradient(rgba(0, 51, 64, 0.8), rgba(4, 78, 91, 0.8)), url(/img/home_1.jpg);
-    background-size: cover;
-    background-position: top;
-    position: relative;
-    
-    @* clip-path: polygon(0 0, 100% 0, 100% 75%, 0 100%); *@
-}
+    .header {
+        height: 100vh;
+        background-image: linear-gradient(rgba(35,148,227,0.5),rgba(35,148,227,0.5)),url(/img/home_1.jpg);
+        background-size: contain;
+        background-position: center;
+        position: relative;
+        @* clip-path: polygon(0 0, 100% 0, 100% 75%, 0 100%); *@
+    }
 
 .logo-box
 {
@@ -76,8 +73,6 @@ body::-webkit-scrollbar-thumb {
     font-size: 60px;
     font-weight: 400;
     letter-spacing: 35px;
-   
-
     animation: moveInLeft 0.5s ease-in-out;
 
 }
@@ -289,7 +284,7 @@ body::-webkit-scrollbar-thumb {
 
         </h1>
 
-        <a href="/login" class="btn btn-white btn-animated">Explore</a>
+        <a href="/index" class="btn btn-white btn-animated">Explore</a>
     
     </div>
 

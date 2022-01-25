@@ -1,0 +1,653 @@
+﻿@page "/ind"
+@using XebecPortal.UI.Utils
+@inject IJSRuntime jsr
+@inject HttpClient httpClient
+
+@inject NavigationManager NavManager
+@inject State State
+@layout EmptyLayout
+
+<style>
+    .container-main {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+        background-color: #003340;
+        overflow: hidden;
+    }
+
+        .container-main:before {
+            content: '';
+            position: absolute;
+            width: 2000px;
+            height: 2000px;
+            border-radius: 50%;
+            /*background: linear-gradient(-45deg, #00BCAE, #44c1e6);*/
+            background-color: rgba(4,78,91,0.9);
+            top: -10%;
+            right: 48%;
+            transform: translateY(-50%);
+            z-index: 6;
+            transition: 1.8s ease-in-out;
+        }
+
+
+    .forms-container {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+    }
+
+
+    .signin-signup {
+        position: absolute;
+        left: 60%;
+        top: 19%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        background: black;
+        z-index: 5;
+        transition: 1s 0.7s ease-in-out;
+    }
+  form {
+    background-color: #003340;
+    border: 5px solid rgba(255,255,255,0.2);
+    box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    padding: 50px 35px;
+    position: absolute;
+    }
+
+ form * {
+            font-family: sans-serif;
+            color: #ffffff;
+            letter-spacing: 1px;
+            outline: none;
+            border: none;
+        }
+
+        form h3 {
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1.3em;
+            text-align: center;
+        }
+
+    label {
+        display: block;
+        margin-top: 30px;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    input {
+        display: block;
+        height: 50px;
+        width: 100%;
+        background-color: rgba(255,255,255,0.07);
+        border-radius: 3px;
+        padding: 0 10px;
+        margin-top: 8px;
+        font-size: 14px;
+        font-weight: 300;
+    }
+
+    ::placeholder {
+        color: #e5e5e5;
+    }
+
+    button {
+        margin-top: 50px;
+        width: 100%;
+        background-color: #ffffff;
+        color: #080710;
+        padding: 15px 0;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .social {
+        margin-top: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        width: 310px;
+    }
+
+        .social div {
+            width: 40%;
+            padding: 5px;
+            border: 2px solid rgba(255,255,255,0.27);
+            color: #eaf0fb;
+            text-align: center;
+        }
+
+            .social div:hover {
+                background-color: rgba(255,255,255, 0.34);
+            }
+            .social div:hover, i{
+                color: #003340;
+            }
+
+        
+.navigate{ 
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 4px;
+    margin-top: 5px;
+}
+.navigate a{
+    text-decoration: none;
+    color: #fff;
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+}
+.navigate a:after{
+content: "•";
+color: #fff;
+text-align: center;
+border-bottom: 10px;
+}
+.navigate a:hover{
+    color:  rgba(47,79,79,0.68);
+}
+    .sign-in-form {
+        z-index: 2;
+    }
+
+    .sign-up-form {
+        z-index: 1;
+        opacity: 0;
+    }
+
+    .btn {
+        width: 150px;
+        height: 49px;
+        border: none;
+        outline: none;
+        border-radius: 49px;
+        color: #fff;
+        cursor: pointer;
+        background-color: #44c1e6; /**/
+        
+        text-transform: uppercase;
+        font-weight: 600;
+        margin: 10px 0;
+        transition: 0.5s;
+    }
+
+        .btn:hover {
+            background-color: #00BCAE;
+        }
+
+
+   
+
+    form.sign-in-form {
+        z-index: 2;
+    }
+
+    form.sign-up-form {
+        z-index: 1;
+        opacity: 0;
+    }
+
+
+
+    .panels-container {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .panel {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: space-around;
+        text-align: center;
+        z-index: 7;
+    }
+
+    .left-panel {
+        pointer-events: all;
+        padding: 3rem 17% 2rem 12%;
+    }
+
+    .right-panel {
+        pointer-events: none;
+        padding: 3rem 12% 2rem 17%;
+    }
+
+    .panel .content {
+        color: #fff;
+        transition: 0.9s 0.6s ease-in-out;
+    }
+
+    .panel h3 {
+        font-weight: 600;
+        font-size: 1.5rem;
+        line-height: 1;
+    }
+
+    .panel p {
+        font-size: 0.95rem;
+        padding: 0.7rem 0;
+    }
+
+    .btn.transparent {
+        margin: 0;
+        background: none;
+        border: 2px solid #fff;
+        width: 130px;
+        height: 41px;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    .image {
+        width: 100%;
+        transition: 1.1s 0.4s ease-in-out;
+    }
+
+    .right-panel .content,
+    .right-panel .image {
+        transform: translateX(800px);
+    }
+
+    /*ANIMATIONS*/
+    .container-main.sign-up-mode:before {
+        transform: translate(100%, -50%);
+        right: 52%;
+    }
+
+    .container-main.sign-up-mode .left-panel .image,
+    .container-main.sign-up-mode .left-panel .content {
+        transform: translateX(-800px);
+    }
+
+    .container-main.sign-up-mode .right-panel .content,
+    .container-main.sign-up-mode .right-panel .image {
+        transform: translateX(0px);
+    }
+
+    .container-main.sign-up-mode .left-panel {
+        pointer-events: none;
+    }
+
+    .container-main.sign-up-mode .right-panel {
+        pointer-events: all;
+    }
+
+    .container-main.sign-up-mode .signin-signup {
+        left: 25%;
+    }
+
+    .container-main.sign-up-mode form.sign-in-form {
+        z-index: 1;
+        opacity: 0;
+    }
+
+    .container-main.sign-up-mode form.sign-up-form{
+        transform: translateY(-10%);
+        z-index: 2;
+        opacity: 1;
+    }
+
+
+    /*RESPONSIVE*/
+
+    @@media (max-width: 870px) {
+        .container-main {
+            min-height: 800px;
+            height: 100vh;
+        }
+
+        .container-main::before {
+            width: 1500px;
+            height: 1500px;
+            left: 30%;
+            bottom: 68%;
+            transform: translateX(-50%);
+            right: initial;
+            top: initial;
+            transition: 2s ease-in-out;
+        }
+
+        .signin-signup {
+            width: 100%;
+            left: 50%;
+            top: 30%;
+            transform: translate(-33%, -100%);
+            transition: 1s 0.8s ease-in-out;
+        }
+
+
+        .panels-container {
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr 2fr 1fr;
+        }
+
+        .panel {
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            padding: 2.5rem 8%;
+        }
+
+        .panel .content {
+            width: 100%;
+            height: 20%;
+            transition: 0.9s 0.8s ease-in-out;
+        }
+
+        .image-content {
+            width: 100%;
+            height: 70%;
+            margin-bottom: 10%;
+            transition: 0.9s 0.8s ease-in-out;
+        }
+
+        .panel p {
+            font-size: 0.7rem;
+            padding: 0.5rem 0;
+        }
+
+        .panel h3 {
+            font-size: 1.2rem;
+        }
+
+        .btn.transparent {
+            width: 110px;
+            height: 35px;
+            font-size: 0.7rem;
+        }
+
+        .image {
+            width: 100%;
+            height: 100%;
+        }
+
+        .left-panel {
+            grid-row: 1 / 2;
+        }
+
+        .right-panel {
+            grid-row: 3/4;
+        }
+
+        .right-panel .content,
+        .right-panel .image {
+            transform: translateY(300px);
+        }
+
+        .container-main.sign-up-mode:before {
+            transform: translate(-50%, 100%);
+            bottom: 32%;
+            right: initial;
+        }
+
+        .container-main.sign-up-mode .left-panel .image,
+        .container-main.sign-up-mode .left-panel .content {
+            transform: translateY(-300px);
+        }
+
+        .container-main.sign-up-mode .signin-signup {
+            top: 5%;
+            transform: translate(-50%, 0);
+            left: 50%;
+        }
+
+    }
+
+    @@media (max-width: 570px) {
+        form {
+            padding: 0 1.5rem;
+        }
+
+        .image {
+            display: none;
+        }
+
+        .panel .content {
+            padding: 0.5rem 1rem;
+        }
+
+        .container-main::before {
+            bottom: 72%;
+            left: 50%;
+        }
+
+        .container-main.sign-up-mode::before {
+            bottom: 28%;
+            left: 50%;
+        }
+
+    }
+
+  </style>
+
+
+<div class="container-main">
+
+    <div class="forms-container">
+
+        <div class="signin-signup">
+
+            <!-- sign in -->
+            <EditForm Model="user" OnValidSubmit="OnValidLogin" action="" class="sign-in-form">
+                <DataAnnotationsValidator/>
+                <ValidationSummary/>
+
+                <p>@LoginMessage</p>
+
+                <h3>Login Here</h3>
+
+                <label for="username">Email</label>
+                <input type="text" placeholder="example@@exam.com" id="username">
+
+                <label for="login-password">Password</label>
+                <input type="password" placeholder="**************" id="login-password">
+
+                <button>Log In</button>
+                <div class="social">
+                    <div class="go">
+                        <i class="fab fa-google"></i>
+                    </div>
+                    <div class="fb">
+                        <i class="fab fa-microsoft"></i>
+                    </div>
+                </div>
+                <div class="navigate">
+                    <a href="/hrapplicantcontroltool">HR Admin</a>
+                    <a href="/applicantjobportal">Candidate</a>
+                    <a href="/developerapplicantcontroltool">Recruitment</a>
+                </div>
+            </EditForm>
+
+            <!-- sign up -->
+            <EditForm Model="reg" OnValidSubmit="OnValidReg" action="" class="sign-up-form">
+                <DataAnnotationsValidator/>
+                <ValidationSummary/>
+
+                <p>@RegisterMessage</p>
+
+                <h3>Register Here</h3>
+
+                <label for="username">Email</label>
+                <input type="text" placeholder="example@@exam.com" id="email">
+
+                <label for="signup-password">Password</label>
+                <input type="password" placeholder="**********" id="signup-password">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" placeholder="*********" id="confirm-password">
+                <button>Register</button>
+                <div class="social">
+                    <div class="go">
+                        <i class="fab fa-google"></i>
+                    </div>
+                    <div class="fb">
+                        <i class="fab fa-microsoft"></i>
+                    </div>
+                </div>
+                <div class="navigate">
+                    <a href="/hrapplicantcontroltool">HR Admin</a>
+                    <a href="/applicantjobportal">Candidate</a>
+                    <a href="/developerapplicantcontroltool">Recruitment</a>
+                </div>
+            </EditForm>
+
+        </div>
+
+    </div>
+
+
+    <div class="panels-container">
+
+        <div class="panel left-panel">
+
+            <div class="content">
+                <h3>New here?</h3>
+                <p>Register, Apply, Get Hired</p>
+                <button class="btn transparent btn-new" id="sign-up-btn">Register</button>
+            </div>
+
+            <div class="image-content">
+                <img src="img/login-phone3.svg" alt="" class="image">
+            </div>
+            
+        </div>
+
+        <div class="panel right-panel">
+
+            <div class="content">
+                <h3>One of us?</h3>
+                <p>We connect thoroughly vetted candidates to suitable organizations</p>
+                <button class="btn transparent btn-new" id="sign-in-btn">Sign in</button>
+            </div>
+            <img src="img/login-grey.svg" alt="" class="image">
+        </div>
+    </div>
+</div>
+
+@code {
+
+    /*login specific*/
+    LoginModel user = new LoginModel();
+    bool IsSuccessful = false;
+    bool isDisabledLogin = false;
+    string LoginMessage = string.Empty;
+
+
+    /*register specific*/
+    RegisterModel reg = new RegisterModel();
+    string RegisterMessage = string.Empty;
+    string RegisterLogin = string.Empty;
+    bool isDisabledRegsiter = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            await jsr.InvokeVoidAsync("initializeLogin");
+
+        reg.Role = "HRAdmin";
+    }
+
+    //login
+
+    private async Task OnValidLogin()
+    {
+        isDisabledLogin = true;
+        using (var msg = await httpClient.PostAsJsonAsync<LoginModel>("/api/auth/login", user,
+            System.Threading.CancellationToken.None))
+        {
+            if (msg.IsSuccessStatusCode)
+            {
+                LoginResult result = await msg.Content.ReadFromJsonAsync<LoginResult>();
+                LoginMessage = result.Message;
+                isDisabledLogin = false;
+                if (result.Success)
+                {
+                    State.Id = result.Id;
+                    State.UserEmail = result.Email;
+                    State.Role = result.Role;
+
+                    await jsr.InvokeVoidAsync("localStorage.setItem", "user",
+                        $"{result.Email};{result.Role};{result.JwtBearer};{result.Id}").ConfigureAwait(false);
+
+                    LoginHelper loginHelper = new LoginHelper();
+                    loginHelper.TimeDateLogin = DateTime.Now;
+                    loginHelper.TimeDateLogOut = DateTime.Now;
+                    loginHelper.AppUserId = result.Id;
+                    await httpClient.PostAsJsonAsync("/api/LoginHelper", loginHelper);
+
+                    NavManager.NavigateTo("/profile_");
+                }
+            }
+        }
+    }
+
+
+    //register
+    private async Task OnValidReg()
+    {
+    //TODO: Check for duplicate emails in db first before registering new account
+
+        isDisabledRegsiter = true;
+        using (var msg = await httpClient.PostAsJsonAsync<RegisterModel>("/api/auth/register", reg,
+            System.Threading.CancellationToken.None))
+        {
+            if (msg.IsSuccessStatusCode)
+            {
+                LoginResult result = await msg.Content.ReadFromJsonAsync<LoginResult>();
+                RegisterMessage = result.Message;
+                if (result.Success)
+                {
+                    RegisterHelper registerHelper = new RegisterHelper();
+                    registerHelper.TimeDateOfRegistration = DateTime.Now;
+                    registerHelper.AppUserId = result.AppUserId;
+                    await httpClient.PostAsJsonAsync("/api/RegisterHelper", registerHelper);
+
+                    RegisterMessage += " Please Sign In to continue.";
+                    @* RegisterLogin = "Click here to LOGIN."; *@
+                }
+                else
+                    isDisabledRegsiter = false;
+            }
+        }
+    }
+
+    /*OAuth*/
+
+    private void GoogleSignIn()
+    {
+        NavManager.NavigateTo("api/ThirdPartyUser/GoogleSignIn", true);
+    }
+
+    private void GitHubSignIn()
+    {
+        NavManager.NavigateTo("api/ThirdPartyUser/GitHubSignIn", true);
+    }
+
+    private void TwitterSignIn()
+    {
+        NavManager.NavigateTo("api/ThirdPartyUser/TwitterSignIn", true);
+    }
+
+    private void LinkedInSignIn()
+    {
+        NavManager.NavigateTo("api/ThirdPartyUser/LinkedInSignIn", true);
+    }
+
+}

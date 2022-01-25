@@ -1,0 +1,1313 @@
+﻿@page "/"
+@inject NavigationManager navmanager
+@layout EmptyLayout
+@inject HttpClient HttpClient;
+@using System.Linq;
+@using XebecPortal.UI.Shared.Models;
+
+<style>
+
+    @@font-face {
+        src: url(/fonts/BebasNeue-Regular.ttf);
+        font-family: bebas;
+    }
+
+    @@font-face {
+        src: url(/fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf);
+        font-family: opensans-italic;
+    }
+
+    @@font-face {
+        src: url(/fonts/OpenSans-VariableFont_wdth,wght.ttf);
+        font-family: opensans-variable;
+    }
+
+    @@font-face {
+        src: url(/fonts/OpenSansCondensed-Bold.ttf);
+        font-family: opensans-condensed-bold;
+    }
+
+    @@font-face {
+        src: url(/fonts/OpenSansCondensed-Light.ttf);
+        font-family: opensans-condensed-light;
+    }
+
+    @@font-face {
+        src: url(/fonts/OpenSansCondensed-LightItalic.ttf);
+        font-family: opensans-condensed-light-italic;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .underlay {
+        background-image: linear-gradient(rgba(0, 188, 174,0.05),rgba(0, 188, 174,0.05)),url(/Img/background.svg);
+        height: 100vh;
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center;
+        position: fixed;
+        z-index: -2;
+        width: 100%;
+        top: 0;
+        overflow-y: scroll;
+    }
+
+        .underlay::-webkit-scrollbar {
+            background-color: transparent;
+            width: 1vw;
+        }
+
+        .underlay::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 188, 174,0.8);
+            border-radius: 1em
+        }
+
+    .overlay-nav {
+        position: fixed;
+        top: 0;
+        z-index: 2;
+        height: 15vh;
+        padding-top: 5vh;
+        width: 98vw;
+        text-align: center;
+        margin-left: 1vw;
+    }
+
+    .nav-buttons {
+        width: 100%;
+        height: inherit;
+        background-color: transparent;
+        border: none;
+        border-radius: 1em;
+        color: rgba(0, 188, 174,1);
+        font-size: 1em;
+        font-weight: 900;
+        font-family: opensans-condensed-light;
+    }
+
+        .nav-buttons:hover {
+            width: 100%;
+            height: inherit;
+            background-color: rgba(0, 188, 174,1);
+            border: none;
+            border-radius: 1em;
+            color: white;
+            font-family: opensans-condensed-light;
+            font-size: 1em;
+        }
+
+    .overlay-home {
+        top: 0;
+        z-index: 0;
+        height: 100vh;
+        width: 100%;
+    }
+
+    .overlay-services {
+        z-index: 0;
+        top: 0;
+        height: 115vh;
+        width: 100%;
+        display: flex;
+    }
+
+    .overlay-login {
+        z-index: 0;
+        top: 0;
+        height: 115vh;
+        width: 100%;
+        background-color: rgb(255,255,255,0.4);
+    }
+
+    .overlay-register {
+        z-index: 0;
+        height: 115vh;
+        top: 0;
+        width: 100%;
+        background-color: rgb(255,255,255,0.4);
+    }
+
+    .overlay-reviews {
+        z-index: 0;
+        height: 115vh;
+        top: 0;
+        width: 100%;
+        background-color: white;
+    }
+
+    .overlay-contact {
+        z-index: 0;
+        height: 115vh;
+        width: 100%;
+        top: 0;
+        background-color: black;
+    }
+
+    .xebec-left {
+        color: black;
+        font-size: 1em;
+        font-weight: 400;
+        height: 100%;
+    }
+
+    .xebec-right {
+        color: black;
+        font-size: 1em;
+        font-weight: 800;
+        height: 100%;
+    }
+
+    .home-left {
+        height: 100%;
+    }
+
+    .home-right {
+        height: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .home-left-block {
+        height: 25vh;
+        width: 80%;
+        margin-left: 10%;
+        margin-right: 10%;
+        margin-top: 35vh;
+        text-align: center;
+    }
+
+    .home-left-heading {
+        height: 10vh;
+        width: 80%;
+        margin: auto;
+        display: flex;
+        text-align: center;
+    }
+
+    .home-left-body {
+        height: 15vh;
+        width: 100%;
+        margin: auto;
+        color: rgb(0,0,0,0.6);
+        text-align: center;
+        font-family: bebas;
+        font-weight: 100;
+        font-size: 1.5em;
+    }
+
+    .home-xebec-left {
+        font-size: 3em;
+        color: rgba(0, 188, 174,1);
+        font-weight: 900;
+        font-family: opensans-condensed-bold;
+        text-align: center;
+        padding-right: 0.5em;
+        border-right: solid rgba(0, 188, 174,1) 0.1em;
+    }
+
+    .home-xebec-right {
+        font-size: 3em;
+        color: rgba(0, 188, 174,1);
+        font-weight: 800;
+        padding-left: 0.5em;
+        font-family: opensans-condensed-light;
+        text-align: center;
+        display: flex;
+    }
+
+    .home-image-container {
+        width: 30%;
+        height: 60vh;
+        margin-right: 2vw;
+        border-top-left-radius: 7em;
+        border-top-right-radius: 7em;
+    }
+
+    .image1 {
+        height: 50vh;
+        margin-top: 15vh;
+        border-top-left-radius: 7em;
+        border-top-right-radius: 7em;
+        background-image: linear-gradient(rgba(0, 188, 174,0.1),rgba(0, 188, 174,0.1)),url(/Img/c.jpg);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .image2 {
+        height: 50vh;
+        margin-top: 25vh;
+        border-top-left-radius: 7em;
+        border-top-right-radius: 7em;
+        background-image: linear-gradient(rgba(0, 188, 174,0.1),rgba(0, 188, 174,0.1)),url(/Img/a.jpg);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .image3 {
+        height: 50vh;
+        margin-top: 35vh;
+        border-top-left-radius: 7em;
+        border-top-right-radius: 7em;
+        background-image: linear-gradient(rgba(0, 188, 174,0.1),rgba(0, 188, 174,0.1)),url(/Img/d.jpg);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .home-image-label {
+        height: 10vh;
+        border-bottom-left-radius: 7em;
+        border-bottom-right-radius: 7em;
+        background-color: rgba(0,0,0,1);
+        text-align: center;
+        color: white;
+        font-weight: 700;
+        font-size: 0.8em;
+        line-height: 10vh;
+        font-family: bebas;
+    }
+
+    .services-carousel-container {
+        width: 100%;
+        height: 70vh;
+        margin-top: 15vh;
+    }
+
+    .services-container {
+        width: 100%;
+        height: 60vh;
+        background-size: cover;
+        display: flex;
+        background-position: center;
+    }
+
+    .services-label {
+        width: 100%;
+        height: 10vh;
+    }
+
+    .services-applicant {
+        width: 30%;
+        height: 60vh;
+        margin-left: 3%;
+        position: relative;
+    }
+
+    .services-developer {
+        width: 100%;
+        height: 60vh;
+        position: relative;
+    }
+
+    .services-top {
+        height: 20vh;
+        width: 100%;
+    }
+
+    .services-middle {
+        height: 10vh;
+        width: 100%;
+    }
+
+    .services-bottom {
+        height: auto;
+        width: 100%;
+        position: relative;
+        background-color: black;
+    }
+
+    .services-hr {
+        width: 20%;
+        height: 60vh;
+        position: relative;
+    }
+
+    .applicant-profile {
+        height: 12vh;
+        width: 20%;
+        position: absolute;
+        background-image: url(/Img/upload.svg);
+        background-size: cover;
+        background-position: center;
+        top: 10%;
+        left: 40%;
+    }
+
+    .applicant-job-portal {
+        height: 12vh;
+        width: 20%;
+        position: absolute;
+        background-image: url(/Img/search.svg);
+        background-size: cover;
+        background-position: center;
+        top: 10%;
+        left: 40%;
+    }
+
+    .applicant-my-jobs {
+        height: 12vh;
+        width: 20%;
+        position: absolute;
+        background-image: url(/Img/saved.svg);
+        background-size: cover;
+        background-position: center;
+        top: 10%;
+        left: 40%;
+    }
+
+    .services-label-h2 {
+        height: 10vh;
+        text-align: center;
+        color: black;
+        font-family: opensans-condensed-bold;
+        font-size: 2em;
+    }
+
+    .applicant-middle-text {
+        height: 10vh;
+        text-align: center;
+        color: black;
+        font-family: opensans-condensed-bold;
+        font-size: 1em;
+    }
+
+    .applicant-bottom-text {
+        height: 10vh;
+        text-align: center;
+        color: white;
+        font-family: opensans-condensed-light;
+        font-size: 1.5em;
+        padding-top: 1em;
+    }
+
+    .developer-tool {
+        height: 20vh;
+        width: 10%;
+        position: absolute;
+        background-image: url(/Img/checklist.svg);
+        background-size: cover;
+        background-position: center;
+        top: 0%;
+        left: 45%;
+    }
+
+    .hr-applicant-control {
+        height: 12vh;
+        width: 30%;
+        position: absolute;
+        background-image: url(/Img/checklist.svg);
+        background-size: cover;
+        background-position: center;
+        top: 10%;
+        left: 35%;
+    }
+
+    .hr-applicant-portal {
+        height: 12vh;
+        width: 30%;
+        position: absolute;
+        background-image: url(/Img/search.svg);
+        background-size: cover;
+        background-position: center;
+        top: 10%;
+        left: 35%;
+    }
+
+    .hr-candidate-recommender {
+        height: 12vh;
+        width: 30%;
+        position: absolute;
+        background-image: url(/Img/paper.svg);
+        background-size: cover;
+        background-position: center;
+        top: 10%;
+        left: 35%;
+    }
+
+    .hr-job-portal {
+        height: 12vh;
+        width: 30%;
+        position: absolute;
+        background-image: url(/Img/send.svg);
+        background-size: cover;
+        background-position: center;
+        top: 10%;
+        left: 35%;
+    }
+
+    .hr-data-analytics {
+        height: 12vh;
+        width: 30%;
+        position: absolute;
+        background-image: url(/Img/chart.svg);
+        background-size: cover;
+        background-position: center;
+        top: 10%;
+        left: 35%;
+    }
+
+    .hr-middle-text {
+        height: 10vh;
+        text-align: center;
+        color: black;
+        font-family: opensans-condensed-bold;
+        font-size: 1em;
+    }
+    .login-page {
+        height: 115vh;
+        width: 100%;
+    }
+    .login-left {
+        background-image: linear-gradient(rgba(0, 188, 174,0.2),rgba(0, 188, 174,0.2)),url(/Img/pexels1.jpg);
+        height: 115vh;
+        background-size: cover;
+        background-position: center;
+    }
+    .login-right{
+        height: 115vh;
+    }
+    .index-form-login {
+        width: 50%;
+        margin-top: 40%;
+        margin-left: 25%;
+        margin-right: 25%;
+        background-color: transparent;
+        box-shadow: rgba(0, 0, 0, 0.8) 0px 5px 15px;
+    }
+    .index-form-register {
+        width: 60%;
+        margin-top: 20%;
+        margin-left: 20%;
+        margin-right: 20%;
+        background-color: transparent;
+        box-shadow: rgba(0, 0, 0, 0.8) 0px 5px 15px;
+    }
+    .index-form-heading {
+        width: 100%;
+        padding-top: 4vh;
+        font-family: opensans-condensed-bold;
+        text-align: center;
+        opacity: 1;
+        border-radius: 0.5em;
+        margin-bottom: 5vh;
+    }
+
+    .index-form-heading-1 {
+        font-size: 3em;
+        font-weight: 800;
+        height: 5vh;
+        margin-bottom: 3vh;
+        color: black;
+    }
+
+    .index-form-heading-2 {
+        font-size: 1.5em;
+        font-weight: 700;
+        color: #666666;
+        height: 3vh;
+    }
+
+    .index-form-heading-3 {
+        font-size: 0.8em;
+        font-weight: 600;
+        color: #666666;
+        height: 5vh;
+    }
+
+    .index-form-group {
+        margin-bottom: 2vh;
+        width: 100%;
+        display: flex;
+    }
+
+    
+    input {
+        background-color: transparent;
+        width: 70%;
+        height: 7vh;
+        font-size: 1em;
+        border-bottom: solid 0.1em black;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        font-weight: 800;
+        color: black;
+        margin-left: 15%;
+        margin-right: 15%;
+        padding: 1em 1em 1em 1em;
+    }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+        }
+
+    ::placeholder {
+        color: rgb(0,0,0,0.6);
+        font-size: 1em;
+        font-weight: 900;
+    }
+
+    .forgotpassword {
+        color: rgba(0, 188, 174,1);
+        width: 80%;
+        margin-left: 10%;
+        margin-right: 10%;
+        text-align: right;
+        height: 3vh;
+        font-size: 0.8em;
+        font-weight: 800;
+        margin-bottom: 0;
+        padding-bottom: 0;
+        cursor: pointer;
+    }
+
+        .forgotpassword:hover {
+            color: rgba(0, 188, 174,1);
+            width: 80%;
+            margin-left: 10%;
+            margin-right: 10%;
+            text-align: right;
+            height: 3vh;
+            font-size: 1em;
+            font-weight: 800;
+            margin-bottom: 0;
+            padding-bottom: 0;
+            cursor: pointer;
+        }
+
+    .index-form-button {
+        background-color: rgba(0, 188, 174,1);
+        color: white;
+        width: 100%;
+        height: 7vh;
+        border: none;
+        text-align: center;
+        font-size: 1em;
+        font-weight: 700;
+        border: none;
+        margin-left: 0%;
+    }
+
+        .index-form-button:hover {
+            background-color: white;
+            width: 100%;
+            height: 7vh;
+            border: none;
+            text-align: center;
+            color: rgba(0, 188, 174,1);
+            font-size: 1em;
+            font-weight: 700;
+            border: none;
+            margin-left: 0%;
+        }
+
+    .index-form-or {
+        text-align: center;
+        height: 3vh;
+        margin: 0;
+        padding: 0;
+    }
+
+    .index-form-or-heading {
+        font-size: 1em;
+        color: #A7A9AB;
+        font-weight: 100;
+    }
+
+    .index-socialmedia-div {
+        color: white;
+        font-size: 1.5em;
+        width: 20%;
+        height: 5vh;
+        margin-top: 2vh;
+        margin-left: 14%;
+    }
+
+        .index-socialmedia-div:hover {
+            color: white;
+            font-size: 2.5em;
+            width: 20%;
+            height: 5vh;
+            margin-top: 0vh;
+            margin-left: 14%;
+        }
+
+
+    .index-form-checkbox {
+        width: 10%;
+        margin-left: 5%;
+        height: 5vh;
+        line-height: 5vh;
+    }
+
+    .index-form-checkbox-div {
+        display: flex;
+        height: 100%;
+        width: 30%;
+        margin-left: 3%;
+    }
+
+    .index-checkbox-label {
+        color: black;
+        font-weight: 800;
+        font-size: 0.8em;
+        width: 85%;
+        height: 5vh;
+        line-height: 1vh;
+        margin-left: 3%;
+    }
+    .register-page {
+        height: 115vh;
+        width: 100%;
+    }
+
+    .register-left {
+        background-image: linear-gradient(rgba(0, 188, 174,0.2),rgba(0, 188, 174,0.2)),url(/Img/pexels3.jpg);
+        height: 115vh;
+        background-size: cover;
+        background-position: center;
+    }
+    .register-right {
+        height: 115vh;
+    }
+</style>
+
+<div class="underlay">
+
+    <div class="row overlay-nav">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3"></div>
+        <div class="col-sm-1">
+            <input type="button" class="nav-buttons" value="HOME" />
+        </div>
+        <div class="col-sm-1">
+            <input type="button" class="nav-buttons" value="SERVICES" />
+        </div>
+        <div class="col-sm-1">
+            <input type="button" class="nav-buttons" value="LOGIN" />
+        </div>
+        <div class="col-sm-1">
+            <input type="button" class="nav-buttons" value="SIGN UP" />
+        </div>
+        <div class="col-sm-1">
+            <input type="button" class="nav-buttons" value="REVIEWS" />
+        </div>
+        <div class="col-sm-1">
+            <input type="button" class="nav-buttons" value="CONTACT" />
+        </div>
+    </div>
+
+    <div class="row overlay-home">
+        <div class="col-sm-4 home-left">
+            <div class="home-left-block">
+                <div class="home-left-heading" style="text-align:center; justify-content: center;">
+                    <h1 class="home-xebec-left">XE</h1>
+                    <h1 class="home-xebec-right">BEC</h1>
+                </div>
+                <div class="home-left-body">
+                    <p>We streamline the recruitment experience with analytical feedback in a unified space.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8 home-right">
+            <div class="home-image-container">
+                <div class="image1"></div>
+                <div class="home-image-label">APPLICANTS PORTAL</div>
+            </div>
+            <div class="home-image-container">
+                <div class="image2"></div>
+                <div class="home-image-label">DEVELOPERS PORTAL</div>
+            </div>
+            <div class="home-image-container">
+                <div class="image3"></div>
+                <div class="home-image-label">HUMAN RESOURCES PORTAL</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay-services" id="services">
+        <div class="services-carousel-container">
+            <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                    <li data-target="#myCarousel" data-slide-to="0" class="active" style="background-color: black;"></li>
+                    <li data-target="#myCarousel" data-slide-to="1" style="background-color: black;"></li>
+                    <li data-target="#myCarousel" data-slide-to="2" style="background-color: black;"></li>
+                </ol>
+
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner">
+                    <div class="item active">
+                        <div class="services-label">
+                            <h2 class="services-label-h2">Applicant Services</h2>
+                        </div>
+                        <div class="services-container">
+                            <div class="services-applicant">
+                                <div class="services-top">
+                                    <div class="applicant-profile"></div>
+                                </div>
+                                <div class="services-middle">
+                                    <h3 class="applicant-middle-text">APPLICATION PROFILE</h3>
+                                </div>
+                                <div class="services-bottom">
+
+                                </div>
+                            </div>
+                            <div class="services-applicant">
+                                <div class="services-top">
+                                    <div class="applicant-job-portal"></div>
+                                </div>
+                                <div class="services-middle">
+                                    <h3 class="applicant-middle-text">JOBS PORTAL</h3>
+                                </div>
+                                <div class="services-bottom">
+
+                                </div>
+                            </div>
+                            <div class="services-applicant">
+                                <div class="services-top">
+                                    <div class="applicant-my-jobs"></div>
+                                </div>
+                                <div class="services-middle">
+                                    <h3 class="applicant-middle-text">MY JOBS</h3>
+                                </div>
+                                <div class="services-bottom">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="services-label">
+                            <h2 class="services-label-h2">Developer Services</h2>
+                        </div>
+                        <div class="services-container">
+                            <div class="services-developer">
+                                <div class="services-top">
+                                    <div class="developer-tool"></div>
+                                </div>
+                                <div class="services-middle">
+                                    <h3 class="applicant-middle-text">APPLICANT CONTROL TOOL</h3>
+                                </div>
+                                <div class="services-bottom">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="services-label">
+                            <h2 class="services-label-h2">Human Resource Services</h2>
+                        </div>
+                        <div class="services-container">
+                            <div class="services-hr">
+                                <div class="services-top">
+                                    <div class="hr-applicant-portal"></div>
+                                </div>
+                                <div class="services-middle">
+                                    <h3 class="hr-middle-text">APPLICANT VIEWER</h3>
+                                </div>
+                                <div class="services-bottom">
+                                </div>
+                            </div>
+                            <div class="services-hr">
+                                <div class="services-top">
+                                    <div class="hr-applicant-control"></div>
+                                </div>
+                                <div class="services-middle">
+                                    <h3 class="hr-middle-text">APPLICANT CONTROL TOOL</h3>
+                                </div>
+                                <div class="services-bottom">
+
+                                </div>
+                            </div>
+                            <div class="services-hr">
+                                <div class="services-top">
+                                    <div class="hr-candidate-recommender"></div>
+                                </div>
+                                <div class="services-middle">
+                                    <h3 class="hr-middle-text">CANDIDATE RECOMMENDER</h3>
+                                </div>
+                                <div class="services-bottom">
+
+                                </div>
+                            </div>
+                            <div class="services-hr">
+                                <div class="services-top">
+                                    <div class="hr-job-portal"></div>
+                                </div>
+                                <div class="services-middle">
+                                    <h3 class="hr-middle-text">JOB PORTAL</h3>
+                                </div>
+                                <div class="services-bottom">
+
+                                </div>
+                            </div>
+                            <div class="services-hr">
+                                <div class="services-top">
+                                    <div class="hr-data-analytics"></div>
+                                </div>
+                                <div class="services-middle">
+                                    <h3 class="hr-middle-text">DATA ANALYTICS</h3>
+                                </div>
+                                <div class="services-bottom">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Left and right controls -->
+                <a class="left carousel-control" href="#myCarousel" data-slide="prev" style="background: none;">
+                    <span class="glyphicon glyphicon-chevron-left" style="color:rgba(0, 188, 174,1);"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#myCarousel" data-slide="next" style="background: none;">
+                    <span class="glyphicon glyphicon-chevron-right" style="color:rgba(0, 188, 174,1);"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay-login">
+        <div class="row login-page">
+            <div class="col-sm-6 login-left"></div>
+            <div class="col-sm-6 login-right">
+                <form class="index-form-login" hidden="@RightDisplayLoginIsHidden">
+                    <div class="form-group index-form-heading">
+                        <h1 class="index-form-heading-1">LOGIN</h1>
+                    </div>
+                    <div class="form-group index-form-group">
+                        <input type="email" required placeholder="Email address" @bind="@Email">
+                    </div>
+                    <div class="form-group index-form-group">
+                        <input type="password" placeholder="Password" @bind="@Password">
+                    </div>
+                    <div class="form-group index-form-group">
+                        <h1 class="forgotpassword">forgot password?</h1>
+                    </div>
+                    <div class="form-group index-form-or" hidden="@invalidEmailorPasswordMessageIsHidden">
+                        <h1 class="index-form-heading-3">incorrect credentials</h1>
+                    </div>
+                    <div class="form-group index-form-or" hidden="@notRegisteredMessageIsHidden">
+                        <h1 class="index-form-heading-3">you are not registered on xebec</h1>
+                    </div>
+                    <input type="button" class="index-form-button" @onclick="Login" value="Submit" />
+                </form>
+                <form class="index-form-login" hidden="@RightDisplayForgotPasswordIsHidden">
+                    <div class="form-group index-form-heading">
+                        <h1 class="index-form-heading-2">we will send you an email with a link to create your new password</h1>
+                    </div>
+                    <div class="form-group index-form-group">
+                        <input type="email" placeholder="email address" @bind="@Email">
+                    </div>
+                    <div class="form-group index-form-or" hidden="@invalidEmailorPasswordMessageIsHidden">
+                        <h1 class="index-form-heading-3">invalid email</h1>
+                    </div>
+                    <div class="form-group index-form-or" hidden="@validSubmitForgotPasswordMessageIsHidden">
+                        <h1 class="index-form-heading-3">check your email for a link from us</h1>
+                    </div>
+                    <input type="button" class="index-form-button" value="Submit"  />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay-register">
+         <div class="row login-page">
+            <div class="col-sm-6 register-left"></div>
+            <div class="col-sm-6 register-right">
+                <form class="index-form-register">
+                    <div class="form-group index-form-heading">
+                        <h1 class="index-form-heading-1">REGISTER</h1>
+                    </div>
+                    <div class="form-group index-form-group">
+                        <input type="text" placeholder="Name" @bind="@thisUser.Name">
+                    </div>
+                    <div class="form-group index-form-group">
+                        <input type="text" placeholder="Surname" @bind="@thisUser.Surname">
+                    </div>
+                    <div class="form-group index-form-group">
+                        <input type="email" placeholder="Email address" @bind="@Email">
+                    </div>
+                    <div class="form-group index-form-or" hidden="@existingUserMessageIsHidden">
+                        <h1 class="index-form-heading-3">this email is registered on the platform</h1>
+                    </div>
+                    <div class="form-group index-form-group">
+                        <input type="password" placeholder="Password" @bind="@password1">
+                    </div>
+                    <div class="form-group index-form-group">
+                        <input type="password" placeholder="Confirm password" @bind="@password2">
+                    </div>
+                    <div class="form-group index-form-or" hidden="@passwordMessageIsHidden">
+                        <h1 class="index-form-heading-3">passwords do not match</h1>
+                    </div>
+                    <div class="form-group index-form-group">
+                        <div class="index-form-checkbox-div">
+                            <input type="checkbox" class="index-form-checkbox" @onclick="@IsApplicant" @bind="@applicant" /><h2 class="index-checkbox-label">Applicant</h2>
+                        </div>
+                        <div class="index-form-checkbox-div">
+                            <input type="checkbox" class="index-form-checkbox" @onclick="@IsDeveloper" @bind="@developer" /><h2 class="index-checkbox-label">Developer</h2>
+                        </div>
+                        <div class="index-form-checkbox-div">
+                            <input type="checkbox" class="index-form-checkbox" @onclick="@IsHR" @bind="@hr" /><h2 class="index-checkbox-label">HR admin</h2>
+                        </div>
+                    </div>
+                    <div class="form-group index-form-or" hidden="@selectCheckBoxMessageIsHidden">
+                        <h1 class="index-form-heading-3">checkbox not selected</h1>
+                    </div>
+                    <div class="form-group index-form-or" hidden="@successfulRegistrationMessageIsHidden">
+                        <h1 class="index-form-heading-3">you have been successfully registered to xebec</h1>
+                    </div>
+                    <div class="form-group index-form-or" hidden="@confirmAccountMessageIsHidden">
+                        <h1 class="index-form-heading-3">we will send you a key and link to activate your account</h1>
+                    </div>
+                    <input type="button" class="index-form-button" @onclick="Register" value="Submit" />
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay-reviews">
+        reviews
+    </div>
+
+    <div class="overlay-contact">
+        contact
+    </div>
+</div>
+@code {
+
+    // See login or forgot password form
+    private bool RightDisplayLoginIsHidden;
+    private bool RightDisplayForgotPasswordIsHidden;
+
+    //login invalid messages
+    private bool invalidEmailorPasswordMessageIsHidden;
+    private bool notRegisteredMessageIsHidden;
+
+    public UserModel thisUser = new UserModel();
+    private string Email = "";
+    private string Password = "";
+
+    private ForgotPasswordModel forgotPassword = new ForgotPasswordModel();
+    private string forgotpasswordlink = "https://localhost:44364/forgotpassword";
+    private bool validSubmitForgotPasswordMessageIsHidden;
+
+    private List<UserModel> users = new List<UserModel>();
+
+    private string password1 = "";
+    private string password2 = "";
+
+    private bool existingUserMessageIsHidden;
+    private bool passwordMessageIsHidden;
+    private bool selectCheckBoxMessageIsHidden;
+    private bool successfulRegistrationMessageIsHidden;
+    private bool confirmAccountMessageIsHidden;
+
+    private bool applicant;
+    private bool developer;
+    private bool hr;
+
+    private string confirmationlink = "https://localhost:44364/confirmation";
+
+    private KeyRequest request;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        RightDisplayLoginIsHidden = false;
+        RightDisplayForgotPasswordIsHidden = true;
+        validSubmitForgotPasswordMessageIsHidden = true;
+
+        invalidEmailorPasswordMessageIsHidden = true;
+        notRegisteredMessageIsHidden = true;
+
+        passwordMessageIsHidden = true;
+        existingUserMessageIsHidden = true;
+
+        selectCheckBoxMessageIsHidden = true;
+        successfulRegistrationMessageIsHidden = true;
+        confirmAccountMessageIsHidden = true;
+
+        applicant = false;
+        developer = false;
+        hr = false;
+
+        users = await HttpClient.GetFromJsonAsync<List<UserModel>>("https://my-json-server.typicode.com/IviweMalotana/xebecDB/Users");
+    }
+
+    private void ToLoginPage()
+    {
+
+        RightDisplayLoginIsHidden = false;
+        RightDisplayForgotPasswordIsHidden = true;
+
+        invalidEmailorPasswordMessageIsHidden = true;
+        notRegisteredMessageIsHidden = true;
+        validSubmitForgotPasswordMessageIsHidden = true;
+
+        passwordMessageIsHidden = true;
+        existingUserMessageIsHidden = true;
+
+        selectCheckBoxMessageIsHidden = true;
+        successfulRegistrationMessageIsHidden = true;
+        confirmAccountMessageIsHidden = true;
+
+    }
+
+    public void Login()
+    {
+
+        try
+        {
+            thisUser = users.Where(a => a.Email.Equals(Email)).Single();
+
+
+            if (thisUser.Registered == true && thisUser.Password.Equals(Password))
+            {
+
+                navmanager.NavigateTo("/main/" + thisUser.ID);
+
+            }
+            else if (thisUser.Registered == false)
+            {
+
+                RightDisplayLoginIsHidden = false;
+                RightDisplayForgotPasswordIsHidden = true;
+
+                invalidEmailorPasswordMessageIsHidden = true;
+                notRegisteredMessageIsHidden = false;
+
+            }
+            else if (!thisUser.Password.Equals(Password))
+            {
+                RightDisplayLoginIsHidden = false;
+                RightDisplayForgotPasswordIsHidden = true;
+
+                invalidEmailorPasswordMessageIsHidden = false;
+                notRegisteredMessageIsHidden = true;
+
+            }
+            passwordMessageIsHidden = true;
+            existingUserMessageIsHidden = true;
+
+            selectCheckBoxMessageIsHidden = true;
+            successfulRegistrationMessageIsHidden = true;
+            confirmAccountMessageIsHidden = true;
+
+        }
+        catch
+        {
+
+            RightDisplayLoginIsHidden = false;
+            RightDisplayForgotPasswordIsHidden = true;
+
+            invalidEmailorPasswordMessageIsHidden = false;
+            notRegisteredMessageIsHidden = true;
+
+            passwordMessageIsHidden = true;
+            existingUserMessageIsHidden = true;
+
+            selectCheckBoxMessageIsHidden = true;
+            successfulRegistrationMessageIsHidden = true;
+            confirmAccountMessageIsHidden = true;
+        }
+
+    }
+
+    private void ToRegistrationPage()
+    {
+
+        RightDisplayLoginIsHidden = true;
+        RightDisplayForgotPasswordIsHidden = true;
+
+        invalidEmailorPasswordMessageIsHidden = true;
+        notRegisteredMessageIsHidden = true;
+
+        passwordMessageIsHidden = true;
+        existingUserMessageIsHidden = true;
+
+        selectCheckBoxMessageIsHidden = true;
+        successfulRegistrationMessageIsHidden = true;
+        confirmAccountMessageIsHidden = true;
+
+    }
+
+    private void ToForgotPasswordForm()
+    {
+
+        RightDisplayLoginIsHidden = true;
+        RightDisplayForgotPasswordIsHidden = false;
+        validSubmitForgotPasswordMessageIsHidden = true;
+
+        invalidEmailorPasswordMessageIsHidden = true;
+        notRegisteredMessageIsHidden = true;
+
+        passwordMessageIsHidden = true;
+        existingUserMessageIsHidden = true;
+
+        selectCheckBoxMessageIsHidden = true;
+        successfulRegistrationMessageIsHidden = true;
+        confirmAccountMessageIsHidden = true;
+
+    }
+
+    private async Task SendForgotPassword()
+    {
+        try
+        {
+            thisUser = users.Where(a => a.Email.Equals(Email)).Single();
+            invalidEmailorPasswordMessageIsHidden = true;
+            validSubmitForgotPasswordMessageIsHidden = false;
+            forgotPassword.Email = Email;
+            forgotPassword.Link = forgotpasswordlink;
+            await HttpClient.PostAsJsonAsync("https://prod-254.westeurope.logic.azure.com:443/workflows/36ef500265094a1193de55a42b18adb3/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9Ez43vZDBzvzl-qigJMdlQ_te0RTiuHW50l0E17wW-M", forgotPassword);
+
+        }
+        catch
+        {
+            invalidEmailorPasswordMessageIsHidden = false;
+            validSubmitForgotPasswordMessageIsHidden = true;
+        }
+
+    }
+
+    private void IsApplicant()
+    {
+        developer = hr = false;
+        thisUser.Role = "applicant";
+    }
+
+    private void IsDeveloper()
+    {
+        applicant = hr = false;
+        thisUser.Role = "developer";
+    }
+
+    private void IsHR()
+    {
+        developer = applicant = false;
+        thisUser.Role = "hr";
+    }
+
+    private void Register()
+    {
+        bool passwordIsValid = RegisterPasswordCheck();
+        bool emailIsValid = RegisterEmailCheck();
+        bool checkboxSelected = RegisterCheckboxCheck();
+
+        if (passwordIsValid && emailIsValid && checkboxSelected)
+        {
+            //get ID of last item
+            int lastItem = users.Count;
+            UserModel lastUser = users[lastItem - 1];
+            int lastID = lastUser.ID;
+
+            //increment int
+            int newId = lastID++;
+
+            // set usermodel(newID)
+            thisUser.ID = newId;
+
+            if (applicant)
+            {
+                thisUser.Key = "";
+                thisUser.LinkVisits = 0;
+
+                thisUser.Registered = true;
+
+                // Post model to dB
+                successfulRegistrationMessageIsHidden = false;
+
+            }
+            else
+            {
+                thisUser.Key = "123";
+                thisUser.Registered = false;
+
+                //Post model to dB
+
+                // Power Flow to RegistrationKeyRequest(send model)
+                request.Id = thisUser.ID;
+                request.Email = thisUser.Email;
+                request.Key = thisUser.Key;
+                request.Link = confirmationlink;
+                HttpClient.PostAsJsonAsync("https://prod-223.westeurope.logic.azure.com:443/workflows/fa4c087fb4bc4ee6af54b07047ca6f57/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=doWY1Jeit9AC3MhFltbcskJ9J5ygBO9nZ_8BJEe5hPE", request);
+                successfulRegistrationMessageIsHidden = true;
+                confirmAccountMessageIsHidden = false;
+
+            }
+        }
+    }
+
+    private bool RegisterPasswordCheck()
+    {
+        if (password1 != password2)
+        {
+            passwordMessageIsHidden = false;
+            existingUserMessageIsHidden = true;
+            selectCheckBoxMessageIsHidden = true;
+            successfulRegistrationMessageIsHidden = true;
+            confirmAccountMessageIsHidden = true;
+            return false;
+        }
+        else
+        {
+            passwordMessageIsHidden = true;
+            existingUserMessageIsHidden = true;
+            selectCheckBoxMessageIsHidden = true;
+            successfulRegistrationMessageIsHidden = true;
+            confirmAccountMessageIsHidden = true;
+            thisUser.Password = password1;
+            return true;
+        }
+    }
+
+    private bool RegisterEmailCheck()
+    {
+        passwordMessageIsHidden = true;
+        selectCheckBoxMessageIsHidden = true;
+        successfulRegistrationMessageIsHidden = true;
+        confirmAccountMessageIsHidden = true;
+
+        try
+        {
+            int existingUser = users.Where(x => x.Email == Email).Select(x => x.ID).Single();
+            existingUserMessageIsHidden = false;
+
+            return false;
+
+        }
+        catch
+        {
+            existingUserMessageIsHidden = true;
+            thisUser.Email = Email;
+            return true;
+        }
+    }
+
+    private bool RegisterCheckboxCheck()
+    {
+
+        passwordMessageIsHidden = true;
+        existingUserMessageIsHidden = true;
+        successfulRegistrationMessageIsHidden = true;
+        confirmAccountMessageIsHidden = true;
+
+        if (applicant == false && developer == false && hr == false)
+        {
+            selectCheckBoxMessageIsHidden = false;
+            return false;
+        }
+        else
+        {
+            selectCheckBoxMessageIsHidden = true;
+            return true;
+        }
+    }
+}
