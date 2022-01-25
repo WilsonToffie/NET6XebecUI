@@ -1,12 +1,95 @@
 ﻿@page "/applicationform"
+
+<style>
+    .wrapper {
+        margin-left: 20%;
+        width: 60%;
+        min-height: 80vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: lightpink;
+    }
+    .application-form{
+        width: 450px;
+        height: 500px;
+        background-color: lightblue;
+        border-radius: 5px;
+    }
+    .application-form-title{
+        width:100%;
+        height: 10%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+        background-color: sandybrown;
+    }
+    .application-form-question-area {
+        width: 100%;
+        height: 75%;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    .application-form-button{
+        width: 100%;
+        height: 15%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .application-form-question{
+        max-width: 90%;
+        align-items: center;
+        justify-content: center;
+        margin-left: 10px;
+        word-wrap: break-word;
+    }
+</style>
+
+
 <div hidden="@mainmodel.ApplicantIsHidden">
-    <h3>ApplicationForm</h3>
+
 </div>
 <div hidden="@mainmodel.DeveloperIsHidden">
     <h3>You are not authorised to view this page.</h3>
 </div>
 <div hidden="@mainmodel.HRIsHidden">
-    <h3>You are not authorised to view this page.</h3>
+    <!-- <h3>You are not authorised to view this page. 123213213</h3> -->
+
+    <div class="wrapper">
+        <div class="application-form">
+            <div class="application-form-title">
+                <h4>Application Form</h4>
+            </div>
+            <div class="application-form-question-area">
+                <table class="table">
+                    <tbody>
+                        @if(ApplicantQuestions != null)
+                        {
+                            @foreach(var customquestion in ApplicantQuestions)
+                            {
+                            <tr>
+                                <td>
+                                    <div class="application-form-question">
+                                        <h6 class="form-text text-muted" style="font-size: 14px; width: 90%;">@customquestion</h6>
+                                        <input type="text" class="form-control" placeholder="Answer..." style="width: 80%">
+                                    </div>
+                                </td>
+                            </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="application-form-button">
+                <button class="btn btn-danger" @onclick="Submit">Submit</button>
+            </div>
+        </div>
+    </div>
+
+
+
 </div>
 
 
@@ -14,4 +97,34 @@
 
     private MainModel mainmodel { get; set; } = new MainModel();
 
+    List<string> ApplicantQuestions = new List<string>();
+    //list of question objects
+    //list of applicantquestions
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        ApplicantQuestions.Add("Test string question?");
+
+        ApplicantQuestions.Add("Test string question longggggggggggggggggggggggggggggggggggggggggggggggggggggg af6ti7f6aif76r7a?");
+
+        ApplicantQuestions.Add("Test string question?");
+
+        ApplicantQuestions.Add("Test string question?");
+
+        ApplicantQuestions.Add("Test string question?");
+
+        ApplicantQuestions.Add("Test string question?");
+
+        ApplicantQuestions.Add("Question to test overflow");
+
+        //get all jobs and last or default
+        //populate our list with only questions related to the JobId
+        //New list with answers attatched as well as current appuserid
+    }
+
+    public void Submit()
+        {
+
+        }
 }
