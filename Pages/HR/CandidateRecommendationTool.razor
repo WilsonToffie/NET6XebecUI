@@ -1,16 +1,6 @@
 ﻿@page "/candidaterecommendationtool"
 
-<div hidden="@mainmodel.HRIsHidden">
-    <h3>CandidateRecommendationTool</h3>
-</div>
-<div hidden="@mainmodel.DeveloperIsHidden">
-    <h3>You are not authorised to view this page.</h3>
-</div>
-<div hidden="@mainmodel.ApplicantIsHidden">
-    <h3>You are not authorised to view this page.</h3>
-</div>
-
-
+<h3>CandidateRecommendationTool</h3>
 @code {
 
     private MainModel mainmodel { get; set; } = new MainModel();

@@ -1,18 +1,303 @@
 ﻿@page "/myjobs"
+@using XebecPortal.UI.Interfaces
+@using XebecPortal.UI.Services.MockServices
+@using XebecPortal.UI.Services.Models
+@inject IJobDataService _jobDataService
+@inject IApplicationDataService _applicationDataService
+@inject IApplicationPhaseHelperDataService _applicationPhaseHelperDataService
 
-<div hidden="@mainmodel.ApplicantIsHidden">
-    <h3>MyJobs</h3>
-</div>
-<div hidden="@mainmodel.DeveloperIsHidden">
-    <h3>You are not authorised to view this page.</h3>
-</div>
-<div hidden="@mainmodel.HRIsHidden">
-    <h3>You are not authorised to view this page.</h3>
-</div>
+@inject IMyJobListDataService _myJobListDataService
+<style>
+    .main-wrapper {
+        background: transparent;
+        width: 100%;
+        min-height: 100%;
+        overflow: hidden;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: 10% 6% auto auto;
+        grid-gap: 10px;
+        max-height: 100%;
+        padding: 20px 10% 0 10%;
+    }
 
+    .search-panel, .heading, .line {
+        grid-column: span 4;
+        background: rgba(255,255,255,0.7);
+        box-shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+    }
+
+    .line {
+        background: black;
+    }
+
+    .main-wrapper-child {
+        border-radius: 10px;
+        /* background: rgba(167,169,171,0.22);*/
+        padding-top: 10px;
+    }
+
+    .job-cards {
+        display: grid;
+        grid-template-columns: repeat(2, fr);
+        align-content: start;
+        /*grid-template-columns: repeat(@@maxJobs, 1fr);*/
+        background: rgba(167,169,171,0.22);
+        overflow-y: auto;
+        grid-row-gap: 1vh;
+        padding: 5px;
+    }
+
+        .job-cards::-webkit-scrollbar-track {
+            background: linear-gradient(#a7a9ab 0%, rgba(0,51,64,0.09) 30%);
+            border-radius: 5px;
+            transform: translateX(10vw);
+        }
+
+        .job-cards::-webkit-scrollbar {
+            width: 0.09vw;
+            background-color: rgba(0,51,64,0.6);
+        }
+
+        .job-cards::-webkit-scrollbar-thumb {
+            background: linear-gradient(transparent 30%, #fff 30%);
+        }
+
+        .job-cards div {
+            /*border: #003340 3px solid;*/
+            border: none;
+            border-left: #003340 10px solid;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.7);
+            margin: 0 5px 0 3px;
+        }
+
+            .job-cards div:first-child {
+                background: #003340;
+                border-radius: 5px;
+                margin: 0;
+            }
+
+    .card-header {
+        position: sticky;
+        top: -5px;
+        box-sizing: border-box;
+        height: fit-content;
+        transition: 0.3s fade;
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+    }
+
+    .job-card {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(4, fit-content());
+        grid-row-gap: 0;
+        height: fit-content;
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+    }
+
+    .position, .company {
+        grid-column: span 2;
+    }
+
+
+    /* text and input: sizes and content placement*/
+    .heading {
+        width: fit-content;
+        height: fit-content;
+        justify-self: start;
+        padding: 0 5%;
+    }
+
+        .heading h1 {
+            color: #2d1c13;
+            text-align: left;
+            font-size: 3vw;
+            font-weight: 900;
+        }
+
+        .heading small {
+            color: rgba(0,0,0,0.39);
+            text-transform: uppercase;
+            font-size: 0.5vw;
+        }
+
+    .search-panel {
+        /*positioning*/
+        justify-self: end;
+        align-items: center;
+        /*sizing*/
+        width: fit-content;
+        /*spacing*/
+        padding: 0.5em;
+        font-size: 1vw;
+        /*coloring*/
+        color: rgba(128,128,128,0.5);
+    }
+
+        .search-panel .icon {
+        }
+
+        .search-panel input {
+            margin-left: 0.4em;
+            border: none;
+            /*Coloring*/
+            color: rgba(128,128,128,1);
+            background-color: transparent;
+        }
+
+            .search-panel input:focus {
+                outline: none;
+            }
+
+    .card-header {
+        font-size: 1.5vw;
+        text-align: center;
+        color: white;
+        margin-bottom: 3vh;
+    }
+
+    .job-card {
+        padding: 3px 5px;
+    }
+
+        .position, .company, .job-card small {
+            text-overflow: ellipsis;
+            word-wrap: break-word;
+            display: block;
+        }
+
+    .position {
+        font-size: 1.3vw;
+        font-weight: 700;
+    }
+
+    .company {
+        font-size: 1vw;
+        font-weight: 500;
+    }
+
+    .job-card small {
+        font-size: 0.6vw;
+    }
+
+    .addition-details {
+        margin-left: 3px;
+    }
+
+    .left-text {
+        text-align: end;
+        margin-right: 5px;
+    }
+
+    .rejection-card {
+    }
+</style>
+<div class="main-wrapper">
+    <header class="main-wrapper-child heading">
+        <h1>My Jobs</h1>
+        <small>This page shows a detailed history of the jobs you have applied for.</small>
+    </header>
+    <div class="main-wrapper-child search-panel d-flex justify-content-end align-content-center">
+        <i class="fas fa-search"></i><input placeholder="search for job">
+    </div>
+    <hr class="line" />
+    <div class="main-wrapper-child job-cards">
+        <div class="card-header d-flex align-content-center justify-content-center ">
+            <span>Applications</span>
+        </div>
+        @foreach (var application in Applications)
+        {
+            <div class="job-card">
+                <span class="position">@application.Position</span>
+                <span class="company">@application.Company</span>
+                <small class="addition-details text-muted">@application.Location</small>
+                <small class="phase left-text">@application.Phase</small>
+                <small class="addition-details text-muted">Date Advertized: @application.LastMoved</small>
+                <small class="addition-details left-text text-muted">Application Date : @application.ApplicationDate</small>
+            </div>
+        }
+
+
+
+    </div>
+
+    <div class="main-wrapper-child job-cards">
+        <div class="card-header  d-flex align-content-center justify-content-center">
+            <span>In Progress</span>
+        </div>
+        @foreach (var application in InProgress)
+        {
+            <div class="job-card">
+                <span class="position">@application.Position</span>
+                <span class="company">@application.Company</span>
+                <small class="addition-details text-muted">@application.Location</small>
+                <small class="phase left-text">@application.Phase</small>
+                <small class="addition-details text-muted">Date Advertized: @application.LastMoved</small>
+                <small class="addition-details left-text text-muted">Application Date : @application.ApplicationDate</small>
+            </div>
+        }
+    </div>
+
+    <div class="main-wrapper-child job-cards">
+        <div class="card-header  d-flex align-content-center justify-content-center">
+            <span>Offers</span>
+        </div>
+        @foreach (var application in Offers)
+        {
+            <div class="job-card">
+                <span class="position">@application.Position</span>
+                <span class="company">@application.Company</span>
+                <small class="addition-details text-muted">@application.Location</small>
+                <small class="phase left-text">@application.Phase</small>
+                <small class="addition-details text-muted">Date Advertized: @application.LastMoved</small>
+                <small class="addition-details left-text text-muted">Application Date : @application.ApplicationDate</small>
+            </div>
+        }
+    </div>
+
+    <div class="main-wrapper-child job-cards rejection-card">
+        <div class="card-header  d-flex align-content-center justify-content-center bg-danger border-0">
+            <span>Rejections</span>
+        </div>
+        @foreach (var rejection in Rejections)
+        {
+            <div class="job-card border-left-1 border-danger p-2">
+                <span class="position">@rejection.Position</span>
+                <span class="company">@rejection.Company</span>
+                <small class="addition-details">@rejection.Location</small>
+                <small class="phase left-text">Last Phase : @rejection.Phase</small>
+                <small class="addition-details">Date Advertized: @rejection.ApplicationDate</small>
+                <small class="addition-details left-text">Date Closed : @rejection.LastMoved</small>
+            </div>
+        }
+    </div>
+
+
+</div>
 
 @code {
-
     private MainModel mainmodel { get; set; } = new MainModel();
+
+    List<MyJob> AllJobs;
+    List<MyJob> Applications;
+    List<MyJob> Rejections;
+    List<MyJob> InProgress;
+    List<MyJob> Offers;
+
+    protected override void OnInitialized()
+    {
+        AllJobs = _myJobListDataService.GetAllJobs();
+
+        Applications = AllJobs.FindAll(
+            match: a => { return a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)); });
+        InProgress = AllJobs.FindAll(
+            match: a => { return !(a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) || a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)); });
+        Offers = AllJobs.FindAll(
+            match: a => { return (a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)); });
+        Rejections = AllJobs.FindAll(
+            match: a => { return a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.Rejected)); });
+    }
+
 
 }
