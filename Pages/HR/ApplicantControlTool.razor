@@ -208,40 +208,18 @@
         </div>
     </div>
 </div>
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
 
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Row information</h4>
-            </div>
-            <div class="modal-body">
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-
-    </div>
-</div>
 
 @code {
     List<Applicant> _applicants;
     Applicant _tempApplicant;
     private List<Applicant> _storeInitializedData;
-    private List<Job> _jobs;
 
     protected override async Task OnInitializedAsync()
     {
         Console.WriteLine("getting Applicants");
         _applicants = (await _applicantDataService.GetAllApplicants()).ToList();
 
-        _jobs = (await _jobDataService.GetAllJobs()).ToList();
-        _departments = CatergorizeJobsToDepartment(_jobs);
         await _jsRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
 
         _storeInitializedData = _applicants;
@@ -296,6 +274,4 @@
     {
         if (e.Value != null) _tempApplicant.Phase = e.Value.ToString();
     }
-
-    private Dictionary<string, List<Job>> _departments;
 }
