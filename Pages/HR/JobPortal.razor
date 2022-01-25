@@ -1,9 +1,298 @@
 ﻿@page "/hrjobportal"
+@inject HttpClient httpClient
+@inject IJSRuntime jsRuntime
+@inject NavigationManager nav
 
-<h3>JobPortal</h3>
+@{
+    //var jobPagedList = jobList.ToPagedList(pageNum, 6);
+}
+
+<style>
+    .searchBox {
+    }
+
+    .handPointer {
+        cursor: pointer;
+    }
+
+    .headingPage {
+        height: 5vh;
+        color: #003340;
+        font-size: 2rem;
+    }
+
+    .formContainer {
+        background-color: lightgray;
+        height: auto;
+    }
+
+    .formButton {
+        background-color: #00BCAE;
+        color: white;
+        font-weight: 600;
+        height: min-content;
+    }
+
+    input {
+        height: min-content;
+    }
+
+    select {
+        height: min-content;
+    }
+
+    .select2 {
+        width: 100% !important;
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+    }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+</style>
+
+<div hidden="@mainmodel.HRIsHidden">
+
+    <!--Heading Page-->
+    <br />
+    <h1 class="headingPage text-center">Job Portal</h1>
+    <br />
+
+    <div class="container">
+
+        <!--Search-Box-->
+        <div class="row" style="height:5vh">
+            <div class="col">
+                <div class="input-group d-flex justify-content-center">
+                    <span class="input-group-text handPointer" @onclick="() => SeachListJob(searchJob)">
+                        <i class="fa fa-search"></i>
+                    </span>
+                    <input class="form-control" style="max-width: 50%" type="text" placeholder="Search" @bind="searchJob" />
+                </div>
+            </div>
+        </div>
+        <br />
+
+        @if (jobListFilter != null && jobListFilter.Count > 0)
+        {
+            <div class="row" style="height:355px">
+                <div class="col-4 overflow-auto" style="height:355px">
+
+                    <!--Card list for jobs-->
+                    @foreach (var item in jobPagedList)
+                    {
+                        <div class="card handPointer" @onclick="() => DisplayJobDetail(item.id)">
+                            <div class="card-body">
+                                <h3 class="card-title">@item.jobName</h3>
+                                <h5 class="card-subtitle text-muted">@item.companyName</h5>
+                                <br />
+                                <p class="card-text">
+                                    @item.location
+                                    <br />
+                                    @item.dateDue.ToString("dd MMMM yyyy")
+                                </p>
+                            </div>
+                        </div>
+                        <br />
+                    }
+                </div>
+
+                <div class="col-8 overflow-auto" style="height:355px">
+
+                    <!--The Form for editing and deleting a job-->
+                    <div class="row p-3 formContainer" style="height: auto">
+                        <div class="col-12">
+                            <form>
+                                <div class="row">
+                                    <div class="col-6 p-2">
+                                        @if (changeForm)
+                                        {
+                                            <input type="text" class="form-control" placeholder="Job Name" @bind="displayJobDetail.jobName" />
+                                        }
+                                        else
+                                        {
+                                            <h3>@displayJobDetail.jobName</h3>
+                                        }
+                                    </div>
+                                    <div class="col-6 p-2 d-flex justify-content-end">
+                                        <div class="row">
+                                            @if (changeForm)
+                                            {
+                                                <div class="col handPointer" @onclick="() => FormType(false)"><i class="fa fa-times-circle fa-2x" style="color: red"></i></div>
+                                                <div class="col handPointer" @onclick="() => SaveData (displayJobDetail)"><i class="fa fa-save fa-2x" style="color: #00BCAE"></i></div>
+                                            }
+                                            else
+                                            {
+                                                <div class="col handPointer" @onclick="() => FormType(true)"><i class="fa fa-edit fa-2x" style="color: #00BCAE"></i></div>
+                                                <div class="col handPointer" @onclick="() => DeleteData(displayJobDetail.id)"><i class="fa fa-trash fa-2x" style="color: #00BCAE"></i></div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="col-6 p-2">
+                                        @if (changeForm)
+                                        {
+                                            <input type="text" class="form-control" placeholder="Company Name" @bind="displayJobDetail.companyName" />
+                                        }
+                                        else
+                                        {
+                                            <h5 class="text-muted">@displayJobDetail.companyName</h5>
+                                        }
+                                    </div>
+                                    <div class="col-6 p-2 d-flex justify-content-end">
+                                        @if (changeForm)
+                                        {
+                                        <select class="form-select" @bind="displayJobDetail.location">
+                                            @foreach (var item in mockLocations.Distinct())
+                                            {
+                                                <option>@item.location</option>
+                                            }
+                                        </select>
+                                        }
+                                        else
+                                        {
+                                            <p>@displayJobDetail.location</p>
+                                        }
+                                    </div>
+                                    <div class="col-6 p-2">
+                                        <div hidden="@(!changeForm)">
+                                            <select class="form-select selectMultiOptions1" multiple="multiple">
+                                                <option>Full-time/Part-time (Select1)</option>
+                                                <option>Full-time/Part-time (Select2)</option>
+                                                <option>Full-time/Part-time (Select3)</option>
+                                            </select>
+                                        </div>
+                                        @if (!changeForm)
+                                        {
+                                            <p>Full-Time</p>
+                                        }
+                                    </div>
+                                    <div class="col-6 p-2 d-flex justify-content-end">
+                                        @if (changeForm)
+                                        {
+                                            <select class="form-select" @bind="displayJobDetail.department">
+                                                @foreach (var item in mockDepartments.Distinct())
+                                                {
+                                                    <option>@item.department</option>
+                                                }
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <p>@displayJobDetail.department</p>
+                                        }
+                                    </div>
+                                    <div class="col-12 p-2">
+                                        @if (changeForm)
+                                        {
+                                            <textarea class="form-control" style="resize: none" placeholder="Description" rows="3" @bind="displayJobDetail.description"></textarea>
+                                        }
+                                        else
+                                        {
+                                            <p class="text-center">@displayJobDetail.description</p>
+                                        }
+                                    </div>
+                                    <div class="col-6 p-2">
+                                        <div hidden="@(!changeForm)">
+                                            <select class="form-select selectMultiOptions2" multiple="multiple" @bind="displayJobDetail.socialMedia">
+                                                @foreach (var item in mockSocialMedia.Distinct())
+                                                {
+                                                    <option>@item.socialMedia</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        @if (!changeForm)
+                                        {
+                                            <p>@displayJobDetail.socialMedia</p>
+                                        }
+                                    </div>
+                                    <div class="col-6 p-2 d-flex justify-content-end">
+                                        @if (changeForm)
+                                        {
+                                            <input class="form-control" type="date" placeholder="Due Date" @bind="displayJobDetail.dateDue" />
+                                        }
+                                        else
+                                        {
+                                            <p>@displayJobDetail.dateDue.ToString("d MMMM yyyy")</p>
+                                        }
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row p-3">
+                <div class="col-4 d-flex justify-content-center">
+                    <nav>
+                        <ul class="pagination" style="cursor:pointer">
+                            @if (!jobPagedList.IsFirstPage)
+                            {
+                                <li class="page-item" @onclick="() => PageListNav(jobPagedList.PageNumber - 1)">
+                                    <a class="page-link">
+                                        <span>&laquo;</span>
+                                    </a>
+                                </li>
+                            }
+                            <li class="page-item @(jobPagedList.PageNumber.Equals(pageNum.FirstOrDefault()) ? "active":"")" @onclick="() => PageListNav(pageNum.FirstOrDefault())"><a class="page-link">@pageNum.FirstOrDefault()</a></li>
+                            @foreach (var item in pageNum)
+                            {
+                                if (item != pageNum.FirstOrDefault() && item != pageNum.LastOrDefault())
+                                {
+                                    <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active":"")" @onclick="() => PageListNav(item)"><a class="page-link">@item</a></li>
+                                }
+                            }
+                            @if (pageNum.Count > 1)
+                            {
+                                <li class="page-item @(jobPagedList.PageNumber.Equals(pageNum.LastOrDefault()) ? "active":"")" @onclick="() => PageListNav(pageNum.LastOrDefault())"><a class="page-link">@pageNum.LastOrDefault()</a></li>
+                            }
+                            @if (!jobPagedList.IsLastPage)
+                            {
+                                <li class="page-item" @onclick="() => PageListNav(jobPagedList.PageNumber + 1)">
+                                    <a class="page-link">
+                                        <span>&raquo;</span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-8 d-flex justify-content-center">
+                    <button class="btn formButton" @onclick="pageRedirect">Create Job</button>
+                </div>
+            </div>
+        }
+        else
+        {
+            @for (int i = 0; i < 5; i++)
+            {
+                <br />
+            }
+            <h1 class="text-center align-middle">No Job Are Available</h1>
+        }
+    </div>
+</div>
+
+<div hidden="@mainmodel.DeveloperIsHidden">
+    <h3>You are not authorised to view this page.</h3>
+</div>
+<div hidden="@mainmodel.ApplicantIsHidden">
+    <h3>You are not authorised to view this page.</h3>
+</div>
 
 @code {
-
     private MainModel mainmodel { get; set; } = new MainModel();
-
 }
