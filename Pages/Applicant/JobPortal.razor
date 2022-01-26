@@ -13,7 +13,7 @@
     }
 
     .formContainer {
-        background-color: lightgray;
+        background-color: rgba(255,255,255,0.3);
         height: auto;
     }
 
@@ -26,21 +26,23 @@
     }
 
     ::-webkit-scrollbar {
-        width: 10px;
+        background-color: transparent;
+        width: 1vw;
     }
 
     ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
+        background-color: transparent;
+        width: 1vw;
     }
 
     ::-webkit-scrollbar-thumb {
-        background: #888;
-        border-radius: 10px;
+        background-color: rgba(0, 188, 174,0.8);
+        border-radius: 1em;
     }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #555;
+            background-color: rgba(0, 188, 174,0.8);
+            border-radius: 1em;
         }
 
     .my-container {
@@ -89,9 +91,9 @@
             <div class="col-8 overflow-auto" style=" height:55vh">
 
                 <!--The Form for applying for a job-->
-                <div class="row formContainer sticky-top" style="height: auto">
-                    <div class="col-12">
-                        <form>
+                <div class="row formContainer sticky-top" style="height: 55vh; background-color:rgba(255,255,255,1);">
+                    <div class="col-12" style="background-color: rgba(255,255,255,1);">
+                        <form style="padding-top: 7vh; padding-left: 2vw; padding-right: 2vw;">
                             <div class="row p-3">
                                 <div class="col-6 p-2">
                                     <h3>Front-end Developer</h3>

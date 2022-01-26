@@ -7,6 +7,7 @@
 @inject NavigationManager navmanager;
 
 <style>
+
     @@font-face {
         src: url(/fonts/BebasNeue-Regular.ttf);
         font-family: bebas;
@@ -36,7 +37,6 @@
         src: url(/fonts/OpenSansCondensed-LightItalic.ttf);
         font-family: opensans-condensed-light-italic;
     }
-
     .page {
         top: 0;
         left: 0;
@@ -61,10 +61,11 @@
     .main-heading {
         height: 5vh;
         width: 100%;
-        text-align: start;
-        margin-left: 1.5em;
-        font-size: 1.5em;
-        color: #666666;
+        text-align: center;
+        font-size: 2em;
+        color: black;
+        font-weight: 900;
+        text-transform: uppercase;
         font-family: opensans-condensed-bold;
     }
     .main-body {
@@ -79,36 +80,23 @@
         margin-left: 93.5%;
     }
     
-    .heading {
+    .mainlayout-heading {
         width: 70%;
         height: 100%;
         top: 0;
-        background-color: transparent;
+        background-color: none;
         display: flex;
     }
-    .xebec-left {
+    .mainlayout-xebec-heading {
         font-size: 2em;
         color: rgba(0, 188, 174,1);
-        background-color: transparent;
+        background-color: none;
         font-weight: 900;
         font-family: opensans-condensed-bold;
         text-align: center;
-        padding-left: 0.5em;
-        padding-right: 0.1em;
-        border-right: solid rgba(0, 188, 174,1) 0.1em;
+        padding-left: 2em;
     }
 
-    .xebec-right {
-        color: rgba(0, 188, 174,1);
-        background-color: transparent;
-        font-size: 2em;
-        height: 100%;
-        font-weight: 600;
-        padding-left: 0.1em;
-        font-family: opensans-condensed-light;
-        text-align: center;
-        display: flex;
-    }
     .icon-user {
         width: 50px;
         height: 5vh;
@@ -153,11 +141,12 @@
         display: inline-block;
         width: 20%;
         height: 100%;
-        padding-top: 0.3em;
+        padding-top: 0.4em;
+        padding-left: 0.2em;
     }
 
     .nav-link-text {
-        font-size: 1em;
+        font-size: 1.3em;
         display: inline-block;
         padding-top: 0.1em;
         width: 80%;
@@ -258,9 +247,8 @@
   
     <div class="header">
         <div class="d-flex justify-content-between align-items-center">
-            <div class="heading">
-                <h1 class="xebec-left">XE</h1>
-                <h1 class="xebec-right">BEC</h1>
+            <div class="mainlayout-heading">
+                <h1 class="mainlayout-xebec-heading">XEBEC</h1>
             </div>
             <div class="nav">
                 <img class="icon-user" src="/Img/user.svg" data-bs-toggle="offcanvas" data-bs-target="#showDeveloper" aria-controls="offcanvasRight" />
@@ -301,9 +289,8 @@
 <div class="page" hidden="@ApplicantIsHidden">
     <div class="header">
         <div class="d-flex justify-content-between align-items-center">
-            <div class="heading">
-                <h1 class="xebec-left">XE</h1>
-                <h1 class="xebec-right">BEC</h1>
+            <div class="mainlayout-heading">
+                <h1 class="mainlayout-xebec-heading">XEBEC</h1>
             </div>
             <div class="nav">
                 <img class="icon-user" src="/Img/user.svg" data-bs-toggle="offcanvas" data-bs-target="#showApplicant" aria-controls="offcanvasRight" />
@@ -354,7 +341,7 @@
         </div>
     </div>
     <div class="main" hidden="@applicantApplicationProfileIsHidden">
-        <h2 class="main-heading">Applicantion Profile</h2>
+        <h2 class="main-heading">Application Profile</h2>
         <div class="main-body">
             <XebecPortal.UI.Pages.Applicant.ApplicationProfile />
         </div>
@@ -379,9 +366,8 @@
  
     <div class="header">
         <div class="d-flex justify-content-between align-items-center">
-            <div class="heading">
-                <h1 class="xebec-left">XE</h1>
-                <h1 class="xebec-right">BEC</h1>
+            <div class="mainlayout-heading">
+                <h1 class="mainlayout-xebec-heading">XEBEC</h1>
             </div>
             <div class="nav">
                 <img class="icon-user" src="/Img/user.svg" data-bs-toggle="offcanvas" data-bs-target="#showHR" aria-controls="offcanvasRight" />
