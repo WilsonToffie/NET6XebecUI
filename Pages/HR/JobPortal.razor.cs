@@ -38,7 +38,7 @@ namespace XebecPortal.UI.Pages.HR
 
         protected override Task OnAfterRenderAsync(bool firstRender)
         {
-            jsRuntime.InvokeVoidAsync("HrJobPortalJs");
+            jsRuntime.InvokeVoidAsync("HrJobPortalJS");
             return base.OnAfterRenderAsync(firstRender);
         }
 
