@@ -3,45 +3,50 @@
 @inject NavigationManager NavigationManager
 
 <style>
-    .page-title {
-        min-height: 8vh;
-        display: flex;
-        justify-content: center;
-        align-items: end;
-    }
-
     .wrapper {
-        margin-left: 20%;
-        width: 60%;
-        min-height: 72vh;
+        margin-left: 10%;
+        width: 80%;
+        min-height: 78vh;
         display: flex;
         justify-content: space-evenly;
         align-items: center;
     }
 
     .question-select {
-        width: 400px;
-        height: 450px;
+        width: 500px;
+        height: 500px;
         background-color: #f2f2f2;
         border-radius: 5px;
+        border: 2px solid grey;
     }
 
     .form-preview {
-        width: 400px;
-        height: 450px;
+        width: 500px;
+        height: 500px;
         background-color: #f2f2f2;
         border-radius: 5px;
+        border: 2px solid grey;
     }
 
     .form-title {
         display: flex;
         justify-content: center;
+        align-items: center;
         height: 10%;
+    }
+
+    .question-area-title {
+        width: 100%;
+        height: 10%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
     }
 
     .question-area {
         width: 100%;
-        height: 85%;
+        height: 75%;
         overflow: hidden;
         overflow-y: auto;
     }
@@ -115,7 +120,7 @@
         align-items: center;
     }
 
-    .delete-popup-header{
+    .delete-popup-header {
         width: 100%;
         height: 10%;
         display: flex;
@@ -135,28 +140,37 @@
     .form-preview-question {
         width: 100%;
     }
+
     .question-description {
         word-wrap: break-word;
-        max-width: 320px;
+        width: 450px;
     }
+
     .form-question-description {
         word-wrap: break-word;
-        max-width: 320px;
+        max-width: 450px;
     }
 
-    @@keyframes fade-in{
-        from {opacity: 0; top: 10%}
-        to {opacity: 1; top: 18%}
+    @@keyframes fade-in {
+        from {
+            opacity: 0;
+            top: 10%
+        }
+
+        to {
+            opacity: 1;
+            top: 18%
+        }
     }
-
-
-
 </style>
 
 <div class="wrapper">
     <div class="question-select scrollbar-winter-neva">
+        <div class="question-area-title">
+            Select Questions
+        </div>
         <div class="question-area">
-            <table class="table">
+            <table class="table" style="border-radius: 5px;">
                 @if (Questions == null)
                 {
                     <div>Loading...</div>
@@ -164,26 +178,20 @@
                 else
                 {
 
-                <thead style="background-color: #003340; color: white;">
-                    <tr>
-                        <th style="width: 80%">Select Questions</th>
-                        <th style="background-color: #003340; width: 20%;"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Questions != null)
-                    {
-                        @foreach (var question in Questions)
+                    <tbody>
+                        @if (Questions != null)
                         {
-                            <tr>
-                                <td class="question-description">@question.questionDescription</td>
-                                <td style="max-width: 20%">
-                                    <button class="btn btn-small" style="background-color: #00BCAE; color: white;" @onclick="() => AddToForm(question.questionDescription)">Add</button>
-                                </td>
-                            </tr>
+                            @foreach (var question in Questions)
+                            {
+                                <tr>
+                                    <td class="question-description" style="font-size: 15px;">@question.questionDescription</td>
+                                    <td style="max-width: 20%">
+                                        <button class="btn btn-small" style="background-color: #00BCAE; color: white;" @onclick="() => AddToForm(question.questionDescription)">Add</button>
+                                    </td>
+                                </tr>
+                            }
                         }
-                    }
-                </tbody>
+                    </tbody>
                 }
             </table>
         </div>
@@ -195,7 +203,7 @@
 
     <div class="form-preview">
         <div class="form-title">
-            <div style="font-size: 30px; color: #003340">Application Form</div>
+            <div style="font-size: 20px; color: #003340">Application Form</div>
         </div>
         <div class="form-questions">
             <table class="table">

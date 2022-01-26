@@ -7,36 +7,6 @@
 
 <style>
 
-    @@font-face {
-        src: url(/fonts/BebasNeue-Regular.ttf);
-        font-family: bebas;
-    }
-
-    @@font-face {
-        src: url(/fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf);
-        font-family: opensans-italic;
-    }
-
-    @@font-face {
-        src: url(/fonts/OpenSans-VariableFont_wdth,wght.ttf);
-        font-family: opensans-variable;
-    }
-
-    @@font-face {
-        src: url(/fonts/OpenSansCondensed-Bold.ttf);
-        font-family: opensans-condensed-bold;
-    }
-
-    @@font-face {
-        src: url(/fonts/OpenSansCondensed-Light.ttf);
-        font-family: opensans-condensed-light;
-    }
-
-    @@font-face {
-        src: url(/fonts/OpenSansCondensed-LightItalic.ttf);
-        font-family: opensans-condensed-light-italic;
-    }
-
     * {
         margin: 0;
         padding: 0;
@@ -58,26 +28,28 @@
         .underlay::-webkit-scrollbar {
             background-color: transparent;
             width: 1vw;
+            z-index: -2;
         }
 
         .underlay::-webkit-scrollbar-thumb {
             background-color: rgba(0, 188, 174,0.8);
-            border-radius: 1em
+            border-radius: 1em;
+            z-index: -2;
         }
 
     .overlay-nav {
         position: fixed;
         top: 0;
         z-index: 2;
-        height: 15vh;
-        padding-top: 5vh;
-        width: 98vw;
+        background-color: transparent;
+        min-height: 15vh;
+        padding-top: 4vh;
+        width: 101vw;
         text-align: center;
-        margin-left: 1vw;
     }
 
     .nav-buttons {
-        width: 100%;
+        width: fit-content;
         height: inherit;
         background-color: transparent;
         border: none;
@@ -89,7 +61,7 @@
     }
 
         .nav-buttons:hover {
-            width: 100%;
+            width: min-content;
             height: inherit;
             background-color: rgba(0, 188, 174,1);
             border: none;
@@ -108,7 +80,7 @@
 
     .overlay-services {
         z-index: 0;
-        top: 0;
+        top: 200vh;
         height: 115vh;
         width: 100%;
         display: flex;
@@ -116,7 +88,7 @@
 
     .overlay-login {
         z-index: 0;
-        top: 0;
+        top: 300vh;
         height: 115vh;
         width: 100%;
         background-color: rgb(255,255,255,0.4);
@@ -125,7 +97,7 @@
     .overlay-register {
         z-index: 0;
         height: 115vh;
-        top: 0;
+        top: 400vh;
         width: 100%;
         background-color: rgb(255,255,255,0.4);
     }
@@ -133,7 +105,7 @@
     .overlay-reviews {
         z-index: 0;
         height: 115vh;
-        top: 0;
+        top: 500vh;
         width: 100%;
         background-color: white;
     }
@@ -142,7 +114,7 @@
         z-index: 0;
         height: 115vh;
         width: 100%;
-        top: 0;
+        top: 600vh;
         background-color: black;
     }
 
@@ -161,11 +133,11 @@
     }
 
     .home-left {
-        height: 100%;
+        height: 100vh;
     }
 
     .home-right {
-        height: 100%;
+        height: 100vh;
         display: flex;
         justify-content: flex-end;
     }
@@ -175,7 +147,7 @@
         width: 80%;
         margin-left: 10%;
         margin-right: 10%;
-        margin-top: 35vh;
+        margin-top: 45vh;
         text-align: center;
     }
 
@@ -201,20 +173,17 @@
     .home-xebec-left {
         font-size: 3em;
         color: rgba(0, 188, 174,1);
-        font-weight: 900;
         font-family: opensans-condensed-bold;
+        font-weight: 800;
         text-align: center;
-        padding-right: 0.5em;
-        border-right: solid rgba(0, 188, 174,1) 0.1em;
     }
 
     .home-xebec-right {
         font-size: 3em;
         color: rgba(0, 188, 174,1);
-        font-weight: 800;
-        padding-left: 0.5em;
         font-family: opensans-condensed-light;
         text-align: center;
+        font-weight: 800;
         display: flex;
     }
 
@@ -228,7 +197,7 @@
 
     .image1 {
         height: 50vh;
-        margin-top: 15vh;
+        margin-top: 20vh;
         border-top-left-radius: 7em;
         border-top-right-radius: 7em;
         background-image: linear-gradient(rgba(0, 188, 174,0.1),rgba(0, 188, 174,0.1)),url(/Img/c.jpg);
@@ -248,7 +217,7 @@
 
     .image3 {
         height: 50vh;
-        margin-top: 35vh;
+        margin-top: 30vh;
         border-top-left-radius: 7em;
         border-top-right-radius: 7em;
         background-image: linear-gradient(rgba(0, 188, 174,0.1),rgba(0, 188, 174,0.1)),url(/Img/d.jpg);
@@ -271,8 +240,9 @@
 
     .services-carousel-container {
         width: 100%;
-        height: 70vh;
-        margin-top: 15vh;
+        height: 60vh;
+        margin-top: 30vh;
+        margin-bottom: 10vh;
     }
 
     .services-container {
@@ -290,14 +260,14 @@
 
     .services-applicant {
         width: 30%;
-        height: 60vh;
+        height: 50vh;
         margin-left: 3%;
         position: relative;
     }
 
     .services-developer {
         width: 100%;
-        height: 60vh;
+        height: 50vh;
         position: relative;
     }
 
@@ -312,15 +282,14 @@
     }
 
     .services-bottom {
-        height: auto;
+        height: 20vh;
         width: 100%;
         position: relative;
-        background-color: black;
     }
 
     .services-hr {
         width: 20%;
-        height: 60vh;
+        height: 50vh;
         position: relative;
     }
 
@@ -470,9 +439,10 @@
     }
     .index-form-login {
         width: 50%;
-        margin-top: 40%;
+        margin-top: 30%;
         margin-left: 25%;
         margin-right: 25%;
+        border-radius: 2em;
         background-color: transparent;
         box-shadow: rgba(0, 0, 0, 0.8) 0px 5px 15px;
     }
@@ -481,6 +451,7 @@
         margin-top: 20%;
         margin-left: 20%;
         margin-right: 20%;
+        border-radius: 2em;
         background-color: transparent;
         box-shadow: rgba(0, 0, 0, 0.8) 0px 5px 15px;
     }
@@ -498,8 +469,8 @@
         font-size: 3em;
         font-weight: 800;
         height: 5vh;
-        margin-bottom: 3vh;
         color: black;
+        margin-bottom: 3vh;
     }
 
     .index-form-heading-2 {
@@ -588,6 +559,8 @@
         font-weight: 700;
         border: none;
         margin-left: 0%;
+        border-bottom-left-radius: 2em;
+        border-bottom-right-radius: 2em;
     }
 
         .index-form-button:hover {
@@ -601,6 +574,8 @@
             font-weight: 700;
             border: none;
             margin-left: 0%;
+            border-bottom-left-radius: 2em;
+            border-bottom-right-radius: 2em;
         }
 
     .index-form-or {
@@ -617,7 +592,7 @@
     }
 
     .index-socialmedia-div {
-        color: white;
+        color: #00bcae;
         font-size: 1.5em;
         width: 20%;
         height: 5vh;
@@ -626,7 +601,7 @@
     }
 
         .index-socialmedia-div:hover {
-            color: white;
+            color: #00bcae;
             font-size: 2.5em;
             width: 20%;
             height: 5vh;
@@ -686,7 +661,7 @@
             <input type="button" class="nav-buttons" value="SERVICES" />
         </div>
         <div class="col-sm-1">
-            <input type="button" class="nav-buttons" value="LOGIN" />
+            <input type="button" class="nav-buttons" value="SIGN IN" />
         </div>
         <div class="col-sm-1">
             <input type="button" class="nav-buttons" value="SIGN UP" />
@@ -879,13 +854,27 @@
             <div class="col-sm-6 login-right">
                 <form class="index-form-login" hidden="@RightDisplayLoginIsHidden">
                     <div class="form-group index-form-heading">
-                        <h1 class="index-form-heading-1">LOGIN</h1>
+                        <h1 class="index-form-heading-1">SIGN IN</h1>
                     </div>
                     <div class="form-group index-form-group">
                         <input type="email" required placeholder="Email address" @bind="@Email">
                     </div>
                     <div class="form-group index-form-group">
                         <input type="password" placeholder="Password" @bind="@Password">
+                    </div>
+                    <div class="form-group index-form-or">
+                        <h1 class="index-form-heading-3">or sign in using</h1>
+                    </div>
+                    <div class="form-group index-form-group">
+                        <div class="index-socialmedia-div">
+                            <i class="fab fa-google"></i>
+                        </div>
+                        <div class="index-socialmedia-div">
+                            <i class="fab fa-microsoft"></i>
+                        </div>
+                        <div class="index-socialmedia-div">
+                            <i class="fab fa-facebook"></i>
+                        </div>
                     </div>
                     <div class="form-group index-form-group">
                         <h1 class="forgotpassword">forgot password?</h1>
@@ -945,6 +934,17 @@
                     </div>
                     <div class="form-group index-form-or" hidden="@passwordMessageIsHidden">
                         <h1 class="index-form-heading-3">passwords do not match</h1>
+                    </div>
+                    <div class="form-group index-form-group">
+                        <div class="index-socialmedia-div">
+                            <i class="fab fa-google"></i>
+                        </div>
+                        <div class="index-socialmedia-div">
+                            <i class="fab fa-microsoft"></i>
+                        </div>
+                        <div class="index-socialmedia-div">
+                            <i class="fab fa-facebook"></i>
+                        </div>
                     </div>
                     <div class="form-group index-form-group">
                         <div class="index-form-checkbox-div">
