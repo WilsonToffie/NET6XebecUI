@@ -292,7 +292,7 @@
             jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
             Job tempJob = jobs.LastOrDefault<Job>();
 
-            CurrentJobId = tempJob.id;
+            CurrentJobId = tempJob.Id;
         }
 
         private void ToggleModalSubmitPhase()

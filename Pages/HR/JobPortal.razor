@@ -3,10 +3,6 @@
 @inject IJSRuntime jsRuntime
 @inject NavigationManager nav
 
-@{
-    //var jobPagedList = jobList.ToPagedList(pageNum, 6);
-}
-
 <style>
     .searchBox {
     }
@@ -86,10 +82,10 @@
 
 <div class="container" style="height: 60vh;" hidden="@JobPortalIsHidden">
 
-    <div>
+    <div style="width: 100%">
         <!--Search-Box-->
         <div class="row" style="height:5vh">
-            <div class="col">
+            <div class="col-12">
                 <div class="input-group d-flex justify-content-center">
                     <span class="input-group-text handPointer" @onclick="() => SeachListJob(searchJob)">
                         <i class="fa fa-search"></i>
@@ -103,42 +99,44 @@
         @if (jobListFilter != null && jobListFilter.Count > 0)
         {
             <div class="row" style="height:55vh">
-                <div class="col-4 overflow-auto" style="height:55vh">
+                <div class="col-4 overflow-auto" style="height: 55vh">
 
                     <!--Card list for jobs-->
-                    @foreach (var item in jobPagedList)
-                    {
-                        <div class="card handPointer" @onclick="() => DisplayJobDetail(item.id)">
-                            <div class="card-body">
-                                <h3 class="card-title">@item.jobName</h3>
-                                <h5 class="card-subtitle text-muted">@item.companyName</h5>
-                                <br />
-                                <p class="card-text">
-                                    @item.location
+                    <div class="col-12">
+                        @foreach (var item in jobPagedList)
+                        {
+                            <div class="card handPointer" @onclick="() => DisplayJobDetail(item.Id)">
+                                <div class="card-body">
+                                    <h3 class="card-title">@item.Title</h3>
+                                    <h5 class="card-subtitle text-muted">@item.Company</h5>
                                     <br />
-                                    @item.dateDue.ToString("dd MMMM yyyy")
-                                </p>
+                                    <p class="card-text">
+                                        @item.Location
+                                        <br />
+                                        @item.DueDate.ToString("d MMMM yyyy")
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                        <br />
-                    }
+                            <br />
+                        }
+                    </div>
                 </div>
 
                 <div class="col-8 overflow-auto" style="height:55vh">
 
                     <!--The Form for editing and deleting a job-->
-                    <div class="row p-5 formContainer" style="height: 55vh; width: 100%">
-                        <div class="col-12">
-                            <form class="d-flex justify-content-center">
+                    <div style="height: 55vh">
+                        <div class="col-12 p-5 formContainer">
+                            <form>
                                 <div class="row">
                                     <div class="col-6 p-2">
                                         @if (changeForm)
                                         {
-                                            <input type="text" class="form-control" placeholder="Job Name" @bind="displayJobDetail.jobName" />
+                                            <input type="text" class="form-control" placeholder="Job Name" @bind="displayJobDetail.Title" />
                                         }
                                         else
                                         {
-                                            <h3>@displayJobDetail.jobName</h3>
+                                            <h3>@displayJobDetail.Title</h3>
                                         }
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
@@ -151,24 +149,24 @@
                                             else
                                             {
                                                 <div class="col handPointer" @onclick="() => FormType(true)"><i class="fa fa-edit fa-2x" style="color: #00BCAE"></i></div>
-                                                <div class="col handPointer" @onclick="() => DeleteData(displayJobDetail.id)"><i class="fa fa-trash fa-2x" style="color: #00BCAE"></i></div>
+                                                <div class="col handPointer" @onclick="() => DeleteData(displayJobDetail.Id)"><i class="fa fa-trash fa-2x" style="color: #00BCAE"></i></div>
                                             }
                                         </div>
                                     </div>
                                     <div class="col-6 p-2">
                                         @if (changeForm)
                                         {
-                                            <input type="text" class="form-control" placeholder="Company Name" @bind="displayJobDetail.companyName" />
+                                            <input type="text" class="form-control" placeholder="Company Name" @bind="displayJobDetail.Company" />
                                         }
                                         else
                                         {
-                                            <h5 class="text-muted">@displayJobDetail.companyName</h5>
+                                            <h5 class="text-muted">@displayJobDetail.Company</h5>
                                         }
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
                                         @if (changeForm)
                                         {
-                                            <select class="form-select" @bind="displayJobDetail.location">
+                                            <select class="form-select" @bind="displayJobDetail.Location">
                                                 @foreach (var item in mockLocations.Distinct())
                                                 {
                                                     <option>@item.location</option>
@@ -177,12 +175,12 @@
                                         }
                                         else
                                         {
-                                            <p>@displayJobDetail.location</p>
+                                            <p>@displayJobDetail.Location</p>
                                         }
                                     </div>
                                     <div class="col-6 p-2">
                                         <div hidden="@(!changeForm)">
-                                            <select id="selectMultiOptions1" class="form-select" multiple="multiple">
+                                            <select class="selectMultiOptions1 form-select" multiple="multiple">
                                                 <option>Full-time/Part-time (Select1)</option>
                                                 <option>Full-time/Part-time (Select2)</option>
                                                 <option>Full-time/Part-time (Select3)</option>
@@ -196,7 +194,7 @@
                                     <div class="col-6 p-2 d-flex justify-content-end">
                                         @if (changeForm)
                                         {
-                                            <select class="form-select" @bind="displayJobDetail.department">
+                                            <select class="form-select" @bind="displayJobDetail.Department">
                                                 @foreach (var item in mockDepartments.Distinct())
                                                 {
                                                     <option>@item.department</option>
@@ -205,22 +203,22 @@
                                         }
                                         else
                                         {
-                                            <p>@displayJobDetail.department</p>
+                                            <p>@displayJobDetail.Department</p>
                                         }
                                     </div>
                                     <div class="col-12 p-2">
                                         @if (changeForm)
                                         {
-                                            <textarea class="form-control" style="resize: none" placeholder="Description" rows="3" @bind="displayJobDetail.description"></textarea>
+                                            <textarea class="form-control" placeholder="Description" rows="4" @bind="displayJobDetail.Description"></textarea>
                                         }
                                         else
                                         {
-                                            <p class="text-center">@displayJobDetail.description</p>
+                                            <p class="text-center">@displayJobDetail.Description</p>
                                         }
                                     </div>
                                     <div class="col-6 p-2">
                                         <div hidden="@(!changeForm)">
-                                            <select id="selectMultiOptions2" class="form-select" multiple="multiple" @bind="displayJobDetail.socialMedia">
+                                            <select class="selectMultiOptions2 form-select" multiple="multiple">
                                                 @foreach (var item in mockSocialMedia.Distinct())
                                                 {
                                                     <option>@item.socialMedia</option>
@@ -229,17 +227,17 @@
                                         </div>
                                         @if (!changeForm)
                                         {
-                                            <p>@displayJobDetail.socialMedia</p>
+                                            <p>@displayJobDetail.JobPlatforms</p>
                                         }
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
                                         @if (changeForm)
                                         {
-                                            <input class="form-control" type="date" placeholder="Due Date" @bind="displayJobDetail.dateDue" />
+                                            <input class="form-control" type="date" placeholder="Due Date" @bind="displayJobDetail.DueDate" />
                                         }
                                         else
                                         {
-                                            <p>@displayJobDetail.dateDue.ToString("d MMMM yyyy")</p>
+                                            <p>@displayJobDetail.DueDate.ToString("d MMMM yyyy")</p>
                                         }
                                     </div>
                                 </div>
@@ -250,42 +248,46 @@
             </div>
 
             <div class="row p-3">
-                <div class="col-4 d-flex justify-content-center">
-                    <nav>
-                        <ul class="pagination" style="cursor:pointer">
-                            @if (!jobPagedList.IsFirstPage)
-                            {
-                                <li class="page-item" @onclick="() => PageListNav(jobPagedList.PageNumber - 1)">
-                                    <a class="page-link">
-                                        <span>&laquo;</span>
-                                    </a>
-                                </li>
-                            }
-                            <li class="page-item @(jobPagedList.PageNumber.Equals(pageNum.FirstOrDefault()) ? "active":"")" @onclick="() => PageListNav(pageNum.FirstOrDefault())"><a class="page-link">@pageNum.FirstOrDefault()</a></li>
-                            @foreach (var item in pageNum)
-                            {
-                                if (item != pageNum.FirstOrDefault() && item != pageNum.LastOrDefault())
+                <div class="col-4">
+                    <div class="col-12 d-flex justify-content-center">
+                        <nav>
+                            <ul class="pagination" style="cursor:pointer">
+                                @if (!jobPagedList.IsFirstPage)
                                 {
-                                    <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active":"")" @onclick="() => PageListNav(item)"><a class="page-link">@item</a></li>
+                                    <li class="page-item" @onclick="() => PageListNav(jobPagedList.PageNumber - 1)">
+                                        <a class="page-link">
+                                            <span>&laquo;</span>
+                                        </a>
+                                    </li>
                                 }
-                            }
-                            @if (pageNum.Count > 1)
-                            {
-                                <li class="page-item @(jobPagedList.PageNumber.Equals(pageNum.LastOrDefault()) ? "active":"")" @onclick="() => PageListNav(pageNum.LastOrDefault())"><a class="page-link">@pageNum.LastOrDefault()</a></li>
-                            }
-                            @if (!jobPagedList.IsLastPage)
-                            {
-                                <li class="page-item" @onclick="() => PageListNav(jobPagedList.PageNumber + 1)">
-                                    <a class="page-link">
-                                        <span>&raquo;</span>
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-                    </nav>
+                                <li class="page-item @(jobPagedList.PageNumber.Equals(pageNum.FirstOrDefault()) ? "active":"")" @onclick="() => PageListNav(pageNum.FirstOrDefault())"><a class="page-link">@pageNum.FirstOrDefault()</a></li>
+                                @foreach (var item in pageNum)
+                                {
+                                    if (item != pageNum.FirstOrDefault() && item != pageNum.LastOrDefault() && item >= jobPagedList.PageNumber - 3 && item <= jobPagedList.PageNumber + 3)
+                                    {
+                                        <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active":"")" @onclick="() => PageListNav(item)"><a class="page-link">@item</a></li>
+                                    }
+                                }
+                                @if (pageNum.Count > 1)
+                                {
+                                    <li class="page-item @(jobPagedList.PageNumber.Equals(pageNum.LastOrDefault()) ? "active":"")" @onclick="() => PageListNav(pageNum.LastOrDefault())"><a class="page-link">@pageNum.LastOrDefault()</a></li>
+                                }
+                                @if (!jobPagedList.IsLastPage)
+                                {
+                                    <li class="page-item" @onclick="() => PageListNav(jobPagedList.PageNumber + 1)">
+                                        <a class="page-link">
+                                            <span>&raquo;</span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
-                <div class="col-8 d-flex justify-content-center">
-                    <button class="btn formButton" @onclick="GoToCreateAJob">Create Job</button>
+                <div class="col-8">
+                    <div class="col-12 d-flex justify-content-center">
+                        <button class="btn formButton" @onclick="GoToCreateAJob">Create Job</button>
+                    </div>
                 </div>
             </div>
         }

@@ -205,7 +205,7 @@
     {
         Console.WriteLine("getting Applicants");
         _applicants = (await _applicantDataService.GetAllApplicants()).ToList();
-        await _jsRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+        //await _jsRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
         _storeInitializedData = _applicants;
     }
 
