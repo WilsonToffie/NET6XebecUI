@@ -29,6 +29,7 @@
         height: 85vh;
         width: 100%;
     }
+
     .main-heading {
         height: 5vh;
         width: 100%;
@@ -39,6 +40,7 @@
         text-transform: uppercase;
         font-family: opensans-condensed-bold;
     }
+
     .main-body {
         height: 80vh;
         width: 100%;
@@ -50,7 +52,7 @@
         height: 100%;
         margin-left: 93.5%;
     }
-    
+
     .mainlayout-heading {
         width: 70%;
         height: 100%;
@@ -58,6 +60,7 @@
         background-color: none;
         display: flex;
     }
+
     .mainlayout-xebec-heading {
         font-size: 2em;
         color: rgba(0, 188, 174,1);
@@ -85,13 +88,13 @@
 
     .nav {
         width: 30%;
-        height:10vh;
+        height: 10vh;
         top: 0;
         justify-content: right;
-        justify-items:right;
+        justify-items: right;
     }
 
-    .nav-menu{
+    .nav-menu {
         height: 100%;
     }
 
@@ -195,6 +198,7 @@
         display: inline-block;
         height: 100%;
     }
+
     .profile-logout {
         color: #00bcae;
         font-size: 1.5em;
@@ -203,6 +207,7 @@
         text-align: center;
         height: 100%;
     }
+
         .profile-logout:hover {
             color: lightgrey;
             font-size: 1.5em;
@@ -211,11 +216,10 @@
             width: 100%;
             text-align: center;
         }
-
 </style>
 
 <div class="page" hidden="@DeveloperIsHidden">
-  
+
     <div class="header">
         <div class="d-flex justify-content-between align-items-center">
             <div class="mainlayout-heading">
@@ -231,7 +235,7 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body profile-div">
-            
+
             <div class="infodiv">
                 <h2 class="profile-name">@thisUser.Name @thisUser.Surname</h2>
             </div>
@@ -241,7 +245,6 @@
             <div class="infodiv">
                 <h2 class="profile-email">@thisUser.Email</h2>
             </div>
-
         </div>
         <div class="infodiv">
             <h2 class="profile-logout">Logout</h2>
@@ -254,7 +257,6 @@
         </div>
     </div>
     <div class="footer">
-
     </div>
 </div>
 <div class="page" hidden="@ApplicantIsHidden">
@@ -267,7 +269,6 @@
                 <img class="icon-user" src="/Img/user.svg" data-bs-toggle="offcanvas" data-bs-target="#showApplicant" aria-controls="offcanvasRight" />
                 <img class="icon-menu" src="/Img/list.svg" data-bs-toggle="offcanvas" data-bs-target="#showApplicantNav" aria-controls="offcanvasRight" />
             </div>
-
         </div>
     </div>
     <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showApplicant" aria-labelledby="offcanvasRightLabel">
@@ -275,7 +276,7 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body profile-div">
-            
+
             <div class="infodiv">
                 <h2 class="profile-name">@thisUser.Name @thisUser.Surname</h2>
             </div>
@@ -285,7 +286,6 @@
             <div class="infodiv">
                 <h2 class="profile-email">@thisUser.Email</h2>
             </div>
-
         </div>
         <div class="infodiv">
             <h2 class="profile-logout">Logout</h2>
@@ -330,11 +330,10 @@
         </div>
     </div>
     <div class="footer">
-
     </div>
 </div>
 <div class="page" hidden="@HRIsHidden">
- 
+
     <div class="header">
         <div class="d-flex justify-content-between align-items-center">
             <div class="mainlayout-heading">
@@ -351,7 +350,7 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body profile-div">
-            
+
             <div class="infodiv">
                 <h2 class="profile-name">@thisUser.Name @thisUser.Surname</h2>
             </div>
@@ -361,7 +360,6 @@
             <div class="infodiv">
                 <h2 class="profile-email">@thisUser.Email</h2>
             </div>
-
         </div>
         <div class="infodiv">
             <h2 class="profile-logout">Logout</h2>
@@ -424,12 +422,11 @@
         </div>
     </div>
     <div class="footer">
-       
     </div>
 </div>
-      
+
 @code{
-    private MainModel mainmodel= new MainModel();
+    private MainModel mainmodel = new MainModel();
     private List<UserModel> users = new List<UserModel>();
     private UserModel thisUser = new UserModel();
 
@@ -511,12 +508,17 @@
         }
         catch
         {
-            Console.WriteLine(mainmodel.ID+" not working");
+            Console.WriteLine(mainmodel.ID + " not working");
         }
 
-
-
     }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        JsRuntime.InvokeVoidAsync("HrJobPortalJS");
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
     private void showApplicantApplicationProfile()
     {
         applicantApplicationProfileIsHidden = false;

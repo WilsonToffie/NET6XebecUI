@@ -201,14 +201,11 @@
                             </tr>
                         }
                     }
-
-
                 </tbody>
             </table>
         </div>
     </div>
 </div>
-
 
 @code {
     List<Applicant> _applicants;
@@ -220,7 +217,7 @@
         Console.WriteLine("getting Applicants");
         _applicants = (await _applicantDataService.GetAllApplicants()).ToList();
 
-        await _jsRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
+        //await _jsRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
 
         _storeInitializedData = _applicants;
     }
@@ -245,11 +242,9 @@
         _applicants = (await _applicantDataService.GetAllApplicants()).ToList();
         Console.WriteLine("Done Getting Updated Applicants List");
 
-
         _storeInitializedData = _applicants;
         _tempApplicant = null;
     }
-
 
     private void ChangePhase(Applicant applicant, ChangeEventArgs e)
     {

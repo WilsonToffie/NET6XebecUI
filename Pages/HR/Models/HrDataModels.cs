@@ -19,15 +19,52 @@ namespace XebecPortal.UI.Pages.HR
 
     public class Job
     {
-        public int id { get; set; }
-        public string jobName { get; set; }
-        public string companyName { get; set; }
-        public string location { get; set; }
-        public string department { get; set; }
-        public string description { get; set; }
-        public string socialMedia { get; set; }
-        public DateTime dateAdvertised { get; set; }
-        public DateTime dateDue { get; set; }
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Company { get; set; }
+        public decimal? Compensation { get; set; }
+        public int? MinimumExperience { get; set; }
+        public string Location { get; set; }
+        public string Department { get; set; }
+        public DateTime DueDate { get; set; }
+        public DateTime CreationDate { get; set; }
+        public List<JobTypeHelper> JobTypes { get; set; }
+        public List<JobPlatformHelper> JobPlatforms { get; set; }
+        public List<JobApplicationPhase> JobPhases { get; set; }
+        public List<Application> Applications { get; set; }
+    }
+
+    public class JobType
+    {
+        public int Id { get; set; }
+        public string Type { get; set; }
+    }
+
+    public class JobTypeHelper
+    {
+        public int Id { get; set; }
+        //Foreign Key: Job
+        public int JobId { get; set; }
+        public Job Job { get; set; }
+        //Foreign Key: JobType
+        public int JobTypeId { get; set; }
+        public JobType JobType { get; set; }
+    }
+
+    public class JobPlatformHelper
+    {
+
+    }
+
+    public class JobApplicationPhase
+    {
+
+    }
+
+    public class Application
+    {
+
     }
 
     public class MockLocation
