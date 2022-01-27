@@ -47,7 +47,7 @@ namespace XebecPortal.UI.Services.MockServices
             throw new NotImplementedException();
         }
 
-        public async Task UpdateApplicant(Applicant applicant)
+        public async Task<IEnumerable<Applicant>> UpdateApplicant(Applicant applicant)
         {
             _applicants = _applicants.Select(i =>
             {
@@ -62,6 +62,8 @@ namespace XebecPortal.UI.Services.MockServices
 
                 return i;
             }).ToList();
+
+            return _applicants;
         }
 
         private void InitializeApplicants()
