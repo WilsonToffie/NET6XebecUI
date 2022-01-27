@@ -19,15 +19,15 @@ namespace XebecPortal.UI.Pages.HR
 
     public class Job
     {
-        public int id { get; set; }
-        public string jobName { get; set; }
-        public string companyName { get; set; }
-        public string location { get; set; }
-        public string department { get; set; }
-        public string description { get; set; }
-        public string socialMedia { get; set; }
-        public DateTime dateAdvertised { get; set; }
-        public DateTime dateDue { get; set; }
+        public int Id { get; set; }
+        public string JobName { get; set; }
+        public string CompanyName { get; set; }
+        public string Location { get; set; }
+        public string Department { get; set; }
+        public string Description { get; set; }
+        public string SocialMedia { get; set; }
+        public DateTime DateAdvertised { get; set; }
+        public DateTime DateDue { get; set; }
     }
 
     public class MockLocation

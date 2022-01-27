@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Bogus;
 using Microsoft.AspNetCore.Components;
 using XebecPortal.UI.Interfaces;
+using XebecPortal.UI.Pages.HR;
 using XebecPortal.UI.Services.MockServices;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -75,7 +76,7 @@ namespace XebecPortal.UI.Services.Models
                     {
                         jobInfo.ApplicationDate = application.BeginApplication;
                         var jobAppliedFor = await client.GetFromJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/api/job/{application.JobId}");
-                        if (jobAppliedFor != null) jobInfo.Position = jobAppliedFor.Title;
+                        if (jobAppliedFor != null) jobInfo.Position = jobAppliedFor.JobName;
                     }
 
                     

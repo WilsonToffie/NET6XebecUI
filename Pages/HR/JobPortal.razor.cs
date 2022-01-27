@@ -6,6 +6,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using X.PagedList;
 using System.Text.Json;
+using XebecPortal.UI.Services.Models;
 
 namespace XebecPortal.UI.Pages.HR
 {
@@ -56,7 +57,7 @@ namespace XebecPortal.UI.Pages.HR
         {
             if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Delete This Item?"))
             {
-                jobList = jobList.Where(x => x.id != id).ToList();
+                jobList = jobList.Where(x => x.Id != id).ToList();
                 var jsonFile = JsonSerializer.Serialize<List<Job>>(jobList.ToList());
             }
         }
@@ -65,7 +66,7 @@ namespace XebecPortal.UI.Pages.HR
         {
             if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Override This Item?"))
             {
-                var itemSearch = jobList.First(x => x.id == value.id);
+                var itemSearch = jobList.First(x => x.Id == value.Id);
                 var index = jobList.IndexOf(itemSearch);
                 jobList[index] = value;
             }
@@ -82,7 +83,7 @@ namespace XebecPortal.UI.Pages.HR
 
             if (value != null && value != "" && value != " ")
             {
-                jobListFilter = jobList.Where(x => $"{x.jobName} {x.companyName} {x.location}".Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
+                jobListFilter = jobList.Where(x => $"{x.JobName} {x.CompanyName} {x.Location}".Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
                 jobPagedList = jobListFilter.ToPagedList(1, 17);
                 pageNum.AddRange(Enumerable.Range(1, jobPagedList.PageCount));
             }
@@ -98,7 +99,7 @@ namespace XebecPortal.UI.Pages.HR
 
         private void DisplayJobDetail(int id)
         {
-            displayJobDetail = jobListFilter.FirstOrDefault(x => x.id == id);
+            displayJobDetail = jobListFilter.FirstOrDefault(x => x.Id == id);
         }
     }
 }

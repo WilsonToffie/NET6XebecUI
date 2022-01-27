@@ -112,15 +112,15 @@
                     <!--Card list for jobs-->
                     @foreach (var item in jobPagedList)
                     {
-                        <div class="card handPointer" @onclick="() => DisplayJobDetail(item.id)">
+                        <div class="card handPointer" @onclick="() => DisplayJobDetail(item.Id)">
                             <div class="card-body">
-                                <h3 class="card-title">@item.jobName</h3>
-                                <h5 class="card-subtitle text-muted">@item.companyName</h5>
+                                <h3 class="card-title">@item.JobName</h3>
+                                <h5 class="card-subtitle text-muted">@item.CompanyName</h5>
                                 <br />
                                 <p class="card-text">
-                                    @item.location
+                                    @item.Location
                                     <br />
-                                    @item.dateDue.ToString("dd MMMM yyyy")
+                                    @item.DateDue.ToString("dd MMMM yyyy")
                                 </p>
                             </div>
                         </div>
@@ -138,11 +138,11 @@
                                     <div class="col-6 p-2">
                                         @if (changeForm)
                                         {
-                                            <input type="text" class="form-control" placeholder="Job Name" @bind="displayJobDetail.jobName" />
+                                            <input type="text" class="form-control" placeholder="Job Name" @bind="displayJobDetail.JobName" />
                                         }
                                         else
                                         {
-                                            <h3>@displayJobDetail.jobName</h3>
+                                            <h3>@displayJobDetail.JobName</h3>
                                         }
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
@@ -155,24 +155,24 @@
                                             else
                                             {
                                                 <div class="col handPointer" @onclick="() => FormType(true)"><i class="fa fa-edit fa-2x" style="color: #00BCAE"></i></div>
-                                                <div class="col handPointer" @onclick="() => DeleteData(displayJobDetail.id)"><i class="fa fa-trash fa-2x" style="color: #00BCAE"></i></div>
+                                                <div class="col handPointer" @onclick="() => DeleteData(displayJobDetail.Id)"><i class="fa fa-trash fa-2x" style="color: #00BCAE"></i></div>
                                             }
                                         </div>
                                     </div>
                                     <div class="col-6 p-2">
                                         @if (changeForm)
                                         {
-                                            <input type="text" class="form-control" placeholder="Company Name" @bind="displayJobDetail.companyName" />
+                                            <input type="text" class="form-control" placeholder="Company Name" @bind="displayJobDetail.CompanyName" />
                                         }
                                         else
                                         {
-                                            <h5 class="text-muted">@displayJobDetail.companyName</h5>
+                                            <h5 class="text-muted">@displayJobDetail.CompanyName</h5>
                                         }
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
                                         @if (changeForm)
                                         {
-                                            <select class="form-select" @bind="displayJobDetail.location">
+                                            <select class="form-select" @bind="displayJobDetail.Location">
                                                 @foreach (var item in mockLocations.Distinct())
                                                 {
                                                     <option>@item.location</option>
@@ -181,7 +181,7 @@
                                         }
                                         else
                                         {
-                                            <p>@displayJobDetail.location</p>
+                                            <p>@displayJobDetail.Location</p>
                                         }
                                     </div>
                                     <div class="col-6 p-2">
@@ -200,7 +200,7 @@
                                     <div class="col-6 p-2 d-flex justify-content-end">
                                         @if (changeForm)
                                         {
-                                            <select class="form-select" @bind="displayJobDetail.department">
+                                            <select class="form-select" @bind="displayJobDetail.Department">
                                                 @foreach (var item in mockDepartments.Distinct())
                                                 {
                                                     <option>@item.department</option>
@@ -209,22 +209,22 @@
                                         }
                                         else
                                         {
-                                            <p>@displayJobDetail.department</p>
+                                            <p>@displayJobDetail.Department</p>
                                         }
                                     </div>
                                     <div class="col-12 p-2">
                                         @if (changeForm)
                                         {
-                                            <textarea class="form-control" style="resize: none" placeholder="Description" rows="3" @bind="displayJobDetail.description"></textarea>
+                                            <textarea class="form-control" style="resize: none" placeholder="Description" rows="3" @bind="displayJobDetail.Description"></textarea>
                                         }
                                         else
                                         {
-                                            <p class="text-center">@displayJobDetail.description</p>
+                                            <p class="text-center">@displayJobDetail.Description</p>
                                         }
                                     </div>
                                     <div class="col-6 p-2">
                                         <div hidden="@(!changeForm)">
-                                            <select class="form-select selectMultiOptions2" multiple="multiple" @bind="displayJobDetail.socialMedia">
+                                            <select class="form-select selectMultiOptions2" multiple="multiple" @bind="displayJobDetail.SocialMedia">
                                                 @foreach (var item in mockSocialMedia.Distinct())
                                                 {
                                                     <option>@item.socialMedia</option>
@@ -233,17 +233,17 @@
                                         </div>
                                         @if (!changeForm)
                                         {
-                                            <p>@displayJobDetail.socialMedia</p>
+                                            <p>@displayJobDetail.SocialMedia</p>
                                         }
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
                                         @if (changeForm)
                                         {
-                                            <input class="form-control" type="date" placeholder="Due Date" @bind="displayJobDetail.dateDue" />
+                                            <input class="form-control" type="date" placeholder="Due Date" @bind="displayJobDetail.DateDue" />
                                         }
                                         else
                                         {
-                                            <p>@displayJobDetail.dateDue.ToString("d MMMM yyyy")</p>
+                                            <p>@displayJobDetail.DateDue.ToString("d MMMM yyyy")</p>
                                         }
                                     </div>
                                 </div>

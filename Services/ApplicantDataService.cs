@@ -14,6 +14,7 @@ namespace XebecPortal.UI.Services
     {
         private readonly HttpClient _httpClient;
         private readonly MockApplicantDataService _mocks;
+        private HttpClient altClient = new HttpClient();
 
         public ApplicantDataService(HttpClient httpClient)
         {
@@ -24,16 +25,23 @@ namespace XebecPortal.UI.Services
         public async Task<IEnumerable<Applicant>> GetAllApplicants()
         {
             // return await JsonSerializer.DeserializeAsync<IEnumerable<Applicant>>
-            //     (await _httpClient.GetStreamAsync($"api/applicant/all-jobs"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-            return (await _mocks.GetAllApplicants()).ToList();
+            //     (await _httpClient.GetStreamAsync($"api/applicant/"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            
+            return await JsonSerializer.DeserializeAsync<IEnumerable<Applicant>>
+                (await altClient.GetStreamAsync($"https://xebecapi.azurewebsites.net/api/applicant"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            //return (await _mocks.GetAllApplicants()).ToList();
         }
 
         public async Task<IEnumerable<Applicant>> GetAllApplicantsByJobId(int jobId)
         {
             // return await JsonSerializer.DeserializeAsync<IEnumerable<Applicant>>
             // (await _httpClient.GetStreamAsync($"api/applicant/{jobId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-            var mocks = new MockApplicantDataService();
-            return await mocks.GetAllApplicants();
+            
+            return await JsonSerializer.DeserializeAsync<IEnumerable<Applicant>>
+            (await altClient.GetStreamAsync($"https://xebecapi.azurewebsites.net/api/applicant/{jobId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            
+            // var mocks = new MockApplicantDataService();
+            // return await mocks.GetAllApplicants();
         }
 
         public async Task<Applicant> GetApplicantDetails(int applicantId)

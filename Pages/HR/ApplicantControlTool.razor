@@ -1,10 +1,12 @@
 ﻿@page "/hrapplicantcontroltool"
 @using XebecPortal.UI.Interfaces
 @using XebecPortal.UI.Services.Models
+@using JetBrains.Annotations
+@using System.Globalization
 @inject IApplicantDataService _applicantDataService
 @inject IJobDataService _jobDataService
 @inject IJSRuntime _jsRuntime
-
+@inject HttpClient altHttpClient
 <style>
     * {
         font-family: 'Open Sans','Arial Narrow',Arial,sans-serif !important;
@@ -132,77 +134,77 @@
     <div class="table-container p-4">
 
         <div class="table-wrap">
-            <h4>Applicants</h4><hr />
+            <h4 class="d-flex justify-content-between">
+                <span>Applicants</span>
+            </h4><hr/>
             <table id="example" class="table table-striped table-bordered ">
                 <thead>
-                    <tr style="color:#fff;" class="col-12">
-                        <th class="col-small">#</th>
-                        <th class="col-2">Full Name</th>
-                        <th class="col-small">CST Mark</th>
-                        <th class="col-3">CST Comment</th>
-                        <th class="col-1">Int. Rating</th>
-                        <th class="col-3">Interview Comment</th>
-                        <th class="col-1">Phase</th>
-                        <th class="col-1">Action</th>
-                    </tr>
+                <tr style="color:#fff;" class="col-12">
+                    <th class="col-small">#</th>
+                    <th class="col-2">Full Name</th>
+                    <th class="col-small">CST Mark</th>
+                    <th class="col-3">CST Comment</th>
+                    <th class="col-1">Int. Rating</th>
+                    <th class="col-3">Interview Comment</th>
+                    <th class="col-1">Phase</th>
+                    <th class="col-1">Action</th>
+                </tr>
                 </thead>
                 <tbody>
-                    @if (_applicants != null)
+                @if (_applicants != null)
+                {
+                    foreach (var applicant in _applicants)
                     {
-                        foreach (var applicant in _applicants)
-                        {
-                            <tr class="col-12">
-                                <td class="col-small">@applicant.Id</td>
-                                <td class="colspan">@applicant.FirstName @applicant.LastName</td>
-                                <td class="col-small">@(applicant.CstMark)%</td>
-                                <td class="col-3">@applicant.CstComment</td>
+                        <tr class="col-12">
+                            <td class="col-small">@applicant.Id</td>
+                            <td class="colspan">@applicant.FirstName @applicant.LastName</td>
+                            <td class="col-small">@(applicant.CstMark)%</td>
+                            <td class="col-3">@applicant.CstComment</td>
 
-                                @if (_tempApplicant != applicant)
+                            @if (_tempApplicant != applicant)
+                            {
+                                <td class="col-1">@(applicant.InterviewRating)%</td>
+                                <td class="col-3">@applicant.InterviewComment</td>
+                                <td class="col-1">@applicant.Phase</td>
+                            }
+                            else
+                            {
+                                <td class="col-1">
+                                    <input type="text" class="form-control" @bind="_tempApplicant.InterviewRating">
+                                </td>
+                                <td class="col-3">
+                                    <textarea class="form-control" rows="5" @bind="_tempApplicant.InterviewComment"></textarea>
+                                </td>
+                                <td class="col-1 small">
+                                    <select class="form-control" @onchange="e => ChangePhase(applicant, e)">
+                                        <option disabled>--Select Phase--</option>
+                                        <option value="application">Application</option>
+                                        <option value="interview">Interview</option>
+                                        <option value="offer">Offer</option>
+                                        <option value="hire">Hire</option>
+                                    </select>
+                                </td>
+                            }
+                            <td class="col-1">
+                                @if (applicant != _tempApplicant)
                                 {
-                                    <td class="col-1">@(applicant.InterviewRating)%</td>
-                                    <td class="col-3">@applicant.InterviewComment</td>
-                                    <td class="col-1">@applicant.Phase</td>
+                                    <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => Edit(applicant)">
+                                        <i class="fas fa-pen"></i>
+                                    </button>
                                 }
                                 else
                                 {
-                                    <td class="col-1">
-                                        <input type="text" class="form-control" @bind="_tempApplicant.InterviewRating">
-                                    </td>
-                                    <td class="col-3">
-                                        <textarea class="form-control" rows="5" @bind="_tempApplicant.InterviewComment"></textarea>
-                                    </td>
-                                    <td class="col-1 small">
-                                        <select class="form-control" @onchange="e => ChangePhase(applicant, e)">
-                                            <option disabled>--Select Phase--</option>
-                                            <option value="application">Application</option>
-                                            <option value="interview">Interview</option>
-                                            <option value="offer">Offer</option>
-                                            <option value="hire">Hire</option>
-                                        </select>
-                                    </td>
+                                    <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => Save(applicant)">
+                                        <i class="fas fa-save"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => CancelEdit(applicant)">
+                                        <i class="fas fa-times"></i>
+                                    </button>
                                 }
-                                <td class="col-1">
-                                    @if (applicant != _tempApplicant)
-                                    {
-                                        <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => Edit(applicant)">
-                                            <i class="fas fa-pen"></i>
-                                        </button>
-                                    }
-                                    else
-                                    {
-                                        <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => Save(applicant)">
-                                            <i class="fas fa-save"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => CancelEdit(applicant)">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    }
-                                </td>
-                            </tr>
-                        }
+                            </td>
+                        </tr>
                     }
-
-
+                }
                 </tbody>
             </table>
         </div>
@@ -212,16 +214,17 @@
 
 @code {
     List<Applicant> _applicants;
+    List<Job> _jobs;
     Applicant _tempApplicant;
     private List<Applicant> _storeInitializedData;
+
 
     protected override async Task OnInitializedAsync()
     {
         Console.WriteLine("getting Applicants");
         _applicants = (await _applicantDataService.GetAllApplicants()).ToList();
-
-        await _jsRuntime.InvokeAsync<object>("TestDataTablesAdd", "#example");
-
+    //_applicants = (await _applicantDataService.GetAllApplicantsByJobId(1)).ToList();
+        _jobs = (await _jobDataService.GetAllJobs()).ToList();
         _storeInitializedData = _applicants;
     }
 
@@ -244,15 +247,44 @@
         Console.WriteLine("Get Updated Applicants List");
         _applicants = (await _applicantDataService.GetAllApplicants()).ToList();
         Console.WriteLine("Done Getting Updated Applicants List");
-
-
         _storeInitializedData = _applicants;
         _tempApplicant = null;
+        
     }
-
 
     private void ChangePhase(Applicant applicant, ChangeEventArgs e)
     {
         if (e.Value != null) _tempApplicant.Phase = e.Value.ToString();
     }
+
+    [Parameter]
+    public string JobId { get; set; }
+
+    [Parameter]
+    [CanBeNull]
+    public string Keyword { get; set; }
+
+    [Parameter]
+    [CanBeNull]
+    public EventCallback<string> KeywordChanged { get; set; }
+
+    private string _keyword = string.Empty;
+
+    private Task OnKeywordChanged(ChangeEventArgs e)
+    {
+        _keyword = e?.Value?.ToString();
+
+        if (string.IsNullOrWhiteSpace(_keyword))
+        {
+            _applicants = _storeInitializedData;
+
+            return Task.CompletedTask;
+        }
+
+        _applicants = _storeInitializedData.FindAll(a =>
+            a.Id.ToString().ToLower().Contains(_keyword.ToLower()) || a.Phase.ToLower().Contains(_keyword.ToLower()) || a.CstComment.ToLower().Contains(_keyword.ToLower()) || a.CstMark.ToString().ToLower().Contains(_keyword.ToLower()) || a.InterviewRating.ToString().ToLower().Contains(value: _keyword.ToLower()));
+
+        return KeywordChanged.InvokeAsync(_keyword);
+    }
+
 }
