@@ -166,7 +166,9 @@
     .rejection-card {
     }
 </style>
-<div class="main-wrapper">
+@if (_allJobs != null)
+{
+    <div class="main-wrapper">
     <!--Search-Box-->
     <div class="row" style="height:5vh; grid-column: span 4;">
         <div class="col">
@@ -243,6 +245,15 @@
         }
     </div>
 </div>
+}
+else
+{
+    
+    <button class="btn btn-primary" type="button" disabled>
+        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+        Getting Jobs....
+    </button>
+}
 
 @code {
     List<MyJob> _allJobs;
@@ -264,7 +275,9 @@
 
     protected override void OnInitialized()
     {
-        _allJobs = _myJobListDataService.GetAllJobs();
+         _allJobs = _myJobListDataService.GetAllJobs();
+        //_allJobs = (await _myJobListDataService.GetAllJobsByAppUserId(2)).ToList();
+        
         _initJobs = _allJobs;
         _applications = _allJobs.FindAll(
             match: a => a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));

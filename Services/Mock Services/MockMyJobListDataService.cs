@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Bogus;
 using XebecPortal.UI.Interfaces;
 using XebecPortal.UI.Services.Models;
@@ -59,7 +60,7 @@ namespace XebecPortal.UI.Services.MockServices
             return MyJob;
         }
 
-        public List<MyJob> GetAllJobsByAppUserId(int appUserId)
+        public Task<List<MyJob>> GetAllJobsByAppUserId(int appUserId)
         {
             throw new System.NotImplementedException();
         }
