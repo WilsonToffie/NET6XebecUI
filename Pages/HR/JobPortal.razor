@@ -263,9 +263,20 @@
                                 <li class="page-item @(jobPagedList.PageNumber.Equals(pageNum.FirstOrDefault()) ? "active":"")" @onclick="() => PageListNav(pageNum.FirstOrDefault())"><a class="page-link">@pageNum.FirstOrDefault()</a></li>
                                 @foreach (var item in pageNum)
                                 {
-                                    if (item != pageNum.FirstOrDefault() && item != pageNum.LastOrDefault() && item >= jobPagedList.PageNumber - 3 && item <= jobPagedList.PageNumber + 3)
+                                    if (item != pageNum.FirstOrDefault() && item != pageNum.LastOrDefault())
                                     {
-                                        <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active":"")" @onclick="() => PageListNav(item)"><a class="page-link">@item</a></li>
+                                        @if (item >= jobPagedList.PageCount - 3 - 2 && jobPagedList.PageNumber >= jobPagedList.PageCount - 3)
+                                        {
+                                            <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active":"")" @onclick="() => PageListNav(item)"><a class="page-link">@item</a></li>
+                                        }
+                                        else if (item <= 4 + 2 && jobPagedList.PageNumber <= 4)
+                                        {
+                                            <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active":"")" @onclick="() => PageListNav(item)"><a class="page-link">@item</a></li>
+                                        }
+                                        else if (item >= jobPagedList.PageNumber - 2 && item <= jobPagedList.PageNumber + 2 && jobPagedList.PageNumber < jobPagedList.PageCount - 3 && jobPagedList.PageNumber > 4)
+                                        {
+                                            <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active":"")" @onclick="() => PageListNav(item)"><a class="page-link">@item</a></li>
+                                        }
                                     }
                                 }
                                 @if (pageNum.Count > 1)
