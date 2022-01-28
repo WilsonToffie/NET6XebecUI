@@ -6,7 +6,7 @@
     .wrapper {
         margin-left: 10%;
         width: 80%;
-        min-height: 78vh;
+        height: 78vh;
         display: flex;
         justify-content: space-evenly;
         align-items: center;
@@ -78,7 +78,7 @@
         top: 18%;
         width: 500px;
         height: 350px;
-        background-color: #A7A9AB;
+        background-color: #f2f2f2;
         border: 2px solid black;
         border-radius: 5px;
         animation-name: fade-in;
@@ -91,7 +91,7 @@
         top: 18%;
         width: 500px;
         height: 450px;
-        background-color: #A7A9AB;
+        background-color: #f2f2f2;
         border: 2px solid black;
         border-radius: 5px;
         animation-name: fade-in;
@@ -237,8 +237,8 @@
     {
         <div class="add-popup">
             <div class="add-popup-header">
-                <h4 style="margin-left: 20px;">Add Question:</h4>
-                <button class="btn-close" style="margin-left: 57%" @onclick="CloseAddPopup"></button>
+                <h4 style="margin-left: 20px; font-size: 20px;">Add Question:</h4>
+                <button class="btn-close" style="margin-left: 68%" @onclick="CloseAddPopup"></button>
             </div>
             <div class="add-popup-body">
                 <textarea style="width: 80%; border: 2px solid grey" @bind="tempQuestion.questionDescription"></textarea>
@@ -252,24 +252,18 @@
     {
         <div class="delete-popup">
             <div class="delete-popup-header">
-                <h4 style="margin-left: 20px;">Delete:</h4>
+                <h4 style="margin-left: 20px; font-size: 20px;">Delete Questions:</h4>
                 <button class="btn-close" style="margin-left: 57%" @onclick="CloseDeletePopup"></button>
             </div>
             <div class="delete-popup-body">
                 <table class="table">
-                    <thead style="background-color: #003340; color: white;">
-                        <tr>
-                            <th style="width: 90%">Questions</th>
-                            <th style="background-color: #003340; width: 20%;"></th>
-                        </tr>
-                    </thead>
                     <tbody>
                         @if (Questions != null)
                         {
                             @foreach (var question in Questions)
                             {
                                 <tr>
-                                    <td class="question-description">@question.questionDescription</td>
+                                    <td class="question-description" style="font-size: 15px;">@question.questionDescription</td>
                                     <td style="max-width: 10%">
                                         <button class="btn-close" @onclick="() => DeleteQuestion(question)"></button>
                                     </td>
@@ -374,6 +368,6 @@
     {
         await httpClient.PostAsJsonAsync<List<FormQuestion>>("https://xebecapi.azurewebsites.net/api/questionnaire/lst", FormQuestions);
 
-        NavigationManager.NavigateTo("/phasecontrol");
+        //NavigationManager.NavigateTo("/phasecontrol");
     }
 }
