@@ -6,7 +6,6 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using X.PagedList;
 using System.Text.Json;
-using XebecPortal.UI.Services.Models;
 
 namespace XebecPortal.UI.Pages.HR
 {
@@ -27,7 +26,7 @@ namespace XebecPortal.UI.Pages.HR
 
         protected override async Task OnInitializedAsync()
         {
-            jobList = await httpClient.GetFromJsonAsync<List<Job>>("/mockData/jobMockData.json");
+            jobList = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
             mockDepartments = await httpClient.GetFromJsonAsync<List<MockDepartment>>("/mockData/departmentMockData.json");
             mockLocations = await httpClient.GetFromJsonAsync<List<MockLocation>>("/mockData/locationMockData.json");
             mockSocialMedia = await httpClient.GetFromJsonAsync<List<MockSocialMedia>>("/mockData/socialmediaMockData.json");
@@ -39,7 +38,7 @@ namespace XebecPortal.UI.Pages.HR
 
         protected override Task OnAfterRenderAsync(bool firstRender)
         {
-            jsRuntime.InvokeVoidAsync("HrJobPortalJs");
+            jsRuntime.InvokeVoidAsync("HrJobPortalJS");
             return base.OnAfterRenderAsync(firstRender);
         }
 
@@ -57,9 +56,15 @@ namespace XebecPortal.UI.Pages.HR
         {
             if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Delete This Item?"))
             {
-                jobList = jobList.Where(x => x.Id != id).ToList();
-                var jsonFile = JsonSerializer.Serialize<List<Job>>(jobList.ToList());
+                await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/Job/{id}");
+                jobList = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
+                jobListFilter = jobList;
+                pageNum.Clear();
+                jobPagedList = jobListFilter.ToPagedList(1, 17);
+                displayJobDetail = jobListFilter.FirstOrDefault();
+                pageNum.AddRange(Enumerable.Range(1, jobPagedList.PageCount));
             }
+
         }
 
         private async Task SaveData(Job value)
@@ -83,7 +88,7 @@ namespace XebecPortal.UI.Pages.HR
 
             if (value != null && value != "" && value != " ")
             {
-                jobListFilter = jobList.Where(x => $"{x.JobName} {x.CompanyName} {x.Location}".Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
+                jobListFilter = jobList.Where(x => $"{x.Title} {x.Company} {x.Location}".Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
                 jobPagedList = jobListFilter.ToPagedList(1, 17);
                 pageNum.AddRange(Enumerable.Range(1, jobPagedList.PageCount));
             }

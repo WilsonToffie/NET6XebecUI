@@ -1,11 +1,14 @@
 ﻿@page "/phasecontrol"
-@using XebecPortal.UI.Services.Models
 @inject HttpClient httpClient
 @inject IJSRuntime jsr
 
 <style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
 
-    .container {
+    .container-phasecontrol {
         display: flex;
         width: 100%;
         height: 60vh;
@@ -20,25 +23,41 @@
     .select-phase {
         justify-content: center;
         text-align: center;
-        margin-right: 50px;
-        margin-left: 50px;
-        width: 50%;
         height: 100%;
+        width: 45%;
+        margin-left: 5%;
+        margin-right: 5%;
+        background-color: transparent;
+        box-shadow: rgba(0, 0, 0, 0.8) 0px 5px 15px;
+        border-radius: 2em;
+    }
+
+    .select-phase-content {
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+        margin-left: 0px;
     }
 
     .phase-order {
         justify-content: center;
         text-align: center;
-        margin-left: 75px;
-        margin-right: 75px;
-        width: 50%;
         height: 100%;
+        width: 45%;
+        margin-right: 5%;
+        background-color: transparent;
+        border-radius: 2em;
+        box-shadow: rgba(0, 0, 0, 0.8) 0px 5px 15px;
     }
 
     .phase-order-content {
         justify-content: center;
-        text-align: left;
+        text-align: center;
+        width: 95%;
         height: 100%;
+        margin-left: 2.5%;
+        margin-right: 2.5%;
     }
 
     .button {
@@ -118,99 +137,99 @@
         width: 100%;
         height: 50%;
     }
+
+    .select-phase-header {
+        font-family: opensans-condensed-bold;
+        font-weight: 700;
+        color: white;
+        background-color: #00bcae;
+        text-align: center;
+        font-size: 1.5em;
+        border-top-right-radius: 2em;
+        border-top-left-radius: 2em;
+        width: 100%;
+        text-transform: uppercase;
+    }
 </style>
 
-<div class="container">
-    <div class="select-phase row overflow-auto">
 
-        <table class="table-bordered" style="background-color: lightgrey;">
-            <thead style="background-color: #003340">
-            <tr>
-                <td style="color: white; text-align: center; font-size: 20px;" colspan="2">Select Phase</td>
-            </tr>
-            </thead>
+<div class="container-phasecontrol">
+    <div class="select-phase">
 
-            <tbody>
+        <div class="select-phase-header">Phase Selection</div>
 
-            @foreach (var phase in phases)
-            {
-                <tr>
-                    <td style="font-weight: bold" @onclick="() => AddPhase(phase)">@phase.description</td>
-                    <td class="close-phase" @onclick="() => DeletePhase(phase)">&times;</td>
-                </tr>
-                @foreach (var subphase in subphases)
-                {
-                    @if (phase.id == subphase.applicationPhaseId)
+        <div class="select-phase-content row overflow-auto">
+
+            <table style="background-color:transparent">
+
+                <colgroup>
+                    <col style="width: 90%;">
+                    <col style="width: 10%;">
+                </colgroup>
+
+                <tbody>
+
+                    @foreach (var phase in phases)
                     {
                         <tr>
-                            <td style="font-weight: bold" @onclick="() => AddSubPhase(phase, subphase)">@subphase.description</td>
-                            <td class="close-phase" @onclick="() => DeleteSubPhase(subphase)">&times;</td>
+                            <td style="font-weight: bold; font-size: 15px" @onclick="() => AddPhase(phase)">@phase.description</td>
+                            <td class="close-phase" @onclick="() => DeletePhase(phase)">&times;</td>
                         </tr>
                     }
-                }
-            }
 
-            </tbody>
+                </tbody>
 
-        </table>
+            </table>
+        </div>
         <div class="button">
             <button @onclick="ToggleModalSubmitPhase" class="button-content">Add Phase</button>
         </div>
     </div>
 
-    <div class="phase-order row overflow-auto">
 
-        <table style="background-color: lightgrey">
-            <colgroup>
-                <col style="width: 70%;">
-                <col style="width: 30%;">
-            </colgroup>
 
-            <thead style="color: white">
-            <tr>
-                <td style="text-align: center; font-size: 20px" colspan="2">Phase Order</td>
-            </tr>
-            </thead>
+    <div class="phase-order">
 
-            <tbody style="text-align: left">
+        <div class="select-phase-header">Phase Form</div>
 
-            @foreach (var phase in phasesAdded)
-            {
-                <tr class="align-text-top">
-                    <tr>
-                        <td class="text-left" style="font-weight: bold">@phase.description</td>
-                    </tr>
-                    @foreach (var subphase in SubPhasesAdded)
+        <div class="phase-order-content row overflow-auto">
+            <table style=" background-color: transparent;">
+
+                <colgroup>
+                    <col style="width: 20%">
+                    <col style="width: 70%">
+                    <col style="width: 10%">
+                </colgroup>
+
+                <tbody style=" align-items: center">
+
+                    @foreach (var phase in phasesAdded)
                     {
-                        @if (phase.id == subphase.applicationPhaseId)
+                        if (phase.description == "Interview")
                         {
                             <tr>
-                                <td style="font-weight: bold">@subphase.description</td>
-                                <td>
-                                    <button type="button" @onclick="() => DeletePhaseOrderSubPhase(subphase)" class="button-content" btn>Remove</button>
-                                </td>
-                                @if (subphase.description.ToLower() == "developer interview")
-                                {
-                                    <td>@developerAssigned</td>
-                                }
+                                <td class="text-left" style="font-weight: bold; font-size: 15px">@phase.description</td>
+                                <td style="color: #00bcae; font-size: 13px; font-weight: bold; text-align:left">@developerAssigned</td>
+                                <td class="close-phase" @onclick="() => DeletePhaseOrderPhase(phase)">&times;</td>
                             </tr>
                         }
+                        else
+                        {
+                            <tr>
+                                <td class="text-left" style="font-weight: bold; font-size: 15px" colspan="2">@phase.description</td>
+                                <td class="close-phase" @onclick="() => DeletePhaseOrderPhase(phase)">&times;</td>
+                            </tr>
+                        }
+
                     }
 
-                    <td>
-                        <button type="button" @onclick="() => DeletePhaseOrderPhase(phase)" class="button-content" btn>Remove</button>
-                    </td>
-                </tr>
-            }
 
-            </tbody>
+                </tbody>
 
-        </table>
-
+            </table>
+        </div>
         <div class="button">
-            <a href="https://localhost:44364/">
-                <button class="button-content">Add Phase</button>
-            </a>
+            <a href="https://localhost:44364/"><button class="button-content">Assign Phases</button></a>
         </div>
     </div>
 </div>
@@ -221,7 +240,7 @@
         <div class="modal-content">
             <span class="close" @onclick="ToggleModalSubmitPhase">&times;</span>
             <p>Phase:</p>
-            <input type="text" @bind="@phaseValue.description"/>
+            <input type="text" @bind="@phaseValue.description" />
             <div class="button">
                 <button type="submit" @onclick="AddPhase" class="button-content">Submit Phase</button>
             </div>
@@ -232,44 +251,36 @@
 @if (showModalAssign)
 {
     <div class="modalbox">
-        <div class="modal-content">
+        <div class="modal-content" style="height: 400px">
+            <div style="font-weight: bold; padding: 10px">Select Developer</div>
 
             <span class="close" @onclick="ToggleModalAssign">&times;</span>
+            <div style=" overflow: auto">
+                <table class="table-bordered position-relative" style="background-color: lightgrey; padding-right: 10px; margin-top: 20px">
+                    <tbody>
 
-            <table class="table-bordered position-relative" style="background-color: lightgrey; padding-right: 10px; margin-top: 20px">
-                <thead style="background-color: #003340">
-                <tr>
-                    <td style="color: white">Select Developer</td>
-                </tr>
-                </thead>
+                        @foreach (var developer in developers)
+                        {
+                            @if (developer.role == "Developer")
+                            {
+                                <tr>
+                                    <td @onclick="() => AssignDeveloper(developer)">@developer.name</td>
+                                </tr>
+                            }
+                        }
 
-                <tbody>
+                    </tbody>
 
-                @foreach (var developer in developers)
-                {
-                    @if (developer.role == "Developer")
-                    {
-                        <tr>
-                            <td @onclick="() => AssignDeveloper(developer)">@developer.name</td>
-                        </tr>
-                    }
-                }
-
-                </tbody>
-
-            </table>
-            @*<div class="button">
-                        <button @onclick="ToggleModalAssign" class="button-content">Assign</button>
-                    </div>*@
+                </table>
+            </div>
         </div>
     </div>
 }
 
+
 @code
 {
     private IList<Phase> phases = new List<Phase>();
-    private IList<SubPhase> subphases = new List<SubPhase>();
-    private IList<SubPhase> SubPhasesAdded = new List<SubPhase>();
     private IList<Phase> phasesAdded = new List<Phase>();
     private IList<AppUser> developers = new List<AppUser>();
     private IList<Job> jobs = new List<Job>();
@@ -287,7 +298,6 @@
     protected override async Task OnInitializedAsync()
     {
         phases = await httpClient.GetFromJsonAsync<List<Phase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
-        subphases = await httpClient.GetFromJsonAsync<List<SubPhase>>("https://xebecapi.azurewebsites.net/api/applicationsubphase");
         developers = await httpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
 
         jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
@@ -314,16 +324,9 @@
         await jsr.InvokeVoidAsync("alert", "Deleted!");
     }
 
-    private async Task DeleteSubPhase(SubPhase subPhase)
-    {
-        await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/applicationsubphase/{subPhase.id}");
-        subphases = await httpClient.GetFromJsonAsync<List<SubPhase>>("https://xebecapi.azurewebsites.net/api/applicationsubphase");
-
-        await jsr.InvokeVoidAsync("alert", "Deleted!");
-    }
-
     private async Task AddPhase()
     {
+
         await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/applicationphase", phaseValue);
 
         phases = await httpClient.GetFromJsonAsync<List<Phase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
@@ -333,10 +336,11 @@
 
     private async Task SubmitPhases()
     {
-    @foreach (var phase in phasesAdded)
-    {
-        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobapplicationphase", phaseValue);
-    }
+        @foreach (var phase in phasesAdded)
+        {
+            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobapplicationphase", phaseValue);
+        }
+
     }
 
     private void AddPhase(Phase phase)
@@ -345,62 +349,27 @@
         {
             phasesAdded.Add(phase);
         }
-    }
-
-    private void AddSubPhase(Phase phase, SubPhase subPhase)
-    {
-        if (!phasesAdded.Contains(phase) && !SubPhasesAdded.Contains(subPhase))
-        {
-            phasesAdded.Add(phase);
-            SubPhasesAdded.Add(subPhase);
-        }
-        else if (!SubPhasesAdded.Contains(subPhase))
-        {
-            SubPhasesAdded.Add(subPhase);
-        }
-
-        if (subPhase.description.ToLower() == "developer interview")
+        if (phase.description == "Interview")
         {
             ToggleModalAssign();
         }
+
     }
 
     private void AssignDeveloper(AppUser developer)
     {
+        ToggleModalAssign();
         developerAssigned = developer.name;
     }
 
     private async Task DeletePhaseOrderPhase(Phase phase)
     {
-        Phase tempPhase = phase;
         phasesAdded.Remove(phase);
-
-    @foreach (var subphase in SubPhasesAdded)
-    {
-    @if (tempPhase.id == subphase.applicationPhaseId)
-    {
-        DeletePhaseOrderSubPhase(subphase);
-    }
-    }
-    }
-
-    private void DeletePhaseOrderSubPhase(SubPhase subPhase)
-    {
-        SubPhasesAdded.Remove(subPhase);
     }
 
     class Phase
     {
         public int id { get; set; }
-
-        public string description { get; set; }
-    }
-
-    class SubPhase
-    {
-        public int id { get; set; }
-
-        public int applicationPhaseId { get; set; }
 
         public string description { get; set; }
     }
