@@ -76,7 +76,7 @@ namespace XebecPortal.UI.Services.Models
                     {
                         jobInfo.ApplicationDate = application.BeginApplication;
                         var jobAppliedFor = await client.GetFromJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/api/job/{application.JobId}");
-                        if (jobAppliedFor != null) jobInfo.Position = jobAppliedFor.JobName;
+                        if (jobAppliedFor != null) jobInfo.Position = jobAppliedFor.Title;
                     }
 
                     

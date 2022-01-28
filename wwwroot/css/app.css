@@ -1,31 +1,26 @@
 ﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
 @font-face {
-    src: url(/fonts/BebasNeue-Regular.ttf);
-    font-family: bebas;
+    src: url("fonts/static/OpenSans/OpenSans-Bold.ttf");
+    font-family: opensans-bold;
 }
 
 @font-face {
-    src: url(/fonts/OpenSans-Italic-VariableFont_wdth,wght.ttf);
-    font-family: opensans-italic;
+    src: url("fonts/static/OpenSans/OpenSans-ExtraBold.ttf");
+    font-family: opensans-extra-bold;
 }
 
 @font-face {
-    src: url(/fonts/OpenSans-VariableFont_wdth,wght.ttf);
-    font-family: opensans-variable;
+    src: url("fonts/static/OpenSans/OpenSans-Light.ttf");
+    font-family: opensans-light;
 }
 
 @font-face {
-    src: url(/fonts/OpenSansCondensed-Bold.ttf);
+    src: url("fonts/static/OpenSans_Condensed/OpenSans_Condensed-Bold.ttf");
     font-family: opensans-condensed-bold;
 }
 
 @font-face {
-    src: url(/fonts/OpenSansCondensed-Light.ttf);
+    src: url("fonts/static/OpenSans_Condensed/OpenSans_Condensed-Light.ttf");
     font-family: opensans-condensed-light;
-}
-
-@font-face {
-    src: url(/fonts/OpenSansCondensed-LightItalic.ttf);
-    font-family: opensans-condensed-light-italic;
 }
