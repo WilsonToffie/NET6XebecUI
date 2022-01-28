@@ -14,22 +14,8 @@ namespace XebecPortal.UI.Services.MockServices
             return AMockDataHub.MockApplicationHelpers.ToList();
         }
 
-        public Task<ApplicationPhaseHelper> GetApplicationPhaseHelperById(int applicationPhaseHelperId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<ApplicationPhaseHelper> AddApplicationPhaseHelper(ApplicationPhaseHelper applicationPhaseHelper)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateApplicationPhaseHelper(ApplicationPhaseHelper applicationPhaseHelper)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteApplicationPhaseHelper(int applicationPhaseHelperId)
+        //api/ApplicationPhaseHelper/UserId={AppUserId}
+        public Task<IEnumerable<ApplicationPhaseHelper>> GetApplicationPhaseHelpersByUserId(int userId)
         {
             throw new NotImplementedException();
         }

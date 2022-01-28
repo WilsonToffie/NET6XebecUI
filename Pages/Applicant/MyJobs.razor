@@ -2,6 +2,8 @@
 @using XebecPortal.UI.Interfaces
 @using XebecPortal.UI.Services.MockServices
 @using XebecPortal.UI.Services.Models
+@using JetBrains.Annotations
+@using System.Globalization
 @inject IJobDataService _jobDataService
 @inject IApplicationDataService _applicationDataService
 @inject IApplicationPhaseHelperDataService _applicationPhaseHelperDataService
@@ -14,7 +16,7 @@
         overflow: hidden;
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        grid-template-rows: 10% 6% auto auto;
+        grid-template-rows: 10% auto;
         grid-gap: 10px;
         max-height: 100%;
         padding: 20px 10% 0 10%;
@@ -119,33 +121,7 @@
             font-size: 0.5vw;
         }
 
-    .search-panel {
-        /*positioning*/
-        justify-self: end;
-        align-items: center;
-        /*sizing*/
-        width: fit-content;
-        /*spacing*/
-        padding: 0.5em;
-        font-size: 1vw;
-        /*coloring*/
-        color: rgba(128,128,128,0.5);
-    }
-
-        .search-panel .icon {
-        }
-
-        .search-panel input {
-            margin-left: 0.4em;
-            border: none;
-            /*Coloring*/
-            color: rgba(128,128,128,1);
-            background-color: transparent;
-        }
-
-            .search-panel input:focus {
-                outline: none;
-            }
+    
 
     .card-header {
         font-size: 1.5vw;
@@ -190,16 +166,25 @@
     .rejection-card {
     }
 </style>
-<div class="main-wrapper">
-    <div class="main-wrapper-child search-panel d-flex justify-content-end align-content-center">
-        <span></span><i class="fas fa-search"></i><input placeholder="search for job">
+@if (_allJobs != null)
+{
+    <div class="main-wrapper">
+    <!--Search-Box-->
+    <div class="row" style="height:5vh; grid-column: span 4;">
+        <div class="col">
+            <div class="input-group d-flex justify-content-center">
+                <span class="input-group-text">
+                    <i class="fa fa-search"></i>
+                </span>
+                <input class="form-control" style="max-width: 50%" type="text" placeholder="Search" value="@_keyword" @oninput="@OnKeywordChanged"/>
+            </div>
+        </div>
     </div>
-    <hr class="line" />
     <div class="main-wrapper-child job-cards">
         <div class="card-header d-flex align-content-center justify-content-center ">
             <span>Applications</span>
         </div>
-        @foreach (var application in Applications)
+        @foreach (var application in _applications)
         {
             <div class="job-card">
                 <span class="position">@application.Position</span>
@@ -215,7 +200,7 @@
         <div class="card-header  d-flex align-content-center justify-content-center">
             <span>In Progress</span>
         </div>
-        @foreach (var application in InProgress)
+        @foreach (var application in _inProgress)
         {
             <div class="job-card">
                 <span class="position">@application.Position</span>
@@ -231,7 +216,7 @@
         <div class="card-header  d-flex align-content-center justify-content-center">
             <span>Offers</span>
         </div>
-        @foreach (var application in Offers)
+        @foreach (var application in _offers)
         {
             <div class="job-card">
                 <span class="position">@application.Position</span>
@@ -247,7 +232,7 @@
         <div class="card-header  d-flex align-content-center justify-content-center bg-danger border-0">
             <span>Rejections</span>
         </div>
-        @foreach (var rejection in Rejections)
+        @foreach (var rejection in _rejections)
         {
             <div class="job-card border-left-1 border-danger p-2">
                 <span class="position">@rejection.Position</span>
@@ -260,22 +245,83 @@
         }
     </div>
 </div>
+}
+else
+{
+    
+    <button class="btn btn-primary" type="button" disabled>
+        <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
+        Getting Jobs....
+    </button>
+}
+
 @code {
-    List<MyJob> AllJobs;
-    List<MyJob> Applications;
-    List<MyJob> Rejections;
-    List<MyJob> InProgress;
-    List<MyJob> Offers;
+    List<MyJob> _allJobs;
+    List<MyJob> _applications;
+    List<MyJob> _rejections;
+    List<MyJob> _inProgress;
+    List<MyJob> _offers;
+
+    private string _keyword = string.Empty;
+    private List<MyJob> _initJobs;
+
+    [Parameter]
+    [CanBeNull]
+    public string Keyword { get; set; }
+
+    [Parameter]
+    [CanBeNull]
+    public EventCallback<string> KeywordChanged { get; set; }
+
     protected override void OnInitialized()
     {
-        AllJobs = _myJobListDataService.GetAllJobs();
-        Applications = AllJobs.FindAll(
-            match: a => { return a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)); });
-        InProgress = AllJobs.FindAll(
-            match: a => { return !(a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) || a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)); });
-        Offers = AllJobs.FindAll(
-            match: a => { return (a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)); });
-        Rejections = AllJobs.FindAll(
-            match: a => { return a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.Rejected)); });
+         _allJobs = _myJobListDataService.GetAllJobs();
+        //_allJobs = (await _myJobListDataService.GetAllJobsByAppUserId(2)).ToList();
+        
+        _initJobs = _allJobs;
+        _applications = _allJobs.FindAll(
+            match: a => a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
+        _inProgress = _allJobs.FindAll(
+            match: a => !(a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) || a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
+        _offers = _allJobs.FindAll(
+            match: a => (a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
+        _rejections = _allJobs.FindAll(
+            match: a => a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.Rejected)));
     }
+
+    private Task OnKeywordChanged(ChangeEventArgs e)
+    {
+        _keyword = e?.Value?.ToString();
+
+        if (string.IsNullOrWhiteSpace(_keyword))
+        {
+            _allJobs = _initJobs;
+            _applications = _allJobs.FindAll(
+                match: a => a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
+            _inProgress = _allJobs.FindAll(
+                match: a => !(a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) || a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
+            _offers = _allJobs.FindAll(
+                match: a => (a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
+            _rejections = _allJobs.FindAll(
+                match: a => a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.Rejected)));
+            return Task.CompletedTask;
+        }
+
+        _allJobs = _initJobs.FindAll(a => a.Position.ToLower().Contains(_keyword.ToLower()) || a.Company.ToLower().Contains(_keyword.ToLower()) ||
+                                          a.Location.ToLower().Contains(_keyword.ToLower()) || a.Phase.ToLower().Contains(_keyword.ToLower()) ||
+                                          a.Status.ToLower().Contains(_keyword.ToLower()) ||
+                                          a.LastMoved.ToString(CultureInfo.CurrentCulture).ToLower().Contains(_keyword.ToLower()) ||
+                                          a.ApplicationDate.ToString(CultureInfo.CurrentCulture).ToLower().Contains(_keyword.ToLower()));
+
+        _applications = _allJobs.FindAll(
+            match: a => a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
+        _inProgress = _allJobs.FindAll(
+            match: a => !(a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) || a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
+        _offers = _allJobs.FindAll(
+            match: a => (a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
+        _rejections = _allJobs.FindAll(
+            match: a => a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.Rejected)));
+        return KeywordChanged.InvokeAsync(_keyword);
+    }
+
 }
