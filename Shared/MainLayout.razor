@@ -21,36 +21,16 @@
         top: 0;
         left: 0;
         height: 10vh;
+        background-color: white;
     }
 
     .main {
         top: 10vh;
         left: 0;
-        height: 85vh;
-        width: 100%;
-    }
-    .main-heading {
-        height: 5vh;
-        width: 100%;
-        text-align: center;
-        font-size: 2em;
-        color: black;
-        font-weight: 900;
-        text-transform: uppercase;
-        font-family: opensans-condensed-bold;
-    }
-    .main-body {
-        height: 80vh;
+        height: 90vh;
         width: 100%;
     }
 
-    .footer-message {
-        background-image: url("../Img/logo.svg");
-        width: 5%;
-        height: 100%;
-        margin-left: 93.5%;
-    }
-    
     .mainlayout-heading {
         width: 70%;
         height: 100%;
@@ -117,7 +97,7 @@
     }
 
     .nav-link-text {
-        font-size: 1.3em;
+        font-size: 1.1em;
         display: inline-block;
         padding-top: 0.1em;
         width: 80%;
@@ -248,13 +228,7 @@
         </div>
     </div>
     <div class="main">
-        <h2 class="main-heading">Applicant Control Tool</h2>
-        <div class="main-body">
-            <XebecPortal.UI.Pages.Developer.ApplicantControlTool />
-        </div>
-    </div>
-    <div class="footer">
-
+        <XebecPortal.UI.Pages.Developer.ApplicantControlTool />
     </div>
 </div>
 <div class="page" hidden="@ApplicantIsHidden">
@@ -312,25 +286,13 @@
         </div>
     </div>
     <div class="main" hidden="@applicantApplicationProfileIsHidden">
-        <h2 class="main-heading">Application Profile</h2>
-        <div class="main-body">
-            <XebecPortal.UI.Pages.Applicant.ApplicationProfile />
-        </div>
+        <XebecPortal.UI.Pages.Applicant.ApplicationProfile />
     </div>
     <div class="main" hidden="@applicantJobPortalIsHidden">
-        <h2 class="main-heading">Job Portal</h2>
-        <div class="main-body">
-            <XebecPortal.UI.Pages.Applicant.JobPortal />
-        </div>
+        <XebecPortal.UI.Pages.Applicant.JobPortal />
     </div>
     <div class="main" hidden="@applicantMyJobsIsHidden">
-        <h2 class="main-heading">My Jobs</h2>
-        <div class="main-body">
-            <XebecPortal.UI.Pages.Applicant.MyJobs />
-        </div>
-    </div>
-    <div class="footer">
-
+        <XebecPortal.UI.Pages.Applicant.MyJobs />
     </div>
 </div>
 <div class="page" hidden="@HRIsHidden">
@@ -394,37 +356,19 @@
         </div>
     </div>
     <div class="main" hidden="@hrApplicantControlToolIsHidden">
-        <h2 class="main-heading">Applicant Control Tool</h2>
-        <div class="main-body">
-            <XebecPortal.UI.Pages.HR.ApplicantControlTool />
-        </div>
+        <XebecPortal.UI.Pages.HR.ApplicantControlTool />
     </div>
     <div class="main" hidden="@hrApplicantPortalIsHidden">
-        <h2 class="main-heading">Applicant Portal</h2>
-        <div class="main-body">
-            <XebecPortal.UI.Pages.HR.ApplicantPortal />
-        </div>
+        <XebecPortal.UI.Pages.HR.ApplicantPortal />
     </div>
     <div class="main" hidden="@hrCandidateRecommendationToolIsHidden">
-        <h2 class="main-heading">Candidate Recommender</h2>
-        <div class="main-body">
-            <XebecPortal.UI.Pages.HR.CandidateRecommendationTool />
-        </div>
+        <XebecPortal.UI.Pages.HR.CandidateRecommendationTool />
     </div>
     <div class="main" hidden="@hrDataAnalyticsToolIsHidden">
-        <h2 class="main-heading">Data Analytics</h2>
-        <div class="main-body">
-            <XebecPortal.UI.Pages.HR.DataAnalyticsTool />
-        </div>
+        <XebecPortal.UI.Pages.HR.DataAnalyticsTool />
     </div>
     <div class="main" hidden="@hrJobPortalIsHidden">
-        <h2 class="main-heading">Job Portal</h2>
-        <div class="main-body">
-            <XebecPortal.UI.Pages.HR.JobPortal />
-        </div>
-    </div>
-    <div class="footer">
-       
+        <XebecPortal.UI.Pages.HR.JobPortal />
     </div>
 </div>
       
