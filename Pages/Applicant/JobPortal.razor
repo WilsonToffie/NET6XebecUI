@@ -1,7 +1,11 @@
 ﻿@page "/applicantjobportal"
-@inject NavigationManager navmanager;
+@inject NavigationManager navmanager
+@inject HttpClient httpClient
 
 <style>
+    .searchBox {
+    }
+
     .handPointer {
         cursor: pointer;
     }
@@ -13,37 +17,61 @@
     }
 
     .formContainer {
-        background-color: rgba(255,255,255,0.3);
-        height: auto;
+        background-color: white;
     }
 
     .formButton {
         background-color: #00BCAE;
         color: white;
         font-weight: 600;
+        height: 5vh;
+        margin-top: 2vh;
+        width: auto;
+    }
+
+    input {
         height: min-content;
-        width: 50%;
+    }
+
+    .select2 {
+        width: 100% !important;
     }
 
     ::-webkit-scrollbar {
-        background-color: transparent;
-        width: 1vw;
+        width: 10px;
     }
 
     ::-webkit-scrollbar-track {
-        background-color: transparent;
-        width: 1vw;
+        background: #f1f1f1;
+        border-radius: 10px;
     }
 
     ::-webkit-scrollbar-thumb {
-        background-color: rgba(0, 188, 174,0.8);
-        border-radius: 1em;
+        background: #888;
+        border-radius: 10px;
     }
 
         ::-webkit-scrollbar-thumb:hover {
-            background-color: rgba(0, 188, 174,0.8);
-            border-radius: 1em;
+            background: #555;
         }
+
+    .container-main {
+        height: 75vh;
+        width: 100%;
+    }
+
+    .container-button {
+        height: 5vh;
+        width: 100%;
+    }
+
+    .mini-button {
+        height: 5vh;
+        text-align: center;
+        background-color: #00bcae;
+        width: auto;
+        border-radius: 1em;
+    }
 
     .my-container {
         height: 65vh;
@@ -51,116 +79,163 @@
     }
 </style>
 
-<div class="container" hidden="@jobPortalIsHidden">
-    <div class="my-container">
+<div class="container" style="height: 60vh">
+
+    <div style="width: 100%">
         <!--Search-Box-->
         <div class="row" style="height:5vh">
-            <div class="col">
+            <div class="col-12">
                 <div class="input-group d-flex justify-content-center">
-                    <span class="input-group-text handPointer">
+                    <span class="input-group-text handPointer" @onclick="() => SeachListJob(searchJob)">
                         <i class="fa fa-search"></i>
                     </span>
-                    <input class="form-control" style="max-width: 50%" type="text" placeholder="Search" />
+                    <input class="form-control" style="max-width: 50%" type="text" placeholder="Search" @bind="searchJob" />
                 </div>
             </div>
         </div>
         <br />
 
-        <div class="row" style=" height:55vh">
-            <div class="col-4 overflow-auto" style=" height:55vh">
+        @if (jobListFilter != null && jobListFilter.Count > 0)
+        {
+            <div class="row" style="height:55vh">
+                <div class="col-4 overflow-auto" style="height: 55vh">
 
-                <!--Card list for jobs-->
-                @for (int i = 0; i < 5; i++)
-                {
-                    <div class="card">
-                        <div class="card-body">
-                            <h3 class="card-title">Front-end Developer</h3>
-                            <h5 class="card-subtitle text-muted">1Nebula</h5>
-                            <br />
-                            <p class="card-text">
-                                Cape Town, South Africa
-                                <br />
-                                05 January 2022
-                            </p>
-                        </div>
-                    </div>
-                    <br />
-                }
-            </div>
-
-            <div class="col-8 overflow-auto" style=" height:55vh">
-
-                <!--The Form for applying for a job-->
-                <div class="row formContainer sticky-top" style="height: 55vh; background-color:rgba(255,255,255,1);">
-                    <div class="col-12" style="background-color: rgba(255,255,255,1);">
-                        <form style="padding-top: 7vh; padding-left: 2vw; padding-right: 2vw;">
-                            <div class="row p-3">
-                                <div class="col-6 p-2">
-                                    <h3>Front-end Developer</h3>
-                                </div>
-                                <div class="col-6 p-2 d-flex justify-content-end">
-                                    <button class="btn formButton" @onclick="GoToApplicationForm">Apply</button>
-                                </div>
-                                <div class="col-6 p-2">
-                                    <h5 class="text-muted">1Nebula</h5>
-                                </div>
-                                <div class="col-6 p-2 d-flex justify-content-end">
-                                    <p>Cape Town, South Africa</p>
-                                </div>
-                                <div class="col-6 p-2">
-                                    <p>Full-Time</p>
-                                </div>
-                                <div class="col-6 p-2 d-flex justify-content-end">
-                                    <p>Software Developer</p>
-                                </div>
-                                <div class="col-12 p-2">
-                                    <p class="text-center">A Front End Developer, or Front End Web Developer, is responsible for using their knowledge of programming languages to code user-side applications, including visual elements like menu bars, clickable buttons and the overall layout of websites or web applications.</p>
-                                </div>
-                                <div class="col-6 p-2">
-                                    <p>Advertised On: 05 January 2022</p>
-                                </div>
-                                <div class="col-6 p-2 d-flex justify-content-end">
-                                    <p>Applied On: 05 January 2022</p>
+                    <!--Card list for jobs-->
+                    <div class="col-12">
+                        @foreach (var item in jobPagedList)
+                        {
+                            <div class="card handPointer" @onclick="() => DisplayJobDetail(item.Id)">
+                                <div class="card-body">
+                                    <h3 class="card-title">@item.Title</h3>
+                                    <h5 class="card-subtitle text-muted">@item.Company</h5>
+                                    <br />
+                                    <p class="card-text">
+                                        @item.Location
+                                        <br />
+                                        @item.DueDate.ToString("d MMMM yyyy")
+                                    </p>
                                 </div>
                             </div>
-                        </form>
+                            <br />
+                        }
+                    </div>
+                </div>
+
+                <div class="col-8 overflow-auto" style="height:55vh">
+
+                    <!--The Form for editing and deleting a job-->
+                    <div style="height: 55vh">
+                        <div class="col-12 p-5 formContainer">
+                            <form>
+                                <div class="row">
+                                    <div class="col-6 p-2">
+                                            <h3>@displayJobDetail.Title</h3>
+                                    </div>
+                                    <div class="col-6 p-2 d-flex justify-content-end">
+                                        <button class="btn formButton">Apply</button>
+                                    </div>
+                                    <div class="col-6 p-2">
+                                            <h5 class="text-muted">@displayJobDetail.Company</h5>
+                                    </div>
+                                    <div class="col-6 p-2 d-flex justify-content-end">
+                                            <p>@displayJobDetail.Location</p>
+                                    </div>
+                                    <div class="col-6 p-2">
+                                            <p>Full-Time</p>
+                                    </div>
+                                    <div class="col-6 p-2 d-flex justify-content-end">
+                                            <p>@displayJobDetail.Department</p>
+                                    </div>
+                                    <div class="col-12 p-2">
+                                            <p class="text-center">@displayJobDetail.Description</p>
+                                    </div>
+                                    <div class="col-6 p-2">
+                                            <p>@displayJobDetail.JobPlatforms</p>
+                                    </div>
+                                    <div class="col-6 p-2 d-flex justify-content-end">
+                                            <p>@displayJobDetail.DueDate.ToString("d MMMM yyyy")</p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="row p-3">
-            <div class="col-4 d-flex justify-content-center">
-                <nav>
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link">
-                                <span>&laquo;</span>
-                            </a>
-                        </li>
-                        <li class="page-item"><a class="page-link">1</a></li>
-                        <li class="page-item"><a class="page-link">2</a></li>
-                        <li class="page-item"><a class="page-link">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link">
-                                <span>&raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
+            <div class="row p-3">
+                <div class="col-4">
+                    <div class="col-12 d-flex justify-content-center">
+                        <nav>
+                            <ul class="pagination" style="cursor:pointer">
+                                @if (!jobPagedList.IsFirstPage)
+                                {
+                                    <li class="page-item" @onclick="() => PageListNav(jobPagedList.PageNumber - 1)">
+                                        <a class="page-link">
+                                            <span>&laquo;</span>
+                                        </a>
+                                    </li>
+                                }
+                                <li class="page-item @(jobPagedList.PageNumber.Equals(pageNum.FirstOrDefault()) ? "active":"")" @onclick="() => PageListNav(pageNum.FirstOrDefault())"><a class="page-link">@pageNum.FirstOrDefault()</a></li>
+                                @foreach (var item in pageNum)
+                                {
+                                    if (item != pageNum.FirstOrDefault() && item != pageNum.LastOrDefault())
+                                    {
+                                        @if (item >= jobPagedList.PageCount - 3 - 2 && jobPagedList.PageNumber >= jobPagedList.PageCount - 3)
+                                        {
+                                            <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active":"")" @onclick="() => PageListNav(item)"><a class="page-link">@item</a></li>
+                                        }
+                                        else if (item <= 4 + 2 && jobPagedList.PageNumber <= 4)
+                                        {
+                                            <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active":"")" @onclick="() => PageListNav(item)"><a class="page-link">@item</a></li>
+                                        }
+                                        else if (item >= jobPagedList.PageNumber - 2 && item <= jobPagedList.PageNumber + 2 && jobPagedList.PageNumber < jobPagedList.PageCount - 3 && jobPagedList.PageNumber > 4)
+                                        {
+                                            <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active":"")" @onclick="() => PageListNav(item)"><a class="page-link">@item</a></li>
+                                        }
+                                    }
+                                }
+                                @if (pageNum.Count > 1)
+                                {
+                                    <li class="page-item @(jobPagedList.PageNumber.Equals(pageNum.LastOrDefault()) ? "active":"")" @onclick="() => PageListNav(pageNum.LastOrDefault())"><a class="page-link">@pageNum.LastOrDefault()</a></li>
+                                }
+                                @if (!jobPagedList.IsLastPage)
+                                {
+                                    <li class="page-item" @onclick="() => PageListNav(jobPagedList.PageNumber + 1)">
+                                        <a class="page-link">
+                                            <span>&raquo;</span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <div class="col-12 d-flex justify-content-center">
+                        <button class="btn formButton">Create Job</button>
+                    </div>
+                </div>
             </div>
-        </div>
+        }
+        else
+        {
+            @for (int i = 0; i < 5; i++)
+            {
+                <br />
+            }
+            <h1 class="text-center align-middle">No Job Are Available</h1>
+        }
     </div>
 </div>
-    
+
 <div class="my-container" hidden="@applicationFormIsHidden">
-    <XebecPortal.UI.Pages.Applicant.ApplicationForm/>
+    <XebecPortal.UI.Pages.Applicant.ApplicationForm />
 </div>
 
 @code {
 
     private bool jobPortalIsHidden = false;
-    private bool applicationFormIsHidden =true;
+    private bool applicationFormIsHidden = true;
 
     private void GoToApplicationForm()
     {
