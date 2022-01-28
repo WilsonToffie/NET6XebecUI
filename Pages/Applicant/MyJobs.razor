@@ -57,7 +57,7 @@
 
         .job-cards::-webkit-scrollbar {
             width: 0.09vw;
-            background-color: rgba(0,51,64,0.6);
+            rgba(0, 188, 174,0.6)
         }
 
         .job-cards::-webkit-scrollbar-thumb {
@@ -276,7 +276,7 @@ else
     protected override void OnInitialized()
     {
          _allJobs = _myJobListDataService.GetAllJobs();
-        //_allJobs = (await _myJobListDataService.GetAllJobsByAppUserId(2)).ToList();
+        //_allJobs = (await _myJobListDataService.GetAllJobsByAppUserId(3)).ToList();
         
         _initJobs = _allJobs;
         _applications = _allJobs.FindAll(
