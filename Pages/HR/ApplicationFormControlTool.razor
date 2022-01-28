@@ -302,8 +302,8 @@
         Jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
         Job tempJob = Jobs.LastOrDefault<Job>();
 
-        CurrentJobId = tempJob.id;
-        CurrentJobDescription = tempJob.description;
+        CurrentJobId = tempJob.Id;
+        CurrentJobDescription = tempJob.Description;
         //use parameter in future
     }
 
