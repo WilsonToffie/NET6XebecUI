@@ -29,10 +29,10 @@ namespace XebecPortal.UI.Pages.Applicant
         public string Department { get; set; }
         public DateTime DueDate { get; set; }
         public DateTime CreationDate { get; set; }
-        public List<JobTypeHelper> JobTypes { get; set; }
-        public List<JobPlatformHelper> JobPlatforms { get; set; }
-        public List<JobApplicationPhase> JobPhases { get; set; }
-        public List<Application> Applications { get; set; }
+        public IList<JobTypeHelper> JobTypes { get; set; }
+        public IList<JobPlatformHelper> JobPlatforms { get; set; }
+        public IList<JobApplicationPhase> JobPhases { get; set; }
+        public IList<Application> Applications { get; set; }
     }
 
     public class JobType
@@ -62,26 +62,26 @@ namespace XebecPortal.UI.Pages.Applicant
 
     }
 
+    public class AppUser
+    {
+
+    }
+
+    public class JobPhaseHelpers
+    {
+
+    }
+
     public class Application
     {
-
+        public int Id { get; set; }
+        public DateTime TimeApplied { get; set; }
+        public DateTime BeginApplication { get; set; }
+        public int JobId { get; set; }
+        public IList<Job> Job { get; set; }
+        public int AppUserId { get; set; }
+        public IList<AppUser> AppUser { get; set; }
+        public IList<JobPhaseHelpers> PhaseHelpers { get; set; }
     }
 
-    public class MockLocation
-    {
-        public int id { get; set; }
-        public string location { get; set; }
-    }
-
-    public class MockDepartment
-    {
-        public int id { get; set; }
-        public string department { get; set; }
-    }
-
-    public class MockSocialMedia
-    {
-        public int id { get; set; }
-        public string socialMedia { get; set; }
-    }
 }
