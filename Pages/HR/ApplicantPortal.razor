@@ -316,7 +316,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _applicants = (await _applicantDataService.GetAllApplicants()).ToList();
+        _applicants = (await _applicantDataService.GetAllApplicants()).OrderBy(a => a.Id).ToList();
         _candidateJobs = (_myJobListDataService.GetAllJobs()).ToList();
         map = AssociateApplicantsToJobs(_applicants, _candidateJobs);
         if (_applicants.Any())
@@ -407,7 +407,7 @@
 
     private void Save(MyJob job)
     {
-        var jobs = map[FocusApplicant].Where(j => j.Id != job.Id).ToList();
+        var jobs = map[FocusApplicant].Where(j => j.Id != job.Id).ToList();s
         jobs.Add(job);
         map[FocusApplicant] = jobs;
         var ind = _applicants.FindIndex(a => a.Id == FocusApplicant.Id);
