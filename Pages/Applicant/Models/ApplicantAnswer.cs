@@ -15,8 +15,8 @@ namespace XebecPortal.UI.Pages.Applicant.Models
 
         public string questionnaireHRForm { get; set; }
 
-        public string user { get; set; }
-
         public int appUserId { get; set; }
+
+        public string user { get; set; }
     }
 }

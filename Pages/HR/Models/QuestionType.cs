@@ -5,14 +5,10 @@ using System.Threading.Tasks;
 
 namespace XebecPortal.UI.Shared
 {
-    public class CustomQuestion
+    public class QuestionType
     {
         public int Id { get; set; }
 
-        public string questionDescription { get; set; }
-
-        public int answerTypeId { get; set; }
-
-        public string answerType { get; set; }
+        public string Type { get; set; }
     }
 }

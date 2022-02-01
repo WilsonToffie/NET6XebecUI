@@ -65,7 +65,30 @@
                             <td>
                                 <div class="application-form-question">
                                     <h6 class="form-text text-muted" style="font-size: 14px; width: 90%;">@customquestion.HRQuestion</h6>
-                                    <input type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="customquestion.ApplicantAnswer">
+                                    @switch (customquestion.TypeId)
+                                    {
+                                        case 1:
+                                            <input type="number" class="form-control" style="width: 80%" @bind="customquestion.Applicantanswer">
+                                            break;
+                                        case 2:
+                                            <textarea type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="customquestion.Applicantanswer"></textarea>
+                                            break;
+                                        case 3:
+                                            <input type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="customquestion.Applicantanswer">
+                                            break;
+                                        case 4:
+                                        <input type="date" id="test" class="form-control" style="width: 80%" @onchange="(e) => { customquestion.Applicantanswer = e.Value.ToString(); }">
+                                            break;
+                                        case 5:
+                                            <select @bind="customquestion.Applicantanswer">
+                                                <option value="yes">Yes</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                            break;
+                                        case 6:
+                                            <input type="file" class="form-control" style="width: 80%" @bind="customquestion.Applicantanswer">
+                                            break;
+                                    }
                                 </div>
                             </td>
                         </tr>
@@ -83,8 +106,9 @@
 @code {
 
     List<Job> Jobs = null;
+    List<QuestionType> Types = null;
     int CurrentJobId = 0;
-    int CurrentAppUser = 0;
+    int CurrentAppUser = 6;
 
     List<FormQuestion> QuestionList = new List<FormQuestion>();
     List<ApplicantQuestion> ApplicantAnswers = new List<ApplicantQuestion>();
@@ -93,19 +117,22 @@
 
     protected override async Task OnInitializedAsync()
     {
-
         Jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
         Job tempJob = Jobs.LastOrDefault<Job>();
+
+        Types = await httpClient.GetFromJsonAsync<List<QuestionType>>("https://xebecapi.azurewebsites.net/api/jobtype");
 
         CurrentJobId = tempJob.Id;
 
         QuestionList = await httpClient.GetFromJsonAsync<List<FormQuestion>>($"https://xebecapi.azurewebsites.net/api/questionnairehrform/HR/{CurrentJobId}");
+        
 
         foreach (var q in QuestionList)
         {
             ApplicantQuestion tempAppQuuestion = new ApplicantQuestion();
             tempAppQuuestion.HRQuestion = q.question;
             tempAppQuuestion.HRQuestionId = q.id;
+            tempAppQuuestion.TypeId = q.answerTypeId;
 
             ApplicantAnswers.Add(tempAppQuuestion);
         }
@@ -116,17 +143,13 @@
         foreach(var q in ApplicantAnswers)
         {
             ApplicantAnswer tempAnswer = new ApplicantAnswer();
-            tempAnswer.applicantAnswer = q.ApplicantAnswer;
+            tempAnswer.applicantAnswer = q.Applicantanswer;
             tempAnswer.questionnaireHRFormId = q.HRQuestionId;
             tempAnswer.appUserId = CurrentAppUser;
-
-            Console.WriteLine(tempAnswer.applicantAnswer);
-            Console.WriteLine(tempAnswer.questionnaireHRFormId);
-            Console.WriteLine(tempAnswer.appUserId);
 
             AnswerList.Add(tempAnswer);
         }
 
-        await httpClient.PostAsJsonAsync<List<ApplicantAnswer>>("https://xebecapi.azurewebsites.net/api/customquestionforapplicants", AnswerList);
+        await httpClient.PostAsJsonAsync<List<ApplicantAnswer>>("https://xebecapi.azurewebsites.net/api/customquestionforapplicants/list", AnswerList);
     }
 }
