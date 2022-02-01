@@ -16,5 +16,9 @@ namespace XebecPortal.UI.Shared
         public int jobId { get; set; }
 
         public string job { get; set; }
+
+        public int answerTypeId { get; set; }
+
+        public string answerType { get; set; }
     }
 }
