@@ -132,7 +132,14 @@
                                             <h3>@displayJobDetail.Title</h3>
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
-                                        <button class="btn formButton">Apply</button>
+                                        @if (IsApplyHidden)
+                                        {
+                                            <p>You Have Applied For This Post</p>
+                                        }
+                                        else
+                                        {
+                                            <input type="button" class="btn formButton" value="Apply" @onclick="() => Apply(displayJobDetail.Id)" />
+                                        }
                                     </div>
                                     <div class="col-6 p-2">
                                             <h5 class="text-muted">@displayJobDetail.Company</h5>

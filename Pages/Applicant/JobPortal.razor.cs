@@ -10,20 +10,39 @@ namespace XebecPortal.UI.Pages.Applicant
     public partial class JobPortal
     {
         private string searchJob;
-
+        private bool IsApplyHidden;
         private List<int> pageNum = new List<int>();
         private IList<Job> jobList = new List<Job>();
         private IList<Job> jobListFilter = new List<Job>();
         private Job displayJobDetail = new Job();
         private IPagedList<Job> jobPagedList = new List<Job>().ToPagedList();
+        private IList<Application> applicationList = new List<Application>();
 
         protected override async Task OnInitializedAsync()
         {
             jobList = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
+            applicationList = await httpClient.GetFromJsonAsync<List<Application>>("https://xebecapi.azurewebsites.net/api/Application");
             jobListFilter = jobList;
             jobPagedList = jobListFilter.ToPagedList(1, 17);
             pageNum.AddRange(Enumerable.Range(1, jobPagedList.PageCount));
             displayJobDetail = jobListFilter.FirstOrDefault();
+            DisplayJobDetail(displayJobDetail.Id);
+        }
+
+        private async Task Apply(int id)
+        {
+            Application application = new Application();
+
+            application.TimeApplied = DateTime.Today;
+            application.BeginApplication = DateTime.Today;
+            application.JobId = id;
+            application.AppUserId = 1;
+
+            _ = await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Application", application);
+            jobList = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
+            applicationList = await httpClient.GetFromJsonAsync<List<Application>>("https://xebecapi.azurewebsites.net/api/Application");
+
+            IsApplyHidden = true;
         }
 
         private void PageListNav(int value)
@@ -53,6 +72,11 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private void DisplayJobDetail(int id)
         {
+            if (applicationList.Count(x => x.AppUserId == 1 && x.JobId == id) > 0)
+                IsApplyHidden = true;
+            else
+                IsApplyHidden = false;
+
             displayJobDetail = jobListFilter.FirstOrDefault(x => x.Id == id);
         }
     }
