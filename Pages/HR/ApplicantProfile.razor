@@ -1,6 +1,12 @@
 ﻿@layout EmptyLayout
 @page "/profile"
 @using XebecPortal.UI.Services.Models
+@using XebecPortal.UI.Service_Interfaces
+
+@inject IEducationDataService _educationDataService
+@inject IWorkHistoryDataService _workHistoryDataService
+@inject IPersonalInformationDataService _personalInformationDataService
+@inject IAdditionalInformationDataService _additionalInformationDataService
 
 
 <style>
@@ -35,8 +41,9 @@
         }
     .this-content{
         padding: 5px;
-        max-height: 30vh !important;
-        overflow-y: auto;
+    }
+    .person-info{
+       
     }
     .work-history-section { 
       height: 100% !important;
@@ -56,10 +63,10 @@
             border: solid 1px #fff;
             box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
             border-radius: 10px;
-            height: 10vh;
+            height: 15vh;
             padding: 10px 10px 0 10px;
             display: grid!important;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: 1fr 1fr 1.5fr;
             grid-template-rows: repeat(2, 1fr);
            
         }
@@ -100,80 +107,78 @@
     <div class="col-12 this-content">
         <div class="tab-content">
             <!--Personal Information-->
-            <div id="personal-information" class="container tab-pane active">
-
-                <div class="row">
-                    <div class="col-12">
-                        <div class="row p-3">
-                            <div class="col-4">
-                                <label class="form-label" for="first-name">First Name</label>
-                                <p id="first-name" class="form-control name">Person</p>
+            <div id="personal-information" class="tab-pane active person-info rounded">
+                @if (_PersonalInformation != null)
+                {
+                    <div class="" style="height: 100%;">
+                            <div class="row p-3">
+                                <div class="col-4">
+                                    <label class="form-label" for="first-name">First Name</label>
+                                    <p id="first-name" class="form-control name">@_PersonalInformation.FirstName</p>
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label" for="last-name">Last Name</label>
+                                    <p id="last-name" class="form-control name">@_PersonalInformation.LastName</p>
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label" for="email-address">Email Address</label>
+                                    <p id="email-address" class="form-control">@_PersonalInformation.Email</p>
+                                </div>
                             </div>
-                            <div class="col-4">
-                                <label class="form-label" for="last-name">Last Name</label>
-                                <p id="last-name" class="form-control name">Person</p>
+                            <div class="row p-3">
+                                <div class="col-4">
+                                    <label class="form-label" for="phone-number">Phone Number</label>
+                                    <p id="phone-number" class="form-control">@_PersonalInformation.PhoneNumber</p>
+                                </div>
+                                @if (_AdditionalInformation != null)
+                                {
+                                    <div class="col-4">
+                                        <label class="form-label" for="ethnicity">Ethnicity</label>
+                                        <p id="ethnicity" class="form-control">@_AdditionalInformation.Ethnicity</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" for="gender">Gender</label>
+                                        <p id="gender" class="form-control">@_AdditionalInformation.Gender</p>
+                                    </div>
+                                }
                             </div>
-                            <div class="col-4">
-                                <label class="form-label" for="email-address">Email Address</label>
-                                <p id="email-address" class="form-control">example@email.com</p>
+                            <div class="row p-3">
+                                <div class="col-4">
+                                    <label class="form-label" for="id-number">ID Number</label>
+                                    <p id="id-number" class="form-control">@_PersonalInformation.IdNumber</p>
+                                </div>
+                                <div class="col-8">
+                                    <label class="form-label" for="address">Address</label>
+                                    <p id="address" class="form-control" rows="4">@_PersonalInformation.Address </p>
+                                </div>
                             </div>
                         </div>
-                        <div class="row p-3">
-                            <div class="col-4">
-                                <label class="form-label" for="phone-number">Phone Number</label>
-                                <p id="phone-number" class="form-control">+27 00 000 0000</p>
-                            </div>
-                            <div class="col-4">
-                                <label class="form-label" for="ethnicity">Ethnicity</label>
-                                <p id="ethnicity" class="form-control">Human</p>
-                            </div>
-                            <div class="col-4">
-                                <label class="form-label" for="gender">Gender</label>
-                                <p id="gender" class="form-control">Person</p>
-                            </div>
-                        </div>
-                        <div class="row p-3">
-                            <div class="col-4">
-                                <label class="form-label" for="id-number">ID Number</label>
-                                <p id="id-number" class="form-control">000000 0000 000</p>
-                            </div>
-                            <div class="col-8">
-                                <label class="form-label" for="address">Address</label>
-                                <p id="address" class="form-control" rows="4">xxx xxx xxxxx</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                    
+                }
+                else
+                {
+                    <div>Getting Personal Information</div>
+                }
             </div>
             <!--Work History-->
             <div id="work-history" class="tab-pane">
                 <div class="work-history-section">
-                    <div class="work-card">
-                        <div class="company-name">Company Name 1</div>
-                        <div class="job-position">Job Title</div>
-                        <div class="start-end-date"> start date - end date</div>
-                        <div class="work-description"></div>
-                    </div>
-                    <div class="work-card">
-                        <div class="company-name">Company Name 2</div>
-                        <div class="job-position">Job Title</div>
-                        <div class="start-end-date"> start date - end date</div>
-                        <div class="work-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab aliquid asperiores autem dignissimos dolor expedita pariatur quibusdam, rem repudiandae voluptatum.</div>
-                    </div>
-                    <div class="work-card">
-                        <div class="company-name">Company Name 3</div>
-                        <div class="job-position">Job Title</div>
-                        <div class="start-end-date"> start date - end date</div>
-                        <div class="work-description"></div>
-                    </div>
-                    <div class="work-card">
-                        <div class="company-name">Company Name 3</div>
-                        <div class="job-position">Job Title</div>
-                        <div class="start-end-date"> start date - end date</div>
-                        <div class="work-description"></div>
-                    </div>
-                    
+                    @if (_WorkHistories != null)
+                    {
+                        foreach (var workHistory in _WorkHistories)
+                        {
+                            <div class="work-card">
+                                <div class="company-name">@workHistory.CompanyName</div>
+                                <div class="job-position">@workHistory.JobTitle</div>
+                                <div class="start-end-date"><small>@($"{workHistory.StartDate:yyyy MMMM} - {workHistory.EndDate:yyyy MMMM}")</small></div>
+                                <div class="work-description">@workHistory.Description</div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>Getting Work history...</p>
+                    }
                 </div>
             </div>
 
@@ -181,18 +186,23 @@
             <!--Education-->
             <div id="education" class="tab-pane">
                 <div class="work-history-section">
-                    <div class="work-card">
-                        <div class="company-name">School 1</div>
-                        <div class="job-position">Qualification name</div>
-                        <div class="start-end-date"> start date - end date</div>
-                        <div class="work-description">Short Description</div>
-                    </div>
-                    <div class="work-card">
-                        <div class="company-name">School 2</div>
-                        <div class="job-position">Qualification name</div>
-                        <div class="start-end-date"> start date - end date</div>
-                        <div class="work-description">Short Description</div>
-                    </div>
+                    @if (_Educations != null)
+                    {
+                        foreach (var education in _Educations)
+                        {
+                            <div class="work-card">
+                            <div class="company-name">@education.Qualification</div>
+                            <div class="job-position"></div>
+                            <div class="start-end-date"><small>@($"{education.StartDate:yyyy MMMM} - {education.EndDate:yyyy MMMM}")</small></div>
+                            <div class="work-description">@education.Insitution</div>
+                        </div>
+                        }
+                    }
+                    else
+                    {
+                        <p>Getting Education history...</p>
+                    }
+                    
                 </div>
             </div>
             <!--Online Profile-->
@@ -208,10 +218,33 @@
     [Parameter]
     public Applicant Applicant { get; set; }
 
-    public Candidate Candidate { get; set; }
+    [Parameter]
+    public AppUser AppUser { get; set; }
 
-    protected override void OnInitialized()
+    public int AppUserId { get; set; }
+
+    private PersonalInformation _PersonalInformation { get; set; }
+    private AdditionalInformation _AdditionalInformation { get; set; }
+    private List<WorkHistory> _WorkHistories { get; set; }
+    private List<Education> _Educations { get; set; }
+
+    protected override async Task OnParametersSetAsync()
     {
+        if (Applicant != null)
+        {
+            AppUserId = Applicant.Id;
+            if (AppUserId >= 0)
+            {
+                AppUserId = 1;
+            }
+            Console.WriteLine("Getting personal info");
+            _PersonalInformation = (await _personalInformationDataService.GetPersonalDetails(AppUserId));
+            _WorkHistories = await _workHistoryDataService.GetWorkHistories(AppUserId);
+            _Educations = await _educationDataService.GetEducations(AppUserId);
+            _AdditionalInformation = await _additionalInformationDataService.GetAdditionalInfo(AppUserId);
+        }
     }
+
+
 
 }

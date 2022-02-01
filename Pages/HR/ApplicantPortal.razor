@@ -14,7 +14,7 @@
 }
 .container-main {
      width: 100vw;
-     min-height: 90vh;
+     min-height: calc(90vh - 20px);
      margin: 0;
 
      display: grid;
@@ -23,19 +23,21 @@
      grid-auto-flow: row;
      grid-gap: 10px;
      padding: 5px;
-     overflow: hidden;
-     background: #dde1eb;
+     overflow: auto;
+     /*background: #dde1eb;*/
+     
  }
 
  .container-main > div {
     background: #fff;
     border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
  }
 
  .candidate-section {
      display: grid;
      grid-template-columns: 1fr;
-     grid-template-rows: 18.7% 1fr;
+     grid-template-rows: fit-content() 1fr;
      grid-auto-flow: row;
      grid-area: 1 / 1 / 3 / 3;
      grid-gap: 10px;
@@ -51,24 +53,20 @@
  /*filter plane styling - start*/
  .filter-plane {
      display: grid;
-     grid-template-columns: repeat(4, 1fr);
-     grid-template-rows: repeat(4, 1fr);
+     grid-template-columns: repeat(1, 1fr);
+     grid-template-rows: repeat(1, 1fr);
      grid-auto-flow: row;
  }
 
  .filter-plane-heading {
-     grid-area: 1 / 1 / 2 / 5;
+     grid-area: 1 / 1 /  span 1/ span 1;
      text-align: center;
      font-weight: 900;
  }
 
- .filter-plane-dropdowns {
-     grid-area: 2 / 1 / 4 / 5;
- }
-
- .filter-plane-search-bar {
-     grid-area: 4 / 1 / 5 / 5;
- }
+ /*.filter-plane-search-bar {*/
+ /*    grid-area: 2 / 1 / span 1 / span 2;*/
+ /*}*/
 
  /*filter plane styling - end*/
 
@@ -84,8 +82,7 @@
 
 
  .candidate-list > div {
-     box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0, rgba(60, 64, 67, 0.15) 0 1px 3px 1px;
-     
+     box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0, rgba(60, 64, 67, 0.15) 0 1px 3px 1px; 
  }
 
 
@@ -144,24 +141,25 @@
  /*Jobs Section Start*/
  .jobs-section {
      grid-area: 1 / 3 / 2 / 5;
-     
+     padding: 10px;
  }
  .jobs-section tbody {
         display: block;
-        height: 35vh !important;
+        height: 30vh !important;
         overflow: auto;
     }
   .jobs-section  thead, tbody tr {
         display: table;
         width: 100%;
         table-layout: fixed;
+        border-radius: 0 0 10px 10px;
     }
    
  .jobs-section  thead{
-     border-radius: 0 ;
+      border-radius: 10px 10px 0 0;
    }
  .jobs-section  tbody{
-     border-radius: 0;
+      border-radius: 0;
    }
  .jobs-section  th:hover{
      cursor: pointer;
@@ -187,10 +185,7 @@
             <h1 class="filter-plane-heading">
                 Candidates
             </h1>
-            <div class="filter-plane-dropdowns">
-
-            </div>
-            <input placeholder="find candidate" class="filter-plane-search-bar">
+            
         </div>
         <div class="candidate-list">
             @if (_applicants != null)
@@ -228,7 +223,7 @@
 
         @if (FocusApplicant != null)
         {
-            <h1>@($"{FocusApplicant.FirstName} {FocusApplicant.LastName}")'s Job Section</h1>
+            <h1>@($"{FocusApplicant.FirstName} {FocusApplicant.LastName}") Job Applications</h1>
             var applicantJobs = map[FocusApplicant];
             KeyValuePair<Applicant, List<MyJob>> entry = GetEntry(map, FocusApplicant);
             <table id="example" class="table table-striped bg-white">

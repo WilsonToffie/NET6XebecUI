@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace XebecPortal.UI.Services.Models
 {
@@ -10,7 +11,11 @@ namespace XebecPortal.UI.Services.Models
         public int Id { get; set; }
 
         [JsonProperty("firstName")] 
+        [Required]
+        [StringLength(50, ErrorMessage = "First name is too int.")]
         public string FirstName { get; set; }
+        [Required]
+        [StringLength(50, ErrorMessage = "last name is too int.")]
 
         [JsonProperty("lastName")] 
         public string LastName { get; set; }

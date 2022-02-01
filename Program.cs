@@ -13,7 +13,8 @@ using XebecPortal.UI.Interfaces;
 using XebecPortal.UI.Services;
 using XebecPortal.UI.Services.Models;
 using XebecPortal.UI.Utils;
-using Smart.Blazor;  
+using Smart.Blazor;
+using XebecPortal.UI.Service_Interfaces;
 
 namespace XebecPortal.UI
 {
@@ -30,11 +31,17 @@ namespace XebecPortal.UI
             builder.Services.AddScoped<IApplicationDataService, ApplicationDataService>();
             builder.Services.AddScoped<IJobDataService, JobDataService>();
             builder.Services.AddScoped<IApplicationPhaseHelperDataService, ApplicationPhaseHelperDataService>();
+            
+            builder.Services.AddScoped<IPersonalInformationDataService, PersonalInformationDataService>();
+            builder.Services.AddScoped<IWorkHistoryDataService, WorkHistoryDataService>();
+            builder.Services.AddScoped<IEducationDataService, EducationDataService>();
+            builder.Services.AddScoped<IEducationDataService, EducationDataService>();
+            builder.Services.AddScoped<IAdditionalInformationDataService, AdditionalInformationDataService>();
             //Testing
             builder.Services.AddScoped<IMyJobListDataService, MyJobListDataService>();
 
-            builder.Services.AddSmart();
-            builder.Services.AddMatBlazor();
+            // builder.Services.AddSmart();
+            // builder.Services.AddMatBlazor();
 
 
             await builder.Build().RunAsync();
