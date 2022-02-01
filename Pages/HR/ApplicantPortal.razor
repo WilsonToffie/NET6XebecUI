@@ -316,7 +316,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _applicants = (await _applicantDataService.GetAllApplicants()).ToList();
+        _applicants = (await _applicantDataService.GetAllApplicants()).OrderBy(a => a.Id).ToList();
         _candidateJobs = (_myJobListDataService.GetAllJobs()).ToList();
         map = AssociateApplicantsToJobs(_applicants, _candidateJobs);
         if (_applicants.Any())
