@@ -81,7 +81,8 @@ namespace XebecPortal.UI.Services.MockServices
                         .RuleFor(a => a.CstComment, f => f.Rant.Review())
                         .RuleFor(a => a.InterviewRating, f => f.Random.Number(5))
                         .RuleFor(a => a.InterviewComment, f => f.Rant.Review("Person"))
-                        .RuleFor(a => a.Phase, f => f.PickRandom(phases));
+                        .RuleFor(a => a.Phase, f => f.PickRandom(phases))
+                        .RuleFor(a => a.Avatar, f => f.Person.Avatar);
                     _applicants = mockApplicants.Generate(20).ToList();
                 }
         }
