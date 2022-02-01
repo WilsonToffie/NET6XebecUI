@@ -6,7 +6,7 @@
     .wrapper {
         margin-left: 10%;
         width: 80%;
-        min-height: 78vh;
+        height: 78vh;
         display: flex;
         justify-content: space-evenly;
         align-items: center;
@@ -78,7 +78,7 @@
         top: 18%;
         width: 500px;
         height: 350px;
-        background-color: #A7A9AB;
+        background-color: #f2f2f2;
         border: 2px solid black;
         border-radius: 5px;
         animation-name: fade-in;
@@ -91,7 +91,7 @@
         top: 18%;
         width: 500px;
         height: 450px;
-        background-color: #A7A9AB;
+        background-color: #f2f2f2;
         border: 2px solid black;
         border-radius: 5px;
         animation-name: fade-in;
@@ -107,9 +107,17 @@
 
     .add-popup-body {
         width: 100%;
-        height: 70%;
+        height: 60%;
         display: flex;
         justify-content: center;
+    }
+
+    .add-popup-type {
+        width: 100%;
+        height: 10%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .add-popup-button {
@@ -137,18 +145,23 @@
         background-color: white;
     }
 
+    .delete-popup-question {
+        word-wrap: break-word;
+        width: 450px;
+    }
+
     .form-preview-question {
         width: 100%;
     }
 
     .question-description {
         word-wrap: break-word;
-        width: 450px;
+        width: 350px;
     }
 
     .form-question-description {
         word-wrap: break-word;
-        max-width: 450px;
+        max-width: 370px;
     }
 
     @@keyframes fade-in {
@@ -183,12 +196,17 @@
                         {
                             @foreach (var question in Questions)
                             {
-                                <tr>
-                                    <td class="question-description" style="font-size: 15px;">@question.questionDescription</td>
-                                    <td style="max-width: 20%">
-                                        <button class="btn btn-small" style="background-color: #00BCAE; color: white;" @onclick="() => AddToForm(question.questionDescription)">Add</button>
-                                    </td>
-                                </tr>
+                        <tr>
+                            <td class="question-description" style="font-size: 15px;">@question.questionDescription</td>
+                            <td style="font-size: 12px; width: 60px;">
+                                <div>
+                                    @Types.FirstOrDefault(q => q.Id == question.answerTypeId).Type
+                                </div>
+                            </td>
+                            <td style="max-width: 20%">
+                                <button class="btn btn-small" style="background-color: #00BCAE; color: white;" @onclick="() => AddToForm(question.questionDescription, question.answerTypeId)">Add</button>
+                            </td>
+                        </tr>
                             }
                         }
                     </tbody>
@@ -216,7 +234,31 @@
                                 <td class="form-question-description">
                                     <div class="form-preview-question">
                                         <h6 class="form-text text-muted" style="font-size: 14px;">@formquestion.question</h6>
-                                        <input type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="formquestion.answer">
+
+                                        @switch (formquestion.answerTypeId)
+                                        {
+                                            case 1:
+                                                <input type="number" class="form-control" style="width: 80%" @bind="formquestion.answer">
+                                                break;
+                                            case 2:
+                                                <textarea type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="formquestion.answer"></textarea>
+                                                break;
+                                            case 3:
+                                                <input type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="formquestion.answer">
+                                                break;
+                                            case 4:
+                                            <input type="date" id="test" class="form-control" style="width: 80%"  @onchange="(e) => { formquestion.answer = e.Value.ToString(); }">
+                                                break;
+                                            case 5:
+                                                <select @bind="formquestion.answer">
+                                                    <option value="yes" selected>Yes</option>
+                                                    <option value="no">No</option>
+                                                </select>
+                                                break;
+                                            case 6:
+                                                <input type="file" class="form-control" style="width: 80%" @bind="formquestion.answer">
+                                                break;
+                                        }
                                     </div>
                                 </td>
                                 <td style="width: 10%;">
@@ -237,11 +279,19 @@
     {
         <div class="add-popup">
             <div class="add-popup-header">
-                <h4 style="margin-left: 20px;">Add Question:</h4>
-                <button class="btn-close" style="margin-left: 57%" @onclick="CloseAddPopup"></button>
+                <h4 style="margin-left: 20px; font-size: 20px;">Add Question:</h4>
+                <button class="btn-close" style="margin-left: 68%" @onclick="CloseAddPopup"></button>
             </div>
             <div class="add-popup-body">
                 <textarea style="width: 80%; border: 2px solid grey" @bind="tempQuestion.questionDescription"></textarea>
+            </div>
+            <div class="add-popup-type">
+                <select @bind="tempType">
+                    @foreach(var option in Types)
+                    {
+                    <option value="@option.Type">@option.Type</option>
+                    }
+                </select>
             </div>
             <div class="add-popup-button">
                 <button class="btn" style="background-color: #00BCAE; color:white;" @onclick="AddQuestion">Submit question</button>
@@ -252,24 +302,18 @@
     {
         <div class="delete-popup">
             <div class="delete-popup-header">
-                <h4 style="margin-left: 20px;">Delete:</h4>
+                <h4 style="margin-left: 20px; font-size: 20px;">Delete Questions:</h4>
                 <button class="btn-close" style="margin-left: 57%" @onclick="CloseDeletePopup"></button>
             </div>
             <div class="delete-popup-body">
                 <table class="table">
-                    <thead style="background-color: #003340; color: white;">
-                        <tr>
-                            <th style="width: 90%">Questions</th>
-                            <th style="background-color: #003340; width: 20%;"></th>
-                        </tr>
-                    </thead>
                     <tbody>
                         @if (Questions != null)
                         {
                             @foreach (var question in Questions)
                             {
                                 <tr>
-                                    <td class="question-description">@question.questionDescription</td>
+                                    <td class="delete-popup-question" style="font-size: 15px;">@question.questionDescription</td>
                                     <td style="max-width: 10%">
                                         <button class="btn-close" @onclick="() => DeleteQuestion(question)"></button>
                                     </td>
@@ -287,8 +331,11 @@
 @code {
 
 
-    List<CustomQuestion> Questions = null;
+    List<CustomQuestion> Questions = new List<CustomQuestion>();
     List<FormQuestion> FormQuestions = new List<FormQuestion>();
+    List<QuestionType> Types = new List<QuestionType>();
+
+    string tempType = null;
 
     //temporary
     List<Job> Jobs = null;
@@ -303,22 +350,27 @@
 
     protected override async Task OnInitializedAsync()
     {
+
         Questions = await httpClient.GetFromJsonAsync<List<CustomQuestion>>("https://xebecapi.azurewebsites.net/api/question");
 
         Jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
+
         Job tempJob = Jobs.LastOrDefault<Job>();
+
+        Types = await httpClient.GetFromJsonAsync<List<QuestionType>>("https://xebecapi.azurewebsites.net/api/answertype");
 
         CurrentJobId = tempJob.Id;
         CurrentJobDescription = tempJob.Description;
         //use parameter in future
     }
 
-    public void AddToForm(string QuestionString)
+    public void AddToForm(string QuestionString, int TypeId)
     {
         if (FormQuestions.FindIndex(q => q.question == QuestionString) == -1)
         {
             FormQuestion temp = new FormQuestion();
             temp.question = QuestionString;
+            temp.answerTypeId = TypeId;
             temp.jobId = CurrentJobId;
 
             FormQuestions.Add(temp);
@@ -328,6 +380,7 @@
     public async Task DeleteQuestion(CustomQuestion q)
     {
         await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/question/{q.Id}");
+
         await OnInitializedAsync();
     }
 
@@ -348,6 +401,8 @@
         if (tempQuestion.questionDescription != "")
         {
             ShowAddPopup = !ShowAddPopup;
+
+            tempQuestion.answerTypeId = Types.FirstOrDefault(q => q.Type == tempType).Id;
 
             await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/question", tempQuestion);
 
@@ -374,6 +429,6 @@
     {
         await httpClient.PostAsJsonAsync<List<FormQuestion>>("https://xebecapi.azurewebsites.net/api/questionnaire/lst", FormQuestions);
 
-        NavigationManager.NavigateTo("/phasecontrol");
+        //NavigationManager.NavigateTo("/phasecontrol");
     }
 }
