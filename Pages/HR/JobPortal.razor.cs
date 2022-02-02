@@ -13,7 +13,7 @@ namespace XebecPortal.UI.Pages.HR
     {
         private bool changeForm;
         private string searchJob;
-
+     
         private List<int> pageNum = new List<int>();
         private IList<Job> jobList = new List<Job>();
         private IList<Job> jobListFilter = new List<Job>();
@@ -22,6 +22,9 @@ namespace XebecPortal.UI.Pages.HR
         private IList<MockDepartment> mockDepartments = new List<MockDepartment>();
         private IList<MockLocation> mockLocations = new List<MockLocation>();
         private IList<MockSocialMedia> mockSocialMedia = new List<MockSocialMedia>();
+        private IList<JobPlatform> jobPlatforms = new List<JobPlatform>();
+        private IList<JobPlatformHelper> jobPlatformHelpers = new List<JobPlatformHelper>();
+        private List<JobPlatform> platformsUsed = new List<JobPlatform>();
 
 
         protected override async Task OnInitializedAsync()
@@ -30,6 +33,8 @@ namespace XebecPortal.UI.Pages.HR
             mockDepartments = await httpClient.GetFromJsonAsync<List<MockDepartment>>("/mockData/departmentMockData.json");
             mockLocations = await httpClient.GetFromJsonAsync<List<MockLocation>>("/mockData/locationMockData.json");
             mockSocialMedia = await httpClient.GetFromJsonAsync<List<MockSocialMedia>>("/mockData/socialmediaMockData.json");
+            jobPlatforms = await httpClient.GetFromJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform");
+            jobPlatformHelpers = await httpClient.GetFromJsonAsync<List<JobPlatformHelper>>("https://xebecapi.azurewebsites.net/api/jobplatformhelper");
             jobListFilter = jobList;
             jobPagedList = jobListFilter.ToPagedList(1, 17);
             pageNum.AddRange(Enumerable.Range(1, jobPagedList.PageCount));
@@ -105,6 +110,18 @@ namespace XebecPortal.UI.Pages.HR
         private void DisplayJobDetail(int id)
         {
             displayJobDetail = jobListFilter.FirstOrDefault(x => x.Id == id);
+            platformsUsed.Clear();
+        }
+
+        private async Task RemovePlatform(JobPlatform platform)
+        {
+            int tempId = platform.id;
+            await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/jobplatformhelper/{tempId}");
+        }
+
+        private async Task AddPlatform(JobPlatform platform)
+        {
+            await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/jobplatformhelper",platform);
         }
     }
 }

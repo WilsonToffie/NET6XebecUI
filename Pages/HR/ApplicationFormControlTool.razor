@@ -330,6 +330,8 @@
 
 @code {
 
+    [Parameter]
+    public CreateJobPost tempJob { get; set; }
 
     List<CustomQuestion> Questions = new List<CustomQuestion>();
     List<FormQuestion> FormQuestions = new List<FormQuestion>();
@@ -427,8 +429,10 @@
 
     public async Task CompileForm()
     {
-        await httpClient.PostAsJsonAsync<List<FormQuestion>>("https://xebecapi.azurewebsites.net/api/questionnaire/lst", FormQuestions);
+        //await httpClient.PostAsJsonAsync<List<FormQuestion>>("https://xebecapi.azurewebsites.net/api/questionnaire/lst", FormQuestions);
 
-        //NavigationManager.NavigateTo("/phasecontrol");
+        tempJob.formQuestions = FormQuestions;
+
+        NavigationManager.NavigateTo($"/phasecontrol/{tempJob}");
     }
 }
