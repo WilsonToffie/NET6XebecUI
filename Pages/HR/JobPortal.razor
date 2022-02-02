@@ -34,6 +34,12 @@
         height: min-content;
     }
 
+        input.smallerCheckBox {
+            width: 15px;
+            height: 15px;
+            margin: 2px;
+        }
+
     .select2 {
         width: 100% !important;
     }
@@ -132,6 +138,7 @@
                                     <div class="col-6 p-2">
                                         @if (changeForm)
                                         {
+                                            <label>Job Title</label>
                                             <input type="text" class="form-control" placeholder="Job Name" @bind="displayJobDetail.Title" />
                                         }
                                         else
@@ -156,6 +163,7 @@
                                     <div class="col-6 p-2">
                                         @if (changeForm)
                                         {
+                                            <label>Company</label>
                                             <input type="text" class="form-control" placeholder="Company Name" @bind="displayJobDetail.Company" />
                                         }
                                         else
@@ -163,9 +171,10 @@
                                             <h5 class="text-muted">@displayJobDetail.Company</h5>
                                         }
                                     </div>
-                                    <div class="col-6 p-2 d-flex justify-content-end">
+                                    <div class="col-6 p-2 justify-content-end">
                                         @if (changeForm)
                                         {
+                                            <label>Location</label>
                                             <select class="form-select" @bind="displayJobDetail.Location">
                                                 @foreach (var item in mockLocations.Distinct())
                                                 {
@@ -179,21 +188,26 @@
                                         }
                                     </div>
                                     <div class="col-6 p-2">
-                                        <div hidden="@(!changeForm)">
-                                            <select class="selectMultiOptions1 form-select" multiple="multiple">
-                                                <option>Full-time/Part-time (Select1)</option>
-                                                <option>Full-time/Part-time (Select2)</option>
-                                                <option>Full-time/Part-time (Select3)</option>
+
+                                        @if (changeForm)
+                                        {
+                                            <label>Job Type</label>
+                                            <select class="form-select">
+                                                <option>Full-time</option>
+                                                <option>Part-time</option>
+                                                <option>Contract</option>
                                             </select>
-                                        </div>
+                                        }
                                         @if (!changeForm)
                                         {
                                             <p>Full-Time</p>
                                         }
                                     </div>
-                                    <div class="col-6 p-2 d-flex justify-content-end">
+                                    <div class="col-6 p-2">
+
                                         @if (changeForm)
                                         {
+                                            <label>Department</label>
                                             <select class="form-select" @bind="displayJobDetail.Department">
                                                 @foreach (var item in mockDepartments.Distinct())
                                                 {
@@ -209,6 +223,7 @@
                                     <div class="col-12 p-2">
                                         @if (changeForm)
                                         {
+                                            <label>Job Description</label>
                                             <textarea class="form-control" placeholder="Description" rows="4" @bind="displayJobDetail.Description"></textarea>
                                         }
                                         else
@@ -218,22 +233,50 @@
                                     </div>
                                     <div class="col-6 p-2">
                                         <div hidden="@(!changeForm)">
-                                            <select class="selectMultiOptions2 form-select" multiple="multiple">
-                                                @foreach (var item in mockSocialMedia.Distinct())
+
+                                            @foreach (var item in jobPlatformHelpers)
+                                            {
+                                                @if (displayJobDetail.Id == item.JobId)
                                                 {
-                                                    <option>@item.socialMedia</option>
+                                                    @foreach (var platform in jobPlatforms)
+                                                    {
+                                                        @if (item.JobPlatformId == platform.id)
+                                                        {
+                                                            platformsUsed.Add(platform);
+                                                        }
+                                                    }
                                                 }
-                                            </select>
+
+                                            }
+
+                                            @foreach (var jobPlatform in jobPlatforms)
+                                            {
+
+                                                @if (!platformsUsed.Contains(jobPlatform))
+                                                {
+                                                    <input class="smallerCheckBox" type="checkbox" id="@jobPlatform.id" name="@jobPlatform.platformName" @onclick='() => AddPlatform(jobPlatform)'>
+                                                    <label for="@jobPlatform.id"> @jobPlatform.platformName</label>
+                                                }
+                                                else
+                                                {
+                                                    <input class="smallerCheckBox" type="checkbox" id="@jobPlatform.id" name="@jobPlatform.platformName" checked @onclick='() => RemovePlatform(jobPlatform)'>
+                                                    <label for="@jobPlatform.id"> @jobPlatform.platformName</label>
+                                                }
+                                            }
+
                                         </div>
                                         @if (!changeForm)
                                         {
                                             <p>@displayJobDetail.JobPlatforms</p>
                                         }
                                     </div>
-                                    <div class="col-6 p-2 d-flex justify-content-end">
+                                    <div class="col-6 p-2 justify-content-end">
                                         @if (changeForm)
                                         {
-                                            <input class="form-control" type="date" placeholder="Due Date" @bind="displayJobDetail.DueDate" />
+                                            <label>Date Advertised</label>
+                                            <input class="form-control" type="date" @bind="displayJobDetail.DueDate" />
+                                            <label>Due Date</label>
+                                            <input class="form-control" type="date" @bind="displayJobDetail.DueDate" />
                                         }
                                         else
                                         {
