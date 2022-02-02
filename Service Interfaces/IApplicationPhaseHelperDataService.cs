@@ -6,8 +6,8 @@ namespace XebecPortal.UI.Interfaces
 {
     public interface IApplicationPhaseHelperDataService
     {
-        List<ApplicationPhaseHelper> GetAllApplicationPhaseHelpers();
-        Task<IEnumerable<ApplicationPhaseHelper>> GetApplicationPhaseHelpersByUserId(int appUserId);
+        Task<List<ApplicationPhaseHelper>> GetAllApplicationPhaseHelpers();
+        Task<List<ApplicationPhaseHelper>> GetApplicationPhaseHelpersByUserId(int appUserId);
        
     }
 }

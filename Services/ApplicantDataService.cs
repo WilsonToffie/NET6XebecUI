@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Bogus;
 using XebecPortal.UI.Interfaces;
 using XebecPortal.UI.Services.MockServices;
 using XebecPortal.UI.Services.Models;
@@ -32,11 +33,13 @@ namespace XebecPortal.UI.Services
             // return await JsonSerializer.DeserializeAsync<IEnumerable<Applicant>>
             //     (await _httpClient.GetStreamAsync($"api/applicant/"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             
-              //_applicants = await JsonSerializer.DeserializeAsync<IEnumerable<Applicant>>
-              //(await altClient.GetStreamAsync($"https://xebecapi.azurewebsites.net/api/applicant"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-             //ApplicantDataService.InitAppl = _applicants;
-              //return _applicants;
-             return (await _mocks.GetAllApplicants()).ToList();
+              _applicants = await JsonSerializer.DeserializeAsync<IEnumerable<Applicant>>
+              (await altClient.GetStreamAsync($"https://xebecapi.azurewebsites.net/api/applicant"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+              ApplicantDataService.InitAppl = _applicants;
+              
+              _applicants.ToList().ForEach(a => a.Avatar = new Faker().Person.Avatar);
+              return _applicants;
+             //return (await _mocks.GetAllApplicants()).ToList();
         }
 
         public async Task<IEnumerable<Applicant>> GetAllApplicantsByJobId(int jobId)

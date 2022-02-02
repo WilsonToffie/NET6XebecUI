@@ -272,7 +272,7 @@
         </div>
         <div class="main-wrapper-child job-cards">
             <div class="card-header  d-flex align-content-center justify-content-center accepted-heading">
-                <span class="count">@_offers.Count</span><span>Successful Applications </span> 
+                <span class="count">@_offers.Count</span><span>Successful</span><p>Applications</p>
             </div>
             @foreach (var application in _offers)
             {
@@ -290,7 +290,7 @@
         </div>
         <div class="main-wrapper-child job-cards rejection-card">
             <div class="card-header  d-flex align-content-center justify-content-center rejection-heading">
-                <span class="count">@_rejections.Count</span><span>Unsuccessful Applications</span>
+                <span class="count">@_rejections.Count</span><span>successful</span><br><span>Applications</span>
             </div>
             @foreach (var rejection in _rejections)
             {
