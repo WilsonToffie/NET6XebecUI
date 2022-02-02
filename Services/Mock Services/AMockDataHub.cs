@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Bogus;
+using XebecPortal.UI.Pages.HR;
 using XebecPortal.UI.Services.Models;
+using Application = XebecPortal.UI.Services.Models.Application;
 
 namespace XebecPortal.UI.Services.MockServices
 {
@@ -73,8 +75,7 @@ namespace XebecPortal.UI.Services.MockServices
                     .RuleFor(job => job.Id, f => f.IndexFaker)
                     .RuleFor(job => job.Title, f => f.Name.JobTitle())
                     .RuleFor(job => job.Description, f => f.Name.JobDescriptor())
-                    .RuleFor(job => job.Compensation, f => (double) f.Finance.Amount(200, 1000000))
-                    .RuleFor(job => job.MinimumExperience, f => f.Random.Int(20))
+                    
                 ;
         }
     }

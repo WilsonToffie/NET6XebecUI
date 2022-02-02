@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using XebecPortal.UI.Interfaces;
+using XebecPortal.UI.Pages.HR;
 using XebecPortal.UI.Services.MockServices;
 using XebecPortal.UI.Services.Models;
 
@@ -20,11 +21,11 @@ namespace XebecPortal.UI.Services
 
         public async Task<IEnumerable<Job>> GetAllJobs()
         {
-            //return await JsonSerializer.DeserializeAsync<IEnumerable<Job>>
-            //(await _httpClient.GetStreamAsync($"api/job"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-            var mocks = new MockJobDataService();
+            return await JsonSerializer.DeserializeAsync<IEnumerable<Job>>
+            (await _httpClient.GetStreamAsync($"https://xebecapi.azurewebsites.net/api/job"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            //var mocks = new MockJobDataService();
 
-            return await mocks.GetAllJobs();
+            //return await mocks.GetAllJobs();
         }
 
         public async Task<Job> GetJobDetails(int jobId)
@@ -54,6 +55,8 @@ namespace XebecPortal.UI.Services
 
             await _httpClient.PutAsync("api/job", jobJson);
         }
+
+        
 
         public async Task DeleteJob(int jobId)
         {

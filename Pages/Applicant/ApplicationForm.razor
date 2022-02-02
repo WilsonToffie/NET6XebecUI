@@ -1,7 +1,9 @@
 ﻿@page "/applicationform"
+@inject HttpClient httpClient
+@using Models 
 
 <style>
-    .wrapper {
+    .app-form-wrapper {
         margin-left: 20%;
         width: 60%;
         min-height: 80vh;
@@ -9,11 +11,12 @@
         justify-content: center;
         align-items: center;
     }
-    .application-form{
-        width: 450px;
+    .application-form {
+        width: 550px;
         height: 500px;
-        background-color: lightblue;
+        background-color: #f2f2f2;
         border-radius: 5px;
+        border: 2px solid grey;
     }
     .application-form-title{
         width:100%;
@@ -22,13 +25,12 @@
         justify-content: center;
         align-items: center;
         border-radius: 5px;
-        background-color: sandybrown;
+        font-size: 20px;
     }
     .application-form-question-area {
         width: 100%;
         height: 75%;
         overflow-y: auto;
-        overflow-x: hidden;
     }
     .application-form-button{
         width: 100%;
@@ -47,23 +49,46 @@
 </style>
 
 
-<div class="wrapper">
+<div class="app-form-wrapper">
     <div class="application-form">
         <div class="application-form-title">
-            <h4>Application Form</h4>
+            Application Form
         </div>
         <div class="application-form-question-area">
             <table class="table">
                 <tbody>
-                    @if(ApplicantQuestions != null)
+                    @if(ApplicantAnswers != null)
                     {
-                        @foreach(var customquestion in ApplicantQuestions)
+                        @foreach(var customquestion in ApplicantAnswers)
                         {
                         <tr>
                             <td>
                                 <div class="application-form-question">
-                                    <h6 class="form-text text-muted" style="font-size: 14px; width: 90%;">@customquestion</h6>
-                                    <input type="text" class="form-control" placeholder="Answer..." style="width: 80%">
+                                    <h6 class="form-text text-muted" style="font-size: 14px; width: 90%;">@customquestion.HRQuestion</h6>
+                                    @switch (customquestion.TypeId)
+                                    {
+                                        case 1:
+                                            <input type="number" class="form-control" style="width: 80%" @bind="customquestion.Applicantanswer">
+                                            break;
+                                        case 2:
+                                            <textarea type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="customquestion.Applicantanswer"></textarea>
+                                            break;
+                                        case 3:
+                                            <input type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="customquestion.Applicantanswer">
+                                            break;
+                                        case 4:
+                                        <input type="date" id="test" class="form-control" style="width: 80%" @onchange="(e) => { customquestion.Applicantanswer = e.Value.ToString(); }">
+                                            break;
+                                        case 5:
+                                            <select @bind="customquestion.Applicantanswer">
+                                                <option value="yes">Yes</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                            break;
+                                        case 6:
+                                            <input type="file" class="form-control" style="width: 80%" @bind="customquestion.Applicantanswer">
+                                            break;
+                                    }
                                 </div>
                             </td>
                         </tr>
@@ -73,42 +98,58 @@
             </table>
         </div>
         <div class="application-form-button">
-            <button class="btn btn-danger" @onclick="Submit">Submit</button>
+            <button class="btn" style="color: white; background-color: #00BCAE" @onclick="SaveAnswers">Submit</button>
         </div>
     </div>
 </div>
 
 @code {
 
+    List<Job> Jobs = null;
+    List<QuestionType> Types = null;
+    int CurrentJobId = 0;
+    int CurrentAppUser = 6;
 
-    List<string> ApplicantQuestions = new List<string>();
-    //list of question objects
-    //list of applicantquestions
+    List<FormQuestion> QuestionList = new List<FormQuestion>();
+    List<ApplicantQuestion> ApplicantAnswers = new List<ApplicantQuestion>();
+    List<ApplicantAnswer> AnswerList = new List<ApplicantAnswer>();
 
 
     protected override async Task OnInitializedAsync()
     {
-        ApplicantQuestions.Add("Test string question?");
+        Jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
+        Job tempJob = Jobs.LastOrDefault<Job>();
 
-        ApplicantQuestions.Add("Test string question longggggggggggggggggggggggggggggggggggggggggggggggggggggg af6ti7f6aif76r7a?");
+        Types = await httpClient.GetFromJsonAsync<List<QuestionType>>("https://xebecapi.azurewebsites.net/api/jobtype");
 
-        ApplicantQuestions.Add("Test string question?");
+        CurrentJobId = tempJob.Id;
 
-        ApplicantQuestions.Add("Test string question?");
+        QuestionList = await httpClient.GetFromJsonAsync<List<FormQuestion>>($"https://xebecapi.azurewebsites.net/api/questionnairehrform/HR/{CurrentJobId}");
+        
 
-        ApplicantQuestions.Add("Test string question?");
+        foreach (var q in QuestionList)
+        {
+            ApplicantQuestion tempAppQuuestion = new ApplicantQuestion();
+            tempAppQuuestion.HRQuestion = q.question;
+            tempAppQuuestion.HRQuestionId = q.id;
+            tempAppQuuestion.TypeId = q.answerTypeId;
 
-        ApplicantQuestions.Add("Test string question?");
-
-        ApplicantQuestions.Add("Question to test overflow");
-
-        //get all jobs and last or default
-        //populate our list with only questions related to the JobId
-        //New list with answers attatched as well as current appuserid
+            ApplicantAnswers.Add(tempAppQuuestion);
+        }
     }
 
-    public void Submit()
+    public async Task SaveAnswers()
+    {
+        foreach(var q in ApplicantAnswers)
         {
+            ApplicantAnswer tempAnswer = new ApplicantAnswer();
+            tempAnswer.applicantAnswer = q.Applicantanswer;
+            tempAnswer.questionnaireHRFormId = q.HRQuestionId;
+            tempAnswer.appUserId = CurrentAppUser;
 
+            AnswerList.Add(tempAnswer);
         }
+
+        await httpClient.PostAsJsonAsync<List<ApplicantAnswer>>("https://xebecapi.azurewebsites.net/api/customquestionforapplicants/list", AnswerList);
+    }
 }

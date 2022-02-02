@@ -1,5 +1,425 @@
 ﻿@page "/applicantportal"
+@using XebecPortal.UI.Services.Models
+@using XebecPortal.UI.Interfaces
+@using Bogus
+@using XebecPortal.UI.Pages.Applicant
+@using XebecPortal.UI.Services.MockServices
+@inject IApplicantDataService _applicantDataService
+@inject IMyJobListDataService _myJobListDataService
+
+<style>
+     
+*{
+    font-family: 'Open Sans', sans-serif;
+}
+.container-main {
+     width: 100vw;
+     min-height: calc(90vh - 20px);
+     margin: 0;
+     display: grid;
+     grid-template-columns: 1fr 0.2fr 1.8fr 1fr;
+     grid-template-rows: repeat(2, 1fr);
+     grid-auto-flow: row;
+     grid-gap: 10px;
+     padding: 5px;
+     overflow: auto;
+     /*background: #dde1eb;*/
+     
+ }
+
+ .container-main > div {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+ }
+
+ .candidate-section {
+     display: grid;
+     grid-template-columns: 1fr;
+     grid-template-rows: fit-content() 1fr;
+     grid-auto-flow: row;
+     grid-area: 1 / 1 / 3 / 3;
+     grid-gap: 10px;
+     padding: 5px;
+     background: transparent !important;
+ }
+
+ .candidate-section > div {
+     background: #fff;
+     border-radius: 10px;
+ }
+
+ /*filter plane styling - start*/
+ .filter-plane {
+     display: grid;
+     grid-template-columns: repeat(1, 1fr);
+     grid-template-rows: repeat(1, 1fr);
+     grid-auto-flow: row;
+ }
+
+ .filter-plane-heading {
+     grid-area: 1 / 1 /  span 1/ span 1;
+     text-align: center;
+     font-weight: 900;
+ }
+
+ /*.filter-plane-search-bar {*/
+ /*    grid-area: 2 / 1 / span 1 / span 2;*/
+ /*}*/
+
+ /*filter plane styling - end*/
+
+ /*Candidate list styling - start*/
+ .candidate-list {
+     grid-area: 2 / 1 / 3 / 2;
+     display: grid;
+     grid-auto-rows: 15%;
+     grid-template-columns: 1fr;
+     grid-gap: 10px;
+     overflow-y: auto;
+ }
+
+
+ .candidate-list > div {
+     box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0, rgba(60, 64, 67, 0.15) 0 1px 3px 1px; 
+ }
+
+
+ .candidate-card {
+     display: grid;
+     grid-template-columns: 28% 69%;
+     grid-template-rows: 1fr;
+     grid-column-gap: 2px;
+     
+ }
+
+ .candidate-card .profile-picture {
+     border: none !important;
+     border-radius: 0 !important;
+     grid-area: 1 / 1 / 2 / 2;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+ }
+
+ .candidate-card .profile-picture img {
+     height: 7vh;
+     width: 7vh;
+     border-radius: 50%;
+     box-shadow: rgba(6, 24, 44, 0.4) 0 0 0 2px, rgba(6, 24, 44, 0.65) 0 4px 6px -1px, rgba(255, 255, 255, 0.08) 0 1px 0 inset;
+ }
+
+ .candidate-card .candidate-details {
+     grid-area: 1 / 2 / 2 / 3;
+     
+     height: 100%;
+     width: 100%;
+     padding: 5px;
+     
+ }
+
+.candidate-card .candidate-details .name{
+    font-weight: 800;
+    line-height: 3vh;
+    font-size: 3vh;
+
+}
+.candidate-card .candidate-details .job{
+    line-height: 2vh;
+    font-size: 1.5vh;
+    font-weight: 400;
+}
+.candidate-card .candidate-details .phase{
+    line-height: 1vh;
+    font-size: 1vh;
+    font-weight: 500;
+}
+
+ /*Candidate list styling - start*/
+
+ /*Jobs Section Start*/
+ .jobs-section {
+     grid-area: 1 / 3 / 2 / 5;
+     padding: 10px;
+ }
+ .jobs-section tbody {
+        display: block;
+        height: 30vh !important;
+        overflow: auto;
+    }
+  .jobs-section  thead, tbody tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+        border-radius: 0 0 10px 10px;
+    }
+   
+ .jobs-section  thead{
+      border-radius: 10px 10px 0 0;
+   }
+ .jobs-section  tbody{
+      border-radius: 0;
+   }
+ .jobs-section  th:hover{
+     cursor: pointer;
+   }
+ .jobs-section  .btn-primary{
+     background: #00bcae;
+   }
+   /*Jobs Section end*/
+
+ .profile-section {
+     grid-area: 2 / 3 / 3 / 5;
+     padding: 10px;
+ }
+</style>
+
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+<div class="container-main">
+    <div class="candidate-section">
+        <div class="filter-plane">
+            <h1 class="filter-plane-heading">
+                Candidates
+            </h1>
+            
+        </div>
+        <div class="candidate-list">
+            @if (_applicants != null)
+            {
+                foreach (var applicant in _applicants)
+                {
+                    var applicantJobs = map[applicant];
+                    var lastJob = new MyJob()
+                    {
+                        Position = "Has Not applied for a job"
+                    };
+                    if (applicantJobs != null || applicantJobs.Count() > 0)
+                    {
+                        lastJob = applicantJobs[applicantJobs.Count() - 1];
+                    }
+                    <div class="candidate-card" @onclick="() => ShowApplicant(applicant)">
+                        <div class="profile-picture">
+                            <img src="@applicant.Avatar" alt="Avatar">
+                        </div>
+                        <div class="candidate-details">
+                            <span class="name">@($"{applicant.FirstName} {applicant.LastName}")</span>
+                            <br>
+                            <span class="job">@lastJob.Position</span>
+                            <br>
+                            <span class="phase-pill" style="@(GetColor(applicant.Phase))">@lastJob.Phase</span>
+                        </div>
+                    </div>
+                }
+            }
+
+        </div>
+    </div>
+    <div class="jobs-section">
+        <!-- table-->
+
+        @if (FocusApplicant != null)
+        {
+            <span class="this-personal-detail">Job Applications </span> <span>@($"{FocusApplicant.FirstName} {FocusApplicant.LastName}")</span>
+            var applicantJobs = map[FocusApplicant];
+            KeyValuePair<Applicant, List<MyJob>> entry = GetEntry(map, FocusApplicant);
+            <table id="example" class="table table-striped bg-white">
+                <thead style="background: #00bcae;">
+                <tr style="color:#fff;" class="col-12">
+                    <th>#</th>
+                    <th>Job</th>
+                    <th>Company</th>
+                    <th>Application Phase</th>
+                    <th>Phase Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @for (var index = 0; index < applicantJobs.Count; index++)
+                {
+                    var job = applicantJobs[index];
+
+                    <tr class="col-12">
+                        <td>@index</td>
+                        <td >@job.Position</td>
+                        <td >@job.Company</td>
+                        @if (jobToChange != job)
+                        {
+                            <td >@job.Phase</td>
+                            <td >@job.Status</td>
+                        }
+                        else
+                        {
+                            <td >
+                                @* <input type="text" class="form-control" @bind="jobToChange.Phase"> *@
+                                <select @bind="jobToChange.Phase">
+                                    @foreach (var phase in Enum.GetNames(typeof(MyJobs.ApplicationPhase)))
+                                    {
+                                        <option value="@phase">@phase</option>
+                                    }
+                                </select>
+                            </td>
+
+                            <td >
+                                @* <input type="text" class="form-control" @bind="jobToChange.Status"> *@
+                                <select @bind="jobToChange.Status">
+                                    @foreach (var status in Enum.GetNames(typeof(MockMyJobListDataService.Statuses)))
+                                    {
+                                        <option value="@status">@status</option>
+                                    }
+                                </select>
+                            </td>
+                        }
+                        <td>
+                            @if (job != jobToChange && !entry.Equals(EntryToChange))
+                            {
+                                <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => Edit(job, entry)">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => Save(job)">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                                <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="CancelEdit">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            }
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Loading Applicant Details</p>
+        }
+    </div>
+    <div class="profile-section">
+        <ApplicantProfile Applicant=@FocusApplicant></ApplicantProfile>
+    </div>
+</div>
+
 
 @code {
+    private Applicant FocusApplicant { get; set; }
+    private MyJob jobToChange;
+    IEnumerable<Applicant> _applicants;
+    IEnumerable<MyJob> _candidateJobs;
+    Dictionary<Applicant, List<MyJob>> map;
+    KeyValuePair<Applicant, List<MyJob>> EntryToChange;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _applicants = (await _applicantDataService.GetAllApplicants()).OrderBy(a => a.Id).ToList();
+        _candidateJobs = (_myJobListDataService.GetAllJobs()).ToList();
+        map = AssociateApplicantsToJobs(_applicants, _candidateJobs);
+        if (_applicants.Any())
+        {
+            FocusApplicant = _applicants.ToList()[0];
+        }
+    }
+
+    private Dictionary<Applicant, List<MyJob>> AssociateApplicantsToJobs(IEnumerable<Applicant> applicants, IEnumerable<MyJob> candidateJobs)
+    {
+        Dictionary<Applicant, List<MyJob>> tempMap = new Dictionary<Applicant, List<MyJob>>();
+        int stop = candidateJobs.Count() - 1;
+        Random rnd = new Random();
+        foreach (var applicant in applicants)
+        {
+            var jobs = candidateJobs.Skip(rnd.Next(0, stop)).Take(rnd.Next(1, stop)).ToList();
+            tempMap.Add(applicant, jobs);
+        }
+        return tempMap;
+    }
+
+    private string GetColor(string applicationPhase)
+    {
+        string bg_colour;
+        string text_colour;
+
+        if (Enum.GetName(MyJobs.ApplicationPhase.Application).Equals(applicationPhase))
+        {
+            bg_colour = "rgba(9, 71, 111, 0.22)";
+            text_colour = "rgba(9, 71, 111, 1)";
+        }
+        else if (Enum.GetName(MyJobs.ApplicationPhase.Testing).Equals(applicationPhase))
+        {
+            bg_colour = "rgba(11, 28, 72, 0.22)";
+            text_colour = "rgba(11, 28, 72, 1)";
+        }
+        else if (Enum.GetName(MyJobs.ApplicationPhase.InterviewStaff).Equals(applicationPhase, StringComparison.OrdinalIgnoreCase))
+        {
+            bg_colour = "rgba(0, 155, 174, 0.22)";
+            text_colour = "rgba(0, 155, 174, 1)";
+        }
+    // ReSharper disable once PossibleNullReferenceException
+        else if (Enum.GetName(MyJobs.ApplicationPhase.InterviewHR).Equals(applicationPhase))
+        {
+            bg_colour = "rgba(131, 97, 67, 0.22)";
+            text_colour = "rgba(131, 97, 67, 1)";
+        }
+        else if (Enum.GetName(MyJobs.ApplicationPhase.InterviewCEO).Equals(applicationPhase))
+        {
+            bg_colour = "rgba(224, 213, 204, 0.22)";
+            text_colour = "rgba(131, 97, 67, 1)";
+        }
+        else if (Enum.GetName(MyJobs.ApplicationPhase.Offer).Equals(applicationPhase))
+        {
+            bg_colour = "rgba(0, 188, 80, 0.22)";
+            text_colour = "rgba(0, 188, 80, 1)";
+        }
+        else if (Enum.GetName(MyJobs.ApplicationPhase.Screening).Equals(applicationPhase))
+        {
+            bg_colour = "rgba(0, 108, 188, 0.22)";
+            text_colour = "rgba(0, 108, 188, 1)";
+        }
+        else
+        {
+            bg_colour = "rgba(94,93,240,0.22)";
+            text_colour = "rgba(94,93,240,1)";
+        }
+        return $"background: {bg_colour}; color: {text_colour}; box-shadow: {text_colour} 0 10px 20px -10px;";
+    }
+
+    private void ShowApplicant(Applicant applicant)
+    {
+        Console.WriteLine($"FocusApplicant = {applicant.FirstName}");
+        FocusApplicant = applicant;
+    }
+
+    private void Edit(MyJob job, KeyValuePair<Applicant, List<MyJob>> pair)
+    {
+        jobToChange = job;
+        EntryToChange = pair;
+    }
+
+    public KeyValuePair<TKey, TValue> GetEntry<TKey, TValue>
+        (Dictionary<TKey, TValue> dictionary,
+            TKey key)
+    {
+        return new KeyValuePair<TKey, TValue>(key, dictionary[key]);
+    }
+
+    private void Save(MyJob job)
+    {
+        var jobs = map[FocusApplicant].Where(j => j.Id != job.Id).ToList();
+        jobs.Add(job);
+        map[FocusApplicant] = jobs;
+        var ind = _applicants.FindIndex(a => a.Id == FocusApplicant.Id);
+        _applicants.ToList()[ind].Phase = job.Phase;
+        jobToChange = null;
+        EntryToChange = new KeyValuePair<Applicant, List<MyJob>>();
+    }
+
+    private void CancelEdit()
+    {
+        jobToChange = null;
+        EntryToChange = new KeyValuePair<Applicant, List<MyJob>>();
+    }
 
 }
