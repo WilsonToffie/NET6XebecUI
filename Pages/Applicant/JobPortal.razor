@@ -3,21 +3,56 @@
 @inject HttpClient httpClient
 
 <style>
-    .searchBox {
+    .job-search-bar {
+        max-width: 50%;
+        background-color: rgba(255,255,255,0.6);
+        border-radius: 2em;
+        border: 0.1em solid rgba(0,0,0,0.2);
     }
-
-    .handPointer {
+        .job-search-bar::placeholder {
+            color: rgb(0,0,0,0.5);
+            font-weight: 200;
+            font-size: 1em;
+            font-family: opensans-condensed-bold;
+        }
+    .job-search-icon {
+        color: #00BCAE;
+        font-size: 2em;
+        text-align: center;
+    }
+    .job-search-icon-div {
         cursor: pointer;
+        background-color: rgba(255,255,255,0.6);
+        border-radius: 2em;
+        width: 5%;
+        text-align: center;
+        border: 0.1em solid rgba(0,0,0,0.2);
+    }
+    .job-portal-card {
+        cursor: pointer;
+        background-color: rgba(255,255,255,0.5);
+        border-radius: 2em;
+        border: solid white 0.25em;
+    }
+        .job-portal-card:hover {
+            cursor: pointer;
+            background-color: rgba(255,255,255,1);
+            border-radius: 2em;
+            border: solid white 0.25em;
+            box-shadow: 0 2px 5px 0 rgba(255,255,255, 1), 0 2px 10px 0 rgba(255,255,255, 1);
+        }
+        
+    .job-portal-card-body{
+        height: 20vh;
+        margin-left: 1vh;
+        margin-right: 1vh;
+        margin-bottom: 1vh;
     }
 
     .headingPage {
         height: 5vh;
         color: #003340;
         font-size: 2rem;
-    }
-
-    .formContainer {
-        background-color: white;
     }
 
     .formButton {
@@ -27,34 +62,45 @@
         height: 5vh;
         margin-top: 2vh;
         width: auto;
+        font-family: opensans-bold;
     }
-
+        .formButton:hover {
+            background-color: #d35bc9;
+            color: white;
+            font-weight: 600;
+            height: 5vh;
+            margin-top: 2vh;
+            width: auto;
+            font-family: opensans-bold;
+        }
     input {
         height: min-content;
     }
 
-    .select2 {
-        width: 100% !important;
+
+    .job-portal-left::-webkit-scrollbar {
+        background-color: transparent;
+        width: 1vw;
+    }
+    .job-portal-left::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+    .job-portal-left::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 188, 174,1);
+        border-radius: 1em;
+    }
+    .job-portal-right-main::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+    .job-portal-right-main::-webkit-scrollbar {
+        background-color: transparent;
+        width: 1vw;
     }
 
-    ::-webkit-scrollbar {
-        width: 10px;
+    .job-portal-right-main::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 188, 174,1);
+        border-radius: 1em;
     }
-
-    ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: #888;
-        border-radius: 10px;
-    }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-
     .container-main {
         height: 75vh;
         width: 100%;
@@ -77,19 +123,73 @@
         height: 65vh;
         width: 100%;
     }
+    .small-card-name {
+        color: black; 
+        font-weight: 600; 
+        font-size: 1em;
+        font-family: opensans-bold;
+    }
+    .small-card-company {
+        color: rgba(0,0,0,0.5);
+        font-weight: 600;
+        font-size: 1em;
+        font-family: opensans-bold;
+    }
+    .small-card-location {
+        color: rgba(0,0,0,0.5);
+        font-weight: 600;
+        font-size: 1em;
+        font-family: opensans-light;
+    }
+    .small-card-date {
+        color: #d35bc9;
+        font-weight: 800;
+        font-size: 1em;
+        font-family: opensans-bold;
+    }
+    .job-portal-right {
+        background-color: rgba(255,255,255,1);
+        border-radius: 2em;
+        border: solid white 0.25em;
+        box-shadow: 0 2px 5px 0 rgba(255,255,255, 1), 0 2px 10px 0 rgba(255,255,255, 1);
+    }
+    .job-portal-form{
+        width: 90%;
+        margin-left: 5%;
+        margin-right: 5%;
+
+    }
+    .big-card-name {
+        color: black;
+        font-weight: 900;
+        font-size: 2em;
+        font-family: opensans-bold;
+    }
+    .big-card-description {
+        color: #666666;
+        font-weight: 800;
+        font-size: 1em;
+        font-family: opensans-condensed-light;
+    }
+    .big-card-type {
+        color: black;
+        font-weight: 800;
+        font-size: 1em;
+        font-family: opensans-bold;
+    }
 </style>
 
-<div class="container" style="height: 60vh">
+<div class="container" style="height: 75vh; margin-top:5vh;">
 
     <div style="width: 100%">
         <!--Search-Box-->
         <div class="row" style="height:5vh">
             <div class="col-12">
                 <div class="input-group d-flex justify-content-center">
-                    <span class="input-group-text handPointer" @onclick="() => SeachListJob(searchJob)">
-                        <i class="fa fa-search"></i>
+                    <input class="form-control job-search-bar" type="text" placeholder="Search for a job" @bind="searchJob" />
+                    <span class="input-group-text job-search-icon-div" @onclick="() => SeachListJob(searchJob)">
+                        <i class="fa fa-search job-search-icon"></i>
                     </span>
-                    <input class="form-control" style="max-width: 50%" type="text" placeholder="Search" @bind="searchJob" />
                 </div>
             </div>
         </div>
@@ -97,23 +197,20 @@
 
         @if (jobListFilter != null && jobListFilter.Count > 0)
         {
-            <div class="row" style="height:55vh">
-                <div class="col-4 overflow-auto" style="height: 55vh">
+            <div class="row" style="height:60vh">
+                <div class="col-4 job-portal-left overflow-auto" style="height: 60vh">
 
                     <!--Card list for jobs-->
                     <div class="col-12">
                         @foreach (var item in jobPagedList)
                         {
-                            <div class="card handPointer" @onclick="() => DisplayJobDetail(item.Id)">
-                                <div class="card-body">
-                                    <h3 class="card-title">@item.Title</h3>
-                                    <h5 class="card-subtitle text-muted">@item.Company</h5>
+                            <div class="card job-portal-card" @onclick="() => DisplayJobDetail(item.Id)">
+                                <div class="card-body job-portal-card-body">
+                                    <h3 class="card-title small-card-name">@item.Title</h3>
+                                    <h5 class="card-subtitle text-muted small-card-company">@item.Company</h5>
                                     <br />
-                                    <p class="card-text">
-                                        @item.Location
-                                        <br />
-                                        @item.DueDate.ToString("d MMMM yyyy")
-                                    </p>
+                                    <h5 class="card-text small-card-location">@item.Location</h5>
+                                    <h5 class="card-text small-card-date">@item.DueDate.ToString("d MMMM yyyy")</h5>
                                 </div>
                             </div>
                             <br />
@@ -121,39 +218,39 @@
                     </div>
                 </div>
 
-                <div class="col-8 overflow-auto" style="height:55vh">
+                <div class="col-8 overflow-auto job-portal-right-main" style="height: 60vh">
 
                     <!--The Form for editing and deleting a job-->
-                    <div style="height: 55vh">
-                        <div class="col-12 p-5 formContainer">
-                            <form>
+                    <div style="height: 60vh">
+                        <div class="col-12 job-portal-right">
+                            <form class="job-portal-form">
                                 <div class="row">
-                                    <div class="col-6 p-2">
-                                            <h3>@displayJobDetail.Title</h3>
+                                    <div class="col-6">
+                                            <h3 class="big-card-name">@displayJobDetail.Title</h3>
                                     </div>
-                                    <div class="col-6 p-2 d-flex justify-content-end">
+                                    <div class="col-6 d-flex justify-content-end">
                                         <button class="btn formButton">Apply</button>
                                     </div>
-                                    <div class="col-6 p-2">
-                                            <h5 class="text-muted">@displayJobDetail.Company</h5>
+                                    <div class="col-6 d-flex justify-content-start">
+                                            <h5 class="text-muted small-card-company">@displayJobDetail.Company</h5>
                                     </div>
-                                    <div class="col-6 p-2 d-flex justify-content-end">
-                                            <p>@displayJobDetail.Location</p>
+                                    <div class="col-6 d-flex justify-content-end">
+                                            <p class="small-card-company">@displayJobDetail.Location</p>
                                     </div>
-                                    <div class="col-6 p-2">
-                                            <p>Full-Time</p>
+                                    <div class="col-6 justify-content-start">
+                                            <p class="big-card-type">Full-Time</p>
                                     </div>
-                                    <div class="col-6 p-2 d-flex justify-content-end">
-                                            <p>@displayJobDetail.Department</p>
+                                    <div class="col-6 d-flex justify-content-end">
+                                            <p class="big-card-type"> @displayJobDetail.Department</p>
                                     </div>
-                                    <div class="col-12 p-2">
-                                            <p class="text-center">@displayJobDetail.Description</p>
+                                    <div class="col-12">
+                                            <p class="text-center big-card-description">@displayJobDetail.Description</p>
                                     </div>
-                                    <div class="col-6 p-2">
+                                    <div class="col-6">
                                             <p>@displayJobDetail.JobPlatforms</p>
                                     </div>
-                                    <div class="col-6 p-2 d-flex justify-content-end">
-                                            <p>@displayJobDetail.DueDate.ToString("d MMMM yyyy")</p>
+                                    <div class="col-6 d-flex justify-content-end">
+                                            <p class="small-card-date">@displayJobDetail.DueDate.ToString("d MMMM yyyy")</p>
                                     </div>
                                 </div>
                             </form>
@@ -210,11 +307,6 @@
                         </nav>
                     </div>
                 </div>
-                <div class="col-8">
-                    <div class="col-12 d-flex justify-content-center">
-                        <button class="btn formButton">Create Job</button>
-                    </div>
-                </div>
             </div>
         }
         else
@@ -223,7 +315,7 @@
             {
                 <br />
             }
-            <h1 class="text-center align-middle">No Job Are Available</h1>
+            <h1 class="text-center align-middle">No Jobs Are Available</h1>
         }
     </div>
 </div>
