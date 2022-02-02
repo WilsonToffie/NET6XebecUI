@@ -56,22 +56,24 @@ namespace XebecPortal.UI.Pages.HR
     public class FormQuestion
     {
         public int id { get; set; }
-
         public string question { get; set; }
-
         public string answer { get; set; }
-
         public int jobId { get; set; }
-
         public string job { get; set; }
+        public int answerTypeId { get; set; }
+        public string answerType { get; set; }
     }
+
 
     public class CustomQuestion
     {
         public int Id { get; set; }
-
         public string questionDescription { get; set; }
+        public int answerTypeId { get; set; }
+        public string answerType { get; set; }
     }
+
+
 
     class Developer
     {

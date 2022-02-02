@@ -35,6 +35,19 @@ namespace XebecPortal.UI.Pages.Applicant
         public IList<Application> Applications { get; set; }
     }
 
+    public class FormQuestion
+    {
+        public int id { get; set; }
+
+        public string question { get; set; }
+
+        public string answer { get; set; }
+
+        public int jobId { get; set; }
+
+        public string job { get; set; }
+        public int answerTypeId { get; set; }
+    }
     public class JobType
     {
         public int Id { get; set; }
