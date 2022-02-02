@@ -9,13 +9,13 @@ namespace XebecPortal.UI.Services.MockServices
 {
     public class MockApplicationPhaseHelperDataService : IApplicationPhaseHelperDataService
     {
-        public List<ApplicationPhaseHelper> GetAllApplicationPhaseHelpers()
+        public async Task<List<ApplicationPhaseHelper>> GetAllApplicationPhaseHelpers()
         {
             return AMockDataHub.MockApplicationHelpers.ToList();
         }
 
         //api/ApplicationPhaseHelper/UserId={AppUserId}
-        public Task<IEnumerable<ApplicationPhaseHelper>> GetApplicationPhaseHelpersByUserId(int userId)
+        public Task<List<ApplicationPhaseHelper>> GetApplicationPhaseHelpersByUserId(int userId)
         {
             throw new NotImplementedException();
         }

@@ -37,6 +37,9 @@ namespace XebecPortal.UI
             builder.Services.AddScoped<IEducationDataService, EducationDataService>();
             builder.Services.AddScoped<IEducationDataService, EducationDataService>();
             builder.Services.AddScoped<IAdditionalInformationDataService, AdditionalInformationDataService>();
+            builder.Services.AddScoped<IStatusDataService, StatusDataService>();
+            builder.Services.AddScoped<IPhaseDataService, PhaseDataService>();
+            
             //Testing
             builder.Services.AddScoped<IMyJobListDataService, MyJobListDataService>();
 

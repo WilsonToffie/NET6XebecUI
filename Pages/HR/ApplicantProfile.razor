@@ -219,6 +219,9 @@
     public Applicant Applicant { get; set; }
 
     [Parameter]
+    public EventCallback<Applicant> ApplicantChanged { get; set; }
+    
+    [Parameter]
     public AppUser AppUser { get; set; }
 
     public int AppUserId { get; set; }
@@ -233,18 +236,15 @@
         if (Applicant != null)
         {
             AppUserId = Applicant.Id;
-            if (AppUserId >= 0)
+            if (AppUserId <= 0)
             {
                 AppUserId = 1;
             }
-            Console.WriteLine("Getting personal info");
+            Console.WriteLine($"Getting personal info id= {Applicant.Id} Name = {Applicant.FirstName}");
             _PersonalInformation = (await _personalInformationDataService.GetPersonalDetails(AppUserId));
             _WorkHistories = await _workHistoryDataService.GetWorkHistories(AppUserId);
             _Educations = await _educationDataService.GetEducations(AppUserId);
             _AdditionalInformation = await _additionalInformationDataService.GetAdditionalInfo(AppUserId);
         }
     }
-
-
-
 }
