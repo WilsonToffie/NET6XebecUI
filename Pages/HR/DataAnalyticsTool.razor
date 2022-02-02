@@ -1,6 +1,169 @@
 ﻿@page "/dataanalyticstool"
 
-@code {
+<style>
+    .da-container {
+        width: 95%;
+        margin-left: 2.5%;
+        margin-right: 2.5%;
+        height: 80vh;
+        border-radius: 5em;
+        background-color: rgb(255,255,255,0.7);
+        border: solid white 0.1em;
+        box-shadow: 0 2px 5px 0 rgba(255,255,255, 1), 0 2px 10px 0 rgba(255,255,255, 1);
+        display: flex;
+    }
+    .da-nav {
+        width: 70px;
+        margin-left: 5px;
+        margin-right: 10px;
+        background-color: #004393;
+        height: 75vh;
+        border-top-left-radius: 100px;
+        border-bottom-left-radius: 100px;
+        border-top-right-radius: 100px;
+        border-bottom-right-radius: 100px;
+        padding-top: 5vh;
+        margin-top: 2.5vh;
+        margin-bottom: 2.5vh;
+        padding-bottom: 5vh;
+    }
+    .da-nav-option {
+        width: 80%;
+        margin-left: 10%;
+        margin-right: 10%;
+        height: 5vh;
+        text-align: center;
+        color: white;
+        font-size: 1.5em;
+        border-radius: 4em;
+        margin-top: 2vh;
+        padding-top: 0.5vh;
+    }
+        .da-nav-option:hover {
+            width: 80%;
+            margin-left: 10%;
+            margin-right: 10%;
+            height: 5vh;
+            text-align: center;
+            background-color: white;
+            color: #004393;
+            font-size: 1.5em;
+            border-radius: 4em;
+            margin-top: 2vh;
+            padding-top: 0.5vh;
+        }
 
+    .da-main {
+        width: 1475px;
+        height: 75vh;
+        margin-top: 2.5vh;
+        margin-bottom: 2.5vh;
+        margin-right: 25px;
+        border-top-left-radius: 100px;
+        border-bottom-left-radius: 100px;
+        border-top-right-radius: 100px;
+        border-bottom-right-radius: 100px;
+        background-color: red;
+    }
+</style>
+
+<div class="da-container">
+    <div class="da-nav">
+        <div class="da-nav-option" @onclick="showConversionRates">
+            <i class="fas fa-exchange-alt da-nav-icon"></i>
+        </div>
+        <div class="da-nav-option" @onclick="showGenderRatios">
+            <i class="fas fa-venus-mars da-nav-icon"></i>
+        </div>
+        <div class="da-nav-option" @onclick="showJobPortalStats">
+            <i class="fas fa-briefcase da-nav-icon"></i>
+        </div>
+        <div class="da-nav-option" @onclick="showJobTypeStats">
+            <i class="fas fa-file-signature da-nav-icon"></i>
+        </div>
+        <div class="da-nav-option" @onclick="showRecruitingFunnelStats">
+            <i class="fas fa-filter da-nav-icon"></i>
+        </div>
+        <div class="da-nav-option" @onclick="showTrafficStats">
+            <i class="fas fa-traffic-light da-nav-icon"></i>
+        </div>
+        <div class="da-nav-option" @onclick="showTalentRating">
+            <i class="fas fa-percent da-nav-icon"></i>
+        </div>
+    </div>
+    <div class="da-main" hidden="@conversionRateIsHidden">
+  
+    </div>
+    <div class="da-main" hidden="@genderRatioIsHidden">
+       
+    </div>
+    <div class="da-main" hidden="@jobPortalIsHidden">
+        
+    </div>
+    <div class="da-main" hidden="@jobTypeIsHidden">
+        
+    </div>
+    <div class="da-main" hidden="@recruitingFunnelIsHidden">
+        
+    </div>
+    <div class="da-main" hidden="@trafficIsHidden">
+        
+    </div>
+    <div class="da-main" hidden="@talentRatingIsHidden">
+        
+    </div>
+</div>
+
+@code{
+    private bool conversionRateIsHidden, genderRatioIsHidden, jobPortalIsHidden, jobTypeIsHidden, trafficIsHidden, talentRatingIsHidden, recruitingFunnelIsHidden;
+
+    protected override async Task OnInitializedAsync()
+    {
+        conversionRateIsHidden = false;
+        genderRatioIsHidden = jobPortalIsHidden = jobTypeIsHidden = trafficIsHidden = talentRatingIsHidden = recruitingFunnelIsHidden = true;
+    }
+
+    private void showConversionRates()
+    {
+        conversionRateIsHidden = false;
+        genderRatioIsHidden = jobPortalIsHidden = jobTypeIsHidden = trafficIsHidden = talentRatingIsHidden = recruitingFunnelIsHidden = true;
+    }
+
+    private void showGenderRatios()
+    {
+        genderRatioIsHidden = false;
+        conversionRateIsHidden = jobPortalIsHidden = jobTypeIsHidden = trafficIsHidden = talentRatingIsHidden = recruitingFunnelIsHidden = true;
+    }
+
+    private void showJobPortalStats()
+    {
+        jobPortalIsHidden = false;
+        genderRatioIsHidden = conversionRateIsHidden = jobTypeIsHidden = trafficIsHidden = talentRatingIsHidden = recruitingFunnelIsHidden = true;
+    }
+
+    private void showJobTypeStats()
+    {
+        jobTypeIsHidden = false;
+        genderRatioIsHidden = jobPortalIsHidden = conversionRateIsHidden = trafficIsHidden = talentRatingIsHidden = recruitingFunnelIsHidden = true;
+    }
+
+    private void showRecruitingFunnelStats()
+    {
+        recruitingFunnelIsHidden = false;
+        genderRatioIsHidden = jobPortalIsHidden = jobTypeIsHidden = trafficIsHidden = talentRatingIsHidden = conversionRateIsHidden = true;
+    }
+
+    private void showTrafficStats()
+    {
+        trafficIsHidden = false;
+        genderRatioIsHidden = jobPortalIsHidden = jobTypeIsHidden = conversionRateIsHidden = talentRatingIsHidden = recruitingFunnelIsHidden = true;
+
+    }
+
+    private void showTalentRating()
+    {
+        talentRatingIsHidden = false;
+        genderRatioIsHidden = jobPortalIsHidden = jobTypeIsHidden = trafficIsHidden = conversionRateIsHidden = recruitingFunnelIsHidden = true;
+    }
 
 }

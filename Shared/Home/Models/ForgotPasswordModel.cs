@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace XebecPortal.UI.Shared
+namespace XebecPortal.UI.Shared.Home.Models
 {
     public class ForgotPasswordModel
     {
