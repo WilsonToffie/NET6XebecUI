@@ -43,7 +43,7 @@
         grid-template-columns: repeat(2, fr);
         align-content: start;
         /*grid-template-columns: repeat(@@maxJobs, 1fr);*/
-        background: rgba(167,169,171,0.22);
+        background: rgba(0, 188, 174,0.1);
         overflow-y: auto;
         grid-row-gap: 1vh;
         padding: 5px;
@@ -57,7 +57,7 @@
 
         .job-cards::-webkit-scrollbar {
             width: 0.09vw;
-            background-color: rgba(0,51,64,0.6);
+            rgba(0, 188, 174,0.6)
         }
 
         .job-cards::-webkit-scrollbar-thumb {
@@ -67,9 +67,9 @@
         .job-cards div {
             /*border: #003340 3px solid;*/
             border: none;
-            border-left: rgba(0, 188, 174,1) 10px solid;
+            border-left: rgba(0, 188, 174,0.7) 10px solid;
             border-radius: 10px;
-            background: rgba(255,255,255,0.7);
+            background: rgba(255,255,255,0.9);
             margin: 0 5px 0 3px;
         }
 
@@ -77,7 +77,26 @@
                 background: rgba(0, 188, 174,1);
                 border-radius: 5px;
                 margin: 0;
+                font-weight: 700;
+                box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px !important;
             }
+            .job-cards div.rejection {
+                border-left: #ff4d5a  10px solid;
+                box-shadow: rgba(253,139,151,0.3) 0px 2px 2px, rgba(253,139,151,0.01) 0px 15px 12px;
+            }
+            .job-cards .accepted {
+                            border-left: rgba(0, 188, 80, 1)  10px solid;
+                            box-shadow: rgba(253,139,151,0.3) 0px 2px 2px, rgba(253,139,151,0.01) 0px 15px 12px;
+                        }
+            
+            .job-cards div:first-child.rejection-heading {
+                            background: #ff4d5a;
+                            border: none !important;
+              }
+              .job-cards div:first-child.accepted-heading {
+                                          background: rgba(0, 188, 80, 1);
+                                          border: none !important;
+                            }
 
     .card-header {
         position: sticky;
@@ -85,7 +104,11 @@
         box-sizing: border-box;
         height: fit-content;
         transition: 0.3s fade;
-        box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+        
+        /*box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;*/
+    }
+    .card-header .rejection-heading{
+        
     }
 
     .job-card {
@@ -94,7 +117,7 @@
         grid-template-rows: repeat(4, fit-content());
         grid-row-gap: 0;
         height: fit-content;
-        box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+        box-shadow: rgba(0, 188, 174,0.3) 0px 2px 2px, rgba(0, 188, 174,0.22) 0px 15px 12px;
     }
 
     .position, .company {
@@ -163,92 +186,128 @@
         margin-right: 5px;
     }
 
-    .rejection-card {
+
+    .phase-pill, .rejection-phase{
+     
+      border-radius: 999px;
+      
+      box-sizing: border-box;
+      cursor: pointer;
+      
+      width: fit-content;
+      word-break: break-word;
+      border: 0;
+    }
+    .rejection-phase{
+        color: rgba(188, 0, 14, 1);
+        background: rgba(188, 0, 14, 0.33);
+        font-size: 1vh;
+              font-weight: 700;
+              opacity: 1;
+              padding: 0.2vh 1vh;
+    }
+    .phase-pill{
+         background: rgba(94,93,240,0.22);
+         color: rgb(94,93,240);
+         font-size: 1.5vh;
+               font-weight: 700;
+               opacity: 1;
+               padding: 0.2vh 1vh;
+    }
+    .count{
+        text-decoration: underline;
+        border-radius: 1em;
+        font-size: 1em;
     }
 </style>
 @if (_allJobs != null)
 {
     <div class="main-wrapper">
-    <!--Search-Box-->
-    <div class="row" style="height:5vh; grid-column: span 4;">
-        <div class="col">
-            <div class="input-group d-flex justify-content-center">
-                <span class="input-group-text">
-                    <i class="fa fa-search"></i>
-                </span>
-                <input class="form-control" style="max-width: 50%" type="text" placeholder="Search" value="@_keyword" @oninput="@OnKeywordChanged"/>
+        <!--Search-Box-->
+        <div class="row" style="height:5vh; grid-column: span 4;">
+            <div class="col">
+                <div class="input-group d-flex justify-content-center">
+                    <span class="input-group-text">
+                        <i class="fa fa-search"></i>
+                    </span>
+                    <input class="form-control" style="max-width: 50%" type="text" placeholder="Search" value="@_keyword" @oninput="@OnKeywordChanged"/>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="main-wrapper-child job-cards">
-        <div class="card-header d-flex align-content-center justify-content-center ">
-            <span>Applications</span>
-        </div>
-        @foreach (var application in _applications)
-        {
-            <div class="job-card">
-                <span class="position">@application.Position</span>
-                <span class="company">@application.Company</span>
-                <small class="addition-details text-muted">@application.Location</small>
-                <small class="phase left-text">@application.Phase</small>
-                <small class="addition-details text-muted">Date Advertized: @application.LastMoved</small>
-                <small class="addition-details left-text text-muted">Application Date : @application.ApplicationDate</small>
+        <div class="main-wrapper-child job-cards">
+            <div class="card-header d-flex align-content-center justify-content-center ">
+                <span>Applications</span>
             </div>
-        }
-    </div>
-    <div class="main-wrapper-child job-cards">
-        <div class="card-header  d-flex align-content-center justify-content-center">
-            <span>In Progress</span>
+            @foreach (var application in _applications)
+            {
+                <div class="job-card">
+                    <span class="position">@application.Position</span>
+                    <span class="company">@application.Company</span>
+                    <small class="addition-details text-muted">@application.Location</small>
+                    <small class="phase left-text">
+                        <span class="phase-pill" style="@(GetColor(application.Phase))">@application.Phase</span>
+                    </small>
+                    <small class="addition-details text-muted">Date Advertized: @application.LastMoved</small>
+                    <small class="addition-details left-text text-muted">Application Date : @application.ApplicationDate</small>
+                </div>
+            }
         </div>
-        @foreach (var application in _inProgress)
-        {
-            <div class="job-card">
-                <span class="position">@application.Position</span>
-                <span class="company">@application.Company</span>
-                <small class="addition-details text-muted">@application.Location</small>
-                <small class="phase left-text">@application.Phase</small>
-                <small class="addition-details text-muted">Date Advertized: @application.LastMoved</small>
-                <small class="addition-details left-text text-muted">Application Date : @application.ApplicationDate</small>
+        <div class="main-wrapper-child job-cards">
+            <div class="card-header  d-flex align-content-center justify-content-center">
+                <span>In Progress</span>
             </div>
-        }
-    </div>
-    <div class="main-wrapper-child job-cards">
-        <div class="card-header  d-flex align-content-center justify-content-center">
-            <span>Offers</span>
+            @foreach (var application in _inProgress)
+            {
+                <div class="job-card">
+                    <span class="position">@application.Position</span>
+                    <span class="company">@application.Company</span>
+                    <small class="addition-details text-muted">@application.Location</small>
+                    <small class="phase left-text">
+                        <span class="phase-pill" style="@(GetColor(application.Phase))">@application.Phase</span>
+                    </small>
+                    <small class="addition-details text-muted">Date Advertized: @application.LastMoved</small>
+                    <small class="addition-details left-text text-muted">Application Date : @application.ApplicationDate</small>
+                </div>
+            }
         </div>
-        @foreach (var application in _offers)
-        {
-            <div class="job-card">
-                <span class="position">@application.Position</span>
-                <span class="company">@application.Company</span>
-                <small class="addition-details text-muted">@application.Location</small>
-                <small class="phase left-text">@application.Phase</small>
-                <small class="addition-details text-muted">Date Advertized: @application.LastMoved</small>
-                <small class="addition-details left-text text-muted">Application Date : @application.ApplicationDate</small>
+        <div class="main-wrapper-child job-cards">
+            <div class="card-header  d-flex align-content-center justify-content-center accepted-heading">
+                <span class="count">@_offers.Count</span><span>Successful</span><p>Applications</p>
             </div>
-        }
-    </div>
-    <div class="main-wrapper-child job-cards rejection-card">
-        <div class="card-header  d-flex align-content-center justify-content-center bg-danger border-0">
-            <span>Rejections</span>
+            @foreach (var application in _offers)
+            {
+                <div class="job-card accepted">
+                    <span class="position">@application.Position</span>
+                    <span class="company">@application.Company</span>
+                    <small class="addition-details text-muted">@application.Location</small>
+                    <small class="phase left-text">
+                        <button class="phase-pill" style="@(GetColor(application.Phase))">@application.Phase</button>
+                    </small>
+                    <small class="addition-details text-muted">Date Advertized: @application.LastMoved</small>
+                    <small class="addition-details left-text text-muted">Application Date : @application.ApplicationDate</small>
+                </div>
+            }
         </div>
-        @foreach (var rejection in _rejections)
-        {
-            <div class="job-card border-left-1 border-danger p-2">
-                <span class="position">@rejection.Position</span>
-                <span class="company">@rejection.Company</span>
-                <small class="addition-details">@rejection.Location</small>
-                <small class="phase left-text">Last Phase : @rejection.Phase</small>
-                <small class="addition-details">Date Advertized: @rejection.ApplicationDate</small>
-                <small class="addition-details left-text">Date Closed : @rejection.LastMoved</small>
+        <div class="main-wrapper-child job-cards rejection-card">
+            <div class="card-header  d-flex align-content-center justify-content-center rejection-heading">
+                <span class="count">@_rejections.Count</span><span>successful</span><br><span>Applications</span>
             </div>
-        }
+            @foreach (var rejection in _rejections)
+            {
+                <div class="job-card rejection">
+                    <span class="position">@rejection.Position</span>
+                    <span class="company">@rejection.Company</span>
+                    <small class="addition-details">@rejection.Location</small>
+                    <small class="phase left-text">Last Phase : <button class="rejection-phase">@rejection.Phase</button></small>
+                    <small class="addition-details">Date Advertized: @rejection.ApplicationDate</small>
+                    <small class="addition-details left-text">Date Closed : @rejection.LastMoved</small>
+                </div>
+            }
+        </div>
     </div>
-</div>
 }
 else
 {
-    
     <button class="btn btn-primary" type="button" disabled>
         <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>
         Getting Jobs....
@@ -275,9 +334,9 @@ else
 
     protected override void OnInitialized()
     {
-         _allJobs = _myJobListDataService.GetAllJobs();
-        //_allJobs = (await _myJobListDataService.GetAllJobsByAppUserId(2)).ToList();
-        
+        _allJobs = _myJobListDataService.GetAllJobs();
+    //_allJobs = (await _myJobListDataService.GetAllJobsByAppUserId(3)).ToList();
+
         _initJobs = _allJobs;
         _applications = _allJobs.FindAll(
             match: a => a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
@@ -322,6 +381,71 @@ else
         _rejections = _allJobs.FindAll(
             match: a => a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.Rejected)));
         return KeywordChanged.InvokeAsync(_keyword);
+    }
+
+    public enum ApplicationPhase
+    {
+    //get desciption
+        Application,
+        Testing,
+        InterviewStaff,
+        InterviewCEO,
+        InterviewHR,
+        Offer,
+        Screening
+    }
+    public enum Statuses
+    {
+        InProgress, Rejected
+    }
+
+    private string GetColor(string applicationPhase)
+    {
+        string bg_colour;
+        string text_colour;
+
+        if (Enum.GetName(ApplicationPhase.Application).Equals(applicationPhase))
+        {
+            bg_colour = "rgba(9, 71, 111, 0.22)";
+            text_colour = "rgba(9, 71, 111, 1)";
+        }
+        else if (Enum.GetName(ApplicationPhase.Testing).Equals(applicationPhase))
+        {
+            bg_colour = "rgba(11, 28, 72, 0.22)";
+            text_colour = "rgba(11, 28, 72, 1)";
+        }
+        else if (Enum.GetName(ApplicationPhase.InterviewStaff).Equals(applicationPhase, StringComparison.OrdinalIgnoreCase))
+        {
+            bg_colour = "rgba(0, 155, 174, 0.22)";
+            text_colour = "rgba(0, 155, 174, 1)";
+        }
+    // ReSharper disable once PossibleNullReferenceException
+        else if (Enum.GetName(ApplicationPhase.InterviewHR).Equals(applicationPhase))
+        {
+            bg_colour = "rgba(131, 97, 67, 0.22)";
+            text_colour = "rgba(131, 97, 67, 1)";
+        }
+        else if (Enum.GetName(ApplicationPhase.InterviewCEO).Equals(applicationPhase))
+        {
+            bg_colour = "rgba(224, 213, 204, 0.22)";
+            text_colour = "rgba(131, 97, 67, 1)";
+        }
+        else if (Enum.GetName(ApplicationPhase.Offer).Equals(applicationPhase))
+        {
+            bg_colour = "rgba(0, 188, 80, 0.22)";
+            text_colour = "rgba(0, 188, 80, 1)";
+        }
+        else if (Enum.GetName(ApplicationPhase.Screening).Equals(applicationPhase))
+        {
+            bg_colour = "rgba(0, 108, 188, 0.22)";
+            text_colour = "rgba(0, 108, 188, 1)";
+        }
+        else
+        {
+            bg_colour = "rgba(94,93,240,0.22)";
+            text_colour = "rgba(94,93,240,1)";
+        }
+        return $"background: {bg_colour}; color: {text_colour}; box-shadow: {text_colour} 0 10px 20px -10px;";
     }
 
 }

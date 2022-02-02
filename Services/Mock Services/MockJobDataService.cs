@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using XebecPortal.UI.Interfaces;
+using XebecPortal.UI.Pages.HR;
 using XebecPortal.UI.Services.Models;
 
 namespace XebecPortal.UI.Services.MockServices

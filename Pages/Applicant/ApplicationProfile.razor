@@ -1,6 +1,34 @@
 ﻿@page "/applicationprofile"
+<MatThemeProvider Theme="@_theme2">
+    <MatTabGroup @bind-ActiveIndex="@tabIndex">
+        <MatTab Label="Person Info">
+            Person Info.
+        </MatTab>
+        <MatTab Label="Work Experience">
+            Work Experience
+        </MatTab>
+        <MatTab Label="Education">
+            Education
+        </MatTab>
+        <MatTab Label="Online Presence">
+            Online things
+        </MatTab>
+    
+    </MatTabGroup>
+    <MatButton OnClick="@ChangeTab" Outlined="true" Icon="play_circle_filled">Next field</MatButton>
+</MatThemeProvider>
 
-@code {
+@code
+{
+    public int tabIndex = 0;
 
-
+    void ChangeTab(MouseEventArgs e)
+    {
+        tabIndex = tabIndex < 3 ? tabIndex + 1 : 0;
+    }
+    MatTheme _theme2 = new MatTheme()
+    {
+        Primary = "#00bcae",
+        Secondary = "#e1d7e6"
+    };
 }

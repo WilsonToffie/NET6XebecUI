@@ -30,6 +30,7 @@ namespace XebecPortal.UI.Services.MockServices
                 var phases = Enum.GetNames(typeof(Phases));
                 var statuses = Enum.GetNames(typeof(Statuses));
                 var mockJobs = new Faker<MyJob>()
+                    .RuleFor(j => j.Id, f => f.IndexGlobal)
                     .RuleFor(j => j.Position, f => f.Name.JobTitle())
                     .RuleFor(j => j.Company, f => f.Company.CompanyName())
                     .RuleFor(j => j.Location, f => f.PickRandom(locations))

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Bogus;
 using Microsoft.AspNetCore.Components;
 using XebecPortal.UI.Interfaces;
+using XebecPortal.UI.Pages.HR;
 using XebecPortal.UI.Services.MockServices;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 

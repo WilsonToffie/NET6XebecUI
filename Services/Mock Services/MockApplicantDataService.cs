@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Bogus;
@@ -47,7 +48,7 @@ namespace XebecPortal.UI.Services.MockServices
             throw new NotImplementedException();
         }
 
-        public async Task UpdateApplicant(Applicant applicant)
+        public async Task<IEnumerable<Applicant>> UpdateApplicant(Applicant applicant)
         {
             _applicants = _applicants.Select(i =>
             {
@@ -62,6 +63,8 @@ namespace XebecPortal.UI.Services.MockServices
 
                 return i;
             }).ToList();
+
+            return _applicants;
         }
 
         private void InitializeApplicants()
@@ -69,6 +72,7 @@ namespace XebecPortal.UI.Services.MockServices
             if (_applicants == null)
                 if (_applicants == null)
                 {
+                    var phases = Enum.GetNames(typeof(ApplicationPhase));
                     var mockApplicants = new Faker<Applicant>()
                         .RuleFor(a => a.Id, f => f.IndexFaker)
                         .RuleFor(a => a.FirstName, f => f.Name.FirstName())
@@ -77,9 +81,22 @@ namespace XebecPortal.UI.Services.MockServices
                         .RuleFor(a => a.CstComment, f => f.Rant.Review())
                         .RuleFor(a => a.InterviewRating, f => f.Random.Number(5))
                         .RuleFor(a => a.InterviewComment, f => f.Rant.Review("Person"))
-                        .RuleFor(a => a.Phase, f => f.Hacker.Verb());
+                        .RuleFor(a => a.Phase, f => f.PickRandom(phases))
+                        .RuleFor(a => a.Avatar, f => f.Person.Avatar);
                     _applicants = mockApplicants.Generate(20).ToList();
                 }
+        }
+        
+        public enum ApplicationPhase
+        {
+            //get desciption
+            [Description("Application Sent")] Application,
+            Testing,
+            Interview_Staff,
+            Interview_CEO,
+            Interview_HR,
+            Offer,
+            Hired
         }
     }
 }

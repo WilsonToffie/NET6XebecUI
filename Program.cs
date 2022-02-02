@@ -8,10 +8,13 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using MatBlazor;
 using XebecPortal.UI.Interfaces;
 using XebecPortal.UI.Services;
 using XebecPortal.UI.Services.Models;
 using XebecPortal.UI.Utils;
+using Smart.Blazor;
+using XebecPortal.UI.Service_Interfaces;
 
 namespace XebecPortal.UI
 {
@@ -28,8 +31,20 @@ namespace XebecPortal.UI
             builder.Services.AddScoped<IApplicationDataService, ApplicationDataService>();
             builder.Services.AddScoped<IJobDataService, JobDataService>();
             builder.Services.AddScoped<IApplicationPhaseHelperDataService, ApplicationPhaseHelperDataService>();
+            
+            builder.Services.AddScoped<IPersonalInformationDataService, PersonalInformationDataService>();
+            builder.Services.AddScoped<IWorkHistoryDataService, WorkHistoryDataService>();
+            builder.Services.AddScoped<IEducationDataService, EducationDataService>();
+            builder.Services.AddScoped<IEducationDataService, EducationDataService>();
+            builder.Services.AddScoped<IAdditionalInformationDataService, AdditionalInformationDataService>();
+            builder.Services.AddScoped<IStatusDataService, StatusDataService>();
+            builder.Services.AddScoped<IPhaseDataService, PhaseDataService>();
+            
             //Testing
             builder.Services.AddScoped<IMyJobListDataService, MyJobListDataService>();
+
+            // builder.Services.AddSmart();
+            // builder.Services.AddMatBlazor();
 
 
             await builder.Build().RunAsync();
