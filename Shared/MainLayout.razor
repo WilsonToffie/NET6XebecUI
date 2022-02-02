@@ -279,6 +279,9 @@
             <div class="nav-link" @onclick="showApplicantMyJobs">
                 <div class="icons"><i class="fa fa-users" aria-hidden="true"></i></div><h2 class="nav-link-text">My Jobs</h2>
             </div>
+            <div class="nav-link" @onclick="showDropZone">
+                <div class="icons"><i class="fa fa-users" aria-hidden="true"></i></div><h2 class="nav-link-text">Dropzone</h2>
+            </div>
         </div>
         <div class="infodiv">
             <h2 class="profile-logout">Logout</h2>
@@ -292,6 +295,9 @@
     </div>
     <div class="main" hidden="@applicantMyJobsIsHidden">
         <XebecPortal.UI.Pages.Applicant.MyJobs />
+    </div>
+    <div class="main" hidden="@ApplicantDropzoneIsHidden">
+        <XebecPortal.UI.Pages.Applicant.DropZone />
     </div>
 </div>
 <div class="page" hidden="@HRIsHidden">
@@ -388,6 +394,7 @@
     private bool hrCandidateRecommendationToolIsHidden { get; set; } = true;
     private bool hrDataAnalyticsToolIsHidden { get; set; } = true;
     private bool hrJobPortalIsHidden { get; set; } = true;
+    private bool ApplicantDropzoneIsHidden { get; set; } = true;
 
     [Parameter]
     public int ID { get; set; }
@@ -411,8 +418,9 @@
                 DeveloperIsHidden = HRIsHidden = true;
 
                 applicantApplicationProfileIsHidden = true;
-                applicantJobPortalIsHidden = false;
+                applicantJobPortalIsHidden = true;
                 applicantMyJobsIsHidden = true;
+                ApplicantDropzoneIsHidden = false;
 
                 hrApplicantControlToolIsHidden = true;
                 hrApplicantPortalIsHidden = true;
@@ -523,6 +531,16 @@
         hrCandidateRecommendationToolIsHidden = true;
         hrDataAnalyticsToolIsHidden = true;
         hrJobPortalIsHidden = false;
+    }
+
+    private void showDropZone()
+    {
+        hrApplicantControlToolIsHidden = true;
+        hrApplicantPortalIsHidden = true;
+        hrCandidateRecommendationToolIsHidden = true;
+        hrDataAnalyticsToolIsHidden = true;
+        hrJobPortalIsHidden = true;
+        ApplicantDropzoneIsHidden = false;
     }
 
 }

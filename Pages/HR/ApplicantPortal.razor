@@ -407,7 +407,7 @@
 
     private void Save(MyJob job)
     {
-        var jobs = map[FocusApplicant].Where(j => j.Id != job.Id).ToList();s
+        var jobs = map[FocusApplicant].Where(j => j.Id != job.Id).ToList();
         jobs.Add(job);
         map[FocusApplicant] = jobs;
         var ind = _applicants.FindIndex(a => a.Id == FocusApplicant.Id);

@@ -1,6 +1,7 @@
 ﻿@page "/applicationformcontroltool"
 @inject HttpClient httpClient
-@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
 
 <style>
     .wrapper {
@@ -175,6 +176,7 @@
             top: 18%
         }
     }
+
 </style>
 
 <div class="wrapper">
@@ -275,6 +277,8 @@
         </div>
     </div>
 
+
+
     @if (ShowAddPopup)
     {
         <div class="add-popup">
@@ -329,7 +333,6 @@
 
 
 @code {
-
 
     List<CustomQuestion> Questions = new List<CustomQuestion>();
     List<FormQuestion> FormQuestions = new List<FormQuestion>();
@@ -431,4 +434,5 @@
 
         //NavigationManager.NavigateTo("/phasecontrol");
     }
+
 }
