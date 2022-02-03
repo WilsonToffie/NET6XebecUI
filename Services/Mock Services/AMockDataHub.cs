@@ -29,7 +29,7 @@ namespace XebecPortal.UI.Services.MockServices
         }
 
         public static readonly List<Job> MockJobs = GetMockJobs().Generate(20);
-        public static readonly List<AppUser> MockAppUsers = GetMockAppUsers().Generate(20);
+        public static readonly List<Services.Models.AppUser> MockAppUsers = GetMockAppUsers().Generate(20);
         public static readonly List<Application> MockApplications = GetMockApplications().Generate(50);
 
         public static readonly List<ApplicationPhaseHelper>
@@ -50,10 +50,10 @@ namespace XebecPortal.UI.Services.MockServices
                 .RuleFor(a => a.Application, f => f.PickRandom(MockApplications));
         }
 
-        private static Faker<AppUser> GetMockAppUsers()
+        private static Faker<Services.Models.AppUser> GetMockAppUsers()
         {
             string[] roles = {"candidate", "developer", "hr"};
-            return new Faker<AppUser>()
+            return new Faker<Services.Models.AppUser>()
                 .RuleFor(user => user.Id, f => f.IndexFaker)
                 .RuleFor(user => user.Name, f => f.Name.FirstName())
                 .RuleFor(user => user.Surname, f => f.Name.LastName())

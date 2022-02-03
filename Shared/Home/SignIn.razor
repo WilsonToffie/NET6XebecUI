@@ -1,0 +1,165 @@
+﻿@page "/signin"
+@inject NavigationManager navmanager
+@layout EmptyLayout
+@inject HttpClient HttpClient
+@using System.Linq;
+@using XebecPortal.UI.Shared.Home.Models
+
+<style>
+    .overlay-login {
+        z-index: 0;
+        top: 0;
+        height: 80vh;
+        width: 100%;
+    }
+</style>
+<div class="overlay-login" id="login">
+    <div class="login-page">
+        <div class="login-left">
+            <form class="index-form-login" hidden="@RightDisplayLoginIsHidden">
+                <div class="form-group index-form-heading">
+                    <h1 class="index-form-heading-1">SIGN IN</h1>
+                </div>
+                <div class="form-group index-form-group index-group">
+                    <div class="index-form-icon">
+                        <i class="fa fa-user"></i>
+                    </div>
+                    <input type="email" required placeholder="Email address" @bind="@Email">
+                </div>
+                <div class="form-group index-form-group index-group">
+                    <div class="index-form-icon">
+                        <i class="fa fa-lock "></i>
+                    </div>
+                    <input type="password" placeholder="Password" @bind="@Password">
+                </div>
+                <div class="form-group index-form-or">
+                    <h1 class="index-form-heading-3">or sign in using</h1>
+                </div>
+                <div class="form-group index-form-socials">
+                    <div class="index-socialmedia-div">
+                        <i class="fab fa-google"></i>
+                    </div>
+                    <div class="index-socialmedia-div">
+                        <i class="fab fa-microsoft"></i>
+                    </div>
+                    <div class="index-socialmedia-div">
+                        <i class="fab fa-facebook"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <h1 class="forgotpassword" @onclick="GoToForgotPassword">forgot password?</h1>
+                </div>
+                <div class="form-group index-form-or" hidden="@invalidEmailorPasswordMessageIsHidden">
+                    <h1 class="index-form-heading-3">incorrect credentials</h1>
+                </div>
+                <input type="button" class="index-form-button" @onclick="Login" value="Submit" />
+            </form>
+
+            <form class="index-form-login" hidden="@RightDisplayForgotPasswordIsHidden">
+
+                <div class="form-group index-form-group index-group">
+                    <div class="index-form-icon">
+                        <i class="fa fa-user"></i>
+                    </div>
+                    <input type="email" required placeholder="Email address" @bind="@Email">
+                </div>
+                <div class="form-group">
+                    <h1 class="forgotpassword"  @onclick="GoToLogin">login</h1>
+                </div>
+                <div class="form-group index-form-or" hidden="@invalidEmailorPasswordMessageIsHidden">
+                    <h1 class="index-form-heading-3">invalid email</h1>
+                </div>
+                <div class="form-group index-form-or" hidden="@validSubmitForgotPasswordMessageIsHidden">
+                    <h1 class="index-form-heading-3">check your email for a link from us</h1>
+                </div>
+                <input type="button" class="index-form-button" @onclick="SubmitForgotPassword" value="Submit" />
+            </form>
+        </div>
+        <div class="login-right"></div>
+
+    </div>
+</div>
+
+@code{
+
+    // See login or forgot password form
+    private bool RightDisplayLoginIsHidden;
+    private bool RightDisplayForgotPasswordIsHidden;
+
+    //login invalid messages
+    private bool invalidEmailorPasswordMessageIsHidden;
+    private bool validSubmitForgotPasswordMessageIsHidden;
+
+    private string Email = "";
+    private string Password = "";
+
+    private ForgotPasswordModel forgotPassword = new ForgotPasswordModel();
+
+    private SignInModel signIn = new SignInModel();
+    private List<UserModel> users = new List<UserModel>();
+    private UserModel user = new UserModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        RightDisplayLoginIsHidden = false;
+        RightDisplayForgotPasswordIsHidden = true;
+        validSubmitForgotPasswordMessageIsHidden = true;
+        invalidEmailorPasswordMessageIsHidden = true;
+        await Task.Delay(0);
+
+    }
+
+    private async Task Login()
+    {
+        signIn.Email = Email;
+        signIn.Password = Password;
+
+        //send model to API 
+
+        //get user JSON from API 
+        try
+        {
+            users = await HttpClient.GetFromJsonAsync<List<UserModel>>("https://my-json-server.typicode.com/IviweMalotana/xebecDB/Users");
+            user = users.Where(a => a.Email.Equals(Email)).Single();
+            navmanager.NavigateTo("/main/" + user.ID);
+        }
+        catch
+        {
+            invalidEmailorPasswordMessageIsHidden = false;
+        }
+    }
+
+    private async Task SubmitForgotPassword()
+    {
+        forgotPassword.Email = Email;
+        forgotPassword.Link = "https://localhost:44364/forgotpassword";
+
+        try
+        {
+            //send Email 
+            users = await HttpClient.GetFromJsonAsync<List<UserModel>>("https://my-json-server.typicode.com/IviweMalotana/xebecDB/Users");
+            user = users.Where(a => a.Email.Equals(Email)).Single();
+            validSubmitForgotPasswordMessageIsHidden = false;
+            invalidEmailorPasswordMessageIsHidden = true;
+            // power automate 
+        }
+        catch
+        {
+            validSubmitForgotPasswordMessageIsHidden = true;
+            invalidEmailorPasswordMessageIsHidden = false;
+        }
+    }
+
+    private async Task GoToLogin()
+    {
+        await OnInitializedAsync();
+    }
+    private void GoToForgotPassword()
+    {
+        RightDisplayLoginIsHidden = true;
+        RightDisplayForgotPasswordIsHidden = false;
+        validSubmitForgotPasswordMessageIsHidden = true;
+        invalidEmailorPasswordMessageIsHidden = true;
+    }
+}
+ 
