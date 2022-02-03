@@ -97,4 +97,61 @@ namespace XebecPortal.UI.Pages.Applicant
         public IList<JobPhaseHelpers> PhaseHelpers { get; set; }
     }
 
+    public class WorkHistory
+    {
+        public int Id { get; set; }
+        public string CompanyName { get; set; }
+        public string JobTitle { get; set; }
+        public string Description { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public int AppUserId { get; set; }
+        public IList<AppUser> AppUser { get; set; }
+    }
+
+    public class Education
+    {
+        public int Id { get; set; }
+        public string Insitution { get; set; }
+        public string Qualification { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        public int AppUserId { get; set; }
+        public IList<AppUser> AppUser { get; set; }
+    }
+
+    public class ProfilePortfolioLink
+    {
+        public int Id { get; set; }
+        public string GitHubLink { get; set; }
+        public string LinkedInLink { get; set; }
+        public string TwitterLink { get; set; }
+        public string PersonalWebsiteUrl { get; set; }
+        public int AppUserId { get; set; }
+        public IList<AppUser> AppUser { get; set; }
+    }
+
+    public class AdditionalInformation
+    {
+        public int Id { get; set; }
+        public string Disability { get; set; }
+        public string Gender { get; set; }
+        public string Ethnicity { get; set; }
+        public int AppUserId { get; set; }
+        public IList<AppUser> AppUser { get; set; }
+    }
+
+    public class PersonalInformation
+    {
+        public int Id { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string PhoneNumber { get; set; }
+        public string IdNumber { get; set; }
+        public string Email { get; set; }
+        public string Address { get; set; }
+        public string ImageUrl { get; set; }
+        public int AppUserId { get; set; }
+        public IList<AppUser> AppUser { get; set; }
+    }
 }
