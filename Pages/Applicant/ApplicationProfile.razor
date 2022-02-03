@@ -1,6 +1,340 @@
 ﻿@page "/applicationprofile"
+@inject HttpClient httpClient
+@inject IJSRuntime jsRuntime
+
+<style>
+    .nav1 {
+        width: auto !important;
+        height: auto !important;
+        top: auto !important;
+        justify-content: normal !important;
+        justify-items: normal !important;
+    }
+
+    .nav-link1 {
+        width: auto !important;
+        height: auto !important;
+        margin-bottom: auto !important;
+        display: normal !important;
+        vertical-align: auto !important;
+        border-radius: 0px;
+        background-color: white;
+        color: #00bcae;
+        cursor: pointer;
+    }
+
+    .nav-link-text1 {
+        display: normal !important;
+        padding-top: 0px;
+        width: auto !important;
+        height: auto !important;
+    }
+
+    select {
+        font-size: medium !important
+    }
+
+    .formButton {
+        background-color: #00BCAE;
+        color: white;
+        font-weight: 600;
+        height: 5vh;
+        margin-top: 2vh;
+        width: auto;
+    }
+
+</style>
+
+<div class="container-fluid">
+
+    <div class="row">
+
+        <!--Navigation Tab-->
+        <div class="col-12 d-flex justify-content-center">
+            <ul class="nav nav1 nav-tabs" role="tablist">
+                <li class="nav-item p-1">
+                    <a id="personal-tab" class="nav-link nav-link1 active" data-bs-toggle="tab" href="#personal-information">Personal Information</a>
+                </li>
+                <li class="nav-item p-1">
+                    <a class="nav-link nav-link1" data-bs-toggle="tab" href="#work-history">Work History</a>
+                </li>
+                <li class="nav-item p-1">
+                    <a class="nav-link nav-link1" data-bs-toggle="tab" href="#education">Education</a>
+                </li>
+                <li class="nav-item p-1">
+                    <a id="online-tag" class="nav-link nav-link1" data-bs-toggle="tab" href="#online-profile">Online Profile</a>
+                </li>
+            </ul>
+        </div>
+
+        <!--Content Panel-->
+        <div class="col-12">
+            <div class="tab-content">
+
+                <!--Personal Information-->
+                <div id="personal-information" class="container tab-pane active">
+                    <form id="personal-information-form">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row p-3">
+                                    <div class="col-12 d-flex justify-content-center">
+                                        <button class="btn formButton" type="button">Drop CV</button>
+                                    </div>
+                                </div>
+                                <div class="row p-3">
+                                    <div class="col-4">
+                                        <label class="form-label" for="first-name">First Name</label>
+                                        <input id="first-name" class="form-control" type="text" @bind="personalInformation.FirstName" placeholder="John" required />
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" for="last-name">Last Name</label>
+                                        <input id="last-name" class="form-control" type="text" @bind="personalInformation.LastName" placeholder="Smith" required />
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" for="email-address">Email Address</label>
+                                        <input id="email-address" class="form-control" type="email" @bind="personalInformation.Email" placeholder="John@gmail.com" required />
+                                    </div>
+                                </div>
+                                <div class="row p-3">
+                                    <div class="col-4">
+                                        <label class="form-label" for="phone-number">Phone Number</label>
+                                        <input id="phone-number" class="form-control" type="tel" @bind="personalInformation.PhoneNumber" placeholder="0713369875" required />
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" for="ethnicity">Ethnicity</label>
+                                        <select id="ethnicity" class="form-select" @bind="additionalInformation.Ethnicity" required>
+                                            <option value="" disabled selected>Select Ethnicity</option>
+                                            <option value="African">African</option>
+                                            <option value="White">White</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" for="gender">Gender</label>
+                                        <select id="gender" class="form-select" @bind="additionalInformation.Gender" required>
+                                            <option value="" disabled selected>Select Gender</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row p-3">
+                                    <div class="col-4">
+                                        <label class="form-label" for="id-number">ID Number</label>
+                                        <input id="id-number" class="form-control" type="text" min="13" max="13" @bind="personalInformation.IdNumber" placeholder="010205365987" required />
+                                    </div>
+                                    <div class="col-8">
+                                        <label class="form-label" for="address">Address</label>
+                                        <textarea id="address" class="form-control" @bind="personalInformation.Address" placeholder="Address" rows="4" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!--Work History-->
+                <div id="work-history" class="container tab-pane">
+                    <form>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row p-3">
+                                    <div class="col-6">
+                                        <div class="row">
+                                            <input type="hidden" @bind="workHistory.Id" />
+                                            <input type="hidden" @bind="workHistory.AppUserId" />
+                                            <div class="row p-3">
+                                                <div class="col-6">
+                                                    <label class="form-label" for="company-name">Company Name</label>
+                                                    <input id="company-name" class="form-control" type="text" @bind="workHistory.CompanyName" placeholder="1Nebula" />
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="form-label" for="job-title">Job Title</label>
+                                                    <input id="job-title" class="form-control" type="text" @bind="workHistory.JobTitle" placeholder="Software Developer" />
+                                                </div>
+                                            </div>
+                                            <div class="row p-3">
+                                                <div class="col-6">
+                                                    <label class="form-label" for="start-date">Start Date</label>
+                                                    <input id="start-date" class="form-control" @bind="workHistory.StartDate" @onblur="StartDateCheck" type="date" />
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="form-label" for="end-date">End Date</label>
+                                                    <input id="end-date" class="form-control" @bind="workHistory.EndDate" @onblur="EndDateCheck" type="date" />
+                                                </div>
+                                            </div>
+                                            <div class="row p-3">
+                                                <div class="col-12">
+                                                    <label class="form-label" for="description">Description</label>
+                                                    <textarea id="description" class="form-control" placeholder="Description" @bind="workHistory.Description" rows="4"></textarea>
+                                                </div>
+                                                <div class="col-12 d-flex justify-content-around">
+                                                    @if (workHistUpdate)
+                                                    {
+                                                        <input class="btn formButton" type="button" @onclick="() => UpdateWorkHistory(workHistory)" value="Update" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input class="btn formButton" type="button" @onclick="() => AddWorkHistory(workHistory)" value="Add" />
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="row">
+                                            <div class="col-12 overflow-auto" style="height: 365px">
+                                                @if (workHistoryList != null && workHistoryList.Count > 0)
+                                                {
+                                                    foreach (var item in workHistoryList)
+                                                    {
+                                                        <div class="card" style="cursor: pointer" @onclick="() => PopulateWorkHistory(item.Id)">
+                                                            <div class="card-body">
+                                                                <h3 class="card-title">@item.JobTitle</h3>
+                                                                <h4 class="card-subtitle">@item.CompanyName</h4>
+                                                                <div class="d-flex justify-content-end"><span @onclick="() => DeleteWorkHistory(item.Id)"><i class="fa fa-times-circle fa-2x" style="color: red"></i></span></div>
+                                                                <p class="card-text">Start Date: @item.StartDate.ToString("d MMM yyyy")</p>
+                                                                <p class="card-text">End Date: @item.EndDate.ToString("d MMM yyyy")</p>
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!--Education-->
+                <div id="education" class="container tab-pane">
+                    <form>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row p-3">
+                                    <div class="col-6">
+                                        <div class="row">
+                                            <input type="hidden" @bind="education.Id" />
+                                            <input type="hidden" @bind="education.AppUserId" />
+                                            <div class="row p-3">
+                                                <div class="col-6">
+                                                    <label class="form-label" for="institution">Institution</label>
+                                                    <input id="institution" class="form-control" type="text" @bind="education.Insitution" placeholder="University of Cape Town" />
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="form-label" for="qualification">Qualification</label>
+                                                    <input id="qualification" class="form-control" type="text" @bind="education.Qualification" placeholder="BSc Chemical Engineering" />
+                                                </div>
+                                            </div>
+                                            <div class="row p-3">
+                                                <div class="col-6">
+                                                    <label class="form-label" for="start-date">Start Date</label>
+                                                    <input id="start-date" class="form-control" @bind="education.StartDate" @onblur="StartDateCheck" type="date" />
+                                                </div>
+                                                <div class="col-6">
+                                                    <label class="form-label" for="end-date">End Date</label>
+                                                    <input id="end-date" class="form-control" @bind="education.EndDate" @onblur="EndDateCheck" type="date" />
+                                                </div>
+                                            </div>
+                                            <div class="row p-3">
+                                                <div class="col-12 d-flex justify-content-around">
+                                                    @if (eduUpdate)
+                                                    {
+                                                        <input class="btn formButton" type="button" @onclick="() => UpdateEducation(education)" value="Update" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input class="btn formButton" type="button" @onclick="() => AddEducation(education)" value="Add" />
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="row">
+                                            <div class="col-12 overflow-auto" style="height: 365px">
+                                                @if (educationList != null && educationList.Count > 0)
+                                                {
+                                                    foreach (var item in educationList)
+                                                    {
+                                                        <div class="card" style="cursor: pointer" @onclick="() => PopulateEducation(item.Id)">
+                                                            <div class="card-body">
+                                                                <h3 class="card-title">@item.Qualification</h3>
+                                                                <h4 class="card-subtitle">@item.Insitution</h4>
+                                                                <div class="d-flex justify-content-end"><span @onclick="() => DeleteEducation(item.Id)"><i class="fa fa-times-circle fa-2x" style="color: red"></i></span></div>
+                                                                <p class="card-text">Start Date: @item.StartDate.ToString("d MMM yyyy")</p>
+                                                                <p class="card-text">End Date: @item.EndDate.ToString("d MMM yyyy")</p>
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!--Online Profile-->
+                <div id="online-profile" class="container tab-pane">
+                    <form>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row p-3">
+                                    <div class="col-6">
+                                        <div>
+                                            <label class="form-label" for="github">Github</label>
+                                            &ensp;
+                                            <i class="fab fa-github fa-2x"></i>
+                                        </div>
+                                        <input id="github" class="form-control" type="text" @bind="profilePortfolio.GitHubLink" />
+                                    </div>
+                                    <div class="col-6">
+                                        <div>
+                                            <label class="form-label" for="linkedin">LinkedIn</label>
+                                            &ensp;
+                                            <i class="fab fa-linkedin-in fa-2x" style="color: #0077b5"></i>
+                                        </div>
+                                        <input id="linkedin" class="form-control" type="text" @bind="profilePortfolio.LinkedInLink" />
+                                    </div>
+                                </div>
+                                <div class="row p-3">
+                                    <div class="col-6">
+                                        <div>
+                                            <label class="form-label" for="twitter">Twitter</label>
+                                            &ensp;
+                                            <i class="fab fa-twitter-square fa-2x" style="color: #00acee"></i>
+                                        </div>
+                                        <input id="twitter" class="form-control" type="text" @bind="profilePortfolio.TwitterLink" />
+                                    </div>
+                                    <div class="col-6">
+                                        <div>
+                                            <label class="form-label" for="personal-website">Personal Website</label>
+                                            &ensp;
+                                            <i class="fas fa-globe fa-2x" style="color: #35afc0"></i>
+                                        </div>
+                                        <input id="personal-website" class="form-control" type="text" @bind="profilePortfolio.PersonalWebsiteUrl" />
+                                    </div>
+                                </div>
+                                <div class="row p-3">
+                                    <div class="col-12 d-flex justify-content-center">
+                                        <input class="btn formButton" type="button" value="Done" @onclick="Submit" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
-
 
 }
