@@ -1,0 +1,112 @@
+﻿@inject HttpClient httpClient
+@using System.Collections.Generic
+@using System.Net.Http
+@using System.Net.Http.Json
+@using System.Threading.Tasks
+@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
+@using System.IO
+@using Microsoft.AspNetCore.Components.Forms   
+
+<style>
+    .wrapper-dropzone{
+        height: 80vh;
+        width: 100%;
+        background-color: black;
+
+    }
+    .top{
+        width: 900px;
+        height: 10vh;
+        background-color: red;
+
+    }
+    .bottom{
+        width: 900px;
+        height: 40vh;
+        background-color: blue;
+    }
+    .dropzone{
+        width: 900px;
+        height: 10vh;
+        background-color: white;
+
+    }
+    .dropzone::-webkit-file-upload-button{
+        visibility: hidden;
+    }
+    .dropzone:hover::before{
+        border-color: green;
+    }
+    .dropzone:active::before{
+        background-color: black;
+    }
+    .dropzone::before{
+        display: inline-block;
+        -webkit-user-select: none;
+        cursor: pointer;
+    }
+</style>
+
+<div class="wrapper-dropzone">
+    <div class="top" @ref="dropzone">
+        <InputFile OnChange="@OnFileChange" class="dropzone" @ref="file"/>
+    </div>
+    <div class="bottom">
+        @thisFile
+    </div>
+</div>
+
+@code {
+
+    ElementReference dropzone;
+    InputFile file;
+    private string thisFile;
+    IJSObjectReference module, dropZone;
+
+    public class FileModel
+    {
+        public string FileName { get; set; }
+    }
+
+    FileModel newFile = new FileModel();
+
+    [Parameter]
+    public EventCallback<string> FileChanged { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./DragAndDrop.js");
+
+            dropZone = await module.InvokeAsync<IJSObjectReference>("InitializeFileDropZone", dropzone, file);
+        }
+            catch
+            {
+
+            }
+    }
+
+    public Task OnFileChange(InputFileChangeEventArgs e)
+    {
+        thisFile = e.File.Name.ToString();
+
+        return FileChanged.InvokeAsync(newFile.FileName);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if(dropZone!=null)
+        {
+            await dropZone.InvokeVoidAsync("Dispose");
+
+            await dropZone.DisposeAsync();
+        }
+
+        if (module != null)
+        {
+            await module.DisposeAsync();
+        }
+    }
+}
