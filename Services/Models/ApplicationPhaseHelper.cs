@@ -21,12 +21,15 @@ namespace XebecPortal.UI.Services.Models
         [JsonProperty("statusId")] 
         public int StatusId { get; set; }
         //Todo
-        [JsonProperty("status")] public object Status { get; set; }
+        [JsonProperty("status")] public AppStatus Status { get; set; }
 
         [JsonProperty("timeMoved")] public DateTime TimeMoved { get; set; }
 
         [JsonProperty("comments")] public string Comments { get; set; }
 
         [JsonProperty("rating")] public float  Rating { get; set; }
+        
+        //Todo remove
+        public int AppUserId { get; set; }
     }
 }

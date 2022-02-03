@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using XebecPortal.UI.Service_Interfaces;
 using XebecPortal.UI.Services.MockServices;
 using XebecPortal.UI.Services.Models;
@@ -15,8 +14,6 @@ namespace XebecPortal.UI.Services
         private HttpClient altClient = new HttpClient();
         
         private List<AppPhase> _appPhases;
-        private List<PhaseModel> _applicationPhases;
-
         private List<AppPhase> AppPhases
         {
             get
@@ -69,27 +66,18 @@ namespace XebecPortal.UI.Services
             _appPhases = new List<AppPhase>{application, interviewHr, interviewStaff, testing, screening, offer};
         }
 
-        public List<PhaseModel> ApplicationPhases
-        {
-            get => _applicationPhases;
-            set => _applicationPhases = value;
-        }
-
         public PhaseDataService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
-        public async Task<List<PhaseModel>> GetApplicationPhases()
+        public List<AppPhase> GetApplicationPhases()
         {
-            return await altClient.GetFromJsonAsync<List<PhaseModel>>(
-                $"https://xebecapi.azurewebsites.net/api/applicationphase/");
+            return AppPhases;
         }
 
-        public async Task<PhaseModel> GeApplicationPhaseById(int id)
+        public AppPhase GeApplicationPhaseById(int id)
         {
-            return await altClient.GetFromJsonAsync<PhaseModel>(
-                $"https://xebecapi.azurewebsites.net/api/ApplicationPhase/{id}");
+            return AppPhases.FirstOrDefault(a => a.Id == id);
         }
-        
     }
 }

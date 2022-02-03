@@ -13,7 +13,7 @@ namespace XebecPortal.UI.Services.Models
 
         [JsonProperty("appUserId")] public int AppUserId { get; set; }
 
-        [JsonProperty("appUser")] public object AppUser { get; set; }
+        [JsonProperty("appUser")] public Applicant AppUser { get; set; }
 
         [JsonProperty("timeApplied")] public DateTimeOffset TimeApplied { get; set; }
 

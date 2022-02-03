@@ -195,8 +195,9 @@
                 Console.WriteLine("We have applicants");
                 foreach (var applicant in _applicants)
                 {
-                    //var applicationPhaseHelpers = _map[applicant];
-                    var applicationPhaseHelpers = _httpClient.GetFromJsonAsync<List<ApplicationPhaseHelper>>($"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/UserId={FocusApplicant.Id}").Result;
+                    var applicationPhaseHelpers = _map[applicant];
+                    Console.WriteLine($">>>>>>>>Applicant Portal : applicant id:{applicant.Id} has {applicationPhaseHelpers.Count} phase helpers!");
+                    //var applicationPhaseHelpers = _httpClient.GetFromJsonAsync<List<ApplicationPhaseHelper>>($"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/UserId={FocusApplicant.Id}").Result;
                     //Todo: application must not be null && get the last job
                     //var lastJob = new JobModel(){ Title = "N/A no application",Department = "N/A no application"};
                     if (applicationPhaseHelpers != null && applicationPhaseHelpers.Any())
@@ -295,7 +296,7 @@
                                 <select @bind=@applicationPhaseHelper.ApplicationPhaseId>
                                     @foreach (int phaseId in Enum.GetValues(typeof(PhaseEnum)))
                                     {
-                                        <option value="@phaseId">@_phaseDataService.GeApplicationPhaseById(phaseId).Result.Description</option>
+                                        <option value="@phaseId">@_phaseDataService.GeApplicationPhaseById(phaseId).Description</option>
                                     }
                                 </select>
                             </td>
@@ -330,7 +331,7 @@
         }
     </div>
     <div class="profile-section">
-
+        <ApplicantProfile Applicant=@FocusApplicant></ApplicantProfile>
     </div>
 </div>
 
@@ -341,7 +342,7 @@
     public HttpClient altClient;
     public KeyValuePair<Applicant, List<ApplicationPhaseHelper>> focusPair = new();
     public Applicant FocusApplicant { get; set; }
-    public List<PhaseModel> _appPhases;
+    public List<AppPhase> _appPhases;
     public List<AppStatus> _statues;
     public List<ApplicationPhaseHelper> FocuApplicationPhaseHelpers { get; set; }
     ApplicationPhaseHelper helperToChange = new ApplicationPhaseHelper
@@ -351,51 +352,41 @@
 
     protected override async Task OnInitializedAsync()
     {
+        //Console.WriteLine($">>>>>>>>Applicant Portal OnInitialized");
         _applicants = (await _applicantDataService.GetAllApplicants()).OrderBy(a => a.Id).ToList();
 
         if (_applicants != null)
         {
             if (_applicants.Any())
             {
-                Console.WriteLine($"OnInitialized = setting applicant");
+                Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = setting focus applicant");
                 FocusApplicant = _applicants[0];
-                
             }
-            Console.WriteLine($"OnInitialized = Associating map");
+            Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Associating map");
             _map = AssociateApplicantsToJobs(_applicants);
             if (_map != null)
             {
-                Console.WriteLine($"OnInitialized = Associating map");
-                Console.WriteLine($"OnInitialized = Creating Focus Value pair");
+                Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Associating map > Done!!!");
+                Console.WriteLine();
+                Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Creating Focus Value pair");
                 focusPair = _map.FirstOrDefault(a => _applicants.FirstOrDefault(a => a.Id > -1) == a.Key);
+                Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Creating Focus Value pair> Done!!!");
+                Console.WriteLine();
             }
         }
-            try
-            {
-                _appPhases = _phaseDataService.GetApplicationPhases().Result.OrderBy(p => p.Id).ToList();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"OnInitialized = _appPhases = _phaseDataService.GetApplicationPhases().Result.OrderBy(p => p.Id).ToList(); {e}");
-            }
+            
+            _appPhases = _phaseDataService.GetApplicationPhases().OrderBy(p => p.Id).ToList();
             _statues = _statusDataService.GetAllStatuses().Result.OrderBy(s => s.Id).ToList();
         }
 
         public  Dictionary<Applicant, List<ApplicationPhaseHelper>> AssociateApplicantsToJobs(List<Applicant> applicants)
         {
             Dictionary<Applicant, List<ApplicationPhaseHelper>> tempMap = new Dictionary<Applicant, List<ApplicationPhaseHelper>>();
-            foreach (var applicant in applicants)
+
+            foreach (var app in applicants)
             {
-                try
-                {
-    //var tempHelpers = (await _httpClient.GetFromJsonAsync<List<ApplicationPhaseHelper>>($"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/userId={applicant.Id}"));
-                    List<ApplicationPhaseHelper> tempHelpers = _phaseHelperDataService.GetApplicationPhaseHelpersByUserId(applicant.Id);
-                    _map.Add(applicant, tempHelpers);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"{e.Message}");
-                }
+                List<ApplicationPhaseHelper> temp = _phaseHelperDataService.GetAssApplicationPhaseHelpers(app, _applicants);
+                tempMap.Add(app, temp);
             }
             return tempMap;
         }

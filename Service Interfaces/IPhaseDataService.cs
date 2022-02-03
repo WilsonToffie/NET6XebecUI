@@ -8,8 +8,8 @@ namespace XebecPortal.UI.Service_Interfaces
     public interface IPhaseDataService
     {
         //api/Status
-        Task<List<PhaseModel>> GetApplicationPhases();
+        List<AppPhase> GetApplicationPhases();
         //api/Status/{id}
-        Task<PhaseModel> GeApplicationPhaseById(int id);
+        AppPhase GeApplicationPhaseById(int id);
     }
 }
