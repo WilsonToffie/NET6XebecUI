@@ -126,17 +126,14 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private async Task Submit()
         {
-            /*if (await jsRuntime.InvokeAsync<bool>("ProfileApplication"))
+            if (await jsRuntime.InvokeAsync<bool>("ProfileApplication"))
             {
                 await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/PersonalInformation", personalInformation);
                 await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/AdditionalInformation", additionalInformation);
-
+                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/WorkHistory", workHistoryList);
+                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Education", educationList);
                 await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink", profilePortfolio);
-            }*/
-
-            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/WorkHistory", workHistoryList);
-            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Education", educationList);
-
+            }
         }
     }
 }
