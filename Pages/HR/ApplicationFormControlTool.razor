@@ -1,6 +1,7 @@
 ﻿@page "/applicationformcontroltool"
 @inject HttpClient httpClient
-@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
 
 <style>
     .wrapper {
@@ -175,6 +176,7 @@
             top: 18%
         }
     }
+
 </style>
 
 <div class="wrapper">
@@ -274,6 +276,8 @@
             <button class="btn" style="background-color: #00BCAE; color: white;" @onclick="CompileForm">Compile form</button>
         </div>
     </div>
+
+
 
     @if (ShowAddPopup)
     {
@@ -435,4 +439,5 @@
 
         NavigationManager.NavigateTo($"/phasecontrol/{tempJob}");
     }
+
 }
