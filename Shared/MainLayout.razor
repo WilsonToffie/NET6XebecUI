@@ -1,10 +1,11 @@
 ﻿@page "/main/{ID:int}"
-@inherits LayoutComponentBase;
-@inject IJSRuntime JsRuntime;
-@inject HttpClient HttpClient;
-@using Microsoft.AspNetCore.Components;
-@layout EmptyLayout;
-@inject NavigationManager navmanager;
+@inherits LayoutComponentBase
+@inject IJSRuntime JsRuntime
+@inject HttpClient HttpClient
+@using Microsoft.AspNetCore.Components
+@layout EmptyLayout
+@inject NavigationManager navmanager
+@using XebecPortal.UI.Shared.Home.Models
 
 <style>
 
@@ -30,7 +31,37 @@
         height: 90vh;
         width: 100%;
     }
-
+    .main-heading-div{
+        height: 5vh;
+        width: 100%;
+        display: flex;
+    }
+    .main-heading-icon {
+        width: 5%;
+        font-size: 1.5em;
+        color: rgba(0,0,0,0.5);
+        text-align: left;
+        padding-left: 2%;
+        padding-top: 1vh;
+    }
+    .main-heading-text-div {
+        width: 93%;
+        margin-top: -1vh;
+    }
+    .main-heading-text {
+        font-size: 1.2em;
+        font-weight: 800;
+        display: inline-block;
+        font-family: opensans-condensed-bold;
+        color: rgba(0,0,0,0.5);
+        text-align: left;
+        text-transform: uppercase;
+    }
+    .main-component{
+        height: 80vh;
+        margin-bottom: 5vh;
+        width: 100%;
+    }
     .mainlayout-heading {
         width: 70%;
         height: 100%;
@@ -98,7 +129,7 @@
     }
 
     .nav-link-text {
-        font-size: 1.1em;
+        font-size: 1.5em;
         display: inline-block;
         padding-top: 0.1em;
         width: 80%;
@@ -196,42 +227,6 @@
         }
 </style>
 
-<div class="page" hidden="@DeveloperIsHidden">
-
-    <div class="header">
-        <div class="d-flex justify-content-between align-items-center">
-            <div class="mainlayout-heading">
-                <h1 class="mainlayout-xebec-heading">XEBEC</h1>
-            </div>
-            <div class="nav">
-                <img class="icon-user" src="/Img/user.svg" data-bs-toggle="offcanvas" data-bs-target="#showDeveloper" aria-controls="offcanvasRight" />
-            </div>
-        </div>
-    </div>
-    <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showDeveloper" aria-labelledby="offcanvasRightLabel">
-        <div class="offcanvas-header">
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body profile-div">
-
-            <div class="infodiv">
-                <h2 class="profile-name">@thisUser.Name @thisUser.Surname</h2>
-            </div>
-            <div class="infodiv">
-                <h2 class="profile-role">@thisUser.Role</h2>
-            </div>
-            <div class="infodiv">
-                <h2 class="profile-email">@thisUser.Email</h2>
-            </div>
-        </div>
-        <div class="infodiv">
-            <h2 class="profile-logout">Logout</h2>
-        </div>
-    </div>
-    <div class="main">
-        <XebecPortal.UI.Pages.Developer.ApplicantControlTool />
-    </div>
-</div>
 <div class="page" hidden="@ApplicantIsHidden">
     <div class="header">
         <div class="d-flex justify-content-between align-items-center">
@@ -239,31 +234,11 @@
                 <h1 class="mainlayout-xebec-heading">XEBEC</h1>
             </div>
             <div class="nav">
-                <img class="icon-user" src="/Img/user.svg" data-bs-toggle="offcanvas" data-bs-target="#showApplicant" aria-controls="offcanvasRight" />
                 <img class="icon-menu" src="/Img/list.svg" data-bs-toggle="offcanvas" data-bs-target="#showApplicantNav" aria-controls="offcanvasRight" />
             </div>
         </div>
     </div>
-    <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showApplicant" aria-labelledby="offcanvasRightLabel">
-        <div class="offcanvas-header">
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body profile-div">
-
-            <div class="infodiv">
-                <h2 class="profile-name">@thisUser.Name @thisUser.Surname</h2>
-            </div>
-            <div class="infodiv">
-                <h2 class="profile-role">@thisUser.Role</h2>
-            </div>
-            <div class="infodiv">
-                <h2 class="profile-email">@thisUser.Email</h2>
-            </div>
-        </div>
-        <div class="infodiv">
-            <h2 class="profile-logout">Logout</h2>
-        </div>
-    </div>
+    
     <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showApplicantNav" aria-labelledby="offcanvasRightLabel">
         <div class="offcanvas-header">
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -274,7 +249,7 @@
             </div>
 
             <div class="nav-link" @onclick="showApplicantJobPortal">
-                <div class="icons"><i class="fa fa-file" aria-hidden="true"></i></div><h2 class="nav-link-text">Job Portal</h2>
+                <div class="icons"><i class="fa fa-briefcase" aria-hidden="true"></i></div><h2 class="nav-link-text">Job Portal</h2>
             </div>
             <div class="nav-link" @onclick="showApplicantMyJobs">
                 <div class="icons"><i class="fa fa-users" aria-hidden="true"></i></div><h2 class="nav-link-text">My Jobs</h2>
@@ -288,13 +263,43 @@
         </div>
     </div>
     <div class="main" hidden="@applicantApplicationProfileIsHidden">
-        <XebecPortal.UI.Pages.Applicant.ApplicationProfile />
+        <div class="main-heading-div">
+            <div class="main-heading-icon">
+                <i class="fa fa-book" aria-hidden="true"></i>
+            </div>
+            <div class="main-heading-text-div">
+                <h2 class="main-heading-text">My Profile</h2>
+            </div>
+        </div>
+        <div class="main-component">
+            <XebecPortal.UI.Pages.Applicant.ApplicationProfile />
+        </div>
     </div>
     <div class="main" hidden="@applicantJobPortalIsHidden">
-        <XebecPortal.UI.Pages.Applicant.JobPortal />
+        <div class="main-heading-div">
+            <div class="main-heading-icon">
+                <i class="fa fa-briefcase" aria-hidden="true"></i>
+            </div>
+            <div class="main-heading-text-div">
+                <h2 class="main-heading-text">Job Search</h2>
+            </div>
+        </div>
+        <div class="main-component">
+            <XebecPortal.UI.Pages.Applicant.JobPortal />
+        </div>
     </div>
     <div class="main" hidden="@applicantMyJobsIsHidden">
-        <XebecPortal.UI.Pages.Applicant.MyJobs />
+        <div class="main-heading-div">
+            <div class="main-heading-icon">
+                <i class="fa fa-file" aria-hidden="true"></i>
+            </div>
+            <div class="main-heading-text-div">
+                <h2 class="main-heading-text">My Jobs</h2>
+            </div>
+        </div>
+        <div class="main-component">
+            <XebecPortal.UI.Pages.Applicant.MyJobs />
+        </div>
     </div>
     <div class="main" hidden="@ApplicantDropzoneIsHidden">
         <XebecPortal.UI.Pages.Applicant.DropZone />
@@ -308,29 +313,8 @@
                 <h1 class="mainlayout-xebec-heading">XEBEC</h1>
             </div>
             <div class="nav">
-                <img class="icon-user" src="/Img/user.svg" data-bs-toggle="offcanvas" data-bs-target="#showHR" aria-controls="offcanvasRight" />
                 <img class="icon-menu" src="/Img/list.svg" data-bs-toggle="offcanvas" data-bs-target="#showHRNav" aria-controls="offcanvasRight" />
             </div>
-        </div>
-    </div>
-    <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showHR" aria-labelledby="offcanvasRightLabel">
-        <div class="offcanvas-header">
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body profile-div">
-
-            <div class="infodiv">
-                <h2 class="profile-name">@thisUser.Name @thisUser.Surname</h2>
-            </div>
-            <div class="infodiv">
-                <h2 class="profile-role">@thisUser.Role</h2>
-            </div>
-            <div class="infodiv">
-                <h2 class="profile-email">@thisUser.Email</h2>
-            </div>
-        </div>
-        <div class="infodiv">
-            <h2 class="profile-logout">Logout</h2>
         </div>
     </div>
     <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showHRNav" aria-labelledby="offcanvasRightLabel">
@@ -338,16 +322,9 @@
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
-            <div class="nav-link" @onclick="showHRApplicantControlTool">
-                <div class="icons"><i class="fa fa-table" aria-hidden="true"></i></div><h2 class="nav-link-text">Applicant Control Tool</h2>
-            </div>
             <div class="nav-link" @onclick="showHRApplicantPortal">
                 <div class="icons"><i class="fa fa-users" aria-hidden="true"></i></div><h2 class="nav-link-text">Applicant Portal</h2>
             </div>
-            <div class="nav-link" @onclick="showHRCandidateRecommendationTool">
-                <div class="icons"><i class="fas fa-lightbulb" aria-hidden="true"></i></div><h2 class="nav-link-text">Candidate Recommendation Tool</h2>
-            </div>
-
             <div class="nav-link" @onclick="showHRDataAnalyticsTool">
                 <div class="icons"><i class="fa fa-chart-bar" aria-hidden="true"></i></div><h2 class="nav-link-text">Data Analytics Tool</h2>
             </div>
@@ -359,29 +336,52 @@
             <h2 class="profile-logout">Logout</h2>
         </div>
     </div>
-    <div class="main" hidden="@hrApplicantControlToolIsHidden">
-        <XebecPortal.UI.Pages.HR.ApplicantControlTool/>
-    </div>
     <div class="main" hidden="@hrApplicantPortalIsHidden">
-        <XebecPortal.UI.Pages.HR.ApplicantPortal />
-    </div>
-    <div class="main" hidden="@hrCandidateRecommendationToolIsHidden">
-        <XebecPortal.UI.Pages.HR.CandidateRecommendationTool />
+        <div class="main-heading-div">
+            <div class="main-heading-icon">
+                <i class="fa fa-users" aria-hidden="true"></i>
+            </div>
+            <div class="main-heading-text-div">
+                <h2 class="main-heading-text">Applicant Portal</h2>
+            </div>
+        </div>
+        <div class="main-component">
+            <XebecPortal.UI.Pages.HR.ApplicantPortal />
+        </div>
     </div>
     <div class="main" hidden="@hrDataAnalyticsToolIsHidden">
-        <XebecPortal.UI.Pages.HR.DataAnalyticsTool />
+        <div class="main-heading-div">
+            <div class="main-heading-icon">
+                <i class="fa fa-chart-bar" aria-hidden="true"></i>
+            </div>
+            <div class="main-heading-text-div">
+                <h2 class="main-heading-text">Data Analytics Tool</h2>
+            </div>
+        </div>
+        <div class="main-component">
+            <XebecPortal.UI.Pages.HR.DataAnalyticsTool />
+        </div>
     </div>
     <div class="main" hidden="@hrJobPortalIsHidden">
-        <XebecPortal.UI.Pages.HR.JobPortal />
+        <div class="main-heading-div">
+            <div class="main-heading-icon">
+                <i class="fa fa-briefcase" aria-hidden="true"></i>
+            </div>
+            <div class="main-heading-text-div">
+                <h2 class="main-heading-text">Job Adverts</h2>
+            </div>
+        </div>
+        <div class="main-component">
+            <XebecPortal.UI.Pages.HR.JobPortal />
+        </div>
     </div>
 </div>
-      
+
 @code{
     private MainModel mainmodel = new MainModel();
     private List<UserModel> users = new List<UserModel>();
     private UserModel thisUser = new UserModel();
 
-    private bool DeveloperIsHidden { get; set; } = true;
     private bool HRIsHidden { get; set; } = true;
     private bool ApplicantIsHidden { get; set; } = true;
 
@@ -389,9 +389,7 @@
     private bool applicantJobPortalIsHidden { get; set; } = true;
     private bool applicantMyJobsIsHidden { get; set; } = true;
 
-    private bool hrApplicantControlToolIsHidden { get; set; } = true;
     private bool hrApplicantPortalIsHidden { get; set; } = true;
-    private bool hrCandidateRecommendationToolIsHidden { get; set; } = true;
     private bool hrDataAnalyticsToolIsHidden { get; set; } = true;
     private bool hrJobPortalIsHidden { get; set; } = true;
     private bool ApplicantDropzoneIsHidden { get; set; } = true;
@@ -404,7 +402,6 @@
         users = await HttpClient.GetFromJsonAsync<List<UserModel>>("https://my-json-server.typicode.com/IviweMalotana/xebecDB/Users");
 
         Console.WriteLine(ApplicantIsHidden);
-        Console.WriteLine(DeveloperIsHidden);
         Console.WriteLine(HRIsHidden);
         Console.WriteLine(mainmodel.ID);
 
@@ -415,47 +412,27 @@
             if (thisUser.Role.Equals("applicant"))
             {
                 ApplicantIsHidden = false;
-                DeveloperIsHidden = HRIsHidden = true;
 
                 applicantApplicationProfileIsHidden = true;
                 applicantJobPortalIsHidden = true;
                 applicantMyJobsIsHidden = true;
                 ApplicantDropzoneIsHidden = false;
 
-                hrApplicantControlToolIsHidden = true;
                 hrApplicantPortalIsHidden = true;
-                hrCandidateRecommendationToolIsHidden = true;
                 hrDataAnalyticsToolIsHidden = true;
                 hrJobPortalIsHidden = true;
 
             }
-            else if (thisUser.Role.Equals("developer"))
-            {
-                DeveloperIsHidden = false;
-                HRIsHidden = ApplicantIsHidden = true;
-
-                applicantApplicationProfileIsHidden = true;
-                applicantJobPortalIsHidden = true;
-                applicantMyJobsIsHidden = true;
-
-                hrApplicantControlToolIsHidden = true;
-                hrApplicantPortalIsHidden = true;
-                hrCandidateRecommendationToolIsHidden = true;
-                hrDataAnalyticsToolIsHidden = true;
-                hrJobPortalIsHidden = true;
-            }
+            
             else if (thisUser.Role.Equals("hr"))
             {
                 HRIsHidden = false;
-                DeveloperIsHidden = ApplicantIsHidden = true;
                 applicantApplicationProfileIsHidden = true;
                 applicantJobPortalIsHidden = true;
                 applicantMyJobsIsHidden = true;
 
-                hrApplicantControlToolIsHidden = false;
                 hrApplicantPortalIsHidden = true;
-                hrCandidateRecommendationToolIsHidden = true;
-                hrDataAnalyticsToolIsHidden = true;
+                hrDataAnalyticsToolIsHidden = false;
                 hrJobPortalIsHidden = true;
             }
         }
@@ -464,12 +441,6 @@
             Console.WriteLine(mainmodel.ID + " not working");
         }
 
-    }
-
-    protected override Task OnAfterRenderAsync(bool firstRender)
-    {
-        JsRuntime.InvokeVoidAsync("HrJobPortalJS");
-        return base.OnAfterRenderAsync(firstRender);
     }
 
     private void showApplicantApplicationProfile()
@@ -491,44 +462,22 @@
         applicantJobPortalIsHidden = true;
         applicantMyJobsIsHidden = false;
     }
-
-    private void showHRApplicantControlTool()
-    {
-        hrApplicantControlToolIsHidden = false;
-        hrApplicantPortalIsHidden = true;
-        hrCandidateRecommendationToolIsHidden = true;
-        hrDataAnalyticsToolIsHidden = true;
-        hrJobPortalIsHidden = true;
-    }
     private void showHRApplicantPortal()
     {
-        hrApplicantControlToolIsHidden = true;
         hrApplicantPortalIsHidden = false;
-        hrCandidateRecommendationToolIsHidden = true;
         hrDataAnalyticsToolIsHidden = true;
         hrJobPortalIsHidden = true;
     }
-    private void showHRCandidateRecommendationTool()
-    {
-        hrApplicantControlToolIsHidden = true;
-        hrApplicantPortalIsHidden = true;
-        hrCandidateRecommendationToolIsHidden = false;
-        hrDataAnalyticsToolIsHidden = true;
-        hrJobPortalIsHidden = true;
-    }
+    
     private void showHRDataAnalyticsTool()
     {
-        hrApplicantControlToolIsHidden = true;
         hrApplicantPortalIsHidden = true;
-        hrCandidateRecommendationToolIsHidden = true;
         hrDataAnalyticsToolIsHidden = false;
         hrJobPortalIsHidden = true;
     }
     private void showHRJobPortal()
     {
-        hrApplicantControlToolIsHidden = true;
         hrApplicantPortalIsHidden = true;
-        hrCandidateRecommendationToolIsHidden = true;
         hrDataAnalyticsToolIsHidden = true;
         hrJobPortalIsHidden = false;
     }

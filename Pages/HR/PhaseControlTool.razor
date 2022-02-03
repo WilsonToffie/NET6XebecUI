@@ -1,6 +1,7 @@
 ﻿@page "/phasecontrol"
 @inject HttpClient httpClient
 @inject IJSRuntime jsr
+@inject NavigationManager NavigationManager
 
 <style>
     * {
@@ -205,21 +206,10 @@
 
                     @foreach (var phase in phasesAdded)
                     {
-                        if (phase.description == "Interview")
-                        {
-                            <tr>
-                                <td class="text-left" style="font-weight: bold; font-size: 15px">@phase.description</td>
-                                <td style="color: #00bcae; font-size: 13px; font-weight: bold; text-align:left">@developerAssigned</td>
-                                <td class="close-phase" @onclick="() => DeletePhaseOrderPhase(phase)">&times;</td>
-                            </tr>
-                        }
-                        else
-                        {
-                            <tr>
-                                <td class="text-left" style="font-weight: bold; font-size: 15px" colspan="2">@phase.description</td>
-                                <td class="close-phase" @onclick="() => DeletePhaseOrderPhase(phase)">&times;</td>
-                            </tr>
-                        }
+                        <tr>
+                            <td class="text-left" style="font-weight: bold; font-size: 15px" colspan="2">@phase.description</td>
+                            <td class="close-phase" @onclick="() => DeletePhaseOrderPhase(phase)">&times;</td>
+                        </tr>
 
                     }
 
@@ -229,7 +219,7 @@
             </table>
         </div>
         <div class="button">
-            <a href="https://localhost:44364/"><button class="button-content">Assign Phases</button></a>
+            <button class="button-content" @onclick="AssignPhases">Assign Phases</button>
         </div>
     </div>
 </div>
@@ -248,43 +238,16 @@
     </div>
 }
 
-@if (showModalAssign)
-{
-    <div class="modalbox">
-        <div class="modal-content" style="height: 400px">
-            <div style="font-weight: bold; padding: 10px">Select Developer</div>
-
-            <span class="close" @onclick="ToggleModalAssign">&times;</span>
-            <div style=" overflow: auto">
-                <table class="table-bordered position-relative" style="background-color: lightgrey; padding-right: 10px; margin-top: 20px">
-                    <tbody>
-
-                        @foreach (var developer in developers)
-                        {
-                            @if (developer.role == "Developer")
-                            {
-                                <tr>
-                                    <td @onclick="() => AssignDeveloper(developer)">@developer.name</td>
-                                </tr>
-                            }
-                        }
-
-                    </tbody>
-
-                </table>
-            </div>
-        </div>
-    </div>
-}
-
 
 @code
 {
-    private IList<Phase> phases = new List<Phase>();
-    private IList<Phase> phasesAdded = new List<Phase>();
-    private IList<AppUser> developers = new List<AppUser>();
+    [Parameter]
+    public CreateJobPost tempJob { get; set; }
+
+    private IList<ApplicationPhase> phases = new List<ApplicationPhase>();
+    private List<ApplicationPhase> phasesAdded = new List<ApplicationPhase>();
     private IList<Job> jobs = new List<Job>();
-    Phase phaseValue = new Phase();
+    ApplicationPhase phaseValue = new ApplicationPhase();
 
     private string developerAssigned = "";
 
@@ -293,12 +256,10 @@
     private MainModel mainmodel { get; set; } = new MainModel();
 
     private bool showModalSubmitPhase = false;
-    private bool showModalAssign = false;
 
     protected override async Task OnInitializedAsync()
     {
-        phases = await httpClient.GetFromJsonAsync<List<Phase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
-        developers = await httpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
+        phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
 
         jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
         Job tempJob = jobs.LastOrDefault<Job>();
@@ -311,15 +272,10 @@
         showModalSubmitPhase = !showModalSubmitPhase;
     }
 
-    private void ToggleModalAssign()
-    {
-        showModalAssign = !showModalAssign;
-    }
-
-    private async Task DeletePhase(Phase phase)
+    private async Task DeletePhase(ApplicationPhase phase)
     {
         await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/applicationphase/{phase.id}");
-        phases = await httpClient.GetFromJsonAsync<List<Phase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
+        phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
 
         await jsr.InvokeVoidAsync("alert", "Deleted!");
     }
@@ -329,7 +285,7 @@
 
         await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/applicationphase", phaseValue);
 
-        phases = await httpClient.GetFromJsonAsync<List<Phase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
+        phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
 
         showModalSubmitPhase = !showModalSubmitPhase;
     }
@@ -343,58 +299,34 @@
 
     }
 
-    private void AddPhase(Phase phase)
+    private void AddPhase(ApplicationPhase phase)
     {
         if (!phasesAdded.Contains(phase))
         {
             phasesAdded.Add(phase);
         }
-        if (phase.description == "Interview")
-        {
-            ToggleModalAssign();
-        }
-
     }
 
-    private void AssignDeveloper(AppUser developer)
-    {
-        ToggleModalAssign();
-        developerAssigned = developer.name;
-    }
-
-    private async Task DeletePhaseOrderPhase(Phase phase)
+    private void DeletePhaseOrderPhase(ApplicationPhase phase)
     {
         phasesAdded.Remove(phase);
     }
 
-    class Phase
+    public async Task AssignPhases()
     {
-        public int id { get; set; }
+        @*@foreach (var phase in phasesAdded)
+            {
+                JobApplicationPhase JobApplicationPhase_ = new JobApplicationPhase();
+                JobApplicationPhase_.JobId = CurrentJobId;
+                JobApplicationPhase_.ApplicationPhaseId = phase.id;
 
-        public string description { get; set; }
-    }
+                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobapplicationphase", JobApplicationPhase_);
+            }*@
 
-    class AppUser
-    {
-        public int id { get; set; }
+    tempJob.JobPhases = phasesAdded;
 
-        public string email { get; set; }
+    await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/job", tempJob);
 
-        public string role { get; set; }
-
-        public string passwordhash { get; set; }
-
-        public string name { get; set; }
-
-        public string surname { get; set; }
-
-        public string key { get; set; }
-
-        public bool registered { get; set; }
-
-        public int linkVisits { get; set; }
-    }
-
-
-
+    //NavigationManager.NavigateTo("/");
+}
 }
