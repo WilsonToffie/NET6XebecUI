@@ -11,8 +11,8 @@ namespace XebecPortal.UI.Pages.HR
 {
     public partial class CreateJob
     {
-        private List<Developer> developers = new List<Developer>();
-        private List<Developer> developersAdded = new List<Developer>();
+        private List<AppUser> collaborators = new List<AppUser>();
+        private List<AppUser> collaboratorsAdded = new List<AppUser>();
         private IList<MockDepartment> mockDepartments = new List<MockDepartment>();
         private IList<MockLocation> mockLocations = new List<MockLocation>();
         private IList<JobType> jobTypes = new List<JobType>();
@@ -28,21 +28,21 @@ namespace XebecPortal.UI.Pages.HR
             mockDepartments = await HttpClient.GetFromJsonAsync<List<MockDepartment>>("/mockData/departmentMockData.json");
             mockLocations = await HttpClient.GetFromJsonAsync<List<MockLocation>>("/mockData/locationMockData.json");
             jobPlatforms = await HttpClient.GetFromJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform");
-            developers = await HttpClient.GetFromJsonAsync<List<Developer>>("https://my-json-server.typicode.com/WilsonToffie/JSONTesting/Developers");
             jobTypes = await HttpClient.GetFromJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/jobtype");
+            collaborators = await HttpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
         }
 
-        private void AddCollaborator(Developer developer)
+        private void AddCollaborator(AppUser collaborator)
         {
-            if (!developersAdded.Contains(developer))
+            if (!collaboratorsAdded.Contains(collaborator))
             {
-                developersAdded.Add(developer);
+                collaboratorsAdded.Add(collaborator);
             }
         }
 
-        private void RemoveCollaborator(Developer developer)
+        private void RemoveCollaborator(AppUser collaborator)
         {
-            developersAdded.Remove(developer);
+            collaboratorsAdded.Remove(collaborator);
         }
 
         protected override Task OnAfterRenderAsync(bool firstRender)

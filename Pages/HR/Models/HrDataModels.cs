@@ -47,10 +47,11 @@ namespace XebecPortal.UI.Pages.HR
         public string Department { get; set; }
         public DateTime DueDate { get; set; }
         public DateTime CreationDate { get; set; }
-        public JobTypeHelper JobType { get; set; }
-        public List<JobPlatformHelper> JobPlatforms { get; set; }
+        public JobType JobType { get; set; }
+        public List<JobPlatform> JobPlatforms { get; set; }
         public List<ApplicationPhase> JobPhases { get; set; }
         public List<FormQuestion> formQuestions { get; set; }
+        public List<AppUser> Collaborators { get; set; }
     }
 
     public class FormQuestion

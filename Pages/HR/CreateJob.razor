@@ -4,6 +4,10 @@
 @inject NavigationManager nav
 
 <style>
+    .create-job-container {
+        background-color: transparent;
+    }
+
     .sub-container {
         display: flex;
     }
@@ -66,7 +70,7 @@
 </style>
 
 <!--Body Page-->
-<div class="container">
+<div class="create-job-container">
     <div class="sub-container">
         <!--The Form for creating a job-->
         <div class="create-job-form">
@@ -85,7 +89,7 @@
                             </div>
                             <div class="col-6 p-2">
                                 <label>Location</label>
-                                <select class="form-select" @bind="tempJob.Title">
+                                <select class="form-select" @bind="tempJob.Location">
                                     @foreach (var item in mockLocations)
                                     {
                                         <option>@item.location</option>
@@ -94,11 +98,12 @@
                             </div>
                             <div class="col-6 p-2">
                                 <label>Job Type</label>
-                                <select class="form-select selectMultiOptions1" @bind="tempJob.JobType">
+                                <select class="form-select selectMultiOptions1">
                                     @foreach (var item in jobTypes)
                                     {
                                         <option>@item.Type</option>
-                                    }
+                                        @*@bind= "@tempJob.JobType"*@
+                         }
                                 </select>
                             </div>
                             <div class="col-6 p-2">
@@ -146,11 +151,11 @@
             <div class="create-job-header">Collaborators</div>
             <div style="overflow: auto; height: 125px">
                 <table>
-                    @foreach (var developer in developersAdded)
+                    @foreach (var collaborator in collaboratorsAdded)
                     {
                         <tr>
-                            <td>@developer.Role</td>
-                            <td style="text-align: right; font-weight: bold; font-size:25px" @onclick='() => RemoveCollaborator(developer)'>&times;</td>
+                            <td>@collaborator.name</td>
+                            <td style="text-align: right; font-weight: bold; font-size:25px" @onclick='() => RemoveCollaborator(collaborator)'>&times;</td>
                         </tr>
 
                     }
@@ -162,10 +167,10 @@
 
                 <table style="background-color: transparent">
 
-                    @foreach (var developer in developers)
+                    @foreach (var collaborator in collaborators)
                     {
                         <tr>
-                            <td @onclick='() =>AddCollaborator(developer)'>@developer.Role</td>
+                            <td @onclick='() =>AddCollaborator(collaborator)'>@collaborator.name</td>
                         </tr>
                     }
 
@@ -183,8 +188,17 @@
 
 @code {
 
+    string Type = "";
+
     private void navTo(CreateJobPost tempJob)
     {
+        //JobType jobType = new JobType();
+        //jobType.Type = Type;
+
+        //tempJob.JobPlatforms = ListOfPlatforms;
+        //tempJob.JobType = jobType;
+        //tempJob.Collaborators = collaboratorsAdded;
+
         nav.NavigateTo($"/applicationformcontroltool/{tempJob}");
     }
 
