@@ -9,7 +9,7 @@ namespace XebecPortal.UI.Services.Models
 
         [JsonProperty("jobId")] public int JobId { get; set; }
 
-        [JsonProperty("job")] public object Job { get; set; }
+        [JsonProperty("job")] public JobModel Job { get; set; }
 
         [JsonProperty("appUserId")] public int AppUserId { get; set; }
 
@@ -19,10 +19,6 @@ namespace XebecPortal.UI.Services.Models
 
         [JsonProperty("beginApplication")] public DateTime BeginApplication { get; set; }
 
-        public override string ToString()
-        {
-            return
-                $"{nameof(Id)}: {Id}, {nameof(JobId)}: {JobId}, {nameof(Job)}: {Job}, {nameof(AppUserId)}: {AppUserId}, {nameof(AppUser)}: {AppUser}, {nameof(TimeApplied)}: {TimeApplied}, {nameof(BeginApplication)}: {BeginApplication}";
-        }
+        
     }
 }

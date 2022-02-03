@@ -3,10 +3,14 @@
 @using XebecPortal.UI.Interfaces
 @using Bogus
 @using XebecPortal.UI.Pages.Applicant
+@using XebecPortal.UI.Service_Interfaces
 @using XebecPortal.UI.Services.MockServices
 @inject IApplicantDataService _applicantDataService
 @inject IMyJobListDataService _myJobListDataService
-
+@inject IApplicationPhaseHelperDataService _phaseHelperDataService
+@inject IPhaseDataService _phaseDataService
+@inject IStatusDataService _statusDataService
+@inject HttpClient _httpClient
 <style>
      
 *{
@@ -36,7 +40,7 @@
  .candidate-section {
      display: grid;
      grid-template-columns: 1fr;
-     grid-template-rows: fit-content() 1fr;
+     grid-template-rows: 10% 1fr;
      grid-auto-flow: row;
      grid-area: 1 / 1 / 3 / 3;
      grid-gap: 10px;
@@ -184,104 +188,134 @@
             <h1 class="filter-plane-heading">
                 Candidates
             </h1>
-            
         </div>
         <div class="candidate-list">
             @if (_applicants != null)
             {
+                Console.WriteLine("We have applicants");
                 foreach (var applicant in _applicants)
                 {
-                    var applicantJobs = map[applicant];
-                    var lastJob = new MyJob()
+                    //var applicationPhaseHelpers = _map[applicant];
+                    var applicationPhaseHelpers = _httpClient.GetFromJsonAsync<List<ApplicationPhaseHelper>>($"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/UserId={FocusApplicant.Id}").Result;
+                    //Todo: application must not be null && get the last job
+                    //var lastJob = new JobModel(){ Title = "N/A no application",Department = "N/A no application"};
+                    if (applicationPhaseHelpers != null && applicationPhaseHelpers.Any())
                     {
-                        Position = "Has Not applied for a job"
-                    };
-                    if (applicantJobs != null || applicantJobs.Count() > 0)
-                    {
-                        lastJob = applicantJobs[applicantJobs.Count() - 1];
+                        //lastJob = applicationPhaseHelpers[applicationPhaseHelpers.Count() - 1].Application.Job;
                     }
-                    <div class="candidate-card" @onclick="() => ShowApplicant(applicant)">
+                    KeyValuePair<Applicant, List<ApplicationPhaseHelper>> applicantPair = new KeyValuePair<Applicant, List<ApplicationPhaseHelper>>(applicant, applicationPhaseHelpers);
+
+                    <div class="candidate-card" @onclick="() => ShowApplicant(applicantPair)">
                         <div class="profile-picture">
                             <img src="@applicant.Avatar" alt="Avatar">
                         </div>
                         <div class="candidate-details">
                             <span class="name">@($"{applicant.FirstName} {applicant.LastName}")</span>
-                            <br>
-                            <span class="job">@lastJob.Position</span>
-                            <br>
-                            <span class="phase-pill" style="@(GetColor(applicant.Phase))">@lastJob.Phase</span>
+                            @* <br> *@
+                            @* <span class="job">@lastJob.Title</span> *@
+                            @* <br> *@
+                            @* <span class="phase-pill" style="@(GetColor(applicant.Phase))">@lastJob.JobPhases</span> *@
                         </div>
                     </div>
                 }
             }
-
+            else
+            {
+                <p>Please wait whilst we get all Applicants</p>
+            }
         </div>
     </div>
     <div class="jobs-section">
         <!-- table-->
-
         @if (FocusApplicant != null)
         {
-            <span class="this-personal-detail">Job Applications </span> <span>@($"{FocusApplicant.FirstName} {FocusApplicant.LastName}")</span>
-            var applicantJobs = map[FocusApplicant];
-            KeyValuePair<Applicant, List<MyJob>> entry = GetEntry(map, FocusApplicant);
+            <span class="this-personal-detail">Job Applications </span>
+            <span>@($"{FocusApplicant.FirstName} {FocusApplicant.LastName}")</span>
+            List<ApplicationPhaseHelper> assPhaseHelpers = _map[FocusApplicant];
+            ApplicationPhaseHelper cstPhaseHelper = assPhaseHelpers.Find(p => (p.ApplicationPhaseId == (int) PhaseEnum.Testing || p.ApplicationPhase.PhaseEnum == PhaseEnum.Testing || p.ApplicationPhase.Description.ToLower().Contains("test")));
+            if (cstPhaseHelper == null)
+            {
+                cstPhaseHelper = new ApplicationPhaseHelper
+                {
+                    Rating = -1,
+                    Comments = "N/A - no test submitted",
+                    ApplicationPhase = new AppPhase {Description = "N/A - no test submitted"},
+                    TimeMoved = DateTime.Now,
+                    ApplicationId = (int) PhaseEnum.Testing
+                };
+            }
+            ApplicationPhaseHelper intPhaseHelper = assPhaseHelpers.Find(p => (p.ApplicationPhaseId == (int) PhaseEnum.InterviewHr || p.ApplicationPhase.PhaseEnum == PhaseEnum.InterviewHr || p.ApplicationPhase.Description.ToLower().Contains("inter")));
+            if (intPhaseHelper == null)
+            {
+                intPhaseHelper = new ApplicationPhaseHelper
+                {
+                    Id = -1,
+                    Rating = -1,
+                    Comments = "N/A - no interview",
+                    ApplicationPhase = new AppPhase {Description = "N/A - no interview"},
+                    TimeMoved = DateTime.Now
+                };
+            }
+            //KeyValuePair<Applicant, List<ApplicationPhaseHelper>> entry = GetEntry(map, FocusApplicant);
             <table id="example" class="table table-striped bg-white">
                 <thead style="background: #00bcae;">
                 <tr style="color:#fff;" class="col-12">
                     <th>#</th>
                     <th>Job</th>
-                    <th>Company</th>
-                    <th>Application Phase</th>
-                    <th>Phase Status</th>
+                    <th>Current Phase</th>
+                    <th>CST Mark</th>
+                    <th>CST Comment</th>
+                    <th>Int. Rating</th>
+                    <th>Int. Rating</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                @for (var index = 0; index < applicantJobs.Count; index++)
+                @for (var index = 0; index < assPhaseHelpers.Count; index++)
                 {
-                    var job = applicantJobs[index];
+                    var applicationPhaseHelper = assPhaseHelpers[index];
 
                     <tr class="col-12">
                         <td>@index</td>
-                        <td >@job.Position</td>
-                        <td >@job.Company</td>
-                        @if (jobToChange != job)
+                        <td>@applicationPhaseHelper.Application.Job.Title</td>
+                        <td>@cstPhaseHelper.Rating</td>
+                        <td>@cstPhaseHelper.Comments</td>
+
+
+                        @if (helperToChange.Application.Id != applicationPhaseHelper.Application.Job.Id)
                         {
-                            <td >@job.Phase</td>
-                            <td >@job.Status</td>
+                            <td>@applicationPhaseHelper.ApplicationPhase.Description</td>
+                            <td>@(intPhaseHelper.Rating)%</td>
+                            <td>@(intPhaseHelper.Comments)</td>
                         }
                         else
                         {
                             <td >
-                                @* <input type="text" class="form-control" @bind="jobToChange.Phase"> *@
-                                <select @bind="jobToChange.Phase">
-                                    @foreach (var phase in Enum.GetNames(typeof(MyJobs.ApplicationPhase)))
+                                @* <input type="text" class="form-control" @bind="newHelper.Phase"> *@
+                                <select @bind=@applicationPhaseHelper.ApplicationPhaseId>
+                                    @foreach (int phaseId in Enum.GetValues(typeof(PhaseEnum)))
                                     {
-                                        <option value="@phase">@phase</option>
+                                        <option value="@phaseId">@_phaseDataService.GeApplicationPhaseById(phaseId).Result.Description</option>
                                     }
                                 </select>
                             </td>
-
                             <td >
-                                @* <input type="text" class="form-control" @bind="jobToChange.Status"> *@
-                                <select @bind="jobToChange.Status">
-                                    @foreach (var status in Enum.GetNames(typeof(MockMyJobListDataService.Statuses)))
-                                    {
-                                        <option value="@status">@status</option>
-                                    }
-                                </select>
+                                <input type="number" class="form-control" @bind=@applicationPhaseHelper.Rating>
+                            </td>
+                            <td >
+                                <input type="text" class="form-control" @bind=@applicationPhaseHelper.Comments>
                             </td>
                         }
                         <td>
-                            @if (job != jobToChange && !entry.Equals(EntryToChange))
+                            @if (applicationPhaseHelper != helperToChange)
                             {
-                                <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => Edit(job, entry)">
+                                <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => Edit(applicationPhaseHelper, intPhaseHelper, cstPhaseHelper)">
                                     <i class="fas fa-pen"></i>
                                 </button>
                             }
                             else
                             {
-                                <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => Save(job)">
+                                <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => Save(applicationPhaseHelper)">
                                     <i class="fas fa-save"></i>
                                 </button>
                                 <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="CancelEdit">
@@ -294,132 +328,106 @@
                 </tbody>
             </table>
         }
-        else
-        {
-            <p>Loading Applicant Details</p>
-        }
     </div>
     <div class="profile-section">
-        <ApplicantProfile Applicant=@FocusApplicant></ApplicantProfile>
+
     </div>
 </div>
 
 
 @code {
-    private Applicant FocusApplicant { get; set; }
-    private MyJob jobToChange;
-    IEnumerable<Applicant> _applicants;
-    IEnumerable<MyJob> _candidateJobs;
-    Dictionary<Applicant, List<MyJob>> map;
-    KeyValuePair<Applicant, List<MyJob>> EntryToChange;
+    Dictionary<Applicant, List<ApplicationPhaseHelper>> _map = new();
+    List<Applicant> _applicants;
+    public HttpClient altClient;
+    public KeyValuePair<Applicant, List<ApplicationPhaseHelper>> focusPair = new();
+    public Applicant FocusApplicant { get; set; }
+    public List<PhaseModel> _appPhases;
+    public List<AppStatus> _statues;
+    public List<ApplicationPhaseHelper> FocuApplicationPhaseHelpers { get; set; }
+    ApplicationPhaseHelper helperToChange = new ApplicationPhaseHelper
+    {
+        Application = new Services.Models.Application()
+    };
 
     protected override async Task OnInitializedAsync()
     {
         _applicants = (await _applicantDataService.GetAllApplicants()).OrderBy(a => a.Id).ToList();
-        _candidateJobs = (_myJobListDataService.GetAllJobs()).ToList();
-        map = AssociateApplicantsToJobs(_applicants, _candidateJobs);
-        if (_applicants.Any())
-        {
-            FocusApplicant = _applicants.ToList()[0];
-        }
-    }
 
-    private Dictionary<Applicant, List<MyJob>> AssociateApplicantsToJobs(IEnumerable<Applicant> applicants, IEnumerable<MyJob> candidateJobs)
-    {
-        Dictionary<Applicant, List<MyJob>> tempMap = new Dictionary<Applicant, List<MyJob>>();
-        int stop = candidateJobs.Count() - 1;
-        Random rnd = new Random();
-        foreach (var applicant in applicants)
+        if (_applicants != null)
         {
-            var jobs = candidateJobs.Skip(rnd.Next(0, stop)).Take(rnd.Next(1, stop)).ToList();
-            tempMap.Add(applicant, jobs);
+            if (_applicants.Any())
+            {
+                Console.WriteLine($"OnInitialized = setting applicant");
+                FocusApplicant = _applicants[0];
+                
+            }
+            Console.WriteLine($"OnInitialized = Associating map");
+            _map = AssociateApplicantsToJobs(_applicants);
+            if (_map != null)
+            {
+                Console.WriteLine($"OnInitialized = Associating map");
+                Console.WriteLine($"OnInitialized = Creating Focus Value pair");
+                focusPair = _map.FirstOrDefault(a => _applicants.FirstOrDefault(a => a.Id > -1) == a.Key);
+            }
         }
-        return tempMap;
-    }
+            try
+            {
+                _appPhases = _phaseDataService.GetApplicationPhases().Result.OrderBy(p => p.Id).ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"OnInitialized = _appPhases = _phaseDataService.GetApplicationPhases().Result.OrderBy(p => p.Id).ToList(); {e}");
+            }
+            _statues = _statusDataService.GetAllStatuses().Result.OrderBy(s => s.Id).ToList();
+        }
 
-    private string GetColor(string applicationPhase)
-    {
-        string bg_colour;
-        string text_colour;
+        public  Dictionary<Applicant, List<ApplicationPhaseHelper>> AssociateApplicantsToJobs(List<Applicant> applicants)
+        {
+            Dictionary<Applicant, List<ApplicationPhaseHelper>> tempMap = new Dictionary<Applicant, List<ApplicationPhaseHelper>>();
+            foreach (var applicant in applicants)
+            {
+                try
+                {
+    //var tempHelpers = (await _httpClient.GetFromJsonAsync<List<ApplicationPhaseHelper>>($"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/userId={applicant.Id}"));
+                    List<ApplicationPhaseHelper> tempHelpers = _phaseHelperDataService.GetApplicationPhaseHelpersByUserId(applicant.Id);
+                    _map.Add(applicant, tempHelpers);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"{e.Message}");
+                }
+            }
+            return tempMap;
+        }
 
-        if (Enum.GetName(MyJobs.ApplicationPhase.Application).Equals(applicationPhase))
+        public void ShowApplicant(KeyValuePair<Applicant, List<ApplicationPhaseHelper>> applicantPair)
         {
-            bg_colour = "rgba(9, 71, 111, 0.22)";
-            text_colour = "rgba(9, 71, 111, 1)";
+            focusPair = applicantPair;
+            FocusApplicant = focusPair.Key;
         }
-        else if (Enum.GetName(MyJobs.ApplicationPhase.Testing).Equals(applicationPhase))
-        {
-            bg_colour = "rgba(11, 28, 72, 0.22)";
-            text_colour = "rgba(11, 28, 72, 1)";
-        }
-        else if (Enum.GetName(MyJobs.ApplicationPhase.InterviewStaff).Equals(applicationPhase, StringComparison.OrdinalIgnoreCase))
-        {
-            bg_colour = "rgba(0, 155, 174, 0.22)";
-            text_colour = "rgba(0, 155, 174, 1)";
-        }
-    // ReSharper disable once PossibleNullReferenceException
-        else if (Enum.GetName(MyJobs.ApplicationPhase.InterviewHR).Equals(applicationPhase))
-        {
-            bg_colour = "rgba(131, 97, 67, 0.22)";
-            text_colour = "rgba(131, 97, 67, 1)";
-        }
-        else if (Enum.GetName(MyJobs.ApplicationPhase.InterviewCEO).Equals(applicationPhase))
-        {
-            bg_colour = "rgba(224, 213, 204, 0.22)";
-            text_colour = "rgba(131, 97, 67, 1)";
-        }
-        else if (Enum.GetName(MyJobs.ApplicationPhase.Offer).Equals(applicationPhase))
-        {
-            bg_colour = "rgba(0, 188, 80, 0.22)";
-            text_colour = "rgba(0, 188, 80, 1)";
-        }
-        else if (Enum.GetName(MyJobs.ApplicationPhase.Screening).Equals(applicationPhase))
-        {
-            bg_colour = "rgba(0, 108, 188, 0.22)";
-            text_colour = "rgba(0, 108, 188, 1)";
-        }
-        else
-        {
-            bg_colour = "rgba(94,93,240,0.22)";
-            text_colour = "rgba(94,93,240,1)";
-        }
-        return $"background: {bg_colour}; color: {text_colour}; box-shadow: {text_colour} 0 10px 20px -10px;";
-    }
 
-    private void ShowApplicant(Applicant applicant)
-    {
-        Console.WriteLine($"FocusApplicant = {applicant.FirstName}");
-        FocusApplicant = applicant;
-    }
+        public void Edit(ApplicationPhaseHelper applicationPhaseHelper, ApplicationPhaseHelper intPhaseHelper, ApplicationPhaseHelper cstPhaseHelper)
+        {
+            helperToChange = applicationPhaseHelper;
+            if (intPhaseHelper.Id == -1 && applicationPhaseHelper.ApplicationPhase.Description.ToLower().Contains("int"))
+            {
+    //Todo
+            }
+            else if (intPhaseHelper.Id == -1 && !applicationPhaseHelper.ApplicationPhase.Description.ToLower().Contains("int"))
+            {
+    //todo
+            }
+        }
 
-    private void Edit(MyJob job, KeyValuePair<Applicant, List<MyJob>> pair)
-    {
-        jobToChange = job;
-        EntryToChange = pair;
-    }
+        public void Save(ApplicationPhaseHelper applicationPhaseHelper)
+        {
+            throw new NotImplementedException();
+        }
 
-    public KeyValuePair<TKey, TValue> GetEntry<TKey, TValue>
-        (Dictionary<TKey, TValue> dictionary,
-            TKey key)
-    {
-        return new KeyValuePair<TKey, TValue>(key, dictionary[key]);
-    }
-
-    private void Save(MyJob job)
-    {
-        var jobs = map[FocusApplicant].Where(j => j.Id != job.Id).ToList();
-        jobs.Add(job);
-        map[FocusApplicant] = jobs;
-        var ind = _applicants.FindIndex(a => a.Id == FocusApplicant.Id);
-        _applicants.ToList()[ind].Phase = job.Phase;
-        jobToChange = null;
-        EntryToChange = new KeyValuePair<Applicant, List<MyJob>>();
-    }
-
-    private void CancelEdit()
-    {
-        jobToChange = null;
-        EntryToChange = new KeyValuePair<Applicant, List<MyJob>>();
+        void CancelEdit()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

@@ -42,11 +42,12 @@ namespace XebecPortal.UI.Services.MockServices
             return new Faker<ApplicationPhaseHelper>()
                 .StrictMode(true)
                 .RuleFor(a => a.Id, f => f.IndexFaker)
-                .RuleFor(a => a.Status, f => f.PickRandom(typeof(Status)))
-                .RuleFor(a => a.ApplicationPhase, f => f.PickRandom(typeof(ApplicationPhase)))
+                .RuleFor(a => a.Status, f => new AppStatus{Id = 1, Description = "In progress",StatusEnum = StatusEnum.InProgress})
+                .RuleFor(a => a.ApplicationPhase, f => new AppPhase{Id = 1, Description = "Application",PhaseEnum = PhaseEnum.Application})
                 .RuleFor(a => a.TimeMoved, f => f.PickRandom(MockApplications).TimeApplied)
                 .RuleFor(a => a.Rating, f => f.Random.Int(0, 5))
-                .RuleFor(a => a.Comments, f => f.Rant.Reviews().ToString());
+                .RuleFor(a => a.Comments, f => f.Rant.Reviews().ToString())
+                .RuleFor(a => a.Application, f => f.PickRandom(MockApplications));
         }
 
         private static Faker<AppUser> GetMockAppUsers()

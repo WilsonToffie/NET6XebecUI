@@ -15,7 +15,7 @@ namespace XebecPortal.UI.Services.MockServices
         }
 
         //api/ApplicationPhaseHelper/UserId={AppUserId}
-        public Task<List<ApplicationPhaseHelper>> GetApplicationPhaseHelpersByUserId(int userId)
+        public List<ApplicationPhaseHelper> GetApplicationPhaseHelpersByUserId(int userId)
         {
             throw new NotImplementedException();
         }

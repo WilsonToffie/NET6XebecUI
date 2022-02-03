@@ -12,22 +12,21 @@ namespace XebecPortal.UI.Services.Models
 
         [JsonProperty("application")] 
         public Application Application { get; set; }
-
         [JsonProperty("applicationPhaseId")] 
         public int ApplicationPhaseId { get; set; }
 
         [JsonProperty("applicationPhase")] 
-        public object ApplicationPhase { get; set; }
+        public AppPhase ApplicationPhase { get; set; }
 
         [JsonProperty("statusId")] 
         public int StatusId { get; set; }
-
+        //Todo
         [JsonProperty("status")] public object Status { get; set; }
 
         [JsonProperty("timeMoved")] public DateTime TimeMoved { get; set; }
 
         [JsonProperty("comments")] public string Comments { get; set; }
 
-        [JsonProperty("rating")] public int Rating { get; set; }
+        [JsonProperty("rating")] public float  Rating { get; set; }
     }
 }
