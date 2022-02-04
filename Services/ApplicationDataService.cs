@@ -30,29 +30,29 @@ namespace XebecPortal.UI.Services
 
            
         }
-        public async Task<IEnumerable<Application>> GetAllApplications()
+        public async Task<IEnumerable<ApplicationModel>> GetAllApplications()
         {
-            return await JsonSerializer.DeserializeAsync<IEnumerable<Application>>
-                (await _httpClient.GetStreamAsync($"api/application/all-jobs"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            return await JsonSerializer.DeserializeAsync<IEnumerable<ApplicationModel>>
+                (await _httpClient.GetStreamAsync($"api/applicationModel/all-jobs"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             //var mockApplications = new MockApplicationDataService();
             //return (await mockApplications.GetAllApplications()).ToList();
         }
 
-        //api/Application/{applicationId}
-        public async Task<Application> GetApplicationById(int applicationId)
+        //api/ApplicationModel/{applicationId}
+        public async Task<ApplicationModel> GetApplicationById(int applicationId)
         {
             
-            var responseStream = await _httpClient.GetStreamAsync($"api/Application/{applicationId}");
-            Application application = await JsonSerializer.DeserializeAsync<Application>(responseStream, _options);
-            return application;
+            var responseStream = await _httpClient.GetStreamAsync($"api/ApplicationModel/{applicationId}");
+            ApplicationModel applicationModel = await JsonSerializer.DeserializeAsync<ApplicationModel>(responseStream, _options);
+            return applicationModel;
         }
 
-        public Task<Application> AddApplication(Application application)
+        public Task<ApplicationModel> AddApplication(ApplicationModel applicationModel)
         {
             throw new NotImplementedException();
         }
 
-        public Task UpdateApplication(Application application)
+        public Task UpdateApplication(ApplicationModel applicationModel)
         {
             throw new NotImplementedException();
         }

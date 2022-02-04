@@ -50,5 +50,10 @@ namespace XebecPortal.UI.Services.Models
 
         [JsonProperty("applications")]
         public object Applications { get; set; }
+
+        public override string ToString()
+        {
+            return $"{nameof(Id)}: {Id}, {nameof(Title)}: {Title}, {nameof(Description)}: {Description}, {nameof(Company)}: {Company}, {nameof(Compensation)}: {Compensation}, {nameof(MinimumExperience)}: {MinimumExperience}, {nameof(Location)}: {Location}, {nameof(Department)}: {Department}, {nameof(DueDate)}: {DueDate}, {nameof(CreationDate)}: {CreationDate}";
+        }
     }
 }

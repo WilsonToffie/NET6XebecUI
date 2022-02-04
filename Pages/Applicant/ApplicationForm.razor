@@ -11,14 +11,14 @@
         justify-content: center;
         align-items: center;
     }
-    .application-form {
+    .applicationModel-form {
         width: 550px;
         height: 500px;
         background-color: #f2f2f2;
         border-radius: 5px;
         border: 2px solid grey;
     }
-    .application-form-title{
+    .applicationModel-form-title{
         width:100%;
         height: 10%;
         display: flex;
@@ -27,19 +27,19 @@
         border-radius: 5px;
         font-size: 20px;
     }
-    .application-form-question-area {
+    .applicationModel-form-question-area {
         width: 100%;
         height: 75%;
         overflow-y: auto;
     }
-    .application-form-button{
+    .applicationModel-form-button{
         width: 100%;
         height: 15%;
         display: flex;
         justify-content: center;
         align-items: center;
     }
-    .application-form-question{
+    .applicationModel-form-question{
         max-width: 90%;
         align-items: center;
         justify-content: center;
@@ -50,11 +50,11 @@
 
 
 <div class="app-form-wrapper">
-    <div class="application-form">
-        <div class="application-form-title">
-            Application Form
+    <div class="applicationModel-form">
+        <div class="applicationModel-form-title">
+            ApplicationModel Form
         </div>
-        <div class="application-form-question-area">
+        <div class="applicationModel-form-question-area">
             <table class="table">
                 <tbody>
                     @if(ApplicantAnswers != null)
@@ -63,7 +63,7 @@
                         {
                         <tr>
                             <td>
-                                <div class="application-form-question">
+                                <div class="applicationModel-form-question">
                                     <h6 class="form-text text-muted" style="font-size: 14px; width: 90%;">@customquestion.HRQuestion</h6>
                                     @switch (customquestion.TypeId)
                                     {
@@ -97,7 +97,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="application-form-button">
+        <div class="applicationModel-form-button">
             <button class="btn" style="color: white; background-color: #00BCAE" @onclick="SaveAnswers">Submit</button>
         </div>
     </div>

@@ -33,5 +33,10 @@ namespace XebecPortal.UI.Services.Models
         public string InterviewComment { get; set; }
 
         [JsonProperty("phase")] public string Phase { get; set; }
+
+        public override string ToString()
+        {
+            return $"{nameof(Id)}: {Id}, {nameof(FirstName)}: {FirstName}, {nameof(LastName)}: {LastName}, {nameof(CstMark)}: {CstMark}, {nameof(CstComment)}: {CstComment}, {nameof(InterviewRating)}: {InterviewRating}, {nameof(InterviewComment)}: {InterviewComment}, {nameof(Phase)}: {Phase}";
+        }
     }
 }

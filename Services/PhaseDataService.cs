@@ -30,7 +30,7 @@ namespace XebecPortal.UI.Services
             var application = new AppPhase
             {
                 Id = 1,
-                Description = "Application",
+                Description = "ApplicationModel",
                 PhaseEnum = PhaseEnum.Application
             };
             var interviewHr = new AppPhase

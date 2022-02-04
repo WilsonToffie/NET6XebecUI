@@ -316,11 +316,11 @@
     {
         @*@foreach (var phase in phasesAdded)
             {
-                JobApplicationPhase JobApplicationPhase_ = new JobApplicationPhase();
-                JobApplicationPhase_.JobId = CurrentJobId;
-                JobApplicationPhase_.ApplicationPhaseId = phase.id;
+                JobApplicationModelPhase JobApplicationModelPhase_ = new JobApplicationModelPhase();
+                JobApplicationModelPhase_.JobId = CurrentJobId;
+                JobApplicationModelPhase_.ApplicationModelPhaseId = phase.id;
 
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobapplicationphase", JobApplicationPhase_);
+                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobapplicationModelphase", JobApplicationModelPhase_);
             }*@
 
     tempJob.JobPhases = phasesAdded;

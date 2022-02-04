@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace XebecPortal.UI.Services.Models
 {
-    public class Application
+    public class ApplicationModel
     {
         [JsonProperty("id")] public int Id { get; set; }
 
@@ -19,6 +19,10 @@ namespace XebecPortal.UI.Services.Models
 
         [JsonProperty("beginApplication")] public DateTime BeginApplication { get; set; }
 
-        
+
+        public override string ToString()
+        {
+            return $"{nameof(Id)}: {Id}, {nameof(JobId)}: {JobId}, {nameof(Job)}: {Job}, {nameof(AppUserId)}: {AppUserId}, {nameof(AppUser)}: {AppUser}, {nameof(TimeApplied)}: {TimeApplied}, {nameof(BeginApplication)}: {BeginApplication}";
+        }
     }
 }

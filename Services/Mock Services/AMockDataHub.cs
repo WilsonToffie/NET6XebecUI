@@ -5,7 +5,6 @@ using System.Linq;
 using Bogus;
 using XebecPortal.UI.Pages.HR;
 using XebecPortal.UI.Services.Models;
-using Application = XebecPortal.UI.Services.Models.Application;
 
 namespace XebecPortal.UI.Services.MockServices
 {
@@ -14,7 +13,7 @@ namespace XebecPortal.UI.Services.MockServices
         public enum ApplicationPhase
         {
             //get desciption
-            [Description("Application Sent")] Application,
+            [Description("ApplicationModel Sent")] Application,
             Testing,
             InterviewStaff,
             InterviewCeo,
@@ -32,7 +31,7 @@ namespace XebecPortal.UI.Services.MockServices
         public static readonly List<JobModel> MockJobModels = GetMockJobModels(50);
 
         public static readonly List<Services.Models.AppUser> MockAppUsers = GetMockAppUsers().Generate(20);
-       // public static readonly List<Application> MockApplications = GetMockApplications().Generate(50);
+       // public static readonly List<ApplicationModel> MockApplications = GetMockApplications().Generate(50);
         public static List<Applicant> MockApplicants = new();
 
         
@@ -48,9 +47,9 @@ namespace XebecPortal.UI.Services.MockServices
                 .RuleFor(user => user.Role, f => "candidate");
         }
 
-        private static Faker<Application> GetMockApplications()
+        private static Faker<ApplicationModel> GetMockApplications()
         {
-            return new Faker<Application>()
+            return new Faker<ApplicationModel>()
                 .StrictMode(true)
                 .RuleFor(a => a.Id, f => f.IndexFaker)
                 .RuleFor(a => a.JobId, f => f.PickRandom(MockJobs).Id)
@@ -67,7 +66,8 @@ namespace XebecPortal.UI.Services.MockServices
                     
                 ;
         }
-        private static List<ApplicationPhaseHelper> _mockPhaseHelpers;
+
+        public static List<ApplicationPhaseHelper> _mockPhaseHelpers;
         public static List<ApplicationPhaseHelper> GetAssApplicationPhaseHelpers(Applicant applicant, List<Applicant> applicants)
         {
             var allHelpers = GetMockApplicationHelper(applicants);
@@ -88,25 +88,25 @@ namespace XebecPortal.UI.Services.MockServices
             _mockPhaseHelpers = new();
             //Create mock job list
             List<JobModel> jobs = MockJobModels;
-            //for each job simulate an application (create application)
-            List<Application> applications = GetMockApplications(jobs, applicants, 60);
+            //for each job simulate an applicationModel (create applicationModel)
+            List<ApplicationModel> applications = GetMockApplications(jobs, applicants, 60);
             foreach (var application in applications)
             {
-                //Console.WriteLine($">>>>>>>>ApplicationPhaseHelper.cs InitializeMockPhaseHelper applications:{application.AppUserId} application.Job.Title:{application.Job.Title}");
+                //Console.WriteLine($">>>>>>>>ApplicationPhaseHelper.cs InitializeMockPhaseHelper applications:{applicationModel.AppUserId} applicationModel.Job.Title:{applicationModel.Job.Title}");
             }
             
             
-            var tempPhase = new AppPhase {Id = (int) PhaseEnum.Application, Description = "Application"};
+            var tempPhase = new AppPhase {Id = (int) PhaseEnum.Application, Description = "ApplicationModel"};
             var tempStatus = new AppStatus {Id = (int) StatusEnum.InProgress, Description = "In Progress"};
 
-            //for each application create phase helper
+            //for each applicationModel create phase helper
             for (int i = 0; i < applications.Count; i++)
             {
                 ApplicationPhaseHelper tempHelper = new();
                 var tempApplication = applications[i];
                 tempHelper.Id = i;
                 tempHelper.ApplicationId = applications[i].Id;
-                tempHelper.Application = applications[i];
+                tempHelper.ApplicationModel = applications[i];
                 tempHelper.ApplicationPhaseId = tempPhase.Id;
                 tempHelper.ApplicationPhase = tempPhase;
                 tempHelper.StatusId = tempStatus.Id;
@@ -129,9 +129,9 @@ namespace XebecPortal.UI.Services.MockServices
 
             return faker.Generate(num);;
         }
-        private static List<Application> GetMockApplications(List<JobModel> jobs, List<Applicant> applicants,int num)
+        private static List<ApplicationModel> GetMockApplications(List<JobModel> jobs, List<Applicant> applicants,int num)
         {
-            var faker = new Faker<Application>()
+            var faker = new Faker<ApplicationModel>()
                 .RuleFor(application => application.Id, f => f.IndexFaker)
                 .RuleFor(application => application.Job, f => f.PickRandom(jobs))
                 .RuleFor(application => application.AppUser, f => f.PickRandom(applicants))

@@ -66,7 +66,7 @@ namespace XebecPortal.UI.Services
         public async Task<Applicant> AddApplicant(Applicant applicant)
         {
             var applicantJson =
-                new StringContent(JsonSerializer.Serialize(applicant), Encoding.UTF8, "application/json");
+                new StringContent(JsonSerializer.Serialize(applicant), Encoding.UTF8, "applicationModel/json");
 
             var response = await _httpClient.PostAsync("api/applicant", applicantJson);
 
@@ -79,7 +79,7 @@ namespace XebecPortal.UI.Services
         public async Task<IEnumerable<Applicant>> UpdateApplicant(Applicant applicant)
         {
             // var applicantJson =
-            //     new StringContent(JsonSerializer.Serialize(applicant), Encoding.UTF8, "application/json");
+            //     new StringContent(JsonSerializer.Serialize(applicant), Encoding.UTF8, "applicationModel/json");
             //
             // await _httpClient.PutAsync("api/applicant", applicantJson);
             // var _applicants2 = (await JsonSerializer.DeserializeAsync<IEnumerable<Applicant>>

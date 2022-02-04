@@ -236,7 +236,7 @@
         </div>
         <div class="main-wrapper-child job-cards">
             <div class="card-header d-flex align-content-center justify-content-center ">
-                <span>Applications</span>
+                <span>ApplicationModels</span>
             </div>
             @foreach (var application in _applications)
             {
@@ -248,7 +248,7 @@
                         <span class="phase-pill" style="@(GetColor(application.Phase))">@application.Phase</span>
                     </small>
                     <small class="addition-details text-muted">Date Advertized: @application.LastMoved</small>
-                    <small class="addition-details left-text text-muted">Application Date : @application.ApplicationDate</small>
+                    <small class="addition-details left-text text-muted">ApplicationModel Date : @application.ApplicationDate</small>
                 </div>
             }
         </div>
@@ -266,13 +266,13 @@
                         <span class="phase-pill" style="@(GetColor(application.Phase))">@application.Phase</span>
                     </small>
                     <small class="addition-details text-muted">Date Advertized: @application.LastMoved</small>
-                    <small class="addition-details left-text text-muted">Application Date : @application.ApplicationDate</small>
+                    <small class="addition-details left-text text-muted">ApplicationModel Date : @application.ApplicationDate</small>
                 </div>
             }
         </div>
         <div class="main-wrapper-child job-cards">
             <div class="card-header  d-flex align-content-center justify-content-center accepted-heading">
-                <span class="count">@_offers.Count</span><span>Successful</span><p>Applications</p>
+                <span class="count">@_offers.Count</span><span>Successful</span><p>ApplicationModels</p>
             </div>
             @foreach (var application in _offers)
             {
@@ -284,13 +284,13 @@
                         <button class="phase-pill" style="@(GetColor(application.Phase))">@application.Phase</button>
                     </small>
                     <small class="addition-details text-muted">Date Advertized: @application.LastMoved</small>
-                    <small class="addition-details left-text text-muted">Application Date : @application.ApplicationDate</small>
+                    <small class="addition-details left-text text-muted">ApplicationModel Date : @application.ApplicationDate</small>
                 </div>
             }
         </div>
         <div class="main-wrapper-child job-cards rejection-card">
             <div class="card-header  d-flex align-content-center justify-content-center rejection-heading">
-                <span class="count">@_rejections.Count</span><span>successful</span><br><span>Applications</span>
+                <span class="count">@_rejections.Count</span><span>successful</span><br><span>ApplicationModels</span>
             </div>
             @foreach (var rejection in _rejections)
             {
