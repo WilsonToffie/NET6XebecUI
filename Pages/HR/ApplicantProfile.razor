@@ -90,16 +90,16 @@
         <span class="this-personal-detail">Personl Details</span>
         <ul class="nav this-nav nav-tabs" role="tablist">
             <li class="nav-item p-1">
-                <a class="nav-link nav-link1 active" data-bs-toggle="tab" href="#personal-information">Personal Information</a>
+                <a class="nav-link nav-link1 active" data-bs-toggle="tab" href="#personal-information" @onclick="() => _tabEnum = TabEnum.PersonalInfo">Personal Information</a>
             </li>
             <li class="nav-item p-1">
-                <a class="nav-link nav-link1" data-bs-toggle="tab" href="#work-history">Work History</a>
+                <a class="nav-link nav-link1" data-bs-toggle="tab" href="#work-history" @onclick="() => _tabEnum = TabEnum.WorkHistory">Work History</a>
             </li>
             <li class="nav-item p-1">
-                <a class="nav-link nav-link1" data-bs-toggle="tab" href="#education">Education</a>
+                <a class="nav-link nav-link1" data-bs-toggle="tab" href="#education" @onclick="() => _tabEnum = TabEnum.Educa">Education</a>
             </li>
             <li class="nav-item p-1">
-                <a class="nav-link nav-link1" data-bs-toggle="tab" href="#online-profile">Online Profile</a>
+                <a class="nav-link nav-link1" data-bs-toggle="tab" href="#online-profile" @onclick="() => _tabEnum = TabEnum.Online">Online Profile</a>
             </li>
         </ul>
     </div>
@@ -107,7 +107,7 @@
     <div class="col-12 this-content">
         <div class="tab-content">
             <!--Personal Information-->
-            <div id="personal-information" class="tab-pane active person-info rounded">
+            <div id="personal-information" class="tab-pane person-info rounded" style="@GetActivity(TabEnum.PersonalInfo)">
                 @if (_PersonalInformation != null)
                 {
                     <div class="" style="height: 100%;">
@@ -161,7 +161,7 @@
                 }
             </div>
             <!--Work History-->
-            <div id="work-history" class="tab-pane">
+            <div id="work-history" class="tab-pane" style="@GetActivity(TabEnum.WorkHistory)">
                 <div class="work-history-section">
                     @if (_WorkHistories != null)
                     {
@@ -184,7 +184,7 @@
 
 
             <!--Education-->
-            <div id="education" class="tab-pane">
+            <div id="education" class="tab-pane" style="@GetActivity(TabEnum.Educa)">
                 <div class="work-history-section">
                     @if (_Educations != null)
                     {
@@ -206,7 +206,7 @@
                 </div>
             </div>
             <!--Online Profile-->
-            <div id="online-profile" class="container tab-pane">
+            <div id="online-profile" class="container tab-pane" style="@GetActivity(TabEnum.Online)">
                 <h3>Online Profile</h3>
             </div>
         </div>
@@ -214,7 +214,7 @@
 </div>
 
 @code {
-
+    TabEnum _tabEnum = new();
     [Parameter]
     public Applicant Applicant { get; set; }
 
@@ -245,6 +245,24 @@
             _WorkHistories = await _workHistoryDataService.GetWorkHistories(AppUserId);
             _Educations = await _educationDataService.GetEducations(AppUserId);
             _AdditionalInformation = await _additionalInformationDataService.GetAdditionalInfo(AppUserId);
+            if (_PersonalInformation != null)
+            {
+                _tabEnum = TabEnum.PersonalInfo;
+            }
         }
     }
+
+    private enum TabEnum
+    {
+        PersonalInfo, WorkHistory, Educa, AddInfo, Online
+    }
+    private string GetActivity(TabEnum tab)
+    {
+        if (_tabEnum == tab)
+        {
+            return "display: block;";
+        }
+        return "display: none;";
+    }
+
 }

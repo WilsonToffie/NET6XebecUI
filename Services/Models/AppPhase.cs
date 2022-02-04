@@ -27,7 +27,10 @@ namespace XebecPortal.UI.Services.Models
         InterviewHr = 2, 
         InterviewStaff = 3, 
         Testing = 4, 
-        Screening = 5, 
-        Offer = 6
+        Screening = 5,
+        InterviewCeo = 6,
+        Offer = 7,
+        Error = -1,
+        
     }
 }

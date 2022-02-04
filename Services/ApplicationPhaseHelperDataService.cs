@@ -15,6 +15,7 @@ namespace XebecPortal.UI.Services
         private readonly HttpClient _httpClient;
         private HttpClient AltClient = new HttpClient();
         private List<ApplicationPhaseHelper> _mockPhaseHelpers;
+        private Dictionary<Applicant, List<ApplicationPhaseHelper>> _map;
 
         public ApplicationPhaseHelperDataService(HttpClient httpClient)
         {
@@ -36,14 +37,6 @@ namespace XebecPortal.UI.Services
         //api/ApplicationPhaseHelper/UserId={AppUserId}
         public List<ApplicationPhaseHelper> GetApplicationPhaseHelpersByUserId(int appUserId)
         {
-            
-            // return (await JsonSerializer.DeserializeAsync<List<ApplicationPhaseHelper>>
-            //     (await AltClient.GetStreamAsync(
-            //         $"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/userId={appUserId}"),
-            //     new JsonSerializerOptions()
-            //     {
-            //         PropertyNameCaseInsensitive = true
-            //     }));
             Console.WriteLine($">>>>>ApplicationPhaseHelperDataService : getting helper for {appUserId}");
              return Task.FromResult((AltClient.GetFromJsonAsync<List<ApplicationPhaseHelper>>(
                  $"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/userId={appUserId}"))).Result.Result;
@@ -64,6 +57,7 @@ namespace XebecPortal.UI.Services
             //Console.WriteLine($">>>>>>>>ApplicationPhaseHelper.cs applicant Id:{applicant.Id} has {assHelpers.Count} helper allHelpers count = {allHelpers.Count}");
             return assHelpers;
         }
+        
 
         private void InitializeMockPhaseHelper(List<Applicant> applicants)
         {
@@ -72,6 +66,10 @@ namespace XebecPortal.UI.Services
             List<JobModel> jobs = GetMockJobs(50);
             //for each job simulate an application (create application)
             List<Application> applications = GetMockApplications(jobs, applicants, 60);
+            foreach (var application in applications)
+            {
+                //Console.WriteLine($">>>>>>>>ApplicationPhaseHelper.cs InitializeMockPhaseHelper applications:{application.AppUserId} application.Job.Title:{application.Job.Title}");
+            }
             
             
             var tempPhase = new AppPhase {Id = (int) PhaseEnum.Application, Description = "Application"};
@@ -89,7 +87,11 @@ namespace XebecPortal.UI.Services
                 tempHelper.ApplicationPhase = tempPhase;
                 tempHelper.StatusId = tempStatus.Id;
                 tempHelper.Status = tempStatus;
-                tempHelper.AppUserId = applications[i].AppUserId;
+                
+                //Console.WriteLine($">>>>>>>>ApplicationPhaseHelper.cs InitializeMockPhaseHelper tempHelper.AppUserId ");
+                
+                tempHelper.AppUserId = applications[i].AppUser.Id;
+                //Console.WriteLine($">>>>>>>>ApplicationPhaseHelper.cs InitializeMockPhaseHelper tempHelper.AppUserId:{tempHelper.Id} applications[i].AppUserId:{applications[i].AppUserId}");
                 _mockPhaseHelpers.Add(tempHelper);
             }
         }
