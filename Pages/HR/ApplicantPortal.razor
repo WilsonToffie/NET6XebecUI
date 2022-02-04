@@ -240,11 +240,11 @@
                     var lastHelper = GetLatestHelper(_map[applicant]);
                     if (lastHelper == null)
                     {
-                        lastHelper = new ApplicationPhaseHelper {Id = -1,ApplicationPhaseId = 1, ApplicationPhase = new AppPhase{Id =  1, Description = "Db error", PhaseEnum = PhaseEnum.Error}};
+                        lastHelper = new ApplicationPhaseHelper {Id = -1, ApplicationPhaseId = 1, ApplicationPhase = new AppPhase {Id = 1, Description = "Db error", PhaseEnum = PhaseEnum.Error}};
                     }
                     KeyValuePair<Applicant, List<ApplicationPhaseHelper>> applicantPair = new KeyValuePair<Applicant, List<ApplicationPhaseHelper>>(applicant, applicationPhaseHelpers);
                     //var phase = _appPhases[r.Next(5)];
-                    
+
                     <div class="candidate-card" @onclick="() => ShowApplicant(applicantPair)">
                         <div class="profile-picture">
                             <img src="@applicant.Avatar" alt="Avatar">
@@ -252,22 +252,22 @@
                         <div class="candidate-details">
                             <span class="name">@($"{applicant.FirstName} {applicant.LastName}")</span>
                             <br>
-                           @if (lastHelper.Application == null || lastHelper.Id == -1)
-                           {
-                               <span class="job">Db error: applicant has no associated job</span>
-                               <br>
-                               <span class="phase-pill" style="@(GetColor(lastHelper.ApplicationPhase.Description))">@lastHelper.ApplicationPhase.Description</span>        
-                           }
-                           else
-                           {
-                               <span class="job">@lastHelper.Application.Job.Title</span>
-                               <br>
-                               <span class="phase-pill" style="@(GetColor(lastHelper.ApplicationPhase.Description))">@lastHelper.ApplicationPhase.Description</span>                                           
-                           }
+                            @if (lastHelper.Application == null || lastHelper.Id == -1)
+                            {
+                                <span class="job">Db error: applicant has no associated job</span>
+                                <br>
+                                <span class="phase-pill" style="@(GetColor(lastHelper.ApplicationPhase.Description))">@lastHelper.ApplicationPhase.Description</span>
+                            }
+                            else
+                            {
+                                <span class="job">@lastHelper.Application.Job.Title</span>
+                                <br>
+                                <span class="phase-pill" style="@(GetColor(lastHelper.ApplicationPhase.Description))">@lastHelper.ApplicationPhase.Description</span>
+                            }
                             @* <br> *@
                             @* <span class="phase-pill" style="@(GetColor(applicant.Phase))">@lastJob.JobPhases</span> *@
-                            
-                            
+
+
                         </div>
                     </div>
                 }
@@ -352,7 +352,7 @@
                                 Console.WriteLine($"Problem line helperToChange.Id{helperToChange.Id}");
                                 <td class="col-2">
                                     @* <input type="text" class="form-control" @bind="newHelper.Phase"> *@
-                                    
+
                                     <select @bind=@helperToChange.ApplicationPhaseId>
                                         @foreach (var phase in _appPhases)
                                         {
@@ -371,13 +371,13 @@
 
                                 @if (applicationPhaseHelper != helperToChange)
                                 {
-                                    <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => Edit(applicationPhaseHelper, intPhaseHelper, cstPhaseHelper)">
+                                    <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => Edit(applicationPhaseHelper)">
                                         <i class="fas fa-pen"></i>
                                     </button>
                                 }
                                 else
                                 {
-                                    <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => Save(applicationPhaseHelper)">
+                                    <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => Save(applicationPhaseHelper, intPhaseHelper, cstPhaseHelper)">
                                         <i class="fas fa-save"></i>
                                     </button>
                                     <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="Cancel">
@@ -421,19 +421,19 @@
         {
             if (_applicants.Any())
             {
-                //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = setting focus applicant");
+    //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = setting focus applicant");
                 FocusApplicant = _applicants[0];
             }
-            //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Associating map");
+    //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Associating map");
             _map = AssociateApplicantsToJobs(_applicants);
             if (_map != null)
             {
-                //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Associating map > Done!!!");
-                //Console.WriteLine();
-                //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Creating Focus Value pair");
+    //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Associating map > Done!!!");
+    //Console.WriteLine();
+    //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Creating Focus Value pair");
                 focusPair = _map.FirstOrDefault(a => _applicants.FirstOrDefault(a => a.Id > -1) == a.Key);
-                //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Creating Focus Value pair> Done!!!");
-                //Console.WriteLine();
+    //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Creating Focus Value pair> Done!!!");
+    //Console.WriteLine();
             }
         }
 
@@ -448,7 +448,7 @@
         foreach (var app in applicants)
         {
             List<ApplicationPhaseHelper> temp = _phaseHelperDataService.GetAssApplicationPhaseHelpers(app, _applicants);
-    //Console.WriteLine($">>>>>>>>Applicant Portal :AssociateApplicantsToJobs = tempMap.Add({app.Id}, count: {temp.Count});");
+            //Console.WriteLine($">>>>>>>>Applicant Portal :AssociateApplicantsToJobs = tempMap.Add({app.Id}, count: {temp.Count});");
             tempMap.Add(app, temp);
         }
         return tempMap;
@@ -460,30 +460,29 @@
         FocusApplicant = focusPair.Key;
     }
 
-    public void Edit(ApplicationPhaseHelper applicationPhaseHelper, ApplicationPhaseHelper intPhaseHelper, ApplicationPhaseHelper cstPhaseHelper)
-    { 
+    public void Save(ApplicationPhaseHelper applicationPhaseHelper, ApplicationPhaseHelper intPhaseHelper, ApplicationPhaseHelper cstPhaseHelper)
+    {
+    //if current helper is null or (ass helper is null or empty)
+    //.add Method
+    //..1 in backend helpers a new helper
+    //..2 get updated list
+
+    //current phase == new phase (phase helper.Application.Phase
+    //.put phase changes
+    //..1 find phase 
+    //..2 change properties
+    }
+
+    private void Edit(ApplicationPhaseHelper applicationPhaseHelper)
+    {
         Console.WriteLine("Inside Edit");
-        
+
         if (applicationPhaseHelper == null)
         {
             Console.WriteLine("application helper is null.");
             applicationPhaseHelper = new ApplicationPhaseHelper();
         }
         helperToChange = applicationPhaseHelper;
-        
-        if (intPhaseHelper.Id == -1 && applicationPhaseHelper.ApplicationPhase.Description.ToLower().Contains("int"))
-        {
-        //Todo
-        }
-        else if (intPhaseHelper.Id == -1 && !applicationPhaseHelper.ApplicationPhase.Description.ToLower().Contains("int"))
-        {
-        //todo
-        }
-    }
-
-    private void Save(ApplicationPhaseHelper applicationPhaseHelper)
-    {
-        throw new NotImplementedException();
     }
 
     private ApplicationPhaseHelper GetLatestHelper(List<ApplicationPhaseHelper> helpers)

@@ -32,10 +32,10 @@ namespace XebecPortal.UI.Services
         }
         public async Task<IEnumerable<Application>> GetAllApplications()
         {
-            // return await JsonSerializer.DeserializeAsync<IEnumerable<Applicant>>
-            //     (await _httpClient.GetStreamAsync($"api/applicant/all-jobs"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-            var mockApplications = new MockApplicationDataService();
-            return (await mockApplications.GetAllApplications()).ToList();
+            return await JsonSerializer.DeserializeAsync<IEnumerable<Application>>
+                (await _httpClient.GetStreamAsync($"api/application/all-jobs"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            //var mockApplications = new MockApplicationDataService();
+            //return (await mockApplications.GetAllApplications()).ToList();
         }
 
         //api/Application/{applicationId}
