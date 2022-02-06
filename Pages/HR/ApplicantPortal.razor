@@ -11,6 +11,7 @@
 @inject IPhaseDataService _phaseDataService
 @inject IStatusDataService _statusDataService
 @inject HttpClient _httpClient
+
 <style>
      
 *{
@@ -81,7 +82,7 @@
      grid-template-columns: 1fr;
      grid-gap: 10px;
      overflow-y: auto;
-     background: transparent !important;
+     /*background: transparent !important;*/
  }
 
 
@@ -240,10 +241,10 @@
                     var lastHelper = GetLatestHelper(_map[applicant]);
                     if (lastHelper == null)
                     {
-                        lastHelper = new ApplicationPhaseHelper {Id = -1, ApplicationPhaseId = 1, ApplicationPhase = new AppPhase {Id = 1, Description = "Db error", PhaseEnum = PhaseEnum.Error}};
+                        lastHelper = _phaseHelperDataService.GetEmptyHelper();
                     }
                     KeyValuePair<Applicant, List<ApplicationPhaseHelper>> applicantPair = new KeyValuePair<Applicant, List<ApplicationPhaseHelper>>(applicant, applicationPhaseHelpers);
-                    //var phase = _appPhases[r.Next(5)];
+                    var phase = _phaseDataService.GeApplicationPhaseById(lastHelper.ApplicationPhaseId);
 
                     <div class="candidate-card" @onclick="() => ShowApplicant(applicantPair)">
                         <div class="profile-picture">
@@ -252,17 +253,20 @@
                         <div class="candidate-details">
                             <span class="name">@($"{applicant.FirstName} {applicant.LastName}")</span>
                             <br>
-                            @if (lastHelper.Application == null || lastHelper.Id == -1)
+                            
+                            @if ((lastHelper != null) && (lastHelper.Application == null || lastHelper.Id == -1 || lastHelper.Application.Job == null))
                             {
+                                //Console.WriteLine("Sila");
                                 <span class="job">Db error: applicant has no associated job</span>
                                 <br>
-                                <span class="phase-pill" style="@(GetColor(lastHelper.ApplicationPhase.Description))">@lastHelper.ApplicationPhase.Description</span>
+                                //<span class="phase-pill" style="@(GetColor(lastHelper.ApplicationPhase.Description))">@lastHelper.ApplicationPhase.Description</span>
                             }
-                            else
+                            else if((lastHelper != null) )
                             {
+                                Console.WriteLine("Sila");
                                 <span class="job">@lastHelper.Application.Job.Title</span>
                                 <br>
-                                <span class="phase-pill" style="@(GetColor(lastHelper.ApplicationPhase.Description))">@lastHelper.ApplicationPhase.Description</span>
+                                <span class="phase-pill" style="@(GetColor(phase.Description))">@phase.Description</span>
                             }
                             @* <br> *@
                             @* <span class="phase-pill" style="@(GetColor(applicant.Phase))">@lastJob.JobPhases</span> *@
@@ -280,119 +284,7 @@
     </div>
     <div class="jobs-section">
         <!-- table-->
-        @if (FocusApplicant != null)
-        {
-            <span class="this-personal-detail">Job Applications </span>
-            <span>@($"{FocusApplicant.FirstName} {FocusApplicant.LastName}")</span>
-            List<ApplicationPhaseHelper> assPhaseHelpers = _map[FocusApplicant];
-            ApplicationPhaseHelper cstPhaseHelper = assPhaseHelpers.Find(p => (p.ApplicationPhaseId == (int) PhaseEnum.Testing || p.ApplicationPhase.PhaseEnum == PhaseEnum.Testing || p.ApplicationPhase.Description.ToLower().Contains("test")));
-            if (cstPhaseHelper == null)
-            {
-                cstPhaseHelper = new ApplicationPhaseHelper
-                {
-                    Rating = -1,
-                    Comments = "N/A - no test submitted",
-                    ApplicationPhase = new AppPhase {Description = "N/A - no test submitted"},
-                    TimeMoved = DateTime.Now,
-                    ApplicationId = (int) PhaseEnum.Testing
-                };
-            }
-            ApplicationPhaseHelper intPhaseHelper = assPhaseHelpers.Find(p => (p.ApplicationPhaseId == (int) PhaseEnum.InterviewHr || p.ApplicationPhase.PhaseEnum == PhaseEnum.InterviewHr || p.ApplicationPhase.Description.ToLower().Contains("inter")));
-            if (intPhaseHelper == null)
-            {
-                intPhaseHelper = new ApplicationPhaseHelper
-                {
-                    Id = -1,
-                    Rating = -1,
-                    Comments = "N/A - no interview",
-                    ApplicationPhase = new AppPhase {Description = "N/A - no interview"},
-                    TimeMoved = DateTime.Now
-                };
-            }
-            //KeyValuePair<Applicant, List<ApplicationPhaseHelper>> entry = GetEntry(map, FocusApplicant);
-            <table id="example" class="table table-striped bg-white">
-                <thead style="background: #00bcae;">
-                <tr style="color:#fff;" class="col-12">
-                    <th class="col-small">#</th>
-                    <th class="col-2">Job</th>
-                    <th class="col-small">CST Mark</th>
-                    <th class="col-3">CST Comment</th>
-                    <th class="col-2">Current Phase</th>
-                    <th class="col-small">Int. Rating</th>
-                    <th class="col-3">Int. Comment</th>
-                    <th class="col-1">Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                @if (assPhaseHelpers == null || assPhaseHelpers.Count == 0)
-                {
-                    <p>Db inconsistancy: No jobs found</p>
-                }
-                else
-                {
-                    @for (var index = 0; index < assPhaseHelpers.Count; index++)
-                    {
-                        var applicationPhaseHelper = assPhaseHelpers[index];
-
-                        <tr class="col-12">
-                            <td class="col-small">@index</td>
-                            <td class="col-2">@applicationPhaseHelper.Application.Job.Title</td>
-                            <td class="col-small">@cstPhaseHelper.Rating</td>
-                            <td class="col-3">@cstPhaseHelper.Comments</td>
-
-
-                            @if (helperToChange != applicationPhaseHelper)
-                            {
-                                <td class="col-2">@applicationPhaseHelper.ApplicationPhase.Description</td>
-                                <td class="col-small">@(intPhaseHelper.Rating)%</td>
-                                <td class="col-3">@(intPhaseHelper.Comments)</td>
-                            }
-                            else
-                            {
-                                Console.WriteLine($"Problem line helperToChange.Id{helperToChange.Id}");
-                                <td class="col-2">
-                                    @* <input type="text" class="form-control" @bind="newHelper.Phase"> *@
-
-                                    <select @bind=@helperToChange.ApplicationPhaseId>
-                                        @foreach (var phase in _appPhases)
-                                        {
-                                            <option value="@phase.Id">@phase.Description</option>
-                                        }
-                                    </select>
-                                </td>
-                                <td class="col-small">
-                                    <input type="number" class="form-control" @bind=@helperToChange.Rating>
-                                </td>
-                                <td class="col-3">
-                                    <input type="text" class="form-control" @bind=@helperToChange.Comments>
-                                </td>
-                            }
-                            <td class="col-1">
-
-                                @if (applicationPhaseHelper != helperToChange)
-                                {
-                                    <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => Edit(applicationPhaseHelper)">
-                                        <i class="fas fa-pen"></i>
-                                    </button>
-                                }
-                                else
-                                {
-                                    <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => Save(applicationPhaseHelper, intPhaseHelper, cstPhaseHelper)">
-                                        <i class="fas fa-save"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="Cancel">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                }
-                            </td>
-                        </tr>
-                    }
-                }
-
-
-                </tbody>
-            </table>
-        }
+        <AssocicatedJobs Applicant=@FocusApplicant></AssocicatedJobs>
     </div>
     <div class="profile-section">
         <ApplicantProfile Applicant=@FocusApplicant></ApplicantProfile>
@@ -425,7 +317,7 @@
                 FocusApplicant = _applicants[0];
             }
     //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Associating map");
-            _map = AssociateApplicantsToJobs(_applicants);
+            _map = await AssociateApplicantsToJobs(_applicants);
             if (_map != null)
             {
     //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Associating map > Done!!!");
@@ -435,19 +327,20 @@
     //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Creating Focus Value pair> Done!!!");
     //Console.WriteLine();
             }
+            Task.WaitAll();
         }
 
         _appPhases = _phaseDataService.GetApplicationPhases().OrderBy(p => p.Id).ToList();
         _statues = _statusDataService.GetAllStatuses().Result.OrderBy(s => s.Id).ToList();
     }
 
-    public Dictionary<Applicant, List<ApplicationPhaseHelper>> AssociateApplicantsToJobs(List<Applicant> applicants)
+    public async Task<Dictionary<Applicant, List<ApplicationPhaseHelper>>> AssociateApplicantsToJobs(List<Applicant> applicants)
     {
         Dictionary<Applicant, List<ApplicationPhaseHelper>> tempMap = new Dictionary<Applicant, List<ApplicationPhaseHelper>>();
 
         foreach (var app in applicants)
         {
-            List<ApplicationPhaseHelper> temp = _phaseHelperDataService.GetAssApplicationPhaseHelpers(app, _applicants);
+            List<ApplicationPhaseHelper> temp = (await _phaseHelperDataService.GetAssApplicationPhaseHelpers(app, _applicants));
             //Console.WriteLine($">>>>>>>>Applicant Portal :AssociateApplicantsToJobs = tempMap.Add({app.Id}, count: {temp.Count});");
             tempMap.Add(app, temp);
         }

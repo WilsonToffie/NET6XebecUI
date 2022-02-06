@@ -1,0 +1,161 @@
+﻿@page "/associcatedJobs/"
+@layout EmptyLayout
+@using XebecPortal.UI.Services.Models
+@using XebecPortal.UI.Service_Interfaces
+@using Microsoft.AspNetCore.Components
+@using XebecPortal.UI.Interfaces
+@inject IPhaseDataService _phaseDataService
+@inject IStatusDataService _statusDataService
+@inject IApplicationPhaseHelperDataService _phaseHelperDataService
+
+@if (_applicationPhaseHelpers != null && _appPhases != null && Applicant != null)
+{
+    if (_applicationPhaseHelpers.Count > 0)
+    {
+        var index = 0;
+        <table id="example" class="table table-striped bg-white">
+            <thead style="background: #00bcae;">
+            <tr style="color:#fff;" class="col-12">
+                <th class="col-small">#</th>
+                <th class="col-2">Job</th>
+                <th class="col-small">CST Mark</th>
+                <th class="col-3">CST Comment</th>
+                <th class="col-2">Current Phase</th>
+                <th class="col-small">Int. Rating</th>
+                <th class="col-3">Int. Comment</th>
+                <th class="col-1">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var applicationPhaseHelper in _applicationPhaseHelpers)
+            {
+                <tr class="col-12">
+                    <td class="col-small">@(index++)</td>
+                    <td class="col-2">@GetJobTitle(applicationPhaseHelper)</td>
+                    <td class="col-small">@Applicant.CstMark</td>
+                    <td class="col-3">@Applicant.CstComment</td>
+
+
+                    @if (FocusPhaseHelper != applicationPhaseHelper)
+                    {
+                        <td class="col-2">@GetApplicationPhase(applicationPhaseHelper)</td>
+                        <td class="col-small">@(applicationPhaseHelper.Rating)%</td>
+                        <td class="col-3">@(applicationPhaseHelper.Comments)</td>
+                        <td class="col-1">
+                            <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => Edit(applicationPhaseHelper)">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                        </td>
+                    }
+                    else
+                    {
+                        <td class="col-2">
+                            @* <input type="text" class="form-control" @bind="newHelper.Phase"> *@
+
+                            <select @bind=@FocusPhaseHelper.ApplicationPhaseId>
+                                @foreach (var phase in _appPhases)
+                                {
+                                    <option value="@phase.Id">@phase.Description</option>
+                                }
+                            </select>
+                        </td>
+                        <td class="col-small">
+                            <input type="number" class="form-control" @bind=@FocusPhaseHelper.Rating>
+                        </td>
+                        <td class="col-3">
+                            <textarea rows="3" type="text" class="form-control" @bind=@FocusPhaseHelper.Comments></textarea>
+                        </td>
+                        <td class="col-1">
+                            <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="async () => await Save(applicationPhaseHelper)">
+                                <i class="fas fa-save"></i>
+                            </button>
+                            <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="Cancel">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </td>
+                    }
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Db Error Data inconsistancy</p>
+    }
+}
+else
+{
+    <p>Getting Jobs applications </p>
+}
+
+@code {
+
+    [Parameter]
+    public Applicant Applicant { get; set; } = new Applicant();
+
+    private List<AppPhase> _appPhases;
+    private List<ApplicationPhaseHelper> _applicationPhaseHelpers;
+    private ApplicationPhaseHelper FocusPhaseHelper { get; set; } = new();
+    private ApplicationPhaseHelper _initialHelper;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Applicant == null)
+            _applicationPhaseHelpers = await _phaseHelperDataService.GetAllApplicationPhaseHelpers();
+        
+        _appPhases = _phaseDataService.GetApplicationPhases();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Applicant != null) _applicationPhaseHelpers = await _phaseHelperDataService.GetApplicationPhaseHelpersByUserId(Applicant.Id);
+    }
+
+    private async Task Save(ApplicationPhaseHelper applicationPhaseHelper)
+    {
+        FocusPhaseHelper.TimeMoved = DateTime.Now;
+        await _phaseHelperDataService.UpdateApplicationPhaseHelper(FocusPhaseHelper);
+        FocusPhaseHelper = new ApplicationPhaseHelper();
+    }
+
+    private void Edit(ApplicationPhaseHelper applicationPhaseHelper)
+    {
+        _initialHelper = applicationPhaseHelper;
+        FocusPhaseHelper = applicationPhaseHelper;
+    }
+
+    private void Cancel()
+    {
+        FocusPhaseHelper = new ApplicationPhaseHelper();
+    }
+
+    private string GetJobTitle(ApplicationPhaseHelper applicationPhaseHelper)
+    {
+        var application = applicationPhaseHelper.Application;
+        if (application != null)
+        {
+            if (application.Job != null)
+            {
+                return application.Job.Title;
+            }
+            else
+            {
+    //Todo get job by Id
+            }
+        }
+        else
+        {
+    //Todo get application by id
+        }
+        return "jobTitle";
+    }
+
+    private string GetApplicationPhase(ApplicationPhaseHelper applicationPhaseHelper)
+    {
+    //applicationPhaseHelper.ApplicationPhase.Description
+        AppPhase phase = _appPhases.Find(a => a.Id == applicationPhaseHelper.ApplicationPhaseId);
+        return phase.Description;
+    }
+
+}
