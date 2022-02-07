@@ -156,7 +156,7 @@
         line-height: 7vh;
     }
 
-    input[type="text"], input[type="email"], input[type="password"] {
+    input[type="text"], input[type="email"], input[type="password"], select {
         background-color: transparent;
         width: 90%;
         height: 7vh;
@@ -353,9 +353,6 @@
             <input type="button" class="nav-buttons" value="SIGN UP" @onclick="ToSignUp" />
         </div>
         <div class="col-sm-1">
-            <input type="button" class="nav-buttons" value="REVIEWS" @onclick="ToReviews" />
-        </div>
-        <div class="col-sm-1">
             <input type="button" class="nav-buttons" value="CONTACT" @onclick="ToContact" />
         </div>
     </div>
@@ -372,9 +369,6 @@
     <div class="overlay" hidden="@SignUpIsHidden">
         <XebecPortal.UI.Shared.Home.SignUp />
     </div>
-    <div class="overlay" hidden="@ReviewsIsHidden">
-        <XebecPortal.UI.Shared.Home.Reviews />
-    </div>
     <div class="overlay" hidden="@ContactIsHidden">
         <XebecPortal.UI.Shared.Home.Contact />
     </div>
@@ -387,7 +381,6 @@
     private bool ServicesIsHidden;
     private bool SignInIsHidden;
     private bool SignUpIsHidden;
-    private bool ReviewsIsHidden;
     private bool ContactIsHidden;
 
     protected override async Task OnInitializedAsync()
@@ -398,37 +391,30 @@
     private void ToHome()
     {
         HomeIsHidden = false;
-        ServicesIsHidden = SignInIsHidden = SignUpIsHidden = ReviewsIsHidden = ContactIsHidden = true;
+        ServicesIsHidden = SignInIsHidden = SignUpIsHidden = ContactIsHidden = true;
     }
 
     private void ToServices()
     {
         ServicesIsHidden = false;
-        HomeIsHidden = SignInIsHidden = SignUpIsHidden = ReviewsIsHidden = ContactIsHidden = true;
+        HomeIsHidden = SignInIsHidden = SignUpIsHidden = ContactIsHidden = true;
     }
 
     private void ToSignIn()
     {
         SignInIsHidden = false;
-        ServicesIsHidden = HomeIsHidden = SignUpIsHidden = ReviewsIsHidden = ContactIsHidden = true;
+        ServicesIsHidden = HomeIsHidden = SignUpIsHidden = ContactIsHidden = true;
     }
 
     private void ToSignUp()
     {
         SignUpIsHidden = false;
-        ServicesIsHidden = SignInIsHidden = HomeIsHidden = ReviewsIsHidden = ContactIsHidden = true;
+        ServicesIsHidden = SignInIsHidden = HomeIsHidden = ContactIsHidden = true;
     }
-
-    private void ToReviews()
-    {
-        ReviewsIsHidden = false;
-        ServicesIsHidden = SignInIsHidden = SignUpIsHidden = HomeIsHidden = ContactIsHidden = true;
-    }
-
     private void ToContact()
     {
         ContactIsHidden = false;
-        ServicesIsHidden = SignInIsHidden = SignUpIsHidden = ReviewsIsHidden = HomeIsHidden = true;
+        ServicesIsHidden = SignInIsHidden = SignUpIsHidden= HomeIsHidden = true;
     }
 
 }
