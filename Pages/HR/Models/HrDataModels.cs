@@ -52,6 +52,26 @@ namespace XebecPortal.UI.Pages.HR
         public List<ApplicationPhase> JobPhases { get; set; }
         public List<FormQuestion> formQuestions { get; set; }
         public List<AppUser> Collaborators { get; set; }
+        public Components componentShow { get; set; }
+
+
+        public enum Components
+        {
+            Create_Job,
+            ApplicationForm_Control,
+            Phase_Control
+        }
+
+        
+        public string ShowComponent(Components component)
+        {
+            if (componentShow == component)
+            {
+                return "display: block;";
+            }
+
+            return "display: none;";
+        }
     }
 
     public class FormQuestion

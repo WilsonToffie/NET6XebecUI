@@ -1,7 +1,7 @@
 ﻿@page "/applicationformcontroltool"
 @inject HttpClient httpClient
 @inject IJSRuntime JSRuntime
-
+@inject NavigationManager NavigationManager
 
 <style>
     .wrapper {
@@ -176,150 +176,102 @@
             top: 18%
         }
     }
-
 </style>
 
-<div class="wrapper">
-    <div class="question-select scrollbar-winter-neva">
-        <div class="question-area-title">
-            Select Questions
-        </div>
-        <div class="question-area">
-            <table class="table" style="border-radius: 5px;">
-                @if (Questions == null)
-                {
-                    <div>Loading...</div>
-                }
-                else
-                {
+@if (tempJob != null)
+{
 
-                    <tbody>
-                        @if (Questions != null)
-                        {
-                            @foreach (var question in Questions)
+
+    <div class="wrapper">
+        <div class="question-select scrollbar-winter-neva">
+            <div class="question-area-title">
+                Select Questions
+            </div>
+            <div class="question-area">
+                <table class="table" style="border-radius: 5px;">
+                    @if (Questions == null)
+                    {
+                        <div>Loading...</div>
+                    }
+                    else
+                    {
+
+                        <tbody>
+                            @if (Questions != null)
                             {
-                        <tr>
-                            <td class="question-description" style="font-size: 15px;">@question.questionDescription</td>
-                            <td style="font-size: 12px; width: 60px;">
-                                <div>
-                                    @Types.FirstOrDefault(q => q.Id == question.answerTypeId).Type
-                                </div>
-                            </td>
-                            <td style="max-width: 20%">
-                                <button class="btn btn-small" style="background-color: #00BCAE; color: white;" @onclick="() => AddToForm(question.questionDescription, question.answerTypeId)">Add</button>
-                            </td>
-                        </tr>
+                                @foreach (var question in Questions)
+                                {
+                                    <tr>
+                                        <td class="question-description" style="font-size: 15px;">@question.questionDescription</td>
+                                        <td style="font-size: 12px; width: 60px;">
+                                            <div>
+                                                @Types.FirstOrDefault(q => q.Id == question.answerTypeId).Type
+                                            </div>
+                                        </td>
+                                        <td style="max-width: 20%">
+                                            <button class="btn btn-small" style="background-color: #00BCAE; color: white;" @onclick="() => AddToForm(question.questionDescription, question.answerTypeId)">Add</button>
+                                        </td>
+                                    </tr>
+                                }
                             }
-                        }
-                    </tbody>
+                        </tbody>
+                    }
+                </table>
+            </div>
+            <div class="question-button">
+                <button class="btn" style="background-color: #00BCAE; color:white;" @onclick="OpenDeletePopup">Delete questions</button>
+                <button class="btn" style="background-color: #00BCAE; color:white;" @onclick="OpenAddPopup">Add question</button>
+            </div>
+        </div>
+
+        <div class="form-preview">
+            <div class="form-title">
+                <div style="font-size: 20px; color: #003340">Application Form</div>
+            </div>
+            <div class="form-questions">
+                @if (tempJob != null)
+                {
+                    <p>@tempJob.Title</p>
                 }
-            </table>
-        </div>
-        <div class="question-button">
-            <button class="btn" style="background-color: #00BCAE; color:white;" @onclick="OpenDeletePopup">Delete questions</button>
-            <button class="btn" style="background-color: #00BCAE; color:white;" @onclick="OpenAddPopup">Add question</button>
-        </div>
-    </div>
-
-    <div class="form-preview">
-        <div class="form-title">
-            <div style="font-size: 20px; color: #003340">Application Form</div>
-        </div>
-        <div class="form-questions">
-            <table class="table">
-                <tbody>
-                    @if (Questions != null)
-                    {
-                        @foreach (var formquestion in FormQuestions)
-                        {
-                            <tr>
-                                <td class="form-question-description">
-                                    <div class="form-preview-question">
-                                        <h6 class="form-text text-muted" style="font-size: 14px;">@formquestion.question</h6>
-
-                                        @switch (formquestion.answerTypeId)
-                                        {
-                                            case 1:
-                                                <input type="number" class="form-control" style="width: 80%" @bind="formquestion.answer">
-                                                break;
-                                            case 2:
-                                                <textarea type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="formquestion.answer"></textarea>
-                                                break;
-                                            case 3:
-                                                <input type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="formquestion.answer">
-                                                break;
-                                            case 4:
-                                            <input type="date" id="test" class="form-control" style="width: 80%"  @onchange="(e) => { formquestion.answer = e.Value.ToString(); }">
-                                                break;
-                                            case 5:
-                                                <select @bind="formquestion.answer">
-                                                    <option value="yes" selected>Yes</option>
-                                                    <option value="no">No</option>
-                                                </select>
-                                                break;
-                                            case 6:
-                                                <input type="file" class="form-control" style="width: 80%" @bind="formquestion.answer">
-                                                break;
-                                        }
-                                    </div>
-                                </td>
-                                <td style="width: 10%;">
-                                    <button class="btn-close" @onclick="() => DeleteFormQuestion(formquestion.question)"></button>
-                                </td>
-                            </tr>
-                        }
-                    }
-                </tbody>
-            </table>
-        </div>
-        <div class="form-button">
-            <button class="btn" style="background-color: #00BCAE; color: white;" @onclick="CompileForm">Compile form</button>
-        </div>
-    </div>
-
-
-
-    @if (ShowAddPopup)
-    {
-        <div class="add-popup">
-            <div class="add-popup-header">
-                <h4 style="margin-left: 20px; font-size: 20px;">Add Question:</h4>
-                <button class="btn-close" style="margin-left: 68%" @onclick="CloseAddPopup"></button>
-            </div>
-            <div class="add-popup-body">
-                <textarea style="width: 80%; border: 2px solid grey" @bind="tempQuestion.questionDescription"></textarea>
-            </div>
-            <div class="add-popup-type">
-                <select @bind="tempType">
-                    @foreach(var option in Types)
-                    {
-                    <option value="@option.Type">@option.Type</option>
-                    }
-                </select>
-            </div>
-            <div class="add-popup-button">
-                <button class="btn" style="background-color: #00BCAE; color:white;" @onclick="AddQuestion">Submit question</button>
-            </div>
-        </div>
-    }
-    @if (ShowDeletePopup)
-    {
-        <div class="delete-popup">
-            <div class="delete-popup-header">
-                <h4 style="margin-left: 20px; font-size: 20px;">Delete Questions:</h4>
-                <button class="btn-close" style="margin-left: 57%" @onclick="CloseDeletePopup"></button>
-            </div>
-            <div class="delete-popup-body">
                 <table class="table">
                     <tbody>
                         @if (Questions != null)
                         {
-                            @foreach (var question in Questions)
+                            @foreach (var formquestion in FormQuestions)
                             {
                                 <tr>
-                                    <td class="delete-popup-question" style="font-size: 15px;">@question.questionDescription</td>
-                                    <td style="max-width: 10%">
-                                        <button class="btn-close" @onclick="() => DeleteQuestion(question)"></button>
+                                    <td class="form-question-description">
+                                        <div class="form-preview-question">
+                                            <h6 class="form-text text-muted" style="font-size: 14px;">@formquestion.question</h6>
+
+                                            @switch (formquestion.answerTypeId)
+                                            {
+                                                case 1:
+                                                    <input type="number" class="form-control" style="width: 80%" @bind="formquestion.answer">
+                                                    break;
+                                                case 2:
+                                                    <textarea type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="formquestion.answer"></textarea>
+                                                    break;
+                                                case 3:
+                                                    <input type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="formquestion.answer">
+                                                    break;
+                                                case 4:
+                                                    <input type="date" id="test" class="form-control" style="width: 80%" @onchange="(e) => { formquestion.answer = e.Value.ToString(); }">
+                                                    break;
+                                                case 5:
+                                                    <select @bind="formquestion.answer">
+                                                        <option value="yes" selected>Yes</option>
+                                                        <option value="no">No</option>
+                                                    </select>
+                                                    break;
+                                                case 6:
+                                                    <input type="file" class="form-control" style="width: 80%" @bind="formquestion.answer">
+                                                    break;
+                                            }
+                                        </div>
+                                    </td>
+                                    <td style="width: 10%;">
+                                        <button class="btn-close" @onclick="() => DeleteFormQuestion(formquestion.question)"></button>
                                     </td>
                                 </tr>
                             }
@@ -327,15 +279,77 @@
                     </tbody>
                 </table>
             </div>
+            <div class="form-button">
+                <button class="btn" style="background-color: #00BCAE; color: white;" @onclick="CompileForm">Compile form</button>
+            </div>
         </div>
-    }
-</div>
+
+
+
+        @if (ShowAddPopup)
+        {
+            <div class="add-popup">
+                <div class="add-popup-header">
+                    <h4 style="margin-left: 20px; font-size: 20px;">Add Question:</h4>
+                    <button class="btn-close" style="margin-left: 68%" @onclick="CloseAddPopup"></button>
+                </div>
+                <div class="add-popup-body">
+                    <textarea style="width: 80%; border: 2px solid grey" @bind="tempQuestion.questionDescription"></textarea>
+                </div>
+                <div class="add-popup-type">
+                    <select @bind="tempType">
+                        @foreach (var option in Types)
+                        {
+                            <option value="@option.Type">@option.Type</option>
+                        }
+                    </select>
+                </div>
+                <div class="add-popup-button">
+                    <button class="btn" style="background-color: #00BCAE; color:white;" @onclick="AddQuestion">Submit question</button>
+                </div>
+            </div>
+        }
+        @if (ShowDeletePopup)
+        {
+            <div class="delete-popup">
+                <div class="delete-popup-header">
+                    <h4 style="margin-left: 20px; font-size: 20px;">Delete Questions:</h4>
+                    <button class="btn-close" style="margin-left: 57%" @onclick="CloseDeletePopup"></button>
+                </div>
+                <div class="delete-popup-body">
+                    <table class="table">
+                        <tbody>
+                            @if (Questions != null)
+                            {
+                                @foreach (var question in Questions)
+                                {
+                                    <tr>
+                                        <td class="delete-popup-question" style="font-size: 15px;">@question.questionDescription</td>
+                                        <td style="max-width: 10%">
+                                            <button class="btn-close" @onclick="() => DeleteQuestion(question)"></button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+  <p>temp is nulllllll</p>
+}
 
 
 @code {
 
     [Parameter]
     public CreateJobPost tempJob { get; set; }
+
+    public CreateJobPost job { get; set; }
 
     List<CustomQuestion> Questions = new List<CustomQuestion>();
     List<FormQuestion> FormQuestions = new List<FormQuestion>();
@@ -361,13 +375,26 @@
 
         Jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
 
-        Job tempJob = Jobs.LastOrDefault<Job>();
+        //Job tempJob = Jobs.LastOrDefault<Job>();
 
         Types = await httpClient.GetFromJsonAsync<List<QuestionType>>("https://xebecapi.azurewebsites.net/api/answertype");
 
-        CurrentJobId = tempJob.Id;
-        CurrentJobDescription = tempJob.Description;
+        //CurrentJobId = tempJob.Id;
+        //CurrentJobDescription = tempJob.Description;
         //use parameter in future
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (tempJob == null)
+        {
+            Console.WriteLine("tempJob is null");
+        }
+        else
+        {
+            Console.WriteLine("Temp job is not null" + tempJob.Title);
+            job = tempJob;
+        }
     }
 
     public void AddToForm(string QuestionString, int TypeId)
@@ -437,7 +464,9 @@
 
         //tempJob.formQuestions = FormQuestions;
 
-        NavigationManager.NavigateTo($"/phasecontrol/{tempJob}");
+        //NavigationManager.NavigateTo($"/phasecontrol/{tempJob}");
+
+        componentShow = Components.ApplicationForm_Control;
     }
 
 }

@@ -219,7 +219,7 @@
             </table>
         </div>
         <div class="button">
-            <button class="button-content" >Assign Phases</button>
+            <button class="button-content" @onclick="AssignPhases">Assign Phases</button>
         </div>
     </div>
 </div>
@@ -264,7 +264,27 @@
         jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
         //Job temporaryJob = jobs.LastOrDefault<Job>();
 
+
+
+
+
+
+        //Console.WriteLine(tempJob.Title);
+
         //CurrentJobId = temporaryJob.Id;
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (tempJob == null)
+        {
+            Console.WriteLine("tempJob is null");
+        }
+        else
+        {
+            Console.WriteLine("Temp job is not null" + tempJob.Title);
+            //job = tempJob;
+        }
     }
 
     private void ToggleModalSubmitPhase()
@@ -312,16 +332,8 @@
         phasesAdded.Remove(phase);
     }
 
-    /*public async Task AssignPhases()
+    public async Task AssignPhases()
     {
-        @foreach (var phase in phasesAdded)
-            {
-                JobApplicationPhase JobApplicationPhase_ = new JobApplicationPhase();
-                JobApplicationPhase_.JobId = CurrentJobId;
-                JobApplicationPhase_.ApplicationPhaseId = phase.id;
-
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobapplicationphase", JobApplicationPhase_);
-            }
 
         //Post the job
         Job job = new Job();
@@ -334,12 +346,26 @@
         job.DueDate = tempJob.DueDate;
         job.CreationDate = tempJob.CreationDate;
 
+        Console.WriteLine(job.Title);
+
         await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/job", job);
 
-        //Find the ID of the job that has just been posted
-        Job temporaryJob = jobs.LastOrDefault<Job>();
+        await jsr.InvokeVoidAsync("Job has been added","Added");
 
-        CurrentJobId = temporaryJob.Id;
+        //Find the ID of the job that has just been posted
+        CurrentJobId = job.Id;
+
+
+        //Add Application Phases
+        foreach (var phase in phasesAdded)
+        {
+            JobApplicationPhase JobApplicationPhase_ = new JobApplicationPhase();
+            JobApplicationPhase_.JobId = CurrentJobId;
+            JobApplicationPhase_.ApplicationPhaseId = phase.id;
+
+            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobapplicationphase", JobApplicationPhase_);
+            await jsr.InvokeVoidAsync("Phase has been added", "Added");
+        }
 
         //Add Job type to JobTypeHelpers
         JobTypeHelper jobTypeHelper = new JobTypeHelper();
@@ -347,35 +373,37 @@
         jobTypeHelper.JobTypeId = tempJob.JobType.Id;
 
         await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobtypehelper", jobTypeHelper);
+        await jsr.InvokeVoidAsync("Type has been added", "Added");
 
         //Add selected platforms to JobPlatformHelpers
-        @foreach (var platform in tempJob.JobPlatforms)
+        foreach (var platform in tempJob.JobPlatforms)
         {
             JobPlatformHelper jobPlatformHelper = new JobPlatformHelper();
             jobPlatformHelper.JobId = CurrentJobId;
             jobPlatformHelper.JobPlatformId = platform.id;
 
             await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobplatformhelper", jobPlatformHelper);
+            await jsr.InvokeVoidAsync("JobPlatformHelper has been added", "Added");
         }
 
         //Add collaborators to CollaboratorsAssigned
-        @*@foreach (var collaborator in tempJob.Collaborators)
-        {
-            JobPlatformHelper jobPlatformHelper = new JobPlatformHelper();
-            jobPlatformHelper.JobId = CurrentJobId;
-            jobPlatformHelper.JobPlatformId = platform.id;
+        //foreach (var collaborator in tempJob.Collaborators)
+        //{
+        //    JobPlatformHelper jobPlatformHelper = new JobPlatformHelper();
+        //    jobPlatformHelper.JobId = CurrentJobId;
+        //    //jobPlatformHelper.JobPlatformId = tempJob.pl;
 
-            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobplatformhelper", jobPlatformHelper);
-        }*@
+        //    await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobplatformhelper", jobPlatformHelper);
+        //}
 
         //Add form questions to
-        //await httpClient.PostAsJsonAsync<List<FormQuestion>>("https://xebecapi.azurewebsites.net/api/questionnaire/lst", FormQuestions);
-
-
-        tempJob.JobPhases = phasesAdded;
+        //foreach (var formQuestion in tempJob.formQuestions)
+        //{
+        //    await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/questionnairehrform", formQuestion);
+        //}
 
         await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/job", tempJob);
 
         //NavigationManager.NavigateTo("/");
-    }*/
+    }
 }
