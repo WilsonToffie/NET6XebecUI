@@ -118,9 +118,8 @@
 
  .candidate-card .candidate-details {
      grid-area: 1 / 2 / 2 / 3;
-     
      height: 100%;
-     width: 100%;
+     width: calc(100% - 16px);
      padding: 5px;
      
  }
@@ -145,10 +144,6 @@
  /*Candidate list styling - start*/
 
  /*Jobs Section Start*/
- .jobs-section {
-     grid-area: 1 / 3 / 2 / 5;
-     padding: 10px;
- }
  .jobs-section tbody {
         display: block;
         height: 30vh !important;
@@ -176,7 +171,7 @@
    /*Jobs Section end*/
 
  .profile-section {
-     grid-area: 2 / 3 / 3 / 5;
+     grid-area: 1 / 3 / 4 / 5;
      padding: 10px;
  }
  
@@ -246,7 +241,7 @@
                     KeyValuePair<Applicant, List<ApplicationPhaseHelper>> applicantPair = new KeyValuePair<Applicant, List<ApplicationPhaseHelper>>(applicant, applicationPhaseHelpers);
                     var phase = _phaseDataService.GeApplicationPhaseById(lastHelper.ApplicationPhaseId);
 
-                    <div class="candidate-card" @onclick="() => ShowApplicant(applicantPair)">
+                    <div class="candidate-card" @onclick="() => ShowApplicant(applicantPair)" style="@(GetStyle(applicant))">
                         <div class="profile-picture">
                             <img src="@applicant.Avatar" alt="Avatar">
                         </div>
@@ -282,10 +277,7 @@
             }
         </div>
     </div>
-    <div class="jobs-section">
-        <!-- table-->
-        <AssocicatedJobs Applicant=@FocusApplicant></AssocicatedJobs>
-    </div>
+    
     <div class="profile-section">
         <ApplicantProfile Applicant=@FocusApplicant></ApplicantProfile>
     </div>
@@ -451,6 +443,13 @@
             text_colour = "rgba(94,93,240,1)";
         }
         return $"background: {bg_colour}; color: {text_colour}; box-shadow: {text_colour} 0 10px 20px -10px;";
+    }
+
+    private object GetStyle(Applicant applicant)
+    {
+        if (focusPair.Key == applicant)
+            return "border-left: 5px solid #00bcae;";
+        return "";
     }
 
 }

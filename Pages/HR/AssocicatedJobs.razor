@@ -42,8 +42,11 @@
                         <td class="col-small">@(applicationPhaseHelper.Rating)%</td>
                         <td class="col-3">@(applicationPhaseHelper.Comments)</td>
                         <td class="col-1">
-                            <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => Edit(applicationPhaseHelper)">
+                            <button type="button" class="btn btn-primary btn-xs dt-edit" style="" @onclick="() => Edit(applicationPhaseHelper)">
                                 <i class="fas fa-pen"></i>
+                            </button>
+                            <button type="button" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="View Candidate's application form">
+                              <i class="far fa-eye"></i>
                             </button>
                         </td>
                     }
@@ -66,10 +69,10 @@
                             <textarea rows="3" type="text" class="form-control" @bind=@FocusPhaseHelper.Comments></textarea>
                         </td>
                         <td class="col-1">
-                            <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="async () => await Save(applicationPhaseHelper)">
+                            <button type="button" class="btn btn-primary btn-xs dt-edit" style="" @onclick="async () => await Save(applicationPhaseHelper)">
                                 <i class="fas fa-save"></i>
                             </button>
-                            <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="Cancel">
+                            <button type="button" class="btn btn-primary btn-xs dt-edit" style="" @onclick="Cancel">
                                 <i class="fas fa-times"></i>
                             </button>
                         </td>
