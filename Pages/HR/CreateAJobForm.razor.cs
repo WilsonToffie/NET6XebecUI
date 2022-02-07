@@ -39,13 +39,6 @@ namespace XebecPortal.UI.Pages.HR
             return base.OnAfterRenderAsync(firstRender);
         }
 
-        private void pageRedirect(Job job)
-        {
-            CreateNewJob(job);
-
-            nav.NavigateTo("/applicationformcontroltool");
-        }
-
         private void CreateNewJob(Job job)
         {
 
@@ -67,5 +60,7 @@ namespace XebecPortal.UI.Pages.HR
         {
             return isChecked = !isChecked;
         }
+
     }
+    
 }

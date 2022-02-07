@@ -279,9 +279,6 @@
             <div class="nav-link" @onclick="showApplicantMyJobs">
                 <div class="icons"><i class="fa fa-users" aria-hidden="true"></i></div><h2 class="nav-link-text">My Jobs</h2>
             </div>
-            <div class="nav-link" @onclick="showDropZone">
-                <div class="icons"><i class="fa fa-users" aria-hidden="true"></i></div><h2 class="nav-link-text">Dropzone</h2>
-            </div>
         </div>
         <div class="infodiv">
             <h2 class="profile-logout">Logout</h2>
@@ -401,10 +398,6 @@
     {
         users = await HttpClient.GetFromJsonAsync<List<UserModel>>("https://my-json-server.typicode.com/IviweMalotana/xebecDB/Users");
 
-        Console.WriteLine(ApplicantIsHidden);
-        Console.WriteLine(HRIsHidden);
-        Console.WriteLine(mainmodel.ID);
-
         try
         {
             thisUser = users.Where(a => a.ID == ID).Single();
@@ -416,7 +409,6 @@
                 applicantApplicationProfileIsHidden = true;
                 applicantJobPortalIsHidden = true;
                 applicantMyJobsIsHidden = true;
-                ApplicantDropzoneIsHidden = false;
 
                 HRIsHidden = true;
 
