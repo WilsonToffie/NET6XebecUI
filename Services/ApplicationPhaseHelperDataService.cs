@@ -75,7 +75,7 @@ namespace XebecPortal.UI.Services
                 Title = "Db Error",
             };
 
-            var application = new Application
+            var application = new ApplicationModel
             {
                 JobId = -1,
                 Job = job,
@@ -96,7 +96,7 @@ namespace XebecPortal.UI.Services
             {
                 Id = -1,
                 ApplicationId = 0,
-                Application = new Application
+                Application = new ApplicationModel
                 {
                     Id = 0,
                     JobId = 0,

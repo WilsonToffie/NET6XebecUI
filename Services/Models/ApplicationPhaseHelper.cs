@@ -11,7 +11,7 @@ namespace XebecPortal.UI.Services.Models
         public int ApplicationId { get; set; }
 
         [JsonProperty("applicationModel")] 
-        public ApplicationModel ApplicationModel { get; set; }
+        public ApplicationModel Application { get; set; }
         [JsonProperty("applicationPhaseId")] 
         public int ApplicationPhaseId { get; set; }
 
@@ -34,7 +34,7 @@ namespace XebecPortal.UI.Services.Models
 
         public override string ToString()
         {
-            return $"{nameof(Id)}: {Id}, {nameof(ApplicationId)}: {ApplicationId}, {nameof(ApplicationModel)}: {ApplicationModel}, {nameof(ApplicationPhaseId)}: {ApplicationPhaseId}, {nameof(ApplicationPhase)}: {ApplicationPhase}, {nameof(StatusId)}: {StatusId}, {nameof(Status)}: {Status}, {nameof(TimeMoved)}: {TimeMoved}, {nameof(Comments)}: {Comments}, {nameof(Rating)}: {Rating}, {nameof(AppUserId)}: {AppUserId}";
+            return $"{nameof(Id)}: {Id}, {nameof(ApplicationId)}: {ApplicationId}, {nameof(ApplicationModel)}: {Application}, {nameof(ApplicationPhaseId)}: {ApplicationPhaseId}, {nameof(ApplicationPhase)}: {ApplicationPhase}, {nameof(StatusId)}: {StatusId}, {nameof(Status)}: {Status}, {nameof(TimeMoved)}: {TimeMoved}, {nameof(Comments)}: {Comments}, {nameof(Rating)}: {Rating}, {nameof(AppUserId)}: {AppUserId}";
         }
     }
 }
