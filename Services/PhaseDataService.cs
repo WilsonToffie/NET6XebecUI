@@ -26,42 +26,42 @@ namespace XebecPortal.UI.Services
 
         private void IntializePhases()
         {
-             
-            var application = new AppPhase
+            var screening = new AppPhase
             {
                 Id = 1,
-                Description = "ApplicationModel",
-                PhaseEnum = PhaseEnum.Application
+                Description = "Screening",
+                
+            };
+            var application = new AppPhase
+            {
+                Id = 5,
+                Description = "Application",
+                
             };
             var interviewHr = new AppPhase
             {
-                Id = 2,
+                Id = 3,
                 Description = "Interview - HR",
-                PhaseEnum = PhaseEnum.InterviewHr
+               
             };
             var interviewStaff = new AppPhase
             {
-                Id = 3,
+                Id = 4,
                 Description = "Interview - Staff",
-                PhaseEnum = PhaseEnum.InterviewStaff
+                
             };
             var testing = new AppPhase
             {
-                Id = 4,
+                Id = 2,
                 Description = "Testing",
-                PhaseEnum = PhaseEnum.Testing
+               
             };
-            var screening = new AppPhase
-            {
-                Id = 5,
-                Description = "Screening",
-                PhaseEnum = PhaseEnum.Screening
-            };
+            
             var offer = new AppPhase
             {
-                Id = 6,
+                Id = 25,
                 Description = "Offer",
-                PhaseEnum = PhaseEnum.Offer
+                
             };
             _appPhases = new List<AppPhase>{application, interviewHr, interviewStaff, testing, screening, offer};
         }
@@ -81,3 +81,13 @@ namespace XebecPortal.UI.Services
         }
     }
 }
+//"id": 1,
+//"description": "Screening"
+//"id": 2,
+//"description": "Code Submission",
+//"id": 3,
+//"description": "Interview",
+//"id": 5,
+//"description": "Applied",
+//"id": 25,
+//"description": "Offer",

@@ -19,7 +19,7 @@ namespace XebecPortal.UI.Services.Models
         [JsonProperty("jobPhases")]
         public object JobPhases { get; set; }
 
-        public PhaseEnum PhaseEnum { get; set; }
+       
     }
     public enum PhaseEnum
     {

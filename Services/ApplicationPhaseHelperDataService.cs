@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Bogus;
 using XebecPortal.UI.Interfaces;
+using XebecPortal.UI.Service_Interfaces;
 using XebecPortal.UI.Services.MockServices;
 using XebecPortal.UI.Services.Models;
 
@@ -20,7 +21,9 @@ namespace XebecPortal.UI.Services
         {
             _httpClient = httpClient;
         }
+
         
+
         public async Task<List<ApplicationPhaseHelper>> GetAllApplicationPhaseHelpers()
         {
             var phaseHelpers = await JsonSerializer.DeserializeAsync<List<ApplicationPhaseHelper>>(
@@ -32,68 +35,95 @@ namespace XebecPortal.UI.Services
             return phaseHelpers;
         }
         //api/ApplicationPhaseHelper/UserId={AppUserId}
-        public List<ApplicationPhaseHelper> GetApplicationPhaseHelpersByUserId(int appUserId)
+        public Task<List<ApplicationPhaseHelper>> GetApplicationPhaseHelpersByUserId(int appUserId)
         {
+            //Todo populate application, application.job, applicationPhase, status
             Console.WriteLine($">>>>>ApplicationPhaseHelperDataService : getting helper for {appUserId}");
-             return Task.FromResult((AltClient.GetFromJsonAsync<List<ApplicationPhaseHelper>>(
-                 $"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/userId={appUserId}"))).Result.Result;
+             return (AltClient.GetFromJsonAsync<List<ApplicationPhaseHelper>>(
+                 $"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/userId={appUserId}"));
         }
 
-        public List<ApplicationPhaseHelper> GetAssApplicationPhaseHelpers(Applicant applicant, List<Applicant> applicants)
+        public async Task<List<ApplicationPhaseHelper>> GetAssApplicationPhaseHelpers(Applicant applicant,
+            List<Applicant> applicants)
         {
-            //Get all associated helpers
-            var mockHelpers =  AMockDataHub.GetAssApplicationPhaseHelpers(applicant, applicants);
-            
-            //Filter helpers
-            mockHelpers = GetLatestHelpers(mockHelpers);
-            return mockHelpers;
+            List<ApplicationPhaseHelper> helpers = (await GetApplicationPhaseHelpersByUserId(applicant.Id));
+            if(helpers == null)
+                Console.WriteLine($"xxxxxxxxxxxx no helpers for {applicant.Id} {applicant.FirstName}");
+            return helpers;
+            // return AMockDataHub.GetAssApplicationPhaseHelpers(applicant, applicants);
         }
 
-        public async Task<List<ApplicationPhaseHelper>> UpdatePhaseHelper(ApplicationPhaseHelper applicationPhaseHelper)
+        public async Task UpdateApplicationPhaseHelper(ApplicationPhaseHelper applicationPhaseHelper)
         {
-            //All helpers
-            var mockHelpers = AMockDataHub._mockPhaseHelpers;
-            return mockHelpers;
+            // var applicationHelperJson = new StringContent(JsonSerializer.Serialize(applicationPhaseHelper), Encoding.UTF8,"application/json");
+            // await AltClient.PutAsync($"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/{applicationPhaseHelper.Id}",applicationHelperJson);
+            await AltClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/{applicationPhaseHelper.Id}", applicationPhaseHelper);
         }
 
-        public List<ApplicationPhaseHelper> GetLatestHelpers(List<ApplicationPhaseHelper> unFilteredHelpers)
+        public async Task<ApplicationPhaseHelper> GetApplicationPhaseHelperByUserId(int appUserId)
         {
-            //applicationModel - latest ApplicationPhaseHelper
-            Dictionary<ApplicationModel, ApplicationPhaseHelper>
-                dict = new Dictionary<ApplicationModel, ApplicationPhaseHelper>();
-            foreach(var currentHelper in unFilteredHelpers)
+            var helpers = (await AltClient.GetFromJsonAsync<List<ApplicationPhaseHelper>>(
+                $"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/userId={appUserId}"));
+            if (helpers.Count > 0)
             {
-                var tempApplication = currentHelper.ApplicationModel;
-                if (!dict.ContainsKey(tempApplication))
-                {
-                    dict.Add(tempApplication, currentHelper);
-                }
-                else
-                {
-                    var prevHelper = dict[tempApplication];
-                    var lastDate = prevHelper.TimeMoved;
-                    if (lastDate < currentHelper.TimeMoved)
-                    {
-                        dict[tempApplication] = currentHelper;
-                    }
-                }
+                return helpers[0];
             }
 
-            return dict.Values.OrderByDescending(a => a.TimeMoved).ToList();
+            var job = new JobModel
+            {
+                Id = -1,
+                Title = "Db Error",
+            };
+
+            var application = new Application
+            {
+                JobId = -1,
+                Job = job,
+            };
+            return new ApplicationPhaseHelper
+            {
+                Id = -1,
+                ApplicationId = 0,
+                Application = application,
+                ApplicationPhaseId = -1,
+                ApplicationPhase = null,
+            };
         }
 
         public ApplicationPhaseHelper GetEmptyHelper()
         {
-            var application = new ApplicationModel {Id = 0, JobId = 0, Job = new JobModel {Id = 0, Title = null, Description = null, Company = null, Compensation = 0, MinimumExperience = 0, Location = null, Department = null, DueDate = default, CreationDate = default, JobTypes = null, JobPlatforms = null, JobPhases = null, Applications = null}, AppUserId = 0, AppUser = null, TimeApplied = default, BeginApplication = default};
-            
-           
             var applicationPhaseHelper = new ApplicationPhaseHelper
             {
                 Id = -1,
                 ApplicationId = 0,
-                ApplicationModel = application,
+                Application = new Application
+                {
+                    Id = 0,
+                    JobId = 0,
+                    Job = new JobModel
+                    {
+                        Id = 0,
+                        Title = null,
+                        Description = null,
+                        Company = null,
+                        Compensation = 0,
+                        MinimumExperience = 0,
+                        Location = null,
+                        Department = null,
+                        DueDate = default,
+                        CreationDate = default,
+                        JobTypes = null,
+                        JobPlatforms = null,
+                        JobPhases = null,
+                        Applications = null
+                    },
+                    AppUserId = 0,
+                    AppUser = null,
+                    TimeApplied = default,
+                    BeginApplication = default
+                },
                 ApplicationPhaseId = 0,
-                ApplicationPhase = new AppPhase {Id = 1, Description = "Db error", PhaseEnum = PhaseEnum.Error},
+                ApplicationPhase = new AppPhase {Id = 1, Description = "Db error",},
                 StatusId = 0,
                 Status = new(),
                 TimeMoved = default,
@@ -102,19 +132,6 @@ namespace XebecPortal.UI.Services
                 AppUserId = 0
             };
             return applicationPhaseHelper;
-        }
-        public ApplicationPhaseHelper GetLatestHelper(List<ApplicationPhaseHelper> helpers)
-        {
-            ApplicationPhaseHelper latestHelper = new();
-            if (helpers is {Count: > 0 })
-            {
-                latestHelper = GetLatestHelpers(helpers)[0];
-            }
-            else
-            {
-                latestHelper = GetEmptyHelper();
-            }
-            return latestHelper;
         }
     }
 }
