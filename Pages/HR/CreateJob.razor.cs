@@ -8,12 +8,6 @@ namespace XebecPortal.UI.Pages.HR
 {
     public partial class CreateJob
     {
-        protected override Task OnAfterRenderAsync(bool firstRender)
-        {
-            jsRuntime.InvokeVoidAsync("CreateJob");
-            return base.OnAfterRenderAsync(firstRender);
-        }
-
         private void pageRedirect()
         {
             nav.NavigateTo("/applicationformcontroltool");

@@ -7,3 +7,7 @@
             placeholder: "Social Media"
         });
 }
+
+function focusElement(element) {
+    element.focus();
+}
