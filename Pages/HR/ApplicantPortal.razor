@@ -357,7 +357,7 @@
             bg_colour = "rgba(0, 155, 174, 0.22)";
             text_colour = "rgba(0, 155, 174, 1)";
         }
-    // ReSharper disable once PossibleNullReferenceException
+        // ReSharper disable once PossibleNullReferenceException
         else if (Enum.GetName(MyJobs.ApplicationPhase.InterviewHR).Equals(applicationPhase))
         {
             bg_colour = "rgba(131, 97, 67, 0.22)";
@@ -410,7 +410,7 @@
         var jobs = map[FocusApplicant].Where(j => j.Id != job.Id).ToList();
         jobs.Add(job);
         map[FocusApplicant] = jobs;
-        var ind = _applicants.FindIndex(a => a.Id == FocusApplicant.Id);
+        var ind = _applicants.ToList().FindIndex(a => a.Id == FocusApplicant.Id);
         _applicants.ToList()[ind].Phase = job.Phase;
         jobToChange = null;
         EntryToChange = new KeyValuePair<Applicant, List<MyJob>>();
@@ -420,6 +420,22 @@
     {
         jobToChange = null;
         EntryToChange = new KeyValuePair<Applicant, List<MyJob>>();
+    }
+
+    public enum ApplicationPhase
+    {
+        //get desciption
+        Application,
+        Testing,
+        InterviewStaff,
+        InterviewCEO,
+        InterviewHR,
+        Offer,
+        Screening
+    }
+    public enum Statuses
+    {
+        InProgress, Rejected
     }
 
 }
