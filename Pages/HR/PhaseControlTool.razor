@@ -282,7 +282,7 @@
 
     private async Task SubmitPhases()
     {
-        @foreach (var phase in phasesAdded)
+        foreach (var phase in phasesAdded)
         {
             await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobapplicationphase", phaseValue);
         }
@@ -304,19 +304,11 @@
 
     public async Task AssignPhases()
     {
-        @*@foreach (var phase in phasesAdded)
-            {
-                JobApplicationModelPhase JobApplicationModelPhase_ = new JobApplicationModelPhase();
-                JobApplicationModelPhase_.JobId = CurrentJobId;
-                JobApplicationModelPhase_.ApplicationModelPhaseId = phase.id;
+        
+        tempJob.JobPhases = phasesAdded;
 
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobapplicationModelphase", JobApplicationModelPhase_);
-            }*@
+        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/job", tempJob);
 
-    tempJob.JobPhases = phasesAdded;
-
-    await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/job", tempJob);
-
-    //NavigationManager.NavigateTo("/");
-}
+        //NavigationManager.NavigateTo("/");
+    }
 }

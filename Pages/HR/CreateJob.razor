@@ -271,7 +271,7 @@
                 <div class="create-job-bottom-main">
                     <XebecPortal.UI.Pages.HR.PhaseControlTool />
                 </div>
-                <input type="button" value="Submit" @onclick="CreateAJob" class="createjob-bottom-main-button" />
+                <input type="button" value="Submit" class="createjob-bottom-main-button" />
             </div>
             <div class="col-1 createjob-nav-buttons"></div> 
         </div>
@@ -311,16 +311,5 @@
         PhasesIsHidden = false;
         CreateJobIsHidden = ApplicationFormIsHidden = CollaboratorsIsHidden = true;
     }
-
-    private void navTo(CreateJobPost tempJob)
-    {
-        nav.NavigateTo($"/applicationformcontroltool/{tempJob}");
-    }
-
-    private void CreateAJob()
-    {
-
-    }
-
 
 }
