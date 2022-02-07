@@ -9,7 +9,7 @@ using System.Text.Json;
 
 namespace XebecPortal.UI.Pages.HR
 {
-    public partial class CreateJob
+    public partial class CreateAJobForm
     {
         private List<AppUser> collaborators = new List<AppUser>();
         private List<AppUser> collaboratorsAdded = new List<AppUser>();
@@ -28,6 +28,7 @@ namespace XebecPortal.UI.Pages.HR
             mockDepartments = await HttpClient.GetFromJsonAsync<List<MockDepartment>>("/mockData/departmentMockData.json");
             mockLocations = await HttpClient.GetFromJsonAsync<List<MockLocation>>("/mockData/locationMockData.json");
             jobPlatforms = await HttpClient.GetFromJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform");
+            developers = await HttpClient.GetFromJsonAsync<List<Developer>>("https://my-json-server.typicode.com/WilsonToffie/JSONTesting/Developers");
             jobTypes = await HttpClient.GetFromJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/jobtype");
             collaborators = await HttpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
         }
@@ -51,13 +52,6 @@ namespace XebecPortal.UI.Pages.HR
             return base.OnAfterRenderAsync(firstRender);
         }
 
-        private void pageRedirect(Job job)
-        {
-            CreateNewJob(job);
-
-            nav.NavigateTo("/applicationformcontroltool");
-        }
-
         private void CreateNewJob(Job job)
         {
 
@@ -79,5 +73,7 @@ namespace XebecPortal.UI.Pages.HR
         {
             return isChecked = !isChecked;
         }
+
     }
+    
 }

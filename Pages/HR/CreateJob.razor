@@ -4,220 +4,312 @@
 @inject NavigationManager nav
 
 <style>
-    .create-job-container {
-        background-color: transparent;
-    }
-
-    .sub-container {
-        display: flex;
-    }
-
-    .select-collaborators {
-        width: 200px;
-        text-align: center;
-    }
-
-    .headingPage {
-        height: 5vh;
-        color: #003340
-    }
-
-    .formButton {
-        background-color: #00BCAE;
-        color: white;
-        font-weight: 600;
-    }
-
-    .select2 {
-        width: 100% !important;
-    }
-
-    ::-webkit-scrollbar {
-        width: 10px;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-        border-radius: 10px;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: #888;
-        border-radius: 10px;
-    }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-
-    .create-job-header {
-        font-family: opensans-condensed-bold;
-        font-weight: 700;
-        color: white;
-        background-color: #00bcae;
-        text-align: center;
-        font-size: 1em;
-        border-top-right-radius: 2em;
-        border-top-left-radius: 2em;
+    .container-createjob {
         width: 100%;
-        text-transform: uppercase;
+        margin: auto;
+        height: 100%;
+        margin-top: 5vh;
+        overflow:hidden;
+    }
+   
+    .createjob-top-top{
+        height: 5vh;
+    }
+    .createjob-top-bottom{
+        height: 3vh;
+    }
+    .createjob-bottom{
+        width: 100%;
+        height: 65vh;
+    }
+    .createjob-createjob-top-mini {
+        height: 5vh;
+        margin-top: 0;
+        padding-top: 0;
+        width: 100%;
+        text-align: center;
+    }
+    .collaborators-createjob-top-mini {
+        height: 5vh;
+        margin-top: 0;
+        padding-top: 0;
+        width: 100%;
+        color: #666666;
+        text-align: center;
+    }
+    .applicationform-createjob-top-mini {
+        height: 5vh;
+        margin-top: 0;
+        padding-top: 0;
+        width: 100%;
+        border-radius: 1em;
+        color: #666666;
+        text-align: center;
+    }
+    .phases-createjob-top-mini {
+        height: 5vh;
+        margin-top: 0;
+        padding-top: 0;
+        width: 100%;
+        color: #666666;
+        text-align: center;
+    }
+   
+    .createjob-top-number-div {
+        padding-top: 1vh;
+        height: 5vh;
+        
+        padding-bottom: 1vh;
+    }
+    .createjob-top-text-div {
+        height: 3vh;
+        width: 100%;
+    }
+    .createjob-top-number {
+        font-weight: 900;
+        font-size: 1em;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        color: #00bcae;
+        font-size: 2em;
+    }
+    .createjob-top-text {
+        font-family: opensans-condensed-bold;
+        font-weight: 800;
+        font-size: 1em;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        color: #d35bc9;
+    }
+    .createjob-arrow {
+        background-color: transparent;
+        height: 5px;
+        border-radius: 2em;
+        margin-top: 3vh;
+    }
+    .createjob-bottom-container {
+        height: 60vh;
+        margin-top: 5vh;
     }
 
-    .create-job-form {
-        box-shadow: rgba(0, 0, 0, 0.8) 0px 5px 15px;
-        border-radius: 1.8em;
+    .createjob-bottom-main-container {
+        height: 60vh;
     }
+    .createjob-bottom-main {
+        height: 55vh;
+        width: 100%;
+    }
+    .createjob-bottom-main-button{
+        height: 5vh;
+        width: 10%;
+        margin-left: 45%;
+        margin-right: 45%;
+        margin-top: 2vh;
+        background-color: #00bcae;
+        border: none;
+        border-radius: 2em;
+        color: white;
+        text-align: center;
+        font-family: opensans-bold;
+        font-weight: 700;
+    }
+    .createjob-bottom-main-button:hover {
+        height: 5vh;
+        width: 10%;
+        margin-left: 45%;
+        margin-right: 45%;
+        margin-top: 2vh;
+        background-color: #d35bc9;
+        border: none;
+        border-radius: 2em;
+        color: white;
+        text-align: center;
+        font-family: opensans-bold;
+        font-weight: 700;
+    }
+   .createjob-nav-buttons{
+       height: 10vh;
+       margin-top: 15vh;
+       text-align: center;
+       font-size: 50px;
+       color: #00bcae;
+   }
+    .createjob-nav-buttons:hover {
+        height: 10vh;
+        margin-top: 15vh;
+        text-align: center;
+        font-size: 50px;
+        color: #d35bc9;
+    }
+    .select-collaborators {
+        text-align: center;
+        width: 45%;
+        margin-left: 5%;
+        height: 55vh;
+    }
+   
 </style>
 
 <!--Body Page-->
-<div class="create-job-container" style="@ShowComponent(Components.Create_Job)">
-    <div class="sub-container"><p>@tempJob.Title</p>
-        <!--The Form for creating a job-->
-        <div class="create-job-form">
-            <div class="create-job-header">Create Job</div>
-            <div class="" style="height:500px; background-color: transparent">
-                <div class="col-11" style="margin-left: 10px">
-                    <form style="width: 106%; padding-left: 5px; padding-right: 5px">
-                        <div class="row">
-                            <div class="col-12 p-1 justify-content-center" style="margin-left: 250px">
-                                <label style="margin-left: 225px">Job Title</label>
-                                <input type="text" class="form-control text-center" placeholder="Job Name" style="width: 50%" @bind="tempJob.Title" />
-                            </div>
-                            <div class="col-6 p-2">
-                                <label>Company Name</label>
-                                <input type="text" class="form-control" placeholder="Company Name" @bind="tempJob.Company" />
-                            </div>
-                            <div class="col-6 p-2">
-                                <label>Location</label>
-                                <select class="form-select" @bind="tempJob.Location">
-                                    @foreach (var item in mockLocations)
-                                    {
-                                        <option>@item.location</option>
-                                    }
-                                </select>
-                            </div>
-                            <div class="col-6 p-2">
-                                <label>Job Type</label>
-                                <select class="form-select selectMultiOptions1" @bind="@Type">
-                                    @foreach (var item in jobTypes)
-                                    {
-                                        <option>@item.Type</option>
-
-                                    }
-                                </select>
-                            </div>
-                            <div class="col-6 p-2">
-                                <label>Department</label>
-                                <select class="form-select" @bind="tempJob.Department">
-                                    @foreach (var item in mockDepartments)
-                                    {
-                                        <option>@item.department</option>
-                                    }
-                                </select>
-                            </div>
-                            <div class="col-12 p-2">
-                                <label>Job Description</label>
-                                <textarea class="form-control" style="resize: none" placeholder="Description" rows="4" @bind="tempJob.Description">
-                        </textarea>
-                            </div>
-                            <div class="col-6 p-2">
-
-                                @foreach (var jobPlatform in jobPlatforms)
-                                {
-                                    <input class="smallerCheckBox" type="checkbox" id="@jobPlatform.id" name="@jobPlatform.platformName" @onclick="(e) => AddPlatfrom(jobPlatform, ToggleChecked())">
-                                    <label for="@jobPlatform.id"> @jobPlatform.platformName</label>
-                                }
-
-                            </div>
-                            <div class="col-6">
-                                <div class="row">
-                                    <div class="col-12 p-2">
-                                        <label>Date Advertised</label>
-                                        <input class="form-control" type="date" placeholder="Date Advertised" onfocus="(this.type='date')" onblur="(this.type='text')" @bind="tempJob.CreationDate" />
-                                    </div>
-                                    <div class="col-12 p-2">
-                                        <label>Due Date</label>
-                                        <input class="form-control" type="date" placeholder="Due Date" onfocus="(this.type='date')" onblur="(this.type='text')" @bind="tempJob.DueDate" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+<div class="container-createjob">
+    <div class="row createjob-top">
+        <div class="col-1"></div>
+        <div class="col-1">
+            <div class="createjob-createjob-top-mini">
+                <div class="createjob-top-number-div">
+                    <i class="fas fa-cubes createjob-top-number"></i>
                 </div>
             </div>
         </div>
-        <!--Tables of developers/HR-->
-        <div class="select-collaborators">
-            <div class="create-job-header">Collaborators</div>
-            <div style="overflow: auto; height: 125px">
-                <table>
-                    @foreach (var collaborator in collaboratorsAdded)
-                    {
-                        <tr>
-                            <td>@collaborator.name</td>
-                            <td style="text-align: right; font-weight: bold; font-size:25px" @onclick='() => RemoveCollaborator(collaborator)'>&times;</td>
-                        </tr>
-
-                    }
-                </table>
+        <div class="col-2 createjob-arrow"></div>
+        <div class="col-1">
+            <div class="collaborators-createjob-top-mini">
+                <div class="createjob-top-number-div">
+                    <i class="fas fa-users createjob-top-number"></i>
+                </div>
             </div>
-            <div class="create-job-header">Select Collaborators</div>
-
-            <div style="overflow: auto; height: 255px">
-
-                <table style="background-color: transparent">
-
-                    @foreach (var collaborator in collaborators)
-                    {
-                        <tr>
-                            <td @onclick='() =>AddCollaborator(collaborator)'>@collaborator.name</td>
-                        </tr>
-                    }
-
-                </table>
-
+        </div>
+        <div class="col-2 createjob-arrow"></div>
+        <div class="col-1" >
+            <div class="applicationform-createjob-top-mini">
+                <div class="createjob-top-number-div">
+                    <i class="fab fa-wpforms createjob-top-number"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-2 createjob-arrow"></div>
+        <div class="col-1">
+            <div class="phases-createjob-top-mini">
+                <div class="createjob-top-number-div">
+                    <i class="fas fa-clipboard-check createjob-top-number"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-1"></div>
+    </div>
+    <div class="row createjob-top-bottom">
+        <div class="col-3">
+            <div class="createjob-createjob-top-mini">
+                <div class="createjob-top-text-div">
+                    <h3 class="createjob-top-text">Create A Job</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="collaborators-createjob-top-mini">
+                <div class="createjob-top-text-div">
+                    <h3 class="createjob-top-text">Select Collaborators </h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="applicationform-createjob-top-mini">
+                <div class="createjob-top-text-div">
+                    <h3 class="createjob-top-text">Create Application Form</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="phases-createjob-top-mini">
+                <div class="createjob-top-text-div">
+                    <h3 class="createjob-top-text">Select Phases</h3>
+                </div>
             </div>
         </div>
     </div>
+    <div class="createjob-bottom">
 
-    <!--Button-->
-    <br />
-    <div class="d-flex justify-content-center"><button class="btn formButton" @onclick='() => navTo(tempJob)'>Application Form</button></div>
+        <div class="row createjob-bottom-container" hidden="@CreateJobIsHidden">
+            <div class="col-1 createjob-nav-buttons"></div>
+            <div class="col-10 createjob-bottom-main-container">
+                <div class="createjob-bottom-main">
+                    <XebecPortal.UI.Pages.HR.CreateAJobForm />
+                </div>
+                <input type="button" value="Save" class="createjob-bottom-main-button" />
+            </div>
+            <div class="col-1 createjob-nav-buttons" @onclick="ShowCollaborators">
+                <i class="fas fa-angle-right" ></i>
+            </div>
+        </div>
+        <div class="row createjob-bottom-container" hidden="@CollaboratorsIsHidden">
+            <div class="col-1 createjob-nav-buttons" @onclick="ShowCreateJob">
+                <i class="fas fa-angle-left" ></i>
+            </div>
+            <div class="col-10 createjob-bottom-main-container">
+                <div class="createjob-bottom-main">
+                    <XebecPortal.UI.Pages.HR.Collaborators />
+                </div>
+                <input type="button" value="Save" class="createjob-bottom-main-button" />
+            </div>
+            <div class="col-1 createjob-nav-buttons" @onclick="ShowApplicationForm">
+                <i class="fas fa-angle-right"></i>
+            </div>
+        </div>
+        <div class="row createjob-bottom-container" hidden="@ApplicationFormIsHidden">
+            <div class="col-1 createjob-nav-buttons" @onclick="ShowCollaborators">
+                <i class="fas fa-angle-left" ></i>
+            </div>
+            <div class="col-10 createjob-bottom-main-container">
+                <div class="createjob-bottom-main">
+                    <XebecPortal.UI.Pages.HR.ApplicationFormControlTool />
+                </div>
+                <input type="button" value="Save" class="createjob-bottom-main-button" />
+            </div>
+            <div class="col-1 createjob-nav-buttons"  @onclick="ShowPhases">
+                <i class="fas fa-angle-right"></i>
+            </div>
+        </div>
+        <div class="row create-job-bottom-container" hidden="@PhasesIsHidden">
+            <div class="col-1 createjob-nav-buttons" @onclick="ShowApplicationForm">
+                <i class="fas fa-angle-left" ></i>
+            </div>
+            <div class="col-10 createjob-bottom-main-container">
+                <div class="create-job-bottom-main">
+                    <XebecPortal.UI.Pages.HR.PhaseControlTool />
+                </div>
+                <input type="button" value="Submit" class="createjob-bottom-main-button" />
+            </div>
+            <div class="col-1 createjob-nav-buttons"></div> 
+        </div>
+    </div>
 </div>
-<div style="@tempJob.ShowComponent(Components.ApplicationForm_Control)">
-    <ApplicationFormControlTool tempJob="tempJob"></ApplicationFormControlTool>
-</div>
-<div style="@ShowComponent(Components.Phase_Control)">
-    <PhaseControlTool tempJob="tempJob"></PhaseControlTool>
-</div>
-
 
 @code {
 
-    string Type = "";
+    private bool CreateJobIsHidden, CollaboratorsIsHidden, ApplicationFormIsHidden, PhasesIsHidden;
 
-    private void navTo(CreateJobPost tempJob)
+    protected override async Task OnInitializedAsync()
     {
-        foreach (var type in jobTypes)
-        {
-            if (type.Type == Type)
-            {
-                tempJob.JobType = type;
-            }
-        }
-
-        tempJob.JobPlatforms = ListOfPlatforms;
-        tempJob.Collaborators = collaboratorsAdded;
-
-        tempJob.componentShow = Components.ApplicationForm_Control;
-        //nav.NavigateTo($"/applicationformcontroltool/{tempJob}");
+        CreateJobIsHidden = false;
+        CollaboratorsIsHidden = ApplicationFormIsHidden = PhasesIsHidden = true;
     }
 
-    public enum Components
+    private void ShowCreateJob()
     {
-        Create_Job,
-        ApplicationForm_Control,
-        Phase_Control
+        CreateJobIsHidden = false;
+        CollaboratorsIsHidden = ApplicationFormIsHidden = PhasesIsHidden = true;
+    }
+
+    private void ShowCollaborators()
+    {
+        CollaboratorsIsHidden = false;
+        CreateJobIsHidden = ApplicationFormIsHidden = PhasesIsHidden = true;
+    }
+
+    private void ShowApplicationForm()
+    {
+        ApplicationFormIsHidden = false;
+        CreateJobIsHidden = CollaboratorsIsHidden = PhasesIsHidden = true;
+    }
+
+    private void ShowPhases()
+    {
+        PhasesIsHidden = false;
+        CreateJobIsHidden = ApplicationFormIsHidden = CollaboratorsIsHidden = true;
     }
 
 }

@@ -228,8 +228,15 @@
                                     <div class="col-6">
                                             <h3 class="big-card-name">@displayJobDetail.Title</h3>
                                     </div>
-                                    <div class="col-6 d-flex justify-content-end">
-                                        <button class="btn formButton">Apply</button>
+                                    <div class="col-6 p-2 d-flex justify-content-end">
+                                        @if (IsApplyHidden)
+                                        {
+                                            <p>You Have Applied For This Post</p>
+                                        }
+                                        else
+                                        {
+                                            <input type="button" class="btn formButton" value="Apply" @onclick="() => Apply(displayJobDetail.Id)" />
+                                        }
                                     </div>
                                     <div class="col-6 d-flex justify-content-start">
                                             <h5 class="text-muted small-card-company">@displayJobDetail.Company</h5>
@@ -308,6 +315,7 @@
                     </div>
                 </div>
             </div>
+        
         }
         else
         {
