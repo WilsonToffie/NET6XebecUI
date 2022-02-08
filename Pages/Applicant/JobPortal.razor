@@ -5,7 +5,7 @@
 <style>
     .job-search-bar {
         max-width: 50%;
-        background-color: rgba(255,255,255,0.6);
+        background-color: rgba(255,255,255,1)!important;
         border-radius: 2em;
         border: 0.1em solid rgba(0,0,0,0.2);
     }
@@ -30,7 +30,7 @@
     }
     .job-portal-card {
         cursor: pointer;
-        background-color: rgba(255,255,255,0.5);
+        background-color: rgba(255,255,255,1);
         border-radius: 2em;
         border: solid white 0.25em;
     }
@@ -39,7 +39,8 @@
             background-color: rgba(255,255,255,1);
             border-radius: 2em;
             border: solid white 0.25em;
-            box-shadow: 0 2px 5px 0 rgba(255,255,255, 1), 0 2px 10px 0 rgba(255,255,255, 1);
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+            position: relative;
         }
         
     .job-portal-card-body{
@@ -77,30 +78,6 @@
         height: min-content;
     }
 
-
-    .job-portal-left::-webkit-scrollbar {
-        background-color: transparent;
-        width: 1vw;
-    }
-    .job-portal-left::-webkit-scrollbar-track {
-        background-color: transparent;
-    }
-    .job-portal-left::-webkit-scrollbar-thumb {
-        background-color: rgba(0, 188, 174,1);
-        border-radius: 1em;
-    }
-    .job-portal-right-main::-webkit-scrollbar-track {
-        background-color: transparent;
-    }
-    .job-portal-right-main::-webkit-scrollbar {
-        background-color: transparent;
-        width: 1vw;
-    }
-
-    .job-portal-right-main::-webkit-scrollbar-thumb {
-        background-color: rgba(0, 188, 174,1);
-        border-radius: 1em;
-    }
     .container-main {
         height: 75vh;
         width: 100%;
@@ -151,7 +128,8 @@
         background-color: rgba(255,255,255,1);
         border-radius: 2em;
         border: solid white 0.25em;
-        box-shadow: 0 2px 5px 0 rgba(255,255,255, 1), 0 2px 10px 0 rgba(255,255,255, 1);
+        box-shadow: rgba(0,51,64,0.86) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+        margin-top: 1vh;
     }
     .job-portal-form{
         width: 90%;
@@ -177,6 +155,10 @@
         font-size: 1em;
         font-family: opensans-bold;
     }
+    li.active{
+        background: #00BCAE !important;
+        color: red;
+    }
 </style>
 
 <div class="container" style="height: 75vh; margin-top:5vh;">
@@ -197,14 +179,13 @@
 
         @if (jobListFilter != null && jobListFilter.Count > 0)
         {
-            <div class="row" style="height:60vh">
-                <div class="col-4 job-portal-left overflow-auto" style="height: 60vh">
-
+            <div class="row" style="height:60vh; padding: 20px;">
+                <div class="col-4 job-portal-left overflow-auto">
                     <!--Card list for jobs-->
-                    <div class="col-12">
+                    <div class="col-12" style="height:58vh!important;margin-top:1vh;">
                         @foreach (var item in jobPagedList)
                         {
-                            <div class="card job-portal-card" @onclick="() => DisplayJobDetail(item.Id)">
+                            <div class="card job-portal-card" @onclick="() => DisplayJobDetail(item.Id)" style="@GetStyling(item)">
                                 <div class="card-body job-portal-card-body">
                                     <h3 class="card-title small-card-name">@item.Title</h3>
                                     <h5 class="card-subtitle text-muted small-card-company">@item.Company</h5>
@@ -221,7 +202,7 @@
                 <div class="col-8 overflow-auto job-portal-right-main" style="height: 60vh">
 
                     <!--The Form for editing and deleting a job-->
-                    <div style="height: 60vh">
+                    <div style="height: 58vh">
                         <div class="col-12 job-portal-right">
                             <form class="job-portal-form">
                                 <div class="row">
@@ -254,7 +235,7 @@
                                             <p class="text-center big-card-description">@displayJobDetail.Description</p>
                                     </div>
                                     <div class="col-6">
-                                            <p>@displayJobDetail.JobPlatforms</p>
+                                            @* <p>@displayJobDetail.JobPlatforms</p> *@
                                     </div>
                                     <div class="col-6 d-flex justify-content-end">
                                             <p class="small-card-date">@displayJobDetail.DueDate.ToString("d MMMM yyyy")</p>
@@ -341,6 +322,13 @@
     {
         applicationFormIsHidden = false;
         jobPortalIsHidden = true;
+    }
+
+    private string GetStyling(Job item)
+    {
+        if (displayJobDetail.Id == item.Id)
+            return "box-shadow: rgba(0,51,64,0.86) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;";
+        return "";
     }
 
 }

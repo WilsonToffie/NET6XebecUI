@@ -438,14 +438,6 @@
 
             FormQuestions.Add(temp);
         }
-
-        foreach (var question in FormQuestions)
-        {
-            var q = Questions.FirstOrDefault(q => q.questionDescription == question.question);
-            var ind = Questions.IndexOf(q);
-            Questions.RemoveAt(ind);
-            Questions.Add(q);
-        }
     }
 
     public async Task DeleteQuestion(CustomQuestion q)

@@ -344,7 +344,7 @@
 <div class="appform-container">
     <div class="collaborators-left">
         <div class="collaborators-heading">
-            <h2 class="collaborators-heading-text">Select Questions</h2>
+            <h2 class="collaborators-heading-text">Select Collaborators</h2>
         </div>
         <div class="appform-left-main">
             <table class="collaborators-left-table">
@@ -380,7 +380,7 @@
     </div>
     <div class="collaborators-right">
         <div class="collaborators-heading">
-            <h2 class="collaborators-heading-text">Chosen Questions</h2>
+            <h2 class="collaborators-heading-text">Recruitment Team</h2>
         </div>
         <div class="collaborators-left-main">
             <table class="collaborators-left-table">
@@ -433,10 +433,6 @@
         if (!developersAdded.Contains(developer))
         {
             developersAdded.Add(developer);
-            var q = developers.FirstOrDefault(q => q.id == developer.id);
-            var ind = developers.IndexOf(q);
-            developers.RemoveAt(ind);
-            developers.Add(q);
         }
     }
 

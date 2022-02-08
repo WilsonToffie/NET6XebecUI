@@ -21,7 +21,7 @@ namespace XebecPortal.UI.Pages.Applicant
         protected override async Task OnInitializedAsync()
         {
             jobList = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
-            applicationList = await httpClient.GetFromJsonAsync<List<Application>>("https://xebecapi.azurewebsites.net/api/ApplicationModel");
+            applicationList = await httpClient.GetFromJsonAsync<List<Application>>("https://xebecapi.azurewebsites.net/api/Application");
             jobListFilter = jobList;
             jobPagedList = jobListFilter.ToPagedList(1, 17);
             pageNum.AddRange(Enumerable.Range(1, jobPagedList.PageCount));
