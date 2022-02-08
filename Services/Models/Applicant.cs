@@ -5,7 +5,7 @@ namespace XebecPortal.UI.Services.Models
 {
     public class Applicant
     {
-        public object Avatar { get; set; }
+        public string Avatar { get; set; }
 
         [JsonProperty("id")] 
         public int Id { get; set; }
