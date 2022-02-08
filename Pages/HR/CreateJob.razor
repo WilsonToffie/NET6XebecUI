@@ -54,11 +54,14 @@
         color: #666666;
         text-align: center;
     }
+    .createjob-top-number-div:hover{
+        cursor: pointer !important;
+        color: #a7a1a7 !important;
+    }
    
     .createjob-top-number-div {
         padding-top: 1vh;
         height: 5vh;
-        
         padding-bottom: 1vh;
     }
     .createjob-top-text-div {
@@ -72,10 +75,10 @@
         width: 100%;
         margin: 0;
         padding: 0;
-        color: #00bcae;
+        
         font-size: 2em;
     }
-    .createjob-top-text {
+    .create-job-top-text {
         font-family: opensans-condensed-bold;
         font-weight: 800;
         font-size: 1em;
@@ -83,7 +86,7 @@
         width: 100%;
         margin: 0;
         padding: 0;
-        color: #d35bc9;
+       
     }
     .createjob-arrow {
         background-color: transparent;
@@ -159,68 +162,43 @@
     <div class="row createjob-top">
         <div class="col-1"></div>
         <div class="col-1">
-            <div class="createjob-createjob-top-mini">
-                <div class="createjob-top-number-div">
+            <div class="createjob-createjob-top-mini" @onclick="() => NavigateToSection(CreateJobSection.CreateJob)">
+                <div class="createjob-top-number-div" style="@GetActiveColor(CreateJobSection.CreateJob)">
                     <i class="fas fa-cubes createjob-top-number"></i>
+                    <h3 class="create-job-top-text">Create A Job</h3>
                 </div>
             </div>
         </div>
         <div class="col-2 createjob-arrow"></div>
         <div class="col-1">
-            <div class="collaborators-createjob-top-mini">
-                <div class="createjob-top-number-div">
+            <div class="collaborators-createjob-top-mini" @onclick="() => NavigateToSection(CreateJobSection.SelectCollaborators)">
+                <div class="createjob-top-number-div" style="@GetActiveColor(CreateJobSection.SelectCollaborators)">
                     <i class="fas fa-users createjob-top-number"></i>
+                    <h3 class="create-job-top-text" >Select Collaborators </h3>
                 </div>
             </div>
         </div>
         <div class="col-2 createjob-arrow"></div>
         <div class="col-1" >
-            <div class="applicationform-createjob-top-mini">
-                <div class="createjob-top-number-div">
+            <div class="applicationform-createjob-top-mini" @onclick="() => NavigateToSection(CreateJobSection.CreateApplicationForm)">
+                <div class="createjob-top-number-div"  style="@GetActiveColor(CreateJobSection.CreateApplicationForm)">
                     <i class="fab fa-wpforms createjob-top-number"></i>
+                    <h3 class="create-job-top-text">Create Application Form</h3>
                 </div>
             </div>
         </div>
         <div class="col-2 createjob-arrow"></div>
         <div class="col-1">
-            <div class="phases-createjob-top-mini">
-                <div class="createjob-top-number-div">
-                    <i class="fas fa-clipboard-check createjob-top-number"></i>
+            <div class="phases-createjob-top-mini" @onclick="() => NavigateToSection(CreateJobSection.SelectPhase)">
+                <div class="createjob-top-number-div" style="@GetActiveColor(CreateJobSection.SelectPhase)">
+                    <i class="fas fa-clipboard-check createjob-top-number" ></i>
+                    <h3 class="create-job-top-text">Select Phases</h3>
                 </div>
             </div>
         </div>
         <div class="col-1"></div>
     </div>
-    <div class="row createjob-top-bottom">
-        <div class="col-3">
-            <div class="createjob-createjob-top-mini">
-                <div class="createjob-top-text-div">
-                    <h3 class="createjob-top-text">Create A Job</h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="collaborators-createjob-top-mini">
-                <div class="createjob-top-text-div">
-                    <h3 class="createjob-top-text">Select Collaborators </h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="applicationform-createjob-top-mini">
-                <div class="createjob-top-text-div">
-                    <h3 class="createjob-top-text">Create Application Form</h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-3">
-            <div class="phases-createjob-top-mini">
-                <div class="createjob-top-text-div">
-                    <h3 class="createjob-top-text">Select Phases</h3>
-                </div>
-            </div>
-        </div>
-    </div>
+    
     <div class="createjob-bottom">
 
         <div class="row createjob-bottom-container" hidden="@CreateJobIsHidden">
@@ -310,6 +288,57 @@
     {
         PhasesIsHidden = false;
         CreateJobIsHidden = ApplicationFormIsHidden = CollaboratorsIsHidden = true;
+    }
+
+    private enum CreateJobSection
+    {
+        CreateJob, SelectCollaborators, CreateApplicationForm, SelectPhase
+    }
+
+    private string GetActiveColor(CreateJobSection section )
+    {
+        switch (section)
+        {
+            case CreateJobSection.CreateJob:
+                if (!CreateJobIsHidden)
+                    return "color: #d35bc9  !important;";
+                return "color: #00bcae  !important;";
+            case CreateJobSection.SelectCollaborators:
+                if (!CollaboratorsIsHidden)
+                    return "color: #d35bc9  !important;";
+                return "color: #00bcae  !important;";
+            case CreateJobSection.CreateApplicationForm:
+                if (!ApplicationFormIsHidden)
+                    return "color: #d35bc9  !important;";
+                return "color: #00bcae  !important;";
+            case CreateJobSection.SelectPhase:
+                if (!PhasesIsHidden)
+                    return "color: #d35bc9  !important;";
+                return "color: #00bcae  !important;";
+            default:
+                throw new ArgumentOutOfRangeException(nameof(section), section, null);
+        }
+    }
+
+    private void NavigateToSection(CreateJobSection section)
+    {
+        switch (section)
+        {
+            case CreateJobSection.CreateJob:
+                ShowCreateJob();
+                break;
+            case CreateJobSection.SelectCollaborators:
+                ShowCollaborators();
+                break;
+            case CreateJobSection.CreateApplicationForm:
+                ShowApplicationForm();
+                break;
+            case CreateJobSection.SelectPhase:
+                ShowPhases();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(section), section, null);
+        }
     }
 
 }

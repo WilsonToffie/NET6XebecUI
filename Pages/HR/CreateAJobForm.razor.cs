@@ -27,7 +27,6 @@ namespace XebecPortal.UI.Pages.HR
             mockDepartments = await HttpClient.GetFromJsonAsync<List<MockDepartment>>("/mockData/departmentMockData.json");
             mockLocations = await HttpClient.GetFromJsonAsync<List<MockLocation>>("/mockData/locationMockData.json");
             jobPlatforms = await HttpClient.GetFromJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform");
-            
             jobTypes = await HttpClient.GetFromJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/jobtype");
         }
 
