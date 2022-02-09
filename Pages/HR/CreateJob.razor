@@ -4,160 +4,155 @@
 @inject NavigationManager nav
 
 <style>
-    .container-createjob {
-        width: 100%;
-        margin: auto;
-        height: 100%;
-        margin-top: 5vh;
-        overflow: hidden;
-    }
-
-    .createjob-top-top {
-        height: 5vh;
-    }
-
-    .createjob-top-bottom {
-        height: 3vh;
-    }
-
-    .createjob-bottom {
-        width: 100%;
-        height: 65vh;
-    }
-
-    .createjob-createjob-top-mini {
-        height: 5vh;
-        margin-top: 0;
-        padding-top: 0;
-        width: 100%;
-        text-align: center;
-    }
-    .collaborators-createjob-top-mini {
-        height: 5vh;
-        margin-top: 0;
-        padding-top: 0;
-        width: 100%;
-        color: #666666;
-        text-align: center;
-    }
-    .applicationform-createjob-top-mini {
-        height: 5vh;
-        margin-top: 0;
-        padding-top: 0;
-        width: 100%;
-        border-radius: 1em;
-        color: #666666;
-        text-align: center;
-    }
-    .phases-createjob-top-mini {
-        height: 5vh;
-        margin-top: 0;
-        padding-top: 0;
-        width: 100%;
-        color: #666666;
-        text-align: center;
-    }
-    .createjob-top-number-div:hover{
-        cursor: pointer !important;
-        color: #a7a1a7 !important;
-    }
-   
-    .createjob-top-number-div {
-        padding-top: 1vh;
-        height: 5vh;
-        
-        padding-bottom: 1vh;
-    }
-    .createjob-top-text-div {
-        height: 3vh;
-        width: 100%;
-    }
-    .createjob-top-number {
-        font-weight: 900;
-        font-size: 1em;
-        height: 100%;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        color: #00bcae;
-        font-size: 2em;
-    }
-    .create-job-top-text {
-        font-family: opensans-condensed-bold;
-        font-weight: 800;
-        font-size: 1em;
-        height: 100%;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        color: #d35bc9;
-    }
-    .createjob-arrow {
-        background-color: transparent;
-        height: 5px;
-        border-radius: 2em;
-        margin-top: 3vh;
-    }
-    .createjob-bottom-container {
-        height: 60vh;
-        margin-top: 5vh;
-    }
-
-    .createjob-bottom-main-container {
-        height: 60vh;
-    }
-    .createjob-bottom-main {
-        height: 55vh;
-        width: 100%;
-    }
-    .createjob-bottom-main-button{
-        height: 5vh;
-        width: 10%;
-        margin-left: 45%;
-        margin-right: 45%;
-        margin-top: 2vh;
-        background-color: #00bcae;
-        border: none;
-        border-radius: 2em;
-        color: white;
-        text-align: center;
-        font-family: opensans-bold;
-        font-weight: 700;
-    }
-    .createjob-bottom-main-button:hover {
-        height: 5vh;
-        width: 10%;
-        margin-left: 45%;
-        margin-right: 45%;
-        margin-top: 2vh;
-        background-color: #d35bc9;
-        border: none;
-        border-radius: 2em;
-        color: white;
-        text-align: center;
-        font-family: opensans-bold;
-        font-weight: 700;
-    }
-   .createjob-nav-buttons{
-       height: 10vh;
-       margin-top: 15vh;
-       text-align: center;
-       font-size: 50px;
-       color: #00bcae;
-   }
-    .createjob-nav-buttons:hover {
-        height: 10vh;
-        margin-top: 15vh;
-        text-align: center;
-        font-size: 50px;
-        color: #d35bc9;
-    }
-    .select-collaborators {
-        text-align: center;
-        width: 45%;
-        margin-left: 5%;
-        height: 55vh;
-    }
+      .container-createjob {
+            width: 100%;
+            margin: auto;
+            height: 100%;
+            margin-top: 5vh;
+            overflow:hidden;
+        }
+       
+        .createjob-top-top{
+            height: 5vh;
+        }
+        .createjob-top-bottom{
+            height: 3vh;
+        }
+        .createjob-bottom{
+            width: 100%;
+            height: 65vh;
+        }
+        .createjob-createjob-top-mini {
+            height: 5vh;
+            margin-top: 0;
+            padding-top: 0;
+            width: 100%;
+            text-align: center;
+        }
+        .collaborators-createjob-top-mini {
+            height: 5vh;
+            margin-top: 0;
+            padding-top: 0;
+            width: 100%;
+            color: #666666;
+            text-align: center;
+        }
+        .applicationform-createjob-top-mini {
+            height: 5vh;
+            margin-top: 0;
+            padding-top: 0;
+            width: 100%;
+            border-radius: 1em;
+            color: #666666;
+            text-align: center;
+        }
+        .phases-createjob-top-mini {
+            height: 5vh;
+            margin-top: 0;
+            padding-top: 0;
+            width: 100%;
+            color: #666666;
+            text-align: center;
+        }
+        .createjob-top-number-div:hover{
+            cursor: pointer !important;
+            color: #a7a1a7 !important;
+        }
+       
+        .createjob-top-number-div {
+            padding-top: 1vh;
+            height: 5vh;
+            padding-bottom: 1vh;
+        }
+        .createjob-top-text-div {
+            height: 3vh;
+            width: 100%;
+        }
+        .createjob-top-number {
+            font-weight: 900;
+            font-size: 1em;
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            
+            font-size: 2em;
+        }
+        .create-job-top-text {
+            font-family: opensans-condensed-bold;
+            font-weight: 800;
+            font-size: 1em;
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+           
+        }
+        .createjob-arrow {
+            background-color: transparent;
+            height: 5px;
+            border-radius: 2em;
+            margin-top: 3vh;
+        }
+        .createjob-bottom-container {
+            height: 60vh;
+            margin-top: 5vh;
+        }
+        .createjob-bottom-main-container {
+            height: 60vh;
+        }
+        .createjob-bottom-main {
+            height: 55vh;
+            width: 100%;
+        }
+        .createjob-bottom-main-button{
+            height: 5vh;
+            width: 10%;
+            margin-left: 45%;
+            margin-right: 45%;
+            margin-top: 2vh;
+            background-color: #00bcae;
+            border: none;
+            border-radius: 2em;
+            color: white;
+            text-align: center;
+            font-family: opensans-bold;
+            font-weight: 700;
+        }
+        .createjob-bottom-main-button:hover {
+            height: 5vh;
+            width: 10%;
+            margin-left: 45%;
+            margin-right: 45%;
+            margin-top: 2vh;
+            background-color: #d35bc9;
+            border: none;
+            border-radius: 2em;
+            color: white;
+            text-align: center;
+            font-family: opensans-bold;
+            font-weight: 700;
+        }
+       .createjob-nav-buttons{
+           height: 10vh;
+           margin-top: 15vh;
+           text-align: center;
+           font-size: 50px;
+           color: #00bcae;
+       }
+        .createjob-nav-buttons:hover {
+            height: 10vh;
+            margin-top: 15vh;
+            text-align: center;
+            font-size: 50px;
+            color: #d35bc9;
+        }
+        .select-collaborators {
+            text-align: center;
+            width: 45%;
+            margin-left: 5%;
+            height: 55vh;
+        }
    
 </style>
 
@@ -211,7 +206,6 @@
                 <div class="createjob-bottom-main">
                     <XebecPortal.UI.Pages.HR.CreateAJobForm @bind-TempJob="tempJob"/>
                 </div>
-                <input type="button" value="Save" class="createjob-bottom-main-button"/>
             </div>
             <div class="col-1 createjob-nav-buttons" @onclick="ShowCollaborators">
                 <i class="fas fa-angle-right"></i>
@@ -225,7 +219,6 @@
                 <div class="createjob-bottom-main">
                     <XebecPortal.UI.Pages.HR.Collaborators @bind-TempJob="tempJob"/>
                 </div>
-                <input type="button" value="Save" class="createjob-bottom-main-button"/>
             </div>
             <div class="col-1 createjob-nav-buttons" @onclick="ShowApplicationForm">
                 <i class="fas fa-angle-right"></i>
@@ -239,7 +232,6 @@
                 <div class="createjob-bottom-main">
                     <XebecPortal.UI.Pages.HR.ApplicationFormControlTool @bind-TempJob="tempJob"/>
                 </div>
-
             </div>
             <div class="col-1 createjob-nav-buttons" @onclick="ShowPhases">
                 <i class="fas fa-angle-right"></i>

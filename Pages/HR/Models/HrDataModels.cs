@@ -133,6 +133,7 @@ namespace XebecPortal.UI.Pages.HR
         public bool registered { get; set; }
 
         public int linkVisits { get; set; }
+        public string Avatar { get; set; }
     }
 
     public class JobPlatformHelper

@@ -1,5 +1,6 @@
 ﻿@using Bogus
 @using XebecPortal.UI.Services.Models
+@using System.Text
 @inject HttpClient HttpClient
 @inject IJSRuntime jsRuntime
 @inject NavigationManager nav
@@ -384,11 +385,20 @@
             <h2 class="collaborators-heading-text">Chosen Collaborators</h2>
         </div>
         <div class="collaborators-left-main">
+            @if (collaboratorsAdded != null && collaboratorsAdded.Count > 0)
+            {
+                
+                    <a href="mailto:@collaboratorsAdded[0].email?subject=Recruit Team Assignment&cc=@GetCC(collaboratorsAdded)&body=@GetBody(collaboratorsAdded)!" class="btn btn-info mb-3">Email Team|<i class="fas fa-paper-plane"></i></a>
+            }
             <table class="collaborators-left-table">
                 <tbody>
                 @if (collaboratorsAdded != null)
                 {
-                    @foreach (var developer in collaboratorsAdded)
+                    @if (collaboratorsAdded.Count > 0)
+                    {
+
+                    }
+                    foreach (var developer in collaboratorsAdded)
                     {
                         <tr class="appform-right-row">
                             <td class="collaborators-left-td">
@@ -404,13 +414,16 @@
                             </td>
                         </tr>
                     }
+
                 }
                 </tbody>
             </table>
+
         </div>
         
     </div>
 </div>
+<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save"/>
 
 @code {
     [Parameter]
@@ -466,6 +479,31 @@
     private string GetBody(AppUser developer)
     {
         return $"Good Day {developer.name} {developer.surname},%0D%0A%0D%0AThis%20is%20to%20inform%20you%20that%20you%20are%20now%20part%20of%20the%20recruitment%20team.%0D%0A%0D%0AWe're%20excited%20to%20have%20you!";
+    }
+
+    private void EmailTeam()
+    {
+        
+    }
+
+    private object GetBody(List<AppUser> collaborators)
+    {
+        return "Good Day Team,%0D%0A%0D%0AThis%20is%20to%20welcome%20you%20all%20to%20the%20recruitment%20team.%0D%0A%0D%0AWe're%20excited%20to%20have%20you!";
+    }
+
+    private object GetCC(List<AppUser> team)
+    {
+        if (team.Count == 1)
+        {
+            return team[0].email;
+        }
+        StringBuilder cc = new StringBuilder();
+        for(int i = 1; i < team.Count; i++)
+        {
+            var email = team[i].email;
+            cc.Append($"{email},");
+        }
+        return cc.ToString();
     }
 
 }
