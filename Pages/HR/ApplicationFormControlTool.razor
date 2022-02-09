@@ -1,9 +1,7 @@
 ﻿@page "/applicationformcontroltool"
-@using Array = Smart.Blazor.Array
 @inject HttpClient httpClient
 @inject IJSRuntime JSRuntime
-@inject NavigationManager NavigationManager;  
-
+@inject NavigationManager NavigationManager;
 <style>
     .appform-container {
         height: 55vh;
@@ -20,6 +18,7 @@
         height: 5vh;
         width:100%;
     }
+
     .appform-left-main {
         height: 35vh;
         overflow-y: auto;
@@ -64,13 +63,13 @@
     }
         .appform-left-row:hover {
             box-shadow: 0 2px 5px 0 rgba(0,0,0,1), 0 2px 10px 0 rgba(0,0,0,1);
-            min-height: 9vh;
+            min-height: 20vh;
             color: white;
             font-family: opensans-condensed-bold;
             font-weight: 900;
             font-size: 1em;
             margin-bottom: 5px;
-            background-color: rgb(243,242,242);
+            background-color: black;
             min-width: 100%;
             transition: 0.1s;
         }
@@ -264,12 +263,13 @@
                 }
                 else
                 {
+
                     <tbody>
                     @if (Questions != null)
                     {
                         @foreach (var question in Questions)
                         {
-                            <tr class="@QuestionCardClass(question)" @onclick="() => AddToForm(question.questionDescription, question.answerTypeId)">
+                            <tr class="@QuestionCardClass(question)" @onclick="() => AddToForm(question)">
                                 <td class="collaborators-left-td">@question.questionDescription</td>
                             </tr>
                         }
@@ -388,113 +388,89 @@
         </div>
     }
 </div>
-
+<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save" />
 
 @code {
-
     [Parameter]
-    public CreateJobPost tempJob { get; set; }
+    public CreateJobPost TempJob { get; set; }
+    [Parameter]
+    public EventCallback<CreateJobPost> TempJobChanged { get; set; }
+
 
     List<CustomQuestion> Questions = new List<CustomQuestion>();
     List<FormQuestion> FormQuestions = new List<FormQuestion>();
     List<QuestionType> Types = new List<QuestionType>();
-
     string tempType = null;
-
     //temporary
     List<Job> Jobs = null;
-
     int CurrentJobId = 0;
     string CurrentJobDescription = null;
-
     bool ShowAddPopup = false;
     bool ShowDeletePopup = false;
-
     public CustomQuestion tempQuestion = new CustomQuestion();
-
     protected override async Task OnInitializedAsync()
     {
         Questions = await httpClient.GetFromJsonAsync<List<CustomQuestion>>("https://xebecapi.azurewebsites.net/api/question");
-
         Jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
-
-        Job tempJob = Jobs.LastOrDefault<Job>();
-
         Types = await httpClient.GetFromJsonAsync<List<QuestionType>>("https://xebecapi.azurewebsites.net/api/answertype");
-
-        CurrentJobId = tempJob.Id;
-        CurrentJobDescription = tempJob.Description;
-    //use parameter in future
     }
-
-    public void AddToForm(string QuestionString, int TypeId)
+    public void AddToForm(CustomQuestion question)
     {
-        if (FormQuestions.FindIndex(q => q.question == QuestionString) == -1)
-        {
-            FormQuestion temp = new FormQuestion();
-            temp.question = QuestionString;
-            temp.answerTypeId = TypeId;
-            temp.jobId = CurrentJobId;
 
+        FormQuestion temp = new FormQuestion();
+        temp.question = question.questionDescription;
+        temp.answerTypeId = question.answerTypeId;
+        temp.jobId = TempJob.Id;
+        if (!FormQuestions.Contains(temp))
+        {
             FormQuestions.Add(temp);
         }
-    }
 
+
+    }
     public async Task DeleteQuestion(CustomQuestion q)
     {
         await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/question/{q.Id}");
-
         await OnInitializedAsync();
     }
-
     public void OpenAddPopup()
     {
         ShowAddPopup = !ShowAddPopup;
         ShowDeletePopup = false;
     }
-
     public void OpenDeletePopup()
     {
         ShowDeletePopup = !ShowDeletePopup;
         ShowAddPopup = false;
     }
-
     public async Task AddQuestion()
     {
         if (tempQuestion.questionDescription != "")
         {
             ShowAddPopup = !ShowAddPopup;
-
             tempQuestion.answerTypeId = Types.FirstOrDefault(q => q.Type == tempType).Id;
-
             await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/question", tempQuestion);
-
             await OnInitializedAsync();
         }
     }
-
     public void CloseAddPopup()
     {
         ShowAddPopup = !ShowAddPopup;
     }
-
     public void CloseDeletePopup()
     {
         ShowDeletePopup = !ShowDeletePopup;
     }
-
     public void DeleteFormQuestion(string QuestionString)
     {
         FormQuestions.RemoveAll(q => q.question == QuestionString);
     }
 
-    public async Task CompileForm()
+    private async Task Save()
     {
-    //await httpClient.PostAsJsonAsync<List<FormQuestion>>("https://xebecapi.azurewebsites.net/api/questionnaire/lst", FormQuestions);
-
-        tempJob.formQuestions = FormQuestions;
-
-        NavigationManager.NavigateTo($"/phasecontrol/{tempJob}");
+        TempJob.formQuestions = FormQuestions;
+        Console.WriteLine("Questions Added");
+        await TempJobChanged.InvokeAsync(TempJob);
     }
 
     private string QuestionCardClass(CustomQuestion question)

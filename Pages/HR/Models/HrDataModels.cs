@@ -32,7 +32,6 @@ namespace XebecPortal.UI.Pages.HR
         public List<JobTypeHelper> JobTypes { get; set; }
         public List<JobPlatformHelper> JobPlatforms { get; set; }
         public List<JobApplicationPhase> JobPhases { get; set; }
-        public List<Application> Applications { get; set; }
     }
 
     public class CreateJobPost
@@ -54,17 +53,34 @@ namespace XebecPortal.UI.Pages.HR
         public List<AppUser> Collaborators { get; set; }
     }
 
+    public class Collaborator
+    {
+        public int id { get; set; }
+        public string Name { get; set; }
+        //foreign key
+        public int JobId { get; set; }
+        public Job Job { get; set; }
+        //foreign key
+        public int AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
+    }
+
     public class FormQuestion
     {
         public int id { get; set; }
         public string question { get; set; }
         public string answer { get; set; }
         public int jobId { get; set; }
-        public string job { get; set; }
+        public Job job { get; set; }
         public int answerTypeId { get; set; }
-        public string answerType { get; set; }
+        public AnswerType answerType { get; set; }
     }
 
+    public class AnswerType
+    {
+        public int id { get; set; }
+        public string Type { get; set; }
+    }
 
     public class CustomQuestion
     {
@@ -72,16 +88,6 @@ namespace XebecPortal.UI.Pages.HR
         public string questionDescription { get; set; }
         public int answerTypeId { get; set; }
         public string answerType { get; set; }
-    }
-
-
-
-    class Developer
-    {
-        public int Id { get; set; }
-        public string Email { get; set; }
-        public string Role { get; set; }
-        public string PasswordHash { get; set; }
     }
 
     public class JobType
@@ -149,29 +155,6 @@ namespace XebecPortal.UI.Pages.HR
         //Foreign Key: ApplicationPhase
         public int ApplicationPhaseId { get; set; }
         public ApplicationPhase ApplicationPhase { get; set; }
-    }
-
-    public class Application
-    {
-
-    }
-
-    public class MockLocation
-    {
-        public int id { get; set; }
-        public string location { get; set; }
-    }
-
-    public class MockDepartment
-    {
-        public int id { get; set; }
-        public string department { get; set; }
-    }
-
-    public class MockSocialMedia
-    {
-        public int id { get; set; }
-        public string socialMedia { get; set; }
     }
 
     public class JobPlatform

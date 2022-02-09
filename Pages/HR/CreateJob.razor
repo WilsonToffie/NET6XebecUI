@@ -9,19 +9,22 @@
         margin: auto;
         height: 100%;
         margin-top: 5vh;
-        overflow:hidden;
+        overflow: hidden;
     }
-   
-    .createjob-top-top{
+
+    .createjob-top-top {
         height: 5vh;
     }
-    .createjob-top-bottom{
+
+    .createjob-top-bottom {
         height: 3vh;
     }
-    .createjob-bottom{
+
+    .createjob-bottom {
         width: 100%;
         height: 65vh;
     }
+
     .createjob-createjob-top-mini {
         height: 5vh;
         margin-top: 0;
@@ -62,6 +65,7 @@
     .createjob-top-number-div {
         padding-top: 1vh;
         height: 5vh;
+        
         padding-bottom: 1vh;
     }
     .createjob-top-text-div {
@@ -75,7 +79,7 @@
         width: 100%;
         margin: 0;
         padding: 0;
-        
+        color: #00bcae;
         font-size: 2em;
     }
     .create-job-top-text {
@@ -86,7 +90,7 @@
         width: 100%;
         margin: 0;
         padding: 0;
-       
+        color: #d35bc9;
     }
     .createjob-arrow {
         background-color: transparent;
@@ -229,28 +233,29 @@
         </div>
         <div class="row createjob-bottom-container" hidden="@ApplicationFormIsHidden">
             <div class="col-1 createjob-nav-buttons" @onclick="ShowCollaborators">
-                <i class="fas fa-angle-left" ></i>
+                <i class="fas fa-angle-left"></i>
             </div>
             <div class="col-10 createjob-bottom-main-container">
                 <div class="createjob-bottom-main">
-                    <XebecPortal.UI.Pages.HR.ApplicationFormControlTool />
+                    <XebecPortal.UI.Pages.HR.ApplicationFormControlTool @bind-TempJob="tempJob" />
                 </div>
-                <input type="button" value="Save" class="createjob-bottom-main-button" />
+                
             </div>
-            <div class="col-1 createjob-nav-buttons"  @onclick="ShowPhases">
+            <div class="col-1 createjob-nav-buttons" @onclick="ShowPhases">
                 <i class="fas fa-angle-right"></i>
             </div>
         </div>
         <div class="row create-job-bottom-container" hidden="@PhasesIsHidden">
             <div class="col-1 createjob-nav-buttons" @onclick="ShowApplicationForm">
-                <i class="fas fa-angle-left" ></i>
+                <i class="fas fa-angle-left"></i>
             </div>
             <div class="col-10 createjob-bottom-main-container">
                 <div class="create-job-bottom-main">
-                    <XebecPortal.UI.Pages.HR.PhaseControlTool />
+                    <XebecPortal.UI.Pages.HR.PhaseControlTool @bind-TempJob="tempJob" />
                 </div>
+
             </div>
-            <div class="col-1 createjob-nav-buttons"></div> 
+            <div class="col-1 createjob-nav-buttons"></div>
         </div>
     </div>
 </div>
@@ -258,6 +263,8 @@
 @code {
 
     private bool CreateJobIsHidden, CollaboratorsIsHidden, ApplicationFormIsHidden, PhasesIsHidden;
+
+    CreateJobPost tempJob = new CreateJobPost { Collaborators = new List<AppUser>(), JobPlatforms = new List<JobPlatform>(),formQuestions = new List<FormQuestion>(), JobPhases = new List<ApplicationPhase>(), JobType = new JobType()};
 
     protected override async Task OnInitializedAsync()
     {

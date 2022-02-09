@@ -349,45 +349,46 @@
         <div class="appform-left-main">
             <table class="collaborators-left-table">
 
-                @if (developers == null)
+                @if (collaborators == null)
                 {
                     <div>Loading...</div>
                 }
                 else
                 {
                     <tbody>
-                    @if (developers != null)
+                    @if (collaborators != null)
                     {
-                        for (var index = 0; index < developers.Count; index++)
+                        for (var index = 0; index < collaborators.Count; index++)
                         {
-                            var developer = developers[index];
+                            var collaborator = collaborators[index];
                     
                             string avatar = avatars.FirstOrDefault(i => i.Id == index).Avatar;
-                            <tr class="@DeveloperCardClass(developer) pl-2" @onclick="() => AddCollaborator(developer)">
+                            <tr class="@DeveloperCardClass(collaborator) pl-2" @onclick="() => AddCollaborator(collaborator)">
                                 
                                 <td class="developer-profile-picture col-2 ml-2">
                                     <span style="max-width: 10px !important;min-width: 10px !important;"> </span>
                                     <img src="@avatar" alt="Avatar">
                                 </td>
-                                <td class="collaborators-left-td col-5">@developer.name @developer.surname</td>
+                                <td class="collaborators-left-td col-5">@collaborator.name @collaborator.surname</td>
                             </tr>
                         }
                     }
                     </tbody>
                 }
+
             </table>
-        </div>
+        </div>     
     </div>
     <div class="collaborators-right">
         <div class="collaborators-heading">
-            <h2 class="collaborators-heading-text">Recruitment Team</h2>
+            <h2 class="collaborators-heading-text">Chosen Collaborators</h2>
         </div>
         <div class="collaborators-left-main">
             <table class="collaborators-left-table">
                 <tbody>
-                @if (developersAdded != null)
+                @if (collaboratorsAdded != null)
                 {
-                    @foreach (var developer in developersAdded)
+                    @foreach (var developer in collaboratorsAdded)
                     {
                         <tr class="appform-right-row">
                             <td class="collaborators-left-td">
@@ -404,46 +405,59 @@
                         </tr>
                     }
                 }
-                </tbody>
             </table>
         </div>
+        
     </div>
 </div>
 
 @code {
+    [Parameter]
+    public CreateJobPost TempJob { get; set; }
+    [Parameter]
+    public EventCallback<CreateJobPost> TempJobChanged { get; set; }
 
-    private List<AppUser> developers = new List<AppUser>();
-    private List<AppUser> developersAdded = new List<AppUser>();
+
+    private List<AppUser> collaborators = new List<AppUser>();
+    private List<AppUser> collaboratorsAdded = new List<AppUser>();
     private List<Applicant> avatars = new();
 
     protected override async Task OnInitializedAsync()
     {
-        developers = await HttpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/Developer");
-        if (developers != null)
+        collaborators = await HttpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
+        
+        if (collaborators != null)
         {
             var f = new Faker<Applicant>()
                 .RuleFor(a => a.Id, faker => faker.IndexFaker)
                     .RuleFor(a => a.Avatar, faker => faker.Person.Avatar);
-            avatars = f.Generate(developers.Count);
+            avatars = f.Generate(collaborators.Count);
         }
     }
 
-    private void AddCollaborator(AppUser developer)
+    private void AddCollaborator(AppUser collaborator)
     {
-        if (!developersAdded.Contains(developer))
+        if (!collaboratorsAdded.Contains(collaborator))
         {
-            developersAdded.Add(developer);
+            collaboratorsAdded.Add(collaborator);
         }
     }
 
-    private void RemoveCollaborator(AppUser developer)
+    private void RemoveCollaborator(AppUser collaborator)
     {
-        developersAdded.Remove(developer);
+        collaboratorsAdded.Remove(collaborator);
+    }
+
+    private async Task Save()
+    {
+        TempJob.Collaborators = collaboratorsAdded;
+        Console.WriteLine("Saving Collaborator");
+        await TempJobChanged.InvokeAsync(TempJob);
     }
 
     private object DeveloperCardClass(AppUser developer)
     {
-        if (developersAdded.FindAll(d => d.id == developer.id).Count() > 0)
+        if (collaboratorsAdded.FindAll(d => d.id == developer.id).Count() > 0)
             return "appform-left-row-selected";
         return "appform-left-row";
     }
