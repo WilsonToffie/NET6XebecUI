@@ -33,6 +33,7 @@
         background-color: rgba(255,255,255,1);
         border-radius: 2em;
         border: solid white 0.25em;
+        box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
     }
         .job-portal-card:hover {
             cursor: pointer;
@@ -128,7 +129,7 @@
         background-color: rgba(255,255,255,1);
         border-radius: 2em;
         border: solid white 0.25em;
-        box-shadow: rgba(0,51,64,0.86) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+        box-shadow: rgba(0,51,64,0.86) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset, rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
         margin-top: 1vh;
     }
     .job-portal-form{
@@ -155,9 +156,13 @@
         font-size: 1em;
         font-family: opensans-bold;
     }
-    li.active{
+    li.active a{
         background: #00BCAE !important;
-        color: red;
+        color: white;
+        border-color: #00BCAE !important;
+    }
+    .pagination{
+       box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
     }
 </style>
 
