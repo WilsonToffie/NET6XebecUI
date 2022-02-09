@@ -176,9 +176,9 @@
                                         {
                                             <label>Location</label>
                                             <select class="form-select" @bind="displayJobDetail.Location">
-                                                @foreach (var item in mockLocations.Distinct())
+                                                @foreach (var item in Locations)
                                                 {
-                                                    <option>@item.location</option>
+                                                    <option>@item</option>
                                                 }
                                             </select>
                                         }
@@ -209,9 +209,9 @@
                                         {
                                             <label>Department</label>
                                             <select class="form-select" @bind="displayJobDetail.Department">
-                                                @foreach (var item in mockDepartments.Distinct())
+                                                @foreach (var item in Departments)
                                                 {
-                                                    <option>@item.department</option>
+                                                    <option>@item</option>
                                                 }
                                             </select>
                                         }

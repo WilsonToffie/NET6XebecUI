@@ -11,37 +11,42 @@
         background-color: rgba(255,255,255,1);
         border: solid white 0.1em;
         box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
-        display:flex;
+        display: flex;
     }
-    .collaborators-left{
+
+    .collaborators-left {
         height: 55vh;
         width: 50%;
     }
+
     .collaborators-right {
         height: 55vh;
         width: 50%;
         border-left: black 0.1em solid;
     }
-    .collaborators-heading{
+
+    .collaborators-heading {
         height: 5vh;
         margin-top: 2.5vh;
         margin-bottom: 2.5vh;
         width: 100%;
         text-align: center;
     }
+
     .collaborators-heading-text {
         font-family: opensans-condensed-bold;
         font-weight: 800;
         font-size: 1.5em;
         color: #00bcae;
     }
-   
+
     .collaborators-left-main {
         height: 40vh;
         overflow-y: auto;
         width: 100%;
         margin-bottom: 5vh;
     }
+
         .collaborators-left-main::-webkit-scrollbar {
             background-color: transparent;
             border-radius: 1em;
@@ -55,10 +60,11 @@
 
     .collaborators-left-table {
         height: 40vh;
-        width: 80%;    
+        width: 80%;
         margin-left: 10%;
         margin-right: 10%;
     }
+
     .collaborators-left-row {
         box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.4), 0 2px 10px 0 rgba(0,0,0,0.4);
         height: 8vh;
@@ -70,6 +76,7 @@
         margin-bottom: 5px;
         background-color: rgba(255,255,255,1);
     }
+
         .collaborators-left-row:hover {
             box-shadow: 0 2px 5px 0 rgba(0,0,0,1), 0 2px 10px 0 rgba(0,0,0,1);
             height: 8vh;
@@ -80,8 +87,8 @@
             margin-bottom: 5px;
             background-color: black;
         }
-    
-    .collaborators-left-td{
+
+    .collaborators-left-td {
         padding-left: 10px;
     }
 </style>
@@ -94,15 +101,15 @@
         <div class="appform-left-main">
             <table class="collaborators-left-table">
 
-                @foreach (var developer in developers)
+                @foreach (var collaborator in collaborators)
                 {
                     <tr class="collaborators-left-row">
-                        <td class="collaborators-left-td" @onclick='() =>AddCollaborator(developer)'>@developer.Role</td>
+                        <td class="collaborators-left-td" @onclick='() =>AddCollaborator(collaborator)'>@collaborator.name @collaborator.surname</td>
                     </tr>
                 }
 
             </table>
-        </div>     
+        </div>
     </div>
     <div class="collaborators-right">
         <div class="collaborators-heading">
@@ -110,40 +117,53 @@
         </div>
         <div class="collaborators-left-main">
             <table class="collaborators-left-table">
-                @foreach (var developer in developersAdded)
+                @foreach (var collaborators in collaboratorsAdded)
                 {
                     <tr class="collaborators-left-row">
-                        <td class="collaborators-left-td">@developer.Role</td>
-                        <td class="collaborators-left-td" @onclick='() => RemoveCollaborator(developer)'>&times;</td>
+                        <td class="collaborators-left-td">@collaborators.name @collaborators.surname</td>
+                        <td class="collaborators-left-td" @onclick='() => RemoveCollaborator(collaborators)'>&times;</td>
                     </tr>
 
                 }
             </table>
         </div>
-        
+
     </div>
 </div>
+<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save"/>
 
 @code {
+    [Parameter]
+    public CreateJobPost TempJob { get; set; }
+    [Parameter]
+    public EventCallback<CreateJobPost> TempJobChanged { get; set; }
 
-    private List<Developer> developers = new List<Developer>();
-    private List<Developer> developersAdded = new List<Developer>();
+
+    private List<AppUser> collaborators = new List<AppUser>();
+    private List<AppUser> collaboratorsAdded = new List<AppUser>();
 
     protected override async Task OnInitializedAsync()
     {
-        developers = await HttpClient.GetFromJsonAsync<List<Developer>>("https://my-json-server.typicode.com/WilsonToffie/JSONTesting/Developers");
+        collaborators = await HttpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
     }
 
-    private void AddCollaborator(Developer developer)
+    private void AddCollaborator(AppUser collaborator)
     {
-        if (!developersAdded.Contains(developer))
+        if (!collaboratorsAdded.Contains(collaborator))
         {
-            developersAdded.Add(developer);
+            collaboratorsAdded.Add(collaborator);
         }
     }
 
-    private void RemoveCollaborator(Developer developer)
+    private void RemoveCollaborator(AppUser collaborator)
     {
-        developersAdded.Remove(developer);
+        collaboratorsAdded.Remove(collaborator);
+    }
+
+    private async Task Save()
+    {
+        TempJob.Collaborators = collaboratorsAdded;
+        Console.WriteLine("Saving Collaborator");
+        await TempJobChanged.InvokeAsync(TempJob);
     }
 }
