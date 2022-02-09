@@ -79,24 +79,6 @@
         height: min-content;
     }
 
-    .container-main {
-        height: 75vh;
-        width: 100%;
-    }
-
-    .container-button {
-        height: 5vh;
-        width: 100%;
-    }
-
-    .mini-button {
-        height: 5vh;
-        text-align: center;
-        background-color: #00bcae;
-        width: auto;
-        border-radius: 1em;
-    }
-
     .my-container {
         height: 65vh;
         width: 100%;
@@ -173,14 +155,14 @@
         <div class="row" style="height:5vh">
             <div class="col-12">
                 <div class="input-group d-flex justify-content-center">
-                    <input class="form-control job-search-bar" type="text" placeholder="Search for a job" @bind="searchJob" />
+                    <input class="form-control job-search-bar" type="text" placeholder="Search for a job" @bind="searchJob"/>
                     <span class="input-group-text job-search-icon-div" @onclick="() => SeachListJob(searchJob)">
                         <i class="fa fa-search job-search-icon"></i>
                     </span>
                 </div>
             </div>
         </div>
-        <br />
+        <br/>
 
         @if (jobListFilter != null && jobListFilter.Count > 0)
         {
@@ -194,12 +176,12 @@
                                 <div class="card-body job-portal-card-body">
                                     <h3 class="card-title small-card-name">@item.Title</h3>
                                     <h5 class="card-subtitle text-muted small-card-company">@item.Company</h5>
-                                    <br />
+                                    <br/>
                                     <h5 class="card-text small-card-location">@item.Location</h5>
                                     <h5 class="card-text small-card-date">@item.DueDate.ToString("d MMMM yyyy")</h5>
                                 </div>
                             </div>
-                            <br />
+                            <br/>
                         }
                     </div>
                 </div>
@@ -212,7 +194,7 @@
                             <form class="job-portal-form">
                                 <div class="row">
                                     <div class="col-6">
-                                            <h3 class="big-card-name">@displayJobDetail.Title</h3>
+                                        <h3 class="big-card-name">@displayJobDetail.Title</h3>
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
                                         @if (IsApplyHidden)
@@ -221,29 +203,29 @@
                                         }
                                         else
                                         {
-                                            <input type="button" class="btn formButton" value="Apply" @onclick="() => Apply(displayJobDetail.Id)" />
+                                            <input type="button" class="btn formButton" value="Apply" @onclick="() => Apply(displayJobDetail.Id)"/>
                                         }
                                     </div>
                                     <div class="col-6 d-flex justify-content-start">
-                                            <h5 class="text-muted small-card-company">@displayJobDetail.Company</h5>
+                                        <h5 class="text-muted small-card-company">@displayJobDetail.Company</h5>
                                     </div>
                                     <div class="col-6 d-flex justify-content-end">
-                                            <p class="small-card-company">@displayJobDetail.Location</p>
+                                        <p class="small-card-company">@displayJobDetail.Location</p>
                                     </div>
                                     <div class="col-6 justify-content-start">
-                                            <p class="big-card-type">Full-Time</p>
+                                        <p class="big-card-type">@displayJobDetail.JobTypes.FirstOrDefault()</p>
                                     </div>
                                     <div class="col-6 d-flex justify-content-end">
-                                            <p class="big-card-type"> @displayJobDetail.Department</p>
+                                        <p class="big-card-type"> @displayJobDetail.Department</p>
                                     </div>
                                     <div class="col-12">
-                                            <p class="text-center big-card-description">@displayJobDetail.Description</p>
+                                        <p class="text-center big-card-description">@displayJobDetail.Description</p>
                                     </div>
                                     <div class="col-6">
-                                            @* <p>@displayJobDetail.JobPlatforms</p> *@
+                                        @* <p>@displayJobDetail.JobPlatforms</p> *@
                                     </div>
                                     <div class="col-6 d-flex justify-content-end">
-                                            <p class="small-card-date">@displayJobDetail.DueDate.ToString("d MMMM yyyy")</p>
+                                        <p class="small-card-date">@displayJobDetail.DueDate.ToString("d MMMM yyyy")</p>
                                     </div>
                                 </div>
                             </form>
@@ -265,28 +247,38 @@
                                         </a>
                                     </li>
                                 }
-                                <li class="page-item @(jobPagedList.PageNumber.Equals(pageNum.FirstOrDefault()) ? "active":"")" @onclick="() => PageListNav(pageNum.FirstOrDefault())"><a class="page-link">@pageNum.FirstOrDefault()</a></li>
+                                <li class="page-item @(jobPagedList.PageNumber.Equals(pageNum.FirstOrDefault()) ? "active" : "")" @onclick="() => PageListNav(pageNum.FirstOrDefault())">
+                                    <a class="page-link">@pageNum.FirstOrDefault()</a>
+                                </li>
                                 @foreach (var item in pageNum)
                                 {
                                     if (item != pageNum.FirstOrDefault() && item != pageNum.LastOrDefault())
                                     {
                                         @if (item >= jobPagedList.PageCount - 3 - 2 && jobPagedList.PageNumber >= jobPagedList.PageCount - 3)
                                         {
-                                            <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active":"")" @onclick="() => PageListNav(item)"><a class="page-link">@item</a></li>
+                                            <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active" : "")" @onclick="() => PageListNav(item)">
+                                                <a class="page-link">@item</a>
+                                            </li>
                                         }
                                         else if (item <= 4 + 2 && jobPagedList.PageNumber <= 4)
                                         {
-                                            <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active":"")" @onclick="() => PageListNav(item)"><a class="page-link">@item</a></li>
+                                            <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active" : "")" @onclick="() => PageListNav(item)">
+                                                <a class="page-link">@item</a>
+                                            </li>
                                         }
                                         else if (item >= jobPagedList.PageNumber - 2 && item <= jobPagedList.PageNumber + 2 && jobPagedList.PageNumber < jobPagedList.PageCount - 3 && jobPagedList.PageNumber > 4)
                                         {
-                                            <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active":"")" @onclick="() => PageListNav(item)"><a class="page-link">@item</a></li>
+                                            <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active" : "")" @onclick="() => PageListNav(item)">
+                                                <a class="page-link">@item</a>
+                                            </li>
                                         }
                                     }
                                 }
                                 @if (pageNum.Count > 1)
                                 {
-                                    <li class="page-item @(jobPagedList.PageNumber.Equals(pageNum.LastOrDefault()) ? "active":"")" @onclick="() => PageListNav(pageNum.LastOrDefault())"><a class="page-link">@pageNum.LastOrDefault()</a></li>
+                                    <li class="page-item @(jobPagedList.PageNumber.Equals(pageNum.LastOrDefault()) ? "active" : "")" @onclick="() => PageListNav(pageNum.LastOrDefault())">
+                                        <a class="page-link">@pageNum.LastOrDefault()</a>
+                                    </li>
                                 }
                                 @if (!jobPagedList.IsLastPage)
                                 {
@@ -301,13 +293,12 @@
                     </div>
                 </div>
             </div>
-        
         }
         else
         {
             @for (int i = 0; i < 5; i++)
             {
-                <br />
+                <br/>
             }
             <h1 class="text-center align-middle">No Jobs Are Available</h1>
         }
@@ -315,7 +306,7 @@
 </div>
 
 <div class="my-container" hidden="@applicationFormIsHidden">
-    <XebecPortal.UI.Pages.Applicant.ApplicationForm />
+    <XebecPortal.UI.Pages.Applicant.ApplicationForm/>
 </div>
 
 @code {

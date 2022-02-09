@@ -178,14 +178,14 @@
             <div class="collaborators-createjob-top-mini" @onclick="() => NavigateToSection(CreateJobSection.SelectCollaborators)">
                 <div class="createjob-top-number-div" style="@GetActiveColor(CreateJobSection.SelectCollaborators)">
                     <i class="fas fa-users createjob-top-number"></i>
-                    <h3 class="create-job-top-text" >Select Collaborators </h3>
+                    <h3 class="create-job-top-text">Select Collaborators </h3>
                 </div>
             </div>
         </div>
         <div class="col-2 createjob-arrow"></div>
-        <div class="col-1" >
+        <div class="col-1">
             <div class="applicationform-createjob-top-mini" @onclick="() => NavigateToSection(CreateJobSection.CreateApplicationForm)">
-                <div class="createjob-top-number-div"  style="@GetActiveColor(CreateJobSection.CreateApplicationForm)">
+                <div class="createjob-top-number-div" style="@GetActiveColor(CreateJobSection.CreateApplicationForm)">
                     <i class="fab fa-wpforms createjob-top-number"></i>
                     <h3 class="create-job-top-text">Create Application Form</h3>
                 </div>
@@ -195,37 +195,37 @@
         <div class="col-1">
             <div class="phases-createjob-top-mini" @onclick="() => NavigateToSection(CreateJobSection.SelectPhase)">
                 <div class="createjob-top-number-div" style="@GetActiveColor(CreateJobSection.SelectPhase)">
-                    <i class="fas fa-clipboard-check createjob-top-number" ></i>
+                    <i class="fas fa-clipboard-check createjob-top-number"></i>
                     <h3 class="create-job-top-text">Select Phases</h3>
                 </div>
             </div>
         </div>
         <div class="col-1"></div>
     </div>
-    
+
     <div class="createjob-bottom">
 
         <div class="row createjob-bottom-container" hidden="@CreateJobIsHidden">
             <div class="col-1 createjob-nav-buttons"></div>
             <div class="col-10 createjob-bottom-main-container">
                 <div class="createjob-bottom-main">
-                    <XebecPortal.UI.Pages.HR.CreateAJobForm />
+                    <XebecPortal.UI.Pages.HR.CreateAJobForm @bind-TempJob="tempJob"/>
                 </div>
-                <input type="button" value="Save" class="createjob-bottom-main-button" />
+                <input type="button" value="Save" class="createjob-bottom-main-button"/>
             </div>
             <div class="col-1 createjob-nav-buttons" @onclick="ShowCollaborators">
-                <i class="fas fa-angle-right" ></i>
+                <i class="fas fa-angle-right"></i>
             </div>
         </div>
         <div class="row createjob-bottom-container" hidden="@CollaboratorsIsHidden">
             <div class="col-1 createjob-nav-buttons" @onclick="ShowCreateJob">
-                <i class="fas fa-angle-left" ></i>
+                <i class="fas fa-angle-left"></i>
             </div>
             <div class="col-10 createjob-bottom-main-container">
                 <div class="createjob-bottom-main">
-                    <XebecPortal.UI.Pages.HR.Collaborators />
+                    <XebecPortal.UI.Pages.HR.Collaborators @bind-TempJob="tempJob"/>
                 </div>
-                <input type="button" value="Save" class="createjob-bottom-main-button" />
+                <input type="button" value="Save" class="createjob-bottom-main-button"/>
             </div>
             <div class="col-1 createjob-nav-buttons" @onclick="ShowApplicationForm">
                 <i class="fas fa-angle-right"></i>
@@ -237,25 +237,26 @@
             </div>
             <div class="col-10 createjob-bottom-main-container">
                 <div class="createjob-bottom-main">
-                    <XebecPortal.UI.Pages.HR.ApplicationFormControlTool @bind-TempJob="tempJob" />
+                    <XebecPortal.UI.Pages.HR.ApplicationFormControlTool @bind-TempJob="tempJob"/>
                 </div>
-                
+
             </div>
             <div class="col-1 createjob-nav-buttons" @onclick="ShowPhases">
                 <i class="fas fa-angle-right"></i>
             </div>
         </div>
-        <div class="row create-job-bottom-container" hidden="@PhasesIsHidden">
+        <div class="row createjob-bottom-container" hidden="@PhasesIsHidden">
             <div class="col-1 createjob-nav-buttons" @onclick="ShowApplicationForm">
                 <i class="fas fa-angle-left"></i>
             </div>
             <div class="col-10 createjob-bottom-main-container">
-                <div class="create-job-bottom-main">
-                    <XebecPortal.UI.Pages.HR.PhaseControlTool @bind-TempJob="tempJob" />
+                <div class="createjob-bottom-main">
+                    <XebecPortal.UI.Pages.HR.PhaseControlTool @bind-TempJob="tempJob"/>
                 </div>
-
             </div>
-            <div class="col-1 createjob-nav-buttons"></div>
+            <div class="col-1 createjob-nav-buttons" @onclick="ShowPhases">
+                <i class="fas fa-angle-right"></i>
+            </div>
         </div>
     </div>
 </div>
@@ -264,7 +265,7 @@
 
     private bool CreateJobIsHidden, CollaboratorsIsHidden, ApplicationFormIsHidden, PhasesIsHidden;
 
-    CreateJobPost tempJob = new CreateJobPost { Collaborators = new List<AppUser>(), JobPlatforms = new List<JobPlatform>(),formQuestions = new List<FormQuestion>(), JobPhases = new List<ApplicationPhase>(), JobType = new JobType()};
+    CreateJobPost tempJob = new CreateJobPost {Collaborators = new List<AppUser>(), JobPlatforms = new List<JobPlatform>(), formQuestions = new List<FormQuestion>(), JobPhases = new List<ApplicationPhase>(), JobType = new JobType()};
 
     protected override async Task OnInitializedAsync()
     {
@@ -298,10 +299,13 @@
 
     private enum CreateJobSection
     {
-        CreateJob, SelectCollaborators, CreateApplicationForm, SelectPhase
+        CreateJob,
+        SelectCollaborators,
+        CreateApplicationForm,
+        SelectPhase
     }
 
-    private string GetActiveColor(CreateJobSection section )
+    private string GetActiveColor(CreateJobSection section)
     {
         switch (section)
         {
