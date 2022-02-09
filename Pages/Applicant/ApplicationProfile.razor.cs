@@ -1,4 +1,6 @@
-﻿using Microsoft.JSInterop;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.JSInterop;
+using MudBlazor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +22,8 @@ namespace XebecPortal.UI.Pages.Applicant
         private AdditionalInformation additionalInformation = new() { AppUserId = 1, Disability = "No" };
         private PersonalInformation personalInformation = new() { AppUserId = 1 };
         private IJSObjectReference _jsModule;
+        string _dragEnterStyle;
+        IList<string> fileNames = new List<string>();
 
         protected override async Task OnInitializedAsync()
         {
@@ -146,5 +150,19 @@ namespace XebecPortal.UI.Pages.Applicant
 
 
         }
+
+        void OnInputFileChanged(InputFileChangeEventArgs e)
+        {
+            var files = e.GetMultipleFiles();
+            fileNames = files.Select(f => f.Name).ToList();
+        }
+
+        void Upload()
+        {
+            //Upload the files here
+            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+            Snackbar.Add("TODO: Upload your files!", Severity.Normal);
+        }
+
     }
 }
