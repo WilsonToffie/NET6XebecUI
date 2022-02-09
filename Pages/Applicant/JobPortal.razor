@@ -214,7 +214,10 @@
                                     </div>
                                     <div class="col-6 justify-content-start">
                                         
-                                        <p class="big-card-type">@displayJobDetail.JobTypes.FirstOrDefault()</p>
+                                        @if(displayJobDetail.JobTypes != null && displayJobDetail.JobTypes.Count > 0){
+                                         <p class="big-card-type">@displayJobDetail.JobTypes.FirstOrDefault()</p>
+                                        }
+                                       
                                     </div>
                                     <div class="col-6 d-flex justify-content-end">
                                         <p class="big-card-type"> @displayJobDetail.Department</p>
