@@ -31,11 +31,13 @@
         height: 90vh;
         width: 100%;
     }
-    .main-heading-div{
+
+    .main-heading-div {
         height: 5vh;
         width: 100%;
         display: flex;
     }
+
     .main-heading-icon {
         width: 5%;
         font-size: 1.5em;
@@ -44,10 +46,12 @@
         padding-left: 2%;
         padding-top: 1vh;
     }
+
     .main-heading-text-div {
         width: 93%;
         margin-top: -1vh;
     }
+
     .main-heading-text {
         font-size: 1.2em;
         font-weight: 800;
@@ -57,11 +61,13 @@
         text-align: left;
         text-transform: uppercase;
     }
-    .main-component{
+
+    .main-component {
         height: 80vh;
         margin-bottom: 5vh;
         width: 100%;
     }
+
     .mainlayout-heading {
         width: 70%;
         height: 100%;
@@ -238,7 +244,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showApplicantNav" aria-labelledby="offcanvasRightLabel">
         <div class="offcanvas-header">
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -371,6 +377,10 @@
     </div>
 </div>
 
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
 @code{
     private MainModel mainmodel = new MainModel();
     private List<UserModel> users = new List<UserModel>();
@@ -415,7 +425,7 @@
                 hrJobPortalIsHidden = true;
 
             }
-            
+
             else if (thisUser.Role.Equals("hr"))
             {
                 HRIsHidden = false;
@@ -460,7 +470,7 @@
         hrDataAnalyticsToolIsHidden = true;
         hrJobPortalIsHidden = true;
     }
-    
+
     private void showHRDataAnalyticsTool()
     {
         hrApplicantPortalIsHidden = true;

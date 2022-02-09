@@ -2,6 +2,7 @@
 
     var myform = $("#personal-information-form")[0];
     var proceed = false;
+
     if (!myform.checkValidity()) {
         if (myform.reportValidity) {
             $('#online-tag').removeClass('active');

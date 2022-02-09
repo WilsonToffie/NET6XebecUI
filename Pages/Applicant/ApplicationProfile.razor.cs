@@ -20,6 +20,12 @@ namespace XebecPortal.UI.Pages.Applicant
         private AdditionalInformation additionalInformation = new() { AppUserId = 1, Disability = "No" };
         private PersonalInformation personalInformation = new() { AppUserId = 1 };
 
+        protected override Task OnAfterRenderAsync(bool firstRender)
+        {
+            jsRuntime.InvokeVoidAsync("Dropzone");
+            return base.OnAfterRenderAsync(firstRender);
+        }
+
         private void AddWorkHistory(WorkHistory workHistoryValues)
         {
             workHistoryList.Add(new()
@@ -47,16 +53,7 @@ namespace XebecPortal.UI.Pages.Applicant
         private void UpdateWorkHistory(WorkHistory workHistoryValues)
         {
             int index = workHistoryList.FindIndex(x => x.Id == workHistoryValues.Id);
-
-            workHistoryList[index] = new()
-            {
-                CompanyName = workHistoryValues.CompanyName,
-                JobTitle = workHistoryValues.JobTitle,
-                StartDate = workHistoryValues.StartDate,
-                EndDate = workHistoryValues.EndDate,
-                Description = workHistoryValues.Description
-            };
-
+            workHistoryList[index] = workHistoryValues;
             workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             workHistUpdate = false;
         }
@@ -93,15 +90,7 @@ namespace XebecPortal.UI.Pages.Applicant
         private void UpdateEducation(Education educationValues)
         {
             int index = educationList.FindIndex(x => x.Id == educationValues.Id);
-
-            educationList[index] = new()
-            {
-                Insitution = educationValues.Insitution,
-                Qualification = educationValues.Qualification,
-                StartDate = educationValues.StartDate,
-                EndDate = educationValues.EndDate,
-            };
-
+            educationList[index] = educationValues;
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             eduUpdate = false;
         }
@@ -128,12 +117,22 @@ namespace XebecPortal.UI.Pages.Applicant
         {
             if (await jsRuntime.InvokeAsync<bool>("ProfileApplication"))
             {
+                foreach (var item in workHistoryList)
+                    item.Id = 0;
+
+                foreach (var item in educationList)
+                    item.Id = 0;
+
                 await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/PersonalInformation", personalInformation);
                 await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/AdditionalInformation", additionalInformation);
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/WorkHistory", workHistoryList);
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Education", educationList);
+                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/WorkHistory/List", workHistoryList);
+                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Education/List", educationList);
                 await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink", profilePortfolio);
+
+                await jsRuntime.InvokeVoidAsync("alert", "You Data Has Been Captured");
             }
+
+
         }
     }
 }
