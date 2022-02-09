@@ -176,9 +176,9 @@
                                         {
                                             <label>Location</label>
                                             <select class="form-select" @bind="displayJobDetail.Location">
-                                                @foreach (var item in mockLocations.Distinct())
+                                                @foreach (var item in Locations)
                                                 {
-                                                    <option>@item.location</option>
+                                                    <option>@item</option>
                                                 }
                                             </select>
                                         }
@@ -209,9 +209,9 @@
                                         {
                                             <label>Department</label>
                                             <select class="form-select" @bind="displayJobDetail.Department">
-                                                @foreach (var item in mockDepartments.Distinct())
+                                                @foreach (var item in Departments)
                                                 {
-                                                    <option>@item.department</option>
+                                                    <option>@item</option>
                                                 }
                                             </select>
                                         }
@@ -338,11 +338,6 @@
                         </nav>
                     </div>
                 </div>
-                <div class="col-8">
-                    <div class="col-12 d-flex justify-content-center">
-                        <button class="btn formButton" @onclick="GoToCreateAJob">Create Job</button>
-                    </div>
-                </div>
             </div>
         }
         else
@@ -354,29 +349,6 @@
             <h1 class="text-center align-middle">No Job Are Available</h1>
         }
     </div>
-</div>
-
-<div class="my-container" hidden="@createJobIsHidden">
-    <div class="container-main">
-        <XebecPortal.UI.Pages.HR.CreateJob />
-    </div>
-    <div class="container-button">
-        <input type="button" class="mini-button" @onclick="GoToApplicationFormControl" value="Application Form Control" />
-    </div>
-</div>
-
-<div class="my-container" hidden="@applicationFormControlIsHidden">
-    <div class="container-main">
-        <XebecPortal.UI.Pages.HR.ApplicationFormControlTool />
-    </div>
-    <div class="container-button">
-
-        <input type="button" class="mini-button" @onclick="GoToPhaseControl" value="Phase Control Tool" />
-    </div>
-</div>
-
-<div class="my-container" hidden="@phaseControlIsHidden">
-    <XebecPortal.UI.Pages.HR.PhaseControlTool />
 </div>
 
 @code {
@@ -399,14 +371,6 @@
         applicationFormControlIsHidden = true;
         phaseControlIsHidden = false;
         createJobIsHidden = true;
-
-    }
-    private void GoToCreateAJob()
-    {
-        JobPortalIsHidden = true;
-        applicationFormControlIsHidden = true;
-        phaseControlIsHidden = true;
-        createJobIsHidden = false;
 
     }
 

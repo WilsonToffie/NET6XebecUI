@@ -17,7 +17,6 @@
 
     .service-div {
         height: 85vh;
-        width: 100%;
     }
 
     .services-container {
@@ -44,7 +43,6 @@
 
         .service-left-arrow :hover {
             color: rgba(0, 188, 174,1);
-            z-index: 1;
             line-height: 50vh;
             text-align: center;
             font-size: 2em;
@@ -52,7 +50,6 @@
 
     .service-right-arrow {
         color: rgba(0, 188, 174,0.5);
-        z-index: 1;
         line-height: 50vh;
         text-align: center;
         font-size: 4em;
@@ -60,7 +57,6 @@
 
         .service-right-arrow :hover {
             color: rgba(0, 188, 174,1);
-            z-index: 1;
             line-height: 50vh;
             text-align: center;
             font-size: 2em;
@@ -331,7 +327,7 @@
         </div>
     </div>
 
-    <div class="service-div" hidden="@hrServicesIsHidden">
+    <div class="row service-div" hidden="@hrServicesIsHidden">
         <div class="services-floating row">
             <div class="col-sm-1 service-left-arrow" @onclick="ToApplicant">
                 <i class="fas fa-angle-left"></i>
@@ -426,26 +422,21 @@
             <div class="col-sm-1"></div>
         </div>
     </div>
-    <div class="service-div" hidden="@jobPortalIsHidden">
-        <div class="services-floating row">
-            <div class="col-sm-1 service-left-arrow" @onclick="ToHR">
-                <i class="fas fa-angle-left"></i>
-            </div>
-            <div class="col-sm-10"></div>
-            <div class="col-sm-1 service-right-arrow" @onclick="ToApplicant">
-                <i class="fas fa-angle-right"></i>
-            </div>
+    <div class="row service-div" hidden="@jobPortalIsHidden">
+        <div class="col-1 service-left-arrow" @onclick="ToHR">
+            <i class="fas fa-angle-left"></i>
         </div>
-        <div class="row">
-            <div class="col-sm-12 services-label">
+        <div class="col-10 services-container">
+            <div class="services-label">
                 <h2 class="services-label-h2">Search for Jobs</h2>
             </div>
-        </div>
-        <div class="services-container">
             <div class="home-job-portal">
                 <XebecPortal.UI.Pages.Applicant.JobPortal />
             </div>
-        </div>
+        </div> 
+        <div class="col-1 service-right-arrow" @onclick="ToApplicant">
+            <i class="fas fa-angle-right"></i>
+        </div>      
     </div>
 </div>
 

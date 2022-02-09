@@ -1,0 +1,169 @@
+﻿@inject HttpClient HttpClient
+@inject IJSRuntime jsRuntime
+@inject NavigationManager nav
+
+<style>
+    .collaborators-container {
+        height: 55vh;
+        width: 50%;
+        margin-left: 25%;
+        margin-right: 25%;
+        background-color: rgba(255,255,255,1);
+        border: solid white 0.1em;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
+        display: flex;
+    }
+
+    .collaborators-left {
+        height: 55vh;
+        width: 50%;
+    }
+
+    .collaborators-right {
+        height: 55vh;
+        width: 50%;
+        border-left: black 0.1em solid;
+    }
+
+    .collaborators-heading {
+        height: 5vh;
+        margin-top: 2.5vh;
+        margin-bottom: 2.5vh;
+        width: 100%;
+        text-align: center;
+    }
+
+    .collaborators-heading-text {
+        font-family: opensans-condensed-bold;
+        font-weight: 800;
+        font-size: 1.5em;
+        color: #00bcae;
+    }
+
+    .collaborators-left-main {
+        height: 40vh;
+        overflow-y: auto;
+        width: 100%;
+        margin-bottom: 5vh;
+    }
+
+        .collaborators-left-main::-webkit-scrollbar {
+            background-color: transparent;
+            border-radius: 1em;
+            width: 1vw;
+        }
+
+        .collaborators-left-main::-webkit-scrollbar-thumb {
+            background-color: white;
+            border-radius: 1em;
+        }
+
+    .collaborators-left-table {
+        height: 40vh;
+        width: 80%;
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+
+    .collaborators-left-row {
+        box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.4), 0 2px 10px 0 rgba(0,0,0,0.4);
+        height: 8vh;
+        color: black;
+        font-family: opensans-condensed-bold;
+        font-weight: 900;
+        font-size: 1em;
+        width: 100%;
+        margin-bottom: 5px;
+        background-color: rgba(255,255,255,1);
+    }
+
+        .collaborators-left-row:hover {
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,1), 0 2px 10px 0 rgba(0,0,0,1);
+            height: 8vh;
+            color: white;
+            font-family: opensans-condensed-bold;
+            font-weight: 900;
+            font-size: 1em;
+            margin-bottom: 5px;
+            background-color: black;
+        }
+
+    .collaborators-left-td {
+        padding-left: 10px;
+    }
+</style>
+<!--Tables of developers/HR-->
+<div class="collaborators-container">
+    <div class="collaborators-left">
+        <div class="collaborators-heading">
+            <h2 class="collaborators-heading-text">Select Collaborators</h2>
+        </div>
+        <div class="appform-left-main">
+            <table class="collaborators-left-table">
+
+                @foreach (var collaborator in collaborators)
+                {
+                    <tr class="collaborators-left-row">
+                        <td class="collaborators-left-td" @onclick='() =>AddCollaborator(collaborator)'>@collaborator.name @collaborator.surname</td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+    <div class="collaborators-right">
+        <div class="collaborators-heading">
+            <h2 class="collaborators-heading-text">Chosen Collaborators</h2>
+        </div>
+        <div class="collaborators-left-main">
+            <table class="collaborators-left-table">
+                @foreach (var collaborators in collaboratorsAdded)
+                {
+                    <tr class="collaborators-left-row">
+                        <td class="collaborators-left-td">@collaborators.name @collaborators.surname</td>
+                        <td class="collaborators-left-td" @onclick='() => RemoveCollaborator(collaborators)'>&times;</td>
+                    </tr>
+
+                }
+            </table>
+        </div>
+
+    </div>
+</div>
+<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save"/>
+
+@code {
+    [Parameter]
+    public CreateJobPost TempJob { get; set; }
+    [Parameter]
+    public EventCallback<CreateJobPost> TempJobChanged { get; set; }
+
+
+    private List<AppUser> collaborators = new List<AppUser>();
+    private List<AppUser> collaboratorsAdded = new List<AppUser>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        collaborators = await HttpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
+    }
+
+    private void AddCollaborator(AppUser collaborator)
+    {
+        if (!collaboratorsAdded.Contains(collaborator))
+        {
+            collaboratorsAdded.Add(collaborator);
+        }
+    }
+
+    private void RemoveCollaborator(AppUser collaborator)
+    {
+        collaboratorsAdded.Remove(collaborator);
+    }
+
+    private async Task Save()
+    {
+        TempJob.Collaborators = collaboratorsAdded;
+        Console.WriteLine("Saving Collaborator");
+        await TempJobChanged.InvokeAsync(TempJob);
+    }
+}

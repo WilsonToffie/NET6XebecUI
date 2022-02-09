@@ -4,22 +4,6 @@
 @inject NavigationManager NavigationManager
 
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-    }
-
-    .container-phasecontrol {
-        display: flex;
-        width: 100%;
-        height: 60vh;
-    }
-
-    .center {
-        align-items: center;
-        justify-content: center;
-        display: flex;
-    }
 
     .select-phase {
         justify-content: center;
@@ -154,72 +138,68 @@
 </style>
 
 
-<div class="container-phasecontrol">
-    <div class="select-phase">
-
-        <div class="select-phase-header">Phase Selection</div>
-
-        <div class="select-phase-content row overflow-auto">
-
-            <table style="background-color:transparent">
-
-                <colgroup>
-                    <col style="width: 90%;">
-                    <col style="width: 10%;">
-                </colgroup>
-
-                <tbody>
-
-                    @foreach (var phase in phases)
-                    {
-                        <tr>
-                            <td style="font-weight: bold; font-size: 15px" @onclick="() => AddPhase(phase)">@phase.description</td>
-                            <td class="close-phase" @onclick="() => DeletePhase(phase)">&times;</td>
-                        </tr>
-                    }
-
-                </tbody>
-
+<div class="collaborators-container">
+    <div class="collaborators-left">
+        <div class="collaborators-heading">
+            <h2 class="collaborators-heading-text">Select Phases</h2>
+        </div>
+        <div class="appform-left-main">
+            <table class="collaborators-left-table">
+                @if (phases == null)
+                {
+                    <div>Loading...</div>
+                }
+                else
+                {
+                    <tbody>
+                        @if (phases != null)
+                        {
+                            @foreach (var phase in phases)
+                            {
+                                <tr class="collaborators-left-row" @onclick="() => AddPhase(phase)">
+                                    <td class="collaborators-left-td">@phase.description</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                }
             </table>
         </div>
-        <div class="button">
-            <button @onclick="ToggleModalSubmitPhase" class="button-content">Add Phase</button>
+        <div class="appform-left-buttons">
+            <div class="question-button">
+                <button class="btn appform-main-button" @onclick="ToggleModalDeletePhase">Delete phase</button>
+                <button class="btn appform-main-button" @onclick="ToggleModalSubmitPhase">Add phase</button>
+            </div>
         </div>
     </div>
-
-
-
-    <div class="phase-order">
-
-        <div class="select-phase-header">Phase Form</div>
-
-        <div class="phase-order-content row overflow-auto">
-            <table style=" background-color: transparent;">
-
-                <colgroup>
-                    <col style="width: 20%">
-                    <col style="width: 70%">
-                    <col style="width: 10%">
-                </colgroup>
-
-                <tbody style=" align-items: center">
-
-                    @foreach (var phase in phasesAdded)
-                    {
-                        <tr>
-                            <td class="text-left" style="font-weight: bold; font-size: 15px" colspan="2">@phase.description</td>
-                            <td class="close-phase" @onclick="() => DeletePhaseOrderPhase(phase)">&times;</td>
-                        </tr>
-
-                    }
-
-
-                </tbody>
-
-            </table>
+    <div class="collaborators-right">
+        <div class="collaborators-heading">
+            <h2 class="collaborators-heading-text">Chosen Phases</h2>
         </div>
-        <div class="button">
-            <button class="button-content" @onclick="AssignPhases">Assign Phases</button>
+        <div class="appform-left-main">
+            <table class="collaborators-left-table">
+                @if (phases == null)
+                {
+                    <div>Loading...</div>
+                }
+                else
+                {
+                    <tbody>
+                        @if (phases != null)
+                        {
+                            @foreach (var phase in phasesAdded)
+                            {
+
+                                <tr class="collaborators-left-row">
+                                    <td class="collaborators-left-td">@phase.description</td>
+                                    <td class="collaborators-left-td" @onclick="() => DeletePhaseOrderPhase(phase)">&times;</td>
+                                </tr>
+
+                            }
+                        }
+                    </tbody>
+                }
+            </table>
         </div>
     </div>
 </div>
@@ -238,38 +218,61 @@
     </div>
 }
 
+@if (showModalDeletePhase)
+{
+    <div class="modalbox">
+        <div class="modal-content" style="height: 250px">
+            <span class="close" @onclick="ToggleModalDeletePhase">&times;</span>
+            <p>Delete phase:</p>
+            <div style="overflow: auto">
+                <table>
+                    @foreach (var phase in phases)
+                    {
+                        <tr class="collaborators-left-row">
+                            <td class="collaborators-left-td">@phase.description</td>
+                            <td class="collaborators-left-td" @onclick="() => DeletePhase(phase)">&times;</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    </div>
+}
+<input type="button" value="Submit" class="createjob-bottom-main-button" @onclick="Submit" />
 
 @code
 {
     [Parameter]
-    public CreateJobPost tempJob { get; set; }
+    public CreateJobPost TempJob { get; set; }
+    [Parameter]
+    public EventCallback<CreateJobPost> TempJobChanged { get; set; }
 
     private IList<ApplicationPhase> phases = new List<ApplicationPhase>();
     private List<ApplicationPhase> phasesAdded = new List<ApplicationPhase>();
     private IList<Job> jobs = new List<Job>();
     ApplicationPhase phaseValue = new ApplicationPhase();
 
-    private string developerAssigned = "";
-
-    private int CurrentJobId;
 
     private MainModel mainmodel { get; set; } = new MainModel();
 
     private bool showModalSubmitPhase = false;
+    private bool showModalDeletePhase = false;
 
     protected override async Task OnInitializedAsync()
     {
         phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
 
         jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
-        Job tempJob = jobs.LastOrDefault<Job>();
-
-        CurrentJobId = tempJob.Id;
     }
 
     private void ToggleModalSubmitPhase()
     {
         showModalSubmitPhase = !showModalSubmitPhase;
+    }
+
+    private void ToggleModalDeletePhase()
+    {
+        showModalDeletePhase = !showModalDeletePhase;
     }
 
     private async Task DeletePhase(ApplicationPhase phase)
@@ -292,7 +295,7 @@
 
     private async Task SubmitPhases()
     {
-        @foreach (var phase in phasesAdded)
+        foreach (var phase in phasesAdded)
         {
             await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobapplicationphase", phaseValue);
         }
@@ -312,21 +315,108 @@
         phasesAdded.Remove(phase);
     }
 
-    public async Task AssignPhases()
+    private async Task Submit()
     {
-        @*@foreach (var phase in phasesAdded)
-            {
-                JobApplicationPhase JobApplicationPhase_ = new JobApplicationPhase();
-                JobApplicationPhase_.JobId = CurrentJobId;
-                JobApplicationPhase_.ApplicationPhaseId = phase.id;
+        TempJob.JobPhases = phasesAdded;
+        await TempJobChanged.InvokeAsync(TempJob);
 
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobapplicationphase", JobApplicationPhase_);
-            }*@
+        //Job page post
+        Job job = new Job();
+        job.MinimumExperience = null;
 
-    tempJob.JobPhases = phasesAdded;
+        job.Title = TempJob.Title;
+        job.Description = TempJob.Description;
+        job.Company = TempJob.Company;
+        job.Location = TempJob.Location;
+        job.Department = TempJob.Department;
+        job.DueDate = TempJob.DueDate;
+        job.CreationDate = TempJob.CreationDate;
 
-    await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/job", tempJob);
+        Console.WriteLine(job.Title);
+        Console.WriteLine(job.Description);
+        Console.WriteLine(job.Company);
+        Console.WriteLine(job.Location);
+        Console.WriteLine(job.Department);
+        Console.WriteLine(job.DueDate);
+        Console.WriteLine(job.CreationDate);
 
-    //NavigationManager.NavigateTo("/");
-}
+        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/job", job);
+        job = null;
+
+
+
+        job = await GetJob();
+
+        SubmitRest(job);
+
+
+    }
+
+    private async Task<Job> GetJob()
+    {
+        List<Job> ListOfJobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
+        return ListOfJobs.LastOrDefault(x => x.Title == TempJob.Title);
+    }
+
+    private async Task SubmitRest(Job job)
+    {
+        //Add Job type to JobTypeHelpers
+        JobTypeHelper jobTypeHelper = new JobTypeHelper();
+        jobTypeHelper.JobId = job.Id;
+        jobTypeHelper.JobTypeId = TempJob.JobType.Id;
+
+        Console.WriteLine("JobType that should post.");
+        Console.WriteLine("JobTypeHelper ID: " + job.Id);
+        Console.WriteLine("JobTypeHelper JobTypeId: " + TempJob.JobType.Id);
+
+        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobtypehelper", jobTypeHelper);
+
+
+        //Add selected platforms to JobPlatformHelpers
+        foreach (var platform in TempJob.JobPlatforms)
+        {
+            JobPlatformHelper jobPlatformHelper = new JobPlatformHelper();
+            jobPlatformHelper.JobId = job.Id;
+            jobPlatformHelper.JobPlatformId = platform.id;
+
+            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobplatformhelper", jobPlatformHelper);
+        }
+
+
+        //Add collaborators to CollaboratorsAssigned
+        foreach (var Collaborator in TempJob.Collaborators)
+        {
+            Collaborator collaborator = new Collaborator();
+            collaborator.Name = Collaborator.name;
+            collaborator.JobId = job.Id;
+            collaborator.AppUserId = Collaborator.id;
+
+            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", collaborator);
+        }
+
+
+        //Add form questions
+        foreach (var formQuestion in TempJob.formQuestions)
+        {
+            formQuestion.jobId = job.Id;
+        }
+        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Questionnaire/lst", TempJob.formQuestions);
+
+
+        //Add Application Phases
+        foreach (var phase in phasesAdded)
+        {
+            Console.WriteLine("Phases that should post.");
+            JobApplicationPhase JobApplicationPhase_ = new JobApplicationPhase();
+            JobApplicationPhase_.JobId = job.Id;
+            JobApplicationPhase_.ApplicationPhaseId = phase.id;
+
+            Console.WriteLine(JobApplicationPhase_.Id);
+            Console.WriteLine(JobApplicationPhase_.JobId);
+            Console.WriteLine(JobApplicationPhase_.ApplicationPhaseId);
+            await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/jobapplicationphase/{job.Id}", JobApplicationPhase_);
+        }
+
+        await TempJobChanged.InvokeAsync(TempJob);
+    }
 }
