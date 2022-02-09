@@ -9,19 +9,22 @@
         margin: auto;
         height: 100%;
         margin-top: 5vh;
-        overflow:hidden;
+        overflow: hidden;
     }
-   
-    .createjob-top-top{
+
+    .createjob-top-top {
         height: 5vh;
     }
-    .createjob-top-bottom{
+
+    .createjob-top-bottom {
         height: 3vh;
     }
-    .createjob-bottom{
+
+    .createjob-bottom {
         width: 100%;
         height: 65vh;
     }
+
     .createjob-createjob-top-mini {
         height: 5vh;
         margin-top: 0;
@@ -29,6 +32,7 @@
         width: 100%;
         text-align: center;
     }
+
     .collaborators-createjob-top-mini {
         height: 5vh;
         margin-top: 0;
@@ -37,6 +41,7 @@
         color: #666666;
         text-align: center;
     }
+
     .applicationform-createjob-top-mini {
         height: 5vh;
         margin-top: 0;
@@ -46,6 +51,7 @@
         color: #666666;
         text-align: center;
     }
+
     .phases-createjob-top-mini {
         height: 5vh;
         margin-top: 0;
@@ -54,17 +60,18 @@
         color: #666666;
         text-align: center;
     }
-   
+
     .createjob-top-number-div {
         padding-top: 1vh;
         height: 5vh;
-        
         padding-bottom: 1vh;
     }
+
     .createjob-top-text-div {
         height: 3vh;
         width: 100%;
     }
+
     .createjob-top-number {
         font-weight: 900;
         font-size: 1em;
@@ -75,6 +82,7 @@
         color: #00bcae;
         font-size: 2em;
     }
+
     .createjob-top-text {
         font-family: opensans-condensed-bold;
         font-weight: 800;
@@ -85,12 +93,14 @@
         padding: 0;
         color: #d35bc9;
     }
+
     .createjob-arrow {
         background-color: transparent;
         height: 5px;
         border-radius: 2em;
         margin-top: 3vh;
     }
+
     .createjob-bottom-container {
         height: 60vh;
         margin-top: 5vh;
@@ -99,11 +109,13 @@
     .createjob-bottom-main-container {
         height: 60vh;
     }
+
     .createjob-bottom-main {
         height: 55vh;
         width: 100%;
     }
-    .createjob-bottom-main-button{
+
+    .createjob-bottom-main-button {
         height: 5vh;
         width: 10%;
         margin-left: 45%;
@@ -117,41 +129,44 @@
         font-family: opensans-bold;
         font-weight: 700;
     }
-    .createjob-bottom-main-button:hover {
-        height: 5vh;
-        width: 10%;
-        margin-left: 45%;
-        margin-right: 45%;
-        margin-top: 2vh;
-        background-color: #d35bc9;
-        border: none;
-        border-radius: 2em;
-        color: white;
-        text-align: center;
-        font-family: opensans-bold;
-        font-weight: 700;
-    }
-   .createjob-nav-buttons{
-       height: 10vh;
-       margin-top: 15vh;
-       text-align: center;
-       font-size: 50px;
-       color: #00bcae;
-   }
-    .createjob-nav-buttons:hover {
+
+        .createjob-bottom-main-button:hover {
+            height: 5vh;
+            width: 10%;
+            margin-left: 45%;
+            margin-right: 45%;
+            margin-top: 2vh;
+            background-color: #d35bc9;
+            border: none;
+            border-radius: 2em;
+            color: white;
+            text-align: center;
+            font-family: opensans-bold;
+            font-weight: 700;
+        }
+
+    .createjob-nav-buttons {
         height: 10vh;
         margin-top: 15vh;
         text-align: center;
         font-size: 50px;
-        color: #d35bc9;
+        color: #00bcae;
     }
+
+        .createjob-nav-buttons:hover {
+            height: 10vh;
+            margin-top: 15vh;
+            text-align: center;
+            font-size: 50px;
+            color: #d35bc9;
+        }
+
     .select-collaborators {
         text-align: center;
         width: 45%;
         margin-left: 5%;
         height: 55vh;
     }
-   
 </style>
 
 <!--Body Page-->
@@ -174,7 +189,7 @@
             </div>
         </div>
         <div class="col-2 createjob-arrow"></div>
-        <div class="col-1" >
+        <div class="col-1">
             <div class="applicationform-createjob-top-mini">
                 <div class="createjob-top-number-div">
                     <i class="fab fa-wpforms createjob-top-number"></i>
@@ -221,29 +236,59 @@
             </div>
         </div>
     </div>
+    <div>
+        @*<p>@tempJob.Title</p>
+        <p>@tempJob.JobType.Type</p>
+        <p>@tempJob.JobType.Id</p>
+        <p>@tempJob.Location</p>
+        <p>@tempJob.Department</p>
+        <ul>
+            @foreach (var platform in tempJob.JobPlatforms)
+            {
+                <li>@platform.platformName</li>
+            }
+        </ul>
+        <ul>
+            @foreach (var collaborator in tempJob.Collaborators)
+            {
+                <li>@collaborator.name</li>
+            }
+        </ul>
+        <ul>
+            @foreach (var question in tempJob.formQuestions)
+            {
+                <li>@question.question</li>
+            }
+        </ul>
+        <ul>
+            @foreach (var phase in tempJob.JobPhases)
+            {
+                <li>@phase.description</li>
+            }
+        </ul>*@
+    </div>
+
     <div class="createjob-bottom">
 
         <div class="row createjob-bottom-container" hidden="@CreateJobIsHidden">
             <div class="col-1 createjob-nav-buttons"></div>
             <div class="col-10 createjob-bottom-main-container">
                 <div class="createjob-bottom-main">
-                    <XebecPortal.UI.Pages.HR.CreateAJobForm />
+                    <XebecPortal.UI.Pages.HR.CreateAJobForm @bind-TempJob="tempJob" />
                 </div>
-                <input type="button" value="Save" class="createjob-bottom-main-button" />
             </div>
             <div class="col-1 createjob-nav-buttons" @onclick="ShowCollaborators">
-                <i class="fas fa-angle-right" ></i>
+                <i class="fas fa-angle-right"></i>
             </div>
         </div>
         <div class="row createjob-bottom-container" hidden="@CollaboratorsIsHidden">
             <div class="col-1 createjob-nav-buttons" @onclick="ShowCreateJob">
-                <i class="fas fa-angle-left" ></i>
+                <i class="fas fa-angle-left"></i>
             </div>
             <div class="col-10 createjob-bottom-main-container">
                 <div class="createjob-bottom-main">
-                    <XebecPortal.UI.Pages.HR.Collaborators />
+                    <XebecPortal.UI.Pages.HR.Collaborators @bind-TempJob="tempJob" />
                 </div>
-                <input type="button" value="Save" class="createjob-bottom-main-button" />
             </div>
             <div class="col-1 createjob-nav-buttons" @onclick="ShowApplicationForm">
                 <i class="fas fa-angle-right"></i>
@@ -251,29 +296,29 @@
         </div>
         <div class="row createjob-bottom-container" hidden="@ApplicationFormIsHidden">
             <div class="col-1 createjob-nav-buttons" @onclick="ShowCollaborators">
-                <i class="fas fa-angle-left" ></i>
+                <i class="fas fa-angle-left"></i>
             </div>
             <div class="col-10 createjob-bottom-main-container">
                 <div class="createjob-bottom-main">
-                    <XebecPortal.UI.Pages.HR.ApplicationFormControlTool />
+                    <XebecPortal.UI.Pages.HR.ApplicationFormControlTool @bind-TempJob="tempJob" />
                 </div>
-                <input type="button" value="Save" class="createjob-bottom-main-button" />
+                
             </div>
-            <div class="col-1 createjob-nav-buttons"  @onclick="ShowPhases">
+            <div class="col-1 createjob-nav-buttons" @onclick="ShowPhases">
                 <i class="fas fa-angle-right"></i>
             </div>
         </div>
         <div class="row create-job-bottom-container" hidden="@PhasesIsHidden">
             <div class="col-1 createjob-nav-buttons" @onclick="ShowApplicationForm">
-                <i class="fas fa-angle-left" ></i>
+                <i class="fas fa-angle-left"></i>
             </div>
             <div class="col-10 createjob-bottom-main-container">
                 <div class="create-job-bottom-main">
-                    <XebecPortal.UI.Pages.HR.PhaseControlTool />
+                    <XebecPortal.UI.Pages.HR.PhaseControlTool @bind-TempJob="tempJob" />
                 </div>
-                <input type="button" value="Submit" class="createjob-bottom-main-button" />
+
             </div>
-            <div class="col-1 createjob-nav-buttons"></div> 
+            <div class="col-1 createjob-nav-buttons"></div>
         </div>
     </div>
 </div>
@@ -281,6 +326,8 @@
 @code {
 
     private bool CreateJobIsHidden, CollaboratorsIsHidden, ApplicationFormIsHidden, PhasesIsHidden;
+
+    CreateJobPost tempJob = new CreateJobPost { Collaborators = new List<AppUser>(), JobPlatforms = new List<JobPlatform>(),formQuestions = new List<FormQuestion>(), JobPhases = new List<ApplicationPhase>(), JobType = new JobType()};
 
     protected override async Task OnInitializedAsync()
     {
@@ -311,5 +358,4 @@
         PhasesIsHidden = false;
         CreateJobIsHidden = ApplicationFormIsHidden = CollaboratorsIsHidden = true;
     }
-
 }

@@ -110,45 +110,46 @@
     <form class="createjob-form">
         <div class="form-group createjob-form-group">
             <div class="createjob-form-individual">
-                <input type="text" placeholder="Job Name" @bind="tempJob.Title" />
+                <input type="text" placeholder="Job Name" @bind="TempJob.Title" />
             </div>
         </div>
         <div class="form-group createjob-form-group">
             <div class="createjob-form-individual">
-                <input type="text" placeholder="Company Name" @bind="tempJob.Company" />
+                <input type="text" placeholder="Company Name" @bind="TempJob.Company" />
             </div>
             <div class="createjob-form-individual">
                 <select class="createjob-select" @onchange="OnLocationChanged">
                     <option selected>Select Location</option>
-                    @foreach (var item in mockLocations)
+                    @foreach (var location in Locations)
                     {
-                        <option>@item.location</option>
+                        <option>@location</option>
                     }
                 </select>
             </div>
         </div>
         <div class="form-group createjob-form-group">
             <div class="createjob-form-individual">
-                <select class="createjob-select" @onchange="OnJobTypeChanged">
+                <select class="createjob-select" @bind="@Type">
                     <option selected>Select Job Type</option>
                     @foreach (var item in jobTypes)
                     {
-                        <option>@item.Type</option>
+                        <option value="@item.Type">@item.Type</option>
                     }
                 </select>
+                
             </div>
             <div class="createjob-form-individual">
                 <select class="createjob-select" @onchange="OnDepartmentChanged">
                     <option selected>Select Department</option>
-                    @foreach (var item in mockDepartments)
+                    @foreach (var department in Departments)
                     {
-                        <option>@item.department</option>
+                        <option>@department</option>
                     }
                 </select>
             </div>
         </div>
         <div class="form-group createjob-textarea">
-            <textarea class="form-control" style="resize: none" placeholder="Description" rows="4" @bind="tempJob.Description"></textarea>
+            <textarea class="form-control" style="resize: none" placeholder="Description" rows="4" @bind="TempJob.Description"></textarea>
         </div>
         <div class="form-group createjob-form-group">
             <div class="createjob-form-individual">
@@ -156,7 +157,7 @@
                     @foreach (var jobPlatform in jobPlatforms)
                     {
                         <div class="create-job-form-checkboxes">
-                            <input class="smallerCheckBox" type="checkbox" id="@jobPlatform.id" name="@jobPlatform.platformName" @onclick="(e) => AddPlatfrom(jobPlatform, ToggleChecked())">
+                            <input class="smallerCheckBox" type="checkbox" id="@jobPlatform.id" name="@jobPlatform.platformName" @onchange="(e) => AddPlatfrom(jobPlatform)">
                             <br />
                             <label class="create-a-job-form-checkbox-label" for="@jobPlatform.id"> @jobPlatform.platformName</label>
                         </div>
@@ -164,20 +165,23 @@
                 </div>
             </div>
             <div class="createjob-form-individual">
-                <input type="date" placeholder="Date Advertised" onfocus="(this.type='date')" onblur="(this.type='text')" @bind="tempJob.CreationDate" />
+                <input type="date" placeholder="Date Advertised" onfocus="(this.type='date')" onblur="(this.type='text')" @bind="TempJob.CreationDate" />
             </div>
         </div>
         <div class="form-group createjob-form-group">
             <div class="createjob-form-individual"></div>
             <div class="createjob-form-individual">
-                <input type="date" placeholder="Due Date" onfocus="(this.type='date')" onblur="(this.type='text')" @bind="tempJob.DueDate" />
+                <input type="date" placeholder="Due Date" onfocus="(this.type='date')" onblur="(this.type='text')" @bind="TempJob.DueDate" />
             </div>
         </div>
     </form>
 </div>
+<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save"/>
 
 
 @code {
+
+    string Type;
 
     [Parameter]
     public EventCallback<string> ValueChanged
@@ -188,21 +192,31 @@
 
     private Task OnLocationChanged(ChangeEventArgs e)
     {
-        tempJob.Location = e.Value.ToString();
-        return ValueChanged.InvokeAsync(tempJob.Location);
-    }
-
-    private Task OnJobTypeChanged(ChangeEventArgs e)
-    {
-        /*tempJob.JobType = e.Value.;
-        return ValueChanged.InvokeAsync(tempJob.JobType);*/
-        return null;
+        TempJob.Location = e.Value.ToString();
+        return ValueChanged.InvokeAsync(TempJob.Location);
     }
 
     private Task OnDepartmentChanged(ChangeEventArgs e)
     {
-        tempJob.Department = e.Value.ToString();
-        return ValueChanged.InvokeAsync(tempJob.Department);
+        TempJob.Department = e.Value.ToString();
+        return ValueChanged.InvokeAsync(TempJob.Department);
+    }
+
+    private async Task Save()
+    {
+        JobType jobType = new JobType();
+        jobType.Type = Type;
+        foreach (var type in jobTypes)
+        {
+            if (type.Type == Type)
+            {
+                jobType.Id = type.Id;
+            }
+        }
+
+        TempJob.JobType = jobType;
+        TempJob.JobPlatforms = ListOfPlatforms;
+        await TempJobChanged.InvokeAsync(TempJob);
     }
 
 }
