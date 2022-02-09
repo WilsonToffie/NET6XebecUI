@@ -19,28 +19,31 @@ namespace XebecPortal.UI.Pages.Applicant
         private ProfilePortfolioLink profilePortfolio = new() { AppUserId = 1 };
         private AdditionalInformation additionalInformation = new() { AppUserId = 1, Disability = "No" };
         private PersonalInformation personalInformation = new() { AppUserId = 1 };
+        private IJSObjectReference _jsModule;
 
-        protected override Task OnAfterRenderAsync(bool firstRender)
+        protected override async Task OnInitializedAsync()
         {
-            jsRuntime.InvokeVoidAsync("Dropzone");
-            return base.OnAfterRenderAsync(firstRender);
+            _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/ApplicationProfile.js");
         }
 
-        private void AddWorkHistory(WorkHistory workHistoryValues)
+        private async Task AddWorkHistory(WorkHistory workHistoryValues)
         {
-            workHistoryList.Add(new()
+            if (await _jsModule.InvokeAsync<bool>("WorkHistory"))
             {
-                Id = increment,
-                AppUserId = 1,
-                CompanyName = workHistoryValues.CompanyName,
-                JobTitle = workHistoryValues.JobTitle,
-                StartDate = workHistoryValues.StartDate,
-                EndDate = workHistoryValues.EndDate,
-                Description = workHistoryValues.Description
-            });
+                workHistoryList.Add(new()
+                {
+                    Id = increment,
+                    AppUserId = 1,
+                    CompanyName = workHistoryValues.CompanyName,
+                    JobTitle = workHistoryValues.JobTitle,
+                    StartDate = workHistoryValues.StartDate,
+                    EndDate = workHistoryValues.EndDate,
+                    Description = workHistoryValues.Description
+                });
 
-            increment++;
-            workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
+                increment++;
+                workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
+            }
         }
 
         private void DeleteWorkHistory(int id)
@@ -50,12 +53,15 @@ namespace XebecPortal.UI.Pages.Applicant
             workHistUpdate = false;
         }
 
-        private void UpdateWorkHistory(WorkHistory workHistoryValues)
+        private async Task UpdateWorkHistory(WorkHistory workHistoryValues)
         {
-            int index = workHistoryList.FindIndex(x => x.Id == workHistoryValues.Id);
-            workHistoryList[index] = workHistoryValues;
-            workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
-            workHistUpdate = false;
+            if (await _jsModule.InvokeAsync<bool>("WorkHistory"))
+            {
+                int index = workHistoryList.FindIndex(x => x.Id == workHistoryValues.Id);
+                workHistoryList[index] = workHistoryValues;
+                workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
+                workHistUpdate = false;
+            }
         }
 
         private void PopulateWorkHistory(int id)
@@ -64,20 +70,23 @@ namespace XebecPortal.UI.Pages.Applicant
             workHistUpdate = true;
         }
 
-        private void AddEducation(Education educationValues)
+        private async Task AddEducation(Education educationValues)
         {
-            educationList.Add(new()
+            if (await _jsModule.InvokeAsync<bool>("Education"))
             {
-                Id = increment,
-                AppUserId = 1,
-                Insitution = educationValues.Insitution,
-                Qualification = educationValues.Qualification,
-                StartDate = educationValues.StartDate,
-                EndDate = educationValues.EndDate,
-            });
+                educationList.Add(new()
+                {
+                    Id = increment,
+                    AppUserId = 1,
+                    Insitution = educationValues.Insitution,
+                    Qualification = educationValues.Qualification,
+                    StartDate = educationValues.StartDate,
+                    EndDate = educationValues.EndDate,
+                });
 
-            increment++;
-            education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
+                increment++;
+                education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
+            }
         }
 
         private void DeleteEducation(int id)
@@ -87,12 +96,15 @@ namespace XebecPortal.UI.Pages.Applicant
             eduUpdate = false;
         }
 
-        private void UpdateEducation(Education educationValues)
+        private async Task UpdateEducation(Education educationValues)
         {
-            int index = educationList.FindIndex(x => x.Id == educationValues.Id);
-            educationList[index] = educationValues;
-            education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
-            eduUpdate = false;
+            if (await _jsModule.InvokeAsync<bool>("Education"))
+            {
+                int index = educationList.FindIndex(x => x.Id == educationValues.Id);
+                educationList[index] = educationValues;
+                education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
+                eduUpdate = false;
+            }
         }
 
         private void PopulateEducation(int id)
@@ -115,7 +127,7 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private async Task Submit()
         {
-            if (await jsRuntime.InvokeAsync<bool>("ProfileApplication"))
+            if (await _jsModule.InvokeAsync<bool>("PersonalInformation"))
             {
                 foreach (var item in workHistoryList)
                     item.Id = 0;

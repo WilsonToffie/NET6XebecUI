@@ -49,13 +49,13 @@
         align-items: center;
         justify-content: center;
         transition: all .4s;
-        height: 120px;
+        height: 140px;
     }
 
     .drag-drop-input {
         position: absolute;
         width: 690px;
-        height: 120px;
+        height: 140px;
         opacity: 0;
         cursor: pointer;
         z-index: 2;
@@ -76,12 +76,17 @@
         box-shadow: 0 0 0 4px #d0d0d0;
     }
 
-    .cardBorderChange{
+    .cardBorderChange {
         border: 4px solid #00BCAE;
         background: #00BCAE;
         box-shadow: 0 0 0 4px #00BCAE;
     }
 
+    .cardBorderChange:hover {
+        border: 4px solid #00BCAE;
+        background: #00BCAE;
+        box-shadow: 0 0 0 4px #00BCAE;
+    }
 </style>
 
 <div class="container-fluid">
@@ -151,10 +156,10 @@
                                             <br />
                                             <MudGrid Justify="Justify.Center" Spacing="4">
                                                 <MudItem>
-                                                    <MudButton OnClick="Upload" Disabled="@(!fileNames.Any())" Color="Color.Primary" Variant="Variant.Filled">Upload</MudButton>
+                                                    <MudButton OnClick="Upload" Disabled="@(!fileNames.Any())" Style="color: white; background-color: #00BCAE; font-size: small" Variant="Variant.Filled">Upload</MudButton>
                                                 </MudItem>
                                                 <MudItem>
-                                                    <MudButton OnClick="@fileNames.Clear" Disabled="@(!fileNames.Any())" Color="Color.Error" Variant="Variant.Filled">Clear</MudButton>
+                                                    <MudButton OnClick="@fileNames.Clear" Disabled="@(!fileNames.Any())" Style="color: white; background-color: #00BCAE; font-size: small" Variant="Variant.Filled">Clear</MudButton>
                                                 </MudItem>
                                             </MudGrid>
                                         </div>
@@ -213,7 +218,7 @@
 
                 <!--Work History-->
                 <div id="work-history" class="container tab-pane">
-                    <form>
+                    <form id="work-history-form">
                         <div class="row">
                             <div class="col-12">
                                 <div class="row p-3">
@@ -225,17 +230,17 @@
                                                 <div class="row p-3">
                                                     <div class="col-6">
                                                         <label class="form-label" for="company-name">Company Name</label>
-                                                        <input id="company-name" class="form-control shadow bg-body rounded" type="text" @bind="workHistory.CompanyName" placeholder="1Nebula" />
+                                                        <input id="company-name" class="form-control shadow bg-body rounded" type="text" @bind="workHistory.CompanyName" placeholder="1Nebula" required />
                                                     </div>
                                                     <div class="col-6">
                                                         <label class="form-label" for="job-title">Job Title</label>
-                                                        <input id="job-title" class="form-control shadow bg-body rounded" type="text" @bind="workHistory.JobTitle" placeholder="Software Developer" />
+                                                        <input id="job-title" class="form-control shadow bg-body rounded" type="text" @bind="workHistory.JobTitle" placeholder="Software Developer" required />
                                                     </div>
                                                 </div>
                                                 <div class="row p-3">
                                                     <div class="col-6">
                                                         <label class="form-label" for="start-date">Start Date</label>
-                                                        <input id="start-date" class="form-control shadow bg-body rounded" @bind="workHistory.StartDate" @onblur="StartDateCheck" type="date" />
+                                                        <input id="start-date" class="form-control shadow bg-body rounded" @bind="workHistory.StartDate" @onblur="StartDateCheck" type="date" required />
                                                     </div>
                                                     <div class="col-6">
                                                         <label class="form-label" for="end-date">End Date</label>
@@ -292,7 +297,7 @@
 
                 <!--Education-->
                 <div id="education" class="container tab-pane">
-                    <form>
+                    <form id="education-form">
                         <div class="row">
                             <div class="col-12">
                                 <div class="row p-3">
@@ -304,17 +309,17 @@
                                                 <div class="row p-3">
                                                     <div class="col-6">
                                                         <label class="form-label" for="institution">Institution</label>
-                                                        <input id="institution" class="form-control shadow bg-body rounded" type="text" @bind="education.Insitution" placeholder="University of Cape Town" />
+                                                        <input id="institution" class="form-control shadow bg-body rounded" type="text" @bind="education.Insitution" placeholder="University of Cape Town" required />
                                                     </div>
                                                     <div class="col-6">
                                                         <label class="form-label" for="qualification">Qualification</label>
-                                                        <input id="qualification" class="form-control shadow bg-body rounded" type="text" @bind="education.Qualification" placeholder="BSc Chemical Engineering" />
+                                                        <input id="qualification" class="form-control shadow bg-body rounded" type="text" @bind="education.Qualification" placeholder="BSc Chemical Engineering" required />
                                                     </div>
                                                 </div>
                                                 <div class="row p-3">
                                                     <div class="col-6">
                                                         <label class="form-label" for="start-date">Start Date</label>
-                                                        <input id="start-date" class="form-control shadow bg-body rounded" @bind="education.StartDate" @onblur="StartDateCheck" type="date" />
+                                                        <input id="start-date" class="form-control shadow bg-body rounded" @bind="education.StartDate" @onblur="StartDateCheck" type="date" required />
                                                     </div>
                                                     <div class="col-6">
                                                         <label class="form-label" for="end-date">End Date</label>
@@ -344,7 +349,7 @@
                                                 {
                                                     foreach (var item in educationList)
                                                     {
-                                                        <div class="card shadow-lg bg-body rounded active" style="cursor: pointer" @onclick="() => PopulateEducation(item.Id)">
+                                                        <div class="card shadow-lg bg-body rounded @(education.Id == item.Id? "cardBorderChange":"")" style="cursor: pointer" @onclick="() => PopulateEducation(item.Id)">
                                                             <div class="card-body">
                                                                 <h3 class="card-title">@item.Qualification</h3>
                                                                 <h4 class="card-subtitle">@item.Insitution</h4>
