@@ -124,8 +124,9 @@
 
         CurrentJobId = tempJob.Id;
 
-        QuestionList = await httpClient.GetFromJsonAsync<List<FormQuestion>>($"https://xebecapi.azurewebsites.net/api/questionnairehrform/HR/{CurrentJobId}");
-        
+        //QuestionList = await httpClient.GetFromJsonAsync<List<FormQuestion>>($"https://xebecapi.azurewebsites.net/api/questionnairehrform/HR/{CurrentJobId}");
+        QuestionList = await httpClient.GetFromJsonAsync<List<FormQuestion>>($"https://xebecapi.azurewebsites.net/api/questionnaire/job/{CurrentJobId}");
+
 
         foreach (var q in QuestionList)
         {
