@@ -2,6 +2,7 @@
 @inject NavigationManager navmanager
 @layout EmptyLayout
 @inject HttpClient HttpClient
+@inject IJSRuntime jsRuntime
 @using System.Linq;
 @using XebecPortal.UI.Shared.Home.Models
 
@@ -16,7 +17,7 @@
 <div class="overlay-login" id="login">
     <div class="login-page">
         <div class="login-left">
-            <form class="index-form-login" hidden="@RightDisplayLoginIsHidden">
+            <form id="sign-in-form" class="index-form-login" hidden="@RightDisplayLoginIsHidden">
                 <div class="form-group index-form-heading">
                     <h1 class="index-form-heading-1">SIGN IN</h1>
                 </div>
@@ -24,13 +25,13 @@
                     <div class="index-form-icon">
                         <i class="fa fa-user"></i>
                     </div>
-                    <input type="email" required placeholder="Email address" @bind="@Email">
+                    <input type="email" placeholder="Email address" @bind="@Email" required>
                 </div>
                 <div class="form-group index-form-group index-group">
                     <div class="index-form-icon">
                         <i class="fa fa-lock "></i>
                     </div>
-                    <input type="password" placeholder="Password" @bind="@Password">
+                    <input type="password" placeholder="Password" @bind="@Password" required>
                 </div>
                 <div class="form-group index-form-or">
                     <h1 class="index-form-heading-3">or sign in using</h1>
@@ -49,28 +50,19 @@
                 <div class="form-group">
                     <h1 class="forgotpassword" @onclick="GoToForgotPassword">forgot password?</h1>
                 </div>
-                <div class="form-group index-form-or" hidden="@invalidEmailorPasswordMessageIsHidden">
-                    <h1 class="index-form-heading-3">incorrect credentials</h1>
-                </div>
                 <input type="button" class="index-form-button" @onclick="Login" value="Submit" />
             </form>
 
-            <form class="index-form-login" hidden="@RightDisplayForgotPasswordIsHidden">
+            <form id="forgot-password-form" class="index-form-login" hidden="@RightDisplayForgotPasswordIsHidden">
 
                 <div class="form-group index-form-group index-group">
                     <div class="index-form-icon">
                         <i class="fa fa-user"></i>
                     </div>
-                    <input type="email" required placeholder="Email address" @bind="@Email">
+                    <input type="email" placeholder="Email address" @bind="@Email" required>
                 </div>
                 <div class="form-group">
                     <h1 class="forgotpassword"  @onclick="GoToLogin">login</h1>
-                </div>
-                <div class="form-group index-form-or" hidden="@invalidEmailorPasswordMessageIsHidden">
-                    <h1 class="index-form-heading-3">invalid email</h1>
-                </div>
-                <div class="form-group index-form-or" hidden="@validSubmitForgotPasswordMessageIsHidden">
-                    <h1 class="index-form-heading-3">check your email for a link from us</h1>
                 </div>
                 <input type="button" class="index-form-button" @onclick="SubmitForgotPassword" value="Submit" />
             </form>
@@ -86,10 +78,6 @@
     private bool RightDisplayLoginIsHidden;
     private bool RightDisplayForgotPasswordIsHidden;
 
-    //login invalid messages
-    private bool invalidEmailorPasswordMessageIsHidden;
-    private bool validSubmitForgotPasswordMessageIsHidden;
-
     private string Email = "";
     private string Password = "";
 
@@ -103,8 +91,6 @@
     {
         RightDisplayLoginIsHidden = false;
         RightDisplayForgotPasswordIsHidden = true;
-        validSubmitForgotPasswordMessageIsHidden = true;
-        invalidEmailorPasswordMessageIsHidden = true;
         await Task.Delay(0);
 
     }
@@ -114,10 +100,12 @@
         signIn.Email = Email;
         signIn.Password = Password;
 
+        await jsRuntime.InvokeAsync<bool>("Login");
+
         //send model to API 
 
         //get user JSON from API 
-        try
+        /*try
         {
             users = await HttpClient.GetFromJsonAsync<List<UserModel>>("https://my-json-server.typicode.com/IviweMalotana/xebecDB/Users");
             user = users.Where(a => a.Email.Equals(Email)).Single();
@@ -125,8 +113,8 @@
         }
         catch
         {
-            invalidEmailorPasswordMessageIsHidden = false;
-        }
+
+        }*/
     }
 
     private async Task SubmitForgotPassword()
@@ -134,19 +122,18 @@
         forgotPassword.Email = Email;
         forgotPassword.Link = "https://localhost:44364/forgotpassword";
 
+        await jsRuntime.InvokeAsync<bool>("Login");
+
         try
         {
             //send Email 
             users = await HttpClient.GetFromJsonAsync<List<UserModel>>("https://my-json-server.typicode.com/IviweMalotana/xebecDB/Users");
             user = users.Where(a => a.Email.Equals(Email)).Single();
-            validSubmitForgotPasswordMessageIsHidden = false;
-            invalidEmailorPasswordMessageIsHidden = true;
             // power automate 
         }
         catch
         {
-            validSubmitForgotPasswordMessageIsHidden = true;
-            invalidEmailorPasswordMessageIsHidden = false;
+
         }
     }
 
@@ -158,8 +145,7 @@
     {
         RightDisplayLoginIsHidden = true;
         RightDisplayForgotPasswordIsHidden = false;
-        validSubmitForgotPasswordMessageIsHidden = true;
-        invalidEmailorPasswordMessageIsHidden = true;
     }
 }
+
  
