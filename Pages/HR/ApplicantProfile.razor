@@ -2,6 +2,11 @@
 @page "/profile"
 @using XebecPortal.UI.Services.Models
 @using XebecPortal.UI.Service_Interfaces
+@using XebecPortal.UI.Pages.Applicant
+@using PersonalInformation = XebecPortal.UI.Services.Models.PersonalInformation
+@using AdditionalInformation = XebecPortal.UI.Services.Models.AdditionalInformation
+@using Education = XebecPortal.UI.Services.Models.Education
+@using WorkHistory = XebecPortal.UI.Services.Models.WorkHistory
 
 @inject IEducationDataService _educationDataService
 @inject IWorkHistoryDataService _workHistoryDataService
@@ -82,24 +87,29 @@
     .job-position { grid-area: 1 / 2 / 2 / 3; }
     
     .start-end-date { grid-area: 1 / 3 / 2 / 4; }
+    
+    
 
 </style>
 <div class="container-fluid this-wrap">
     <!--Navigation Tab-->
     <div class="nav-tab">
-        <span class="this-personal-detail">Personl Details</span>
+        @* <span class="this-personal-detail">Personal Details</span> *@
         <ul class="nav this-nav nav-tabs" role="tablist">
             <li class="nav-item p-1">
-                <a class="nav-link nav-link1 active" data-bs-toggle="tab" href="#personal-information">Personal Information</a>
+                <a class="nav-link nav-link1 active" data-bs-toggle="tab" href="#personal-information" @onclick="() => _tabEnum = TabEnum.PersonalInfo">Personal Information</a>
             </li>
             <li class="nav-item p-1">
-                <a class="nav-link nav-link1" data-bs-toggle="tab" href="#work-history">Work History</a>
+                <a class="nav-link nav-link1" data-bs-toggle="tab" href="#work-history" @onclick="() => _tabEnum = TabEnum.WorkHistory">Work History</a>
             </li>
             <li class="nav-item p-1">
-                <a class="nav-link nav-link1" data-bs-toggle="tab" href="#education">Education</a>
+                <a class="nav-link nav-link1" data-bs-toggle="tab" href="#education" @onclick="() => _tabEnum = TabEnum.Educa">Education</a>
             </li>
             <li class="nav-item p-1">
-                <a class="nav-link nav-link1" data-bs-toggle="tab" href="#online-profile">Online Profile</a>
+                <a class="nav-link nav-link1" data-bs-toggle="tab" href="#online-profile" @onclick="() => _tabEnum = TabEnum.Online">Online Profile</a>
+            </li>
+            <li class="nav-item p-1">
+                <a class="nav-link nav-link1" data-bs-toggle="tab" href="#job-list" @onclick="() => _tabEnum = TabEnum.Jobs">View Jobs</a>
             </li>
         </ul>
     </div>
@@ -107,53 +117,52 @@
     <div class="col-12 this-content">
         <div class="tab-content">
             <!--Personal Information-->
-            <div id="personal-information" class="tab-pane active person-info rounded">
+            <div id="personal-information" class="tab-pane person-info rounded" style="@GetActivity(TabEnum.PersonalInfo)">
                 @if (_PersonalInformation != null)
                 {
                     <div class="" style="height: 100%;">
-                            <div class="row p-3">
-                                <div class="col-4">
-                                    <label class="form-label" for="first-name">First Name</label>
-                                    <p id="first-name" class="form-control name">@_PersonalInformation.FirstName</p>
-                                </div>
-                                <div class="col-4">
-                                    <label class="form-label" for="last-name">Last Name</label>
-                                    <p id="last-name" class="form-control name">@_PersonalInformation.LastName</p>
-                                </div>
-                                <div class="col-4">
-                                    <label class="form-label" for="email-address">Email Address</label>
-                                    <p id="email-address" class="form-control">@_PersonalInformation.Email</p>
-                                </div>
+                        <div class="row p-3">
+                            <div class="col-4">
+                                <label class="form-label" for="first-name">First Name</label>
+                                <p id="first-name" class="form-control name">@_PersonalInformation.FirstName</p>
                             </div>
-                            <div class="row p-3">
-                                <div class="col-4">
-                                    <label class="form-label" for="phone-number">Phone Number</label>
-                                    <p id="phone-number" class="form-control">@_PersonalInformation.PhoneNumber</p>
-                                </div>
-                                @if (_AdditionalInformation != null)
-                                {
-                                    <div class="col-4">
-                                        <label class="form-label" for="ethnicity">Ethnicity</label>
-                                        <p id="ethnicity" class="form-control">@_AdditionalInformation.Ethnicity</p>
-                                    </div>
-                                    <div class="col-4">
-                                        <label class="form-label" for="gender">Gender</label>
-                                        <p id="gender" class="form-control">@_AdditionalInformation.Gender</p>
-                                    </div>
-                                }
+                            <div class="col-4">
+                                <label class="form-label" for="last-name">Last Name</label>
+                                <p id="last-name" class="form-control name">@_PersonalInformation.LastName</p>
                             </div>
-                            <div class="row p-3">
-                                <div class="col-4">
-                                    <label class="form-label" for="id-number">ID Number</label>
-                                    <p id="id-number" class="form-control">@_PersonalInformation.IdNumber</p>
-                                </div>
-                                <div class="col-8">
-                                    <label class="form-label" for="address">Address</label>
-                                    <p id="address" class="form-control" rows="4">@_PersonalInformation.Address </p>
-                                </div>
+                            <div class="col-4">
+                                <label class="form-label" for="email-address">Email Address</label>
+                                <p id="email-address" class="form-control">@_PersonalInformation.Email</p>
                             </div>
                         </div>
-                    
+                        <div class="row p-3">
+                            <div class="col-4">
+                                <label class="form-label" for="phone-number">Phone Number</label>
+                                <p id="phone-number" class="form-control">@_PersonalInformation.PhoneNumber</p>
+                            </div>
+                            @if (_AdditionalInformation != null)
+                            {
+                                <div class="col-4">
+                                    <label class="form-label" for="ethnicity">Ethnicity</label>
+                                    <p id="ethnicity" class="form-control">@_AdditionalInformation.Ethnicity</p>
+                                </div>
+                                <div class="col-4">
+                                    <label class="form-label" for="gender">Gender</label>
+                                    <p id="gender" class="form-control">@_AdditionalInformation.Gender</p>
+                                </div>
+                            }
+                        </div>
+                        <div class="row p-3">
+                            <div class="col-4">
+                                <label class="form-label" for="id-number">ID Number</label>
+                                <p id="id-number" class="form-control">@_PersonalInformation.IdNumber</p>
+                            </div>
+                            <div class="col-8">
+                                <label class="form-label" for="address">Address</label>
+                                <p id="address" class="form-control" rows="4">@_PersonalInformation.Address </p>
+                            </div>
+                        </div>
+                    </div>
                 }
                 else
                 {
@@ -161,7 +170,7 @@
                 }
             </div>
             <!--Work History-->
-            <div id="work-history" class="tab-pane">
+            <div id="work-history" class="tab-pane" style="@GetActivity(TabEnum.WorkHistory)">
                 <div class="work-history-section">
                     @if (_WorkHistories != null)
                     {
@@ -170,7 +179,9 @@
                             <div class="work-card">
                                 <div class="company-name">@workHistory.CompanyName</div>
                                 <div class="job-position">@workHistory.JobTitle</div>
-                                <div class="start-end-date"><small>@($"{workHistory.StartDate:yyyy MMMM} - {workHistory.EndDate:yyyy MMMM}")</small></div>
+                                <div class="start-end-date">
+                                    <small>@($"{workHistory.StartDate:yyyy MMMM} - {workHistory.EndDate:yyyy MMMM}")</small>
+                                </div>
                                 <div class="work-description">@workHistory.Description</div>
                             </div>
                         }
@@ -184,43 +195,104 @@
 
 
             <!--Education-->
-            <div id="education" class="tab-pane">
+            <div id="education" class="tab-pane" style="@GetActivity(TabEnum.Educa)">
                 <div class="work-history-section">
                     @if (_Educations != null)
                     {
                         foreach (var education in _Educations)
                         {
                             <div class="work-card">
-                            <div class="company-name">@education.Qualification</div>
-                            <div class="job-position"></div>
-                            <div class="start-end-date"><small>@($"{education.StartDate:yyyy MMMM} - {education.EndDate:yyyy MMMM}")</small></div>
-                            <div class="work-description">@education.Insitution</div>
-                        </div>
+                                <div class="company-name">@education.Qualification</div>
+                                <div class="job-position"></div>
+                                <div class="start-end-date">
+                                    <small>@($"{education.StartDate:yyyy MMMM} - {education.EndDate:yyyy MMMM}")</small>
+                                </div>
+                                <div class="work-description">@education.Insitution</div>
+                            </div>
                         }
                     }
                     else
                     {
                         <p>Getting Education history...</p>
                     }
-                    
+
                 </div>
             </div>
             <!--Online Profile-->
-            <div id="online-profile" class="container tab-pane">
-                <h3>Online Profile</h3>
+            <div id="online-profile" class="container tab-pane" style="@GetActivity(TabEnum.Online)">
+                @if (profilePortfolio != null)
+                {
+                    
+                    <div class="col-9 hadow-sm bg-body rounded" style="background-color: white">
+                        <div class="row p-3">
+                            <div class="col-6">
+                                <div>
+                                    <label class="form-label" for="github">Github</label>
+                                    &ensp;
+                                    <i class="fab fa-github fa-2x"></i>
+                                </div>
+                                <p id="github" class="form-control shadow bg-body rounded"><a href="@profilePortfolio.GitHubLink">@profilePortfolio.GitHubLink</a></p>
+                            </div>
+                            <div class="col-6">
+                                <div>
+                                    <label class="form-label" for="linkedin">LinkedIn</label>
+                                    &ensp;
+                                    <i class="fab fa-linkedin-in fa-2x" style="color: #0077b5"></i>
+                                </div>
+                                <p id="linkedin" class="form-control shadow bg-body rounded">
+                                    <a href="@profilePortfolio.LinkedInLink">@profilePortfolio.LinkedInLink</a>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row p-3">
+                            <div class="col-6">
+                                <div>
+                                    <label class="form-label" for="twitter">Twitter</label>
+                                    &ensp;
+                                    <i class="fab fa-twitter-square fa-2x" style="color: #00acee"></i>
+                                </div>
+                                <p id="twitter" class="form-control shadow bg-body rounded">
+                                    <a href="@profilePortfolio.TwitterLink">@profilePortfolio.TwitterLink</a>
+                                </p>
+                            </div>
+                            <div class="col-6">
+                                <div>
+                                    <label class="form-label" for="personal-website">Personal Website</label>
+                                    &ensp;
+                                    <i class="fas fa-globe fa-2x" style="color: #35afc0"></i>
+                                </div>
+                                <p id="personal-website" class="form-control shadow bg-body rounded">
+                                    <a href="@profilePortfolio.PersonalWebsiteUrl">@profilePortfolio.PersonalWebsiteUrl</a>
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+              
+                }
+                else
+                {
+                    <p>Loading</p>
+                }
+            </div>
+
+            <div id="job-list" class=" tab-pane jobs-section" style="@GetActivity(TabEnum.Jobs)">
+                <!-- table-->
+                <AssocicatedJobs Applicant=@Applicant></AssocicatedJobs>
             </div>
         </div>
     </div>
 </div>
 
 @code {
+    TabEnum _tabEnum = new();
 
     [Parameter]
     public Applicant Applicant { get; set; }
 
     [Parameter]
     public EventCallback<Applicant> ApplicantChanged { get; set; }
-    
+
     [Parameter]
     public AppUser AppUser { get; set; }
 
@@ -231,6 +303,7 @@
     private List<WorkHistory> _WorkHistories { get; set; }
     private List<Education> _Educations { get; set; }
 
+    private ProfilePortfolioLink profilePortfolio { get; set; }
     protected override async Task OnParametersSetAsync()
     {
         if (Applicant != null)
@@ -245,6 +318,31 @@
             _WorkHistories = await _workHistoryDataService.GetWorkHistories(AppUserId);
             _Educations = await _educationDataService.GetEducations(AppUserId);
             _AdditionalInformation = await _additionalInformationDataService.GetAdditionalInfo(AppUserId);
+            profilePortfolio = await _personalInformationDataService.GetPortfolio(AppUserId);
+            if (_PersonalInformation != null)
+            {
+                _tabEnum = TabEnum.PersonalInfo;
+            }
         }
     }
+
+    private enum TabEnum
+    {
+        PersonalInfo,
+        WorkHistory,
+        Educa,
+        AddInfo,
+        Online,
+        Jobs
+    }
+
+    private string GetActivity(TabEnum tab)
+    {
+        if (_tabEnum == tab)
+        {
+            return "display: block;";
+        }
+        return "display: none;";
+    }
+
 }

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
-using XebecPortal.UI.Services.Models;
+using XebecPortal.UI.Pages.Applicant;
+using PersonalInformation = XebecPortal.UI.Services.Models.PersonalInformation;
 
 namespace XebecPortal.UI.Service_Interfaces
 {
@@ -8,5 +9,6 @@ namespace XebecPortal.UI.Service_Interfaces
         
         //api/PersonalInformation/single/{id}
         Task<PersonalInformation> GetPersonalDetails(int appUserId);
+        Task<ProfilePortfolioLink> GetPortfolio(int appUserId);
     }
 }

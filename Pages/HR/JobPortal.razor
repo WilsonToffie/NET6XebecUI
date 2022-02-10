@@ -4,32 +4,12 @@
 @inject NavigationManager nav
 
 <style>
-    .searchBox {
-    }
+  
 
     .handPointer {
         cursor: pointer;
     }
-
-    .headingPage {
-        height: 5vh;
-        color: #003340;
-        font-size: 2rem;
-    }
-
-    .formContainer {
-        background-color: white;
-    }
-
-    .formButton {
-        background-color: #00BCAE;
-        color: white;
-        font-weight: 600;
-        height: 5vh;
-        margin-top: 2vh;
-        width: auto;
-    }
-
+ 
     input {
         height: min-content;
     }
@@ -40,315 +20,455 @@
             margin: 2px;
         }
 
-    .select2 {
-        width: 100% !important;
-    }
-
     ::-webkit-scrollbar {
         width: 10px;
     }
 
     ::-webkit-scrollbar-track {
-        background: #f1f1f1;
+        background: transparent;
         border-radius: 10px;
     }
 
     ::-webkit-scrollbar-thumb {
-        background: #888;
-        border-radius: 10px;
+        background: #fff;
+        border-radius: 5px;
     }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #555;
+            background: #00BCAE;
         }
-
-    .container-main {
-        height: 75vh;
-        width: 100%;
-    }
-
-    .container-button {
-        height: 5vh;
-        width: 100%;
-    }
-
-    .mini-button {
-        height: 5vh;
-        text-align: center;
-        background-color: #00bcae;
-        width: auto;
-        border-radius: 1em;
-    }
-
-    .my-container {
-        height: 65vh;
-        width: 100%;
-    }
+         .job-search-bar {
+                max-width: 50%;
+                background-color: rgba(255,255,255,1)!important;
+                border-radius: 2em;
+                border: 0.1em solid rgba(0,0,0,0.2);
+            }
+                .job-search-bar::placeholder {
+                    color: rgb(0,0,0,0.5);
+                    font-weight: 200;
+                    font-size: 1em;
+                    font-family: opensans-condensed-bold;
+                }
+            .job-search-icon {
+                color: #00BCAE;
+                font-size: 2em;
+                text-align: center;
+            }
+            .job-search-icon-div {
+                cursor: pointer;
+                background-color: rgba(255,255,255,0.6);
+                border-radius: 2em;
+                width: 5%;
+                text-align: center;
+                border: 0.1em solid rgba(0,0,0,0.2);
+            }
+            .job-portal-card {
+                cursor: pointer;
+                background-color: rgba(255,255,255,1);
+                border-radius: 20px;
+                border: solid white 0.25em;
+                box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+            }
+                .job-portal-card:hover {
+                    cursor: pointer;
+                    background-color: rgba(255,255,255,1);
+             
+                    border: solid white 0.25em;
+                    box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+                    position: relative;
+                }
+                
+            .job-portal-card-body{
+                height: 20vh;
+                margin-left: 1vh;
+                margin-right: 1vh;
+                margin-bottom: 1vh;
+            }
+        
+            .headingPage {
+                height: 5vh;
+                color: #003340;
+                font-size: 2rem;
+            }
+        
+            .formButton {
+                background-color: #00BCAE;
+                color: white;
+                font-weight: 600;
+                height: 5vh;
+                margin-top: 2vh;
+                width: auto;
+                font-family: opensans-bold;
+            }
+                .formButton:hover {
+                    background-color: #d35bc9;
+                    color: white;
+                    font-weight: 600;
+                    height: 5vh;
+                    margin-top: 2vh;
+                    width: auto;
+                    font-family: opensans-bold;
+                }
+            input {
+                height: min-content;
+            }
+        
+            .my-container {
+                height: 65vh;
+                width: 100%;
+            }
+            .small-card-name {
+                color: black; 
+                font-weight: 600; 
+                font-size: 1em;
+                font-family: opensans-bold;
+            }
+            .small-card-company {
+                color: rgba(0,0,0,0.5);
+                font-weight: 600;
+                font-size: 1em;
+                font-family: opensans-bold;
+            }
+            .small-card-location {
+                color: rgba(0,0,0,0.5);
+                font-weight: 600;
+                font-size: 1em;
+                font-family: opensans-light;
+            }
+            .small-card-date {
+                color: #d35bc9;
+                font-weight: 800;
+                font-size: 1em;
+                font-family: opensans-bold;
+            }
+            .job-portal-right {
+                background-color: rgba(255,255,255,1);
+                border-radius: 20px;
+                border: solid white 0.25em;
+                box-shadow: rgba(0,51,64,0.86) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset, rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+                margin-top: 1vh;
+            }
+            .job-portal-form{
+                width: 90%;
+                margin-left: 5%;
+                margin-right: 5%;
+        
+            }
+            .big-card-name {
+                color: black;
+                font-weight: 900;
+                font-size: 2em;
+                font-family: opensans-bold;
+            }
+            .big-card-description {
+                color: #666666;
+                font-weight: 800;
+                font-size: 1em;
+                font-family: opensans-condensed-light;
+            }
+            .big-card-type {
+                color: black;
+                font-weight: 800;
+                font-size: 1em;
+                font-family: opensans-bold;
+            }
+            li.active a{
+                background: #00BCAE !important;
+                color: white;
+                border-color: #00BCAE !important;
+            }
+            .pagination{
+               box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+            }
+        
 </style>
 
-<div class="container" style="height: 60vh;" hidden="@JobPortalIsHidden">
+<div class="container col-11" style="height: 75vh;margin-top:5vh;" hidden="@JobPortalIsHidden">
 
-    <div style="width: 100%">
-        <!--Search-Box-->
-        <div class="row" style="height:5vh">
-            <div class="col-12">
-                <div class="input-group d-flex justify-content-center">
-                    <span class="input-group-text handPointer" @onclick="() => SeachListJob(searchJob)">
-                        <i class="fa fa-search"></i>
-                    </span>
-                    <input class="form-control" style="max-width: 50%" type="text" placeholder="Search" @bind="searchJob" />
+<div style="width: 100%" class="">
+<!--Search-Box-->
+<div class="row" style="height:5vh">
+    <div class="col-12">
+        <div class="input-group d-flex justify-content-center">
+            <input class="form-control job-search-bar" type="text" placeholder="Search for a job" @bind="searchJob"/>
+            <span class="input-group-text job-search-icon-div" @onclick="() => SeachListJob(searchJob)">
+                <i class="fa fa-search job-search-icon"></i>
+            </span>
+        </div>
+    </div>
+</div>
+<br/>
+
+@if (jobListFilter != null && jobListFilter.Count > 0)
+{
+    <div class="row" style="height:65vh;">
+        <div class="col-4 overflow-auto job-portal-left" style="height: calc(70vh - 20px)">
+
+            <!--Card list for jobs-->
+            <div class="col-12" style="height:58vh!important;margin-top:1vh;">
+                @foreach (var item in jobPagedList)
+                {
+                    <div class="card job-portal-card" @onclick="() => DisplayJobDetail(item.Id)" style="@GetStyling(item)">
+                        <div class="card-body job-portal-card-body">
+                            <h3 class="card-title small-card-name">@item.Title</h3>
+                            <h5 class="card-subtitle text-muted small-card-company">@item.Company</h5>
+                            <br/>
+                            <h5 class="card-text small-card-location">@item.Location</h5>
+                            <h5 class="card-text small-card-date">@item.DueDate.ToString("d MMMM yyyy")</h5>
+                        </div>
+                    </div>
+                    <br/>
+                }
+            </div>
+        </div>
+
+        <div class="col-8 overflow-auto job-portal-right-main" style="height:73vh;">
+            <!--The Form for editing and deleting a job-->
+            <div class="col-12" style="height:55vh!important;margin-top:1vh;">
+                <div class="col-12 job-portal-right">
+                    <form class="job-portal-form ">
+                        <div class="row">
+                            <div class="col-6 p-2">
+                                @if (changeForm)
+                                {
+                                    <label>Job Title</label>
+                                    <input type="text" class="form-control" placeholder="Job Name" @bind="displayJobDetail.Title"/>
+                                }
+                                else
+                                {
+                                    <h3 class="big-card-name">@displayJobDetail.Title</h3>
+                                }
+                            </div>
+                            <div class="col-6 p-3 d-flex justify-content-end">
+                                <div class="row">
+                                    @if (changeForm)
+                                    {
+                                        <div class="col handPointer" @onclick="() => FormType(false)">
+                                            <i class="fa fa-times-circle fa-2x" style="color: red"></i>
+                                        </div>
+                                        <div class="col handPointer" @onclick="() => SaveData(displayJobDetail)">
+                                            <i class="fa fa-save fa-2x" style="color: #00BCAE"></i>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="col handPointer" @onclick="() => FormType(true)">
+                                            <i class="fa fa-edit fa-2x" style="color: #00BCAE"></i>
+                                        </div>
+                                        <div class="col handPointer" @onclick="() => DeleteData(displayJobDetail.Id)">
+                                            <i class="fa fa-trash fa-2x" style="color: #00BCAE"></i>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="col-6 p-2">
+                                @if (changeForm)
+                                {
+                                    <label>Company</label>
+                                    <input type="text" class="form-control" placeholder="Company Name" @bind="displayJobDetail.Company"/>
+                                }
+                                else
+                                {
+                                    <h5 class="text-muted">@displayJobDetail.Company</h5>
+                                }
+                            </div>
+                            <div class="col-6 p-2 justify-content-end">
+                                @if (changeForm)
+                                {
+                                    <label>Location</label>
+                                    <select class="form-select" @bind="displayJobDetail.Location">
+                                        @foreach (var item in Locations)
+                                        {
+                                            <option>@item</option>
+                                        }
+                                    </select>
+                                }
+                                else
+                                {
+                                    <p class="small-card-company text-right">@displayJobDetail.Location</p>
+                                }
+                            </div>
+                            <div class="col-6 p-2">
+
+                                @if (changeForm)
+                                {
+                                    <label>Job Type</label>
+                                    <select class="form-select">
+                                        <option>Full-time</option>
+                                        <option>Part-time</option>
+                                        <option>Contract</option>
+                                    </select>
+                                }
+                                @if (!changeForm)
+                                {
+                                    if(displayJobDetail.JobTypes != null && displayJobDetail.JobTypes.Count > 0){
+                                        <p class="big-card-type">@GetJobType(displayJobDetail.JobTypes.FirstOrDefault())</p>
+                                    }
+                                }
+                            </div>
+                            <div class="col-6 p-2">
+
+                                @if (changeForm)
+                                {
+                                    <label>Department</label>
+                                    <select class="form-select" @bind="displayJobDetail.Department">
+                                        @foreach (var item in Departments)
+                                        {
+                                            <option>@item</option>
+                                        }
+                                    </select>
+                                }
+                                else
+                                {
+                                    <p class="big-card-type text-right"> @displayJobDetail.Department</p>
+                                }
+                            </div>
+                            <div class="col-12 p-2">
+                                @if (changeForm)
+                                {
+                                    <label>Job Description</label>
+                                    <textarea class="form-control" placeholder="Description" rows="4" @bind="displayJobDetail.Description"></textarea>
+                                }
+                                else
+                                {
+                                    <p class="text-center">@displayJobDetail.Description</p>
+                                }
+                            </div>
+                            <div class="col-6 p-2">
+                                <div hidden="@(!changeForm)">
+
+                                    @foreach (var item in jobPlatformHelpers)
+                                    {
+                                        if (displayJobDetail.Id == item.JobId)
+                                        {
+                                            foreach (var platform in jobPlatforms)
+                                            {
+                                                if (item.JobPlatformId == platform.id)
+                                                {
+                                                    platformsUsed.Add(platform);
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    @foreach (var jobPlatform in jobPlatforms)
+                                    {
+                                        @if (!platformsUsed.Contains(jobPlatform))
+                                        {
+                                            <input class="smallerCheckBox" type="checkbox" id="@jobPlatform.id" name="@jobPlatform.platformName" @onclick='() => AddPlatform(jobPlatform)'>
+                                            <label for="@jobPlatform.id"> @jobPlatform.platformName</label>
+                                        }
+                                        else
+                                        {
+                                            <input class="smallerCheckBox" type="checkbox" id="@jobPlatform.id" name="@jobPlatform.platformName" checked @onclick='() => RemovePlatform(jobPlatform)'>
+                                            <label for="@jobPlatform.id"> @jobPlatform.platformName</label>
+                                        }
+                                    }
+
+                                </div>
+                                @if (!changeForm)
+                                {
+                                    <ul>
+                                        @foreach (var platform in displayJobDetail.JobPlatforms)
+                                        {
+                                            if (platform.JobPlatform != null)
+                                            {
+                                                <li>@platform.JobPlatform.platformName</li>
+                                            }
+                                        }
+                                    </ul>
+                                }
+                            </div>
+                            <div class="col-6 p-2 justify-content-end text-right">
+                                @if (changeForm)
+                                {
+                                    <label>Date Advertised</label>
+                                    <input class="form-control" type="date" @bind="displayJobDetail.DueDate"/>
+                                    <label>Due Date</label>
+                                    <input class="form-control" type="date" @bind="displayJobDetail.DueDate"/>
+                                }
+                                else
+                                {
+                                    <p class="small-card-date">@displayJobDetail.CreationDate.ToString("d MMMM yyyy")</p>         
+                                    <p class="small-card-date">@displayJobDetail.DueDate.ToString("d MMMM yyyy")</p>
+                                }
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-        <br />
-
-        @if (jobListFilter != null && jobListFilter.Count > 0)
-        {
-            <div class="row" style="height:55vh">
-                <div class="col-4 overflow-auto" style="height: 55vh">
-
-                    <!--Card list for jobs-->
-                    <div class="col-12">
-                        @foreach (var item in jobPagedList)
-                        {
-                            <div class="card handPointer" @onclick="() => DisplayJobDetail(item.Id)">
-                                <div class="card-body">
-                                    <h3 class="card-title">@item.Title</h3>
-                                    <h5 class="card-subtitle text-muted">@item.Company</h5>
-                                    <br />
-                                    <p class="card-text">
-                                        @item.Location
-                                        <br />
-                                        @item.DueDate.ToString("d MMMM yyyy")
-                                    </p>
-                                </div>
-                            </div>
-                            <br />
-                        }
-                    </div>
-                </div>
-
-                <div class="col-8 overflow-auto" style="height:55vh">
-
-                    <!--The Form for editing and deleting a job-->
-                    <div style="height: 55vh">
-                        <div class="col-12 p-5 formContainer">
-                            <form>
-                                <div class="row">
-                                    <div class="col-6 p-2">
-                                        @if (changeForm)
-                                        {
-                                            <label>Job Title</label>
-                                            <input type="text" class="form-control" placeholder="Job Name" @bind="displayJobDetail.Title" />
-                                        }
-                                        else
-                                        {
-                                            <h3>@displayJobDetail.Title</h3>
-                                        }
-                                    </div>
-                                    <div class="col-6 p-2 d-flex justify-content-end">
-                                        <div class="row">
-                                            @if (changeForm)
-                                            {
-                                                <div class="col handPointer" @onclick="() => FormType(false)"><i class="fa fa-times-circle fa-2x" style="color: red"></i></div>
-                                                <div class="col handPointer" @onclick="() => SaveData (displayJobDetail)"><i class="fa fa-save fa-2x" style="color: #00BCAE"></i></div>
-                                            }
-                                            else
-                                            {
-                                                <div class="col handPointer" @onclick="() => FormType(true)"><i class="fa fa-edit fa-2x" style="color: #00BCAE"></i></div>
-                                                <div class="col handPointer" @onclick="() => DeleteData(displayJobDetail.Id)"><i class="fa fa-trash fa-2x" style="color: #00BCAE"></i></div>
-                                            }
-                                        </div>
-                                    </div>
-                                    <div class="col-6 p-2">
-                                        @if (changeForm)
-                                        {
-                                            <label>Company</label>
-                                            <input type="text" class="form-control" placeholder="Company Name" @bind="displayJobDetail.Company" />
-                                        }
-                                        else
-                                        {
-                                            <h5 class="text-muted">@displayJobDetail.Company</h5>
-                                        }
-                                    </div>
-                                    <div class="col-6 p-2 justify-content-end">
-                                        @if (changeForm)
-                                        {
-                                            <label>Location</label>
-                                            <select class="form-select" @bind="displayJobDetail.Location">
-                                                @foreach (var item in mockLocations.Distinct())
-                                                {
-                                                    <option>@item.location</option>
-                                                }
-                                            </select>
-                                        }
-                                        else
-                                        {
-                                            <p>@displayJobDetail.Location</p>
-                                        }
-                                    </div>
-                                    <div class="col-6 p-2">
-
-                                        @if (changeForm)
-                                        {
-                                            <label>Job Type</label>
-                                            <select class="form-select">
-                                                <option>Full-time</option>
-                                                <option>Part-time</option>
-                                                <option>Contract</option>
-                                            </select>
-                                        }
-                                        @if (!changeForm)
-                                        {
-                                            <p>Full-Time</p>
-                                        }
-                                    </div>
-                                    <div class="col-6 p-2">
-
-                                        @if (changeForm)
-                                        {
-                                            <label>Department</label>
-                                            <select class="form-select" @bind="displayJobDetail.Department">
-                                                @foreach (var item in mockDepartments.Distinct())
-                                                {
-                                                    <option>@item.department</option>
-                                                }
-                                            </select>
-                                        }
-                                        else
-                                        {
-                                            <p>@displayJobDetail.Department</p>
-                                        }
-                                    </div>
-                                    <div class="col-12 p-2">
-                                        @if (changeForm)
-                                        {
-                                            <label>Job Description</label>
-                                            <textarea class="form-control" placeholder="Description" rows="4" @bind="displayJobDetail.Description"></textarea>
-                                        }
-                                        else
-                                        {
-                                            <p class="text-center">@displayJobDetail.Description</p>
-                                        }
-                                    </div>
-                                    <div class="col-6 p-2">
-                                        <div hidden="@(!changeForm)">
-
-                                            @foreach (var item in jobPlatformHelpers)
-                                            {
-                                                @if (displayJobDetail.Id == item.JobId)
-                                                {
-                                                    @foreach (var platform in jobPlatforms)
-                                                    {
-                                                        @if (item.JobPlatformId == platform.id)
-                                                        {
-                                                            platformsUsed.Add(platform);
-                                                        }
-                                                    }
-                                                }
-
-                                            }
-
-                                            @foreach (var jobPlatform in jobPlatforms)
-                                            {
-
-                                                @if (!platformsUsed.Contains(jobPlatform))
-                                                {
-                                                    <input class="smallerCheckBox" type="checkbox" id="@jobPlatform.id" name="@jobPlatform.platformName" @onclick='() => AddPlatform(jobPlatform)'>
-                                                    <label for="@jobPlatform.id"> @jobPlatform.platformName</label>
-                                                }
-                                                else
-                                                {
-                                                    <input class="smallerCheckBox" type="checkbox" id="@jobPlatform.id" name="@jobPlatform.platformName" checked @onclick='() => RemovePlatform(jobPlatform)'>
-                                                    <label for="@jobPlatform.id"> @jobPlatform.platformName</label>
-                                                }
-                                            }
-
-                                        </div>
-                                        @if (!changeForm)
-                                        {
-                                            <p>@displayJobDetail.JobPlatforms</p>
-                                        }
-                                    </div>
-                                    <div class="col-6 p-2 justify-content-end">
-                                        @if (changeForm)
-                                        {
-                                            <label>Date Advertised</label>
-                                            <input class="form-control" type="date" @bind="displayJobDetail.DueDate" />
-                                            <label>Due Date</label>
-                                            <input class="form-control" type="date" @bind="displayJobDetail.DueDate" />
-                                        }
-                                        else
-                                        {
-                                            <p>@displayJobDetail.DueDate.ToString("d MMMM yyyy")</p>
-                                        }
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row p-3">
-                <div class="col-4">
-                    <div class="col-12 d-flex justify-content-center">
-                        <nav>
-                            <ul class="pagination" style="cursor:pointer">
-                                @if (!jobPagedList.IsFirstPage)
-                                {
-                                    <li class="page-item" @onclick="() => PageListNav(jobPagedList.PageNumber - 1)">
-                                        <a class="page-link">
-                                            <span>&laquo;</span>
-                                        </a>
-                                    </li>
-                                }
-                                <li class="page-item @(jobPagedList.PageNumber.Equals(pageNum.FirstOrDefault()) ? "active":"")" @onclick="() => PageListNav(pageNum.FirstOrDefault())"><a class="page-link">@pageNum.FirstOrDefault()</a></li>
-                                @foreach (var item in pageNum)
-                                {
-                                    if (item != pageNum.FirstOrDefault() && item != pageNum.LastOrDefault())
-                                    {
-                                        @if (item >= jobPagedList.PageCount - 3 - 2 && jobPagedList.PageNumber >= jobPagedList.PageCount - 3)
-                                        {
-                                            <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active":"")" @onclick="() => PageListNav(item)"><a class="page-link">@item</a></li>
-                                        }
-                                        else if (item <= 4 + 2 && jobPagedList.PageNumber <= 4)
-                                        {
-                                            <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active":"")" @onclick="() => PageListNav(item)"><a class="page-link">@item</a></li>
-                                        }
-                                        else if (item >= jobPagedList.PageNumber - 2 && item <= jobPagedList.PageNumber + 2 && jobPagedList.PageNumber < jobPagedList.PageCount - 3 && jobPagedList.PageNumber > 4)
-                                        {
-                                            <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active":"")" @onclick="() => PageListNav(item)"><a class="page-link">@item</a></li>
-                                        }
-                                    }
-                                }
-                                @if (pageNum.Count > 1)
-                                {
-                                    <li class="page-item @(jobPagedList.PageNumber.Equals(pageNum.LastOrDefault()) ? "active":"")" @onclick="() => PageListNav(pageNum.LastOrDefault())"><a class="page-link">@pageNum.LastOrDefault()</a></li>
-                                }
-                                @if (!jobPagedList.IsLastPage)
-                                {
-                                    <li class="page-item" @onclick="() => PageListNav(jobPagedList.PageNumber + 1)">
-                                        <a class="page-link">
-                                            <span>&raquo;</span>
-                                        </a>
-                                    </li>
-                                }
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        }
-        else
-        {
-            @for (int i = 0; i < 5; i++)
-            {
-                <br />
-            }
-            <h1 class="text-center align-middle">No Job Are Available</h1>
-        }
     </div>
+
+    <div class="row p-3">
+        <div class="col-4">
+            <div class="col-12 d-flex justify-content-center">
+                <nav>
+                    <ul class="pagination" style="cursor:pointer">
+                        @if (!jobPagedList.IsFirstPage)
+                        {
+                            <li class="page-item" @onclick="() => PageListNav(jobPagedList.PageNumber - 1)">
+                                <a class="page-link">
+                                    <span>&laquo;</span>
+                                </a>
+                            </li>
+                        }
+                        <li class="page-item @(jobPagedList.PageNumber.Equals(pageNum.FirstOrDefault()) ? "active" : "")" @onclick="() => PageListNav(pageNum.FirstOrDefault())">
+                            <a class="page-link">@pageNum.FirstOrDefault()</a>
+                        </li>
+                        @foreach (var item in pageNum)
+                        {
+                            if (item != pageNum.FirstOrDefault() && item != pageNum.LastOrDefault())
+                            {
+                                @if (item >= jobPagedList.PageCount - 3 - 2 && jobPagedList.PageNumber >= jobPagedList.PageCount - 3)
+                                {
+                                    <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active" : "")" @onclick="() => PageListNav(item)">
+                                        <a class="page-link">@item</a>
+                                    </li>
+                                }
+                                else if (item <= 4 + 2 && jobPagedList.PageNumber <= 4)
+                                {
+                                    <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active" : "")" @onclick="() => PageListNav(item)">
+                                        <a class="page-link">@item</a>
+                                    </li>
+                                }
+                                else if (item >= jobPagedList.PageNumber - 2 && item <= jobPagedList.PageNumber + 2 && jobPagedList.PageNumber < jobPagedList.PageCount - 3 && jobPagedList.PageNumber > 4)
+                                {
+                                    <li class="page-item @(jobPagedList.PageNumber.Equals(item) ? "active" : "")" @onclick="() => PageListNav(item)">
+                                        <a class="page-link">@item</a>
+                                    </li>
+                                }
+                            }
+                        }
+                        @if (pageNum.Count > 1)
+                        {
+                            <li class="page-item @(jobPagedList.PageNumber.Equals(pageNum.LastOrDefault()) ? "active" : "")" @onclick="() => PageListNav(pageNum.LastOrDefault())">
+                                <a class="page-link">@pageNum.LastOrDefault()</a>
+                            </li>
+                        }
+                        @if (!jobPagedList.IsLastPage)
+                        {
+                            <li class="page-item" @onclick="() => PageListNav(jobPagedList.PageNumber + 1)">
+                                <a class="page-link">
+                                    <span>&raquo;</span>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    @for (int i = 0; i < 5; i++)
+    {
+        <br/>
+    }
+    <h1 class="text-center align-middle">No Job Are Available</h1>
+}
+</div>
 </div>
 
 @code {
@@ -371,7 +491,22 @@
         applicationFormControlIsHidden = true;
         phaseControlIsHidden = false;
         createJobIsHidden = true;
-
     }
 
+    private object GetStyling(Job item)
+    {
+        if (displayJobDetail.Id == item.Id)
+            return "box-shadow: rgba(0,51,64,0.86) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;";
+        return "";
+    }
+    private string GetJobType(JobTypeHelper helper)
+    {
+        var type = new JobType{Id = 0, Type = "Contract"};
+        
+        if (JobTypes != null && helper != null)
+        {
+            type = JobTypes.FirstOrDefault(e => e.Id == helper.Id);
+        }
+        return  type.Type;
+    }
 }

@@ -38,7 +38,7 @@ namespace XebecPortal.UI.Services
         public async Task<Job> AddJob(Job job)
         {
             var jobJson =
-                new StringContent(JsonSerializer.Serialize(job), Encoding.UTF8, "application/json");
+                new StringContent(JsonSerializer.Serialize(job), Encoding.UTF8, "applicationModel/json");
 
             var response = await _httpClient.PostAsync("api/job", jobJson);
 
@@ -51,7 +51,7 @@ namespace XebecPortal.UI.Services
         public async Task UpdateJob(Job job)
         {
             var jobJson =
-                new StringContent(JsonSerializer.Serialize(job), Encoding.UTF8, "application/json");
+                new StringContent(JsonSerializer.Serialize(job), Encoding.UTF8, "applicationModel/json");
 
             await _httpClient.PutAsync("api/job", jobJson);
         }

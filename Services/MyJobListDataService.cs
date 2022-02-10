@@ -51,8 +51,8 @@ namespace XebecPortal.UI.Services.Models
             HttpClient client = new HttpClient();
             var applicationPhaseHelpers = await JsonSerializer.DeserializeAsync<IEnumerable<ApplicationPhaseHelper>>
              (await client.GetStreamAsync($"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/UserId={appUserId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-            //Use ApplicationPhaseHelper.Application id get user's applications
-            //->api/Application/{applicationId}
+            //Use ApplicationPhaseHelper.ApplicationModel id get user's applications
+            //->api/ApplicationModel/{applicationId}
             if (applicationPhaseHelpers != null)
                 foreach (var phaseHelper in applicationPhaseHelpers)
                 {
@@ -69,9 +69,9 @@ namespace XebecPortal.UI.Services.Models
 
 
                     //From database
-                    // var application = ApplicationDataService.GetApplicationById(phaseHelper.ApplicationId).Result;
-                    // var jobAppliedFor = JobDataService.GetJobDetails(application.JobId).Result;
-                    var application = await client.GetFromJsonAsync<Application>($"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/api/application/{phaseHelper.ApplicationId}");
+                    // var applicationModel = ApplicationDataService.GetApplicationById(phaseHelper.ApplicationId).Result;
+                    // var jobAppliedFor = JobDataService.GetJobDetails(applicationModel.JobId).Result;
+                    var application = await client.GetFromJsonAsync<ApplicationModel>($"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/api/applicationModel/{phaseHelper.ApplicationId}");
                     if (application != null)
                     {
                         jobInfo.ApplicationDate = application.BeginApplication;

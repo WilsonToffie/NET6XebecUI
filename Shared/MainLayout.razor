@@ -36,6 +36,7 @@
         width: 93%;
         margin-top: -1vh;
     }
+
     .main-heading-text {
         font-size: 1.2em;
         font-weight: 800;
@@ -49,6 +50,7 @@
         height: 85vh;
         width: 100%;
     }
+
     .mainlayout-heading {
         width: 70%;
         height: 100%;
@@ -247,7 +249,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showApplicantNav" aria-labelledby="offcanvasRightLabel">
         <div class="offcanvas-header offcanvas-header-color">
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -370,6 +372,10 @@
         </div>
     </div>
 </div>
+
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
 @code{
     private List<UserModel> users = new List<UserModel>();

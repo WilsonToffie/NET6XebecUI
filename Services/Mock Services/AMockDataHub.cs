@@ -5,7 +5,7 @@ using System.Linq;
 using Bogus;
 using XebecPortal.UI.Pages.HR;
 using XebecPortal.UI.Services.Models;
-using Application = XebecPortal.UI.Services.Models.Application;
+using Application = XebecPortal.UI.Services.Models.ApplicationModel;
 
 namespace XebecPortal.UI.Services.MockServices
 {
@@ -31,24 +31,7 @@ namespace XebecPortal.UI.Services.MockServices
         public static readonly List<Job> MockJobs = GetMockJobs().Generate(20);
         public static readonly List<XebecPortal.UI.Services.Models.AppUser> MockAppUsers = GetMockAppUsers().Generate(20);
         public static readonly List<Application> MockApplications = GetMockApplications().Generate(50);
-
-        public static readonly List<ApplicationPhaseHelper>
-            MockApplicationHelpers = GetApplicationHelper().Generate(50);
-
-        private static Faker<ApplicationPhaseHelper> GetApplicationHelper()
-        {
-            var statuses = Enum.GetNames(typeof(Status)).ToList();
-
-            return new Faker<ApplicationPhaseHelper>()
-                .StrictMode(true)
-                .RuleFor(a => a.Id, f => f.IndexFaker)
-                .RuleFor(a => a.Status, f => f.PickRandom(typeof(Status)))
-                .RuleFor(a => a.ApplicationPhase, f => f.PickRandom(typeof(ApplicationPhase)))
-                .RuleFor(a => a.TimeMoved, f => f.PickRandom(MockApplications).TimeApplied)
-                .RuleFor(a => a.Rating, f => f.Random.Int(0, 5))
-                .RuleFor(a => a.Comments, f => f.Rant.Reviews().ToString());
-        }
-
+        
         private static Faker<XebecPortal.UI.Services.Models.AppUser> GetMockAppUsers()
         {
             string[] roles = {"candidate", "developer", "hr"};

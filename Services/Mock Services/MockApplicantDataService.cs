@@ -90,7 +90,7 @@ namespace XebecPortal.UI.Services.MockServices
         public enum ApplicationPhase
         {
             //get desciption
-            [Description("Application Sent")] Application,
+            [Description("ApplicationModel Sent")] Application,
             Testing,
             Interview_Staff,
             Interview_CEO,

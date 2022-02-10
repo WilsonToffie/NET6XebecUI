@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -32,12 +33,13 @@ namespace XebecPortal.UI.Services
         {
             // return await JsonSerializer.DeserializeAsync<IEnumerable<Applicant>>
             //     (await _httpClient.GetStreamAsync($"api/applicant/"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-            
+            Console.WriteLine("Getting candidates");
               _applicants = await JsonSerializer.DeserializeAsync<IEnumerable<Applicant>>
               (await altClient.GetStreamAsync($"https://xebecapi.azurewebsites.net/api/applicant"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
               ApplicantDataService.InitAppl = _applicants;
               
               _applicants.ToList().ForEach(a => a.Avatar = new Faker().Person.Avatar);
+              _applicants = _applicants.OrderBy(a => a.Id);
               return _applicants;
              //return (await _mocks.GetAllApplicants()).ToList();
         }
@@ -64,7 +66,7 @@ namespace XebecPortal.UI.Services
         public async Task<Applicant> AddApplicant(Applicant applicant)
         {
             var applicantJson =
-                new StringContent(JsonSerializer.Serialize(applicant), Encoding.UTF8, "application/json");
+                new StringContent(JsonSerializer.Serialize(applicant), Encoding.UTF8, "applicationModel/json");
 
             var response = await _httpClient.PostAsync("api/applicant", applicantJson);
 
@@ -77,7 +79,7 @@ namespace XebecPortal.UI.Services
         public async Task<IEnumerable<Applicant>> UpdateApplicant(Applicant applicant)
         {
             // var applicantJson =
-            //     new StringContent(JsonSerializer.Serialize(applicant), Encoding.UTF8, "application/json");
+            //     new StringContent(JsonSerializer.Serialize(applicant), Encoding.UTF8, "applicationModel/json");
             //
             // await _httpClient.PutAsync("api/applicant", applicantJson);
             // var _applicants2 = (await JsonSerializer.DeserializeAsync<IEnumerable<Applicant>>

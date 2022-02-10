@@ -3,9 +3,14 @@
 @using XebecPortal.UI.Interfaces
 @using Bogus
 @using XebecPortal.UI.Pages.Applicant
+@using XebecPortal.UI.Service_Interfaces
 @using XebecPortal.UI.Services.MockServices
 @inject IApplicantDataService _applicantDataService
 @inject IMyJobListDataService _myJobListDataService
+@inject IApplicationPhaseHelperDataService _phaseHelperDataService
+@inject IPhaseDataService _phaseDataService
+@inject IStatusDataService _statusDataService
+@inject HttpClient _httpClient
 
 <style>
      
@@ -36,12 +41,13 @@
  .candidate-section {
      display: grid;
      grid-template-columns: 1fr;
-     grid-template-rows: fit-content() 1fr;
+     grid-template-rows: 10% 1fr;
      grid-auto-flow: row;
      grid-area: 1 / 1 / 3 / 3;
      grid-gap: 10px;
      padding: 5px;
      background: transparent !important;
+     height: 85vh;
  }
 
  .candidate-section > div {
@@ -77,11 +83,13 @@
      grid-template-columns: 1fr;
      grid-gap: 10px;
      overflow-y: auto;
+     /*background: transparent !important;*/
  }
 
 
  .candidate-list > div {
      box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0, rgba(60, 64, 67, 0.15) 0 1px 3px 1px; 
+     background: white !important;
  }
 
 
@@ -90,7 +98,7 @@
      grid-template-columns: 28% 69%;
      grid-template-rows: 1fr;
      grid-column-gap: 2px;
-     
+     cursor: pointer;
  }
 
  .candidate-card .profile-picture {
@@ -111,9 +119,8 @@
 
  .candidate-card .candidate-details {
      grid-area: 1 / 2 / 2 / 3;
-     
      height: 100%;
-     width: 100%;
+     width: calc(100% - 16px);
      padding: 5px;
      
  }
@@ -138,10 +145,6 @@
  /*Candidate list styling - start*/
 
  /*Jobs Section Start*/
- .jobs-section {
-     grid-area: 1 / 3 / 2 / 5;
-     padding: 10px;
- }
  .jobs-section tbody {
         display: block;
         height: 30vh !important;
@@ -169,9 +172,41 @@
    /*Jobs Section end*/
 
  .profile-section {
-     grid-area: 2 / 3 / 3 / 5;
+     grid-area: 1 / 3 / 4 / 5;
      padding: 10px;
  }
+ 
+ .col-1 {
+         max-width: 8.33%;
+     }
+ 
+     .col-2 {
+         max-width: 16.67%;
+     }
+ 
+     .col-3 {
+         min-width: 25%;
+         max-width: 25%;
+     }
+ 
+     .col-12 {
+         min-width: 100%;
+     }
+ 
+     .col-small {
+         width: 4.5%;
+     }
+     /* Chrome, Safari, Edge, Opera */
+     input[type=number]::-webkit-outer-spin-button,
+     input[type=number]::-webkit-inner-spin-button {
+       -webkit-appearance: none;
+       margin: 0;
+     }
+     
+     /* Firefox */
+     input[type=number] {
+       -moz-appearance: textfield;
+     }
 </style>
 
 <link rel="stylesheet" href="style.css">
@@ -184,121 +219,66 @@
             <h1 class="filter-plane-heading">
                 Candidates
             </h1>
-            
         </div>
         <div class="candidate-list">
-            @if (_applicants != null)
+            @if (_applicants != null && _map != null)
             {
+                //todo remove
+                Random r = new Random();
+
+                //Console.WriteLine("We have applicants");
                 foreach (var applicant in _applicants)
                 {
-                    var applicantJobs = map[applicant];
-                    var lastJob = new MyJob()
+                    var applicationPhaseHelpers = _map[applicant];
+                    // Console.WriteLine($">>>>>>>> line 204 Applicant Portal : applicant id:{applicant.Id} has {applicationPhaseHelpers.Count} phase helpers!");
+                    //var applicationPhaseHelpers = _httpClient.GetFromJsonAsync<List<ApplicationPhaseHelper>>($"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/UserId={FocusApplicant.Id}").Result;
+                    //Todo: application must not be null && get the last job
+                    //var lastJob = new JobModel(){ Title = "N/A no application",Department = "N/A no application"};
+                    var lastHelper = GetLatestHelper(_map[applicant]);
+                    if (lastHelper == null)
                     {
-                        Position = "Has Not applied for a job"
-                    };
-                    if (applicantJobs != null || applicantJobs.Count() > 0)
-                    {
-                        lastJob = applicantJobs[applicantJobs.Count() - 1];
+                        lastHelper = _phaseHelperDataService.GetEmptyHelper();
                     }
-                    <div class="candidate-card" @onclick="() => ShowApplicant(applicant)">
+                    KeyValuePair<Applicant, List<ApplicationPhaseHelper>> applicantPair = new KeyValuePair<Applicant, List<ApplicationPhaseHelper>>(applicant, applicationPhaseHelpers);
+                    var phase = _phaseDataService.GeApplicationPhaseById(lastHelper.ApplicationPhaseId);
+
+                    <div class="candidate-card" @onclick="() => ShowApplicant(applicantPair)" style="@(GetStyle(applicant))">
                         <div class="profile-picture">
                             <img src="@applicant.Avatar" alt="Avatar">
                         </div>
                         <div class="candidate-details">
                             <span class="name">@($"{applicant.FirstName} {applicant.LastName}")</span>
                             <br>
-                            <span class="job">@lastJob.Position</span>
-                            <br>
-                            <span class="phase-pill" style="@(GetColor(applicant.Phase))">@lastJob.Phase</span>
+                            
+                            @if ((lastHelper != null) && (lastHelper.Application == null || lastHelper.Id == -1 || lastHelper.Application.Job == null))
+                            {
+                                //Console.WriteLine("Sila");
+                                <span class="job">Db error: applicant has no associated job</span>
+                                <br>
+                                //<span class="phase-pill" style="@(GetColor(lastHelper.ApplicationPhase.Description))">@lastHelper.ApplicationPhase.Description</span>
+                            }
+                            else if((lastHelper != null) )
+                            {
+                                Console.WriteLine("Sila");
+                                <span class="job">@lastHelper.Application.Job.Title</span>
+                                <br>
+                                <span class="phase-pill" style="@(GetColor(phase.Description))">@phase.Description</span>
+                            }
+                            @* <br> *@
+                            @* <span class="phase-pill" style="@(GetColor(applicant.Phase))">@lastJob.JobPhases</span> *@
+
+
                         </div>
                     </div>
                 }
             }
-
+            else
+            {
+                <p>Please wait whilst we get all Applicants</p>
+            }
         </div>
     </div>
-    <div class="jobs-section">
-        <!-- table-->
-
-        @if (FocusApplicant != null)
-        {
-            <span class="this-personal-detail">Job Applications </span> <span>@($"{FocusApplicant.FirstName} {FocusApplicant.LastName}")</span>
-            var applicantJobs = map[FocusApplicant];
-            KeyValuePair<Applicant, List<MyJob>> entry = GetEntry(map, FocusApplicant);
-            <table id="example" class="table table-striped bg-white">
-                <thead style="background: #00bcae;">
-                <tr style="color:#fff;" class="col-12">
-                    <th>#</th>
-                    <th>Job</th>
-                    <th>Company</th>
-                    <th>Application Phase</th>
-                    <th>Phase Status</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                @for (var index = 0; index < applicantJobs.Count; index++)
-                {
-                    var job = applicantJobs[index];
-
-                    <tr class="col-12">
-                        <td>@index</td>
-                        <td >@job.Position</td>
-                        <td >@job.Company</td>
-                        @if (jobToChange != job)
-                        {
-                            <td >@job.Phase</td>
-                            <td >@job.Status</td>
-                        }
-                        else
-                        {
-                            <td >
-                                @* <input type="text" class="form-control" @bind="jobToChange.Phase"> *@
-                                <select @bind="jobToChange.Phase">
-                                    @foreach (var phase in Enum.GetNames(typeof(MyJobs.ApplicationPhase)))
-                                    {
-                                        <option value="@phase">@phase</option>
-                                    }
-                                </select>
-                            </td>
-
-                            <td >
-                                @* <input type="text" class="form-control" @bind="jobToChange.Status"> *@
-                                <select @bind="jobToChange.Status">
-                                    @foreach (var status in Enum.GetNames(typeof(MockMyJobListDataService.Statuses)))
-                                    {
-                                        <option value="@status">@status</option>
-                                    }
-                                </select>
-                            </td>
-                        }
-                        <td>
-                            @if (job != jobToChange && !entry.Equals(EntryToChange))
-                            {
-                                <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => Edit(job, entry)">
-                                    <i class="fas fa-pen"></i>
-                                </button>
-                            }
-                            else
-                            {
-                                <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="() => Save(job)">
-                                    <i class="fas fa-save"></i>
-                                </button>
-                                <button type="button" class="btn btn-primary btn-xs dt-edit" style="margin-right:16px;" @onclick="CancelEdit">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            }
-                        </td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-        }
-        else
-        {
-            <p>Loading Applicant Details</p>
-        }
-    </div>
+    
     <div class="profile-section">
         <ApplicantProfile Applicant=@FocusApplicant></ApplicantProfile>
     </div>
@@ -306,35 +286,110 @@
 
 
 @code {
-    private Applicant FocusApplicant { get; set; }
-    private MyJob jobToChange;
-    IEnumerable<Applicant> _applicants;
-    IEnumerable<MyJob> _candidateJobs;
-    Dictionary<Applicant, List<MyJob>> map;
-    KeyValuePair<Applicant, List<MyJob>> EntryToChange;
+    Dictionary<Applicant, List<ApplicationPhaseHelper>> _map = new();
+    List<Applicant> _applicants;
+    public HttpClient altClient;
+    public KeyValuePair<Applicant, List<ApplicationPhaseHelper>> focusPair = new();
+    public Applicant FocusApplicant { get; set; }
+    public List<AppPhase> _appPhases;
+    public List<AppStatus> _statues;
+    public List<ApplicationPhaseHelper> FocuApplicationPhaseHelpers { get; set; }
+
+    ApplicationPhaseHelper helperToChange = new();
 
     protected override async Task OnInitializedAsync()
     {
+    //Console.WriteLine($">>>>>>>>Applicant Portal OnInitialized");
         _applicants = (await _applicantDataService.GetAllApplicants()).OrderBy(a => a.Id).ToList();
-        _candidateJobs = (_myJobListDataService.GetAllJobs()).ToList();
-        map = AssociateApplicantsToJobs(_applicants, _candidateJobs);
-        if (_applicants.Any())
+
+        if (_applicants != null)
         {
-            FocusApplicant = _applicants.ToList()[0];
+            if (_applicants.Any())
+            {
+    //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = setting focus applicant");
+                FocusApplicant = _applicants[0];
+            }
+    //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Associating map");
+            _map = await AssociateApplicantsToJobs(_applicants);
+            if (_map != null)
+            {
+    //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Associating map > Done!!!");
+    //Console.WriteLine();
+    //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Creating Focus Value pair");
+                focusPair = _map.FirstOrDefault(a => _applicants.FirstOrDefault(a => a.Id > -1) == a.Key);
+    //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Creating Focus Value pair> Done!!!");
+    //Console.WriteLine();
+            }
+            Task.WaitAll();
         }
+
+        _appPhases = _phaseDataService.GetApplicationPhases().OrderBy(p => p.Id).ToList();
+        _statues = _statusDataService.GetAllStatuses().Result.OrderBy(s => s.Id).ToList();
     }
 
-    private Dictionary<Applicant, List<MyJob>> AssociateApplicantsToJobs(IEnumerable<Applicant> applicants, IEnumerable<MyJob> candidateJobs)
+    public async Task<Dictionary<Applicant, List<ApplicationPhaseHelper>>> AssociateApplicantsToJobs(List<Applicant> applicants)
     {
-        Dictionary<Applicant, List<MyJob>> tempMap = new Dictionary<Applicant, List<MyJob>>();
-        int stop = candidateJobs.Count() - 1;
-        Random rnd = new Random();
-        foreach (var applicant in applicants)
+        Dictionary<Applicant, List<ApplicationPhaseHelper>> tempMap = new Dictionary<Applicant, List<ApplicationPhaseHelper>>();
+
+        foreach (var app in applicants)
         {
-            var jobs = candidateJobs.Skip(rnd.Next(0, stop)).Take(rnd.Next(1, stop)).ToList();
-            tempMap.Add(applicant, jobs);
+            List<ApplicationPhaseHelper> temp = (await _phaseHelperDataService.GetAssApplicationPhaseHelpers(app, _applicants));
+            //Console.WriteLine($">>>>>>>>Applicant Portal :AssociateApplicantsToJobs = tempMap.Add({app.Id}, count: {temp.Count});");
+            tempMap.Add(app, temp);
         }
         return tempMap;
+    }
+
+    public void ShowApplicant(KeyValuePair<Applicant, List<ApplicationPhaseHelper>> applicantPair)
+    {
+        focusPair = applicantPair;
+        FocusApplicant = focusPair.Key;
+    }
+
+    public void Save(ApplicationPhaseHelper applicationPhaseHelper, ApplicationPhaseHelper intPhaseHelper, ApplicationPhaseHelper cstPhaseHelper)
+    {
+    //if current helper is null or (ass helper is null or empty)
+    //.add Method
+    //..1 in backend helpers a new helper
+    //..2 get updated list
+
+    //current phase == new phase (phase helper.Application.Phase
+    //.put phase changes
+    //..1 find phase 
+    //..2 change properties
+    }
+
+    private void Edit(ApplicationPhaseHelper applicationPhaseHelper)
+    {
+        Console.WriteLine("Inside Edit");
+
+        if (applicationPhaseHelper == null)
+        {
+            Console.WriteLine("application helper is null.");
+            applicationPhaseHelper = new ApplicationPhaseHelper();
+        }
+        helperToChange = applicationPhaseHelper;
+    }
+
+    private ApplicationPhaseHelper GetLatestHelper(List<ApplicationPhaseHelper> helpers)
+    {
+        var date = DateTime.MinValue;
+        var tempHelper = helpers.FirstOrDefault();
+        foreach (var helper in helpers)
+        {
+            if (date < helper.TimeMoved)
+            {
+                date = helper.TimeMoved;
+                tempHelper = helper;
+            }
+        }
+        return tempHelper;
+    }
+
+    private void Cancel()
+    {
+        Console.WriteLine("canceling");
+        helperToChange = new ApplicationPhaseHelper();
     }
 
     private string GetColor(string applicationPhase)
@@ -342,41 +397,46 @@
         string bg_colour;
         string text_colour;
 
-        if (Enum.GetName(MyJobs.ApplicationPhase.Application).Equals(applicationPhase))
+        if (Enum.GetName(PhaseEnum.Application).Equals(applicationPhase))
         {
             bg_colour = "rgba(9, 71, 111, 0.22)";
             text_colour = "rgba(9, 71, 111, 1)";
         }
-        else if (Enum.GetName(MyJobs.ApplicationPhase.Testing).Equals(applicationPhase))
+        else if (Enum.GetName(PhaseEnum.Testing).Equals(applicationPhase))
         {
             bg_colour = "rgba(11, 28, 72, 0.22)";
             text_colour = "rgba(11, 28, 72, 1)";
         }
-        else if (Enum.GetName(MyJobs.ApplicationPhase.InterviewStaff).Equals(applicationPhase, StringComparison.OrdinalIgnoreCase))
+        else if (Enum.GetName(PhaseEnum.InterviewStaff).Equals(applicationPhase, StringComparison.OrdinalIgnoreCase))
         {
             bg_colour = "rgba(0, 155, 174, 0.22)";
             text_colour = "rgba(0, 155, 174, 1)";
         }
-        // ReSharper disable once PossibleNullReferenceException
-        else if (Enum.GetName(MyJobs.ApplicationPhase.InterviewHR).Equals(applicationPhase))
+    // ReSharper disable once PossibleNullReferenceException
+        else if (Enum.GetName(PhaseEnum.InterviewHr).Equals(applicationPhase))
         {
             bg_colour = "rgba(131, 97, 67, 0.22)";
             text_colour = "rgba(131, 97, 67, 1)";
         }
-        else if (Enum.GetName(MyJobs.ApplicationPhase.InterviewCEO).Equals(applicationPhase))
+        else if (Enum.GetName(PhaseEnum.InterviewCeo).Equals(applicationPhase))
         {
             bg_colour = "rgba(224, 213, 204, 0.22)";
             text_colour = "rgba(131, 97, 67, 1)";
         }
-        else if (Enum.GetName(MyJobs.ApplicationPhase.Offer).Equals(applicationPhase))
+        else if (Enum.GetName(PhaseEnum.Offer).Equals(applicationPhase))
         {
             bg_colour = "rgba(0, 188, 80, 0.22)";
             text_colour = "rgba(0, 188, 80, 1)";
         }
-        else if (Enum.GetName(MyJobs.ApplicationPhase.Screening).Equals(applicationPhase))
+        else if (Enum.GetName(PhaseEnum.Screening).Equals(applicationPhase))
         {
             bg_colour = "rgba(0, 108, 188, 0.22)";
             text_colour = "rgba(0, 108, 188, 1)";
+        }
+        else if (applicationPhase.ToLower().Contains("error"))
+        {
+            bg_colour = "rgba(255, 37, 17, 1)";
+            text_colour = "rgba(47, 36, 64, 1)";
         }
         else
         {
@@ -386,56 +446,13 @@
         return $"background: {bg_colour}; color: {text_colour}; box-shadow: {text_colour} 0 10px 20px -10px;";
     }
 
-    private void ShowApplicant(Applicant applicant)
+    private object GetStyle(Applicant applicant)
     {
-        Console.WriteLine($"FocusApplicant = {applicant.FirstName}");
-        FocusApplicant = applicant;
+        if (focusPair.Key == applicant)
+            return "border-left: 5px solid #00bcae;";
+        return "";
     }
 
-    private void Edit(MyJob job, KeyValuePair<Applicant, List<MyJob>> pair)
-    {
-        jobToChange = job;
-        EntryToChange = pair;
-    }
-
-    public KeyValuePair<TKey, TValue> GetEntry<TKey, TValue>
-        (Dictionary<TKey, TValue> dictionary,
-            TKey key)
-    {
-        return new KeyValuePair<TKey, TValue>(key, dictionary[key]);
-    }
-
-    private void Save(MyJob job)
-    {
-        var jobs = map[FocusApplicant].Where(j => j.Id != job.Id).ToList();
-        jobs.Add(job);
-        map[FocusApplicant] = jobs;
-        var ind = _applicants.ToList().FindIndex(a => a.Id == FocusApplicant.Id);
-        _applicants.ToList()[ind].Phase = job.Phase;
-        jobToChange = null;
-        EntryToChange = new KeyValuePair<Applicant, List<MyJob>>();
-    }
-
-    private void CancelEdit()
-    {
-        jobToChange = null;
-        EntryToChange = new KeyValuePair<Applicant, List<MyJob>>();
-    }
-
-    public enum ApplicationPhase
-    {
-        //get desciption
-        Application,
-        Testing,
-        InterviewStaff,
-        InterviewCEO,
-        InterviewHR,
-        Offer,
-        Screening
-    }
-    public enum Statuses
-    {
-        InProgress, Rejected
-    }
+}
 
 }

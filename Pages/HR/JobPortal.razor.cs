@@ -19,20 +19,17 @@ namespace XebecPortal.UI.Pages.HR
         private IList<Job> jobListFilter = new List<Job>();
         private Job displayJobDetail = new Job();
         private IPagedList<Job> jobPagedList = new List<Job>().ToPagedList();
-        private IList<MockDepartment> mockDepartments = new List<MockDepartment>();
-        private IList<MockLocation> mockLocations = new List<MockLocation>();
-        private IList<MockSocialMedia> mockSocialMedia = new List<MockSocialMedia>();
+        private List<string> Departments = new List<string>() { "Accounting & Finance", "HR", "Sales & Marketing", "Legal", "Research & Development", "IT", "Admin", "Customer Support" };
+        private List<string> Locations = new List<string>() { "Eastern Cape", "Free State", " Gauteng", "KwaZulu-Natal", "Limpopo", "Mpumalanga", "Northen Cape", "North West", "Western Cape" };
         private IList<JobPlatform> jobPlatforms = new List<JobPlatform>();
         private IList<JobPlatformHelper> jobPlatformHelpers = new List<JobPlatformHelper>();
         private List<JobPlatform> platformsUsed = new List<JobPlatform>();
-
+        private List<JobType> JobTypes;
 
         protected override async Task OnInitializedAsync()
         {
+            JobTypes = await httpClient.GetFromJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
             jobList = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
-            mockDepartments = await httpClient.GetFromJsonAsync<List<MockDepartment>>("/mockData/departmentMockData.json");
-            mockLocations = await httpClient.GetFromJsonAsync<List<MockLocation>>("/mockData/locationMockData.json");
-            mockSocialMedia = await httpClient.GetFromJsonAsync<List<MockSocialMedia>>("/mockData/socialmediaMockData.json");
             jobPlatforms = await httpClient.GetFromJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform");
             jobPlatformHelpers = await httpClient.GetFromJsonAsync<List<JobPlatformHelper>>("https://xebecapi.azurewebsites.net/api/jobplatformhelper");
             jobListFilter = jobList;
