@@ -4,6 +4,7 @@
 @inject HttpClient HttpClient
 @using System.Linq;
 @using XebecPortal.UI.Shared.Home.Models
+@inject UserState state 
 
 <style>
     .overlay-login {
@@ -33,7 +34,7 @@
                     <input type="password" placeholder="Password" @bind="@Password">
                 </div>
                 <div class="form-group index-form-or">
-                    <h1 class="index-form-heading-3">or sign in using</h1>
+                    <h1 class="index-form-heading-3">or using</h1>
                 </div>
                 <div class="form-group index-form-socials">
                     <div class="index-socialmedia-div">
@@ -56,7 +57,9 @@
             </form>
 
             <form class="index-form-login" hidden="@RightDisplayForgotPasswordIsHidden">
-
+                <div class="form-group index-form-heading">
+                    <h1 class="index-form-heading-1">FORGOT PASSWORD</h1>
+                </div>
                 <div class="form-group index-form-group index-group">
                     <div class="index-form-icon">
                         <i class="fa fa-user"></i>
@@ -64,7 +67,7 @@
                     <input type="email" required placeholder="Email address" @bind="@Email">
                 </div>
                 <div class="form-group">
-                    <h1 class="forgotpassword"  @onclick="GoToLogin">login</h1>
+                    <h1 class="forgotpassword" @onclick="GoToLogin">login</h1>
                 </div>
                 <div class="form-group index-form-or" hidden="@invalidEmailorPasswordMessageIsHidden">
                     <h1 class="index-form-heading-3">invalid email</h1>
@@ -93,11 +96,11 @@
     private string Email = "";
     private string Password = "";
 
+    private string message = "";
     private ForgotPasswordModel forgotPassword = new ForgotPasswordModel();
 
     private SignInModel signIn = new SignInModel();
-    private List<UserModel> users = new List<UserModel>();
-    private UserModel user = new UserModel();
+    private SignInResult thisUser = new SignInResult();
 
     protected override async Task OnInitializedAsync()
     {
@@ -106,7 +109,6 @@
         validSubmitForgotPasswordMessageIsHidden = true;
         invalidEmailorPasswordMessageIsHidden = true;
         await Task.Delay(0);
-
     }
 
     private async Task Login()
@@ -114,14 +116,34 @@
         signIn.Email = Email;
         signIn.Password = Password;
 
-        //send model to API 
-
-        //get user JSON from API 
         try
         {
-            users = await HttpClient.GetFromJsonAsync<List<UserModel>>("https://my-json-server.typicode.com/IviweMalotana/xebecDB/Users");
-            user = users.Where(a => a.Email.Equals(Email)).Single();
-            navmanager.NavigateTo("/main/" + user.ID);
+            using (var msg = await HttpClient.PostAsJsonAsync<SignInModel>("https://xebecapi.azurewebsites.net/api/auth/loginnew", signIn))
+            {
+                if (msg.IsSuccessStatusCode)
+                {
+                    SignInResult result = await msg.Content.ReadFromJsonAsync<SignInResult>();
+
+                    state.AppUserId = result.AppUserId;
+                    state.Email = result.Email;
+                    state.Name = result.Name;
+                    state.Surname = result.Surname;
+                    state.Role = result.Role;
+
+                    message = result.Message;
+
+                    if (result.Success)
+                    {
+                        navmanager.NavigateTo("/main");
+
+                    }
+                    else if (message.Equals("User/password not found."))
+                    {
+                        invalidEmailorPasswordMessageIsHidden = false;
+                    }
+                }
+            }
+
         }
         catch
         {
@@ -133,21 +155,6 @@
     {
         forgotPassword.Email = Email;
         forgotPassword.Link = "https://localhost:44364/forgotpassword";
-
-        try
-        {
-            //send Email 
-            users = await HttpClient.GetFromJsonAsync<List<UserModel>>("https://my-json-server.typicode.com/IviweMalotana/xebecDB/Users");
-            user = users.Where(a => a.Email.Equals(Email)).Single();
-            validSubmitForgotPasswordMessageIsHidden = false;
-            invalidEmailorPasswordMessageIsHidden = true;
-            // power automate 
-        }
-        catch
-        {
-            validSubmitForgotPasswordMessageIsHidden = true;
-            invalidEmailorPasswordMessageIsHidden = false;
-        }
     }
 
     private async Task GoToLogin()

@@ -2,32 +2,27 @@
 @inject NavigationManager navmanager
 @layout EmptyLayout
 @inject HttpClient HttpClient
-@using System.Linq;
-@using XebecPortal.UI.Shared.Home.Models;
+@using System.Linq
+@using XebecPortal.UI.Shared.Home.Models
 @using Microsoft.AspNetCore.Components;
-@inject IJSRuntime JsRuntime;
+@inject IJSRuntime JsRuntime
 
 <style>
-    .overlay-services {
-        z-index: 0;
-        margin-top: 15vh;
-        height: 85vh;
-        width: 100%;
-    }
 
     .service-div {
+        margin-top: 15vh;
         height: 85vh;
     }
 
     .services-container {
-        height: 80vh;
+        height: 70vh;
         background-size: cover;
         background-position: center;
         z-index: 0;
     }
 
     .services-floating {
-        height: 60vh;
+        height: 70vh;
         z-index: 1;
         position: absolute;
         width: 100%;
@@ -63,7 +58,7 @@
         }
 
     .services-label {
-        height: 15vh;
+        height: 10vh;
     }
 
     .services-label-h2 {
@@ -103,36 +98,23 @@
         font-weight: 700;
     }
 
-    .services-bottom-developer {
-        height: 60vh;
-        width: 100%;
-        background-color: #00bcae;
-        border-radius: 2em;
-        font-size: 1.5em;
-        color: white;
-        font-family: opensans-condensed-light;
-        font-weight: 700;
-        padding-left: 2em;
-        padding-right: 2em;
-    }
-
     ul li {
         padding-top: 1em;
     }
 
     .services-bottom-hr {
-        height: 35vh;
-        width: 100%;
+        height: 20vh;
+        width: 80%;
         margin: auto;
-        border-radius: 1em;
         background-color: #00bcae;
-        list-style: circle;
+        border-radius: 1em;
+        line-height: 2.5vh;
         padding-left: 1em;
-        padding-right: 1em;
         color: white;
-        font-family: opensans-condensed-light;
-        font-weight: 700;
         font-size: 1.3em;
+        font-family: opensans-condensed-light;
+        text-align: center;
+        font-weight: 700;
     }
 
     .applicant-profile {
@@ -210,15 +192,6 @@
         background-position: center;
     }
 
-    .hr-candidate-recommender {
-        height: inherit;
-        max-width: 5em;
-        margin: auto;
-        background-image: url(/Img/paper.svg);
-        background-size: cover;
-        background-position: center;
-    }
-
     .hr-job-portal {
         height: inherit;
         max-width: 5em;
@@ -236,7 +209,14 @@
         background-size: cover;
         background-position: center;
     }
-
+    .hr-create-a-job {
+        height: inherit;
+        max-width: 5em;
+        margin: auto;
+        background-image: url(/Img/paper.svg);
+        background-size: cover;
+        background-position: center;
+    }
     .handPointer {
         cursor: pointer;
     }
@@ -277,21 +257,21 @@
 <div class="overlay-services" id="services">
     <div class="service-div" hidden="@applicantServicesIsHidden">
         <div class="services-floating row">
-            <div class="col-sm-1 service-left-arrow" @onclick="ToJobPortal">
+            <div class="col-1 service-left-arrow" @onclick="ToJobPortal">
                 <i class="fas fa-angle-left"></i>
             </div>
-            <div class="col-sm-10"></div>
-            <div class="col-sm-1 service-right-arrow" @onclick="ToHR">
+            <div class="col-10"></div>
+            <div class="col-1 service-right-arrow" @onclick="ToHR">
                 <i class="fas fa-angle-right"></i>
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12 services-label">
+            <div class="col-12 services-label">
                 <h2 class="services-label-h2">Applicant Services</h2>
             </div>
         </div>
         <div class="row services-container">
-            <div class="col-sm-4 services-block">
+            <div class="col-4 services-block">
                 <div class="services-top">
                     <div class="applicant-profile"></div>
                 </div>
@@ -302,7 +282,7 @@
                     <p>Upload your CV to our AI built form processor</p>
                 </div>
             </div>
-            <div class="col-sm-4 services-block">
+            <div class="col-4 services-block">
                 <div class="services-top">
                     <div class="applicant-job-portal"></div>
                 </div>
@@ -313,7 +293,7 @@
                     <p>Search and apply for jobs </p>
                 </div>
             </div>
-            <div class="col-sm-4 services-block">
+            <div class="col-4 services-block">
                 <div class="services-top">
                     <div class="applicant-my-jobs"></div>
                 </div>
@@ -329,67 +309,36 @@
 
     <div class="row service-div" hidden="@hrServicesIsHidden">
         <div class="services-floating row">
-            <div class="col-sm-1 service-left-arrow" @onclick="ToApplicant">
+            <div class="col-1 service-left-arrow" @onclick="ToApplicant">
                 <i class="fas fa-angle-left"></i>
             </div>
-            <div class="col-sm-10"></div>
-            <div class="col-sm-1 service-right-arrow" @onclick="ToJobPortal">
+            <div class="col-10"></div>
+            <div class="col-1 service-right-arrow" @onclick="ToJobPortal">
                 <i class="fas fa-angle-right"></i>
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-12 services-label">
+            <div class="col-12 services-label">
                 <h2 class="services-label-h2">Human Resource Services</h2>
             </div>
         </div>
         <div class="row services-container">
-            <div class="col-sm-1"></div>
-            <div class="col-sm-2 services-block">
+            <div class="col-3 services-block">
                 <div class="services-top">
                     <div class="hr-applicant-portal"></div>
                 </div>
                 <div class="services-middle">
-                    <h3 class="applicant-middle-text">APPLICANT VIEWER</h3>
+                    <h3 class="applicant-middle-text">APPLICANT CONTROL PORTAL</h3>
                 </div>
                 <div class="services-bottom-hr">
                     <ul>
                         <li>A display of all candidates</li>
-                        <li>A dedicated searh bar</li>
-                        <li>A detailed information block about a candidate</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-sm-2 services-block">
-                <div class="services-top">
-                    <div class="hr-applicant-control"></div>
-                </div>
-                <div class="services-middle">
-                    <h3 class="applicant-middle-text">APPLICANT CONTROL TOOL</h3>
-                </div>
-                <div class="services-bottom-hr">
-                    <ul>
-                        <li>Review and update assignment marks and comments</li>
-                        <li>Review and update interview ratings and comments</li>
+                        <li>Detailed information about candidates</li>
                         <li>Control the status of a candidate’s application</li>
                     </ul>
                 </div>
             </div>
-            <div class="col-sm-2 services-block">
-                <div class="services-top">
-                    <div class="hr-candidate-recommender"></div>
-                </div>
-                <div class="services-middle">
-                    <h3 class="applicant-middle-text">CANDIDATE RECOMMENDER</h3>
-                </div>
-                <div class="services-bottom-hr">
-                    <ul>
-                        <li>A display of top candidates</li>
-                        <li>Uses a smart recruitment algorithm</li>
-                        <li>Provides a rating of the candidate by job</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-sm-2 services-block">
+            <div class="col-3 services-block">
                 <div class="services-top">
                     <div class="hr-job-portal"></div>
                 </div>
@@ -398,18 +347,33 @@
                 </div>
                 <div class="services-bottom-hr">
                     <ul>
-                        <li>Review/edit/delete/create job advertisements</li>
-                        <li>Post job advertisements to popular sites e.g. LinkedIn</li>
-                        <li>Create specialized application forms for each job</li>
+                        <li>A display of all jobs created and advertised</li>
+                        <li>The abilty to review advertised jobs in detail</li>
+                        <li>The ability to edit and delete advertised jobs</li>
                     </ul>
                 </div>
             </div>
-            <div class="col-sm-2 services-block">
+            <div class="col-3 services-block">
+                <div class="services-top">
+                    <div class="hr-create-a-job"></div>
+                </div>
+                <div class="services-middle">
+                    <h3 class="applicant-middle-text">JOB ADVERT CREATOR</h3>
+                </div>
+                <div class="services-bottom-hr">
+                    <ul>
+                        <li>Create/Post a new job advert </li>
+                        <li>Create a specialized application form</li>
+                        <li>Select Collaborators and Phases for job advert</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-3 services-block">
                 <div class="services-top">
                     <div class="hr-data-analytics"></div>
                 </div>
                 <div class="services-middle">
-                    <h3 class="applicant-middle-text">DATA ANALYTICS</h3>
+                    <h3 class="applicant-middle-text">DATA ANALYTICS TOOL</h3>
                 </div>
                 <div class="services-bottom-hr">
                     <ul>
@@ -419,7 +383,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-sm-1"></div>
+
         </div>
     </div>
     <div class="row service-div" hidden="@jobPortalIsHidden">
@@ -449,26 +413,6 @@
     private bool errorIsHidden;
     private bool contentIsHidden;
 
-
-    [Parameter]
-    public IList<ServicesJobPortal> ListOfJobs { get; set; }
-
-    [Parameter]
-    public ServicesJobPortal thisJob { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        applicantServicesIsHidden = false;
-        jobPortalIsHidden = true;
-        hrServicesIsHidden = true;
-
-        ListOfJobs = await HttpClient.GetFromJsonAsync<List<ServicesJobPortal>>("https://my-json-server.typicode.com/IviweMalotana/xebecDB/Jobs");
-        thisJob = ListOfJobs.FirstOrDefault(a => a.ID == 1);
-        errorIsHidden = true;
-        contentIsHidden = false;
-
-    }
-
     private void ToApplicant()
     {
         applicantServicesIsHidden = false;
@@ -488,9 +432,4 @@
         hrServicesIsHidden = false;
     }
 
-    private void CardSelected(int currJob)
-    {
-        thisJob = ListOfJobs.FirstOrDefault(a => a.ID == currJob);
-        Console.WriteLine("Job has changed to: "+thisJob.ID);
-    }
 }
