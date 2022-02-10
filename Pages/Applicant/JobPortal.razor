@@ -154,11 +154,26 @@
         <!--Search-Box-->
         <div class="row" style="height:5vh">
             <div class="col-12">
-                <div class="input-group d-flex justify-content-center">
-                    <input class="form-control job-search-bar" type="text" placeholder="Search for a job" @bind="searchJob"/>
-                    <span class="input-group-text job-search-icon-div" @onclick="() => SeachListJob(searchJob)">
-                        <i class="fa fa-search job-search-icon"></i>
-                    </span>
+                <div class="row">
+                    <div class="col-9">
+                        <div class="input-group d-flex justify-content-center">
+                            <input class="form-control job-search-bar" type="text" placeholder="Search for a job" @bind="searchJob" />
+                            <span class="input-group-text job-search-icon-div" @onclick="() => SeachListJob(searchJob)">
+                                <i class="fa fa-search job-search-icon"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <MudSelect T="string" AnchorOrigin="Origin.BottomCenter" Variant="Variant.Outlined" MultiSelection="true" SelectAll="true" SelectAllText="Select All Locations" @bind-SelectedValues="options" MultiSelectionTextFunc="@(new Func<List<string>, string>(GetMultiSelectionText))" Label="Location" AdornmentIcon="@Icons.Material.Filled.ArrowDropDown" Style="background-color: white">
+                            @if (jobListFilter != null && jobListFilter.Count > 0)
+                            {
+                                @foreach (var item in jobListFilter.Select(x => x.Location).Distinct())
+                                {
+                                    <MudSelectItem T="string" Value="@item">@item</MudSelectItem>
+                                }
+                            }
+                        </MudSelect>
+                    </div>
                 </div>
             </div>
         </div>
@@ -251,7 +266,7 @@
                                 <li class="page-item @(jobPagedList.PageNumber.Equals(pageNum.FirstOrDefault()) ? "active" : "")" @onclick="() => PageListNav(pageNum.FirstOrDefault())">
                                     <a class="page-link">@pageNum.FirstOrDefault()</a>
                                 </li>
-                                @foreach (var item in pageNum)
+                                @foreach (var item in pageNum.Select(x => x).Distinct())
                                 {
                                     if (item != pageNum.FirstOrDefault() && item != pageNum.LastOrDefault())
                                     {
@@ -311,21 +326,4 @@
 </div>
 
 @code {
-
-    private bool jobPortalIsHidden = false;
-    private bool applicationFormIsHidden = true;
-
-    private void GoToApplicationForm()
-    {
-        applicationFormIsHidden = false;
-        jobPortalIsHidden = true;
-    }
-
-    private string GetStyling(Job item)
-    {
-        if (displayJobDetail.Id == item.Id)
-            return "box-shadow: rgba(0,51,64,0.86) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;";
-        return "";
-    }
-
 }
