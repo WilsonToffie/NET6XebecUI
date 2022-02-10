@@ -17,11 +17,15 @@ namespace XebecPortal.UI.Pages.Applicant
         private Job displayJobDetail = new Job();
         private IPagedList<Job> jobPagedList = new List<Job>().ToPagedList();
         private IList<Application> applicationList = new List<Application>();
+        private List<JobType> JobTypes;
 
         protected override async Task OnInitializedAsync()
         {
+            JobTypes = await httpClient.GetFromJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
             jobList = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
             applicationList = await httpClient.GetFromJsonAsync<List<Application>>("https://xebecapi.azurewebsites.net/api/Application");
+            
+            
             jobListFilter = jobList;
             jobPagedList = jobListFilter.ToPagedList(1, 17);
             pageNum.AddRange(Enumerable.Range(1, jobPagedList.PageCount));

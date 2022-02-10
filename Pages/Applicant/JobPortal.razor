@@ -215,7 +215,7 @@
                                     <div class="col-6 justify-content-start">
                                         
                                         @if(displayJobDetail.JobTypes != null && displayJobDetail.JobTypes.Count > 0){
-                                         <p class="big-card-type">@displayJobDetail.JobTypes.FirstOrDefault()</p>
+                                         <p class="big-card-type">@GetJobType(displayJobDetail.JobTypes.FirstOrDefault())</p>
                                         }
                                        
                                     </div>
@@ -329,6 +329,17 @@
         if (displayJobDetail.Id == item.Id)
             return "box-shadow: rgba(0,51,64,0.86) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;";
         return "";
+    }
+
+    private string GetJobType(JobTypeHelper helper)
+    {
+        var type = new JobType{Id = 0, Type = "Contract"};
+        
+        if (JobTypes != null && helper != null)
+        {
+            type = JobTypes.FirstOrDefault(e => e.Id == helper.Id);
+        }
+      return  type.Type;
     }
 
 }
