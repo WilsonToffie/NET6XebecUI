@@ -6,7 +6,6 @@
 <style>
  
     .select-phase {
-        justify-content: center;
         text-align: center;
         height: 100%;
         width: 45%;
@@ -428,18 +427,28 @@
                 else
                 {
                     <tbody>
-                        @if (phases != null)
+                    @if (phasesAdded != null)
+                    {
+                        @foreach (var phase in phasesAdded)
                         {
-                            @foreach (var phase in phasesAdded)
-                            {
-
-                                <tr class="collaborators-left-row">
-                                    <td class="collaborators-left-td">@phase.description</td>
-                                    <td class="collaborators-left-td" @onclick="() => DeletePhaseOrderPhase(phase)">&times;</td>
-                                </tr>
-
-                            }
+                            <tr class="appform-right-row">
+                                <td class="collaborators-left-td">
+                                    <div class="form-preview-question">
+                                        <h3 class="appform-text">@phase.description</h3>
+                                        <button class="btn-close appform-close-button" @onclick="() => DeletePhaseOrderPhase(phase)"></button>
+                                    </div>
+                                    @if (phase.description.ToLower().Contains("interview"))
+                                    {
+                                        <div class="form-preview-input">
+                                            <p type="email" class="form-control" style="width: 100%">
+                                                Interviewer : @developerAssigned
+                                            </p>
+                                        </div>
+                                    }
+                                </td>
+                            </tr>
                         }
+                    }
                     </tbody>
                 }
             </table>
@@ -453,7 +462,7 @@
         <div class="modal-content">
             <span class="close" @onclick="ToggleModalSubmitPhase">&times;</span>
             <p>Phase:</p>
-            <input type="text" @bind="@phaseValue.description" />
+            <input type="text" @bind="@phaseValue.description"/>
             <div class="button">
                 <button type="submit" @onclick="AddPhase" class="button-content">Submit Phase</button>
             </div>
@@ -481,12 +490,13 @@
         </div>
     </div>
 }
-<input type="button" value="Submit" class="createjob-bottom-main-button" @onclick="Submit" />
+<input type="button" value="Submit" class="createjob-bottom-main-button" @onclick="Submit"/>
 
 @code
 {
     [Parameter]
     public CreateJobPost TempJob { get; set; }
+
     [Parameter]
     public EventCallback<CreateJobPost> TempJobChanged { get; set; }
 
@@ -494,9 +504,8 @@
     private List<ApplicationPhase> phasesAdded = new List<ApplicationPhase>();
     private IList<Job> jobs = new List<Job>();
     ApplicationPhase phaseValue = new ApplicationPhase();
+    private string developerAssigned = "";
 
-
-    private MainModel mainmodel { get; set; } = new MainModel();
 
     private bool showModalSubmitPhase = false;
     private bool showModalDeletePhase = false;
@@ -506,6 +515,8 @@
         phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
 
         jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
+        //Todo get developer
+        
     }
 
     private void ToggleModalSubmitPhase()
@@ -528,7 +539,6 @@
 
     private async Task AddPhase()
     {
-
         await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/applicationphase", phaseValue);
 
         phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
@@ -542,7 +552,6 @@
         {
             await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobapplicationphase", phaseValue);
         }
-
     }
 
     private void AddPhase(ApplicationPhase phase)
@@ -563,7 +572,7 @@
         TempJob.JobPhases = phasesAdded;
         await TempJobChanged.InvokeAsync(TempJob);
 
-        //Job page post
+    //Job page post
         Job job = new Job();
         job.MinimumExperience = null;
 
@@ -587,12 +596,9 @@
         job = null;
 
 
-
         job = await GetJob();
 
         SubmitRest(job);
-
-
     }
 
     private async Task<Job> GetJob()
@@ -603,7 +609,7 @@
 
     private async Task SubmitRest(Job job)
     {
-        //Add Job type to JobTypeHelpers
+    //Add Job type to JobTypeHelpers
         JobTypeHelper jobTypeHelper = new JobTypeHelper();
         jobTypeHelper.JobId = job.Id;
         jobTypeHelper.JobTypeId = TempJob.JobType.Id;
@@ -615,7 +621,7 @@
         await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobtypehelper", jobTypeHelper);
 
 
-        //Add selected platforms to JobPlatformHelpers
+    //Add selected platforms to JobPlatformHelpers
         foreach (var platform in TempJob.JobPlatforms)
         {
             JobPlatformHelper jobPlatformHelper = new JobPlatformHelper();
@@ -626,7 +632,7 @@
         }
 
 
-        //Add collaborators to CollaboratorsAssigned
+    //Add collaborators to CollaboratorsAssigned
         foreach (var Collaborator in TempJob.Collaborators)
         {
             Collaborator collaborator = new Collaborator();
@@ -638,7 +644,7 @@
         }
 
 
-        //Add form questions
+    //Add form questions
         foreach (var formQuestion in TempJob.formQuestions)
         {
             formQuestion.jobId = job.Id;
@@ -646,9 +652,7 @@
         await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Questionnaire/lst", TempJob.formQuestions);
 
 
-        //Add Application Phases
-        List<JobApplicationPhase> lstJobApplicationPhase = new List<JobApplicationPhase>();
-
+    //Add Application Phases
         foreach (var phase in phasesAdded)
         {
             Console.WriteLine("Phases that should post.");
@@ -656,9 +660,11 @@
             JobApplicationPhase_.JobId = job.Id;
             JobApplicationPhase_.ApplicationPhaseId = phase.id;
 
-            lstJobApplicationPhase.Add(JobApplicationPhase_);
+            Console.WriteLine(JobApplicationPhase_.Id);
+            Console.WriteLine(JobApplicationPhase_.JobId);
+            Console.WriteLine(JobApplicationPhase_.ApplicationPhaseId);
+            await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/jobapplicationphase/{job.Id}", JobApplicationPhase_);
         }
-        await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/jobapplicationphase/list", lstJobApplicationPhase);
 
         await TempJobChanged.InvokeAsync(TempJob);
     }

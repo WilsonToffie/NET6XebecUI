@@ -2,84 +2,104 @@
 @inject NavigationManager navmanager
 @layout EmptyLayout
 @inject HttpClient HttpClient
-@inject IJSRuntime jsRuntime
 @using System.Linq;
 @using XebecPortal.UI.Shared.Home.Models;
 
-<style>
-    .overlay-register {
-        z-index: 0;
-        height: 80vh;
-        top: 0;
-        width: 100%;
-    }
-</style>
-<div class="overlay-register" id="register">
-    <div class="register-page">
-        <div class="register-left"></div>
-        <div class="register-right">
-            <form id="signup-form" class="index-form-register">
-                <div class="form-group index-form-heading">
-                    <h1 class="index-form-heading-1">SIGN UP</h1>
+<div class="register-page">
+    <div class="register-left"></div>
+    <div class="register-right">
+        <form class="index-form-register" hidden="@registrationFormIsHidden">
+            <div class="form-group index-form-heading">
+                <h1 class="index-form-heading-1">REGISTER</h1>
+            </div>
+            <div class="form-group index-form-group index-group">
+                <div class="index-form-icon">
+                    <i class="fas fa-user"></i>
                 </div>
-                <div class="form-group index-form-group index-group">
-                    <div class="index-form-icon">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <input type="text" placeholder="Name" @bind="@Name" required>
+                <input type="text" placeholder="Name" @bind="@Name">
+            </div>
+            <div class="form-group index-form-group index-group">
+                <div class="index-form-icon">
+                    <i class="fas fa-users"></i>
                 </div>
-                <div class="form-group index-form-group index-group">
-                    <div class="index-form-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <input type="text" placeholder="Surname" @bind="@Surname" required>
+                <input type="text" placeholder="Surname" @bind="@Surname">
+            </div>
+            <div class="form-group index-form-group index-group">
+                <div class="index-form-icon">
+                    <i class="fas fa-at"></i>
                 </div>
-                <div class="form-group index-form-group index-group">
-                    <div class="index-form-icon">
-                        <i class="fas fa-at"></i>
-                    </div>
-                    <input type="email" placeholder="Email address" @bind="@Email" required>
+                <input type="email" placeholder="Email address" @bind="@Email">
+            </div>
+            <div class="form-group index-form-group index-group">
+                <div class="index-form-icon">
+                    <i class="fa fa-lock "></i>
                 </div>
-                <div class="form-group index-form-group index-group">
-                    <div class="index-form-icon">
-                        <i class="fa fa-lock "></i>
-                    </div>
-                    <input type="password" placeholder="Password" @bind="@Password1" required>
+                <input type="password" placeholder="Password" @bind="@Password1">
+            </div>
+            <div class="form-group index-form-group index-group">
+                <div class="index-form-icon">
+                    <i class="fa fa-lock "></i>
                 </div>
-                <div class="form-group index-form-group index-group">
-                    <div class="index-form-icon">
-                        <i class="fa fa-lock "></i>
-                    </div>
-                    <input type="password" placeholder="Confirm password" @bind="@Password2" required>
+                <input type="password" placeholder="Confirm password" @bind="@Password2">
+            </div>
+            <div class="form-group index-form-or">
+                <h1 class="index-form-heading-3">or sign in using</h1>
+            </div>
+            <div class="form-group index-form-socials">
+                <div class="index-socialmedia-div">
+                    <i class="fab fa-google"></i>
                 </div>
-                <div class="form-group index-form-or">
-                    <h1 class="index-form-heading-3">or sign in using</h1>
+                <div class="index-socialmedia-div">
+                    <i class="fab fa-microsoft"></i>
                 </div>
-                <div class="form-group index-form-socials">
-                    <div class="index-socialmedia-div">
-                        <i class="fab fa-google"></i>
-                    </div>
-                    <div class="index-socialmedia-div">
-                        <i class="fab fa-microsoft"></i>
-                    </div>
-                    <div class="index-socialmedia-div">
-                        <i class="fab fa-facebook"></i>
-                    </div>
+                <div class="index-socialmedia-div">
+                    <i class="fab fa-facebook"></i>
                 </div>
-                <div class="form-group index-form-group">
-                    <div class="index-form-checkbox-div">
-                        <input id="applicant-radio" type="radio" class="form-check-input" name="role" @onclick="@IsApplicant" @bind="@applicant" required /><label for="applicant-radio" class="form-label">Applicant</label>
-                    </div>
-                    <div class="index-form-checkbox-div">
-                        <input id="developer-radio" type="radio" class="form-check-input" name="role" @onclick="@IsDeveloper" @bind="@developer" required/><label for="developer-radio" class="form-label">Developer</label>
-                    </div>
-                    <div class="index-form-checkbox-div">
-                        <input id="hr-radio" type="radio" class="form-check-input" name="role" @onclick="@IsHR" @bind="@hr" required/><label for="hr-radio" class="form-label">HR admin</label>
-                    </div>
+            </div>
+            <div class="form-group index-form-group">
+                <div class="index-form-checkbox-div">
+                    <input type="checkbox" @onclick="@IsApplicant" @bind="@applicant" /><h2 class="index-checkbox-label">Applicant</h2>
                 </div>
-                <input type="button" class="index-form-button" @onclick="Register" value="Submit" />
-            </form>
-        </div>
+                <div class="index-form-checkbox-div">
+                    <input type="checkbox" @onclick="@IsHR" @bind="@hr" /><h2 class="index-checkbox-label">Human Resources</h2>
+                </div>
+            </div>
+
+            <div class="form-group index-form-or" hidden="@passwordMessageIsHidden">
+                <h1 class="index-form-heading-3">passwords do not match</h1>
+            </div>
+            <div class="form-group index-form-or" hidden="@existingUserMessageIsHidden">
+                <h1 class="index-form-heading-3">this email is already registered on the platform</h1>
+            </div>
+            <div class="form-group index-form-or" hidden="@selectCheckBoxMessageIsHidden">
+                <h1 class="index-form-heading-3">checkbox not selected</h1>
+            </div>
+            <div class="form-group index-form-or" hidden="@successfulRegistrationMessageIsHidden">
+                <h1 class="index-form-heading-3">You have been successfully registered to xebec. Sign In.</h1>
+            </div>
+            <div class="form-group index-form-or" hidden="@confirmAccountMessageIsHidden">
+                <h1 class="index-form-heading-3">we will send you a key and link to activate your account</h1>
+            </div>
+            <input type="button" class="index-form-button" @onclick="Register" value="Submit" />
+        </form>
+        <form class="index-form-login" hidden="@confirmationFormIsHidden">
+            <div class="form-group index-form-heading">
+                <h1 class="index-form-heading-1">CONFIRMATION</h1>
+            </div>
+            <div class="form-group index-form-group index-group">
+                <div class="index-form-icon">
+                    <i class="fa fa-key "></i>
+                </div>
+                <input type="text" placeholder="Key" @bind="@Key">
+            </div>
+            <div class="form-group index-form-or" hidden="@invalidKeyMessageIsHidden">
+                <h1 class="index-form-heading-3">Invalid Key</h1>
+            </div>
+            <div class="form-group index-form-or" hidden="@successfulRegistrationMessageIsHidden">
+                <h1 class="index-form-heading-3">You have been successfully registered to xebec. Sign In.</h1>
+            </div>
+            <input type="button" class="index-form-button" @onclick="ConfirmAccount" value="Submit" />
+        </form>
     </div>
 </div>
 
@@ -92,84 +112,199 @@
     private string Password2 = "";
     private string Role = "";
     private string Password = "";
+    private string Key = "";
+
+    private bool existingUserMessageIsHidden;
+    private bool passwordMessageIsHidden;
+    private bool selectCheckBoxMessageIsHidden;
+    private bool successfulRegistrationMessageIsHidden;
+    private bool confirmAccountMessageIsHidden;
+
+    private bool registrationFormIsHidden;
+    private bool confirmationFormIsHidden;
+
+    private bool invalidKeyMessageIsHidden;
 
     private bool applicant;
-    private bool developer;
     private bool hr;
 
-    private string confirmationlink = "https://localhost:44364/confirmation";
+    private string message;
 
-    private KeyRequest request;
+    private KeyRequest request = new KeyRequest();
 
     private UserModel user = new UserModel();
     private List<UserModel> users = new List<UserModel>();
 
     protected override async Task OnInitializedAsync()
     {
-        applicant = false;
-        developer = false;
-        hr = false;
+        passwordMessageIsHidden = true;
+        existingUserMessageIsHidden = true;
+        selectCheckBoxMessageIsHidden = true;
+        successfulRegistrationMessageIsHidden = true;
+        confirmAccountMessageIsHidden = true;
 
+        registrationFormIsHidden = false;
+        confirmationFormIsHidden = true;
+
+        applicant = false;
+        hr = false;
+        await Task.Delay(0);
     }
 
     private void IsApplicant()
     {
-        developer = hr = false;
+        hr = false;
         Role = "applicant";
-    }
-
-    private void IsDeveloper()
-    {
-        applicant = hr = false;
-        Role = "developer";
     }
 
     private void IsHR()
     {
-        developer = applicant = false;
+        applicant = false;
         Role = "hr";
     }
 
-    private async Task Register()
+    private async Task ConfirmAccount()
+    {
+        using (var msg = await HttpClient.GetAsync("https://xebecapi.azurewebsites.net/api/auth/keys"))
+        {
+            KeyRequest keyresult = await msg.Content.ReadFromJsonAsync<KeyRequest>();
+            if (msg.IsSuccessStatusCode)
+            {
+
+                if (keyresult.Key.Equals(Key))
+                {
+                    successfulRegistrationMessageIsHidden = false;
+                }
+                else
+                {
+                    invalidKeyMessageIsHidden = false;
+                }
+            }
+        }
+    }
+
+    private async Task showConfirmationForm()
+    {
+        confirmationFormIsHidden = false;
+        registrationFormIsHidden = true;
+        await Task.Delay(0);
+
+    }
+
+    private bool RegisterPasswordCheck()
+    {
+        if (Password1 != Password2)
+        {
+            passwordMessageIsHidden = false;
+            existingUserMessageIsHidden = true;
+            selectCheckBoxMessageIsHidden = true;
+            successfulRegistrationMessageIsHidden = true;
+            confirmAccountMessageIsHidden = true;
+            return false;
+        }
+        else
+        {
+            passwordMessageIsHidden = true;
+            existingUserMessageIsHidden = true;
+            selectCheckBoxMessageIsHidden = true;
+            successfulRegistrationMessageIsHidden = true;
+            confirmAccountMessageIsHidden = true;
+            Password = Password1;
+            return true;
+        }
+    }
+
+    private bool RegisterCheckboxCheck()
     {
 
-        await jsRuntime.InvokeAsync<bool>("Register");
+        passwordMessageIsHidden = true;
+        existingUserMessageIsHidden = true;
+        successfulRegistrationMessageIsHidden = true;
+        confirmAccountMessageIsHidden = true;
 
-        @*
-            //get ID of last item
-            int lastItem = users.Count;
-            UserModel lastUser = users[lastItem - 1];
-            int lastID = lastUser.ID;
+        if (applicant == false && hr == false)
+        {
+            selectCheckBoxMessageIsHidden = false;
+            return false;
+        }
+        else
+        {
+            selectCheckBoxMessageIsHidden = true;
+            return true;
+        }
+    }
 
-            //increment int
-            int newId = lastID++;
 
-            // set usermodel(newID)
-            user.ID = newId;
+    private async Task Register()
+    {
+        bool passwordIsValid = RegisterPasswordCheck();
+        bool checkboxIsValid = RegisterCheckboxCheck();
+
+        if (passwordIsValid && checkboxIsValid)
+        {
+            user.Name = Name;
+            user.Surname = Surname;
+            user.Email = Email;
+            user.Password = Password;
 
             if (applicant)
             {
+                user.Role = "Candidate";
                 user.Key = "";
-                user.LinkVisits = 0;
 
-                user.Registered = true;
-
-                // Post model to dB
+                using (var msg = await HttpClient.PostAsJsonAsync<UserModel>("https://xebecapi.azurewebsites.net/api/auth/registernew", user))
+                {
+                    if (msg.IsSuccessStatusCode)
+                    {
+                        SignInResult result = await msg.Content.ReadFromJsonAsync<SignInResult>();
+                        message = result.Message;
+                        if (result.Success)
+                        {
+                            successfulRegistrationMessageIsHidden = false;
+                        }
+                        else if (message.Equals("User already exists."))
+                        {
+                            existingUserMessageIsHidden = false;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Failed to register user.");
+                        }
+                    }
+                }
 
             }
             else
             {
-                user.Key = "123";
-                user.Registered = false;
+                user.Role = "HRAdmin";
+                user.Key = "";
 
                 //Post model to dB
+                using (var msg = await HttpClient.PostAsJsonAsync<UserModel>("https://xebecapi.azurewebsites.net/api/auth/registernew", user))
+                {
+                    if (msg.IsSuccessStatusCode)
+                    {
+                        SignInResult result = await msg.Content.ReadFromJsonAsync<SignInResult>();
+                        message = result.Message;
+                        if (result.Success)
+                        {
+                            //await showConfirmationForm();
+                            //send key via email 
 
-                // Power Flow to RegistrationKeyRequest(send model)
-                request.Id = user.ID;
-                request.Email = user.Email;
-                request.Key = user.Key;
-                request.Link = confirmationlink;
-                await HttpClient.PostAsJsonAsync("https://prod-223.westeurope.logic.azure.com:443/workflows/fa4c087fb4bc4ee6af54b07047ca6f57/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=doWY1Jeit9AC3MhFltbcskJ9J5ygBO9nZ_8BJEe5hPE", request);
-            }*@
+                            successfulRegistrationMessageIsHidden = false;
+                            await HttpClient.PostAsJsonAsync<UserModel>("https://xebecapi.azurewebsites.net/api/auth/registernew", user);
+                        }
+                        else if (message.Equals("User already exists."))
+                        {
+                            existingUserMessageIsHidden = false;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Failed to register user.");
+                        }
+                    }
+                }
+            }
+        }
     }
 }

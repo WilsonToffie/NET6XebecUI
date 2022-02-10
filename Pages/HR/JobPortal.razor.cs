@@ -24,10 +24,11 @@ namespace XebecPortal.UI.Pages.HR
         private IList<JobPlatform> jobPlatforms = new List<JobPlatform>();
         private IList<JobPlatformHelper> jobPlatformHelpers = new List<JobPlatformHelper>();
         private List<JobPlatform> platformsUsed = new List<JobPlatform>();
-
+        private List<JobType> JobTypes;
 
         protected override async Task OnInitializedAsync()
         {
+            JobTypes = await httpClient.GetFromJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
             jobList = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
             jobPlatforms = await httpClient.GetFromJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform");
             jobPlatformHelpers = await httpClient.GetFromJsonAsync<List<JobPlatformHelper>>("https://xebecapi.azurewebsites.net/api/jobplatformhelper");

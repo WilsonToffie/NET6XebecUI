@@ -1,4 +1,4 @@
-﻿@page "/main/{ID:int}"
+﻿@page "/main"
 @inherits LayoutComponentBase
 @inject IJSRuntime JsRuntime
 @inject HttpClient HttpClient
@@ -6,6 +6,7 @@
 @layout EmptyLayout
 @inject NavigationManager navmanager
 @using XebecPortal.UI.Shared.Home.Models
+@inject UserState state
 
 <style>
 
@@ -28,8 +29,8 @@
     .main {
         top: 10vh;
         left: 0;
-        height: 90vh;
-        width: 100vw;
+        height: 85vh;
+        width: 100%;
     }
     .main-heading-text-div {
         width: 93%;
@@ -47,7 +48,6 @@
     }
     .main-component{
         height: 85vh;
-        margin-bottom: 5vh;
         width: 100%;
     }
 
@@ -262,19 +262,17 @@
                     </div>
                 </div>
                 <div class="profile-name-div">
-                    <h2 class="profile-name">@thisUser.Name &nbsp @thisUser.Surname</h2>
+                    <h2 class="profile-name">@state.Name &nbsp @state.Surname</h2>
                 </div>
                 <div class="profile-role-div">
-                    <h2 class="profile-role">@thisUser.Role</h2>
+                    <h2 class="profile-role">@state.Role</h2>
                 </div>
             </div>
         </div>
         <div class="offcanvas-body offcanvas-body-main">
-
             <div class="nav-link" @onclick="showApplicantApplicationProfile">
                 <div class="icons"><i class="fa fa-book" aria-hidden="true"></i></div><h2 class="nav-link-text">Application Profile</h2>
             </div>
-
             <div class="nav-link" @onclick="showApplicantJobPortal">
                 <div class="icons"><i class="fa fa-briefcase" aria-hidden="true"></i></div><h2 class="nav-link-text">Job Portal</h2>
             </div>
@@ -327,10 +325,10 @@
                     </div>
                 </div>
                 <div class="profile-name-div">
-                    <h2 class="profile-name">@thisUser.Name &nbsp @thisUser.Surname</h2>
+                    <h2 class="profile-name">@state.Name &nbsp @state.Surname</h2>
                 </div>
                 <div class="profile-role-div">
-                    <h2 class="profile-role">@thisUser.Role</h2>
+                    <h2 class="profile-role">@state.Role</h2>
                 </div>
             </div>
         </div>
@@ -380,62 +378,38 @@
 <MudSnackbarProvider />
 
 @code{
-    private MainModel mainmodel = new MainModel();
     private List<UserModel> users = new List<UserModel>();
-    private UserModel thisUser = new UserModel();
 
-    private bool HRIsHidden { get; set; } = true;
-    private bool ApplicantIsHidden { get; set; } = true;
+    private bool HRIsHidden, ApplicantIsHidden;
 
-    private bool applicantApplicationProfileIsHidden { get; set; } = true;
-    private bool applicantJobPortalIsHidden { get; set; } = true;
-    private bool applicantMyJobsIsHidden { get; set; } = true;
+    private bool applicantApplicationProfileIsHidden, applicantJobPortalIsHidden, applicantMyJobsIsHidden;
 
-    private bool hrApplicantPortalIsHidden { get; set; } = true;
-    private bool hrDataAnalyticsToolIsHidden { get; set; } = true;
-    private bool hrJobPortalIsHidden { get; set; } = true;
-    private bool hrCreateAJobIsHidden { get; set; } = true;
-
-
-    [Parameter]
-    public int ID { get; set; }
+    private bool hrApplicantPortalIsHidden, hrDataAnalyticsToolIsHidden, hrJobPortalIsHidden, hrCreateAJobIsHidden;
 
     protected override async Task OnInitializedAsync()
     {
-        users = await HttpClient.GetFromJsonAsync<List<UserModel>>("https://my-json-server.typicode.com/IviweMalotana/xebecDB/Users");
-
-        try
+        if (state.Role.Equals("Candidate"))
         {
-            thisUser = users.Where(a => a.ID == ID).Single();
+            ApplicantIsHidden = false;
+            HRIsHidden = true;
 
-            if (thisUser.Role.Equals("applicant"))
-            {
-                ApplicantIsHidden = false;
+            applicantApplicationProfileIsHidden = false;
+            applicantJobPortalIsHidden = true;
+            applicantMyJobsIsHidden = true;
 
-                applicantApplicationProfileIsHidden = true;
-                applicantJobPortalIsHidden = true;
-                applicantMyJobsIsHidden = true;
-
-                HRIsHidden = true;
-
-            }
-
-            else if (thisUser.Role.Equals("hr"))
-            {
-                HRIsHidden = false;
-                ApplicantIsHidden = true;
-
-                hrApplicantPortalIsHidden = true;
-                hrDataAnalyticsToolIsHidden = true;
-                hrJobPortalIsHidden = true;
-                hrCreateAJobIsHidden = false;
-            }
-        }
-        catch
-        {
-            Console.WriteLine(mainmodel.ID + " not working");
         }
 
+        else if (state.Role.Equals("HRAdmin"))
+        {
+            HRIsHidden = false;
+            ApplicantIsHidden = true;
+
+            hrApplicantPortalIsHidden = true;
+            hrDataAnalyticsToolIsHidden = true;
+            hrJobPortalIsHidden = true;
+            hrCreateAJobIsHidden = false;
+        }
+        await Task.Delay(0);
     }
 
     private void showApplicantApplicationProfile()
