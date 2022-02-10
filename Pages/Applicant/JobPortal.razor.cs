@@ -38,9 +38,9 @@ namespace XebecPortal.UI.Pages.Applicant
             application.JobId = id;
             application.AppUserId = 1;
 
-            _ = await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Application", application);
+            _ = await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/ApplicationModel", application);
             jobList = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
-            applicationList = await httpClient.GetFromJsonAsync<List<Application>>("https://xebecapi.azurewebsites.net/api/Application");
+            applicationList = await httpClient.GetFromJsonAsync<List<Application>>("https://xebecapi.azurewebsites.net/api/ApplicationModel");
 
             IsApplyHidden = true;
         }

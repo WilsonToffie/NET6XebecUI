@@ -5,7 +5,7 @@ namespace XebecPortal.UI.Services.Models
     public class AppStatus
     {
         [JsonProperty("id")]
-        public long Id { get; set; }
+        public int Id { get; set; }
 
         [JsonProperty("description")]
         public string Description { get; set; }

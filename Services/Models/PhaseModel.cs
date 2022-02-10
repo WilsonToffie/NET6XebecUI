@@ -2,7 +2,7 @@
 
 namespace XebecPortal.UI.Services.Models
 {
-    public class AppPhase
+    public class PhaseModel
     {
         [JsonProperty("id")]
         public int Id { get; set; }
@@ -18,19 +18,5 @@ namespace XebecPortal.UI.Services.Models
 
         [JsonProperty("jobPhases")]
         public object JobPhases { get; set; }
-
-       
-    }
-    public enum PhaseEnum
-    {
-        Application = 1,
-        InterviewHr = 2, 
-        InterviewStaff = 3, 
-        Testing = 4, 
-        Screening = 5,
-        InterviewCeo = 6,
-        Offer = 7,
-        Error = -1,
-        
     }
 }

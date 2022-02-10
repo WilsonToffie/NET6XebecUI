@@ -15,6 +15,7 @@ using XebecPortal.UI.Services.Models;
 using XebecPortal.UI.Utils;
 using Smart.Blazor;
 using XebecPortal.UI.Service_Interfaces;
+using MudBlazor.Services;
 
 namespace XebecPortal.UI
 {
@@ -46,6 +47,7 @@ namespace XebecPortal.UI
             // builder.Services.AddSmart();
             // builder.Services.AddMatBlazor();
 
+            builder.Services.AddMudServices();
 
             await builder.Build().RunAsync();
         }

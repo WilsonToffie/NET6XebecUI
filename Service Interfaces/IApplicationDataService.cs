@@ -6,10 +6,10 @@ namespace XebecPortal.UI.Interfaces
 {
     public interface IApplicationDataService
     {
-        Task<IEnumerable<Application>> GetAllApplications();
-        Task<Application> GetApplicationById(int applicationId);
-        Task<Application> AddApplication(Application application);
-        Task UpdateApplication(Application application);
+        Task<IEnumerable<ApplicationModel>> GetAllApplications();
+        Task<ApplicationModel> GetApplicationById(int applicationId);
+        Task<ApplicationModel> AddApplication(ApplicationModel applicationModel);
+        Task UpdateApplication(ApplicationModel applicationModel);
         Task DeleteApplication(int applicationId);
     }
 }
