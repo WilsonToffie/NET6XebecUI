@@ -2,6 +2,11 @@
 @page "/profile"
 @using XebecPortal.UI.Services.Models
 @using XebecPortal.UI.Service_Interfaces
+@using XebecPortal.UI.Pages.Applicant
+@using PersonalInformation = XebecPortal.UI.Services.Models.PersonalInformation
+@using AdditionalInformation = XebecPortal.UI.Services.Models.AdditionalInformation
+@using Education = XebecPortal.UI.Services.Models.Education
+@using WorkHistory = XebecPortal.UI.Services.Models.WorkHistory
 
 @inject IEducationDataService _educationDataService
 @inject IWorkHistoryDataService _workHistoryDataService
@@ -215,10 +220,63 @@
             </div>
             <!--Online Profile-->
             <div id="online-profile" class="container tab-pane" style="@GetActivity(TabEnum.Online)">
-                <h3>Online Profile</h3>
+                @if (profilePortfolio != null)
+                {
+                    
+                    <div class="col-9 hadow-sm bg-body rounded" style="background-color: white">
+                        <div class="row p-3">
+                            <div class="col-6">
+                                <div>
+                                    <label class="form-label" for="github">Github</label>
+                                    &ensp;
+                                    <i class="fab fa-github fa-2x"></i>
+                                </div>
+                                <p id="github" class="form-control shadow bg-body rounded"><a href="@profilePortfolio.GitHubLink">@profilePortfolio.GitHubLink</a></p>
+                            </div>
+                            <div class="col-6">
+                                <div>
+                                    <label class="form-label" for="linkedin">LinkedIn</label>
+                                    &ensp;
+                                    <i class="fab fa-linkedin-in fa-2x" style="color: #0077b5"></i>
+                                </div>
+                                <p id="linkedin" class="form-control shadow bg-body rounded">
+                                    <a href="@profilePortfolio.LinkedInLink">@profilePortfolio.LinkedInLink</a>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row p-3">
+                            <div class="col-6">
+                                <div>
+                                    <label class="form-label" for="twitter">Twitter</label>
+                                    &ensp;
+                                    <i class="fab fa-twitter-square fa-2x" style="color: #00acee"></i>
+                                </div>
+                                <p id="twitter" class="form-control shadow bg-body rounded">
+                                    <a href="@profilePortfolio.TwitterLink">@profilePortfolio.TwitterLink</a>
+                                </p>
+                            </div>
+                            <div class="col-6">
+                                <div>
+                                    <label class="form-label" for="personal-website">Personal Website</label>
+                                    &ensp;
+                                    <i class="fas fa-globe fa-2x" style="color: #35afc0"></i>
+                                </div>
+                                <p id="personal-website" class="form-control shadow bg-body rounded">
+                                    <a href="@profilePortfolio.PersonalWebsiteUrl">@profilePortfolio.PersonalWebsiteUrl</a>
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+              
+                }
+                else
+                {
+                    <p>Loading</p>
+                }
             </div>
 
-            <div  id="job-list" class=" tab-pane jobs-section" style="@GetActivity(TabEnum.Jobs)">
+            <div id="job-list" class=" tab-pane jobs-section" style="@GetActivity(TabEnum.Jobs)">
                 <!-- table-->
                 <AssocicatedJobs Applicant=@Applicant></AssocicatedJobs>
             </div>
@@ -245,6 +303,7 @@
     private List<WorkHistory> _WorkHistories { get; set; }
     private List<Education> _Educations { get; set; }
 
+    private ProfilePortfolioLink profilePortfolio { get; set; }
     protected override async Task OnParametersSetAsync()
     {
         if (Applicant != null)
@@ -259,6 +318,7 @@
             _WorkHistories = await _workHistoryDataService.GetWorkHistories(AppUserId);
             _Educations = await _educationDataService.GetEducations(AppUserId);
             _AdditionalInformation = await _additionalInformationDataService.GetAdditionalInfo(AppUserId);
+            profilePortfolio = await _personalInformationDataService.GetPortfolio(AppUserId);
             if (_PersonalInformation != null)
             {
                 _tabEnum = TabEnum.PersonalInfo;
