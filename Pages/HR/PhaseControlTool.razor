@@ -647,8 +647,6 @@
 
 
         //Add Application Phases
-        List<JobApplicationPhase> lstJobApplicationPhase = new List<JobApplicationPhase>();
-
         foreach (var phase in phasesAdded)
         {
             Console.WriteLine("Phases that should post.");
@@ -656,9 +654,11 @@
             JobApplicationPhase_.JobId = job.Id;
             JobApplicationPhase_.ApplicationPhaseId = phase.id;
 
-            lstJobApplicationPhase.Add(JobApplicationPhase_);
+            Console.WriteLine(JobApplicationPhase_.Id);
+            Console.WriteLine(JobApplicationPhase_.JobId);
+            Console.WriteLine(JobApplicationPhase_.ApplicationPhaseId);
+            await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/jobapplicationphase/{job.Id}", JobApplicationPhase_);
         }
-        await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/jobapplicationphase/list", lstJobApplicationPhase);
 
         await TempJobChanged.InvokeAsync(TempJob);
     }
