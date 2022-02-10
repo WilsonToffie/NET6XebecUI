@@ -7,9 +7,6 @@ namespace XebecPortal.UI.Shared.Home.Models
 {
     public class KeyRequest
     {
-        public int Id { get; set; }
-        public string Email { get; set; }
         public string Key { get; set; }
-        public string Link { get; set; }
     }
 }

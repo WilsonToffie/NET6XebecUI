@@ -28,19 +28,17 @@
         .underlay::-webkit-scrollbar {
             background-color: transparent;
             width: 1vw;
-            z-index: -2;
         }
 
         .underlay::-webkit-scrollbar-thumb {
-            background-color: rgba(0, 188, 174,0.8);
+            background-color: white;
             border-radius: 1em;
-            z-index: -2;
         }
 
     .overlay {
         top: 0;
         z-index: 0;
-        height: 80vh;
+        height: 100vh;
         width: 100%;
     }
 
@@ -69,7 +67,7 @@
         .nav-buttons:hover {
             width: 100%;
             height: inherit;
-            background-color: #00bcae;
+            background-color: #d35bc9;
             border: none;
             border-radius: 1em;
             color: white;
@@ -78,7 +76,7 @@
         }
     
     .login-page {
-        height: 70vh;
+        height: 100vh;
         width: 80%;
         display: flex;
         margin-left: 10%;
@@ -277,7 +275,7 @@
         height: 5vh;
         margin-left: 13%;
     }
-
+    
         .index-socialmedia-div:hover {
             color: #d35bc9;
             font-size: 2em;
@@ -288,32 +286,33 @@
         }
 
 
-    .index-form-checkbox {
-        width: 10%;
-        margin-left: 15%;
+    input[type="checkbox"] {
+        width: 20%;
         margin-right: 5%;
         height: 5vh;
         line-height: 5vh;
     }
-
+    
     .index-form-checkbox-div {
         display: flex;
         height: 100%;
-        width: 33%;
+        width: 42%;
+        margin-left: 5%;
+        margin-right: 3%;
     }
 
     .index-checkbox-label {
         color: black;
-        width: 60%;
         font-weight: 800;
         font-size: 0.8em;
         width: 70%;
+        margin-left: 5%;
         height: 5vh;
         line-height: 1vh;
     }
 
     .register-page {
-        margin-top: 20vh;
+        margin-top: 10vh;
         height: 90vh;
         width: 90%;
         margin-left: 5%;
@@ -338,23 +337,23 @@
 
 <div class="underlay">
     <div class="row overlay-nav">
-        <div class="col-sm-3"></div>
-        <div class="col-sm-3"></div>
-        <div class="col-sm-1">
+        <div class="col-6"></div>
+        <div class="col-1">
             <input type="button" class="nav-buttons" value="HOME" @onclick="ToHome" />
         </div>
-        <div class="col-sm-1">
+        <div class="col-1">
             <input type="button" class="nav-buttons" value="SERVICES" @onclick="ToServices" />
         </div>
-        <div class="col-sm-1">
+        <div class="col-1">
             <input type="button" class="nav-buttons" value="SIGN IN" @onclick="ToSignIn" />
         </div>
-        <div class="col-sm-1">
+        <div class="col-1">
             <input type="button" class="nav-buttons" value="SIGN UP" @onclick="ToSignUp" />
         </div>
-        <div class="col-sm-1">
+        <div class="col-1">
             <input type="button" class="nav-buttons" value="CONTACT" @onclick="ToContact" />
         </div>
+        <div class="col-1"></div>
     </div>
 
     <div class="overlay" hidden="@HomeIsHidden">
