@@ -10,6 +10,8 @@
         top: auto !important;
         justify-content: normal !important;
         justify-items: normal !important;
+        box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+        border-radius: 5px;
     }
 
     .nav-link1 {
@@ -59,8 +61,12 @@
         opacity: 0;
         cursor: pointer;
         z-index: 2;
+        border: unset;
     }
-
+    .drop-corner{
+        border: #00BCAE dashed 2px !important;
+        box-shadow: unset;
+    }
     .drag-enter {
         box-shadow: var(--mud-elevation-10);
     }
@@ -93,24 +99,47 @@
     .form-check-input{
         display: none;
     }
-    .form-check-input:hover{
-    display: inline-block;
-    }
+
     .row-style{
-    
-        background-image: linear-gradient(110 deg, #00BCAE 40%, #003340 40%) !important;
-        background-color: white !important;
+        background: linear-gradient(110deg, rgba(0,51,64,0.56) 40%, rgba(0,188,174,0.53) 40%, #00BCAE);
+        /*background-color: white;*/
         border-radius: 20px;
         padding: 10px;
+        min-height: 75vh;
+    }
+    .rounded-edges{
+        border-radius: 20px;
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgb(209, 213, 219) 0px 0px 0px 1px inset;
+    }
+  .nav-item > .active{
+        background: #ffffff !important;
+        font-weight: 800;
+        font-size: 2vh;
+    }
+    .nav-item > .nav-link1{
+        font-size: 1.8vh;
+        font-weight: 500 !important;
+        color: #003340!important;
+    }
+    .work-card{
+        color: black!important;
+    }
+    .white-back{
+        background: white !important;
+        box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px !important;
+    }
+    .text-color-primary{
+        color: rgba(0,51,64,0.76);
+        text-decoration: underline;
     }
 </style>
 
-<div class="container-fluid d-flex justify-content-center align-items-center">
+<div class="h-100 container-fluid d-flex justify-content-center align-items-center">
 
-<div class="row col-8 d-flex justify-content-center align-items-center row-style">
+<div class="row col-10 d-flex justify-content-center row-style">
 
 <!--Navigation Tab-->
-<div class="col-12 d-flex justify-content-center">
+<div class="col-12 align-self-start d-flex justify-content-center align-items-center">
     <ul class="nav nav1 nav-tabs" role="tablist">
         <li class="nav-item p-1">
             <a id="personal-tab" class="nav-link nav-link1 active" data-bs-toggle="tab" href="#personal-information">Personal Information</a>
@@ -128,22 +157,22 @@
 </div>
 
 <!--Content Panel-->
-<div class="col-12">
-<div class="tab-content">
+<div class="col-12 d-flex justify-content-center align-items-start pt-3 ">
+<div class="tab-content ">
 <br/>
 <!--Personal Information-->
 <div id="personal-information" class="container tab-pane active">
     <div class="d-flex justify-content-center">
         <form id="personal-information-form" style="width: 60%">
             <div class="row">
-                <div class="col-12 shadow-sm bg-body rounded" style="background-color: white">
+                <div class="col-12 shadow-sm bg-body rounded-edges white-back" >
                     <div class="row p-3">
                         <div class="col-12">
-                            <div class="border border-2">
+                            <div class="rounded-edges">
                                 <MudPaper @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
                                           @ondragleave="@(() => _dragEnterStyle = null)"
                                           @ondragend="@(() => _dragEnterStyle = null)"
-                                          Class="@("drag-drop-zone " + _dragEnterStyle)">
+                                          Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
 
                                     <InputFile OnChange="OnInputFileChanged" multiple class="drag-drop-input"/>
                                     @if (fileNames.Count() == 0)
@@ -240,7 +269,7 @@
             <div class="col-12">
                 <div class="row p-3">
                     <div class="col-6 p-5">
-                        <div class="row shadow-sm bg-body rounded" style="background-color: white">
+                        <div class="row shadow-sm bg-body rounded-edges white-back" style="height: 47vh;">
                             <div class="col-12" style="height: 365px">
                                 <input type="hidden" @bind="workHistory.Id"/>
                                 <input type="hidden" @bind="workHistory.AppUserId"/>
@@ -266,7 +295,7 @@
                                             <label class="form-label" for="end-date">
                                                 End Date (
                                                 <span>
-                                                    <label class="form-check-label text-primary" for="flexCheckDefault">
+                                                    <label class="form-check-label text-color-primary" for="flexCheckDefault">
                                                         Still work there?
                                                     </label>
                                                     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" @bind="@presentWork">
@@ -279,8 +308,8 @@
                                     {
                                         <div class="col-6">
                                             <div class="form-check">
-                                                <label class="form-check-label text-primary" for="flexCheckDefault">
-                                                    Don't work there?
+                                                <label class="form-check-label text-color-primary" for="flexCheckDefault">
+                                                    Don't work there anymore?
                                                 </label>
                                                 <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" @bind="@presentWork">
                                             </div>
@@ -299,35 +328,33 @@
                                         }
                                         else
                                         {
-                                            <input class="btn formButton" type="button" @onclick="() => AddWorkHistory(workHistory)" value="Add"/>
+                                            <input class="btn formButton" type="button" @onclick="() => AddWorkHistoryNew(workHistory)" value="Add"/>
                                         }
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 p-5">
-                        <div class="row shadow-sm bg-body rounded" style="background-color: white">
+                    <div class="col-6 p-5 align-self-start">
+                        <div class="row shadow-sm bg-body rounded-edges" style="background-color: white; height: 47vh;">
                             <div class="col-12 overflow-auto" style="height: 365px">
                                 <br/>
                                 @if (workHistoryList != null && workHistoryList.Count > 0)
                                 {
                                     foreach (var item in workHistoryList)
                                     {
-                                        <div class="card shadow-lg bg-body rounded @(workHistory.Id == item.Id ? "cardBorderChange" : "")" style="cursor: pointer" @onclick="() => PopulateWorkHistory(item.Id)">
-                                            <div class="card-body">
-                                                <h3 class="card-title">@item.JobTitle</h3>
-                                                <h4 class="card-subtitle">@item.CompanyName</h4>
-                                                <div class="d-flex justify-content-end">
-                                                    <span @onclick="() => DeleteWorkHistory(item.Id)">
-                                                        <i class="fa fa-times-circle fa-2x" style="color: red"></i>
-                                                    </span>
-                                                </div>
-                                                <p class="card-text">Start Date: @item.StartDate.ToString("d MMM yyyy")</p>
-                                                <p class="card-text">End Date: @item.EndDate.ToString("d MMM yyyy")</p>
+                                        <div class="work-card">
+                                            <div class="company-name">@workHistory.CompanyName</div>
+                                            <div class="job-position">@workHistory.JobTitle</div>
+                                            <div class="start-end-date">
+                                                <small>@($"{workHistory.StartDate:yyyy MMMM} - {workHistory.EndDate:yyyy MMMM}")</small>
+
+                                                <span @onclick="() => DeleteWorkHistory(item.Id)">
+                                                    <i class="fa fa-times-circle fa-2x" style="color: red"></i>
+                                                </span>
                                             </div>
+                                            <div class="work-description">@workHistory.Description</div>
                                         </div>
-                                        <br/>
                                     }
                                 }
                             </div>
@@ -346,8 +373,8 @@
             <div class="col-12">
                 <div class="row p-3">
                     <div class="col-6 p-5">
-                        <div class="row shadow-sm bg-body rounded" style="background-color: white">
-                            <div class="col-12" style="height: 365px">
+                        <div class="row shadow-sm bg-body rounded-edges white-back">
+                            <div class="col-12" style="height: 45vh">
                                 <input type="hidden" @bind="education.Id"/>
                                 <input type="hidden" @bind="education.AppUserId"/>
                                 <div class="row p-3">
@@ -372,10 +399,10 @@
                                             <label class="form-label" for="end-date">
                                                 End Date (
                                                 <span>
-                                                    <label class="form-check-label text-primary" for="flexCheckDefault">
+                                                    <label class="form-check-label text-color-primary" for="edu-check">
                                                         Completed?
                                                     </label>
-                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" @bind="@presentSchool">
+                                                    <input class="form-check-input" type="checkbox"  id="edu-check" @bind="@presentSchool">
                                                 </span>)
                                             </label>
                                             <input id="end-date" class="form-control shadow bg-body rounded" @bind="education.EndDate" @onblur="EndDateCheck" type="date"/>
@@ -385,10 +412,10 @@
                                     {
                                         <div class="col-6">
                                             <div class="form-check">
-                                                <label class="form-check-label text-primary" for="flexCheckDefault">
+                                                <label class="form-check-label text-color-primary" for="edu-check">
                                                     Not Completed
                                                 </label>
-                                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" @bind="@presentSchool">
+                                                <input class="form-check-input" type="checkbox"  id="edu-check" @bind="@presentSchool">
                                             </div>
                                         </div>
                                     }
@@ -409,27 +436,24 @@
                         </div>
                     </div>
                     <div class="col-6 p-5">
-                        <div class="row shadow-sm bg-body rounded" style="background-color: white">
-                            <div class="col-12 overflow-auto" style="height: 365px">
+                        <div class="row shadow-sm bg-body rounded-edges white-back">
+                            <div class="col-12 overflow-auto" style="height: 47vh">
                                 <br/>
                                 @if (educationList != null && educationList.Count > 0)
                                 {
                                     foreach (var item in educationList)
                                     {
-                                        <div class="card shadow-lg bg-body rounded @(education.Id == item.Id ? "cardBorderChange" : "")" style="cursor: pointer" @onclick="() => PopulateEducation(item.Id)">
-                                            <div class="card-body">
-                                                <h3 class="card-title">@item.Qualification</h3>
-                                                <h4 class="card-subtitle">@item.Insitution</h4>
-                                                <div class="d-flex justify-content-end">
-                                                    <span @onclick="() => DeleteEducation(item.Id)">
-                                                        <i class="fa fa-times-circle fa-2x" style="color: red"></i>
-                                                    </span>
-                                                </div>
-                                                <p class="card-text">Start Date: @item.StartDate.ToString("d MMM yyyy")</p>
-                                                <p class="card-text">End Date: @item.EndDate.ToString("d MMM yyyy")</p>
+                                        <div class="work-card mb-3">
+                                            <div class="company-name">@education.Qualification</div>
+                                            <div class="job-position"></div>
+                                            <div class="start-end-date">
+                                                <small>@($"{education.StartDate:yyyy MMMM} - {education.EndDate:yyyy MMMM}")</small>
+                                                <span @onclick="() => DeleteEducation(item.Id)">
+                                                    <i class="fa fa-times-circle fa-2x" style="color: red"></i>
+                                                </span>
                                             </div>
+                                            <div class="work-description">@education.Insitution</div>
                                         </div>
-                                        <br/>
                                     }
                                 }
                             </div>
@@ -442,56 +466,54 @@
 </div>
 
 <!--Online Profile-->
-<div id="online-profile" class="container tab-pane">
-    <div class="d-flex justify-content-center">
-        <form style="width: 60%">
-            <div class="row">
-                <div class="col-12 shadow-sm bg-body rounded" style="background-color: white">
-                    <div class="row p-3">
-                        <div class="col-6">
-                            <div>
-                                <label class="form-label" for="github">Github</label>
-                                &ensp;
-                                <i class="fab fa-github fa-2x"></i>
-                            </div>
-                            <input id="github" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.GitHubLink"/>
+<div id="online-profile" class="container tab-pane" style="height: 60vh;">
+    <form class="col-12 d-flex justify-content-center align-items-start">
+        <div class="row col-9">
+            <div class="col-12 shadow-sm bg-body rounded-edges align-self-start white-back">
+                <div class="row p-3">
+                    <div class="col-6">
+                        <div>
+                            <label class="form-label" for="github">Github</label>
+                            &ensp;
+                            <i class="fab fa-github fa-2x"></i>
                         </div>
-                        <div class="col-6">
-                            <div>
-                                <label class="form-label" for="linkedin">LinkedIn</label>
-                                &ensp;
-                                <i class="fab fa-linkedin-in fa-2x" style="color: #0077b5"></i>
-                            </div>
-                            <input id="linkedin" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.LinkedInLink"/>
-                        </div>
+                        <input id="github" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.GitHubLink"/>
                     </div>
-                    <div class="row p-3">
-                        <div class="col-6">
-                            <div>
-                                <label class="form-label" for="twitter">Twitter</label>
-                                &ensp;
-                                <i class="fab fa-twitter-square fa-2x" style="color: #00acee"></i>
-                            </div>
-                            <input id="twitter" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.TwitterLink"/>
+                    <div class="col-6">
+                        <div>
+                            <label class="form-label" for="linkedin">LinkedIn</label>
+                            &ensp;
+                            <i class="fab fa-linkedin-in fa-2x" style="color: #0077b5"></i>
                         </div>
-                        <div class="col-6">
-                            <div>
-                                <label class="form-label" for="personal-website">Personal Website</label>
-                                &ensp;
-                                <i class="fas fa-globe fa-2x" style="color: #35afc0"></i>
-                            </div>
-                            <input id="personal-website" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.PersonalWebsiteUrl"/>
-                        </div>
+                        <input id="linkedin" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.LinkedInLink"/>
                     </div>
-                    <div class="row p-3">
-                        <div class="col-12 d-flex justify-content-center">
-                            <input class="btn formButton" type="button" value="Done" @onclick="Submit"/>
+                </div>
+                <div class="row p-3">
+                    <div class="col-6">
+                        <div>
+                            <label class="form-label" for="twitter">Twitter</label>
+                            &ensp;
+                            <i class="fab fa-twitter-square fa-2x" style="color: #00acee"></i>
                         </div>
+                        <input id="twitter" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.TwitterLink"/>
+                    </div>
+                    <div class="col-6">
+                        <div>
+                            <label class="form-label" for="personal-website">Personal Website</label>
+                            &ensp;
+                            <i class="fas fa-globe fa-2x" style="color: #35afc0"></i>
+                        </div>
+                        <input id="personal-website" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.PersonalWebsiteUrl"/>
+                    </div>
+                </div>
+                <div class="row p-3">
+                    <div class="col-12 d-flex justify-content-center">
+                        <input class="btn formButton" type="button" value="Done" @onclick="Submit"/>
                     </div>
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 </div>
 </div>
@@ -499,6 +521,22 @@
 </div>
 
 @code {
-    private bool presentWork = true;
-    private bool presentSchool = true;
+    private bool presentWork = false;
+    private bool presentSchool = false;
+    private int id = 1;
+    private void AddWorkHistoryNew(WorkHistory workHistory1)
+    {
+        workHistory.Id = id++;
+        if (!workHistoryList.Contains(workHistory) || !FindWork(workHistory1))
+            workHistoryList.Add(workHistory);
+        else
+            jsRuntime.InvokeVoidAsync("alert", "Job Added");
+    }
+
+    private bool FindWork(WorkHistory workHistory1)
+    {
+        var temp = workHistoryList.FirstOrDefault(w => w.Id == workHistory1.Id || w.CompanyName.ToLower().Equals(workHistory1.CompanyName.ToLower()));
+        return temp == null;
+    }
+
 }
