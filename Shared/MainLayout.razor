@@ -281,7 +281,7 @@
             </div>
         </div>
         <div class="infodiv">
-            <h2 class="profile-logout">Logout</h2>
+            <h2 class="profile-logout" @onclick="Logout">Sign Out</h2>
         </div>
     </div>
     <div class="main" hidden="@applicantApplicationProfileIsHidden">
@@ -348,7 +348,7 @@
             </div>
         </div>
         <div class="infodiv">
-            <h2 class="profile-logout">Logout</h2>
+            <h2 class="profile-logout" @onclick="Logout">Sign Out</h2>
         </div>
     </div>
     <div class="main" hidden="@hrApplicantPortalIsHidden">
@@ -372,7 +372,10 @@
         </div>
     </div>
 </div>
-
+@if (state.isLoggedIn == false)
+{
+    navmanager.NavigateTo("/");
+}
 <MudThemeProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -397,6 +400,12 @@
             applicantJobPortalIsHidden = true;
             applicantMyJobsIsHidden = true;
 
+
+            hrApplicantPortalIsHidden = true;
+            hrDataAnalyticsToolIsHidden = true;
+            hrJobPortalIsHidden = true;
+            hrCreateAJobIsHidden = true;
+
         }
 
         else if (state.Role.Equals("HRAdmin"))
@@ -408,6 +417,10 @@
             hrDataAnalyticsToolIsHidden = true;
             hrJobPortalIsHidden = true;
             hrCreateAJobIsHidden = false;
+
+            applicantApplicationProfileIsHidden = true;
+            applicantJobPortalIsHidden = true;
+            applicantMyJobsIsHidden = true;
         }
         await Task.Delay(0);
     }
@@ -459,5 +472,9 @@
         hrDataAnalyticsToolIsHidden = true;
         hrJobPortalIsHidden = true;
         hrCreateAJobIsHidden = false;
+    }
+    private void Logout()
+    {
+        state.isLoggedIn = false;
     }
 }
