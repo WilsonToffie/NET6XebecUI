@@ -12,6 +12,7 @@
 
     .cardStyle {
         height: 29vh;
+        /*width: 37vh; can adjust this or remove it if it get's to big*/
         position: relative;
         top: 30%;
         border-radius: 16px;
@@ -40,6 +41,7 @@
         padding-top: 0.2em;
         /*this is what causes the border colour*/
         background-color: #FFFFFF;
+
         text-align: center;
     }   
 
@@ -84,27 +86,27 @@
                     <div class="col-2">
                         <div class="cardStyle-selected" @onclick="() => RemoveSelectProfile(companyProfileID)">
 
-                           
+                           <!--This is the profiles are chosen-->
                             @if ((profiles[i].platformName).Equals("Main 1Nebula Platform")) 
                             {
-                                <img src="/Img/logo.svg" style="height: 40%; width: 80%; margin-top: 35%;">
+                                <img src="/Img/logo.svg" style="height: 40%; width: 80%; margin-top: 35%; ">
                             }
                             else if ((profiles[i].platformName).Equals("Xebec Platform"))
                             {
                                 
-                                <img src="/Img/Xebec Logo black.png" style="height: 40%; width: 80%; margin-top: 30%;">
+                                <img src="/Img/Xebec Logo black.png" style="height: 60%; width: 80%; margin-top: 20%; object-fit: cover; object-position:center">
                             }
                             else if ((profiles[i].platformName).Equals("48Software"))
                             {
-                                <img src="/Img/48 full logo colour.png" style="height: 40%; width: 90%; margin-top:30%;">
+                                <img src="/Img/48 full-logo-colour.png" style="height: auto; width: 100%; margin-top: 40%; object-fit: cover; object-fit: cover; object-position: center">
                             }
                             else if ((profiles[i].platformName).Equals("OneView"))
                             {
-                                <img src="/Img/OneView dark logo.png" style="height: 40%; width: 80%; margin-top: 30%;">
+                                <img src="/Img/OneView dark logo.png" style="height: auto; width: 100%; margin-top: 35%; object-fit: cover; object-position: center ">
                             }
                             else if ((profiles[i].platformName).Equals("Stactize"))
                             {                                
-                                <img src="/Img/Stactize logo colour-01.png" style="height: 40%; width: 80%; margin-top: 30%; ">
+                                <img src="/Img/Stactize logo colour-01.png" style="height: auto; width: 100%; margin-top: 40%; object-fit: cover; object-position: center ">
                             }
                         </div>
                     </div>
@@ -113,27 +115,27 @@
                 {
                     <div class="col-2">
                         <div class="cardStyle card-text-Style" @onclick="() => AddSelectProfile(companyProfileID)">
-
-                            @if ((profiles[i].platformName).Equals("Main 1Nebula Platform")) 
+                            <!--This is the profiles are getting chosen-->
+                            @if ((profiles[i].platformName).Equals("Main 1Nebula Platform"))
                             {
                                 <img src="/Img/logo.svg" style="height: 40%; width: 80%; margin-top: 35%;  ">
                             }
                             else if ((profiles[i].platformName).Equals("Xebec Platform"))
                             {
 
-                                <img src="/Img/Xebec Logo white.png" style="height: 40%; width: 80%; margin-top: 30%;">
+                                <img src="/Img/Xebec Logo white.png" style="height: 60%; width: 80%; margin-top: 20%; object-fit: cover; object-position: center ">
                             }
                             else if ((profiles[i].platformName).Equals("48Software"))
                             {
-                                <img src="/Img/48 full logo white.png" style="height: 40%; width: 90%; margin-top:30%;">
+                                <img src="/Img/48 full logo white.png" style="color: rgba(62,179,231,255); height: auto; width: 100%; margin-top: 40%; object-fit: cover; object-position: center ">
                             }
                             else if ((profiles[i].platformName).Equals("OneView"))
                             {
-                                <img src="/Img/OneView light logo.png" style="height: 40%; width: 80%; margin-top: 30%;">
+                                <img src="/Img/OneView light logo.png" style="height: auto; width: 100%; margin-top: 35%; object-fit: cover; object-position: center ">
                             }
                             else if ((profiles[i].platformName).Equals("Stactize"))
                             {
-                                <img src="/Img/Stactize logo light-01.png" style="height: 40%; width: 80%; margin-top: 30%; ">
+                                <img src="/Img/Stactize logo light-01.png" style="height: auto; width: 100%; margin-top: 40%; object-fit: cover; object-position: center ">
                             }
                         </div>
                     </div>
