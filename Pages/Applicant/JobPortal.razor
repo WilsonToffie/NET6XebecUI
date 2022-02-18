@@ -345,11 +345,11 @@
                             <ul class="pagination" style="cursor:pointer">
                                 @if (!jobPagedList.IsFirstPage)
                                 {
-                                    <li class="page-item" @onclick="() => PageListNav(jobPagedList.PageNumber - 1)">
-                                        <a class="page-link">
-                                            <span>&laquo;</span>
-                                        </a>
-                                    </li>
+                                <li class="page-item" @onclick="() => PageListNav(jobPagedList.PageNumber - 1)">                                    
+                                    <a class="page-link">
+                                        <span>&laquo;</span>
+                                    </a>
+                                </li>
                                 }
                                 <li class="page-item @(jobPagedList.PageNumber.Equals(pageNum.FirstOrDefault()) ? "active" : "")" @onclick="() => PageListNav(pageNum.FirstOrDefault())">
                                     <a class="page-link">@pageNum.FirstOrDefault()</a>
@@ -378,12 +378,15 @@
                                         }
                                     }
                                 }
+                                
                                 @if (pageNum.Count > 1)
                                 {
                                     <li class="page-item @(jobPagedList.PageNumber.Equals(pageNum.LastOrDefault()) ? "active" : "")" @onclick="() => PageListNav(pageNum.LastOrDefault())">
                                         <a class="page-link">@pageNum.LastOrDefault()</a>
                                     </li>
                                 }
+
+
                                 @if (!jobPagedList.IsLastPage)
                                 {
                                     <li class="page-item" @onclick="() => PageListNav(jobPagedList.PageNumber + 1)">
@@ -465,7 +468,6 @@
     </div>
 </div>
 
-
 @code {
 
     private bool jobPortalIsHidden = false;
@@ -487,12 +489,11 @@
     private string GetJobType(JobTypeHelper helper)
     {
         var type = new JobType{Id = 0, Type = "Contract"};
-        
+
         if (JobTypes != null && helper != null)
         {
             type = JobTypes.FirstOrDefault(e => e.Id == helper.Id);
         }
-      return  type.Type;
+        return "";  //type.Type; The type seems to not be linked
     }
-
 }
