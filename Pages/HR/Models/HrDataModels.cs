@@ -54,6 +54,22 @@ namespace XebecPortal.UI.Pages.HR
         public List<AppUser> Collaborators { get; set; }
     }
 
+    public partial class CandidateRecommender
+    {
+        public int id { get; set; }
+
+        //Foreign Key
+        public int jobId { get; set; }
+        public Job job { get; set; }
+
+        //Foreign Key
+        public int AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
+
+        public double TotalMatch { get; set; }
+    }
+
+
     public class Collaborator
     {
         public int id { get; set; }
@@ -134,7 +150,7 @@ namespace XebecPortal.UI.Pages.HR
         public bool registered { get; set; }
 
         public int linkVisits { get; set; }
-        public string Avatar { get; set; }
+        public string imageUrl { get; set; }
     }
 
     public class JobPlatformHelper

@@ -18,6 +18,7 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool jobPortalIsHidden = false;
         private bool applicationFormIsHidden = true;
         private bool pageLoad;
+        private int jobId;
         private IList<Job> jobList = new List<Job>();
         private IList<Job> jobListFilter = new List<Job>();
         private Job displayJobDetail = new Job();
@@ -34,6 +35,7 @@ namespace XebecPortal.UI.Pages.Applicant
 
         protected override async Task OnInitializedAsync()
         {
+            JobTypes = await httpClient.GetFromJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
             jobList = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
             applicationList = await httpClient.GetFromJsonAsync<List<Application>>("https://xebecapi.azurewebsites.net/api/Application");
             status = await httpClient.GetFromJsonAsync<List<Status>>("/mockData/Status.json");
@@ -70,12 +72,12 @@ namespace XebecPortal.UI.Pages.Applicant
 
             foreach (var q in QuestionList)
             {
-                ApplicantQuestion tempAppQuuestion = new ApplicantQuestion();
-                tempAppQuuestion.HRQuestion = q.question;
-                tempAppQuuestion.HRQuestionId = q.id;
-                tempAppQuuestion.TypeId = q.answerTypeId;
+                ApplicantQuestion tempAppQuestion = new ApplicantQuestion();
+                tempAppQuestion.HRQuestion = q.question;
+                tempAppQuestion.HRQuestionId = q.id;
+                tempAppQuestion.TypeId = q.answerTypeId;
 
-                ApplicantAnswers.Add(tempAppQuuestion);
+                ApplicantAnswers.Add(tempAppQuestion);
             }
         }
 
@@ -217,6 +219,9 @@ namespace XebecPortal.UI.Pages.Applicant
 
         public async Task SaveAnswers()
         {
+            double tempScore;
+            double tempMatches = 0;
+
             foreach (var q in ApplicantAnswers)
             {
                 ApplicantAnswer tempAnswer = new ApplicantAnswer();
@@ -228,6 +233,38 @@ namespace XebecPortal.UI.Pages.Applicant
             }
 
             await httpClient.PostAsJsonAsync<List<ApplicantAnswer>>("https://xebecapi.azurewebsites.net/api/applicantquestionnaire/list", AnswerList);
+
+            for (int i = 0; i < QuestionList.Count; i++)
+            {
+
+                if (QuestionList[i].question.Contains("How many years of experience do you have"))
+                {
+                    if (int.Parse(QuestionList[i].answer) <= int.Parse(AnswerList[i].applicantAnswer))
+                    {
+                        tempMatches++;
+                    }
+                }
+                else if (QuestionList[i].question == "What salary are you expecting?")
+                {
+                    if (int.Parse(QuestionList[i].answer) >= int.Parse(AnswerList[i].applicantAnswer))
+                    {
+                        tempMatches++;
+                    }
+                }
+                else if (QuestionList[i].answer == AnswerList[i].applicantAnswer)
+                {
+                    tempMatches++;
+                }
+            }
+
+            tempScore = tempMatches / QuestionList.Count * 100;
+
+            CandidateRecommender candidateScore = new CandidateRecommender();
+            candidateScore.jobId = jobId;
+            candidateScore.AppUserId = state.AppUserId;
+            candidateScore.TotalMatch = tempScore;
+
+            //await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/applicantquestionnaire", candidateScore);
         }
     }
 }

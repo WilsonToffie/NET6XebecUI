@@ -32,7 +32,8 @@ namespace XebecPortal.UI.Services.Models
         [JsonProperty("interviewComment")] 
         public string InterviewComment { get; set; }
 
-        [JsonProperty("phase")] public string Phase { get; set; }
+        [JsonProperty("phase")] 
+        public string Phase { get; set; }
 
         public override string ToString()
         {
