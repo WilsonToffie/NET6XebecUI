@@ -86,11 +86,9 @@ namespace XebecPortal.UI.Pages.HR
 
         private void SeachListJob(string value)
         {
-            pageNum.Clear();
-
             if (value != null && value != "" && value != " ")
             {
-                jobListFilter = jobList.Where(x => $"{x.Title} {x.Company} {x.Location}".Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
+                jobListFilter = jobList.Where(x => $"{x.Title} {x.Company} {x.Department}".Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
                 jobPagedList = jobListFilter.ToPagedList(1, 17);
                 pageNum.AddRange(Enumerable.Range(1, jobPagedList.PageCount));
             }
@@ -100,7 +98,6 @@ namespace XebecPortal.UI.Pages.HR
                 jobPagedList = jobListFilter.ToPagedList(1, 17);
                 pageNum.AddRange(Enumerable.Range(1, jobPagedList.PageCount));
             }
-
             displayJobDetail = jobListFilter.FirstOrDefault();
         }
 

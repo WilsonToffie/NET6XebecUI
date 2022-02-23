@@ -13,10 +13,11 @@
         box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
         display: flex;
     }
-    .appform-left-buttons{
+
+    .appform-left-buttons {
         margin-top: 5vh;
         height: 5vh;
-        width:100%;
+        width: 100%;
     }
 
     .appform-left-main {
@@ -26,16 +27,18 @@
         width: 100%;
         padding: 5px;
     }
-    .appform-left-main::-webkit-scrollbar {
-        background-color: transparent;
-        border-radius: 1em;
-        width: 1vw;
-    }
 
-    .appform-left-main::-webkit-scrollbar-thumb {
-        background-color: white;
-        border-radius: 1em;
-    }
+        .appform-left-main::-webkit-scrollbar {
+            background-color: transparent;
+            border-radius: 1em;
+            width: 1vw;
+        }
+
+        .appform-left-main::-webkit-scrollbar-thumb {
+            background-color: white;
+            border-radius: 1em;
+        }
+
     .appform-left-row {
         box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px, rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
         border-radius: 20px !important;
@@ -49,30 +52,34 @@
         background-color: rgba(255,255,255,1);
         padding-right: 5px !important;
     }
-    .appform-left-row-selected{
-                border-radius: 20px !important;
-                min-height: 9vh;
-                color:#00bcae; !important;
-                font-family: opensans-condensed-bold;
-                font-weight: 900;
-                font-size: 1em;
-                margin-bottom: 5px;
-                background-color: rgb(243,242,242);
-                min-width: 100%;
-                transition: 0.1s;
+
+    .appform-left-row-selected {
+        border-radius: 20px !important;
+        min-height: 9vh;
+        color: #00bcae;
+        !important;
+        font-family: opensans-condensed-bold;
+        font-weight: 900;
+        font-size: 1em;
+        margin-bottom: 5px;
+        background-color: rgb(243,242,242);
+        min-width: 100%;
+        transition: 0.1s;
     }
-        .appform-left-row:hover {
-            box-shadow: 0 2px 5px 0 rgba(0,0,0,1), 0 2px 10px 0 rgba(0,0,0,1);
-            min-height: 20vh;
-            color: white;
-            font-family: opensans-condensed-bold;
-            font-weight: 900;
-            font-size: 1em;
-            margin-bottom: 5px;
-            background-color: black;
-            min-width: 100%;
-            transition: 0.1s;
-        }
+
+    .appform-left-row:hover {
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,1), 0 2px 10px 0 rgba(0,0,0,1);
+        min-height: 20vh;
+        color: white;
+        font-family: opensans-condensed-bold;
+        font-weight: 900;
+        font-size: 1em;
+        margin-bottom: 5px;
+        background-color: black;
+        min-width: 100%;
+        transition: 0.1s;
+    }
+
     .appform-right-row {
         box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px, rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
         border-radius: 10px !important;
@@ -87,10 +94,11 @@
         font-family: opensans-condensed-bold;
         font-weight: 900;
         font-size: 1em;
-        margin:0;
+        margin: 0;
         padding: 0;
         width: 90%;
     }
+
     .question-select {
         width: 500px;
         height: 500px;
@@ -197,21 +205,25 @@
         word-wrap: break-word;
         width: 450px;
     }
-    .appform-close-button{
+
+    .appform-close-button {
         width: 10%;
         text-align: end;
     }
+
     .form-preview-question {
         width: 100%;
         display: flex;
         height: 50%;
     }
+
     .form-preview-input {
         width: calc(100% - 10px);
         margin: 0;
         padding: 0;
         height: 50%;
     }
+
     @@keyframes fade-in {
         from {
             opacity: 0;
@@ -223,6 +235,7 @@
             top: 18%
         }
     }
+
     .appform-main-button {
         height: 5vh;
         background-color: #00bcae;
@@ -234,19 +247,20 @@
         font-weight: 700;
     }
 
-    .appform-main-button:hover {
-        height: 5vh;
-        background-color: #d35bc9;
-        border: none;
-        border-radius: 100px;
-        color: white;
-        text-align: center;
-        font-family: opensans-bold;
-        font-weight: 700;
+        .appform-main-button:hover {
+            height: 5vh;
+            background-color: #d35bc9;
+            border: none;
+            border-radius: 100px;
+            color: white;
+            text-align: center;
+            font-family: opensans-bold;
+            font-weight: 700;
+        }
+
+    .collaborators-left-main {
+        padding: 10px;
     }
-.collaborators-left-main{
-    padding: 10px;
-}
 </style>
 
 <div class="appform-container">
@@ -269,9 +283,28 @@
                         {
                             @foreach (var question in Questions)
                             {
+
+                                if (question.answerTypeId == 7)
+                                {
+                                    <tr class="@QuestionCardClass(question)">
+                                        <td class="collaborators-left-td" @onclick="() => AddToForm(question)">@question.questionDescription</td>
+                                        <td class="collaborators-left-td">
+                                            <div><input type="text" @bind="tempString"/></div>
+                                        </td>
+                                    </tr>
+                                }
+                                else
+                                {
+
+                                    <tr class="@QuestionCardClass(question)" @onclick="() => AddToForm(question)">
+                                        <td class="collaborators-left-td">@question.questionDescription</td>
+                                    </tr>
+                                }
+
                                 <tr class="@QuestionCardClass(question)" @onclick="() => AddToForm(question)">
                                     <td class="collaborators-left-td">@question.questionDescription</td>
                                 </tr>
+
                             }
                         }
                     </tbody>
@@ -280,8 +313,8 @@
         </div>
         <div class="appform-left-buttons">
             <div class="question-button">
-                <button class="btn appform-main-button" @onclick="OpenAddPopup">Add question</button>
-                <button class="btn appform-main-button" @onclick="OpenDeletePopup">Delete questions</button>
+                @*<button class="btn appform-main-button" @onclick="OpenAddPopup">Add question</button>
+                <button class="btn appform-main-button" @onclick="OpenDeletePopup">Delete questions</button>*@
             </div>
         </div>
     </div>
@@ -325,6 +358,10 @@
                                                 break;
                                             case 6:
                                                 <input type="file" class="form-control" style="width: 100%" @bind="formquestion.answer">
+                                                break;
+                                      
+                                            case 7:
+                                                <input type="text" class="form-control" placeholder="Answer..." style="width: 100%" @bind="formquestion.answer">
                                                 break;
                                         }
 
@@ -374,8 +411,13 @@
                         {
                             @foreach (var question in Questions)
                             {
+
+                                <tr>
+                                    <td class="delete-popup-question" style="font-size: 15px;">@question.questionDescription</td>
+
                                 <tr class="appform-right-row pr-2 pl-2 pt-1">
                                     <td class="collaborators-left-td appform-text pt-2 pl-2" style="word-wrap: break-word">@question.questionDescription</td>
+
                                     <td style="max-width: 10%">
                                         <button class="btn-close" @onclick="() => DeleteQuestion(question)"></button>
                                     </td>
@@ -396,6 +438,7 @@
     [Parameter]
     public EventCallback<CreateJobPost> TempJobChanged { get; set; }
 
+    string tempString = "";
 
     List<CustomQuestion> Questions = new List<CustomQuestion>();
     List<FormQuestion> FormQuestions = new List<FormQuestion>();
@@ -418,7 +461,7 @@
     {
 
         FormQuestion temp = new FormQuestion();
-        temp.question = question.questionDescription;
+        temp.question = question.questionDescription + " " + tempString;
         temp.answerTypeId = question.answerTypeId;
         temp.jobId = TempJob.Id;
         if (!FormQuestions.Contains(temp))
