@@ -16,7 +16,7 @@ using XebecPortal.UI.Utils;
 using Smart.Blazor;
 using XebecPortal.UI.Service_Interfaces;
 using MudBlazor.Services;
-using XebecPortal.UI.Shared;
+using XebecPortal.UI.Pages.HR;
 
 namespace XebecPortal.UI
 {
@@ -27,7 +27,7 @@ namespace XebecPortal.UI
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
             builder.Services.AddSingleton<State>();
-            builder.Services.AddSingleton<UserState>();
+            builder.Services.AddSingleton<HrJobState>();
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             
             builder.Services.AddScoped<IApplicantDataService, ApplicantDataService>();

@@ -27,6 +27,7 @@ namespace XebecPortal.UI.Pages.Applicant
         public int? MinimumExperience { get; set; }
         public string Location { get; set; }
         public string Department { get; set; }
+        public string Status { get; set; }
         public DateTime DueDate { get; set; }
         public DateTime CreationDate { get; set; }
         public IList<JobTypeHelper> JobTypes { get; set; }
@@ -153,5 +154,10 @@ namespace XebecPortal.UI.Pages.Applicant
         public string ImageUrl { get; set; }
         public int AppUserId { get; set; }
         public IList<AppUser> AppUser { get; set; }
+    }
+
+    public class Status
+    {
+        public string name { get; set; }
     }
 }
