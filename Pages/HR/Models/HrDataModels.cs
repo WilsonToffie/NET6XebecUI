@@ -27,6 +27,7 @@ namespace XebecPortal.UI.Pages.HR
         public int? MinimumExperience { get; set; }
         public string Location { get; set; }
         public string Department { get; set; }
+        public string Status { get; set; }
         public DateTime DueDate { get; set; }
         public DateTime CreationDate { get; set; }
         public List<JobTypeHelper> JobTypes { get; set; }
@@ -162,5 +163,10 @@ namespace XebecPortal.UI.Pages.HR
     {
         public int id { get; set; }
         public string platformName { get; set; }
+    }
+
+    public class Status
+    {
+        public string name { get; set; }
     }
 }

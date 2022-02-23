@@ -1,0 +1,7 @@
+[
+  { "name": "Draft" },
+  { "name": "Open" },
+  { "name": "On Hold" },
+  { "name": "Filled" },
+  { "name": "Canceled" }
+]

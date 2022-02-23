@@ -31,6 +31,7 @@
         height: 90vh;
         width: 100vw;
     }
+
     .main-heading-text-div {
         width: 93%;
         margin-top: -1vh;
@@ -45,7 +46,8 @@
         text-align: left;
         text-transform: uppercase;
     }
-    .main-component{
+
+    .main-component {
         height: 85vh;
         margin-bottom: 5vh;
         width: 100%;
@@ -91,7 +93,7 @@
         justify-content: right;
         justify-items: right;
     }
-    
+
     .nav-menu {
         height: 100%;
         background-color: white;
@@ -170,9 +172,11 @@
     .offcanvas-header-color {
         background-color: rgba(0,0,0,0.1);
     }
-    .offcanvas-body-main{
+
+    .offcanvas-body-main {
         overflow-y: hidden;
     }
+
     .mainlayout-profile {
         height: 30vh;
         width: 100%;
@@ -180,13 +184,15 @@
         padding: 0;
         background-color: rgba(0,0,0,0.1);
     }
-    .profile-div{
+
+    .profile-div {
         height: 25vh;
         width: 70%;
         margin-left: 15%;
         margin-right: 15%;
     }
-    .profile-image-div-cover{
+
+    .profile-image-div-cover {
         height: 10vh;
         width: 30%;
         margin-right: 35%;
@@ -195,6 +201,7 @@
         border: 0.4em rgba(0, 188, 174,1) solid;
         border-radius: 100%;
     }
+
     .profile-image-div {
         height: 8vh;
         margin-top: 1vh;
@@ -204,6 +211,7 @@
         margin-left: 10%;
         border-radius: 100%;
     }
+
     .profile-name-div {
         height: 5vh;
         width: 100%;
@@ -211,7 +219,8 @@
         padding-top: 0;
         text-align: center;
     }
-    .profile-name{
+
+    .profile-name {
         height: 5vh;
         color: white;
         text-transform: uppercase;
@@ -219,6 +228,7 @@
         font-weight: 700;
         font-size: 1.2em;
     }
+
     .profile-role-div {
         height: 5vh;
         width: 80%;
@@ -228,6 +238,7 @@
         padding-top: 0;
         margin-bottom: 5vh;
     }
+
     .profile-role {
         height: 3vh;
         color: white;
@@ -246,10 +257,12 @@
             </div>
             <div class="nav">
                 <img class="icon-menu" src="/Img/list.svg" data-bs-toggle="offcanvas" data-bs-target="#showApplicantNav" aria-controls="offcanvasRight" />
+                <img class="icon-menu" src="/Img/list.svg" data-bs-toggle="offcanvas" data-bs-target="#showApplicantNavAlert" aria-controls="offcanvasRight" />
             </div>
         </div>
     </div>
 
+    <!--Work on this navigation-->
     <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showApplicantNav" aria-labelledby="offcanvasRightLabel">
         <div class="offcanvas-header offcanvas-header-color">
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -258,7 +271,6 @@
             <div class="profile-div">
                 <div class="profile-image-div-cover">
                     <div class="profile-image-div">
-
                     </div>
                 </div>
                 <div class="profile-name-div">
@@ -286,6 +298,84 @@
             <h2 class="profile-logout">Logout</h2>
         </div>
     </div>
+
+    <!--Alert Navigation-->
+    <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showApplicantNavAlert" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header offcanvas-header-color">
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body offcanvas-body-main">
+            <div class="row" style="margin-left: auto !important; margin-right: auto !important">
+                <div class="col-12">
+                    <h3 class="text-center" style="font-weight:900">Configure Alerts</h3>
+                </div>
+                <div class="col-12">
+                    <h4>Filter By:</h4>
+                </div>
+                <div class="col-12 d-grid gap-4">
+                    <div class="col-12">
+                        <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" Label="Department" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" >
+                            @if (jobs?.Any() == true)
+                            {
+                                @foreach (var item in jobs.Select(x => x.Department).Distinct())
+                                {
+                                    <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                }
+                            }
+                        </MudSelect>
+                    </div>
+                    <div class="col-12">
+                        <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Jobs" MultiSelection="true" Label="Job Title" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextJob)">
+                            @if (jobs?.Any() == true)
+                            {
+                                @foreach (var item in jobs.Select(x => x.Title).Distinct())
+                                {
+                                    <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                }
+                            }
+                        </MudSelect>
+                    </div>
+                    <div class="col-12">
+                        <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Companies" MultiSelection="true" Label="Company" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextCompany)">
+                            @if (jobs?.Any() == true)
+                            {
+                                @foreach (var item in jobs.Select(x => x.Company).Distinct())
+                                {
+                                    <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                }
+                            }
+                        </MudSelect>
+                    </div>
+                    <div class="col-12">
+                        <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" Label="Location" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextLocation)">
+                            @if (jobs?.Any() == true)
+                            {
+                                @foreach (var item in jobs.Select(x => x.Location).Distinct())
+                                {
+                                    <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                }
+                            }
+                        </MudSelect>
+                    </div>
+                    <div class="col-12">
+                        <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Types" MultiSelection="true" Label="Type" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextType)">
+                            @if (jobTypes?.Any() == true)
+                            {
+                                @foreach (var item in jobTypes.Select(x => x.Type).Distinct())
+                                {
+                                    <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                }
+                            }
+                        </MudSelect>
+                    </div>
+                    <div class="col-12 d-flex justify-content-center">
+                        <button class="btn btn-primary" type="button">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="main" hidden="@applicantApplicationProfileIsHidden">
         <div class="main-component">
             <XebecPortal.UI.Pages.Applicant.ApplicationProfile />
@@ -323,7 +413,6 @@
             <div class="profile-div">
                 <div class="profile-image-div-cover">
                     <div class="profile-image-div">
-
                     </div>
                 </div>
                 <div class="profile-name-div">
@@ -380,110 +469,4 @@
 <MudSnackbarProvider />
 
 @code{
-    private MainModel mainmodel = new MainModel();
-    private List<UserModel> users = new List<UserModel>();
-    private UserModel thisUser = new UserModel();
-
-    private bool HRIsHidden { get; set; } = true;
-    private bool ApplicantIsHidden { get; set; } = true;
-
-    private bool applicantApplicationProfileIsHidden { get; set; } = true;
-    private bool applicantJobPortalIsHidden { get; set; } = true;
-    private bool applicantMyJobsIsHidden { get; set; } = true;
-
-    private bool hrApplicantPortalIsHidden { get; set; } = true;
-    private bool hrDataAnalyticsToolIsHidden { get; set; } = true;
-    private bool hrJobPortalIsHidden { get; set; } = true;
-    private bool hrCreateAJobIsHidden { get; set; } = true;
-
-
-    [Parameter]
-    public int ID { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        users = await HttpClient.GetFromJsonAsync<List<UserModel>>("https://my-json-server.typicode.com/IviweMalotana/xebecDB/Users");
-
-        try
-        {
-            thisUser = users.Where(a => a.ID == ID).Single();
-
-            if (thisUser.Role.Equals("applicant"))
-            {
-                ApplicantIsHidden = false;
-
-                applicantApplicationProfileIsHidden = true;
-                applicantJobPortalIsHidden = true;
-                applicantMyJobsIsHidden = true;
-
-                HRIsHidden = true;
-
-            }
-
-            else if (thisUser.Role.Equals("hr"))
-            {
-                HRIsHidden = false;
-                ApplicantIsHidden = true;
-
-                hrApplicantPortalIsHidden = true;
-                hrDataAnalyticsToolIsHidden = true;
-                hrJobPortalIsHidden = true;
-                hrCreateAJobIsHidden = false;
-            }
-        }
-        catch
-        {
-            Console.WriteLine(mainmodel.ID + " not working");
-        }
-
-    }
-
-    private void showApplicantApplicationProfile()
-    {
-        applicantApplicationProfileIsHidden = false;
-        applicantJobPortalIsHidden = true;
-        applicantMyJobsIsHidden = true;
-
-    }
-    private void showApplicantJobPortal()
-    {
-        applicantApplicationProfileIsHidden = true;
-        applicantJobPortalIsHidden = false;
-        applicantMyJobsIsHidden = true;
-    }
-    private void showApplicantMyJobs()
-    {
-        applicantApplicationProfileIsHidden = true;
-        applicantJobPortalIsHidden = true;
-        applicantMyJobsIsHidden = false;
-    }
-    private void showHRApplicantPortal()
-    {
-        hrApplicantPortalIsHidden = false;
-        hrDataAnalyticsToolIsHidden = true;
-        hrJobPortalIsHidden = true;
-        hrCreateAJobIsHidden = true;
-    }
-
-    private void showHRDataAnalyticsTool()
-    {
-        hrApplicantPortalIsHidden = true;
-        hrDataAnalyticsToolIsHidden = false;
-        hrJobPortalIsHidden = true;
-        hrCreateAJobIsHidden = true;
-    }
-    private void showHRJobPortal()
-    {
-        hrApplicantPortalIsHidden = true;
-        hrDataAnalyticsToolIsHidden = true;
-        hrJobPortalIsHidden = false;
-        hrCreateAJobIsHidden = true;
-    }
-    private void showHRCreateAJob()
-    {
-        hrApplicantPortalIsHidden = true;
-        hrDataAnalyticsToolIsHidden = true;
-        hrJobPortalIsHidden = true;
-        hrCreateAJobIsHidden = false;
-    }
 }
