@@ -6,6 +6,7 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using X.PagedList;
 using XebecPortal.UI.Pages.Applicant.Models;
+using XebecPortal.UI.Pages.HR;
 using XebecPortal.UI.Shared;
 
 namespace XebecPortal.UI.Pages.Applicant
@@ -27,6 +28,10 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool JobPortalIsHidden, ApplicationFormIsHidden;
         private List<JobType> JobTypes;
         private List<Status> status;
+        List<FormQuestion> QuestionList = new List<FormQuestion>();
+        List<QuestionType> Types = new List<QuestionType>();
+        List<ApplicantQuestion> ApplicantAnswers = new List<ApplicantQuestion>();
+        List<ApplicantAnswer> AnswerList = new List<ApplicantAnswer>();
 
         private IEnumerable<string> mudSelectLocation;
         private IEnumerable<string> mudSelectCompany;

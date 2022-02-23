@@ -422,10 +422,6 @@
             </div>
         </div>
         <div class="offcanvas-body offcanvas-body-main">
-
-            <div class="nav-link" @onclick="showHRApplicantPortal">
-                <div class="icons"><i class="fa fa-users" aria-hidden="true"></i></div><h2 class="nav-link-text">Applicant Portal</h2>
-            </div>
             <div class="nav-link" @onclick="showHRDataAnalyticsTool">
                 <div class="icons"><i class="fa fa-chart-bar" aria-hidden="true"></i></div><h2 class="nav-link-text">Data Analytics Tool</h2>
             </div>
@@ -435,22 +431,9 @@
             <div class="nav-link" @onclick="showHRCreateAJob">
                 <div class="icons"><i class="fa fa-briefcase" aria-hidden="true"></i></div><h2 class="nav-link-text">Create A Job</h2>
             </div>
-            <div class="nav-link" @onclick="showHRCandidateRecommender">
-                <div class="icons"><i class="fa fa-briefcase" aria-hidden="true"></i></div><h2 class="nav-link-text">Candidate Recommender</h2>
-            </div>
         </div>
         <div class="infodiv">
             <h2 class="profile-logout" @onclick="Logout">Sign Out</h2>
-        </div>
-    </div>
-    <div class="main" hidden="@hrCandidateRecommenderIsHidden">
-        <div class="main-component">
-            <XebecPortal.UI.Pages.HR.CandidateRecommender />
-        </div>
-    </div>
-    <div class="main" hidden="@hrApplicantPortalIsHidden">
-        <div class="main-component">
-            <XebecPortal.UI.Pages.HR.ApplicantPortal />
         </div>
     </div>
     <div class="main" hidden="@hrDataAnalyticsToolIsHidden">
@@ -478,115 +461,5 @@
 <MudSnackbarProvider />
 
 @code{
-    private List<UserModel> users = new List<UserModel>();
 
-    private bool HRIsHidden, ApplicantIsHidden;
-
-    private bool applicantApplicationProfileIsHidden, applicantJobPortalIsHidden, applicantMyJobsIsHidden;
-
-    private bool hrApplicantPortalIsHidden, hrDataAnalyticsToolIsHidden, hrJobPortalIsHidden, hrCreateAJobIsHidden, hrCandidateRecommenderIsHidden;
-
-    protected override async Task OnInitializedAsync()
-    {
-        if (state.Role.Equals("Candidate"))
-        {
-            ApplicantIsHidden = false;
-            HRIsHidden = true;
-
-            applicantApplicationProfileIsHidden = false;
-            applicantJobPortalIsHidden = true;
-            applicantMyJobsIsHidden = true;
-
-
-            hrApplicantPortalIsHidden = true;
-            hrDataAnalyticsToolIsHidden = true;
-            hrJobPortalIsHidden = true;
-            hrCreateAJobIsHidden = true;
-            hrCandidateRecommenderIsHidden = true;
-        }
-
-        else if (state.Role.Equals("HRAdmin"))
-        {
-            HRIsHidden = false;
-            ApplicantIsHidden = true;
-
-            hrApplicantPortalIsHidden = true;
-            hrDataAnalyticsToolIsHidden = true;
-            hrJobPortalIsHidden = true;
-            hrCreateAJobIsHidden = true;
-            hrCandidateRecommenderIsHidden = false;
-
-            applicantApplicationProfileIsHidden = true;
-            applicantJobPortalIsHidden = true;
-            applicantMyJobsIsHidden = true;
-        }
-        await Task.Delay(0);
-    }
-
-    private void showApplicantApplicationProfile()
-    {
-        applicantApplicationProfileIsHidden = false;
-        applicantJobPortalIsHidden = true;
-        applicantMyJobsIsHidden = true;
-
-    }
-    private void showApplicantJobPortal()
-    {
-        applicantApplicationProfileIsHidden = true;
-        applicantJobPortalIsHidden = false;
-        applicantMyJobsIsHidden = true;
-    }
-    private void showApplicantMyJobs()
-    {
-        applicantApplicationProfileIsHidden = true;
-        applicantJobPortalIsHidden = true;
-        applicantMyJobsIsHidden = false;
-    }
-    private void showHRApplicantPortal()
-    {
-        hrApplicantPortalIsHidden = false;
-        hrDataAnalyticsToolIsHidden = true;
-        hrJobPortalIsHidden = true;
-        hrCreateAJobIsHidden = true;
-        hrCandidateRecommenderIsHidden = true;
-    }
-
-    private void showHRDataAnalyticsTool()
-    {
-        hrApplicantPortalIsHidden = true;
-        hrDataAnalyticsToolIsHidden = false;
-        hrJobPortalIsHidden = true;
-        hrCreateAJobIsHidden = true;
-        hrCandidateRecommenderIsHidden = true;
-    }
-    private void showHRJobPortal()
-    {
-        hrApplicantPortalIsHidden = true;
-        hrDataAnalyticsToolIsHidden = true;
-        hrJobPortalIsHidden = false;
-        hrCreateAJobIsHidden = true;
-        hrCandidateRecommenderIsHidden = true;
-    }
-    private void showHRCreateAJob()
-    {
-        hrApplicantPortalIsHidden = true;
-        hrDataAnalyticsToolIsHidden = true;
-        hrJobPortalIsHidden = true;
-        hrCreateAJobIsHidden = false;
-        hrCandidateRecommenderIsHidden = true;
-    }
-
-    private void showHRCandidateRecommender()
-    {
-        hrApplicantPortalIsHidden = true;
-        hrDataAnalyticsToolIsHidden = true;
-        hrJobPortalIsHidden = true;
-        hrCreateAJobIsHidden = true;
-        hrCandidateRecommenderIsHidden = false;
-    }
-
-    private void Logout()
-    {
-        state.isLoggedIn = false;
-    }
 }

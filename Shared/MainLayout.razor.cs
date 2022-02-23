@@ -5,70 +5,56 @@ using System.Linq;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using XebecPortal.UI.Shared.Home.Models;
-using XebecPortal.UI.Pages.HR;
+using XebecPortal.UI.Pages.Applicant.Models;
+using XebecPortal.UI.Pages.Applicant;
 
 namespace XebecPortal.UI.Shared
 {
     public partial class MainLayout
     {
-        private MainModel mainmodel = new MainModel();
-        private List<UserModel> users = new List<UserModel>();
-        private UserModel thisUser = new UserModel();
         private IList<Job> jobs = new List<Job>();
         private IList<JobType> jobTypes = new List<JobType>();
 
-        private bool HRIsHidden { get; set; } = true;
-        private bool ApplicantIsHidden { get; set; } = true;
+        private bool HRIsHidden, ApplicantIsHidden = true;
 
-        private bool applicantApplicationProfileIsHidden { get; set; } = true;
-        private bool applicantJobPortalIsHidden { get; set; } = true;
-        private bool applicantMyJobsIsHidden { get; set; } = true;
+        private bool applicantApplicationProfileIsHidden, applicantJobPortalIsHidden, applicantMyJobsIsHidden = true;
 
-        private bool hrApplicantPortalIsHidden { get; set; } = true;
-        private bool hrDataAnalyticsToolIsHidden { get; set; } = true;
-        private bool hrJobPortalIsHidden { get; set; } = true;
-        private bool hrCreateAJobIsHidden { get; set; } = true;
-
-        [Parameter]
-        public int ID { get; set; }
+        private bool hrDataAnalyticsToolIsHidden, hrJobPortalIsHidden, hrCreateAJobIsHidden = true;
 
         protected override async Task OnInitializedAsync()
         {
-            users = await HttpClient.GetFromJsonAsync<List<UserModel>>("https://my-json-server.typicode.com/IviweMalotana/xebecDB/Users");
-            jobs = await HttpClient.GetFromJsonAsync<IList<Job>>("https://xebecapi.azurewebsites.net/api/Job");
-            jobTypes = await HttpClient.GetFromJsonAsync<IList<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
-
-            try
+            if (state.Role.Equals("Candidate"))
             {
-                thisUser = users.Where(a => a.ID == ID).Single();
+                ApplicantIsHidden = false;
+                HRIsHidden = true;
 
-                if (thisUser.Role.Equals("applicant"))
-                {
-                    ApplicantIsHidden = false;
+                applicantApplicationProfileIsHidden = true;
+                applicantJobPortalIsHidden = false;
+                applicantMyJobsIsHidden = true;
 
-                    applicantApplicationProfileIsHidden = true;
-                    applicantJobPortalIsHidden = true;
-                    applicantMyJobsIsHidden = true;
+                hrDataAnalyticsToolIsHidden = true;
+                hrJobPortalIsHidden = true;
+                hrCreateAJobIsHidden = true;
 
-                    HRIsHidden = true;
 
-                }
-
-                else if (thisUser.Role.Equals("hr"))
-                {
-                    HRIsHidden = false;
-                    ApplicantIsHidden = true;
-
-                    hrApplicantPortalIsHidden = true;
-                    hrDataAnalyticsToolIsHidden = true;
-                    hrJobPortalIsHidden = true;
-                    hrCreateAJobIsHidden = false;
-                }
+                jobs = await HttpClient.GetFromJsonAsync<IList<Job>>("https://xebecapi.azurewebsites.net/api/Job");
+                jobTypes = await HttpClient.GetFromJsonAsync<IList<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
             }
-            catch
+
+            else if (state.Role.Equals("HRAdmin"))
             {
-                Console.WriteLine(mainmodel.ID + " not working");
+                HRIsHidden = false;
+                ApplicantIsHidden = true;
+
+                hrDataAnalyticsToolIsHidden = true;
+                hrJobPortalIsHidden = false;
+                hrCreateAJobIsHidden = true;
+
+                applicantApplicationProfileIsHidden = true;
+                applicantJobPortalIsHidden = true;
+                applicantMyJobsIsHidden = true;
             }
+            await Task.Delay(0);
 
         }
 
@@ -77,7 +63,6 @@ namespace XebecPortal.UI.Shared
             applicantApplicationProfileIsHidden = false;
             applicantJobPortalIsHidden = true;
             applicantMyJobsIsHidden = true;
-
         }
         private void showApplicantJobPortal()
         {
@@ -91,34 +76,29 @@ namespace XebecPortal.UI.Shared
             applicantJobPortalIsHidden = true;
             applicantMyJobsIsHidden = false;
         }
-        private void showHRApplicantPortal()
-        {
-            hrApplicantPortalIsHidden = false;
-            hrDataAnalyticsToolIsHidden = true;
-            hrJobPortalIsHidden = true;
-            hrCreateAJobIsHidden = true;
-        }
 
         private void showHRDataAnalyticsTool()
         {
-            hrApplicantPortalIsHidden = true;
             hrDataAnalyticsToolIsHidden = false;
             hrJobPortalIsHidden = true;
             hrCreateAJobIsHidden = true;
         }
         private void showHRJobPortal()
         {
-            hrApplicantPortalIsHidden = true;
             hrDataAnalyticsToolIsHidden = true;
             hrJobPortalIsHidden = false;
             hrCreateAJobIsHidden = true;
         }
         private void showHRCreateAJob()
         {
-            hrApplicantPortalIsHidden = true;
             hrDataAnalyticsToolIsHidden = true;
             hrJobPortalIsHidden = true;
             hrCreateAJobIsHidden = false;
+        }
+
+        private void Logout()
+        {
+            state.isLoggedIn = false;
         }
 
         private static string GetMultiSelectionTextLocation(List<string> selectedValues)

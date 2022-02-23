@@ -17,6 +17,7 @@ using Smart.Blazor;
 using XebecPortal.UI.Service_Interfaces;
 using MudBlazor.Services;
 using XebecPortal.UI.Pages.HR;
+using XebecPortal.UI.Shared;
 
 namespace XebecPortal.UI
 {
