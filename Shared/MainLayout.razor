@@ -346,9 +346,17 @@
             <div class="nav-link" @onclick="showHRCreateAJob">
                 <div class="icons"><i class="fa fa-briefcase" aria-hidden="true"></i></div><h2 class="nav-link-text">Create A Job</h2>
             </div>
+            <div class="nav-link" @onclick="showHRCandidateRecommender">
+                <div class="icons"><i class="fa fa-briefcase" aria-hidden="true"></i></div><h2 class="nav-link-text">Candidate Recommender</h2>
+            </div>
         </div>
         <div class="infodiv">
             <h2 class="profile-logout" @onclick="Logout">Sign Out</h2>
+        </div>
+    </div>
+    <div class="main" hidden="@hrCandidateRecommenderIsHidden">
+        <div class="main-component">
+            <XebecPortal.UI.Pages.HR.CandidateRecommender />
         </div>
     </div>
     <div class="main" hidden="@hrApplicantPortalIsHidden">
@@ -387,7 +395,7 @@
 
     private bool applicantApplicationProfileIsHidden, applicantJobPortalIsHidden, applicantMyJobsIsHidden;
 
-    private bool hrApplicantPortalIsHidden, hrDataAnalyticsToolIsHidden, hrJobPortalIsHidden, hrCreateAJobIsHidden;
+    private bool hrApplicantPortalIsHidden, hrDataAnalyticsToolIsHidden, hrJobPortalIsHidden, hrCreateAJobIsHidden, hrCandidateRecommenderIsHidden;
 
     protected override async Task OnInitializedAsync()
     {
@@ -405,7 +413,7 @@
             hrDataAnalyticsToolIsHidden = true;
             hrJobPortalIsHidden = true;
             hrCreateAJobIsHidden = true;
-
+            hrCandidateRecommenderIsHidden = true;
         }
 
         else if (state.Role.Equals("HRAdmin"))
@@ -416,7 +424,8 @@
             hrApplicantPortalIsHidden = true;
             hrDataAnalyticsToolIsHidden = true;
             hrJobPortalIsHidden = true;
-            hrCreateAJobIsHidden = false;
+            hrCreateAJobIsHidden = true;
+            hrCandidateRecommenderIsHidden = false;
 
             applicantApplicationProfileIsHidden = true;
             applicantJobPortalIsHidden = true;
@@ -450,6 +459,7 @@
         hrDataAnalyticsToolIsHidden = true;
         hrJobPortalIsHidden = true;
         hrCreateAJobIsHidden = true;
+        hrCandidateRecommenderIsHidden = true;
     }
 
     private void showHRDataAnalyticsTool()
@@ -458,6 +468,7 @@
         hrDataAnalyticsToolIsHidden = false;
         hrJobPortalIsHidden = true;
         hrCreateAJobIsHidden = true;
+        hrCandidateRecommenderIsHidden = true;
     }
     private void showHRJobPortal()
     {
@@ -465,6 +476,7 @@
         hrDataAnalyticsToolIsHidden = true;
         hrJobPortalIsHidden = false;
         hrCreateAJobIsHidden = true;
+        hrCandidateRecommenderIsHidden = true;
     }
     private void showHRCreateAJob()
     {
@@ -472,7 +484,18 @@
         hrDataAnalyticsToolIsHidden = true;
         hrJobPortalIsHidden = true;
         hrCreateAJobIsHidden = false;
+        hrCandidateRecommenderIsHidden = true;
     }
+
+    private void showHRCandidateRecommender()
+    {
+        hrApplicantPortalIsHidden = true;
+        hrDataAnalyticsToolIsHidden = true;
+        hrJobPortalIsHidden = true;
+        hrCreateAJobIsHidden = true;
+        hrCandidateRecommenderIsHidden = false;
+    }
+
     private void Logout()
     {
         state.isLoggedIn = false;

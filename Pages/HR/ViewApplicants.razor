@@ -1,0 +1,304 @@
+﻿@page "/viewapplicants"
+@using XebecPortal.UI.Services.Models
+@using XebecPortal.UI.Interfaces
+@using Bogus
+@using XebecPortal.UI.Pages.Applicant
+@using XebecPortal.UI.Service_Interfaces
+@using XebecPortal.UI.Services.MockServices
+@inject IApplicantDataService _applicantDataService
+@inject IMyJobListDataService _myJobListDataService
+@inject IApplicationPhaseHelperDataService _phaseHelperDataService
+@inject IPhaseDataService _phaseDataService
+@inject IStatusDataService _statusDataService
+@inject HttpClient _httpClient
+
+
+<style>
+
+    .view-applicants-top {
+        height: 20vh;
+        width: 100%;
+    }
+
+    .view-applicants-bottom {
+        height: 65vh;
+    }
+
+    .view-applicants-bottom-left {
+        background-color: white;
+        width: 80%;
+        margin: auto;
+        box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0, rgba(60, 64, 67, 0.15) 0 1px 3px 1px;
+        overflow-y: scroll;
+        height: 65vh;
+    }
+
+        .view-applicants-bottom-left::-webkit-scrollbar {
+            width: 2px;
+        }
+
+    .view-applicants-bottom-left-heading {
+        height: 5vh;
+        margin-top: 2.5vh;
+        margin-bottom: 2.5vh;
+    }
+
+    .view-applicants-bottom-left-heading-label {
+        color: #666666;
+        font-weight: 400;
+        font-size: 2em;
+        font-family: opensans-condensed-light;
+        margin: 0;
+        text-align: center;
+    }
+
+    .view-applicants-bottom-right {
+        background-color: white;
+        width: 90%;
+        margin: auto;
+        overflow-y: scroll;
+        height: 65vh;
+        box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0, rgba(60, 64, 67, 0.15) 0 1px 3px 1px;
+    }
+
+    .view-applicants-search {
+        width: 50%;
+        height: 5vh;
+        margin-top: 2.5vh;
+        margin-bottom: 2.5vh;
+        margin-left: 25%;
+        margin-right: 25%;
+    }
+
+        .view-applicants-search input[type="text"] {
+        }
+
+    .view-applicants-filter {
+        height: 5vh;
+        margin-top: 2.5vh;
+        margin-bottom: 2.5vh;
+    }
+</style>
+
+
+
+
+
+<div class="container">
+    <div class="view-applicants-top">
+        <div class="view-applicants-search">
+            <input type="text" placeholder="search" />
+        </div>
+        <div class="row view-applicants-filter">
+            <div class="col-3">
+
+            </div>
+            <div class="col-3">
+
+            </div>
+            <div class="col-3">
+
+            </div>
+            <div class="col-3">
+
+            </div>
+        </div>
+    </div>
+    <div class="row view-applicants-bottom">
+        <div class="col-3">
+            <div class="view-applicants-bottom-left">
+                <div class="view-applicants-bottom-left-heading">
+                    <h2 class="view-applicants-bottom-left-heading-label">
+                        Candidates
+                    </h2>
+                </div>
+                <div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="view-applicants-bottom-right">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+
+    Dictionary<Applicant, List<ApplicationPhaseHelper>> _map = new();
+    List<Applicant> _applicants;
+    public HttpClient altClient;
+    public KeyValuePair<Applicant, List<ApplicationPhaseHelper>> focusPair = new();
+    public Applicant FocusApplicant { get; set; }
+    public List<AppPhase> _appPhases;
+    public List<AppStatus> _statues;
+    public List<ApplicationPhaseHelper> FocuApplicationPhaseHelpers { get; set; }
+
+    ApplicationPhaseHelper helperToChange = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        //Console.WriteLine($">>>>>>>>Applicant Portal OnInitialized");
+        _applicants = (await _applicantDataService.GetAllApplicants()).OrderBy(a => a.Id).ToList();
+
+        if (_applicants != null)
+        {
+            if (_applicants.Any())
+            {
+                //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = setting focus applicant");
+                FocusApplicant = _applicants[0];
+            }
+            //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Associating map");
+            _map = await AssociateApplicantsToJobs(_applicants);
+            if (_map != null)
+            {
+                //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Associating map > Done!!!");
+                //Console.WriteLine();
+                //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Creating Focus Value pair");
+                focusPair = _map.FirstOrDefault(a => _applicants.FirstOrDefault(a => a.Id > -1) == a.Key);
+                //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Creating Focus Value pair> Done!!!");
+                //Console.WriteLine();
+            }
+            Task.WaitAll();
+        }
+
+        _appPhases = _phaseDataService.GetApplicationPhases().OrderBy(p => p.Id).ToList();
+        _statues = _statusDataService.GetAllStatuses().Result.OrderBy(s => s.Id).ToList();
+    }
+
+    public async Task<Dictionary<Applicant, List<ApplicationPhaseHelper>>> AssociateApplicantsToJobs(List<Applicant> applicants)
+    {
+        Dictionary<Applicant, List<ApplicationPhaseHelper>> tempMap = new Dictionary<Applicant, List<ApplicationPhaseHelper>>();
+
+        foreach (var app in applicants)
+        {
+            List<ApplicationPhaseHelper> temp = (await _phaseHelperDataService.GetAssApplicationPhaseHelpers(app, _applicants));
+            //Console.WriteLine($">>>>>>>>Applicant Portal :AssociateApplicantsToJobs = tempMap.Add({app.Id}, count: {temp.Count});");
+            tempMap.Add(app, temp);
+        }
+        return tempMap;
+    }
+
+    public void ShowApplicant(KeyValuePair<Applicant, List<ApplicationPhaseHelper>> applicantPair)
+    {
+        focusPair = applicantPair;
+        FocusApplicant = focusPair.Key;
+    }
+
+    public void Save(ApplicationPhaseHelper applicationPhaseHelper, ApplicationPhaseHelper intPhaseHelper, ApplicationPhaseHelper cstPhaseHelper)
+    {
+        //if current helper is null or (ass helper is null or empty)
+        //.add Method
+        //..1 in backend helpers a new helper
+        //..2 get updated list
+
+        //current phase == new phase (phase helper.Application.Phase
+        //.put phase changes
+        //..1 find phase
+        //..2 change properties
+    }
+
+    private void Edit(ApplicationPhaseHelper applicationPhaseHelper)
+    {
+        Console.WriteLine("Inside Edit");
+
+        if (applicationPhaseHelper == null)
+        {
+            Console.WriteLine("application helper is null.");
+            applicationPhaseHelper = new ApplicationPhaseHelper();
+        }
+        helperToChange = applicationPhaseHelper;
+    }
+
+    private ApplicationPhaseHelper GetLatestHelper(List<ApplicationPhaseHelper> helpers)
+    {
+        var date = DateTime.MinValue;
+        var tempHelper = helpers.FirstOrDefault();
+        foreach (var helper in helpers)
+        {
+            if (date < helper.TimeMoved)
+            {
+                date = helper.TimeMoved;
+                tempHelper = helper;
+            }
+        }
+        return tempHelper;
+    }
+
+    private void Cancel()
+    {
+        Console.WriteLine("canceling");
+        helperToChange = new ApplicationPhaseHelper();
+    }
+
+    private string GetColor(string applicationPhase)
+    {
+        string bg_colour;
+        string text_colour;
+
+        if (Enum.GetName(PhaseEnum.Application).Equals(applicationPhase))
+        {
+            bg_colour = "rgba(9, 71, 111, 0.22)";
+            text_colour = "rgba(9, 71, 111, 1)";
+        }
+        else if (Enum.GetName(PhaseEnum.Testing).Equals(applicationPhase))
+        {
+            bg_colour = "rgba(11, 28, 72, 0.22)";
+            text_colour = "rgba(11, 28, 72, 1)";
+        }
+        else if (Enum.GetName(PhaseEnum.InterviewStaff).Equals(applicationPhase, StringComparison.OrdinalIgnoreCase))
+        {
+            bg_colour = "rgba(0, 155, 174, 0.22)";
+            text_colour = "rgba(0, 155, 174, 1)";
+        }
+        // ReSharper disable once PossibleNullReferenceException
+        else if (Enum.GetName(PhaseEnum.InterviewHr).Equals(applicationPhase))
+        {
+            bg_colour = "rgba(131, 97, 67, 0.22)";
+            text_colour = "rgba(131, 97, 67, 1)";
+        }
+        else if (Enum.GetName(PhaseEnum.InterviewCeo).Equals(applicationPhase))
+        {
+            bg_colour = "rgba(224, 213, 204, 0.22)";
+            text_colour = "rgba(131, 97, 67, 1)";
+        }
+        else if (Enum.GetName(PhaseEnum.Offer).Equals(applicationPhase))
+        {
+            bg_colour = "rgba(0, 188, 80, 0.22)";
+            text_colour = "rgba(0, 188, 80, 1)";
+        }
+        else if (Enum.GetName(PhaseEnum.Screening).Equals(applicationPhase))
+        {
+            bg_colour = "rgba(0, 108, 188, 0.22)";
+            text_colour = "rgba(0, 108, 188, 1)";
+        }
+        else if (applicationPhase.ToLower().Contains("error"))
+        {
+            bg_colour = "rgba(255, 37, 17, 1)";
+            text_colour = "rgba(47, 36, 64, 1)";
+        }
+        else
+        {
+            bg_colour = "rgba(94,93,240,0.22)";
+            text_colour = "rgba(94,93,240,1)";
+        }
+        return $"background: {bg_colour}; color: {text_colour}; box-shadow: {text_colour} 0 10px 20px -10px;";
+    }
+
+    private object GetStyle(Applicant applicant)
+    {
+        if (focusPair.Key == applicant)
+            return "border-left: 5px solid #00bcae;";
+        return "";
+    }
+
+}
+
+
+
+
+}
