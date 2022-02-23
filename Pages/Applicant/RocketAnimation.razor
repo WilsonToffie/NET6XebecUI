@@ -1,0 +1,26 @@
+﻿@page "/rocketTest"
+
+<style>
+    body {
+    overflow-y: hidden;
+    background: #446484;
+}
+
+
+.rocket {
+    position: absolute;
+    bottom: -600px;
+    left: 35%;
+    animation: fly 10s .5s ease-in;
+}
+
+}
+</style>
+
+<img class="rocket launch" src="https://cdn4.iconfinder.com/data/icons/whsr-january-flaticon-set/512/rocket.png">
+<h3>RocketAnimation</h3>
+<input type="text" @bind-=""> <!--You will bind it with a function in C# and check if the values are null or not, if it isnt then the rocket will move up by x %;-->
+
+@code {
+
+}

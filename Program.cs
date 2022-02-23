@@ -28,6 +28,7 @@ namespace XebecPortal.UI
             builder.RootComponents.Add<App>("#app");
             builder.Services.AddSingleton<State>();
             builder.Services.AddSingleton<UserState>();
+            builder.Services.AddSingleton<JobState>();
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             
             builder.Services.AddScoped<IApplicantDataService, ApplicantDataService>();
