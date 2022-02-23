@@ -152,18 +152,11 @@
             <textarea class="form-control" style="resize: none" placeholder="Description" rows="4" @bind="TempJob.Description"></textarea>
         </div>
         <div class="form-group createjob-form-group">
+            
             <div class="createjob-form-individual">
-                <div class="create-job-form-checkbox-div">
-                    @foreach (var jobPlatform in jobPlatforms)
-                    {
-                        <div class="create-job-form-checkboxes">
-                            <input class="smallerCheckBox" type="checkbox" id="@jobPlatform.id" name="@jobPlatform.platformName" @onchange="(e) => AddPlatfrom(jobPlatform)">
-                            <br />
-                            <label class="create-a-job-form-checkbox-label" for="@jobPlatform.id"> @jobPlatform.platformName</label>
-                        </div>
-                    }
-                </div>
+                <!--I removed the code, caused it was asked of me -Andrew -->
             </div>
+
             <div class="createjob-form-individual">
                 <input type="date" placeholder="Date Advertised" onfocus="(this.type='date')" onblur="(this.type='text')" @bind="TempJob.CreationDate" />
             </div>

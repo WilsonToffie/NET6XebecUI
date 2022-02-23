@@ -265,15 +265,15 @@
                 {
 
                     <tbody>
-                    @if (Questions != null)
-                    {
-                        @foreach (var question in Questions)
+                        @if (Questions != null)
                         {
-                            <tr class="@QuestionCardClass(question)" @onclick="() => AddToForm(question)">
-                                <td class="collaborators-left-td">@question.questionDescription</td>
-                            </tr>
+                            @foreach (var question in Questions)
+                            {
+                                <tr class="@QuestionCardClass(question)" @onclick="() => AddToForm(question)">
+                                    <td class="collaborators-left-td">@question.questionDescription</td>
+                                </tr>
+                            }
                         }
-                    }
                     </tbody>
                 }
             </table>
@@ -292,47 +292,47 @@
         <div class="collaborators-left-main">
             <table class="collaborators-left-table">
                 <tbody>
-                @if (Questions != null)
-                {
-                    @foreach (var formquestion in FormQuestions)
+                    @if (Questions != null)
                     {
-                        <tr class="appform-right-row">
-                            <td class="collaborators-left-td">
-                                <div class="form-preview-question">
-                                    <h3 class="appform-text">@formquestion.question</h3>
-                                    <button class="btn-close appform-close-button" @onclick="() => DeleteFormQuestion(formquestion.question)"></button>
-                                </div>
-                                <div class="form-preview-input">
-                                    @switch (formquestion.answerTypeId)
-                                    {
-                                        case 1:
-                                            <input type="number" class="form-control" style="width: 100%" @bind="formquestion.answer">
-                                            break;
-                                        case 2:
-                                            <textarea type="text" class="form-control" placeholder="Answer..." style="width: 100%" @bind="formquestion.answer"></textarea>
-                                            break;
-                                        case 3:
-                                            <input type="text" class="form-control" placeholder="Answer..." style="width: 100%" @bind="formquestion.answer">
-                                            break;
-                                        case 4:
-                                            <input type="date" id="test" class="form-control" style="width: 100%" @onchange="(e) => { formquestion.answer = e.Value.ToString(); }">
-                                            break;
-                                        case 5:
-                                            <select @bind="formquestion.answer">
-                                                <option value="yes" selected>Yes</option>
-                                                <option value="no">No</option>
-                                            </select>
-                                            break;
-                                        case 6:
-                                            <input type="file" class="form-control" style="width: 100%" @bind="formquestion.answer">
-                                            break;
-                                    }
+                        @foreach (var formquestion in FormQuestions)
+                        {
+                            <tr class="appform-right-row">
+                                <td class="collaborators-left-td">
+                                    <div class="form-preview-question">
+                                        <h3 class="appform-text">@formquestion.question</h3>
+                                        <button class="btn-close appform-close-button" @onclick="() => DeleteFormQuestion(formquestion.question)"></button>
+                                    </div>
+                                    <div class="form-preview-input">
+                                        @switch (formquestion.answerTypeId)
+                                        {
+                                            case 1:
+                                                <input type="number" class="form-control" style="width: 100%" @bind="formquestion.answer">
+                                                break;
+                                            case 2:
+                                                <textarea type="text" class="form-control" placeholder="Answer..." style="width: 100%" @bind="formquestion.answer"></textarea>
+                                                break;
+                                            case 3:
+                                                <input type="text" class="form-control" placeholder="Answer..." style="width: 100%" @bind="formquestion.answer">
+                                                break;
+                                            case 4:
+                                                <input type="date" id="test" class="form-control" style="width: 100%" @onchange="(e) => { formquestion.answer = e.Value.ToString(); }">
+                                                break;
+                                            case 5:
+                                                <select @bind="formquestion.answer">
+                                                    <option value="yes" selected>Yes</option>
+                                                    <option value="no">No</option>
+                                                </select>
+                                                break;
+                                            case 6:
+                                                <input type="file" class="form-control" style="width: 100%" @bind="formquestion.answer">
+                                                break;
+                                        }
 
-                                </div>
-                            </td>
-                        </tr>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
                     }
-                }
                 </tbody>
             </table>
         </div>
@@ -341,22 +341,22 @@
     {
         <div class="add-popup">
             <div class="add-popup-header">
-                <h4 style="margin-left: 20px; font-size: 20px;">Add Question:</h4>
+                <h4 class="collaborators-heading-text" style="margin-left: 20px;">Add Question:</h4>
                 <button class="btn-close" style="margin-left: 68%" @onclick="CloseAddPopup"></button>
             </div>
             <div class="add-popup-body">
-                <textarea style="width: 80%; border: 2px solid grey" @bind="tempQuestion.questionDescription"></textarea>
+                <textarea style="width: 80%; border: 2px solid grey; height: 180px; background-color: white; border-radius: 5px;" @bind="tempQuestion.questionDescription"></textarea>
             </div>
             <div class="add-popup-type">
                 <select @bind="tempType">
                     @foreach (var option in Types)
                     {
-                        <option value="@option.Type">@option.Type</option>
+                        <option selected value="@option.Type">@option.Type</option>
                     }
                 </select>
             </div>
             <div class="add-popup-button">
-                <button class="btn" style="background-color: #00BCAE; color:white;" @onclick="AddQuestion">Submit question</button>
+                <button class="btn appform-main-button" @onclick="AddQuestion">Submit question</button>
             </div>
         </div>
     }
@@ -364,24 +364,24 @@
     {
         <div class="delete-popup">
             <div class="delete-popup-header">
-                <h4 style="margin-left: 20px; font-size: 20px;">Delete Questions:</h4>
+                <h4 class="collaborators-heading-text">Delete Questions:</h4>
                 <button class="btn-close" style="margin-left: 57%" @onclick="CloseDeletePopup"></button>
             </div>
             <div class="delete-popup-body">
-                <table class="table">
+                <table class="collaborators-left-table">
                     <tbody>
-                    @if (Questions != null)
-                    {
-                        @foreach (var question in Questions)
+                        @if (Questions != null)
                         {
-                            <tr>
-                                <td class="delete-popup-question" style="font-size: 15px;">@question.questionDescription</td>
-                                <td style="max-width: 10%">
-                                    <button class="btn-close" @onclick="() => DeleteQuestion(question)"></button>
-                                </td>
-                            </tr>
+                            @foreach (var question in Questions)
+                            {
+                                <tr class="appform-right-row pr-2 pl-2 pt-1">
+                                    <td class="collaborators-left-td appform-text pt-2 pl-2" style="word-wrap: break-word">@question.questionDescription</td>
+                                    <td style="max-width: 10%">
+                                        <button class="btn-close" @onclick="() => DeleteQuestion(question)"></button>
+                                    </td>
+                                </tr>
+                            }
                         }
-                    }
                     </tbody>
                 </table>
             </div>

@@ -129,11 +129,14 @@
                     state.Name = result.Name;
                     state.Surname = result.Surname;
                     state.Role = result.Role;
+                    state.Avator = result.Avator;
+                    state.Title = result.Title;
 
                     message = result.Message;
 
                     if (result.Success)
                     {
+                        state.isLoggedIn = true;
                         navmanager.NavigateTo("/main");
 
                     }

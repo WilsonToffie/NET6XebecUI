@@ -427,28 +427,28 @@
                 else
                 {
                     <tbody>
-                    @if (phasesAdded != null)
-                    {
-                        @foreach (var phase in phasesAdded)
+                        @if (phasesAdded != null)
                         {
-                            <tr class="appform-right-row">
-                                <td class="collaborators-left-td">
-                                    <div class="form-preview-question">
-                                        <h3 class="appform-text">@phase.description</h3>
-                                        <button class="btn-close appform-close-button" @onclick="() => DeletePhaseOrderPhase(phase)"></button>
-                                    </div>
-                                    @if (phase.description.ToLower().Contains("interview"))
-                                    {
-                                        <div class="form-preview-input">
-                                            <p type="email" class="form-control" style="width: 100%">
-                                                Interviewer : @developerAssigned
-                                            </p>
+                            @foreach (var phase in phasesAdded)
+                            {
+                                <tr class="appform-right-row">
+                                    <td class="collaborators-left-td">
+                                        <div class="form-preview-question">
+                                            <h3 class="appform-text">@phase.description</h3>
+                                            <button class="btn-close appform-close-button" @onclick="() => DeletePhaseOrderPhase(phase)"></button>
                                         </div>
-                                    }
-                                </td>
-                            </tr>
+                                        @if (phase.description.ToLower().Contains("interview"))
+                                        {
+                                            <div class="form-preview-input">
+                                                <p type="email" class="form-control" style="width: 100%">
+                                                    Interviewer : @developerAssigned
+                                                </p>
+                                            </div>
+                                        }
+                                    </td>
+                                </tr>
+                            }
                         }
-                    }
                     </tbody>
                 }
             </table>
