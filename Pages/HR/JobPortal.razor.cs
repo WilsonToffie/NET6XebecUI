@@ -56,8 +56,10 @@ namespace XebecPortal.UI.Pages.HR
             ApplicantPortalIsHidden = true;
         }
 
-        private void ShowApplicantPortal()
+        private void ShowApplicantPortal(int jobId)
         {
+            hrJobState.JobId = jobId;
+
             JobPortalIsHidden = true;
             ApplicantPortalIsHidden = false;
         }

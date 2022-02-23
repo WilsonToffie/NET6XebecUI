@@ -1,6 +1,7 @@
 ﻿@page "/applicantportal"
 @using XebecPortal.UI.Services.Models
 @inject HttpClient httpClient
+@inject HrJobState hrJobState
 
 <style>
 
@@ -657,44 +658,44 @@
                                 <div class="application-form-question-area">
                                     <table class="table">
                                         <tbody>
-                                                @if (ApplicantAnswers != null)
+                                            @if (ApplicantAnswers != null)
+                                            {
+                                                @foreach (var customquestion in ApplicantAnswers)
                                                 {
-                                                    @foreach (var customquestion in ApplicantAnswers)
-                                                    {
-                                                        <tr>
-                                                            <td>
-                                                                <div class="application-form-question">
-                                                                    <h6 class="form-text text-muted" style="font-size: 14px; width: 90%;">@customquestion.HRQuestion</h6>
-                                                                    @switch (customquestion.TypeId)
-                                                                    {
-                                                                        case 1:
-                                                                            <input type="number" class="form-control" style="width: 80%" @bind="customquestion.Applicantanswer">
-                                                                            break;
-                                                                        case 2:
-                                                                            <textarea type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="customquestion.Applicantanswer"></textarea>
-                                                                            break;
-                                                                        case 3:
-                                                                            <input type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="customquestion.Applicantanswer">
-                                                                            break;
-                                                                        case 4:
-                                                                            <input type="date" id="test" class="form-control" style="width: 80%" @onchange="(e) => { customquestion.Applicantanswer = e.Value.ToString(); }">
-                                                                            break;
-                                                                        case 5:
-                                                                            <select @bind="customquestion.Applicantanswer">
-                                                                                <option value="yes">Yes</option>
-                                                                                <option value="no">No</option>
-                                                                            </select>
-                                                                            break;
-                                                                        case 6:
-                                                                            <input type="file" class="form-control" style="width: 80%" @bind="customquestion.Applicantanswer">
-                                                                            break;
-                                                                    }
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    }
+                                                    <tr>
+                                                        <td>
+                                                            <div class="application-form-question">
+                                                                <h6 class="form-text text-muted" style="font-size: 14px; width: 90%;">@customquestion.HRQuestion</h6>
+                                                                @switch (customquestion.TypeId)
+                                                                {
+                                                                    case 1:
+                                                                        <input type="number" class="form-control" style="width: 80%" @bind="customquestion.Applicantanswer">
+                                                                        break;
+                                                                    case 2:
+                                                                        <textarea type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="customquestion.Applicantanswer"></textarea>
+                                                                        break;
+                                                                    case 3:
+                                                                        <input type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="customquestion.Applicantanswer">
+                                                                        break;
+                                                                    case 4:
+                                                                        <input type="date" id="test" class="form-control" style="width: 80%" @onchange="(e) => { customquestion.Applicantanswer = e.Value.ToString(); }">
+                                                                        break;
+                                                                    case 5:
+                                                                        <select @bind="customquestion.Applicantanswer">
+                                                                            <option value="yes">Yes</option>
+                                                                            <option value="no">No</option>
+                                                                        </select>
+                                                                        break;
+                                                                    case 6:
+                                                                        <input type="file" class="form-control" style="width: 80%" @bind="customquestion.Applicantanswer">
+                                                                        break;
+                                                                }
+                                                            </div>
+                                                        </td>
+                                                    </tr>
                                                 }
-                                            </tbody>
+                                            }
+                                        </tbody>
                                     </table>
                                 </div>
 
@@ -734,9 +735,12 @@
     private IList<WorkHistory> workHistories { get; set; }
     private IList<Education> educations { get; set; }
     private IList<ProfilePortfolioLink> profilePortfolio { get; set; }
+    private int jobId;
 
     protected override async Task OnInitializedAsync()
     {
+        jobId = hrJobState.JobId;
+
         jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
         candidates = await httpClient.GetFromJsonAsync<List<CandidateRecommender>>("https://xebecapi.azurewebsites.net/api/candidaterecommender");
         personalInformations = await httpClient.GetFromJsonAsync<List<PersonalInformation>>("https://xebecapi.azurewebsites.net/api/PersonalInformation");
