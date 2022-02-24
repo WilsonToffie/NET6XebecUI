@@ -5,6 +5,146 @@
 @using System.Linq;
 @using XebecPortal.UI.Shared.Home.Models;
 
+<style>
+    .register-page {
+        height: 100vh;
+        width: 100%;
+        display: flex;
+    }
+
+    .register-right {
+        margin-top: 10vh;
+        height: 90vh;
+        background-color: rgb(255,255,255,0.5);
+        width: 50%;
+    }
+
+    .register-left {
+        background-image: linear-gradient(rgba(0, 188, 174,0.2),rgba(0, 188, 174,0.2)),url(/Img/pexels3.jpg);
+        height: 90vh;
+        margin-top: 10vh;
+        width: 50%;
+        background-size: cover;
+        background-position: center;
+    }
+    .register-page input[type="text"], input[type="email"], input[type="password"], select {
+        background-color: transparent;
+        width: 85%;
+        height: 7vh;
+        line-height: 7vh;
+        font-size: 1em;
+        border: none;
+        font-weight: 800;
+        color: black;
+        font-family: opensans-condensed-light;
+        padding: 1em 1em 1em 1em;
+    }
+    .register-page .index-form-icon {
+        width: 15%;
+        padding-left: 5%;
+        text-align: left;
+        background-color: transparent;
+        color: #00bcae;
+        font-size: 2em;
+        height: 7vh;
+        line-height: 7vh;
+    }
+        .register-page input:focus, textarea:focus, select:focus {
+            outline: none;
+        }
+
+    .register-page::placeholder {
+        color: black;
+        font-family: opensans-condensed-light;
+        font-size: 1em;
+        width: 100%;
+        font-weight: 900;
+    }
+    .index-form-socials-register {
+        width: 100%;
+        height: 8vh;
+        margin-bottom: 5vh;
+    }
+    .socials-register-heading{
+        width: 100%;
+        height: 3vh;
+        color: #666666;
+        font-family: opensans-condensed-bold;
+        font-weight: 900;
+        font-size: 1em;
+        text-align: center;
+    }
+
+    .socials-register-div{
+        width: 100%;
+        height: 5vh;
+        display: flex;
+    }
+    .social-media-register {
+        width: 33%;
+        height: 5vh;
+        text-align: center;
+        color: #00bcae;
+        font-size: 2em;
+    }
+    .index-form-group-register {
+        width: 100%;
+        height: 15vh;
+        margin-bottom: 5vh;
+    }
+
+    .index-role {
+        height: 10vh;
+        width: 100%;
+        display: flex;
+    }
+
+    .role-card {
+        height: 12vh;
+        width: 20%;
+        margin-left: 2.5%;
+        margin-right: 2.5%;
+        border-radius: 2em;
+        border: 0.25em #00bcae solid;
+    }
+        .role-card:hover {
+            background-color: #d35bc9;
+            color: white;
+            border: none;
+        }
+
+    .register-role-heading {
+        height: 4vh;
+        text-align: center;
+        font-weight: 900;
+        font-size: 1em;
+        color: black;
+        width: 100%;
+        font-family: opensans-condensed-light;
+        margin-top: 0;
+        padding-bottom: 1vh;
+    }
+
+    .register-role-icon{
+        height: 7vh;
+        width: 100%;
+        font-size: 2em;
+        color: #00bcae;
+        text-align: center;
+        margin-top: 0;
+        padding-top: 1vh;
+    }
+    .index-group-register {
+        border: solid #00bcae 0.2em;
+        background-color: transparent;
+        height: 7vh;
+        width: 40%;
+        margin-left: 5%;
+        margin-right: 5%;
+        border-radius: 1em;
+        display: flex;
+    }
+</style>
 <div class="register-page">
     <div class="register-left"></div>
     <div class="register-right">
@@ -12,59 +152,94 @@
             <div class="form-group index-form-heading">
                 <h1 class="index-form-heading-1">REGISTER</h1>
             </div>
-            <div class="form-group index-form-group index-group">
-                <div class="index-form-icon">
-                    <i class="fas fa-user"></i>
+            <div class="form-group index-form-group">
+                <div class="index-group-register">
+                    <div class="index-form-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <input type="text" placeholder="Name" @bind="@Name">
                 </div>
-                <input type="text" placeholder="Name" @bind="@Name">
-            </div>
-            <div class="form-group index-form-group index-group">
-                <div class="index-form-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <input type="text" placeholder="Surname" @bind="@Surname">
-            </div>
-            <div class="form-group index-form-group index-group">
-                <div class="index-form-icon">
-                    <i class="fas fa-at"></i>
-                </div>
-                <input type="email" placeholder="Email address" @bind="@Email">
-            </div>
-            <div class="form-group index-form-group index-group">
-                <div class="index-form-icon">
-                    <i class="fa fa-lock "></i>
-                </div>
-                <input type="password" placeholder="Password" @bind="@Password1">
-            </div>
-            <div class="form-group index-form-group index-group">
-                <div class="index-form-icon">
-                    <i class="fa fa-lock "></i>
-                </div>
-                <input type="password" placeholder="Confirm password" @bind="@Password2">
-            </div>
-            <div class="form-group index-form-or">
-                <h1 class="index-form-heading-3">or sign in using</h1>
-            </div>
-            <div class="form-group index-form-socials">
-                <div class="index-socialmedia-div">
-                    <i class="fab fa-google"></i>
-                </div>
-                <div class="index-socialmedia-div">
-                    <i class="fab fa-microsoft"></i>
-                </div>
-                <div class="index-socialmedia-div">
-                    <i class="fab fa-facebook"></i>
+                <div class="index-group-register">
+                    <div class="index-form-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <input type="text" placeholder="Surname" @bind="@Surname">
                 </div>
             </div>
             <div class="form-group index-form-group">
-                <div class="index-form-checkbox-div">
-                    <input type="checkbox" @onclick="@IsApplicant" @bind="@applicant" /><h2 class="index-checkbox-label">Applicant</h2>
+                <div class="index-group-register">
+                    <div class="index-form-icon">
+                        <i class="fas fa-at"></i>
+                    </div>
+                    <input type="email" placeholder="Email address" @bind="@Email1">
                 </div>
-                <div class="index-form-checkbox-div">
-                    <input type="checkbox" @onclick="@IsHR" @bind="@hr" /><h2 class="index-checkbox-label">Human Resources</h2>
+                <div class="index-group-register">
+                    <div class="index-form-icon">
+                        <i class="fas fa-at"></i>
+                    </div>
+                    <input type="email" placeholder="Confirm Email address" @bind="@Email2">
                 </div>
             </div>
-
+            <div class="form-group index-form-group">
+                <div class="index-group-register">
+                    <div class="index-form-icon">
+                        <i class="fa fa-lock "></i>
+                    </div>
+                    <input type="password" placeholder="Password" @bind="@Password1">
+                </div>
+                <div class="index-group-register">
+                    <div class="index-form-icon">
+                        <i class="fa fa-lock "></i>
+                    </div>
+                    <input type="password" placeholder="Confirm password" @bind="@Password2">
+                </div>
+            </div>
+            <div class="form-group index-form-group-register">
+                <h2 class="socials-register-heading">select role</h2>
+                <div class="index-role">
+                    <div class="role-card" @onclick="SelectedApplicant">
+                        <div class="register-role-icon">
+                            <i class="fas fa-user-graduate" style="width: 100%;"></i>
+                        </div>
+                        <h1 class="register-role-heading">Applicant</h1>
+                    </div>
+                    <div class="role-card" @onclick="SelectedHiringManager" >
+                        <div class="register-role-icon">
+                            <i class="fas fa-users" style="width: 100%;"></i>
+                        </div>
+                        <h1 class="register-role-heading">Collaborator</h1>
+                    </div>
+                    <div class="role-card" @onclick="SelectedHumanResources">
+                        <div class="register-role-icon">
+                            <i class="fas fa-user-chart" style="width: 100%;"></i>
+                        </div>
+                        <h1 class="register-role-heading">Human Resources</h1>
+                    </div>
+                    <div class="role-card" @onclick="SelectedSuperAdmin">
+                        <div class="register-role-icon">
+                            <i class="fas fa-crown" style="width: 100%;"></i>
+                        </div>
+                        <h1 class="register-role-heading">Super Admin</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group index-form-socials-register">
+                <h2 class="socials-register-heading">or sign up using</h2>
+                <div class="socials-register-div">
+                    <div class="social-media-register">
+                        <i class="fab fa-google" style="width: 100%;"></i>
+                    </div>
+                    <div class="social-media-register">
+                        <i class="fab fa-microsoft" style="width: 100%;"></i>
+                    </div>
+                    <div class="social-media-register">
+                        <i class="fab fa-facebook" style="width: 100%;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group index-form-or" hidden="@emailMessageIsHidden">
+                <h1 class="index-form-heading-3">emails do not match</h1>
+            </div>
             <div class="form-group index-form-or" hidden="@passwordMessageIsHidden">
                 <h1 class="index-form-heading-3">passwords do not match</h1>
             </div>
@@ -107,10 +282,12 @@
 
     private string Name = "";
     private string Surname = "";
-    private string Email = "";
+    private string Email1= "";
+    private string Email2 = "";
     private string Password1 = "";
     private string Password2 = "";
     private string Role = "";
+    private string Email = "";
     private string Password = "";
     private string Key = "";
 
@@ -119,16 +296,20 @@
     private bool selectCheckBoxMessageIsHidden;
     private bool successfulRegistrationMessageIsHidden;
     private bool confirmAccountMessageIsHidden;
+    private bool emailMessageIsHidden;
 
     private bool registrationFormIsHidden;
     private bool confirmationFormIsHidden;
 
     private bool invalidKeyMessageIsHidden;
 
-    private bool applicant;
-    private bool hr;
+    private bool selectedApplicant;
+    private bool selectedHiringManager;
+    private bool selectedHumanResources;
+    private bool selectedSuperAdmin;
 
     private string message;
+    private object RoleSelected;
 
     private KeyRequest request = new KeyRequest();
 
@@ -142,25 +323,13 @@
         selectCheckBoxMessageIsHidden = true;
         successfulRegistrationMessageIsHidden = true;
         confirmAccountMessageIsHidden = true;
+        emailMessageIsHidden = true;
 
         registrationFormIsHidden = false;
         confirmationFormIsHidden = true;
 
-        applicant = false;
-        hr = false;
+        selectedApplicant = selectedHiringManager = selectedHumanResources = selectedSuperAdmin = false;
         await Task.Delay(0);
-    }
-
-    private void IsApplicant()
-    {
-        hr = false;
-        Role = "applicant";
-    }
-
-    private void IsHR()
-    {
-        applicant = false;
-        Role = "hr";
     }
 
     private async Task ConfirmAccount()
@@ -188,7 +357,6 @@
         confirmationFormIsHidden = false;
         registrationFormIsHidden = true;
         await Task.Delay(0);
-
     }
 
     private bool RegisterPasswordCheck()
@@ -213,16 +381,28 @@
             return true;
         }
     }
+    private bool RegisterEmailCheck()
+    {
+        if (Email1 != Email2)
+        {
+            emailMessageIsHidden = false;
+            return false;
+        }
+        else
+        {
+            emailMessageIsHidden = true;
+            return true;
+        }
+    }
 
     private bool RegisterCheckboxCheck()
     {
-
         passwordMessageIsHidden = true;
         existingUserMessageIsHidden = true;
         successfulRegistrationMessageIsHidden = true;
         confirmAccountMessageIsHidden = true;
 
-        if (applicant == false && hr == false)
+        if (selectedApplicant && selectedHiringManager && selectedHumanResources && selectedSuperAdmin == false)
         {
             selectCheckBoxMessageIsHidden = false;
             return false;
@@ -234,22 +414,52 @@
         }
     }
 
+    private void SelectedApplicant()
+    {
+        selectedApplicant = true;
+        selectedHiringManager = selectedHumanResources = selectedSuperAdmin = false;
+        user.Role = "Candidate";
+    }
+
+    private void SelectedHiringManager()
+    {
+        selectedHiringManager = true;
+        selectedApplicant = selectedHumanResources = selectedSuperAdmin = false;
+        user.Role = "Hiring Manager";
+
+    }
+
+    private void SelectedHumanResources()
+    {
+        selectedHumanResources = true;
+        selectedHiringManager = selectedApplicant = selectedSuperAdmin = false;
+        user.Role = "HRAdmin";
+
+    }
+
+    private void SelectedSuperAdmin()
+    {
+        selectedSuperAdmin = true;
+        selectedHiringManager = selectedHumanResources = selectedApplicant = false;
+        user.Role = "SuperAdmin";
+
+    }
 
     private async Task Register()
     {
         bool passwordIsValid = RegisterPasswordCheck();
+        bool emailIsValid = RegisterEmailCheck();
         bool checkboxIsValid = RegisterCheckboxCheck();
 
-        if (passwordIsValid && checkboxIsValid)
+        if (passwordIsValid && checkboxIsValid && emailIsValid)
         {
             user.Name = Name;
             user.Surname = Surname;
             user.Email = Email;
             user.Password = Password;
 
-            if (applicant)
+            if (selectedApplicant)
             {
-                user.Role = "Candidate";
                 user.Key = "";
 
                 using (var msg = await HttpClient.PostAsJsonAsync<UserModel>("https://xebecapi.azurewebsites.net/api/auth/registernew", user))
@@ -276,7 +486,6 @@
             }
             else
             {
-                user.Role = "HRAdmin";
                 user.Key = "";
 
                 //Post model to dB

@@ -1,14 +1,20 @@
 ﻿@inject HttpClient httpClient;
 <style>
 
+
+
     .layout {
         position: relative;
         height: 90%;
     }
 
+
+
     .content-bottom {
         height: 10%;
     }
+
+
 
     .cardStyle {
         height: 29vh;
@@ -23,11 +29,14 @@
         text-align: center;
         padding-top: 0.2em;
     }
+
         .cardStyle:hover {
             box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px; /*box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;*/
             background-color: rgba(0, 0, 0, 0.5);
             border: 5px solid #00bcae;
         }
+
+
 
     .cardStyle-selected {
         height: 29vh;
@@ -41,13 +50,16 @@
         padding-top: 0.2em;
         /*this is what causes the border colour*/
         background-color: #FFFFFF;
-
         text-align: center;
-    }   
+    }
+
+
 
     .cardLayout {
         left: 10%;
     }
+
+
 
     .buttonStyle {
         width: 80%;
@@ -63,37 +75,41 @@
         height: 5vh;
     }
 
+
+
         .buttonStyle:hover {
             background-color: #d35bc9;
         }
-
 </style>
+
+
 
 <div class="layout">
     <div class="row content-middle">
-
         <div class="col-1"></div>
-
         @if (profiles != null)
         {
             @for (int i = 0; i < profiles.Count; i++)
             {
-
                 var companyProfileID = profiles[i];
+
+
 
                 @if (selectedProfile.Contains(companyProfileID))
                 {
                     <div class="col-2">
                         <div class="cardStyle-selected" @onclick="() => RemoveSelectProfile(companyProfileID)">
 
-                           <!--This is the profiles are chosen-->
-                            @if ((profiles[i].platformName).Equals("Main 1Nebula Platform")) 
+
+
+                            <!--This is the profiles are chosen-->
+                            @if ((profiles[i].platformName).Equals("Main 1Nebula Platform"))
                             {
                                 <img src="/Img/logo.svg" style="height: 40%; width: 80%; margin-top: 35%; ">
                             }
                             else if ((profiles[i].platformName).Equals("Xebec Platform"))
                             {
-                                
+
                                 <img src="/Img/Xebec Logo black.png" style="height: 60%; width: 80%; margin-top: 20%; object-fit: cover; object-position:center">
                             }
                             else if ((profiles[i].platformName).Equals("48Software"))
@@ -105,7 +121,7 @@
                                 <img src="/Img/OneView dark logo.png" style="height: auto; width: 100%; margin-top: 35%; object-fit: cover; object-position: center ">
                             }
                             else if ((profiles[i].platformName).Equals("Stactize"))
-                            {                                
+                            {
                                 <img src="/Img/Stactize logo colour-01.png" style="height: auto; width: 100%; margin-top: 40%; object-fit: cover; object-position: center ">
                             }
                         </div>
@@ -118,10 +134,12 @@
                             <!--This is the profiles are getting chosen-->
                             @if ((profiles[i].platformName).Equals("Main 1Nebula Platform"))
                             {
-                                <img src="/Img/logo.svg" style="height: 40%; width: 80%; margin-top: 35%;  ">
+                                <img src="/Img/logo.svg" style="height: 40%; width: 80%; margin-top: 35%; ">
                             }
                             else if ((profiles[i].platformName).Equals("Xebec Platform"))
                             {
+
+
 
                                 <img src="/Img/Xebec Logo white.png" style="height: 60%; width: 80%; margin-top: 20%; object-fit: cover; object-position: center ">
                             }
@@ -145,6 +163,8 @@
     </div>
 </div>
 
+
+
 <div class="row content-bottom">
     <div class="col-5"></div>
     <div class="col-2">
@@ -153,37 +173,56 @@
     <div class="col-5"></div>
 </div>
 
+
+
 @code {
     [Parameter]
     public CreateJobPost TempJob { get; set; }
     [Parameter]
     public EventCallback<CreateJobPost> TempJobChanged { get; set; }
 
+
+
     private List<JobPlatform> profiles;
     private List<JobPlatform> selectedProfile = new List<JobPlatform>();
 
-    protected override async Task OnInitializedAsync() {
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+
 
         profiles = await httpClient.GetFromJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform");
 
+
+
     }
+
+
 
     protected void AddSelectProfile(JobPlatform profile)
     {
         selectedProfile.Add(profile);
     }
 
+
+
     protected void RemoveSelectProfile(JobPlatform profile)
     {
         selectedProfile.Remove(profile);
     }
 
+
+
     private object selectedCompanyProfile(JobPlatform profile)
     {
-        if (selectedProfile.FindAll(d => d.id == profile.id).Count() >0)
+        if (selectedProfile.FindAll(d => d.id == profile.id).Count() > 0)
             return "cardStyle-selected";
         return "cardStyle";
     }
+
+
 
     private object deselectCompanyProfile(JobPlatform profile)
     {
@@ -191,6 +230,8 @@
             return "cardStyle";
         return "cardStyle-selected";
     }
+
+
 
     private async Task Save()
     {
