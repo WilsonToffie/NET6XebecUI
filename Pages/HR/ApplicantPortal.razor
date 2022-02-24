@@ -6,6 +6,16 @@
 <style>
 
     .container-main {
+        width: 100%;
+        height: 100vh;
+    }
+
+    .container-applicant-portal {
+        width: 100%;
+        height: 100vh;
+    }
+
+    .page-bottom {
         width: 100vw;
         height: 50vh;
         margin: 0 !important;
@@ -17,7 +27,7 @@
         padding: 5px;
     }
 
-        .container-main > div {
+        .page-bottom > div {
             background: #fff;
             border-radius: 10px;
             box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
@@ -347,6 +357,7 @@
         display: flex;
         justify-content: center;
         margin-bottom: 15px;
+        background-color: orange;
     }
 </style>
 
@@ -354,78 +365,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
-
-<div class="page-top">
-
-    <button class="btnNavigate" style="margin-right: 90px; padding: 8px">Job Portal</button>
-
-    <div style="height: 15vh">
-        <div class="job-search-bar" style="background-color: red; height: 5vh; margin-bottom: 2.5vh; margin-top: 2.5vh">
-            <div class="input-group d-flex justify-content-center form-group">
-                <input class="job-search-bar-input" type="text" placeholder="Search for a jobs" />
-            </div>
-        </div>
-        <div class="row" style="height:5vh">
-            <div class="col-3">
-                <!--Location-->
-                <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" Label="Location">
-                    @*@if (jobListFilter != null && jobListFilter.Count > 0)
-                        {
-                            @foreach (var item in jobList.Select(x => x.Location).OrderBy(x => x).Distinct())
-                            {
-                                <MudSelectItem T="string" Value="item">@item</MudSelectItem>
-                            }
-
-                        }*@
-                </MudSelect>
-            </div>
-            <div class="col-3">
-                <!--Company-->
-                <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" Label="Company">
-                    @*@if (jobListFilter != null && jobListFilter.Count > 0)
-                        {
-                            @foreach (var item in jobListFilter.Select(x => x.Company).OrderBy(x => x).Distinct())
-                            {
-                                <MudSelectItem T="string" Value="item">@item</MudSelectItem>
-                            }
-
-                        }*@
-                </MudSelect>
-            </div>
-            <div class="col-3">
-                <!--Department-->
-                <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" Label="Department">
-                    @*@if (jobListFilter != null && jobListFilter.Count > 0)
-                        {
-                            @foreach (var item in jobListFilter.Select(x => x.Department).OrderBy(x => x).Distinct())
-                            {
-                                <MudSelectItem T="string" Value="item">@item</MudSelectItem>
-                            }
-
-                        }*@
-                </MudSelect>
-            </div>
-            <div class="col-3">
-                <!--Status-->
-                <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Status" MultiSelection="true" Label="Status">
-                    @*@if (jobListFilter != null && jobListFilter.Count > 0)
-                        {
-                            @foreach (var item in status.Select(x => x.name))
-                            {
-                                <MudSelectItem T="string" Value="item">@item</MudSelectItem>
-                            }
-
-                        }*@
-                </MudSelect>
-            </div>
-        </div>
-    </div>
-
-    <button class="btnNavigate" style="margin-left: 90px; padding: 8px;">Phase Manager</button>
-
-</div>
-
-<br />
 
 <div class="container-main">
     <div class="candidate-section">
@@ -744,67 +683,6 @@
                                                         </td>
                                                     </tr>
                                                 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                @*<tr>
-                    <td>
-                        <div class="application-form-question">
-                            <h6 class="form-text text-muted" style="font-size: 14px; width: 90%;">@customquestion.HRQuestion</h6>
-                            @switch (customquestion.TypeId)
-                            {
-                                case 1:
-                                    <input type="number" class="form-control" style="width: 80%" @bind="customquestion.Applicantanswer">
-                                    break;
-                                case 2:
-                                    <textarea type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="customquestion.Applicantanswer"></textarea>
-                                    break;
-                                case 3:
-                                    <input type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="customquestion.Applicantanswer">
-                                    break;
-                                case 4:
-                                    <input type="date" id="test" class="form-control" style="width: 80%" @onchange="(e) => { customquestion.Applicantanswer = e.Value.ToString(); }">
-                                    break;
-                                case 5:
-                                    <select @bind="customquestion.Applicantanswer">
-                                        <option value="yes">Yes</option>
-                                        <option value="no">No</option>
-                                    </select>
-                                    break;
-                                case 6:
-                                    <input type="file" class="form-control" style="width: 80%" @bind="customquestion.Applicantanswer">
-                                    break;
-                                case 7:
-                                    <input type="file" class="form-control" style="width: 80%" @bind="customquestion.Applicantanswer">
-                                    break;
-                            }
-                        </div>
-                    </td>
-                </tr>*@
                                             }
                                         }
                                         else
@@ -818,18 +696,19 @@
                                     </tbody>
                                 </table>
                             </div>
-
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-
 @code {
+
+
+
+
 
     private List<FormQuestion> QuestionList = new List<FormQuestion>();
     private List<ApplicantAnswer> AnswerList = new List<ApplicantAnswer>();
@@ -856,6 +735,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+
         jobId = hrJobState.JobId;
 
         jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");

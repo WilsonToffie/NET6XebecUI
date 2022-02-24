@@ -26,21 +26,20 @@ namespace XebecPortal.UI.Pages.HR
         private List<Status> status;
         private List<string> Departments = new List<string>() { "Accounting & Finance", "HR", "Sales & Marketing", "Legal", "Research & Development", "IT", "Admin", "Customer Support" };
         private List<string> Locations = new List<string>() { "Eastern Cape", "Free State", " Gauteng", "KwaZulu-Natal", "Limpopo", "Mpumalanga", "Northen Cape", "North West", "Western Cape" };
-        private bool JobPortalIsHidden = false;
-        private bool ApplicantPortalIsHidden = true;
 
         private IEnumerable<string> mudSelectLocation;
         private IEnumerable<string> mudSelectCompany;
         private IEnumerable<string> mudSelectDepartment;
         private IEnumerable<string> mudSelectStatus;
 
+        private bool ApplicantPortalIsHidden = true;
+        private bool JobPortalIsHidden = true;
+        private bool PhaseManagerIsHidden = true;
+
         protected override async Task OnInitializedAsync()
         {
-            await ShowJobPortal();
-        }
+            ShowJobPortal();
 
-        private async Task ShowJobPortal()
-        {
             JobTypes = await httpClient.GetFromJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
             jobList = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
             jobPlatforms = await httpClient.GetFromJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform");
@@ -51,17 +50,29 @@ namespace XebecPortal.UI.Pages.HR
             jobPagedList = jobListFilter.ToPagedList(1, 17);
             displayJobDetail = jobListFilter.FirstOrDefault();
             DisplayJobDetail(displayJobDetail.Id);
-
-            JobPortalIsHidden = false;
-            ApplicantPortalIsHidden = true;
         }
 
-        private void ShowApplicantPortal(int jobId)
+        private void ShowApplicantPortal(int id)
         {
-            hrJobState.JobId = jobId;
+            hrJobState.JobId = id;
 
-            JobPortalIsHidden = true;
             ApplicantPortalIsHidden = false;
+            JobPortalIsHidden = true;
+            PhaseManagerIsHidden = true;
+        }
+
+        private void ShowPhaseManager()
+        {
+            ApplicantPortalIsHidden = true;
+            JobPortalIsHidden = true;
+            PhaseManagerIsHidden = false;
+        }
+
+        private void ShowJobPortal()
+        {
+            ApplicantPortalIsHidden = true;
+            JobPortalIsHidden = false;
+            PhaseManagerIsHidden = true;
         }
 
         protected override Task OnAfterRenderAsync(bool firstRender)
