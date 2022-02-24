@@ -163,4 +163,73 @@ namespace XebecPortal.UI.Pages.HR
         public int id { get; set; }
         public string platformName { get; set; }
     }
+
+    public class Application
+    {
+        public int Id { get; set; }
+
+        public DateTime TimeApplied { get; set; }
+
+        public DateTime BeginApplication { get; set; }
+
+        public int JobId { get; set; }
+
+        public Job Job { get; set; }
+
+        public int ApplicationPhaseId { get; set; }
+
+        public ApplicationPhase ApplicationPhase { get; set; }
+
+        public int AppUserId { get; set; }
+
+        public AppUser AppUser { get; set; }
+    }
+
+    public class ApplicationPhasesHelper
+    {
+        public int Id { get; set; }
+
+        public DateTime TimeMoved { get; set; }
+
+        public string Comments { get; set; }
+
+        public double Rating { get; set; }
+
+        public int ApplicationId { get; set; }
+
+        public Application Application { get; set; }
+
+        public int ApplicationPhaseId { get; set; }
+
+        public ApplicationPhase ApplicationPhase { get; set; }
+
+        public int StatusId { get; set; }
+
+        public Status Status { get; set; }
+    }
+
+    public class Status
+    {
+        public int Id { get; set; }
+
+        public string Description { get; set; }
+    }
+
+    public class ApplicationPhaseItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+
+        public string Surname { get; set; }
+
+        public string CurrentPhase { get; set; }
+
+        public int ApplicationId { get; set; }
+
+        public int AppUserId { get; set; }
+
+        public int ApplicationPhaseId { get; set; }
+
+        public string EmailTemplate { get; set; }
+    }
 }
