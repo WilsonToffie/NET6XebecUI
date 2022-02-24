@@ -7,15 +7,15 @@
 
     .container-main {
         width: 100vw;
-        min-height: calc(90vh - 20px);
-        margin: 0;
+        height: 50vh;
+        margin: 0 !important;
         display: grid;
         grid-template-columns: 1fr 0.2fr 1.8fr 1fr;
         grid-template-rows: repeat(2, 1fr);
         grid-auto-flow: row;
         grid-gap: 10px;
         padding: 5px;
-        overflow: auto;
+      
     }
 
         .container-main > div {
@@ -107,12 +107,6 @@
             height: 100%;
             width: calc(100% - 16px);
             padding: 5px;
-            /*
-            height: 100%;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;*/
         }
 
             .candidate-card .candidate-details .name {
@@ -178,7 +172,7 @@
     }
 
     .this-wrap {
-        max-height: 100% !important;
+        height: 100% !important;
         max-width: 100% !important;
     }
 
@@ -214,9 +208,6 @@
 
     .this-content {
         padding: 5px;
-    }
-
-    .person-info {
     }
 
     .work-history-section {
@@ -330,12 +321,114 @@
     .application-form-wrapper {
         margin-left: 15%;
     }
+
+    .btnNavigate {
+        height: 5vh;
+        background-color: #00bcae;
+        border: none;
+        border-radius: 100px;
+        color: white;
+        text-align: center;
+        font-family: opensans-bold;
+        font-weight: 700;
+    }
+
+        .btnNavigate:hover {
+            height: 5vh;
+            background-color: #d35bc9;
+            border: none;
+            border-radius: 100px;
+            color: white;
+            text-align: center;
+            font-family: opensans-bold;
+            font-weight: 700;
+        }
+
+    .page-top{
+        display: flex;
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+
 </style>
 
 <link rel="stylesheet" href="style.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+
+<div class="page-top">
+
+<button class="btnNavigate" style="margin-right: 90px; padding: 8px">Job Portal</button>
+
+<div style="height: 15vh">
+    <div class="job-search-bar" style="background-color: red; height: 5vh; margin-bottom: 2.5vh; margin-top: 2.5vh">
+        <div class="input-group d-flex justify-content-center form-group">
+            <input class="job-search-bar-input" type="text" placeholder="Search for a jobs" />
+        </div>
+    </div>
+    <div class="row" style="height:5vh">
+        <div class="col-3">
+            <!--Location-->
+            <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true"  Label="Location">
+                @*@if (jobListFilter != null && jobListFilter.Count > 0)
+                {
+                    @foreach (var item in jobList.Select(x => x.Location).OrderBy(x => x).Distinct())
+                    {
+                        <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                    }
+
+                }*@
+            </MudSelect>
+        </div>
+        <div class="col-3">
+            <!--Company-->
+            <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" Label="Company">
+                @*@if (jobListFilter != null && jobListFilter.Count > 0)
+                {
+                    @foreach (var item in jobListFilter.Select(x => x.Company).OrderBy(x => x).Distinct())
+                    {
+                        <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                    }
+
+                }*@
+            </MudSelect>
+        </div>
+        <div class="col-3">
+            <!--Department-->
+            <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" Label="Department" >
+                @*@if (jobListFilter != null && jobListFilter.Count > 0)
+                {
+                    @foreach (var item in jobListFilter.Select(x => x.Department).OrderBy(x => x).Distinct())
+                    {
+                        <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                    }
+
+                }*@
+            </MudSelect>
+        </div>
+        <div class="col-3">
+            <!--Status-->
+            <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Status" MultiSelection="true" Label="Status">
+                @*@if (jobListFilter != null && jobListFilter.Count > 0)
+                {
+                    @foreach (var item in status.Select(x => x.name))
+                    {
+                        <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                    }
+
+                }*@
+            </MudSelect>
+        </div>
+    </div>
+</div>
+
+<button class="btnNavigate"  style="margin-left: 90px; padding: 8px;">Phase Manager</button>
+
+</div>
+
+<br />
+
 <div class="container-main">
     <div class="candidate-section">
         <div class="filter-plane">
@@ -384,25 +477,6 @@
 
     <div class="profile-section">
         <div class="container-fluid this-wrap">
-            <div class="view-applicants-top">
-                <div class="view-applicants-search">
-                    <input type="text" placeholder="search" />
-                </div>
-                <div class="row view-applicants-filter">
-                    <div class="col-3">
-                        1
-                    </div>
-                    <div class="col-3">
-                        2
-                    </div>
-                    <div class="col-3">
-                        3
-                    </div>
-                    <div class="col-3">
-                        4
-                    </div>
-                </div>
-            </div>
 
             <!--Navigation Tab-->
             <div class="nav-tab">
@@ -422,14 +496,10 @@
                     <li class="nav-item p-1">
                         <a class="nav-link nav-link1" data-bs-toggle="tab" href="#applicationform-list" @onclick="() => _tabEnum = TabEnum.ApplicationForm">Application Form</a>
                     </li>
-                    <li class="nav-item p-1">
-                        <a class="nav-link nav-link1" data-bs-toggle="tab" href="#phasemanager-list" @onclick="() => _tabEnum = TabEnum.PhaseManager">Phase Manager</a>
-                    </li>
                 </ul>
             </div>
             <!--Content Panel-->
             <div class="col-12 this-content">
-                <div class="tab-content">
                     <!--Personal Information-->
                     <div id="personal-information" class="tab-pane person-info rounded" style="@GetActivity(TabEnum.PersonalInfo)">
                         @if (personalInformations != null && selectedCandidate != null)
@@ -703,8 +773,6 @@
                         </div>
 
                     </div>
-
-                </div>
             </div>
         </div>
     </div>
