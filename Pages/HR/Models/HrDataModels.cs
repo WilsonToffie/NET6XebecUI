@@ -239,8 +239,6 @@ namespace XebecPortal.UI.Pages.HR
 
         public string Surname { get; set; }
 
-        public string CurrentPhase { get; set; }
-
         public int ApplicationId { get; set; }
 
         public int AppUserId { get; set; }
@@ -248,6 +246,26 @@ namespace XebecPortal.UI.Pages.HR
         public int ApplicationPhaseId { get; set; }
 
         public string EmailTemplate { get; set; }
+    }
+
+    public class UnsuccessfulReason
+    {
+        public int Id { get; set; }
+
+        public string Reason { get; set; }
+    }
+
+    public class RejectedCandidate
+    {
+        public int Id { get; set; }
+
+        public int ApplicationId { get; set; }
+
+        public Application Application { get; set; }
+
+        public int UnsuccessfulReasonId { get; set; }
+
+        public UnsuccessfulReason UnsuccessfulReason { get; set; }
     }
 
     public class Status

@@ -14,7 +14,7 @@
         width: 100%;
         display: flex;
         align-items: center;
-        justify-content: space-evenly;
+        justify-content: center;
     }
 
     .phase-container {
@@ -136,7 +136,7 @@
 
 
 <div class="page-top-select-job">
-    <input class="form-control" style="max-width: 20%" type="text" placeholder="Search Applicants" />
+    <input class="form-control" style="max-width: 20%" type="text" placeholder="Search Applicants" @bind-value="searchTerm" @bind-value:event="oninput"/>
 </div>
 <div class="phase-manager-container">
 
@@ -153,7 +153,7 @@
                     @ondragenter='() => HandleDragEnter(1)'
                     @ondragleave="HandleDragLeave">
 
-                    @foreach (var item in Items)
+                    @foreach (var item in FilteredItems)
                     {
                         @if (item.ApplicationPhaseId == 1)
                         {
@@ -178,7 +178,7 @@
                     @ondragenter='() => HandleDragEnter(10)'
                     @ondragleave="HandleDragLeave">
 
-                    @foreach (var item in Items)
+                    @foreach (var item in FilteredItems)
                     {
                         @if (item.ApplicationPhaseId is 3 or 5 or 25 or 10)
                         {
@@ -207,7 +207,7 @@
                     @ondragenter='() => HandleDragEnter(27)'
                     @ondragleave="HandleDragLeave">
 
-                    @foreach (var item in Items)
+                    @foreach (var item in FilteredItems)
                     {
                         @if (item.ApplicationPhaseId == 27)
                         {
@@ -237,7 +237,7 @@
                     @ondragenter='() => HandleDragEnter(11)'
                     @ondragleave="HandleDragLeave">
 
-                    @foreach (var item in Items)
+                    @foreach (var item in FilteredItems)
                     {
                         @if (item.ApplicationPhaseId is 26 or 28 or 29 or 30 or 31 or 11)
                         {
@@ -267,7 +267,7 @@
                     @ondragenter='() => HandleDragEnter(32)'
                     @ondragleave="HandleDragLeave">
 
-                    @foreach (var item in Items)
+                    @foreach (var item in FilteredItems)
                     {
                         @if (item.ApplicationPhaseId == 32)
                         {
@@ -297,7 +297,7 @@
                     @ondragenter='() => HandleDragEnter(12)'
                     @ondragleave="HandleDragLeave">
 
-                    @foreach (var item in Items)
+                    @foreach (var item in FilteredItems)
                     {
                         @if (item.ApplicationPhaseId is 33 or 34 or 35 or 12)
                         {
@@ -318,18 +318,18 @@
 
         <div class="phase-container shadow @SuccessDropClass">
             <div class="job-status">
-                <h5>Successful/Unsuccessful (@Items.Where((item) => item.CurrentPhase == "Successful/Unsuccessful").Count())</h5>
+                <h5>Successful/Unsuccessful (@Items.Where((item) => item.ApplicationPhaseId is 36 or 13).Count())</h5>
 
                 <ul class="dropzone"
                     ondragover="event.preventDefault();"
                     ondragstart="event.dataTransfer.setData('', event.target.id);"
-                    @ondrop='() => HandleDrop(35)'
-                    @ondragenter='() => HandleDragEnter(35)'
+                    @ondrop='() => HandleDrop(13)'
+                    @ondragenter='() => HandleDragEnter(13)'
                     @ondragleave="HandleDragLeave">
 
-                    @foreach (var item in Items)
+                    @foreach (var item in FilteredItems)
                     {
-                        @if (item.ApplicationPhaseId == 35)
+                        @if (item.ApplicationPhaseId is 36 or 13)
                         {
                     <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
                         <p class="description">
@@ -432,8 +432,8 @@
                 <b>Successful/Unsuccessful</b>
             </div>
             <div class="screening-dialog-body">
-                <div class="card rounded shadow mycard">Hired</div>
-                <div class="card rounded shadow mycard">Not Hired</div>
+                <div class="card rounded shadow mycard @Hired" @onclick="() => MovePhase(36)"><b>Hired</b></div>
+                <div class="card rounded shadow mycard @NotHired" @onclick="Deny"><b>Not Hired</b></div>
             </div>
             <div class="screening-dialog-textarea">
                 <textarea style="width: 300px; height: 150px; padding: 5px;" placeholder="Email template"></textarea>
@@ -447,13 +447,13 @@
                 <b>Reasoning</b>
             </div>
             <div class="screening-dialog-body">
-                <select>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
+                <select @bind="tempReasonId">
+                    @foreach(var reason in Unsuccessful)
+                    {
+                        <option value="@reason.Id">@reason.Reason</option>
+                    }
                 </select>
+                <button class="btn" @onclick="Reject">Submit</button>
             </div>
 
         </div>
@@ -470,6 +470,9 @@
 
     public ApplicationPhaseItem CurrentItem;
 
+    public string searchTerm = "";
+    public int tempReasonId = -1;
+
     //can only move phases forward
     public int[] AllowedPhases = new int[] { 1 };
     public int[] AllowedPhasesScreening = new int[] { 1, 3, 5, 25, 10 };
@@ -477,16 +480,20 @@
     public int[] AllowedPhasesInterview = new int[] { 1, 3, 5, 25, 26, 27, 28, 29, 30, 31, 10, 11 };
     public int[] AllowedPhasesReference = new int[] { 1, 3, 5, 25, 26, 27, 28, 29, 30, 31, 32, 10, 11 };
     public int[] AllowedPhasesOffer = new int[] { 1, 3, 5, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 10, 11, 12 };
+    public int[] AllowedPhasesFinal = new int[] { 1, 3, 5, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 10, 11, 12, 13 };
 
 
     List<ApplicationPhase> AppPhases = new List<ApplicationPhase>();
     List<ApplicationPhasesHelper> CurrentApplicantPhases = new List<ApplicationPhasesHelper>();
     List<Application> CurrentApplications = new List<Application>();
     List<AppUser> tempAppUsers = new List<AppUser>();
-    //List<UnsuccessReasons> Unsuccessful = new List<UnsuccessReasons>();
+    List<UnsuccessfulReason> Unsuccessful = new List<UnsuccessfulReason>();
+    List<RejectedCandidate> RejectedUsers = new List<RejectedCandidate>();
 
     //list for draggable items
     List<ApplicationPhaseItem> Items = new List<ApplicationPhaseItem>();
+    List<ApplicationPhaseItem> FilteredItems => Items.Where(item => item.Name.ToLower().Contains(searchTerm.ToLower()) || item.Surname.ToLower().Contains(searchTerm.ToLower())).ToList();
+
 
     //dialogs
     bool ScreeningDialogIsOpen = false;
@@ -521,6 +528,9 @@
     string OfferTwo = "";
     string OfferThree = "";
 
+    string Hired = "";
+    string NotHired = "";
+
     protected override async Task OnInitializedAsync()
     {
         CurrentJobId = 1;
@@ -529,6 +539,8 @@
         tempAppUsers = await httpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
         CurrentApplicantPhases = await httpClient.GetFromJsonAsync<List<ApplicationPhasesHelper>>("https://xebecapi.azurewebsites.net/api/applicationphasehelper");
         AppPhases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
+        Unsuccessful = await httpClient.GetFromJsonAsync<List<UnsuccessfulReason>>("https://xebecapi.azurewebsites.net/api/unsuccessfulreason");
+        RejectedUsers = await httpClient.GetFromJsonAsync<List<RejectedCandidate>>("https://xebecapi.azurewebsites.net/api/rejectedcandidate");
 
         foreach (var application in CurrentApplications)
         {
@@ -541,7 +553,6 @@
 
             Items.Add(temp);
         }
-
     }
 
 
@@ -609,6 +620,16 @@
             OfferDropClass = "can-drop";
             SuccessDropClass = "can-drop";
         }
+        else if (CurrentItem.ApplicationPhaseId is 36 or 13)
+        {
+            AppliedDropClass = "no-drop";
+            ScreeningDropClass = "no-drop";
+            AssessmentDropClass = "no-drop";
+            InterviewDropClass = "no-drop";
+            ReferenceDropClass = "no-drop";
+            OfferDropClass = "no-drop";
+            SuccessDropClass = "can-drop";
+        }
     }
 
     private void HandleDragLeave()
@@ -656,6 +677,10 @@
         {
             if (CurrentItem.ApplicationPhaseId is 33 or 34 or 35 or 12 || AllowedPhasesOffer != null && !AllowedPhasesOffer.Contains(CurrentItem.ApplicationPhaseId)) return;
         }
+        if (phase is 36 or 13)
+        {
+            if (CurrentItem.ApplicationPhaseId == 36 || AllowedPhasesFinal != null && !AllowedPhasesFinal.Contains(CurrentItem.ApplicationPhaseId)) return;
+        }
 
 
         await UpdateJobAsync(phase);
@@ -671,7 +696,9 @@
     {
         var task = Items.SingleOrDefault(x => x.Id == CurrentItem.Id);
 
-        if (phase is 10 or 11 or 12 && task != null)
+        task.ApplicationPhaseId = phase;
+
+        if (phase is 10 or 11 or 12 or 13 && task != null)
         {
             task.ApplicationPhaseId = phase;
             return;
@@ -691,6 +718,7 @@
             ApplicationPhasesHelper tempHelper = new ApplicationPhasesHelper();
             tempHelper.ApplicationId = CurrentItem.ApplicationId;
             tempHelper.ApplicationPhaseId = phase;
+            tempHelper.TimeMoved = DateTime.Now;
 
             await httpClient.PostAsJsonAsync<ApplicationPhasesHelper>("https://xebecapi.azurewebsites.net/api/applicationphasehelper", tempHelper);
         }
@@ -713,6 +741,9 @@
         OfferOne = "";
         OfferTwo = "";
         OfferThree = "";
+
+        Hired = "";
+        NotHired = "";
 
         if (item.ApplicationPhaseId is 3 or 5 or 25 or 10)
         {
@@ -802,10 +833,21 @@
             }
         }
 
-        else if (item.CurrentPhase == "Successful/Unsuccessful")
+        else if (item.ApplicationPhaseId is 36 or 13)
         {
             HiredDialogIsOpen = true;
-            ReasonDialogIsOpen = true;
+
+            if(item.ApplicationPhaseId == 36)
+            {
+                if(RejectedUsers.Exists(x => x.ApplicationId == CurrentItem.ApplicationId))
+                {
+                    NotHired = "currentphase";
+                }
+                else
+                {
+                    Hired = "currentphase";
+                }
+            }
         }
 
     }
@@ -829,9 +871,9 @@
         ApplicationPhasesHelper tempHelper = new ApplicationPhasesHelper();
         tempHelper.ApplicationId = CurrentItem.ApplicationId;
         tempHelper.ApplicationPhaseId = i;
+        tempHelper.TimeMoved = DateTime.Now;
 
         await httpClient.PostAsJsonAsync<ApplicationPhasesHelper>("https://xebecapi.azurewebsites.net/api/applicationphasehelper", tempHelper);
-
 
 
         ScreeningOne = "";
@@ -848,15 +890,8 @@
         OfferTwo = "";
         OfferThree = "";
 
-
-        //ApplicationPhasesHelper tempHelper = new ApplicationPhasesHelper();
-        //tempHelper.ApplicationId = CurrentItem.ApplicationId;
-        //tempHelper.ApplicationPhaseId = i;
-        //tempHelper.Comments;
-        //tempHelper.Rating;
-        //tempHelper.TimeMoved;
-
-        //await httpClient.PostAsJsonAsync<ApplicationPhasesHelper>("https://xebecapi.azurewebsites.net/api/applicationphasehelper", tempHelper);
+        Hired = "";
+        NotHired = "";
 
         if (i == 3)
         {
@@ -918,6 +953,39 @@
             OfferTwo = "currentphase";
             OfferThree = "currentphase";
         }
+        else if (i == 36)
+        {
+            if (RejectedUsers.Exists(x => x.ApplicationId == CurrentItem.ApplicationId))
+            {
+                NotHired = "currentphase";
+            }
+            else
+            {
+                Hired = "currentphase";
+            }
+        }
 
+    }
+
+    public async Task Deny()
+    {
+        tempReasonId = -1;
+
+        ReasonDialogIsOpen = true;
+    }
+
+    public async Task Reject()
+    {
+        if (tempReasonId != -1)
+        {
+            RejectedCandidate temp = new RejectedCandidate();
+
+            temp.ApplicationId = CurrentItem.ApplicationId;
+            temp.UnsuccessfulReasonId = tempReasonId;
+
+            await httpClient.PostAsJsonAsync<RejectedCandidate>("https://xebecapi.azurewebsites.net/api/rejectedcandidate", temp);
+
+            MovePhase(36);
+        }
     }
 }
