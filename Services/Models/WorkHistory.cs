@@ -6,7 +6,7 @@ namespace XebecPortal.UI.Services.Models
     public class WorkHistory
     {
         [JsonProperty("id")]
-        public int Id { get; set; }
+        public int id { get; set; }
 
         [JsonProperty("companyName")]
         public string CompanyName { get; set; }
