@@ -250,8 +250,8 @@ namespace XebecPortal.UI.Pages.HR
         public string EmailTemplate { get; set; }
     }
 
-    public class Status
-    {
-        public string name { get; set; }
-    }
+    //public class Status
+    //{
+    //    public string name { get; set; }
+    //}
 }
