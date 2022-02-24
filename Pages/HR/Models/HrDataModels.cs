@@ -225,12 +225,12 @@ namespace XebecPortal.UI.Pages.HR
         public Status Status { get; set; }
     }
 
-    public class Status
-    {
-        public int Id { get; set; }
+    //public class Status
+    //{
+    //    public int Id { get; set; }
 
-        public string Description { get; set; }
-    }
+    //    public string Description { get; set; }
+    //}
 
     public class ApplicationPhaseItem
     {
@@ -250,8 +250,8 @@ namespace XebecPortal.UI.Pages.HR
         public string EmailTemplate { get; set; }
     }
 
-    //public class Status
-    //{
-    //    public string name { get; set; }
-    //}
+    public class Status
+    {
+        public string name { get; set; }
+    }
 }
