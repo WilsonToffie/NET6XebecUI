@@ -527,7 +527,7 @@
 
         CurrentApplications = await httpClient.GetFromJsonAsync<List<Application>>($"https://xebecapi.azurewebsites.net/api/application/job/{CurrentJobId}");
         tempAppUsers = await httpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
-        //CurrentApplicantPhases = await httpClient.GetFromJsonAsync<List<ApplicationPhasesHelper>>("https://xebecapi.azurewebsites.net/api/applicationphasehelper");
+        CurrentApplicantPhases = await httpClient.GetFromJsonAsync<List<ApplicationPhasesHelper>>("https://xebecapi.azurewebsites.net/api/applicationphasehelper");
         AppPhases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
 
         foreach (var application in CurrentApplications)
@@ -671,7 +671,6 @@
     {
         var task = Items.SingleOrDefault(x => x.Id == CurrentItem.Id);
 
-        //if phase 10 11 or 12 then dont do anything
         if (phase is 10 or 11 or 12 && task != null)
         {
             task.ApplicationPhaseId = phase;
@@ -686,20 +685,14 @@
 
             temp = CurrentApplications.Single(i => i.Id == CurrentItem.ApplicationId);
             temp.ApplicationPhaseId = phase;
-            //temp.AppUserId = CurrentItem.AppUserId;
-            //temp.BeginApplication = ;
-            //temp.JobId = CurrentJobId;
-            //temp.TimeApplied = ;
+
             await httpClient.PutAsJsonAsync<Application>($"https://xebecapi.azurewebsites.net/api/application/{CurrentItem.ApplicationId}", temp);
 
-            //ApplicationPhasesHelper tempHelper = new ApplicationPhasesHelper();
-            //tempHelper.ApplicationId = CurrentItem.ApplicationId;
-            //tempHelper.ApplicationPhaseId = phase;
-            //tempHelper.Comments;
-            //tempHelper.Rating;
-            //tempHelper.TimeMoved;
+            ApplicationPhasesHelper tempHelper = new ApplicationPhasesHelper();
+            tempHelper.ApplicationId = CurrentItem.ApplicationId;
+            tempHelper.ApplicationPhaseId = phase;
 
-            //await httpClient.PostAsJsonAsync<ApplicationPhasesHelper>("https://xebecapi.azurewebsites.net/api/applicationphasehelper", tempHelper);
+            await httpClient.PostAsJsonAsync<ApplicationPhasesHelper>("https://xebecapi.azurewebsites.net/api/applicationphasehelper", tempHelper);
         }
     }
 
@@ -817,8 +810,30 @@
 
     }
 
-    public void MovePhase(int i)
+    public async Task MovePhase(int i)
     {
+        var task = Items.SingleOrDefault(x => x.Id == CurrentItem.Id);
+
+        CurrentItem.ApplicationPhaseId = i;
+
+        if(task != null)
+        {
+            Application temp = new Application();
+
+            temp = CurrentApplications.Single(i => i.Id == CurrentItem.ApplicationId);
+            temp.ApplicationPhaseId = i;
+
+            await httpClient.PutAsJsonAsync<Application>($"https://xebecapi.azurewebsites.net/api/application/{CurrentItem.ApplicationId}", temp);
+        }
+
+        ApplicationPhasesHelper tempHelper = new ApplicationPhasesHelper();
+        tempHelper.ApplicationId = CurrentItem.ApplicationId;
+        tempHelper.ApplicationPhaseId = i;
+
+        await httpClient.PostAsJsonAsync<ApplicationPhasesHelper>("https://xebecapi.azurewebsites.net/api/applicationphasehelper", tempHelper);
+
+
+
         ScreeningOne = "";
         ScreeningTwo = "";
         ScreeningThree = "";
@@ -833,10 +848,6 @@
         OfferTwo = "";
         OfferThree = "";
 
-        //Application temp = new Application();
-        //temp.Id = CurrentItem.Id;
-        //temp.CurrentPhase = i;
-        //await httpClient.PutAsJsonAsync<Application>("https://xebecapi.azurewebsites.net/api/application", temp);
 
         //ApplicationPhasesHelper tempHelper = new ApplicationPhasesHelper();
         //tempHelper.ApplicationId = CurrentItem.ApplicationId;
@@ -850,44 +861,32 @@
         if (i == 3)
         {
             ScreeningOne = "currentphase";
-
-            CurrentItem.ApplicationPhaseId = i;
         }
         else if(i == 5)
         {
             ScreeningOne = "currentphase";
             ScreeningTwo = "currentphase";
-
-            CurrentItem.ApplicationPhaseId = i;
         }
         else if (i == 25)
         {
             ScreeningOne = "currentphase";
             ScreeningTwo = "currentphase";
             ScreeningThree = "currentphase";
-
-            CurrentItem.ApplicationPhaseId = i;
         }
         else if(i == 26)
         {
             InterviewOne = "currentphase";
-
-            CurrentItem.ApplicationPhaseId = i;
         }
         else if (i == 28)
         {
             InterviewOne = "currentphase";
             InterviewTwo = "currentphase";
-
-            CurrentItem.ApplicationPhaseId = i;
         }
         else if (i == 29)
         {
             InterviewOne = "currentphase";
             InterviewTwo = "currentphase";
             InterviewThree = "currentphase";
-
-            CurrentItem.ApplicationPhaseId = i;
         }
         else if (i == 30)
         {
@@ -895,8 +894,6 @@
             InterviewTwo = "currentphase";
             InterviewThree = "currentphase";
             InterviewFour = "currentphase";
-
-            CurrentItem.ApplicationPhaseId = i;
         }
         else if (i == 31)
         {
@@ -905,29 +902,21 @@
             InterviewThree = "currentphase";
             InterviewFour = "currentphase";
             InterviewFive = "currentphase";
-
-            CurrentItem.ApplicationPhaseId = i;
         }
         else if (i == 33)
         {
             OfferOne = "currentphase";
-
-            CurrentItem.ApplicationPhaseId = i;
         }
         else if (i == 34)
         {
             OfferOne = "currentphase";
             OfferTwo = "currentphase";
-
-            CurrentItem.ApplicationPhaseId = i;
         }
         else if (i == 35)
         {
             OfferOne = "currentphase";
             OfferTwo = "currentphase";
             OfferThree = "currentphase";
-
-            CurrentItem.ApplicationPhaseId = i;
         }
 
     }
