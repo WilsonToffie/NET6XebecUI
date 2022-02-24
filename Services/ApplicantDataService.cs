@@ -33,7 +33,6 @@ namespace XebecPortal.UI.Services
         {
             // return await JsonSerializer.DeserializeAsync<IEnumerable<Applicant>>
             //     (await _httpClient.GetStreamAsync($"api/applicant/"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-            Console.WriteLine("Getting candidates");
               _applicants = await JsonSerializer.DeserializeAsync<IEnumerable<Applicant>>
               (await altClient.GetStreamAsync($"https://xebecapi.azurewebsites.net/api/applicant"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
               ApplicantDataService.InitAppl = _applicants;

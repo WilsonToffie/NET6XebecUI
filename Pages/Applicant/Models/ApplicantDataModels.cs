@@ -27,6 +27,7 @@ namespace XebecPortal.UI.Pages.Applicant
         public int? MinimumExperience { get; set; }
         public string Location { get; set; }
         public string Department { get; set; }
+        public string Status { get; set; }
         public DateTime DueDate { get; set; }
         public DateTime CreationDate { get; set; }
         public IList<JobTypeHelper> JobTypes { get; set; }
@@ -43,11 +44,36 @@ namespace XebecPortal.UI.Pages.Applicant
 
         public string answer { get; set; }
 
+        //Foreign Key
         public int jobId { get; set; }
+        public Job job { get; set; }
 
-        public string job { get; set; }
+        //Foreign Key
         public int answerTypeId { get; set; }
+        public AnswerType AnswerType { get; set; }
     }
+
+    public class CandidateRecommender
+    {
+        public int id { get; set; }
+
+        //Foreign Key
+        public int jobId { get; set; }
+        public Job job { get; set; }
+
+        //Foreign Key
+        public int AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
+
+        public double TotalMatch { get; set; }
+    }
+
+    public class AnswerType
+    {
+        public int Id { get; set; }
+        public string Type { get; set; }
+    }
+
     public class JobType
     {
         public int Id { get; set; }
@@ -153,5 +179,10 @@ namespace XebecPortal.UI.Pages.Applicant
         public string ImageUrl { get; set; }
         public int AppUserId { get; set; }
         public IList<AppUser> AppUser { get; set; }
+    }
+
+    public class Status
+    {
+        public string name { get; set; }
     }
 }

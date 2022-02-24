@@ -12,7 +12,8 @@ namespace XebecPortal.UI.Shared
         public string Role { get; set; } = "";
         public string Name { get; set; } = "";
         public string Surname { get; set; } = "";
-
+        public string Title { get;set;} = "";
+        public string Avator { get;set;}="";
         public bool isLoggedIn { get; set; } = false;
     }
 }

@@ -168,7 +168,19 @@
                 </div>
             </div>
         </div>
-        <div class="col-2 createjob-arrow"></div>
+        <div class="col-1 createjob-arrow"></div>
+
+        <!--div class="col-1"></!--div>-->
+        <div class="col-1">
+            <div class="createjob-createjob-top-mini" @onclick="() => NavigateToSection(CreateJobSection.SendToLinkedIn)">
+                <div class="createjob-top-number-div" style="@GetActiveColor(CreateJobSection.SendToLinkedIn)">
+                    <i class="fab fa-linkedin createjob-top-number"></i>
+                    <h3 class="create-job-top-text">Choose LinkedIn profile</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-1 createjob-arrow"></div>
+
         <div class="col-1">
             <div class="collaborators-createjob-top-mini" @onclick="() => NavigateToSection(CreateJobSection.SelectCollaborators)">
                 <div class="createjob-top-number-div" style="@GetActiveColor(CreateJobSection.SelectCollaborators)">
@@ -177,7 +189,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-2 createjob-arrow"></div>
+        <div class="col-1 createjob-arrow"></div>
+
         <div class="col-1">
             <div class="applicationform-createjob-top-mini" @onclick="() => NavigateToSection(CreateJobSection.CreateApplicationForm)">
                 <div class="createjob-top-number-div" style="@GetActiveColor(CreateJobSection.CreateApplicationForm)">
@@ -186,7 +199,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-2 createjob-arrow"></div>
+        <div class="col-1 createjob-arrow"></div>
+
         <div class="col-1">
             <div class="phases-createjob-top-mini" @onclick="() => NavigateToSection(CreateJobSection.SelectPhase)">
                 <div class="createjob-top-number-div" style="@GetActiveColor(CreateJobSection.SelectPhase)">
@@ -204,20 +218,35 @@
             <div class="col-1 createjob-nav-buttons"></div>
             <div class="col-10 createjob-bottom-main-container">
                 <div class="createjob-bottom-main">
-                    <XebecPortal.UI.Pages.HR.CreateAJobForm @bind-TempJob="tempJob"/>
+                    <XebecPortal.UI.Pages.HR.CreateAJobForm @bind-TempJob="tempJob" />
+                </div>
+            </div>
+            <div class="col-1 createjob-nav-buttons" @onclick="ShowLinkedIn">
+                <i class="fas fa-angle-right"></i>
+            </div>
+        </div>
+
+        <div class="row createjob-bottom-container" hidden="@LinkedInIsHidden">
+            <div class="col-1 createjob-nav-buttons" @onclick="ShowCreateJob">
+                <i class="fas fa-angle-left"></i>
+            </div>            
+            <div class="col-10 createjob-bottom-main-container">
+                <div class="createjob-bottom-main">
+                    <XebecPortal.UI.Pages.HR.LinkedInSend @bind-TempJob="tempJob" />
                 </div>
             </div>
             <div class="col-1 createjob-nav-buttons" @onclick="ShowCollaborators">
                 <i class="fas fa-angle-right"></i>
             </div>
         </div>
+
         <div class="row createjob-bottom-container" hidden="@CollaboratorsIsHidden">
-            <div class="col-1 createjob-nav-buttons" @onclick="ShowCreateJob">
+            <div class="col-1 createjob-nav-buttons" @onclick="ShowLinkedIn">
                 <i class="fas fa-angle-left"></i>
             </div>
             <div class="col-10 createjob-bottom-main-container">
                 <div class="createjob-bottom-main">
-                    <XebecPortal.UI.Pages.HR.Collaborators @bind-TempJob="tempJob"/>
+                    <XebecPortal.UI.Pages.HR.Collaborators @bind-TempJob="tempJob" />
                 </div>
             </div>
             <div class="col-1 createjob-nav-buttons" @onclick="ShowApplicationForm">
@@ -230,7 +259,7 @@
             </div>
             <div class="col-10 createjob-bottom-main-container">
                 <div class="createjob-bottom-main">
-                    <XebecPortal.UI.Pages.HR.ApplicationFormControlTool @bind-TempJob="tempJob"/>
+                    <XebecPortal.UI.Pages.HR.ApplicationFormControlTool @bind-TempJob="tempJob" />
                 </div>
             </div>
             <div class="col-1 createjob-nav-buttons" @onclick="ShowPhases">
@@ -243,7 +272,7 @@
             </div>
             <div class="col-10 createjob-bottom-main-container">
                 <div class="createjob-bottom-main">
-                    <XebecPortal.UI.Pages.HR.PhaseControlTool @bind-TempJob="tempJob"/>
+                    <XebecPortal.UI.Pages.HR.PhaseControlTool @bind-TempJob="tempJob" />
                 </div>
             </div>
             <div class="col-1 createjob-nav-buttons" @onclick="ShowPhases">
@@ -255,43 +284,50 @@
 
 @code {
 
-    private bool CreateJobIsHidden, CollaboratorsIsHidden, ApplicationFormIsHidden, PhasesIsHidden;
+    private bool CreateJobIsHidden, LinkedInIsHidden, CollaboratorsIsHidden, ApplicationFormIsHidden, PhasesIsHidden;
 
     CreateJobPost tempJob = new CreateJobPost {Collaborators = new List<AppUser>(), JobPlatforms = new List<JobPlatform>(), formQuestions = new List<FormQuestion>(), JobPhases = new List<ApplicationPhase>(), JobType = new JobType()};
 
     protected override async Task OnInitializedAsync()
     {
         CreateJobIsHidden = false;
-        CollaboratorsIsHidden = ApplicationFormIsHidden = PhasesIsHidden = true;
+        LinkedInIsHidden = CollaboratorsIsHidden = ApplicationFormIsHidden = PhasesIsHidden = true;
     }
 
     private void ShowCreateJob()
     {
         CreateJobIsHidden = false;
-        CollaboratorsIsHidden = ApplicationFormIsHidden = PhasesIsHidden = true;
+        LinkedInIsHidden = CollaboratorsIsHidden = ApplicationFormIsHidden = PhasesIsHidden = true;
+    }
+
+    private void ShowLinkedIn()
+    {
+        LinkedInIsHidden = false;
+        CreateJobIsHidden = CollaboratorsIsHidden = ApplicationFormIsHidden = PhasesIsHidden = true;
     }
 
     private void ShowCollaborators()
     {
         CollaboratorsIsHidden = false;
-        CreateJobIsHidden = ApplicationFormIsHidden = PhasesIsHidden = true;
+        LinkedInIsHidden = CreateJobIsHidden = ApplicationFormIsHidden = PhasesIsHidden = true;
     }
 
     private void ShowApplicationForm()
     {
         ApplicationFormIsHidden = false;
-        CreateJobIsHidden = CollaboratorsIsHidden = PhasesIsHidden = true;
+        LinkedInIsHidden = CreateJobIsHidden = CollaboratorsIsHidden = PhasesIsHidden = true;
     }
 
     private void ShowPhases()
     {
         PhasesIsHidden = false;
-        CreateJobIsHidden = ApplicationFormIsHidden = CollaboratorsIsHidden = true;
+        LinkedInIsHidden = CreateJobIsHidden = ApplicationFormIsHidden = CollaboratorsIsHidden = true;
     }
 
     private enum CreateJobSection
     {
         CreateJob,
+        SendToLinkedIn,
         SelectCollaborators,
         CreateApplicationForm,
         SelectPhase
@@ -303,6 +339,10 @@
         {
             case CreateJobSection.CreateJob:
                 if (!CreateJobIsHidden)
+                    return "color: #d35bc9  !important;";
+                return "color: #00bcae  !important;";
+            case CreateJobSection.SendToLinkedIn:
+                if (!LinkedInIsHidden)
                     return "color: #d35bc9  !important;";
                 return "color: #00bcae  !important;";
             case CreateJobSection.SelectCollaborators:
@@ -328,6 +368,9 @@
         {
             case CreateJobSection.CreateJob:
                 ShowCreateJob();
+                break;
+            case CreateJobSection.SendToLinkedIn:
+                ShowLinkedIn();
                 break;
             case CreateJobSection.SelectCollaborators:
                 ShowCollaborators();

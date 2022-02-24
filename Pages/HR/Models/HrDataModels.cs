@@ -27,6 +27,7 @@ namespace XebecPortal.UI.Pages.HR
         public int? MinimumExperience { get; set; }
         public string Location { get; set; }
         public string Department { get; set; }
+        public string Status { get; set; }
         public DateTime DueDate { get; set; }
         public DateTime CreationDate { get; set; }
         public List<JobTypeHelper> JobTypes { get; set; }
@@ -52,6 +53,22 @@ namespace XebecPortal.UI.Pages.HR
         public List<FormQuestion> formQuestions { get; set; }
         public List<AppUser> Collaborators { get; set; }
     }
+
+    public partial class CandidateRecommender
+    {
+        public int id { get; set; }
+
+        //Foreign Key
+        public int jobId { get; set; }
+        public Job job { get; set; }
+
+        //Foreign Key
+        public int AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
+
+        public double TotalMatch { get; set; }
+    }
+
 
     public class Collaborator
     {
@@ -133,7 +150,7 @@ namespace XebecPortal.UI.Pages.HR
         public bool registered { get; set; }
 
         public int linkVisits { get; set; }
-        public string Avatar { get; set; }
+        public string imageUrl { get; set; }
     }
 
     public class JobPlatformHelper
@@ -231,5 +248,10 @@ namespace XebecPortal.UI.Pages.HR
         public int ApplicationPhaseId { get; set; }
 
         public string EmailTemplate { get; set; }
+    }
+
+    public class Status
+    {
+        public string name { get; set; }
     }
 }
