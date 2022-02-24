@@ -15,7 +15,6 @@
         grid-auto-flow: row;
         grid-gap: 10px;
         padding: 5px;
-      
     }
 
         .container-main > div {
@@ -344,12 +343,11 @@
             font-weight: 700;
         }
 
-    .page-top{
+    .page-top {
         display: flex;
         justify-content: center;
         margin-bottom: 15px;
     }
-
 </style>
 
 <link rel="stylesheet" href="style.css">
@@ -359,71 +357,71 @@
 
 <div class="page-top">
 
-<button class="btnNavigate" style="margin-right: 90px; padding: 8px">Job Portal</button>
+    <button class="btnNavigate" style="margin-right: 90px; padding: 8px">Job Portal</button>
 
-<div style="height: 15vh">
-    <div class="job-search-bar" style="background-color: red; height: 5vh; margin-bottom: 2.5vh; margin-top: 2.5vh">
-        <div class="input-group d-flex justify-content-center form-group">
-            <input class="job-search-bar-input" type="text" placeholder="Search for a jobs" />
+    <div style="height: 15vh">
+        <div class="job-search-bar" style="background-color: red; height: 5vh; margin-bottom: 2.5vh; margin-top: 2.5vh">
+            <div class="input-group d-flex justify-content-center form-group">
+                <input class="job-search-bar-input" type="text" placeholder="Search for a jobs" />
+            </div>
+        </div>
+        <div class="row" style="height:5vh">
+            <div class="col-3">
+                <!--Location-->
+                <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" Label="Location">
+                    @*@if (jobListFilter != null && jobListFilter.Count > 0)
+                        {
+                            @foreach (var item in jobList.Select(x => x.Location).OrderBy(x => x).Distinct())
+                            {
+                                <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                            }
+
+                        }*@
+                </MudSelect>
+            </div>
+            <div class="col-3">
+                <!--Company-->
+                <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" Label="Company">
+                    @*@if (jobListFilter != null && jobListFilter.Count > 0)
+                        {
+                            @foreach (var item in jobListFilter.Select(x => x.Company).OrderBy(x => x).Distinct())
+                            {
+                                <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                            }
+
+                        }*@
+                </MudSelect>
+            </div>
+            <div class="col-3">
+                <!--Department-->
+                <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" Label="Department">
+                    @*@if (jobListFilter != null && jobListFilter.Count > 0)
+                        {
+                            @foreach (var item in jobListFilter.Select(x => x.Department).OrderBy(x => x).Distinct())
+                            {
+                                <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                            }
+
+                        }*@
+                </MudSelect>
+            </div>
+            <div class="col-3">
+                <!--Status-->
+                <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Status" MultiSelection="true" Label="Status">
+                    @*@if (jobListFilter != null && jobListFilter.Count > 0)
+                        {
+                            @foreach (var item in status.Select(x => x.name))
+                            {
+                                <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                            }
+
+                        }*@
+                </MudSelect>
+            </div>
         </div>
     </div>
-    <div class="row" style="height:5vh">
-        <div class="col-3">
-            <!--Location-->
-            <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true"  Label="Location">
-                @*@if (jobListFilter != null && jobListFilter.Count > 0)
-                {
-                    @foreach (var item in jobList.Select(x => x.Location).OrderBy(x => x).Distinct())
-                    {
-                        <MudSelectItem T="string" Value="item">@item</MudSelectItem>
-                    }
 
-                }*@
-            </MudSelect>
-        </div>
-        <div class="col-3">
-            <!--Company-->
-            <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" Label="Company">
-                @*@if (jobListFilter != null && jobListFilter.Count > 0)
-                {
-                    @foreach (var item in jobListFilter.Select(x => x.Company).OrderBy(x => x).Distinct())
-                    {
-                        <MudSelectItem T="string" Value="item">@item</MudSelectItem>
-                    }
-
-                }*@
-            </MudSelect>
-        </div>
-        <div class="col-3">
-            <!--Department-->
-            <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" Label="Department" >
-                @*@if (jobListFilter != null && jobListFilter.Count > 0)
-                {
-                    @foreach (var item in jobListFilter.Select(x => x.Department).OrderBy(x => x).Distinct())
-                    {
-                        <MudSelectItem T="string" Value="item">@item</MudSelectItem>
-                    }
-
-                }*@
-            </MudSelect>
-        </div>
-        <div class="col-3">
-            <!--Status-->
-            <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Status" MultiSelection="true" Label="Status">
-                @*@if (jobListFilter != null && jobListFilter.Count > 0)
-                {
-                    @foreach (var item in status.Select(x => x.name))
-                    {
-                        <MudSelectItem T="string" Value="item">@item</MudSelectItem>
-                    }
-
-                }*@
-            </MudSelect>
-        </div>
-    </div>
-</div>
-
-<button class="btnNavigate"  style="margin-left: 90px; padding: 8px;">Phase Manager</button>
+    <button class="btnNavigate" style="margin-left: 90px; padding: 8px;">Phase Manager</button>
 
 </div>
 
@@ -500,279 +498,331 @@
             </div>
             <!--Content Panel-->
             <div class="col-12 this-content">
-                    <!--Personal Information-->
-                    <div id="personal-information" class="tab-pane person-info rounded" style="@GetActivity(TabEnum.PersonalInfo)">
-                        @if (personalInformations != null && selectedCandidate != null)
+                <!--Personal Information-->
+                <div id="personal-information" class="tab-pane person-info rounded" style="@GetActivity(TabEnum.PersonalInfo)">
+                    @if (personalInformations != null && selectedCandidate != null)
+                    {
+                        @if (personalInformations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
                         {
-                            @if (personalInformations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
+                            <div>
+                                Candidate doesn't have any information saved.
+                            </div>
+                        }
+                        else
+                        {
+                            PersonalInformation personalInformation = personalInformations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
+                            <div class="" style="height: 100%;">
+                                <div class="row p-3">
+                                    <div class="col-4">
+                                        <label class="form-label" for="first-name">First Name</label>
+                                        <p id="first-name" class="form-control name">@personalInformation.FirstName</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" for="last-name">Last Name</label>
+                                        <p id="last-name" class="form-control name">@personalInformation.LastName</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" for="email-address">Email Address</label>
+                                        <p id="email-address" class="form-control">@personalInformation.Email</p>
+                                    </div>
+                                </div>
+                                <div class="row p-3">
+                                    <div class="col-4">
+                                        <label class="form-label" for="phone-number">Phone Number</label>
+                                        <p id="phone-number" class="form-control">@personalInformation.PhoneNumber</p>
+                                    </div>
+                                    @if (additionalInformations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
+                                    {
+                                        <div>
+                                            Candidate doesn't have any additional information saved.
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        AdditionalInformation additionalInformation = additionalInformations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
+                                        <div class="col-4">
+                                            <label class="form-label" for="ethnicity">Ethnicity</label>
+                                            <p id="ethnicity" class="form-control">@additionalInformation.Ethnicity</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="form-label" for="gender">Gender</label>
+                                            <p id="gender" class="form-control">@additionalInformation.Gender</p>
+                                        </div>
+
+                                    }
+                                </div>
+                                <div class="row p-3">
+                                    <div class="col-4">
+                                        <label class="form-label" for="id-number">ID Number</label>
+                                        <p id="id-number" class="form-control">@personalInformation.IdNumber</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <label class="form-label" for="address">Address</label>
+                                        <p id="address" class="form-control" rows="4">@personalInformation.Address </p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    }
+                    else if (personalInformations == null)
+                    {
+                        <p>Getting personal information...</p>
+                    }
+                    else
+                    {
+                        <p>No candidate selected...</p>
+                    }
+                </div>
+
+                <div id="work-history" class="tab-pane" style="@GetActivity(TabEnum.WorkHistory)">
+                    <div class="work-history-section">
+                        @if (workHistories != null && selectedCandidate != null)
+                        {
+                            @if (workHistories.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
                             {
                                 <div>
-                                    Candidate doesn't have any information saved.
+                                    Candidate doesn't have any work histories.
                                 </div>
                             }
                             else
                             {
-                                PersonalInformation personalInformation = personalInformations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
-                                <div class="" style="height: 100%;">
-                                    <div class="row p-3">
-                                        <div class="col-4">
-                                            <label class="form-label" for="first-name">First Name</label>
-                                            <p id="first-name" class="form-control name">@personalInformation.FirstName</p>
-                                        </div>
-                                        <div class="col-4">
-                                            <label class="form-label" for="last-name">Last Name</label>
-                                            <p id="last-name" class="form-control name">@personalInformation.LastName</p>
-                                        </div>
-                                        <div class="col-4">
-                                            <label class="form-label" for="email-address">Email Address</label>
-                                            <p id="email-address" class="form-control">@personalInformation.Email</p>
-                                        </div>
+                                WorkHistory workHistory = workHistories.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
+                                <div class="work-card">
+                                    <div class="company-name">@workHistory.CompanyName</div>
+                                    <div class="job-position">@workHistory.JobTitle</div>
+                                    <div class="start-end-date">
+                                        <small>@($"{workHistory.StartDate:yyyy MMMM} - {workHistory.EndDate:yyyy MMMM}")</small>
                                     </div>
-                                    <div class="row p-3">
-                                        <div class="col-4">
-                                            <label class="form-label" for="phone-number">Phone Number</label>
-                                            <p id="phone-number" class="form-control">@personalInformation.PhoneNumber</p>
-                                        </div>
-                                        @if (additionalInformations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
-                                        {
-                                            <div>
-                                                Candidate doesn't have any additional information saved.
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            AdditionalInformation additionalInformation = additionalInformations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
-                                            <div class="col-4">
-                                                <label class="form-label" for="ethnicity">Ethnicity</label>
-                                                <p id="ethnicity" class="form-control">@additionalInformation.Ethnicity</p>
-                                            </div>
-                                            <div class="col-4">
-                                                <label class="form-label" for="gender">Gender</label>
-                                                <p id="gender" class="form-control">@additionalInformation.Gender</p>
-                                            </div>
-
-                                        }
-                                    </div>
-                                    <div class="row p-3">
-                                        <div class="col-4">
-                                            <label class="form-label" for="id-number">ID Number</label>
-                                            <p id="id-number" class="form-control">@personalInformation.IdNumber</p>
-                                        </div>
-                                        <div class="col-8">
-                                            <label class="form-label" for="address">Address</label>
-                                            <p id="address" class="form-control" rows="4">@personalInformation.Address </p>
-                                        </div>
-                                    </div>
+                                    <div class="work-description">@workHistory.Description</div>
                                 </div>
                             }
-
                         }
-                        else if (personalInformations == null)
+                        else if (workHistories == null)
                         {
-                            <p>Getting personal information...</p>
+                            <p>Getting Work history...</p>
                         }
                         else
                         {
                             <p>No candidate selected...</p>
                         }
                     </div>
+                </div>
 
-                    <div id="work-history" class="tab-pane" style="@GetActivity(TabEnum.WorkHistory)">
-                        <div class="work-history-section">
-                            @if (workHistories != null && selectedCandidate != null)
-                            {
-                                @if (workHistories.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
-                                {
-                                    <div>
-                                        Candidate doesn't have any work histories.
-                                    </div>
-                                }
-                                else
-                                {
-                                    WorkHistory workHistory = workHistories.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
-                                    <div class="work-card">
-                                        <div class="company-name">@workHistory.CompanyName</div>
-                                        <div class="job-position">@workHistory.JobTitle</div>
-                                        <div class="start-end-date">
-                                            <small>@($"{workHistory.StartDate:yyyy MMMM} - {workHistory.EndDate:yyyy MMMM}")</small>
-                                        </div>
-                                        <div class="work-description">@workHistory.Description</div>
-                                    </div>
-                                }
-                            }
-                            else if (workHistories == null)
-                            {
-                                <p>Getting Work history...</p>
-                            }
-                            else
-                            {
-                                <p>No candidate selected...</p>
-                            }
-                        </div>
-                    </div>
-
-                    <div id="education" class="tab-pane" style="@GetActivity(TabEnum.Educa)">
-                        <div class="work-history-section">
-                            @if (educations != null && selectedCandidate != null)
-                            {
-                                @if (educations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
-                                {
-                                    <div>
-                                        Candidate doesn't have any education history.
-                                    </div>
-                                }
-                                else
-                                {
-                                    Education education = educations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
-
-                                    <div class="work-card">
-                                        <div class="company-name">@education.Qualification</div>
-                                        <div class="job-position"></div>
-                                        <div class="start-end-date">
-                                            <small>@($"{education.StartDate:yyyy MMMM} - {education.EndDate:yyyy MMMM}")</small>
-                                        </div>
-                                        <div class="work-description">@education.Insitution</div>
-                                    </div>
-                                }
-                            }
-                            else if (educations == null)
-                            {
-                                <p>Getting education history...</p>
-                            }
-                            else
-                            {
-                                <p>No candidate selected...</p>
-                            }
-
-                        </div>
-                    </div>
-
-                    <div id="online-profile" class="container tab-pane" style="@GetActivity(TabEnum.Online)">
-                        @if (profilePortfolio != null && selectedCandidate != null)
+                <div id="education" class="tab-pane" style="@GetActivity(TabEnum.Educa)">
+                    <div class="work-history-section">
+                        @if (educations != null && selectedCandidate != null)
                         {
-
-                            @if (profilePortfolio.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
+                            @if (educations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
                             {
                                 <div>
-                                    Candidate doesn't have any portfolio links.
+                                    Candidate doesn't have any education history.
                                 </div>
                             }
                             else
                             {
-                                ProfilePortfolioLink portfolioLinks = profilePortfolio.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
+                                Education education = educations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
 
-                                <div class="col-9 hadow-sm bg-body rounded" style="background-color: white">
-                                    <div class="row p-3">
-                                        <div class="col-6">
-                                            <div>
-                                                <label class="form-label" for="github">Github</label>
-                                                &ensp;
-                                                <i class="fab fa-github fa-2x"></i>
-                                            </div>
-                                            <p id="github" class="form-control shadow bg-body rounded"><a href="@portfolioLinks.GitHubLink">@portfolioLinks.GitHubLink</a></p>
-                                        </div>
-                                        <div class="col-6">
-                                            <div>
-                                                <label class="form-label" for="linkedin">LinkedIn</label>
-                                                &ensp;
-                                                <i class="fab fa-linkedin-in fa-2x" style="color: #0077b5"></i>
-                                            </div>
-                                            <p id="linkedin" class="form-control shadow bg-body rounded">
-                                                <a href="@portfolioLinks.LinkedInLink">@portfolioLinks.LinkedInLink</a>
-                                            </p>
-                                        </div>
+                                <div class="work-card">
+                                    <div class="company-name">@education.Qualification</div>
+                                    <div class="job-position"></div>
+                                    <div class="start-end-date">
+                                        <small>@($"{education.StartDate:yyyy MMMM} - {education.EndDate:yyyy MMMM}")</small>
                                     </div>
-                                    <div class="row p-3">
-                                        <div class="col-6">
-                                            <div>
-                                                <label class="form-label" for="twitter">Twitter</label>
-                                                &ensp;
-                                                <i class="fab fa-twitter-square fa-2x" style="color: #00acee"></i>
-                                            </div>
-                                            <p id="twitter" class="form-control shadow bg-body rounded">
-                                                <a href="@portfolioLinks.TwitterLink">@portfolioLinks.TwitterLink</a>
-                                            </p>
-                                        </div>
-                                        <div class="col-6">
-                                            <div>
-                                                <label class="form-label" for="personal-website">Personal Website</label>
-                                                &ensp;
-                                                <i class="fas fa-globe fa-2x" style="color: #35afc0"></i>
-                                            </div>
-                                            <p id="personal-website" class="form-control shadow bg-body rounded">
-                                                <a href="@portfolioLinks.PersonalWebsiteUrl">@portfolioLinks.PersonalWebsiteUrl</a>
-                                            </p>
-                                        </div>
-
-                                    </div>
+                                    <div class="work-description">@education.Insitution</div>
                                 </div>
                             }
-
                         }
-                        else if (profilePortfolio == null)
+                        else if (educations == null)
                         {
-                            <p>Getting profile links...</p>
+                            <p>Getting education history...</p>
                         }
                         else
                         {
                             <p>No candidate selected...</p>
                         }
-                    </div>
 
-                    <div id="applicationform-list" class="tab-pane" style="@GetActivity(TabEnum.ApplicationForm)">
-                        <div class="application-form-wrapper">
-                            <div class="application-form">
-                                <div class="application-form-title">
-                                    Application Form
+                    </div>
+                </div>
+
+                <div id="online-profile" class="container tab-pane" style="@GetActivity(TabEnum.Online)">
+                    @if (profilePortfolio != null && selectedCandidate != null)
+                    {
+
+                        @if (profilePortfolio.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
+                        {
+                            <div>
+                                Candidate doesn't have any portfolio links.
+                            </div>
+                        }
+                        else
+                        {
+                            ProfilePortfolioLink portfolioLinks = profilePortfolio.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
+
+                            <div class="col-9 hadow-sm bg-body rounded" style="background-color: white">
+                                <div class="row p-3">
+                                    <div class="col-6">
+                                        <div>
+                                            <label class="form-label" for="github">Github</label>
+                                            &ensp;
+                                            <i class="fab fa-github fa-2x"></i>
+                                        </div>
+                                        <p id="github" class="form-control shadow bg-body rounded"><a href="@portfolioLinks.GitHubLink">@portfolioLinks.GitHubLink</a></p>
+                                    </div>
+                                    <div class="col-6">
+                                        <div>
+                                            <label class="form-label" for="linkedin">LinkedIn</label>
+                                            &ensp;
+                                            <i class="fab fa-linkedin-in fa-2x" style="color: #0077b5"></i>
+                                        </div>
+                                        <p id="linkedin" class="form-control shadow bg-body rounded">
+                                            <a href="@portfolioLinks.LinkedInLink">@portfolioLinks.LinkedInLink</a>
+                                        </p>
+                                    </div>
                                 </div>
-                                <div class="application-form-question-area">
-                                    <table class="table">
-                                        <tbody>
-                                            @if (ApplicantAnswers != null)
+                                <div class="row p-3">
+                                    <div class="col-6">
+                                        <div>
+                                            <label class="form-label" for="twitter">Twitter</label>
+                                            &ensp;
+                                            <i class="fab fa-twitter-square fa-2x" style="color: #00acee"></i>
+                                        </div>
+                                        <p id="twitter" class="form-control shadow bg-body rounded">
+                                            <a href="@portfolioLinks.TwitterLink">@portfolioLinks.TwitterLink</a>
+                                        </p>
+                                    </div>
+                                    <div class="col-6">
+                                        <div>
+                                            <label class="form-label" for="personal-website">Personal Website</label>
+                                            &ensp;
+                                            <i class="fas fa-globe fa-2x" style="color: #35afc0"></i>
+                                        </div>
+                                        <p id="personal-website" class="form-control shadow bg-body rounded">
+                                            <a href="@portfolioLinks.PersonalWebsiteUrl">@portfolioLinks.PersonalWebsiteUrl</a>
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
+
+                    }
+                    else if (profilePortfolio == null)
+                    {
+                        <p>Getting profile links...</p>
+                    }
+                    else
+                    {
+                        <p>No candidate selected...</p>
+                    }
+                </div>
+
+                <div id="applicationform-list" class="tab-pane" style="@GetActivity(TabEnum.ApplicationForm)">
+                    <div class="application-form-wrapper">
+                        <div class="application-form">
+                            <div class="application-form-title">
+                                Application Form
+                            </div>
+                            <div class="application-form-question-area">
+                                <table class="table">
+                                    <tbody>
+                                        @if (AnswerList != null && QuestionList != null)
+                                        {
+                                            @foreach (var answer in AnswerList)
                                             {
-                                                @foreach (var customquestion in ApplicantAnswers)
+                                                @if (answer.appUserId == selectedCandidate.AppUserId)
                                                 {
+
+                                                    FormQuestion question = QuestionList.Where(x => x.id == answer.questionnaireHRFormId && answer.appUserId == selectedCandidate.AppUserId).FirstOrDefault();
+
                                                     <tr>
                                                         <td>
                                                             <div class="application-form-question">
-                                                                <h6 class="form-text text-muted" style="font-size: 14px; width: 90%;">@customquestion.HRQuestion</h6>
-                                                                @switch (customquestion.TypeId)
-                                                                {
-                                                                    case 1:
-                                                                        <input type="number" class="form-control" style="width: 80%" @bind="customquestion.Applicantanswer">
-                                                                        break;
-                                                                    case 2:
-                                                                        <textarea type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="customquestion.Applicantanswer"></textarea>
-                                                                        break;
-                                                                    case 3:
-                                                                        <input type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="customquestion.Applicantanswer">
-                                                                        break;
-                                                                    case 4:
-                                                                        <input type="date" id="test" class="form-control" style="width: 80%" @onchange="(e) => { customquestion.Applicantanswer = e.Value.ToString(); }">
-                                                                        break;
-                                                                    case 5:
-                                                                        <select @bind="customquestion.Applicantanswer">
-                                                                            <option value="yes">Yes</option>
-                                                                            <option value="no">No</option>
-                                                                        </select>
-                                                                        break;
-                                                                    case 6:
-                                                                        <input type="file" class="form-control" style="width: 80%" @bind="customquestion.Applicantanswer">
-                                                                        break;
-                                                                }
+                                                                <span>@question.question</span>
+                                                                <span>@answer.applicantAnswer</span>
                                                             </div>
                                                         </td>
                                                     </tr>
                                                 }
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
 
-                            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                @*<tr>
+                    <td>
+                        <div class="application-form-question">
+                            <h6 class="form-text text-muted" style="font-size: 14px; width: 90%;">@customquestion.HRQuestion</h6>
+                            @switch (customquestion.TypeId)
+                            {
+                                case 1:
+                                    <input type="number" class="form-control" style="width: 80%" @bind="customquestion.Applicantanswer">
+                                    break;
+                                case 2:
+                                    <textarea type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="customquestion.Applicantanswer"></textarea>
+                                    break;
+                                case 3:
+                                    <input type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="customquestion.Applicantanswer">
+                                    break;
+                                case 4:
+                                    <input type="date" id="test" class="form-control" style="width: 80%" @onchange="(e) => { customquestion.Applicantanswer = e.Value.ToString(); }">
+                                    break;
+                                case 5:
+                                    <select @bind="customquestion.Applicantanswer">
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                    break;
+                                case 6:
+                                    <input type="file" class="form-control" style="width: 80%" @bind="customquestion.Applicantanswer">
+                                    break;
+                                case 7:
+                                    <input type="file" class="form-control" style="width: 80%" @bind="customquestion.Applicantanswer">
+                                    break;
+                            }
                         </div>
+                    </td>
+                </tr>*@
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <p>No application form was found.</p>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
 
+                        </div>
                     </div>
+
+                </div>
             </div>
         </div>
     </div>
@@ -782,14 +832,13 @@
 @code {
 
     private List<FormQuestion> QuestionList = new List<FormQuestion>();
-    private List<ApplicantQuestion> ApplicantAnswers = new List<ApplicantQuestion>();
     private List<ApplicantAnswer> AnswerList = new List<ApplicantAnswer>();
     private ApplicationModel tempApplication;
     private IList<ApplicationPhaseHelper> tempPhaseHelper;
     private int tempRank;
     string tempJobTitle;
     private ApplicationPhase phaseFinal;
-    private string selectedJob = "HR Assistant";
+    private string selectedJob = "";
     private string searchTerm = "";
     private CandidateRecommender selectedCandidate;
     private IList<Job> jobs = new List<Job>();
@@ -816,6 +865,8 @@
         workHistories = await httpClient.GetFromJsonAsync<List<WorkHistory>>("https://xebecapi.azurewebsites.net/api/WorkHistory");
         educations = await httpClient.GetFromJsonAsync<List<Education>>("https://xebecapi.azurewebsites.net/api/Education");
         applications = await httpClient.GetFromJsonAsync<List<ApplicationModel>>("https://xebecapi.azurewebsites.net/api/application");
+        AnswerList = await httpClient.GetFromJsonAsync<List<ApplicantAnswer>>("https://xebecapi.azurewebsites.net/api/ApplicantQuestionnaire");
+        QuestionList = await httpClient.GetFromJsonAsync<List<FormQuestion>>("https://xebecapi.azurewebsites.net/api/Questionnaire");
 
         candidates = candidates.OrderByDescending(o => o.TotalMatch).ToList();
 
@@ -862,7 +913,7 @@
 
     }
 
-    private async Task SetSelectedCandidate(CandidateRecommender candidate)
+    private void SetSelectedCandidate(CandidateRecommender candidate)
     {
         selectedCandidate = candidate;
     }
