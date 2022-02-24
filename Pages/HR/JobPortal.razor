@@ -197,6 +197,34 @@
     .pagination {
         box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
     }
+
+    .job-portal-inner-container {
+        width: 100%;
+        height: 85vh;
+    }
+
+    .job-portal-inner-top {
+        height: 5vh;
+        margin-top: 2.5vh;
+        margin-bottom: 2.5vh;
+    }
+
+    .job-portal-inner-bottom {
+        height: 65vh;
+        width: 100%;
+    }
+
+    .job-portal-nav-btn{
+        height: 5vh;
+        width: 100%;
+        border-radius: 2em;
+        border: none;
+        color: white;
+        background-color: #00BCAE;
+        font-weight: 700;
+        font-family: opensans-condensed-bold;
+    }
+
 </style>
 
 <div class="container" style="height: 55vh" hidden="@JobPortalIsHidden">
@@ -454,14 +482,43 @@
         }
         <h1 class="text-center align-middle">No Job Are Available</h1>
     }
+
 </div>
 
-<div class="container" style="height: 55vh" hidden="@ApplicantPortalIsHidden">
-    <div class="container-phase-control" style="height: 5vh"> </div>
-    <div>
+<div class="job-portal-inner-container" hidden="@ApplicantPortalIsHidden">
+    <div class="row job-portal-inner-top">
+        <div class="col-1">
+            <input type="button" value="Job Portal" @onclick="ShowJobPortal" class="job-portal-nav-btn" style="margin-left: 20px"/>
+        </div>
+        <div class="col-10">
+        </div>
+        <div class="col-1">
+            <input type="button" value="Phase Manager" @onclick="ShowPhaseManager" class="job-portal-nav-btn"/>
+        </div>
+    </div>
+    <div class="job-portal-inner-bottom">
         <XebecPortal.UI.Pages.HR.ApplicantPortal />
     </div>
 </div>
+<div class="job-portal-inner-container" hidden="@PhaseManagerIsHidden">
+    <div class="row job-portal-inner-top">
+        <div class="col-1">
+            <input type="button" value="Applicant Portal" class="job-portal-nav-btn"  @onclick="() => ShowApplicantPortal(hrJobState.JobId)"  style="margin-left: 20px"/>
+        </div>
+        <div class="col-10">
+            <div class="job-search-bar">
+                <div class="input-group d-flex justify-content-center form-group">
+                    <input type="text" placeholder="Search for a jobs" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="job-portal-inner-bottom">
+        <XebecPortal.UI.Pages.HR.PhaseManager />
+    </div>
+</div>
+
+
 @code {
 
 }
