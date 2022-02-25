@@ -178,13 +178,14 @@
         selectedProfile.Remove(profile);
     }
 
+    /*
     private object selectedCompanyProfile(JobPlatform profile)
     {
         if (selectedProfile.FindAll(d => d.id == profile.id).Count() >0)
             return "cardStyle-selected";
         return "cardStyle";
     }
-
+    */
     private object deselectCompanyProfile(JobPlatform profile)
     {
         if (selectedProfile.FindAll(d => d.id == profile.id).Count() > 0)
