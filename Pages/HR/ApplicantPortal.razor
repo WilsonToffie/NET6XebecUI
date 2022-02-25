@@ -6,8 +6,17 @@
 <style>
 
     .container-main {
-        width: 100%;
-        height: 100vh;
+        width: 100vw;
+        height: 65vh;
+        margin: 0;
+        display: grid;
+        grid-template-columns: 1fr 0.2fr 1.8fr 1fr;
+        grid-template-rows: repeat(2, 1fr);
+        grid-auto-flow: row;
+        grid-gap: 10px;
+        padding: 5px;
+        overflow-x: hidden;
+        overflow-y: hidden;
     }
 
     .container-applicant-portal {
@@ -42,7 +51,7 @@
         grid-gap: 10px;
         padding: 5px;
         background: transparent !important;
-        height: 85vh;
+        height: 75vh;
     }
 
         .candidate-section > div {
@@ -51,6 +60,7 @@
         }
 
     /*filter plane styling - start*/
+
     .filter-plane {
         display: grid;
         grid-template-columns: repeat(1, 1fr);
@@ -59,22 +69,18 @@
     }
 
     .filter-plane-heading {
-        grid-area: 1 / 1 / span 1/ span 1;
         text-align: center;
         font-weight: 900;
+        font-size: 40px;
+        transform: translateY(-15%);
     }
-
-    /*.filter-plane-search-bar {*/
-    /*    grid-area: 2 / 1 / span 1 / span 2;*/
-    /*}*/
-
     /*filter plane styling - end*/
 
     /*Candidate list styling - start*/
     .candidate-list {
         grid-area: 2 / 1 / 3 / 2;
         display: grid;
-        grid-auto-rows: 15%;
+        grid-auto-rows: 20%;
         grid-template-columns: 1fr;
         grid-gap: 10px;
         overflow-y: auto;
@@ -120,19 +126,19 @@
 
             .candidate-card .candidate-details .name {
                 font-weight: 800;
-                line-height: 3vh;
-                font-size: 3vh;
+                /*                line-height: 3vh;
+                font-size: 3vh;*/
             }
 
             .candidate-card .candidate-details .job {
-                line-height: 2vh;
-                font-size: 1.5vh;
+                /*                line-height: 2vh;
+                font-size: 1.5vh;*/
                 font-weight: 400;
             }
 
             .candidate-card .candidate-details .phase {
-                line-height: 1vh;
-                font-size: 1vh;
+                /*                line-height: 1vh;
+                font-size: 1vh;*/
                 font-weight: 500;
             }
 
@@ -290,9 +296,9 @@
     .application-form {
         width: 550px;
         height: 275px;
-        background-color: #f2f2f2;
+        /*        background-color: #f2f2f2;*/
         border-radius: 5px;
-        border: 2px solid grey;
+        /*        border: 2px solid grey;*/
     }
 
     .application-form-title {
@@ -369,9 +375,9 @@
 <div class="container-main">
     <div class="candidate-section">
         <div class="filter-plane">
-            <h1 class="filter-plane-heading">
+            <div class="filter-plane-heading">
                 Candidates
-            </h1>
+            </div>
         </div>
         <div class="candidate-list">
             @if (candidates != null)
@@ -656,48 +662,58 @@
                     }
                 </div>
 
-                <div id="applicationform-list" class="tab-pane" style="@GetActivity(TabEnum.ApplicationForm)">
-                    <div class="application-form-wrapper">
-                        <div class="application-form">
-                            <div class="application-form-title">
-                                Application Form
-                            </div>
-                            <div class="application-form-question-area">
-                                <table class="table">
-                                    <tbody>
-                                        @if (AnswerList != null && QuestionList != null)
-                                        {
-                                            @foreach (var answer in AnswerList)
-                                            {
-                                                @if (answer.appUserId == selectedCandidate.AppUserId)
-                                                {
+                <div class="tab-pane" style="@GetActivity(TabEnum.ApplicationForm)">
+                    <table style="height: 50vh; overflow: auto">
+                        <thead>
+                            <tr>
+                                <td class="row p-3 col-4">Question</td>
+                                <td class="row p-3 col-4">Answer</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (AnswerList != null && QuestionList != null)
+                            {
+                                @foreach (var answer in AnswerList)
+                                {
+                                    @if (answer.appUserId == selectedCandidate.AppUserId)
+                                    {
 
-                                                    FormQuestion question = QuestionList.Where(x => x.id == answer.questionnaireHRFormId && answer.appUserId == selectedCandidate.AppUserId).FirstOrDefault();
+                                        FormQuestion question = QuestionList.Where(x => x.id == answer.questionnaireHRFormId && answer.appUserId == selectedCandidate.AppUserId).FirstOrDefault();
 
-                                                    <tr>
-                                                        <td>
-                                                            <div class="application-form-question">
-                                                                <span>@question.question</span>
-                                                                <span>@answer.applicantAnswer</span>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            <tr>
+
+                                        <tr>
+                                            <td class="row p-3 col-4">
+                                                <label>@question.question</label>
+                                            </td>
+                                            <td class="row p-3 col-4">
+                                                <p>@answer.applicantAnswer</p>
+                                            </td>
+                                        </tr>
+
+
+
+
+                                        @*<tr>
                                                 <td>
-                                                    <p>No application form was found.</p>
+                                                    <div class="application-form-question">
+                                                        <span>@question.question</span>
+                                                        <span>@answer.applicantAnswer</span>
+                                                    </div>
                                                 </td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                                            </tr>*@
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>
+                                        <p>No application form was found.</p>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
