@@ -3,6 +3,7 @@
 @inject IJSRuntime jsRuntime
 @inject NavigationManager nav
 @inject HrJobState hrJobState
+@inject IDialogService DialogService
 
 <style>
 
@@ -214,7 +215,7 @@
         width: 100%;
     }
 
-    .job-portal-nav-btn{
+    .job-portal-nav-btn {
         height: 5vh;
         width: 100%;
         border-radius: 2em;
@@ -224,7 +225,6 @@
         font-weight: 700;
         font-family: opensans-condensed-bold;
     }
-
 </style>
 
 <div class="container" style="height: 55vh" hidden="@JobPortalIsHidden">
@@ -346,8 +346,8 @@
                                         }
                                         else
                                         {
-                                            <div class="col" @onclick="() => FormType(true)">
-                                                <i class="fa handPointer fa-users fa-2x" style="color: #00BCAE"></i>
+                                            <div class="col">
+                                                <MudIcon Icon="handPointer fa fa-users" Style="color: #00BCAE; font-size: 2em" @onclick="OpenJobCollabDialog" />
                                             </div>
                                             <div class="col" @onclick="() => ShowApplicantPortal(displayJobDetail.Id)">
                                                 <i class="handPointer fa fa-external-link-alt fa-2x" style="color: #00BCAE"></i>
@@ -358,6 +358,9 @@
                                             <div class="col" @onclick="() => DeleteData(displayJobDetail.Id)">
                                                 <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE"></i>
                                             </div>
+
+
+
                                         }
                                     </div>
                                 </div>
@@ -488,12 +491,12 @@
 <div class="job-portal-inner-container" hidden="@ApplicantPortalIsHidden">
     <div class="row job-portal-inner-top">
         <div class="col-1">
-            <input type="button" value="Job Portal" @onclick="ShowJobPortal" class="job-portal-nav-btn" style="margin-left: 20px"/>
+            <input type="button" value="Job Portal" @onclick="ShowJobPortal" class="job-portal-nav-btn" style="margin-left: 20px" />
         </div>
         <div class="col-9">
         </div>
         <div class="col-2">
-            <input type="button" value="Phase Manager" @onclick="ShowPhaseManager" class="job-portal-nav-btn" style="width: 50%; margin-left: 80px"/>
+            <input type="button" value="Phase Manager" @onclick="ShowPhaseManager" class="job-portal-nav-btn" style="width: 50%; margin-left: 80px" />
         </div>
     </div>
     <div class="job-portal-inner-bottom">
@@ -503,7 +506,7 @@
 <div class="job-portal-inner-container" hidden="@PhaseManagerIsHidden">
     <div class="row job-portal-inner-top">
         <div class="col-1">
-            <input type="button" value="Applicant Portal" class="job-portal-nav-btn"  @onclick="() => ShowApplicantPortal(hrJobState.JobId)"  style="margin-left: 20px"/>
+            <input type="button" value="Applicant Portal" class="job-portal-nav-btn" @onclick="() => ShowApplicantPortal(hrJobState.JobId)" style="margin-left: 20px" />
         </div>
         <div class="col-10">
             <div class="job-search-bar">
@@ -519,6 +522,24 @@
 </div>
 
 
+<MudDialog @bind-IsVisible="isDialogVisible" Options="options">
+    <TitleContent>
+        <MudText Typo="Typo.h5" Align="Align.Center">
+            List Of Collaborators For Job Title: <strong>@displayJobDetail.Title</strong>
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudText Typo="Typo.body1">Collaborator 1</MudText>
+    </DialogContent>
+</MudDialog>
+
+
 @code {
+
+    private bool isDialogVisible;
+    private MudBlazor.DialogOptions options = new() { CloseButton = true, FullWidth = true };
+    private void OpenJobCollabDialog() => isDialogVisible = true;
+
+
 
 }
