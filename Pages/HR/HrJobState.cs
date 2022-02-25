@@ -7,6 +7,6 @@ namespace XebecPortal.UI.Pages.HR
 {
     public class HrJobState
     {
-        public int JobId { get; set; } = 0;
+        public int JobId { get; set; }
     }
 }
