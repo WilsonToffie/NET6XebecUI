@@ -677,10 +677,7 @@
                                 {
                                     @if (answer.appUserId == selectedCandidate.AppUserId)
                                     {
-
                                         FormQuestion question = QuestionList.Where(x => x.id == answer.questionnaireHRFormId && answer.appUserId == selectedCandidate.AppUserId).FirstOrDefault();
-
-
                                         <tr>
                                             <td class="row p-3 col-4">
                                                 <label>@question.question</label>
@@ -689,18 +686,6 @@
                                                 <p>@answer.applicantAnswer</p>
                                             </td>
                                         </tr>
-
-
-
-
-                                        @*<tr>
-                                                <td>
-                                                    <div class="application-form-question">
-                                                        <span>@question.question</span>
-                                                        <span>@answer.applicantAnswer</span>
-                                                    </div>
-                                                </td>
-                                            </tr>*@
                                     }
                                 }
                             }
