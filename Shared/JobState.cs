@@ -7,6 +7,7 @@ namespace XebecPortal.UI.Shared
 {
     public class JobState
     {
+        public int JobId { get; set; }
         public bool Open { get; set; }
         public bool Closed { get; set; }
         public bool Draft { get; set; }

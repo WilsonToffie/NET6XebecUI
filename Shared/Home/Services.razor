@@ -10,7 +10,6 @@
 <style>
 
     .service-div {
-        margin-top: 15vh;
         height: 85vh;
     }
 
@@ -22,8 +21,9 @@
     }
 
     .services-floating {
-        height: 70vh;
+        height: 40vh;
         z-index: 1;
+        margin-top: 15vh;
         position: absolute;
         width: 100%;
     }
@@ -59,6 +59,8 @@
 
     .services-label {
         height: 10vh;
+        margin-top: 15vh;
+        margin-bottom: 5vh;
     }
 
     .services-label-h2 {
@@ -119,7 +121,7 @@
 
     .applicant-profile {
         height: inherit;
-        max-width: 10em;
+        max-width: 5em;
         margin: auto;
         background-image: url(/Img/upload.svg);
         background-size: cover;
@@ -387,7 +389,7 @@
         </div>
     </div>
     <div class="row service-div" hidden="@jobPortalIsHidden">
-        <div class="col-1 service-left-arrow" @onclick="ToHR">
+        <div class="col-1 service-left-arrow" style="margin-top: 20vh" @onclick="ToHR">
             <i class="fas fa-angle-left"></i>
         </div>
         <div class="col-10 services-container">
@@ -398,7 +400,7 @@
                 <XebecPortal.UI.Pages.Applicant.JobPortal />
             </div>
         </div> 
-        <div class="col-1 service-right-arrow" @onclick="ToApplicant">
+        <div class="col-1 service-right-arrow" style="margin-top: 20vh" @onclick="ToApplicant">
             <i class="fas fa-angle-right"></i>
         </div>      
     </div>
@@ -406,12 +408,16 @@
 
 @code {
 
-    private bool applicantServicesIsHidden;
-    private bool jobPortalIsHidden;
-    private bool hrServicesIsHidden;
+    private bool applicantServicesIsHidden = false;
+    private bool jobPortalIsHidden = true;
+    private bool hrServicesIsHidden = true;
 
-    private bool errorIsHidden;
-    private bool contentIsHidden;
+    protected async Task OnInitialized()
+    {
+        applicantServicesIsHidden = false;
+        jobPortalIsHidden = true;
+        hrServicesIsHidden = true;
+    }
 
     private void ToApplicant()
     {

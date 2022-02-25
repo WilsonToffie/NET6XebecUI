@@ -41,7 +41,6 @@
         padding-top: 0.2em;
         /*this is what causes the border colour*/
         background-color: #FFFFFF;
-
         text-align: center;
     }   
 
@@ -79,7 +78,6 @@
             @for (int i = 0; i < profiles.Count; i++)
             {
 
-                var companyProfileID = profiles[i];
 
                 @if (selectedProfile.Contains(companyProfileID))
                 {
@@ -122,6 +120,8 @@
                             }
                             else if ((profiles[i].platformName).Equals("Xebec Platform"))
                             {
+
+
 
                                 <img src="/Img/Xebec Logo white.png" style="height: 60%; width: 80%; margin-top: 20%; object-fit: cover; object-position: center ">
                             }
@@ -181,7 +181,7 @@
     /*
     private object selectedCompanyProfile(JobPlatform profile)
     {
-        if (selectedProfile.FindAll(d => d.id == profile.id).Count() >0)
+        if (selectedProfile.FindAll(d => d.id == profile.id).Count() > 0)
             return "cardStyle-selected";
         return "cardStyle";
     }
@@ -192,6 +192,8 @@
             return "cardStyle";
         return "cardStyle-selected";
     }
+
+
 
     private async Task Save()
     {
