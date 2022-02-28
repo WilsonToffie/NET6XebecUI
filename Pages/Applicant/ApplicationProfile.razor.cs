@@ -27,6 +27,11 @@ namespace XebecPortal.UI.Pages.Applicant
         private ProfilePortfolioLink profilePortfolio = new() { AppUserId = 1 };
         private AdditionalInformation additionalInformation = new() { AppUserId = 1, Disability = "No" };
         private PersonalInformation personalInformation = new() { AppUserId = 1 };
+        
+        private List<References> referencesList = new();
+        private References references = new() { AppUserId = 1};
+        
+
         private IJSObjectReference _jsModule;
         string _dragEnterStyle;
         IBrowserFile fileNames;
@@ -37,7 +42,34 @@ namespace XebecPortal.UI.Pages.Applicant
         {
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/ApplicationProfile.js");
         }
+        
+        private void AddReferences(References referencesValues)
+        {
+            
+            referencesList.Add(new()
+            {
+                Id = increment,
+                AppUserId = 1,
+                Name = referencesValues.Name,
+                Surname = referencesValues.Surname,
+                Email = referencesValues.Email,
+                ContactNum = referencesValues.ContactNum,
+            });
 
+            increment++;
+        }
+
+        private void DeleteReference(int refID)
+        {
+            referencesList.RemoveAll(x => x.Id == refID);
+        }
+
+        // Not entire sure how to set the data, still working on that
+        private void SelectReference(int refID)
+        {
+           int val =  referencesList.FindIndex(x => x.Id == refID); // this refers to the List position to where it should be, just not sure how to set the input values
+        }
+        
         private async Task AddWorkHistory(WorkHistory workHistoryValues)
         {
             if (await _jsModule.InvokeAsync<bool>("WorkHistory"))

@@ -250,18 +250,15 @@
 
     @@keyframes vibrate-2 {
         0% {
-            transform: rotate(90deg);
-            transform: translate3d(0, 0, 0);
+            transform: rotate(90deg) translate3d(0, 0, 0);
         }
 
         50% {
-            transform: rotate(90deg);
-            transform: translate3d(-0.3rem, 0, 0);
+            transform: rotate(90deg) translate3d(-0.3rem, 0, 0);
         }
 
         100% {
-            transform: rotate(90deg);
-            transform: translate3d(0.3rem, 0, 0);
+            transform: rotate(90deg) translate3d(0.3rem, 0, 0);
         }
     }
 
@@ -282,7 +279,7 @@
     
 </div>
 
-<div class="h-100 container-fluid d-flex justify-content-center align-items-center overflow-hidden">
+<div class="h-95 container-fluid d-flex justify-content-center align-items-center overflow-hidden">
     <div class="col-1"></div>
     <div class="row col-10 d-flex justify-content-center row-style" >
 
@@ -299,7 +296,10 @@
                     <a class="nav-link nav-link1" data-bs-toggle="tab" href="#education" @onclick="progressCheck">Education</a>
                 </li>
                 <li class="nav-item p-1">
-                    <a id="online-tag" class="nav-link nav-link1" data-bs-toggle="tab" href="#online-profile" @onclick="progressCheck">Online Profile</a>
+                    <a class="nav-link nav-link1" data-bs-toggle="tab" href="#references" @onclick="progressCheck">References</a>
+                </li>
+                <li class="nav-item p-1">
+                    <a id="online-tag" class="nav-link nav-link1" data-bs-toggle="tab" href="#online-profile" @onclick="progressCheck">Online Presence</a>
                 </li>
             </ul>
         </div>
@@ -358,15 +358,15 @@
                                     <div class="row p-3">
                                         <div class="col-4">
                                             <label class="form-label" for="first-name">First Name</label>
-                                            <input id="first-name" class="form-control shadow bg-body rounded" type="text" @bind="personalInformation.FirstName" placeholder="John" required @onfocusout="completion"/> <!--@onfocusout="completion" -->
+                                            <input id="first-name" class="form-control shadow bg-body rounded" type="text" @bind="personalInformation.FirstName" placeholder="John" required @onfocusout="completion" /> <!--@onfocusout="completion" -->
                                         </div>
                                         <div class="col-4">
                                             <label class="form-label" for="last-name">Last Name</label>
-                                            <input id="last-name" class="form-control shadow bg-body rounded" type="text" @bind="personalInformation.LastName" placeholder="Smith" required @onfocusout="completion"/> <!--@onfocusout="completion" -->
+                                            <input id="last-name" class="form-control shadow bg-body rounded" type="text" @bind="personalInformation.LastName" placeholder="Smith" required @onfocusout="completion" /> <!--@onfocusout="completion" -->
                                         </div>
                                         <div class="col-4">
                                             <label class="form-label" for="email-address">Email Address</label>
-                                            <input id="email-address" class="form-control shadow bg-body rounded" type="email" @bind="personalInformation.Email" placeholder="John@gmail.com" required @onfocusout="completion"/> <!--@onfocusout="completion" -->
+                                            <input id="email-address" class="form-control shadow bg-body rounded" type="email" @bind="personalInformation.Email" placeholder="John@gmail.com" required @onfocusout="completion" /> <!--@onfocusout="completion" -->
                                         </div>
                                     </div>
                                     <div class="row p-3">
@@ -376,7 +376,8 @@
                                         </div>
                                         <div class="col-4">
                                             <label class="form-label" for="ethnicity">Ethnicity</label>
-                                            <select id="ethnicity" class="form-select shadow bg-body rounded" @bind="additionalInformation.Ethnicity" required @onfocusout="completion"> <!--@onfocusout="completion" -->
+                                            <select id="ethnicity" class="form-select shadow bg-body rounded" @bind="additionalInformation.Ethnicity" @bind:event="oninput" required @onfocusout="completion">
+                                                <!--@onfocusout="completion" -->
                                                 <option value="" disabled selected>Select Ethnicity</option>
                                                 <option value="African">African</option>
                                                 <option value="White">White</option>
@@ -384,7 +385,7 @@
                                         </div>
                                         <div class="col-4">
                                             <label class="form-label" for="gender">Gender</label>
-                                            <select id="gender" class="form-select shadow bg-body rounded" @bind="additionalInformation.Gender" required @onfocusout="completion">
+                                            <select id="gender" class="form-select shadow bg-body rounded" @bind="additionalInformation.Gender" @bind:event="oninput" required @onfocusout="completion">
                                                 <!--@onfocusout="completion" -->
                                                 <option value="" disabled selected>Select Gender</option>
                                                 <option value="Male">Male</option>
@@ -395,11 +396,11 @@
                                     <div class="row p-3">
                                         <div class="col-4">
                                             <label class="form-label" for="id-number">ID Number</label>
-                                            <input id="id-number" class="form-control shadow bg-body rounded" type="text" min="13" max="13" @bind="personalInformation.IdNumber" placeholder="010205365987" required @onfocusout="completion"/> <!--@onfocusout="completion" -->
+                                            <input id="id-number" class="form-control shadow bg-body rounded" type="text" min="13" max="13" @bind="personalInformation.IdNumber" @bind:event="oninput" placeholder="010205365987" required @onfocusout="completion" /> <!--@onfocusout="completion" -->
                                         </div>
                                         <div class="col-8">
                                             <label class="form-label" for="address">Address</label>
-                                            <textarea id="address" class="form-control shadow bg-body rounded" @bind="personalInformation.Address" placeholder="Address" rows="4" required @onfocusout="completion"></textarea>
+                                            <textarea id="address" class="form-control shadow bg-body rounded" @bind="personalInformation.Address" @bind:event="oninput" placeholder="Address" rows="1" required @onfocusout="completion"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -422,17 +423,17 @@
                                                 <div class="row p-3">
                                                     <div class="col-6">
                                                         <label class="form-label" for="company-name">Company Name</label>
-                                                        <input id="company-name" class="form-control shadow bg-body rounded" type="text" @bind="workHistory.CompanyName" placeholder="1Nebula" required @onfocusout="completion" /> 
+                                                        <input id="company-name" class="form-control shadow bg-body rounded" type="text" @bind="workHistory.CompanyName" @bind:event="oninput" placeholder="1Nebula" required @onfocusout="completion" />
                                                     </div>
                                                     <div class="col-6">
                                                         <label class="form-label" for="job-title">Job Title</label>
-                                                        <input id="job-title" class="form-control shadow bg-body rounded" type="text" @bind="workHistory.JobTitle" placeholder="Software Developer" required  @onfocusout="completion"/> 
+                                                        <input id="job-title" class="form-control shadow bg-body rounded" type="text" @bind="workHistory.JobTitle" @bind:event="oninput" placeholder="Software Developer" required @onfocusout="completion" />
                                                     </div>
                                                 </div>
                                                 <div class="row p-3">
                                                     <div class="col-6">
                                                         <label class="form-label" for="start-date">Start Date</label>
-                                                        <input id="start-date" class="form-control shadow bg-body rounded" @bind="workHistory.StartDate" @onblur="StartDateCheck" type="date" required />
+                                                        <input id="start-date" class="form-control shadow bg-body rounded" @bind="workHistory.StartDate" @bind:event="oninput" @onblur="StartDateCheck" type="date" required />
                                                     </div>
                                                     @if (presentWork)
                                                     {
@@ -444,10 +445,10 @@
                                                                     <label class="form-check-label text-color-primary" for="flexCheckDefault">
                                                                         Still work there?
                                                                     </label>
-                                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" @bind="@presentWork">
+                                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" @bind="@presentWork"  @bind:event="oninput">
                                                                 </span>)
                                                             </label>
-                                                            <input id="end-date" class="form-control shadow bg-body rounded" @bind="workHistory.EndDate" @onblur="EndDateCheck" type="date" />
+                                                            <input id="end-date" class="form-control shadow bg-body rounded" @bind="workHistory.EndDate" @bind:event="oninput" @onblur="EndDateCheck" type="date" />
                                                         </div>
                                                     }
                                                     else
@@ -457,7 +458,7 @@
                                                                 <label class="form-check-label text-color-primary" for="flexCheckDefault">
                                                                     Don't work there anymore?
                                                                 </label>
-                                                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" @bind="@presentWork">
+                                                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" @bind="@presentWork" @bind:event="oninput">
                                                             </div>
                                                         </div>
                                                     }
@@ -465,17 +466,17 @@
                                                 <div class="row p-3">
                                                     <div class="col-12">
                                                         <label class="form-label" for="description">Description</label>
-                                                        <textarea id="description" class="form-control shadow bg-body rounded" placeholder="Description" @bind="workHistory.Description" rows="4" @onfocusout="completion"></textarea> <!--@onfocusout="completion" -->
+                                                        <textarea id="description" class="form-control shadow bg-body rounded" placeholder="Description" @bind="workHistory.Description" @bind:event="oninput" rows="3" @onfocusout="completion"></textarea> <!--@onfocusout="completion" -->
                                                     </div>
                                                     <div class="col-12 d-flex justify-content-around">
+
                                                         @if (workHistUpdate)
                                                         {
-                                                            <input class="btn formButton" type="button" @onclick="() => UpdateWorkHistory(workHistory)" value="Update" />
+                                                            <button class="btn formButton" type="reset" @onclick="() => UpdateWorkHistory(workHistory)" value="Update" >Update</button>
                                                         }
                                                         else
                                                         {
-                                                            <input class="btn formButton" type="button" @onclick="() => AddWorkHistoryNew(workHistory)" value="Add" />
-
+                                                            <button class="btn formButton" type="reset" @onclick="() => AddWorkHistoryNew(workHistory)" value="Add">Add</button>
                                                         }
                                                     </div>
                                                 </div>
@@ -486,21 +487,21 @@
                                         <div class="row shadow-sm bg-body rounded-edges" style="background-color: white; height: 47vh;">
                                             <div class="col-12 overflow-auto" style="height: 365px">
                                                 <br />
-                                                @if (workHistoryList != null && workHistoryList.Count > 0)
+                                                @if (workHistoryList != null)
                                                 {
                                                     foreach (var item in workHistoryList)
                                                     {
                                                         <div class="work-card">
-                                                            <div class="company-name">@workHistory.CompanyName</div>
-                                                            <div class="job-position">@workHistory.JobTitle</div>
+                                                            <div class="company-name">@item.CompanyName</div>
+                                                            <div class="job-position">@item.JobTitle</div>
                                                             <div class="start-end-date">
-                                                                <small>@($"{workHistory.StartDate:yyyy MMMM} - {workHistory.EndDate:yyyy MMMM}")</small>
+                                                                <small>@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</small>
 
                                                                 <span @onclick="() => DeleteWorkHistory(item.Id)">
                                                                     <i class="fa fa-times-circle fa-2x" style="color: red"></i>
                                                                 </span>
                                                             </div>
-                                                            <div class="work-description">@workHistory.Description</div>
+                                                            <div class="work-description">@item.Description</div>
                                                         </div>
                                                     }
                                                 }
@@ -521,23 +522,23 @@
                                 <div class="row p-3">
                                     <div class="col-6 p-5">
                                         <div class="row shadow-sm bg-body rounded-edges white-back">
-                                            <div class="col-12" style="height: 45vh">
+                                            <div class="col-12" style="height: 47vh">
                                                 <input type="hidden" @bind="education.Id" />
                                                 <input type="hidden" @bind="education.AppUserId" />
                                                 <div class="row p-3">
                                                     <div class="col-6">
                                                         <label class="form-label" for="institution">Institution</label>
-                                                        <input id="institution" class="form-control shadow bg-body rounded" type="text" @bind="education.Insitution" placeholder="University of Cape Town" required @onfocusout="completion"/> <!--@onfocusout="completion" -->
+                                                        <input id="institution" class="form-control shadow bg-body rounded" type="text" @bind="education.Insitution" @bind:event="oninput" placeholder="University of Cape Town" required @onfocusout="completion" /> <!--@onfocusout="completion" -->
                                                     </div>
                                                     <div class="col-6">
                                                         <label class="form-label" for="qualification">Qualification</label>
-                                                        <input id="qualification" class="form-control shadow bg-body rounded" type="text" @bind="education.Qualification" placeholder="BSc Chemical Engineering" required @onfocusout="completion"/> <!--@onfocusout="completion" -->
+                                                        <input id="qualification" class="form-control shadow bg-body rounded" type="text" @bind="education.Qualification" @bind:event="oninput" placeholder="BSc Chemical Engineering" required @onfocusout="completion" /> <!--@onfocusout="completion" -->
                                                     </div>
                                                 </div>
                                                 <div class="row p-3">
                                                     <div class="col-6">
                                                         <label class="form-label" for="start-date">Start Date</label>
-                                                        <input id="start-date" class="form-control shadow bg-body rounded" @bind="education.StartDate" @onblur="StartDateCheck" type="date" required />
+                                                        <input id="start-date" class="form-control shadow bg-body rounded" @bind="education.StartDate" @bind:event="oninput" @onblur="StartDateCheck" type="date" required />
                                                     </div>
                                                     @if (presentSchool)
                                                     {
@@ -549,10 +550,10 @@
                                                                     <label class="form-check-label text-color-primary" for="edu-check">
                                                                         Completed?
                                                                     </label>
-                                                                    <input class="form-check-input" type="checkbox" id="edu-check" @bind="@presentSchool">
+                                                                    <input class="form-check-input" type="checkbox" id="edu-check" @bind="@presentSchool" @bind:event="oninput">
                                                                 </span>)
                                                             </label>
-                                                            <input id="end-date" class="form-control shadow bg-body rounded" @bind="education.EndDate" @onblur="EndDateCheck" type="date" />
+                                                            <input id="end-date" class="form-control shadow bg-body rounded" @bind="education.EndDate" @bind:event="oninput" @onblur="EndDateCheck" type="date" />
                                                         </div>
                                                     }
                                                     else
@@ -562,7 +563,7 @@
                                                                 <label class="form-check-label text-color-primary" for="edu-check">
                                                                     Not Completed
                                                                 </label>
-                                                                <input class="form-check-input" type="checkbox" id="edu-check" @bind="@presentSchool">
+                                                                <input class="form-check-input" type="checkbox" id="edu-check" @bind="@presentSchool" @bind:event="oninput">
                                                             </div>
                                                         </div>
                                                     }
@@ -571,11 +572,11 @@
                                                     <div class="col-12 d-flex justify-content-around">
                                                         @if (eduUpdate)
                                                         {
-                                                            <input class="btn formButton" type="button" @onclick="() => UpdateEducation(education)" value="Update" />
+                                                            <button class="btn formButton" type="reset" @onclick="() => UpdateEducation(education)" value="Update">Update</button>
                                                         }
                                                         else
                                                         {
-                                                            <input class="btn formButton" type="button" @onclick="() => AddEducation(education)" value="Add" />
+                                                            <button class="btn formButton" type="reset" @onclick="() => AddEducation(education)" value="Add" >Add</button>
                                                         }
                                                     </div>
                                                 </div>
@@ -599,7 +600,6 @@
                                                                     <i class="fa fa-times-circle fa-2x" style="color: red"></i>
                                                                 </span>
                                                             </div>
-                                                            
                                                         </div>
                                                     }
                                                 }
@@ -612,7 +612,81 @@
                     </form>
                 </div>
 
-                <!--Online Profile-->
+                <!--References tab-->
+
+                <div id="references" class="container tab-pane">
+                    <form id="references-form">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row p-3">
+                                    <div class="col-6 p-5">
+                                        <div class="row shadow-sm bg-body rounded-edges white-back">
+                                            <div class="col-12" style="height: 47vh">                                                 
+                                                <input type="hidden" @bind="references.Id" /> <!--remember to add references ID and AppUserID-->
+                                                <input type="hidden" @bind="references.AppUserId"/>
+                                                <div class="row p-3">
+                                                    <div class="col-6">
+                                                        <label class="form-label" for="referenceName">Name</label>
+                                                        <input id="referenceName" class="form-control shadow bg-body rounded" type="text"  required placeholder="John" @bind="references.Name" @bind:event="oninput"/> <!--@onfocusout="completion" -->
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <label class="form-label" for="referenceSurname">Surname</label>
+                                                        <input id="referenceSurname" class="form-control shadow bg-body rounded" type="text" required placeholder="Smith" @bind="references.Surname" @bind:event="oninput"/> <!--@onfocusout="completion" -->
+                                                    </div>
+                                                </div>
+
+                                                <div class="row p-3">
+                                                    <div class="col-6">
+                                                        <label class="form-label" for="referenceEmail">Email</label>
+                                                        <input id="referenceEmail" class="form-control shadow bg-body rounded" type="text" required placeholder="john@gmail.com" @bind="references.Email" @bind:event="oninput"/> <!--@onfocusout="completion" -->
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <label class="form-label" for="referenceContactNum">Phone Number</label>
+                                                        <input id="referenceContactNum" class="form-control shadow bg-body rounded" type="text" required placeholder="071 336 9875" @bind="references.ContactNum" @bind:event="oninput"/> <!--@onfocusout="completion" -->
+                                                    </div>
+                                                </div>
+                                                <div class="row p-3">
+                                                    <div class="col-12 d-flex justify-content-around">
+                                                        <!--Remember to change the functionality-->                                                        
+                                                            <button class="btn formButton" type="reset" @onclick="() => AddReferences(references)">Add</button>   <!--This allows us to reset the input fields without losing the text-->
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                    <div class="col-6 p-5">
+                                        <div class="row shadow-sm bg-body rounded-edges white-back">
+                                            <div class="col-12 overflow-auto" style="height: 47vh">
+                                                <br />
+                                                
+                                                @if (referencesList != null && referencesList.Count > 0)
+                                                {
+                                                    foreach (var items in referencesList)
+                                                    {
+                                                    <div class="work-card mb-3">
+                                                        <div class="referenceName">@items.Name</div>
+                                                        <div class="referenceSurname">@items.Surname</div>
+                                                        <div>
+                                                            <span class="fa-layers-top-right" @onclick="() => DeleteReference(items.Id)">
+                                                                <i class="fa fa-times-circle fa-2x" style="color: red"></i>
+                                                            </span>
+                                                        </div>
+                                                        <div class="referenceEmail">@items.Email</div>
+                                                        <div class="referenceContactNum">@items.ContactNum </div>
+                                                    </div>
+                                                    }
+                                                 }                                                 
+                                            </div>
+                                        </div>
+                                    </div>    
+                                 </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!--Online Presence-->
                 <div id="online-profile" class="container tab-pane" style="height: 60vh;">
                     <form class="col-12 d-flex justify-content-center align-items-start">
                         <div class="row col-9">
@@ -624,7 +698,7 @@
                                             &ensp;
                                             <i class="fab fa-github fa-2x"></i>
                                         </div>
-                                        <input id="github" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.GitHubLink" />
+                                        <input id="github" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.GitHubLink" placeholder="github.com/1Nebula"/>
                                     </div>
                                     <div class="col-6">
                                         <div>
@@ -632,7 +706,7 @@
                                             &ensp;
                                             <i class="fab fa-linkedin-in fa-2x" style="color: #0077b5"></i>
                                         </div>
-                                        <input id="linkedin" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.LinkedInLink" />
+                                        <input id="linkedin" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.LinkedInLink" placeholder="linkedin.com/company/nebula"/>
                                     </div>
                                 </div>
                                 <div class="row p-3">
@@ -642,7 +716,7 @@
                                             &ensp;
                                             <i class="fab fa-twitter-square fa-2x" style="color: #00acee"></i>
                                         </div>
-                                        <input id="twitter" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.TwitterLink" />
+                                        <input id="twitter" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.TwitterLink" placeholder="twitter.com/1nebula_global" />
                                     </div>
                                     <div class="col-6">
                                         <div>
@@ -650,7 +724,7 @@
                                             &ensp;
                                             <i class="fas fa-globe fa-2x" style="color: #35afc0"></i>
                                         </div>
-                                        <input id="personal-website" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.PersonalWebsiteUrl" />
+                                        <input id="personal-website" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.PersonalWebsiteUrl" placeholder="1nebula.com" />
                                     </div>
                                 </div>
                                 <div class="row p-3">
