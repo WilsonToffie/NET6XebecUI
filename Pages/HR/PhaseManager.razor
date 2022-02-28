@@ -490,7 +490,7 @@
 
 @code {
 
-    int CurrentJobId;
+    [Parameter] public int CurrentJobId { get; set; }
 
     public ApplicationPhaseItem CurrentItem;
 
@@ -562,14 +562,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        CurrentJobId = hrJobState.JobId;
+        CurrentJobId = 1;
+        Console.WriteLine(CurrentJobId);
 
-        Console.WriteLine(hrJobState.JobId);
 
-        //CurrentJobId = 1;
 
-        CurrentJob = await httpClient.GetFromJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/job/{CurrentJobId}");
-        CurrentJobTitle = CurrentJob.Title;
+        //CurrentJob = await httpClient.GetFromJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/job/{CurrentJobId}");
+        //Console.WriteLine(CurrentJob.Company);
+        //CurrentJobTitle = CurrentJob.Title;
 
         CurrentApplications = await httpClient.GetFromJsonAsync<List<Application>>($"https://xebecapi.azurewebsites.net/api/application/job/{CurrentJobId}");
         tempAppUsers = await httpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
