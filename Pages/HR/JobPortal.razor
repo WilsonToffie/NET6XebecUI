@@ -358,9 +358,6 @@
                                             <div class="col" @onclick="() => DeleteData(displayJobDetail.Id)">
                                                 <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE"></i>
                                             </div>
-
-
-
                                         }
                                     </div>
                                 </div>
@@ -490,13 +487,18 @@
 
 <div class="job-portal-inner-container" hidden="@ApplicantPortalIsHidden">
     <div class="row job-portal-inner-top">
-        <div class="col-1">
-            <input type="button" value="Job Portal" @onclick="ShowJobPortal" class="job-portal-nav-btn" style="margin-left: 20px" />
+        <div class="col-2">
+            <input type="button" value="Job Portal" @onclick="ShowJobPortal" class="job-portal-nav-btn" style="margin-left: 100px; width: 50%" />
         </div>
-        <div class="col-9">
+        <div class="col-8">
+            @*<div class="job-search-bar" style="background-color: red; height: 5vh; margin-bottom: 5vh">
+                <div class="input-group d-flex justify-content-center form-group">
+                    <input class="job-search-bar-input" type="text" placeholder="Search for a jobs" @oninput="SearchListJob" />
+                </div>
+            </div>*@
         </div>
         <div class="col-2">
-            <input type="button" value="Phase Manager" @onclick="ShowPhaseManager" class="job-portal-nav-btn" style="width: 50%; margin-left: 80px" />
+            <input type="button" value="Phase Manager" @onclick="ShowPhaseManager" class="job-portal-nav-btn" style="width: 50%;" />
         </div>
     </div>
     <div class="job-portal-inner-bottom">
