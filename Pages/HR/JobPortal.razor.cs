@@ -14,6 +14,7 @@ namespace XebecPortal.UI.Pages.HR
         private bool changeForm;
         private string searchJob;
         private bool nextButton, preButton = true;
+        private bool isFilterContainAnyVal;
         private List<int> pageNum = new List<int>();
         private IList<Job> jobList = new List<Job>();
         private IList<Job> jobListFilter = new List<Job>();
@@ -23,6 +24,7 @@ namespace XebecPortal.UI.Pages.HR
         private IList<JobPlatformHelper> jobPlatformHelpers = new List<JobPlatformHelper>();
         private List<JobPlatform> platformsUsed = new List<JobPlatform>();
         private List<JobType> JobTypes;
+        private List<JobTypeHelper> jobTypeHelper;
         private List<Status> status;
         private List<string> Departments = new List<string>() { "Accounting & Finance", "HR", "Sales & Marketing", "Legal", "Research & Development", "IT", "Admin", "Customer Support" };
         private List<string> Locations = new List<string>() { "Eastern Cape", "Free State", " Gauteng", "KwaZulu-Natal", "Limpopo", "Mpumalanga", "Northen Cape", "North West", "Western Cape" };
@@ -44,6 +46,7 @@ namespace XebecPortal.UI.Pages.HR
             jobList = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
             jobPlatforms = await httpClient.GetFromJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform");
             jobPlatformHelpers = await httpClient.GetFromJsonAsync<List<JobPlatformHelper>>("https://xebecapi.azurewebsites.net/api/jobplatformhelper");
+            jobTypeHelper = await httpClient.GetFromJsonAsync<List<JobTypeHelper>>("https://xebecapi.azurewebsites.net/api/JobTypeHelper");
             status = await httpClient.GetFromJsonAsync<List<Status>>("/mockData/Status.json");
 
             jobListFilter = jobList;
@@ -191,7 +194,7 @@ namespace XebecPortal.UI.Pages.HR
 
         private void FilterDataHelper()
         {
-            if (!string.IsNullOrEmpty(searchJob) && searchJob != " ")
+            if (!string.IsNullOrEmpty(searchJob))
             {
                 jobListFilter = jobListFilter.Where(x => x.Title.Contains(searchJob, StringComparison.CurrentCultureIgnoreCase)).ToList();
             }
@@ -236,15 +239,10 @@ namespace XebecPortal.UI.Pages.HR
             return "";
         }
 
-        private string GetJobType(JobTypeHelper helper)
+        private string GetJobType(int id)
         {
-            var type = new JobType { Id = 0, Type = "Contract" };
-
-            if (JobTypes != null && helper != null)
-            {
-                type = JobTypes.FirstOrDefault(e => e.Id == helper.Id);
-            }
-            return ""; //type.Type;
+            int jobTypeId = jobTypeHelper.FirstOrDefault(x => x.JobId == id).JobTypeId;
+            return JobTypes.FirstOrDefault(x => x.Id == jobTypeId).Type;
         }
     }
 }
