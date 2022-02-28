@@ -167,6 +167,7 @@ namespace XebecPortal.UI.Pages.HR
 
         private void DisplayJobDetail(int id)
         {
+            Console.WriteLine(id);
             hrJobState.JobId = id;
             displayJobDetail = jobListFilter.FirstOrDefault(x => x.Id == id);
             platformsUsed.Clear();

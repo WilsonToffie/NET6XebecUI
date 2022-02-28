@@ -709,7 +709,7 @@
                         <tbody>
                             @if (AnswerList != null && QuestionList != null)
                             {
-                                @foreach (var answer in AnswerList)
+                                @*@foreach (var answer in AnswerList)
                                 {
                                     @if (answer.appUserId == selectedCandidate.AppUserId)
                                     {
@@ -723,7 +723,7 @@
                                             </td>
                                         </tr>
                                     }
-                                }
+                                }*@
                             }
                             else
                             {
@@ -770,12 +770,13 @@
     private IList<WorkHistory> workHistories { get; set; }
     private IList<Education> educations { get; set; }
     private IList<ProfilePortfolioLink> profilePortfolio { get; set; }
-    private int jobId;
+    [Parameter] public int JobId { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
 
-        jobId = hrJobState.JobId;
+        //JobId = hrJobState.JobId;
 
         Console.WriteLine(hrJobState.JobId);
         Console.WriteLine(hrJobState.JobId);
@@ -799,7 +800,7 @@
         profilePortfolio = await httpClient.GetFromJsonAsync<List<ProfilePortfolioLink>>("https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink");
 
 
-        //FilterCandidatesByJob(candidates);
+        FilterCandidatesByJob(candidates);
         SetSelectedCandidate(candidates.FirstOrDefault());
     }
 
@@ -812,6 +813,7 @@
 
     private void FilterCandidatesByJob(IList<CandidateRecommender> candidates_)
     {
+        Console.WriteLine(JobId);
         candidates = candidates_.Where(o => o.jobId == hrJobState.JobId).ToList();
     }
 
