@@ -566,7 +566,7 @@
 
         Console.WriteLine(hrJobState.JobId);
 
-        CurrentJobId = 1;
+        //CurrentJobId = 1;
 
         CurrentJob = await httpClient.GetFromJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/job/{CurrentJobId}");
         CurrentJobTitle = CurrentJob.Title;
