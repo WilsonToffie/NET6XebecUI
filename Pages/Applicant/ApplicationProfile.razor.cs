@@ -7,6 +7,12 @@ using System.Linq;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using Azure.Storage;
+using Azure;
+using System.Net.Http;
+
 namespace XebecPortal.UI.Pages.Applicant
 {
     public partial class ApplicationProfile
@@ -21,15 +27,49 @@ namespace XebecPortal.UI.Pages.Applicant
         private ProfilePortfolioLink profilePortfolio = new() { AppUserId = 1 };
         private AdditionalInformation additionalInformation = new() { AppUserId = 1, Disability = "No" };
         private PersonalInformation personalInformation = new() { AppUserId = 1 };
+        
+        private List<References> referencesList = new();
+        private References references = new() { AppUserId = 1};
+        
+
         private IJSObjectReference _jsModule;
         string _dragEnterStyle;
-        IList<string> fileNames = new List<string>();
+        IBrowserFile fileNames;
+        private int maxAllowedSize = 10 * 1024 * 1024;
+        private string progressBar = 0.ToString("0");
 
         protected override async Task OnInitializedAsync()
         {
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/ApplicationProfile.js");
         }
+        
+        private void AddReferences(References referencesValues)
+        {
+            
+            referencesList.Add(new()
+            {
+                Id = increment,
+                AppUserId = 1,
+                Name = referencesValues.Name,
+                Surname = referencesValues.Surname,
+                Email = referencesValues.Email,
+                ContactNum = referencesValues.ContactNum,
+            });
 
+            increment++;
+        }
+
+        private void DeleteReference(int refID)
+        {
+            referencesList.RemoveAll(x => x.Id == refID);
+        }
+
+        // Not entire sure how to set the data, still working on that
+        private void SelectReference(int refID)
+        {
+           int val =  referencesList.FindIndex(x => x.Id == refID); // this refers to the List position to where it should be, just not sure how to set the input values
+        }
+        
         private async Task AddWorkHistory(WorkHistory workHistoryValues)
         {
             if (await _jsModule.InvokeAsync<bool>("WorkHistory"))
@@ -147,14 +187,46 @@ namespace XebecPortal.UI.Pages.Applicant
 
                 await jsRuntime.InvokeVoidAsync("alert", "You Data Has Been Captured");
             }
+        }
 
+        async Task OnInputFileChangedAsync(InputFileChangeEventArgs e)
+        {
+            fileNames = e.File;
+
+            var blobUri = new Uri("https://"
+                                  + "amafilewam" +
+                                  ".blob.core.windows.net/" +
+                                  "upload" + "/" + fileNames.Name);
+            AzureSasCredential credential = new AzureSasCredential(
+                "sp=racwdli&st=2022-02-22T14:05:44Z&se=2022-02-27T22:05:44Z&sv=2020-08-04&sr=c&sig=D2E7KI550agfvYwMgRRzBlxfwqBAFV5WEe5WRbKnRTo%3D");
+            BlobClient blobClient = new BlobClient(blobUri, credential, new BlobClientOptions());
+            //displayProgress = true;
+            var res = await blobClient.UploadAsync(fileNames.OpenReadStream(maxAllowedSize), new BlobUploadOptions
+            {
+                HttpHeaders = new BlobHttpHeaders { ContentType = fileNames.ContentType },
+                TransferOptions = new StorageTransferOptions
+                {
+                    InitialTransferSize = 1024 * 1024,
+                    MaximumConcurrency = 10
+                },
+                ProgressHandler = new Progress<long>((progress) =>
+                {
+                    progressBar = (100.0 * progress / fileNames.Size).ToString("0");
+                })
+            });
+
+            if (Convert.ToInt32(progressBar) == 100)
+            {
+                var content = new StringContent($"\"{blobUri.ToString()}\"");
+                var response = await httpClient.GetAsync("https://xebecapi.azurewebsites.net/api/ResumeParser");
+                //var resp = await httpClient.PostAsync("https://xebecapi.azurewebsites.net/api/ResumeParser", content);
+            }
 
         }
 
-        void OnInputFileChanged(InputFileChangeEventArgs e)
+        private void ResetFileNames()
         {
-            var files = e.GetMultipleFiles();
-            fileNames = files.Select(f => f.Name).ToList();
+            fileNames = null;
         }
 
         void Upload()

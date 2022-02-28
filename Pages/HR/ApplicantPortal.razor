@@ -126,19 +126,19 @@
 
             .candidate-card .candidate-details .name {
                 font-weight: 800;
-                /*                line-height: 3vh;
-                font-size: 3vh;*/
+                line-height: 3vh;
+                font-size: 3vh;
             }
 
             .candidate-card .candidate-details .job {
-                /*                line-height: 2vh;
-                font-size: 1.5vh;*/
+                line-height: 2vh;
+                font-size: 1.5vh;
                 font-weight: 400;
             }
 
             .candidate-card .candidate-details .phase {
-                /*                line-height: 1vh;
-                font-size: 1vh;*/
+                line-height: 1vh;
+                font-size: 1vh;
                 font-weight: 500;
             }
 
@@ -362,8 +362,8 @@
     .page-top {
         display: flex;
         justify-content: center;
+        align-items: center;
         margin-bottom: 15px;
-        background-color: orange;
     }
 </style>
 
@@ -371,6 +371,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+
+<div class="page-top">
+    <div class="job-search-bar" style="height: 5vh; margin-bottom: 5vh">
+        <div class="input-group d-flex justify-content-center form-group">
+            <input class="job-search-bar-input" type="text" placeholder="Search for candidates" @oninput="SearchCandidate" />
+        </div>
+    </div>
+</div>
 
 <div class="container-main">
     <div class="candidate-section">
@@ -380,35 +388,63 @@
             </div>
         </div>
         <div class="candidate-list">
-            @if (candidates != null)
+            @if (candidates != null @*|| candidates.Count != 0*@)
             {
+                @if (candidates.Count == 0)
+                {
+                    <p>No applicants for this job. (@hrJobState.JobId)</p>
+                }
                 foreach (var candidate in candidates)
                 {
-                    AppUser currentUser = users.Where(x => x.id == candidate.AppUserId).FirstOrDefault();
-                    <div @onclick="() => SetSelectedCandidate(candidate)" style="@(GetStyle(candidate))" class="candidate-card">
-                        <div class="profile-picture">
-                            <img src="@currentUser.imageUrl" alt="Avatar">
-                        </div>
+                    AppUser currentUser = null;
+                    CandidateRecommender tempCandidate = null;
+                    @if (usersFiltered == null || searchCandidate == "" || searchCandidate == " ")
+                    {
+                        currentUser = users.Where(x => x.id == candidate.AppUserId).FirstOrDefault();
+                    }
+                    else if (usersFiltered.Where(x => x.id == candidate.AppUserId).FirstOrDefault() != null)
+                    {
+                        currentUser = usersFiltered.Where(x => x.id == candidate.AppUserId).FirstOrDefault();
+                    }
 
-                        <div class="candidate-details">
-                            @(candidates.IndexOf(candidate) + 1)
-                            <span class="name">@($"{currentUser.name} {currentUser.surname}")</span>
-                            <br>
+                    @if (currentUser != null)
+                    { 
+                        <div @onclick="() => SetSelectedCandidate(candidate)" style="@(GetStyle(candidate))" class="candidate-card">
+                            <div class="profile-picture">
+                                <img src="@currentUser.imageUrl" alt="Avatar">
+                            </div>
 
-                            @foreach (var job in jobs)
-                            {
-                                @if (candidate.jobId == job.Id)
+                            <div class="candidate-details">
+                                @(candidates.IndexOf(candidate) + 1)
+                                <span class="name">@($"{currentUser.name} {currentUser.surname}")</span>
+                                <br>
+
+                                @foreach (var job in jobs)
                                 {
-                                    <span class="job">@job.Title</span>
+                                    @if (candidate.jobId == job.Id)
+                                    {
+                                        <span class="job">@job.Title</span>
+                                    }
                                 }
-                            }
 
-                            <br>
+                                <br>
 
-                            <span class="phase-pill">@FindCurrentPhase(currentUser, selectedJob)</span>
-                            @*style=" @(GetColor(phase.Description))"*@
+                                <span class="phase-pill">@FindCurrentPhase(currentUser, selectedJob)</span>
+                                @*style=" @(GetColor(phase.Description))"*@
+
+
+                                <div>
+                                    @if (candidates.Where(x => x.AppUserId == currentUser.id).FirstOrDefault() != null)
+                                    {
+                                        tempCandidate = candidates.Where(x => x.AppUserId == currentUser.id).FirstOrDefault();
+
+                                        <div class="phase-pill" style="@(GetPillStyle(candidate))">@tempCandidate.TotalMatch %</div>
+                                    }
+
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    }
                 }
             }
             else
@@ -673,14 +709,11 @@
                         <tbody>
                             @if (AnswerList != null && QuestionList != null)
                             {
-                                @foreach (var answer in AnswerList)
+                                @*@foreach (var answer in AnswerList)
                                 {
                                     @if (answer.appUserId == selectedCandidate.AppUserId)
                                     {
-
                                         FormQuestion question = QuestionList.Where(x => x.id == answer.questionnaireHRFormId && answer.appUserId == selectedCandidate.AppUserId).FirstOrDefault();
-
-
                                         <tr>
                                             <td class="row p-3 col-4">
                                                 <label>@question.question</label>
@@ -689,20 +722,8 @@
                                                 <p>@answer.applicantAnswer</p>
                                             </td>
                                         </tr>
-
-
-
-
-                                        @*<tr>
-                                                <td>
-                                                    <div class="application-form-question">
-                                                        <span>@question.question</span>
-                                                        <span>@answer.applicantAnswer</span>
-                                                    </div>
-                                                </td>
-                                            </tr>*@
                                     }
-                                }
+                                }*@
                             }
                             else
                             {
@@ -731,11 +752,13 @@
     private ApplicationModel tempApplication;
     private IList<ApplicationPhaseHelper> tempPhaseHelper;
     private int tempRank;
-    string tempJobTitle;
+    private string tempJobTitle;
+    private string searchCandidate;
     private ApplicationPhase phaseFinal;
     private string selectedJob = "";
     private string searchTerm = "";
     private CandidateRecommender selectedCandidate;
+    private IList<AppUser> usersFiltered;
     private IList<Job> jobs = new List<Job>();
     private IList<CandidateRecommender> candidates = null;
     private IList<AppUser> users = new List<AppUser>();
@@ -747,12 +770,16 @@
     private IList<WorkHistory> workHistories { get; set; }
     private IList<Education> educations { get; set; }
     private IList<ProfilePortfolioLink> profilePortfolio { get; set; }
-    private int jobId;
+    [Parameter] public int JobId { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
 
-        jobId = hrJobState.JobId;
+        //JobId = hrJobState.JobId;
+
+        Console.WriteLine(hrJobState.JobId);
+        Console.WriteLine(hrJobState.JobId);
 
         jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
         candidates = await httpClient.GetFromJsonAsync<List<CandidateRecommender>>("https://xebecapi.azurewebsites.net/api/candidaterecommender");
@@ -766,7 +793,6 @@
 
         candidates = candidates.OrderByDescending(o => o.TotalMatch).ToList();
 
-
         users = await httpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
         phasesHelpers = await httpClient.GetFromJsonAsync<List<ApplicationPhaseHelper>>("https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper");
         applications = await httpClient.GetFromJsonAsync<List<ApplicationModel>>("https://xebecapi.azurewebsites.net/api/Application");
@@ -774,7 +800,21 @@
         profilePortfolio = await httpClient.GetFromJsonAsync<List<ProfilePortfolioLink>>("https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink");
 
 
+        FilterCandidatesByJob(candidates);
         SetSelectedCandidate(candidates.FirstOrDefault());
+    }
+
+    private void SearchCandidate(ChangeEventArgs e)
+    {
+        searchCandidate = e.Value.ToString();
+
+        usersFiltered = users.Where(x => x.name.ToLower().Contains(searchCandidate.ToLower()) || x.surname.ToLower().Contains(searchCandidate.ToLower())).ToList();
+    }
+
+    private void FilterCandidatesByJob(IList<CandidateRecommender> candidates_)
+    {
+        Console.WriteLine(JobId);
+        candidates = candidates_.Where(o => o.jobId == hrJobState.JobId).ToList();
     }
 
     private void AssignApplication(ApplicationModel application)
@@ -811,7 +851,8 @@
 
     private void SetSelectedCandidate(CandidateRecommender candidate)
     {
-        selectedCandidate = candidate;
+        if (candidate != null)
+            selectedCandidate = candidate;
     }
 
     TabEnum _tabEnum = new();
@@ -836,6 +877,29 @@
             return "display: block;";
         }
         return "display: none;";
+    }
+
+    private object GetPillStyle(CandidateRecommender candidate)
+    {
+        double totalMatch = candidate.TotalMatch;
+        if (totalMatch <= 30)
+            return "background: #ff5201; color: rgba(0, 0, 0, 0.35)";
+        else if (totalMatch <= 40)
+            return "background: #ff8401; color: rgba(0, 0, 0, 0.35)";
+        else if (totalMatch <= 50)
+            return "background: #ff9d01; color: rgba(0, 0, 0, 0.35)";
+        else if (totalMatch <= 60)
+            return "background: #ffbc01; color: rgba(0, 0, 0, 0.35)";
+        else if (totalMatch <= 70)
+            return "background: #ffd401; color: rgba(0, 0, 0, 0.35)";
+        else if (totalMatch <= 80)
+            return "background: #ebff01; color: rgba(0, 0, 0, 0.35)";
+        else if (totalMatch <= 90)
+            return "background: #baff01; color: rgba(0, 0, 0, 0.35)";
+        else if (totalMatch <= 100)
+            return "background: #05ff01; color: rgba(0, 0, 0, 0.35)";
+
+        return "";
     }
 
     private object GetStyle(CandidateRecommender candidate)

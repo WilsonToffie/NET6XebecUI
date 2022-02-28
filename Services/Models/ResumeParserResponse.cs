@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace XebecPortal.UI.Pages.HR
+namespace XebecPortal.UI.Services.Models
 {
-    public class HrJobState
+    public class ResumeParserResponse
     {
-        public int JobId { get; set; }
+
     }
 }

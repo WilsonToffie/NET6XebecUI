@@ -19,6 +19,7 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool jobPortalIsHidden = false;
         private bool applicationFormIsHidden = true;
         private bool pageLoad;
+        private bool isFilterContainAnyVal;
         private int jobId;
         private IList<Job> jobList = new List<Job>();
         private IList<Job> jobListFilter = new List<Job>();
@@ -26,6 +27,7 @@ namespace XebecPortal.UI.Pages.Applicant
         private IPagedList<Job> jobPagedList = new List<Job>().ToPagedList();
         private IList<Application> applicationList = new List<Application>();
         private List<JobType> JobTypes;
+        private List<JobTypeHelper> jobTypeHelper;
         private List<Status> status;
         List<FormQuestion> QuestionList = new List<FormQuestion>();
         List<QuestionType> Types = new List<QuestionType>();
@@ -43,7 +45,7 @@ namespace XebecPortal.UI.Pages.Applicant
             jobList = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
             applicationList = await httpClient.GetFromJsonAsync<List<Application>>("https://xebecapi.azurewebsites.net/api/Application");
             status = await httpClient.GetFromJsonAsync<List<Status>>("/mockData/Status.json");
-
+            jobTypeHelper = await httpClient.GetFromJsonAsync<List<JobTypeHelper>>("https://xebecapi.azurewebsites.net/api/JobTypeHelper");
             jobListFilter = jobList;
             jobPagedList = jobListFilter.ToPagedList(1, 17);
             displayJobDetail = jobListFilter.FirstOrDefault();
@@ -156,15 +158,10 @@ namespace XebecPortal.UI.Pages.Applicant
             return "";
         }
 
-        private string GetJobType(JobTypeHelper helper)
+        private string GetJobType(int id)
         {
-            var type = new JobType { Id = 0, Type = "Contract" };
-
-            if (JobTypes != null && helper != null)
-            {
-                type = JobTypes.FirstOrDefault(e => e.Id == helper.Id);
-            }
-            return ""; //type.Type;
+            int jobTypeId = jobTypeHelper.FirstOrDefault(x => x.JobId == id).JobTypeId;
+            return JobTypes.FirstOrDefault(x => x.Id == jobTypeId).Type;
         }
 
         private static string GetMultiSelectionTextLocation(List<string> selectedValues)

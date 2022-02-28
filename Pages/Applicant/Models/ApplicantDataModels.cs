@@ -145,7 +145,18 @@ namespace XebecPortal.UI.Pages.Applicant
         public int AppUserId { get; set; }
         public IList<AppUser> AppUser { get; set; }
     }
-
+    /* Newly added stuffs*/
+    public class References
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string Email { get; set; }
+        public string ContactNum { get; set; }
+        public int AppUserId { get; set; }
+        public IList<AppUser> AppUser { get; set; }
+    }
+    
     public class ProfilePortfolioLink
     {
         public int Id { get; set; }

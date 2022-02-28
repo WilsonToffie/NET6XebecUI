@@ -1,0 +1,58 @@
+﻿@page "/RocketTest"
+
+<style>
+
+    body {
+        overflow-y: hidden;
+        background: #446484;
+    }
+
+    .page-height {
+        height: 95vh;
+    }
+
+    .rocket {
+        position: absolute;
+        height: 60px;
+        left: 35%;
+        animation: fly 5s .5s ease-in;
+    }
+
+    inputNotEmpty {
+        @@keyframes fly {
+            0% {
+                bottom: 0px;
+            }
+
+            100% {
+                bottom: 100%;
+            }
+        }
+    }
+
+    .inputIsEmpty {
+
+        @@keyframes fly {
+
+            0% {
+                bottom: 0px;
+            }
+
+            100% {
+                bottom: 20%;
+            }
+        }
+    }
+</style>
+
+<div class="page-height">
+    <img class="rocket launch" src="https://cdn4.iconfinder.com/data/icons/whsr-january-flaticon-set/512/rocket.png">
+    <h3>RocketAnimation</h3>
+    <input type="text" id="username" placeholder="User name" @bind="@username" > <!--You will bind it with a function in C# and check if the values are null or not, if it isnt then the rocket will move up by x %;-->
+</div>
+
+
+@code {
+
+    private string username = "";
+}

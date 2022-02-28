@@ -6,10 +6,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Pages\Applicant\RocketAnimation.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Pages\HR\ApplicantControlTool.razor.css" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.10.0" />
     <PackageReference Include="Blazored.Localisation" Version="2.0.0" />
     <PackageReference Include="BlazorTable" Version="1.17.0" />
     <PackageReference Include="Bogus" Version="34.0.1" />

@@ -220,7 +220,6 @@
     .pagination {
         box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
     }
-
 </style>
 
 <div class="container" style="height: 55vh;" hidden="@jobPortalIsHidden">
@@ -289,7 +288,7 @@
     </div>
     <br />
 
-    @if (jobListFilter != null && jobListFilter.Count > 0)
+    @if (jobListFilter?.Any() == true)
     {
         <div class="row" style="height:55vh; padding: 20px;">
             <div class="col-3 job-portal-left overflow-auto">
@@ -311,10 +310,10 @@
                 </div>
             </div>
 
-            <div class="col-9 overflow-auto job-portal-right-main" style="height: 55vh">
+            <div class="col-9 job-portal-right-main" style="height: 57vh">
 
                 <!--The Form for applying a job-->
-                <div style="height: 53vh">
+                <div style="height: 57vh">
                     <div class="col-12 job-portal-right">
                         <form class="job-portal-form">
                             <div class="row">
@@ -341,20 +340,20 @@
 
                                     @if (displayJobDetail.JobTypes != null && displayJobDetail.JobTypes.Count > 0)
                                     {
-                                        <p class="big-card-type">@GetJobType(displayJobDetail.JobTypes.FirstOrDefault())</p>
+                                        <p class="big-card-type">@GetJobType(displayJobDetail.Id)</p>
                                     }
                                 </div>
                                 <div class="col-6 d-flex justify-content-end">
                                     <p class="big-card-type"> @displayJobDetail.Department</p>
                                 </div>
                                 <div class="col-12">
-                                    <p class="text-left big-card-description">@displayJobDetail.Description</p>
+                                    <p class="text-left overflow-auto" style="height: 12em">@displayJobDetail.Description</p>
                                 </div>
                                 <div class="col-6">
                                     @* <p>@displayJobDetail.JobPlatforms</p> *@
                                 </div>
                                 <div class="col-6 d-flex justify-content-end">
-                                    <p class="small-card-date">@displayJobDetail.DueDate.ToString("d MMMM yyyy")</p>
+                                    <p class="small-card-date">Due Date: @displayJobDetail.DueDate.ToString("d MMMM yyyy")</p>
                                 </div>
                             </div>
                         </form>
@@ -373,13 +372,25 @@
             </div>
         </div>
     }
+    else if (jobListFilter?.Any() == false && isFilterContainAnyVal)
+    {
+        @for (int i = 0; i < 5; i++)
+        {
+            <br />
+        }
+        <h1 class="text-center align-middle">No Job Are Available</h1>
+    }
     else
     {
         @for (int i = 0; i < 5; i++)
         {
             <br />
         }
-        <h1 class="text-center align-middle">There Were No Jobs That Matched Your Search Criteria.</h1>
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <MudProgressCircular Color="Color.Primary" Style="height:140px;width:140px;" Indeterminate="true" />
+            </div>
+        </div>
     }
 </div>
 <div class="app-form-wrapper" hidden="@applicationFormIsHidden">
@@ -437,6 +448,11 @@
         </div>
     </div>
 </div>
+
+@{
+    isFilterContainAnyVal = !string.IsNullOrEmpty(searchJob) || mudSelectLocation?.Any() == true || mudSelectCompany?.Any() == true || mudSelectDepartment?.Any() == true || mudSelectStatus?.Any() == true;
+}
+
 @code {
 
 }
