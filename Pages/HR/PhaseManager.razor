@@ -13,10 +13,10 @@
 
     .page-top-select-job {
         height: 8%;
-        width: 100%;
+        width: 62%;
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: space-around;
     }
 
     .phase-container {
@@ -135,11 +135,31 @@
     .currentphase {
         background-color: #d35bc9;
     }
+
+    .disabled-phase{
+        color: grey;
+    }
+
+    .active-phase{
+        color: black;
+        font-weight: bold;
+    }
+
+    .disabled-card{
+        color: grey;
+        background-color: lightgrey;
+    }
+    .phase-manager-textarea{
+        border-radius: 5px;
+        border: 1px solid grey;
+        background-color: white;
+    }
 </style>
 
 
 <div class="page-top-select-job">
-    <input class="form-control" style="max-width: 20%" type="text" placeholder="Search Applicants" @bind-value="searchTerm" @bind-value:event="oninput" />
+    <h3 style="margin-left: 50px;">@CurrentJobTitle</h3>
+    <input style="max-width: 20%" type="text" placeholder="Search Applicants" @bind-value="searchTerm" @bind-value:event="oninput" />
 </div>
 <div class="phase-manager-container">
 
@@ -147,7 +167,7 @@
 
         <div class="phase-container shadow @AppliedDropClass">
             <div class="job-status">
-                <h5>Applied (@Items.Where((item) => item.ApplicationPhaseId == 1).Count())</h5>
+                <h5 class="active-phase">Applied (@Items.Where((item) => item.ApplicationPhaseId == 1).Count())</h5>
 
                 <ul class="dropzone"
                     ondragover="event.preventDefault();"
@@ -172,7 +192,7 @@
 
         <div class="phase-container shadow @ScreeningDropClass">
             <div class="job-status">
-                <h5>Screening (@Items.Where((item) => item.ApplicationPhaseId is 3 or 5 or 25 or 10).Count())</h5>
+                <h5 class="@ScreeningActive">Screening (@Items.Where((item) => item.ApplicationPhaseId is 3 or 5 or 25 or 10).Count())</h5>
 
                 <ul class="dropzone"
                     ondragover="event.preventDefault();"
@@ -202,7 +222,7 @@
 
         <div class="phase-container shadow @AssessmentDropClass">
             <div class="job-status">
-                <h5>Assessment (@Items.Where((item) => item.ApplicationPhaseId == 27).Count())</h5>
+                <h5  class="@AssessmentActive">Assessment (@Items.Where((item) => item.ApplicationPhaseId == 27).Count())</h5>
 
                 <ul class="dropzone"
                     ondragover="event.preventDefault();"
@@ -232,7 +252,7 @@
 
         <div class="phase-container shadow @InterviewDropClass">
             <div class="job-status">
-                <h5>Interview (@Items.Where((item) => item.ApplicationPhaseId is 26 or 28 or 29 or 30 or 31 or 11).Count())</h5>
+                <h5 class="@InterviewActive">Interview (@Items.Where((item) => item.ApplicationPhaseId is 26 or 28 or 29 or 30 or 31 or 11).Count())</h5>
 
                 <ul class="dropzone"
                     ondragover="event.preventDefault();"
@@ -262,7 +282,7 @@
 
         <div class="phase-container shadow @ReferenceDropClass">
             <div class="job-status">
-                <h5>Reference Check (@Items.Where((item) => item.ApplicationPhaseId == 32).Count())</h5>
+                <h5 class="@ReferenceActive">Reference Check (@Items.Where((item) => item.ApplicationPhaseId == 32).Count())</h5>
 
                 <ul class="dropzone"
                     ondragover="event.preventDefault();"
@@ -292,7 +312,7 @@
 
         <div class="phase-container shadow @OfferDropClass">
             <div class="job-status">
-                <h5>Offer (@Items.Where((item) => item.ApplicationPhaseId is 33 or 34 or 35 or 12).Count())</h5>
+                <h5  class="@OfferActive">Offer (@Items.Where((item) => item.ApplicationPhaseId is 33 or 34 or 35 or 12).Count())</h5>
 
                 <ul class="dropzone"
                     ondragover="event.preventDefault();"
@@ -322,7 +342,7 @@
 
         <div class="phase-container shadow @SuccessDropClass">
             <div class="job-status">
-                <h5>Successful/Unsuccessful (@Items.Where((item) => item.ApplicationPhaseId is 36 or 13).Count())</h5>
+                <h5 class="active-phase">Hired/Not Hired (@Items.Where((item) => item.ApplicationPhaseId is 36 or 13).Count())</h5>
 
                 <ul class="dropzone"
                     ondragover="event.preventDefault();"
@@ -363,7 +383,7 @@
                 <div class="card rounded shadow mycard @ScreeningThree" @onclick="() => MovePhase(25)"><b>MS Teams Meeting</b></div>
             </div>
             <div class="screening-dialog-textarea">
-                <textarea style="width: 300px; height: 150px; padding: 5px;" placeholder="Email template"></textarea>
+                <textarea class="phase-manager-textarea" style="width: 300px; height: 150px; padding: 5px;" placeholder="Email template"></textarea>
             </div>
         </div>
     </MatDialog>
@@ -377,7 +397,7 @@
                 <p style="font-size: 40px;">88</p>
             </div>
             <div class="screening-dialog-textarea">
-                <textarea style="width: 300px; height: 150px; padding: 5px;" placeholder="Email template"></textarea>
+                <textarea class="phase-manager-textarea" style="width: 300px; height: 150px; padding: 5px;" placeholder="Email template"></textarea>
             </div>
         </div>
     </MatDialog>
@@ -395,7 +415,7 @@
                 <div class="card rounded shadow mycard @InterviewFive" @onclick="() => MovePhase(31)"><b>CEO</b></div>
             </div>
             <div class="screening-dialog-textarea">
-                <textarea style="width: 300px; height: 150px; padding: 5px;" placeholder="Email template"></textarea>
+                <textarea class="phase-manager-textarea" style="width: 300px; height: 150px; padding: 5px;" placeholder="Email template"></textarea>
             </div>
         </div>
     </MatDialog>
@@ -409,7 +429,7 @@
 
             </div>
             <div class="screening-dialog-textarea">
-                <textarea style="width: 300px; height: 150px; padding: 5px;" placeholder="Email template"></textarea>
+                <textarea class="phase-manager-textarea" style="width: 300px; height: 150px; padding: 5px;" placeholder="Email template"></textarea>
             </div>
         </div>
     </MatDialog>
@@ -425,7 +445,7 @@
                 <div class="card rounded shadow mycard @OfferThree" @onclick="() => MovePhase(35)"><b>Reviewed</b></div>
             </div>
             <div class="screening-dialog-textarea">
-                <textarea style="width: 300px; height: 150px; padding: 5px;" placeholder="Email template"></textarea>
+                <textarea class="phase-manager-textarea" style="width: 300px; height: 150px; padding: 5px;" placeholder="Email template"></textarea>
             </div>
         </div>
     </MatDialog>
@@ -440,26 +460,27 @@
                 <div class="card rounded shadow mycard @NotHired" @onclick="Deny"><b>Not Hired</b></div>
             </div>
             <div class="screening-dialog-textarea">
-                <textarea style="width: 300px; height: 150px; padding: 5px;" placeholder="Email template"></textarea>
+                <textarea class="phase-manager-textarea" style="width: 300px; height: 150px; padding: 5px;" placeholder="Email template"></textarea>
             </div>
         </div>
     </MatDialog>
 
     <MatDialog @bind-IsOpen="@ReasonDialogIsOpen" Style="left: 30%;">
-        <div class="mydialog">
+        <div class="mydialog" style="height: 200px;">
             <div class="mydialog-title">
                 <b>Reasoning</b>
             </div>
             <div class="screening-dialog-body">
-                <select @bind="tempReasonId">
+                <select @bind="tempReasonId" class="form-select">
                     @foreach (var reason in Unsuccessful)
                     {
-                        <option value="@reason.Id">@reason.Reason</option>
+                        <option value="@reason.Id" selected>@reason.Reason</option>
                     }
                 </select>
-                <button class="btn" @onclick="Reject">Submit</button>
             </div>
-
+            <div class="d-flex justify-content-center align-items-center">
+                <button class="btn" style="background-color: white; border: 1px solid black" @onclick="Reject">Submit</button>
+            </div>
         </div>
     </MatDialog>
 
@@ -469,22 +490,18 @@
 
 @code {
 
-    //[Parameter] public int CurrentJobId { get; set;}
     int CurrentJobId;
 
     public ApplicationPhaseItem CurrentItem;
 
     public string searchTerm = "";
     public int tempReasonId = -1;
+    public Job CurrentJob = new Job();
+    public string CurrentJobTitle = "";
 
-    //can only move phases forward
-    public int[] AllowedPhases = new int[] { 1 };
-    public int[] AllowedPhasesScreening = new int[] { 1, 3, 5, 25, 10 };
-    public int[] AllowedPhasesAssessment = new int[] { 1, 3, 5, 25, 27, 10 };
-    public int[] AllowedPhasesInterview = new int[] { 1, 3, 5, 25, 26, 27, 28, 29, 30, 31, 10, 11 };
-    public int[] AllowedPhasesReference = new int[] { 1, 3, 5, 25, 26, 27, 28, 29, 30, 31, 32, 10, 11 };
-    public int[] AllowedPhasesOffer = new int[] { 1, 3, 5, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 10, 11, 12 };
     public int[] AllowedPhasesFinal = new int[] { 1, 3, 5, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 10, 11, 12, 13 };
+
+    List<int> TotalPhases = new List<int>(){ 1, 13 };
 
 
     List<ApplicationPhase> AppPhases = new List<ApplicationPhase>();
@@ -493,10 +510,18 @@
     List<AppUser> tempAppUsers = new List<AppUser>();
     List<UnsuccessfulReason> Unsuccessful = new List<UnsuccessfulReason>();
     List<RejectedCandidate> RejectedUsers = new List<RejectedCandidate>();
+    List<JobApplicationPhase> JobPhases = new List<JobApplicationPhase>();
 
     //list for draggable items
     List<ApplicationPhaseItem> Items = new List<ApplicationPhaseItem>();
     List<ApplicationPhaseItem> FilteredItems => Items.Where(item => item.Name.ToLower().Contains(searchTerm.ToLower()) || item.Surname.ToLower().Contains(searchTerm.ToLower())).ToList();
+
+    //phase titles
+    string ScreeningActive = "disabled-phase";
+    string AssessmentActive = "disabled-phase";
+    string InterviewActive = "disabled-phase";
+    string ReferenceActive = "disabled-phase";
+    string OfferActive = "disabled-phase";
 
 
     //dialogs
@@ -540,8 +565,11 @@
         CurrentJobId = hrJobState.JobId;
 
         Console.WriteLine(hrJobState.JobId);
-        
+
         //CurrentJobId = 1;
+
+        CurrentJob = await httpClient.GetFromJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/job/{CurrentJobId}");
+        CurrentJobTitle = CurrentJob.Title;
 
         CurrentApplications = await httpClient.GetFromJsonAsync<List<Application>>($"https://xebecapi.azurewebsites.net/api/application/job/{CurrentJobId}");
         tempAppUsers = await httpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
@@ -549,6 +577,40 @@
         AppPhases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
         Unsuccessful = await httpClient.GetFromJsonAsync<List<UnsuccessfulReason>>("https://xebecapi.azurewebsites.net/api/unsuccessfulreason");
         RejectedUsers = await httpClient.GetFromJsonAsync<List<RejectedCandidate>>("https://xebecapi.azurewebsites.net/api/rejectedcandidate");
+        JobPhases = await httpClient.GetFromJsonAsync<List<JobApplicationPhase>>($"https://xebecapi.azurewebsites.net/api/jobapplicationphase/job/{CurrentJobId}");
+
+        foreach(var phase in JobPhases)
+        {
+            TotalPhases.Add(phase.ApplicationPhaseId);
+        }
+
+        if(JobPhases.Exists((x) => x.ApplicationPhaseId is 3 or 5 or 25))
+        {
+            ScreeningActive = "active-phase";
+            TotalPhases.Add(10);
+        }
+        if (JobPhases.Exists((x) => x.ApplicationPhaseId == 27))
+        {
+            AssessmentActive = "active-phase";
+        }
+        if (JobPhases.Exists((x) => x.ApplicationPhaseId is 26 or 28 or 29 or 30 or 31))
+        {
+            InterviewActive = "active-phase";
+            TotalPhases.Add(11);
+        }
+        if (JobPhases.Exists((x) => x.ApplicationPhaseId == 32))
+        {
+            ReferenceActive = "active-phase";
+        }
+        if (JobPhases.Exists((x) => x.ApplicationPhaseId is 33 or 34 or 35))
+        {
+            OfferActive = "active-phase";
+            TotalPhases.Add(12);
+        }
+
+        TotalPhases.Add(1);
+        TotalPhases.Add(13);
+        TotalPhases.Add(36);
 
         foreach (var application in CurrentApplications)
         {
@@ -568,75 +630,35 @@
     {
         if (applicationPhase == CurrentItem.ApplicationPhaseId) return;
 
-        if (CurrentItem.ApplicationPhaseId == 1)
+        AppliedDropClass = "can-drop";
+        SuccessDropClass = "can-drop";
+
+        ScreeningDropClass = "no-drop";
+        AssessmentDropClass = "no-drop";
+        InterviewDropClass = "no-drop";
+        ReferenceDropClass = "no-drop";
+        OfferDropClass = "no-drop";
+
+
+        if (TotalPhases.Contains(3) || TotalPhases.Contains(5) || TotalPhases.Contains(25))
         {
-            AppliedDropClass = "can-drop";
             ScreeningDropClass = "can-drop";
+        }
+        if (TotalPhases.Contains(27))
+        {
             AssessmentDropClass = "can-drop";
+        }
+        if (TotalPhases.Contains(26) || TotalPhases.Contains(28) || TotalPhases.Contains(29) || TotalPhases.Contains(30) || TotalPhases.Contains(31))
+        {
             InterviewDropClass = "can-drop";
+        }
+        if (TotalPhases.Contains(32))
+        {
             ReferenceDropClass = "can-drop";
-            OfferDropClass = "can-drop";
-            SuccessDropClass = "can-drop";
         }
-        else if (CurrentItem.ApplicationPhaseId is 3 or 5 or 25 or 10)
+        if (TotalPhases.Contains(33) || TotalPhases.Contains(34) || TotalPhases.Contains(35))
         {
-            AppliedDropClass = "no-drop";
-            ScreeningDropClass = "can-drop";
-            AssessmentDropClass = "can-drop";
-            InterviewDropClass = "can-drop";
-            ReferenceDropClass = "can-drop";
             OfferDropClass = "can-drop";
-            SuccessDropClass = "can-drop";
-        }
-        else if (CurrentItem.ApplicationPhaseId == 27)
-        {
-            AppliedDropClass = "no-drop";
-            ScreeningDropClass = "no-drop";
-            AssessmentDropClass = "can-drop";
-            InterviewDropClass = "can-drop";
-            ReferenceDropClass = "can-drop";
-            OfferDropClass = "can-drop";
-            SuccessDropClass = "can-drop";
-        }
-        else if (CurrentItem.ApplicationPhaseId is 26 or 28 or 29 or 30 or 31 or 11)
-        {
-            AppliedDropClass = "no-drop";
-            ScreeningDropClass = "no-drop";
-            AssessmentDropClass = "no-drop";
-            InterviewDropClass = "can-drop";
-            ReferenceDropClass = "can-drop";
-            OfferDropClass = "can-drop";
-            SuccessDropClass = "can-drop";
-        }
-        else if (CurrentItem.ApplicationPhaseId == 32)
-        {
-            AppliedDropClass = "no-drop";
-            ScreeningDropClass = "no-drop";
-            AssessmentDropClass = "no-drop";
-            InterviewDropClass = "no-drop";
-            ReferenceDropClass = "can-drop";
-            OfferDropClass = "can-drop";
-            SuccessDropClass = "can-drop";
-        }
-        else if (CurrentItem.ApplicationPhaseId is 33 or 34 or 35 or 12)
-        {
-            AppliedDropClass = "no-drop";
-            ScreeningDropClass = "no-drop";
-            AssessmentDropClass = "no-drop";
-            InterviewDropClass = "no-drop";
-            ReferenceDropClass = "no-drop";
-            OfferDropClass = "can-drop";
-            SuccessDropClass = "can-drop";
-        }
-        else if (CurrentItem.ApplicationPhaseId is 36 or 13)
-        {
-            AppliedDropClass = "no-drop";
-            ScreeningDropClass = "no-drop";
-            AssessmentDropClass = "no-drop";
-            InterviewDropClass = "no-drop";
-            ReferenceDropClass = "no-drop";
-            OfferDropClass = "no-drop";
-            SuccessDropClass = "can-drop";
         }
     }
 
@@ -661,35 +683,27 @@
         OfferDropClass = "";
         SuccessDropClass = "";
 
-        if (phase == 1)
+        if (!TotalPhases.Contains(phase)) return;
+
+
+        if (phase == CurrentItem.ApplicationPhaseId) return;
+
+        if (phase == 10)
         {
-            if (CurrentItem.ApplicationPhaseId == 1 || AllowedPhases != null && !AllowedPhases.Contains(CurrentItem.ApplicationPhaseId)) return;
+            if (CurrentItem.ApplicationPhaseId is 3 or 5 or 25 or 10) return;
         }
-        if (phase == 3)
+        if (phase == 11)
         {
-            if (CurrentItem.ApplicationPhaseId is 3 or 5 or 25 or 10 || AllowedPhasesScreening != null && !AllowedPhasesScreening.Contains(CurrentItem.ApplicationPhaseId)) return;
+            if (CurrentItem.ApplicationPhaseId is 26 or 28 or 29 or 30 or 31 or 11) return;
         }
-        if (phase == 26)
+        if (phase == 12)
         {
-            if (CurrentItem.ApplicationPhaseId is 26 or 28 or 29 or 30 or 31 or 11 || AllowedPhasesInterview != null && !AllowedPhasesInterview.Contains(CurrentItem.ApplicationPhaseId)) return;
-        }
-        if (phase == 27)
-        {
-            if (CurrentItem.ApplicationPhaseId == 27 || AllowedPhasesAssessment != null && !AllowedPhasesAssessment.Contains(CurrentItem.ApplicationPhaseId)) return;
-        }
-        if (phase == 32)
-        {
-            if (CurrentItem.ApplicationPhaseId == 32 || AllowedPhasesReference != null && !AllowedPhasesReference.Contains(CurrentItem.ApplicationPhaseId)) return;
-        }
-        if (phase == 33)
-        {
-            if (CurrentItem.ApplicationPhaseId is 33 or 34 or 35 or 12 || AllowedPhasesOffer != null && !AllowedPhasesOffer.Contains(CurrentItem.ApplicationPhaseId)) return;
+            if (CurrentItem.ApplicationPhaseId is 33 or 34 or 35 or 12) return;
         }
         if (phase is 36 or 13)
         {
-            if (CurrentItem.ApplicationPhaseId == 36 || AllowedPhasesFinal != null && !AllowedPhasesFinal.Contains(CurrentItem.ApplicationPhaseId)) return;
+            if (CurrentItem.ApplicationPhaseId is 36 or 13) return;
         }
-
 
         await UpdateJobAsync(phase);
 
@@ -702,9 +716,9 @@
 
     public async Task UpdateJobAsync(int phase)
     {
-        var task = Items.SingleOrDefault(x => x.Id == CurrentItem.Id);
+        CurrentItem.ApplicationPhaseId = phase;
 
-        task.ApplicationPhaseId = phase;
+        var task = Items.SingleOrDefault(x => x.Id == CurrentItem.Id);
 
         if (phase is 10 or 11 or 12 or 13 && task != null)
         {
@@ -753,6 +767,7 @@
         Hired = "";
         NotHired = "";
 
+
         if (item.ApplicationPhaseId is 3 or 5 or 25 or 10)
         {
             ScreeningDialogIsOpen = true;
@@ -763,14 +778,24 @@
             }
             else if (item.ApplicationPhaseId == 5)
             {
-                ScreeningOne = "currentphase";
                 ScreeningTwo = "currentphase";
             }
             else if (item.ApplicationPhaseId == 25)
             {
-                ScreeningOne = "currentphase";
-                ScreeningTwo = "currentphase";
                 ScreeningThree = "currentphase";
+            }
+
+            if (!TotalPhases.Contains(3))
+            {
+                ScreeningOne = "disabled-card";
+            }
+            if (!TotalPhases.Contains(5))
+            {
+                ScreeningTwo = "disabled-card";
+            }
+            if (!TotalPhases.Contains(25))
+            {
+                ScreeningThree = "disabled-card";
             }
         }
 
@@ -789,29 +814,39 @@
             }
             else if (item.ApplicationPhaseId == 28)
             {
-                InterviewOne = "currentphase";
                 InterviewTwo = "currentphase";
             }
             else if (item.ApplicationPhaseId == 29)
             {
-                InterviewOne = "currentphase";
-                InterviewTwo = "currentphase";
                 InterviewThree = "currentphase";
             }
             else if (item.ApplicationPhaseId == 30)
             {
-                InterviewOne = "currentphase";
-                InterviewTwo = "currentphase";
-                InterviewThree = "currentphase";
                 InterviewFour = "currentphase";
             }
             else if (item.ApplicationPhaseId == 31)
             {
-                InterviewOne = "currentphase";
-                InterviewTwo = "currentphase";
-                InterviewThree = "currentphase";
-                InterviewFour = "currentphase";
                 InterviewFive = "currentphase";
+            }
+            if (!TotalPhases.Contains(26))
+            {
+                InterviewOne = "disabled-card";
+            }
+            if (!TotalPhases.Contains(28))
+            {
+                InterviewTwo = "disabled-card";
+            }
+            if (!TotalPhases.Contains(29))
+            {
+                InterviewThree = "disabled-card";
+            }
+            if (!TotalPhases.Contains(39))
+            {
+                InterviewFour = "disabled-card";
+            }
+            if (!TotalPhases.Contains(31))
+            {
+                InterviewFive = "disabled-card";
             }
         }
 
@@ -830,14 +865,23 @@
             }
             else if (item.ApplicationPhaseId == 34)
             {
-                OfferOne = "currentphase";
                 OfferTwo = "currentphase";
             }
             else if (item.ApplicationPhaseId == 35)
             {
-                OfferOne = "currentphase";
-                OfferTwo = "currentphase";
                 OfferThree = "currentphase";
+            }
+            if (!TotalPhases.Contains(33))
+            {
+                OfferOne = "disabled-card";
+            }
+            if (!TotalPhases.Contains(34))
+            {
+                OfferTwo = "disabled-card";
+            }
+            if (!TotalPhases.Contains(35))
+            {
+                OfferThree = "disabled-card";
             }
         }
 
@@ -862,6 +906,8 @@
 
     public async Task MovePhase(int i)
     {
+        if (!TotalPhases.Contains(i)) return;
+
         var task = Items.SingleOrDefault(x => x.Id == CurrentItem.Id);
 
         CurrentItem.ApplicationPhaseId = i;
@@ -883,7 +929,6 @@
 
         await httpClient.PostAsJsonAsync<ApplicationPhasesHelper>("https://xebecapi.azurewebsites.net/api/applicationphasehelper", tempHelper);
 
-
         ScreeningOne = "";
         ScreeningTwo = "";
         ScreeningThree = "";
@@ -901,19 +946,62 @@
         Hired = "";
         NotHired = "";
 
+        if (!TotalPhases.Contains(3))
+        {
+            ScreeningOne = "disabled-card";
+        }
+        if (!TotalPhases.Contains(5))
+        {
+            ScreeningTwo = "disabled-card";
+        }
+        if (!TotalPhases.Contains(25))
+        {
+            ScreeningThree = "disabled-card";
+        }
+        if (!TotalPhases.Contains(26))
+        {
+            InterviewOne = "disabled-card";
+        }
+        if (!TotalPhases.Contains(28))
+        {
+            InterviewTwo = "disabled-card";
+        }
+        if (!TotalPhases.Contains(29))
+        {
+            InterviewThree = "disabled-card";
+        }
+        if (!TotalPhases.Contains(39))
+        {
+            InterviewFour = "disabled-card";
+        }
+        if (!TotalPhases.Contains(31))
+        {
+            InterviewFive = "disabled-card";
+        }
+        if (!TotalPhases.Contains(33))
+        {
+            OfferOne = "disabled-card";
+        }
+        if (!TotalPhases.Contains(34))
+        {
+            OfferTwo = "disabled-card";
+        }
+        if (!TotalPhases.Contains(35))
+        {
+            OfferThree = "disabled-card";
+        }
+
+
         if (i == 3)
         {
             ScreeningOne = "currentphase";
         }
         else if (i == 5)
         {
-            ScreeningOne = "currentphase";
             ScreeningTwo = "currentphase";
         }
         else if (i == 25)
         {
-            ScreeningOne = "currentphase";
-            ScreeningTwo = "currentphase";
             ScreeningThree = "currentphase";
         }
         else if (i == 26)
@@ -922,28 +1010,18 @@
         }
         else if (i == 28)
         {
-            InterviewOne = "currentphase";
             InterviewTwo = "currentphase";
         }
         else if (i == 29)
         {
-            InterviewOne = "currentphase";
-            InterviewTwo = "currentphase";
             InterviewThree = "currentphase";
         }
         else if (i == 30)
         {
-            InterviewOne = "currentphase";
-            InterviewTwo = "currentphase";
-            InterviewThree = "currentphase";
             InterviewFour = "currentphase";
         }
         else if (i == 31)
         {
-            InterviewOne = "currentphase";
-            InterviewTwo = "currentphase";
-            InterviewThree = "currentphase";
-            InterviewFour = "currentphase";
             InterviewFive = "currentphase";
         }
         else if (i == 33)
@@ -952,13 +1030,10 @@
         }
         else if (i == 34)
         {
-            OfferOne = "currentphase";
             OfferTwo = "currentphase";
         }
         else if (i == 35)
         {
-            OfferOne = "currentphase";
-            OfferTwo = "currentphase";
             OfferThree = "currentphase";
         }
         else if (i == 36)
@@ -992,8 +1067,11 @@
             temp.UnsuccessfulReasonId = tempReasonId;
 
             await httpClient.PostAsJsonAsync<RejectedCandidate>("https://xebecapi.azurewebsites.net/api/rejectedcandidate", temp);
+            RejectedUsers = await httpClient.GetFromJsonAsync<List<RejectedCandidate>>("https://xebecapi.azurewebsites.net/api/rejectedcandidate");
 
             MovePhase(36);
         }
+
+        ReasonDialogIsOpen = false;
     }
 }
