@@ -57,7 +57,6 @@
         border-radius: 20px !important;
         min-height: 9vh;
         color: #00bcae;
-        !important;
         font-family: opensans-condensed-bold;
         font-weight: 900;
         font-size: 1em;
@@ -261,6 +260,7 @@
     .collaborators-left-main {
         padding: 10px;
     }
+    
 </style>
 
 <div class="appform-container">
@@ -287,8 +287,8 @@
                                 if (question.answerTypeId == 7)
                                 {
                                     <tr class="@QuestionCardClass(question)">
-                                        <td class="collaborators-left-td" @onclick="() => AddToForm(question)">@question.questionDescription</td>
-                                        <td class="collaborators-left-td">
+                                        <td @onclick="() => AddToForm(question)">@question.questionDescription</td>
+                                        <td>
                                             <div><input type="text" @bind="tempString"/></div>
                                         </td>
                                     </tr>
@@ -297,7 +297,7 @@
                                 {
 
                                     <tr class="@QuestionCardClass(question)" @onclick="() => AddToForm(question)">
-                                        <td class="collaborators-left-td">@question.questionDescription</td>
+                                        <td>@question.questionDescription</td>
                                     </tr>
                                 }
                             }

@@ -25,7 +25,6 @@ namespace XebecPortal.UI.Pages.Applicant
         private Job displayJobDetail = new Job();
         private IPagedList<Job> jobPagedList = new List<Job>().ToPagedList();
         private IList<Application> applicationList = new List<Application>();
-        private bool JobPortalIsHidden, ApplicationFormIsHidden;
         private List<JobType> JobTypes;
         private List<Status> status;
         List<FormQuestion> QuestionList = new List<FormQuestion>();
@@ -49,8 +48,8 @@ namespace XebecPortal.UI.Pages.Applicant
             jobPagedList = jobListFilter.ToPagedList(1, 17);
             displayJobDetail = jobListFilter.FirstOrDefault();
             DisplayJobDetail(displayJobDetail.Id);
-            JobPortalIsHidden = false;
-            ApplicationFormIsHidden = true;
+            jobPortalIsHidden = false;
+            applicationFormIsHidden = true;
             JobTypes = await httpClient.GetFromJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
         }
 
@@ -68,8 +67,8 @@ namespace XebecPortal.UI.Pages.Applicant
             jobList = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
             applicationList = await httpClient.GetFromJsonAsync<List<Application>>("https://xebecapi.azurewebsites.net/api/Application");
 
-            JobPortalIsHidden = true;
-            ApplicationFormIsHidden = false;
+            jobPortalIsHidden = true;
+            applicationFormIsHidden = false;
 
             IsApplyHidden = true;
             Types = await httpClient.GetFromJsonAsync<List<QuestionType>>("https://xebecapi.azurewebsites.net/api/answertype");
@@ -142,6 +141,12 @@ namespace XebecPortal.UI.Pages.Applicant
         {
             applicationFormIsHidden = false;
             jobPortalIsHidden = true;
+        }
+
+        private void ToJobPortal()
+        {
+            applicationFormIsHidden = true;
+            jobPortalIsHidden = false;
         }
 
         private string GetStyling(Job item)
