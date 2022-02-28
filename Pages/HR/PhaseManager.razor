@@ -1,4 +1,6 @@
-﻿@inject HttpClient httpClient
+﻿@inject HrJobState hrJobState
+@inject HttpClient httpClient
+
 
 <style>
     .phase-manager-container {
@@ -123,6 +125,7 @@
         justify-content: center;
         align-items: center;
     }
+
     .edit-icon {
         color: #00BCAE;
         font-size: 1em;
@@ -136,7 +139,7 @@
 
 
 <div class="page-top-select-job">
-    <input class="form-control" style="max-width: 20%" type="text" placeholder="Search Applicants" @bind-value="searchTerm" @bind-value:event="oninput"/>
+    <input class="form-control" style="max-width: 20%" type="text" placeholder="Search Applicants" @bind-value="searchTerm" @bind-value:event="oninput" />
 </div>
 <div class="phase-manager-container">
 
@@ -183,7 +186,8 @@
                         @if (item.ApplicationPhaseId is 3 or 5 or 25 or 10)
                         {
                             <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
-                                <p class="description">@item.Name @item.Surname 
+                                <p class="description">
+                                    @item.Name @item.Surname
                                     <span @onclick='() => ShowDialog(item)'>
                                         <i class="fas fa-edit edit-icon"></i>
                                     </span>
@@ -211,14 +215,14 @@
                     {
                         @if (item.ApplicationPhaseId == 27)
                         {
-                    <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
-                        <p class="description">
-                            @item.Name @item.Surname
-                            <span @onclick='() => ShowDialog(item)'>
-                                <i class="fas fa-edit edit-icon"></i>
-                            </span>
-                        </p>
-                    </li>
+                            <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
+                                <p class="description">
+                                    @item.Name @item.Surname
+                                    <span @onclick='() => ShowDialog(item)'>
+                                        <i class="fas fa-edit edit-icon"></i>
+                                    </span>
+                                </p>
+                            </li>
                         }
                     }
 
@@ -241,14 +245,14 @@
                     {
                         @if (item.ApplicationPhaseId is 26 or 28 or 29 or 30 or 31 or 11)
                         {
-                    <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
-                        <p class="description">
-                            @item.Name @item.Surname
-                            <span @onclick='() => ShowDialog(item)'>
-                                <i class="fas fa-edit edit-icon"></i>
-                            </span>
-                        </p>
-                    </li>
+                            <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
+                                <p class="description">
+                                    @item.Name @item.Surname
+                                    <span @onclick='() => ShowDialog(item)'>
+                                        <i class="fas fa-edit edit-icon"></i>
+                                    </span>
+                                </p>
+                            </li>
                         }
                     }
 
@@ -271,14 +275,14 @@
                     {
                         @if (item.ApplicationPhaseId == 32)
                         {
-                    <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
-                        <p class="description">
-                            @item.Name @item.Surname
-                            <span @onclick='() => ShowDialog(item)'>
-                                <i class="fas fa-edit edit-icon"></i>
-                            </span>
-                        </p>
-                    </li>
+                            <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
+                                <p class="description">
+                                    @item.Name @item.Surname
+                                    <span @onclick='() => ShowDialog(item)'>
+                                        <i class="fas fa-edit edit-icon"></i>
+                                    </span>
+                                </p>
+                            </li>
                         }
                     }
 
@@ -301,14 +305,14 @@
                     {
                         @if (item.ApplicationPhaseId is 33 or 34 or 35 or 12)
                         {
-                    <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
-                        <p class="description">
-                            @item.Name @item.Surname
-                            <span @onclick='() => ShowDialog(item)'>
-                                <i class="fas fa-edit edit-icon"></i>
-                            </span>
-                        </p>
-                    </li>
+                            <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
+                                <p class="description">
+                                    @item.Name @item.Surname
+                                    <span @onclick='() => ShowDialog(item)'>
+                                        <i class="fas fa-edit edit-icon"></i>
+                                    </span>
+                                </p>
+                            </li>
                         }
                     }
 
@@ -331,14 +335,14 @@
                     {
                         @if (item.ApplicationPhaseId is 36 or 13)
                         {
-                    <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
-                        <p class="description">
-                            @item.Name @item.Surname
-                            <span @onclick='() => ShowDialog(item)'>
-                                <i class="fas fa-edit edit-icon"></i>
-                            </span>
-                        </p>
-                    </li>
+                            <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
+                                <p class="description">
+                                    @item.Name @item.Surname
+                                    <span @onclick='() => ShowDialog(item)'>
+                                        <i class="fas fa-edit edit-icon"></i>
+                                    </span>
+                                </p>
+                            </li>
                         }
                     }
 
@@ -417,8 +421,8 @@
             </div>
             <div class="screening-dialog-body">
                 <div class="card rounded shadow mycard @OfferOne" @onclick="() => MovePhase(33)"><b>Send Offer</b></div>
-                <div class="card rounded shadow mycard @OfferTwo"  @onclick="() => MovePhase(34)"><b>Unsuccessful</b></div>
-                <div class="card rounded shadow mycard @OfferThree"  @onclick="() => MovePhase(35)"><b>Reviewed</b></div>
+                <div class="card rounded shadow mycard @OfferTwo" @onclick="() => MovePhase(34)"><b>Unsuccessful</b></div>
+                <div class="card rounded shadow mycard @OfferThree" @onclick="() => MovePhase(35)"><b>Reviewed</b></div>
             </div>
             <div class="screening-dialog-textarea">
                 <textarea style="width: 300px; height: 150px; padding: 5px;" placeholder="Email template"></textarea>
@@ -448,7 +452,7 @@
             </div>
             <div class="screening-dialog-body">
                 <select @bind="tempReasonId">
-                    @foreach(var reason in Unsuccessful)
+                    @foreach (var reason in Unsuccessful)
                     {
                         <option value="@reason.Id">@reason.Reason</option>
                     }
@@ -533,7 +537,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        CurrentJobId = 1;
+        CurrentJobId = hrJobState.JobId;
+
+        Console.WriteLine(hrJobState.JobId);
+        
+        //CurrentJobId = 1;
 
         CurrentApplications = await httpClient.GetFromJsonAsync<List<Application>>($"https://xebecapi.azurewebsites.net/api/application/job/{CurrentJobId}");
         tempAppUsers = await httpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
@@ -560,7 +568,7 @@
     {
         if (applicationPhase == CurrentItem.ApplicationPhaseId) return;
 
-        if(CurrentItem.ApplicationPhaseId == 1)
+        if (CurrentItem.ApplicationPhaseId == 1)
         {
             AppliedDropClass = "can-drop";
             ScreeningDropClass = "can-drop";
@@ -837,9 +845,9 @@
         {
             HiredDialogIsOpen = true;
 
-            if(item.ApplicationPhaseId == 36)
+            if (item.ApplicationPhaseId == 36)
             {
-                if(RejectedUsers.Exists(x => x.ApplicationId == CurrentItem.ApplicationId))
+                if (RejectedUsers.Exists(x => x.ApplicationId == CurrentItem.ApplicationId))
                 {
                     NotHired = "currentphase";
                 }
@@ -858,7 +866,7 @@
 
         CurrentItem.ApplicationPhaseId = i;
 
-        if(task != null)
+        if (task != null)
         {
             Application temp = new Application();
 
@@ -897,7 +905,7 @@
         {
             ScreeningOne = "currentphase";
         }
-        else if(i == 5)
+        else if (i == 5)
         {
             ScreeningOne = "currentphase";
             ScreeningTwo = "currentphase";
@@ -908,7 +916,7 @@
             ScreeningTwo = "currentphase";
             ScreeningThree = "currentphase";
         }
-        else if(i == 26)
+        else if (i == 26)
         {
             InterviewOne = "currentphase";
         }

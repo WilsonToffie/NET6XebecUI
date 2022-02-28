@@ -777,6 +777,9 @@
 
         jobId = hrJobState.JobId;
 
+        Console.WriteLine(hrJobState.JobId);
+        Console.WriteLine(hrJobState.JobId);
+
         jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
         candidates = await httpClient.GetFromJsonAsync<List<CandidateRecommender>>("https://xebecapi.azurewebsites.net/api/candidaterecommender");
         personalInformations = await httpClient.GetFromJsonAsync<List<PersonalInformation>>("https://xebecapi.azurewebsites.net/api/PersonalInformation");
