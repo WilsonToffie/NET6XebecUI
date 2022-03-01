@@ -24,14 +24,13 @@ namespace XebecPortal.UI.Pages.HR
         private IList<JobPlatform> jobPlatforms = new List<JobPlatform>();
         private JobType tempJobType = new JobType();
         private List<JobPlatform> ListOfPlatforms = new List<JobPlatform>();
-        private bool isChecked = false;
-
 
         protected override async Task OnInitializedAsync()
         {
             jobPlatforms = await HttpClient.GetFromJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform");
             jobTypes = await HttpClient.GetFromJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/jobtype");
             collaborators = await HttpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
+            TempJob.DueDate = TempJob.CreationDate = DateTime.Today;
         }
 
 

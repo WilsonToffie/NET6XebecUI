@@ -83,10 +83,7 @@
             margin-bottom: 5px;
             background-color: black;
         }
-    
-    .collaborators-left-td{
-        padding-left: 10px;
-    }
+   
     .appform-container {
             height: 55vh;
             width: 70%;
@@ -386,8 +383,7 @@
         </div>
         <div class="collaborators-left-main">
             @if (collaboratorsAdded != null && collaboratorsAdded.Count > 0)
-            {
-                
+            {          
                     <a href="mailto:@collaboratorsAdded[0].email?subject=Recruit Team Assignment&cc=@GetCC(collaboratorsAdded)&body=@GetBody(collaboratorsAdded)!" class="btn btn-info mb-3">Email Team|<i class="fas fa-paper-plane"></i></a>
             }
             <table class="collaborators-left-table">
@@ -406,6 +402,7 @@
                                     <p type="email" class="form-control" style="width: 100%">
                                         <a href="mailto:@(developer.email)?subject=Recruit Team Assignment&body=@GetBody(developer)!">@developer.email</a>
                                     </p>
+                                    
                                 </div>
                             </td>
                         </tr>

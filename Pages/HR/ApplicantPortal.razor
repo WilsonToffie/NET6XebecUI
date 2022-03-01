@@ -770,12 +770,16 @@
     private IList<WorkHistory> workHistories { get; set; }
     private IList<Education> educations { get; set; }
     private IList<ProfilePortfolioLink> profilePortfolio { get; set; }
-    private int jobId;
+    [Parameter] public int JobId { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
 
-        jobId = hrJobState.JobId;
+        //JobId = hrJobState.JobId;
+
+        Console.WriteLine(hrJobState.JobId);
+        Console.WriteLine(hrJobState.JobId);
 
         jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
         candidates = await httpClient.GetFromJsonAsync<List<CandidateRecommender>>("https://xebecapi.azurewebsites.net/api/candidaterecommender");
@@ -809,6 +813,7 @@
 
     private void FilterCandidatesByJob(IList<CandidateRecommender> candidates_)
     {
+        Console.WriteLine(JobId);
         candidates = candidates_.Where(o => o.jobId == hrJobState.JobId).ToList();
     }
 
