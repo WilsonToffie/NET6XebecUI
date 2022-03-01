@@ -1,4 +1,6 @@
-﻿export function PersonalInformation() {
+﻿
+/*
+export function PersonalInformation() {
 
     var myform = $("#personal-information-form")[0];
     var proceed = false;
@@ -20,7 +22,8 @@
 
     return proceed;
 }
-
+*/
+/*
 export function WorkHistory() {
 
     var myform = $("#work-history-form")[0];
@@ -39,7 +42,8 @@ export function WorkHistory() {
 
     return proceed;
 }
-
+*/
+/*
 export function Education() {
 
     var myform = $("#education-form")[0];
@@ -58,3 +62,4 @@ export function Education() {
 
     return proceed;
 }
+*/
