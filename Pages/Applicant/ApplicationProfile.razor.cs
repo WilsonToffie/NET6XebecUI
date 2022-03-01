@@ -12,11 +12,18 @@ using Azure.Storage.Blobs.Models;
 using Azure.Storage;
 using Azure;
 using System.Net.Http;
+using System.Text;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using XebecPortal.UI.Pages.Model;
 
 namespace XebecPortal.UI.Pages.Applicant
 {
     public partial class ApplicationProfile
     {
+        private StringBuilder status = new StringBuilder("waiting");
+        private ResumeResultModel resumeResultModel = new ResumeResultModel();
+        
         private int increment = 1;
         private bool workHistUpdate;
         private bool eduUpdate;
@@ -222,17 +229,30 @@ namespace XebecPortal.UI.Pages.Applicant
             }
         }
 
+        private static int num = 1;
         async Task OnInputFileChangedAsync(InputFileChangeEventArgs e)
         {
             fileNames = e.File;
+            progressBar = 0.ToString("0");
+            status = new StringBuilder($"Uploading file {num++}");
+            
+            
+            //Upload to blob - start
+            status = new StringBuilder($"current file {fileNames.Name}");
 
+            status.AppendLine("\n");
+            
             var blobUri = new Uri("https://"
                                   + "amafilewam" +
                                   ".blob.core.windows.net/" +
                                   "upload" + "/" + fileNames.Name);
             AzureSasCredential credential = new AzureSasCredential(
-                "sp=racwdli&st=2022-02-22T14:05:44Z&se=2022-02-27T22:05:44Z&sv=2020-08-04&sr=c&sig=D2E7KI550agfvYwMgRRzBlxfwqBAFV5WEe5WRbKnRTo%3D");
+                "sp=racwdli&st=2022-02-28T08:30:27Z&se=2022-03-11T16:30:27Z&sv=2020-08-04&sr=c&sig=TE%2B2VCz%2B6KKFbYHIkQwxGPOYWVUtht3xBPYZ8bE3kH4%3D");
             BlobClient blobClient = new BlobClient(blobUri, credential, new BlobClientOptions());
+            status.AppendLine("Created blob client");
+            
+            status.AppendLine("\n");
+            status.AppendLine("Sending to blob");
             //displayProgress = true;
             var res = await blobClient.UploadAsync(fileNames.OpenReadStream(maxAllowedSize), new BlobUploadOptions
             {
@@ -248,11 +268,43 @@ namespace XebecPortal.UI.Pages.Applicant
                 })
             });
 
-            if (Convert.ToInt32(progressBar) == 100)
+             if (Convert.ToInt32(progressBar) == 100)
             {
-                var content = new StringContent($"\"{blobUri.ToString()}\"");
-                var response = await httpClient.GetAsync("https://xebecapi.azurewebsites.net/api/ResumeParser");
-                //var resp = await httpClient.PostAsync("https://xebecapi.azurewebsites.net/api/ResumeParser", content);
+                //var content = new StringContent($"\"{blobUri.ToString()}\"",  Encoding.UTF8, "applicationModel/json");
+                
+                var content = new FormUrlEncodedContent(new[]
+                                {
+                                    new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
+                                });
+                // var urlJson =
+                //     new StringContent(JsonSerializer.Serialize("content"""), Encoding.UTF8, "applicationModel/json");
+                
+                //var response = await httpClient.GetAsync("https://xebecapi.azurewebsites.net/api/ResumeParser");
+                
+                
+                var resp =  await httpClient.PostAsync("http://localhost:5002/api/ResumeParser/", content);
+                //status = new StringBuilder(resp.StatusCode.ToString());
+                var respContent = await resp.Content.ReadAsStringAsync();
+
+                resumeResultModel = JsonConvert.DeserializeObject<ResumeResultModel>(respContent);
+                
+                Console.WriteLine($"Content {respContent}");
+                Console.WriteLine($"Result model {resumeResultModel}");
+                //resumeResultModel =  System.Text.Json.JsonSerializer.Deserialize<ResumeResultModel>(respContent);
+
+                
+                    personalInformation.FirstName = resumeResultModel.Name;
+                    personalInformation.Email = resumeResultModel.EmailAddress;
+
+                    education.Insitution = resumeResultModel.CollegeName;
+                    education.Qualification = resumeResultModel.CollegeName;
+
+                    workHistory.CompanyName = resumeResultModel.CompaniesWorkedAt;
+                    workHistory.JobTitle = resumeResultModel.Designation;
+                
+
+
+                //status = new StringBuilder(await resp.Content.ReadAsStringAsync());
             }
 
         }
