@@ -501,7 +501,7 @@
 
     public int[] AllowedPhasesFinal = new int[] { 1, 3, 5, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 10, 11, 12, 13 };
 
-    List<int> TotalPhases = new List<int>(){ 1, 13 };
+    List<int> TotalPhases = new List<int>() { 1, 13 };
 
 
     List<ApplicationPhase> AppPhases = new List<ApplicationPhase>();
@@ -511,6 +511,7 @@
     List<UnsuccessfulReason> Unsuccessful = new List<UnsuccessfulReason>();
     List<RejectedCandidate> RejectedUsers = new List<RejectedCandidate>();
     List<JobApplicationPhase> JobPhases = new List<JobApplicationPhase>();
+    List<Job> AllJobs = new List<Job>();
 
     //list for draggable items
     List<ApplicationPhaseItem> Items = new List<ApplicationPhaseItem>();
@@ -560,70 +561,75 @@
     string Hired = "";
     string NotHired = "";
 
+
+
+    //OnParametersSetAsync()
     protected override async Task OnInitializedAsync()
     {
-        CurrentJobId = 1;
-        Console.WriteLine(CurrentJobId);
 
 
+            CurrentJobId = 1;
+            CurrentJob = await httpClient.GetFromJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/job/{CurrentJobId}");
 
-        //CurrentJob = await httpClient.GetFromJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/job/{CurrentJobId}");
-        //Console.WriteLine(CurrentJob.Company);
-        //CurrentJobTitle = CurrentJob.Title;
+            CurrentJobTitle = CurrentJob.Title;
 
-        CurrentApplications = await httpClient.GetFromJsonAsync<List<Application>>($"https://xebecapi.azurewebsites.net/api/application/job/{CurrentJobId}");
-        tempAppUsers = await httpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
-        CurrentApplicantPhases = await httpClient.GetFromJsonAsync<List<ApplicationPhasesHelper>>("https://xebecapi.azurewebsites.net/api/applicationphasehelper");
-        AppPhases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
-        Unsuccessful = await httpClient.GetFromJsonAsync<List<UnsuccessfulReason>>("https://xebecapi.azurewebsites.net/api/unsuccessfulreason");
-        RejectedUsers = await httpClient.GetFromJsonAsync<List<RejectedCandidate>>("https://xebecapi.azurewebsites.net/api/rejectedcandidate");
-        JobPhases = await httpClient.GetFromJsonAsync<List<JobApplicationPhase>>($"https://xebecapi.azurewebsites.net/api/jobapplicationphase/job/{CurrentJobId}");
+            CurrentApplications = await httpClient.GetFromJsonAsync<List<Application>>($"https://xebecapi.azurewebsites.net/api/application/job/{CurrentJobId}");
+            JobPhases = await httpClient.GetFromJsonAsync<List<JobApplicationPhase>>($"https://xebecapi.azurewebsites.net/api/jobapplicationphase/job/{CurrentJobId}");
+            tempAppUsers = await httpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
+            CurrentApplicantPhases = await httpClient.GetFromJsonAsync<List<ApplicationPhasesHelper>>("https://xebecapi.azurewebsites.net/api/applicationphasehelper");
+            AppPhases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
+            Unsuccessful = await httpClient.GetFromJsonAsync<List<UnsuccessfulReason>>("https://xebecapi.azurewebsites.net/api/unsuccessfulreason");
+            RejectedUsers = await httpClient.GetFromJsonAsync<List<RejectedCandidate>>("https://xebecapi.azurewebsites.net/api/rejectedcandidate");
 
-        foreach(var phase in JobPhases)
-        {
-            TotalPhases.Add(phase.ApplicationPhaseId);
-        }
 
-        if(JobPhases.Exists((x) => x.ApplicationPhaseId is 3 or 5 or 25))
-        {
-            ScreeningActive = "active-phase";
-            TotalPhases.Add(10);
-        }
-        if (JobPhases.Exists((x) => x.ApplicationPhaseId == 27))
-        {
-            AssessmentActive = "active-phase";
-        }
-        if (JobPhases.Exists((x) => x.ApplicationPhaseId is 26 or 28 or 29 or 30 or 31))
-        {
-            InterviewActive = "active-phase";
-            TotalPhases.Add(11);
-        }
-        if (JobPhases.Exists((x) => x.ApplicationPhaseId == 32))
-        {
-            ReferenceActive = "active-phase";
-        }
-        if (JobPhases.Exists((x) => x.ApplicationPhaseId is 33 or 34 or 35))
-        {
-            OfferActive = "active-phase";
-            TotalPhases.Add(12);
-        }
+            foreach(var phase in JobPhases)
+            {
+                TotalPhases.Add(phase.ApplicationPhaseId);
+            }
 
-        TotalPhases.Add(1);
-        TotalPhases.Add(13);
-        TotalPhases.Add(36);
+            if(JobPhases.Exists((x) => x.ApplicationPhaseId is 3 or 5 or 25))
+            {
+                ScreeningActive = "active-phase";
+                TotalPhases.Add(10);
+            }
+            if (JobPhases.Exists((x) => x.ApplicationPhaseId == 27))
+            {
+                AssessmentActive = "active-phase";
+            }
+            if (JobPhases.Exists((x) => x.ApplicationPhaseId is 26 or 28 or 29 or 30 or 31))
+            {
+                InterviewActive = "active-phase";
+                TotalPhases.Add(11);
+            }
+            if (JobPhases.Exists((x) => x.ApplicationPhaseId == 32))
+            {
+                ReferenceActive = "active-phase";
+            }
+            if (JobPhases.Exists((x) => x.ApplicationPhaseId is 33 or 34 or 35))
+            {
+                OfferActive = "active-phase";
+                TotalPhases.Add(12);
+            }
 
-        foreach (var application in CurrentApplications)
-        {
-            ApplicationPhaseItem temp = new ApplicationPhaseItem();
-            temp.ApplicationId = application.Id;
-            temp.Name = tempAppUsers.First((x) => x.id == application.AppUserId).name;
-            temp.Surname = tempAppUsers.First((x) => x.id == application.AppUserId).surname;
+            TotalPhases.Add(1);
+            TotalPhases.Add(13);
+            TotalPhases.Add(36);
 
-            temp.ApplicationPhaseId = CurrentApplications.First((x) => x.Id == temp.ApplicationId).ApplicationPhaseId;
+            foreach (var application in CurrentApplications)
+            {
+                ApplicationPhaseItem temp = new ApplicationPhaseItem();
+                temp.ApplicationId = application.Id;
+                temp.Name = tempAppUsers.First((x) => x.id == application.AppUserId).name;
+                temp.Surname = tempAppUsers.First((x) => x.id == application.AppUserId).surname;
 
-            Items.Add(temp);
-        }
+                temp.ApplicationPhaseId = CurrentApplications.First((x) => x.Id == temp.ApplicationId).ApplicationPhaseId;
+
+                Items.Add(temp);
+            }
+
     }
+
+
 
 
     private void HandleDragEnter(int applicationPhase)
@@ -660,6 +666,7 @@
         {
             OfferDropClass = "can-drop";
         }
+
     }
 
     private void HandleDragLeave()
