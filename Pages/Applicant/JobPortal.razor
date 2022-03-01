@@ -220,21 +220,34 @@
     .pagination {
         box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
     }
+    .app-form-wrapper{
+        height: 75vh;
+    }
+    .application-form {
+        width: 100%;
+        background-color: transparent;
+    }
+    .application-form-title{
+        height: 5vh;
+        margin-top: 5vh;
+        margin-bottom: 5vh;
+    }
+    .job-portal-application-form {
+        height: 65vh;
+        background-color: transparent;
+    }
 </style>
 
 <div class="container" style="height: 55vh;" hidden="@jobPortalIsHidden">
-
     <!--Search-Box-->
     <div style="height: 15vh">
-        <div class="job-search-bar" style="background-color: red; height: 5vh; margin-bottom: 2.5vh; margin-top: 2.5vh">
-            <div class="input-group d-flex justify-content-center form-group">
-                <input class="job-search-bar-input" type="text" placeholder="Search for a jobs" @oninput="SearchListJob" />
-            </div>
+        <div class="hr-job-search-bar">
+            <input class="hr-job-search-bar-input" type="text" placeholder="Search" @oninput="SearchListJob" />
         </div>
-        <div class="row" style="height:5vh">
+        <div class="row hr-job-filters">
             <div class="col-3">
                 <!--Location-->
-                <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextLocation)" Label="Location" SelectedValuesChanged="SearchListLocation">
+                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextLocation)" Label="Location" SelectedValuesChanged="SearchListLocation">
                     @if (jobListFilter != null && jobListFilter.Count > 0)
                     {
                         @foreach (var item in jobList.Select(x => x.Location).OrderBy(x => x).Distinct())
@@ -247,7 +260,7 @@
             </div>
             <div class="col-3">
                 <!--Company-->
-                <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextCompany)" Label="Company" SelectedValuesChanged="SearchListCompany">
+                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextCompany)" Label="Company" SelectedValuesChanged="SearchListCompany">
                     @if (jobListFilter != null && jobListFilter.Count > 0)
                     {
                         @foreach (var item in jobListFilter.Select(x => x.Company).OrderBy(x => x).Distinct())
@@ -260,7 +273,7 @@
             </div>
             <div class="col-3">
                 <!--Department-->
-                <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
+                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
                     @if (jobListFilter != null && jobListFilter.Count > 0)
                     {
                         @foreach (var item in jobListFilter.Select(x => x.Department).OrderBy(x => x).Distinct())
@@ -273,7 +286,7 @@
             </div>
             <div class="col-3">
                 <!--Status-->
-                <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Status" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextStatus)" Label="Status" SelectedValuesChanged="SearchListStatus">
+                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Status" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextStatus)" Label="Status" SelectedValuesChanged="SearchListStatus">
                     @if (jobListFilter != null && jobListFilter.Count > 0)
                     {
                         @foreach (var item in status.Select(x => x.name))
@@ -393,12 +406,13 @@
         </div>
     }
 </div>
-<div class="app-form-wrapper" hidden="@applicationFormIsHidden">
-    <div class="application-form">
-        <div class="application-form-title">
-            <h4 class="collaborators-heading-text">Application Form</h4>
+<div class="row app-form-wrapper" hidden="@applicationFormIsHidden">
+    <div class="col-4"></div>
+    <div class="col-4 application-form">
+        <div class="application-form-title" >
+            <h4 class="collaborators-heading-text" >Application Form</h4>
         </div>
-        <div class="appform-left-main" style="height: 360px;">
+        <div class="job-portal-application-form">
             <table class="collaborators-left-table">
                 <tbody>
                     @if (ApplicantAnswers != null)
@@ -447,6 +461,8 @@
             <button class="btn appform-main-button" @onclick="SaveAnswers">Submit</button>
         </div>
     </div>
+    <div class="col-4"></div>
+
 </div>
 
 @{
