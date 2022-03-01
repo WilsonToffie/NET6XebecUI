@@ -90,6 +90,23 @@ namespace XebecPortal.UI.Pages.Applicant
             }
         }
 
+        private void addWorkHistoryTest(WorkHistory workHistoryValues) {
+
+            workHistoryList.Add(new()
+            {
+                Id = increment,
+                AppUserId = 1,
+                CompanyName = workHistoryValues.CompanyName,
+                JobTitle = workHistoryValues.JobTitle,
+                StartDate = workHistoryValues.StartDate,
+                EndDate = workHistoryValues.EndDate,
+                Description = workHistoryValues.Description
+            });
+
+            increment++;
+            workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
+        }
+
         private void DeleteWorkHistory(int id)
         {
             workHistoryList.RemoveAll(x => x.Id == id);
@@ -131,6 +148,22 @@ namespace XebecPortal.UI.Pages.Applicant
                 increment++;
                 education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             }
+        }
+
+        private void AddEducationTakeTwo(Education educationValues)
+        {
+            educationList.Add(new()
+            {
+                Id = increment,
+                AppUserId = 1,
+                Insitution = educationValues.Insitution,
+                Qualification = educationValues.Qualification,
+                StartDate = educationValues.StartDate,
+                EndDate = educationValues.EndDate,
+            });
+
+            increment++;
+            education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         }
 
         private void DeleteEducation(int id)
