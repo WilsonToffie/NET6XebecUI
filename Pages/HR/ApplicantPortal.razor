@@ -390,9 +390,10 @@
         <div class="candidate-list">
             @if (candidates != null @*|| candidates.Count != 0*@)
             {
+                FilterCandidatesByJob();
                 @if (candidates.Count == 0)
                 {
-                    <p>No applicants for this job. (@hrJobState.JobId)</p>
+                    <p>No applicants for this job.</p>
                 }
                 foreach (var candidate in candidates)
                 {
@@ -743,10 +744,6 @@
 
 @code {
 
-
-
-
-
     private List<FormQuestion> QuestionList = new List<FormQuestion>();
     private List<ApplicantAnswer> AnswerList = new List<ApplicantAnswer>();
     private ApplicationModel tempApplication;
@@ -775,12 +772,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-
-        //JobId = hrJobState.JobId;
-
-        Console.WriteLine(hrJobState.JobId);
-        Console.WriteLine(hrJobState.JobId);
-
         jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
         candidates = await httpClient.GetFromJsonAsync<List<CandidateRecommender>>("https://xebecapi.azurewebsites.net/api/candidaterecommender");
         personalInformations = await httpClient.GetFromJsonAsync<List<PersonalInformation>>("https://xebecapi.azurewebsites.net/api/PersonalInformation");
@@ -791,16 +782,13 @@
         AnswerList = await httpClient.GetFromJsonAsync<List<ApplicantAnswer>>("https://xebecapi.azurewebsites.net/api/ApplicantQuestionnaire");
         QuestionList = await httpClient.GetFromJsonAsync<List<FormQuestion>>("https://xebecapi.azurewebsites.net/api/Questionnaire");
 
-        candidates = candidates.OrderByDescending(o => o.TotalMatch).ToList();
-
         users = await httpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
         phasesHelpers = await httpClient.GetFromJsonAsync<List<ApplicationPhaseHelper>>("https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper");
         applications = await httpClient.GetFromJsonAsync<List<ApplicationModel>>("https://xebecapi.azurewebsites.net/api/Application");
         phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/ApplicationPhase");
         profilePortfolio = await httpClient.GetFromJsonAsync<List<ProfilePortfolioLink>>("https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink");
 
-
-        FilterCandidatesByJob(candidates);
+        FilterCandidatesByJob();
         SetSelectedCandidate(candidates.FirstOrDefault());
     }
 
@@ -811,10 +799,20 @@
         usersFiltered = users.Where(x => x.name.ToLower().Contains(searchCandidate.ToLower()) || x.surname.ToLower().Contains(searchCandidate.ToLower())).ToList();
     }
 
-    private void FilterCandidatesByJob(IList<CandidateRecommender> candidates_)
-    {
+    private void FilterCandidatesByJob()
+   {
         Console.WriteLine(JobId);
-        candidates = candidates_.Where(o => o.jobId == hrJobState.JobId).ToList();
+
+        GetCandidates();
+
+
+        candidates = candidates.Where(o => o.jobId == JobId).ToList();
+        candidates = candidates.OrderByDescending(o => o.TotalMatch).ToList();
+    }
+
+    private async Task GetCandidates()
+    {
+        candidates = await httpClient.GetFromJsonAsync<List<CandidateRecommender>>("https://xebecapi.azurewebsites.net/api/candidaterecommender");
     }
 
     private void AssignApplication(ApplicationModel application)
