@@ -10,11 +10,6 @@
     .handPointer {
         cursor: pointer;
     }
-
-    input {
-        height: min-content;
-    }
-
         input.smallerCheckBox {
             width: 15px;
             height: 15px;
@@ -39,20 +34,18 @@
             background: #00BCAE;
         }
 
-    .job-search-bar {
-        max-width: 50%;
-        background-color: rgba(255,255,255,1) !important;
-        border-radius: 2em;
-        border: 0.1em solid rgba(0,0,0,0.2);
+    .hr-job-search-bar {
+        width: 40%;
+        height: 5vh;
+        margin-bottom: 2.5vh;
+        margin-top: 2.5vh;
+        margin-left: 30%;
+        margin-right: 30%;
+        border: none;
     }
-
-        .job-search-bar::placeholder {
-            color: rgb(0,0,0,0.5);
-            font-weight: 200;
-            font-size: 1em;
-            font-family: opensans-condensed-bold;
-        }
-
+    .hr-job-filters{
+        height: 5vh;
+    }
     .job-search-icon {
         color: #00BCAE;
         font-size: 2em;
@@ -116,10 +109,6 @@
             width: auto;
             font-family: opensans-bold;
         }
-
-    input {
-        height: min-content;
-    }
 
     .my-container {
         height: 65vh;
@@ -225,20 +214,64 @@
         font-weight: 700;
         font-family: opensans-condensed-bold;
     }
+    job-portal-nav-btn:hover{
+        background-color: #d35bc9;
+    }
+    .hr-jobportal-mudselect {
+        cursor: pointer;
+        background-color: white;
+        height: 7vh;
+        font-size: 1.5em;
+        font-weight: 800;
+        font-family: opensans-condensed-bold;
+        color: black;
+        border-radius: 1em;
+        padding-bottom: 5vh;
+        padding-left: 4vh;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
+    }
+
+        .hr-jobportal-mudselect:hover {
+            border-radius: 1em;
+            border: 0.1em solid black;
+        }
+    .hr-job-search-bar-input {
+        background-color: white;
+        height: 5vh;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
+        border: white solid 0.1em;
+        border-radius: 1em;
+    }
+    .hr-job-search-bar-input::placeholder {
+        color: #666666;
+        font-weight: 900;
+        font-size: 0.8em;
+        padding-left: 1em;
+        padding-top: 1em;
+        font-family: opensans-condensed-bold;
+    }
+    .hr-job-name{
+        height: 5vh;
+        line-height: 5vh;
+        font-weight: 800;
+        font-size: 2em;
+        color: #00BCAE;
+        font-family: opensans-condensed-light;
+        text-align: center;
+    }
+    
 </style>
 
 <div class="container" style="height: 55vh" hidden="@JobPortalIsHidden">
 
     <div style="height: 15vh">
-        <div class="job-search-bar" style="background-color: red; height: 5vh; margin-bottom: 2.5vh; margin-top: 2.5vh">
-            <div class="input-group d-flex justify-content-center form-group">
-                <input class="job-search-bar-input" type="text" placeholder="Search for a jobs" @oninput="SearchListJob" />
-            </div>
+        <div class="hr-job-search-bar">
+            <input class="hr-job-search-bar-input" type="text" placeholder="Search" @oninput="SearchListJob" />
         </div>
-        <div class="row" style="height:5vh">
+        <div class="row hr-job-filters">
             <div class="col-3">
                 <!--Location-->
-                <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextLocation)" Label="Location" SelectedValuesChanged="SearchListLocation">
+                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextLocation)" Label="Location" SelectedValuesChanged="SearchListLocation">
                     @if (jobListFilter?.Any() == true)
                     {
                         @foreach (var item in jobList.Select(x => x.Location).OrderBy(x => x).Distinct())
@@ -251,7 +284,7 @@
             </div>
             <div class="col-3">
                 <!--Company-->
-                <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextCompany)" Label="Company" SelectedValuesChanged="SearchListCompany">
+                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextCompany)" Label="Company" SelectedValuesChanged="SearchListCompany">
                     @if (jobListFilter?.Any() == true)
                     {
                         @foreach (var item in jobList.Select(x => x.Company).OrderBy(x => x).Distinct())
@@ -264,7 +297,7 @@
             </div>
             <div class="col-3">
                 <!--Department-->
-                <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
+                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
                     @if (jobListFilter?.Any() == true)
                     {
                         @foreach (var item in jobList.Select(x => x.Department).OrderBy(x => x).Distinct())
@@ -277,7 +310,7 @@
             </div>
             <div class="col-3">
                 <!--Status-->
-                <MudSelect T="string" Class="form-control rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Status" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextStatus)" Label="Status" SelectedValuesChanged="SearchListStatus">
+                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Status" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextStatus)" Label="Status" SelectedValuesChanged="SearchListStatus">
                     @if (jobListFilter?.Any() == true)
                     {
                         @foreach (var item in status.Select(x => x.name))
@@ -499,19 +532,15 @@
 
 <div class="job-portal-inner-container" hidden="@ApplicantPortalIsHidden">
     <div class="row job-portal-inner-top">
+        <div class="col-2"></div>
         <div class="col-2">
             <input type="button" value="Job Portal" @onclick="ShowJobPortal" class="job-portal-nav-btn" style="margin-left: 100px; width: 50%" />
         </div>
-        <div class="col-8">
-            @*<div class="job-search-bar" style="background-color: red; height: 5vh; margin-bottom: 5vh">
-                <div class="input-group d-flex justify-content-center form-group">
-                    <input class="job-search-bar-input" type="text" placeholder="Search for a jobs" @oninput="SearchListJob" />
-                </div>
-            </div>*@
-        </div>
+        <div class="col-4 hr-job-name">@displayJobDetail.Title</div>
         <div class="col-2">
             <input type="button" value="Phase Manager" @onclick="ShowPhaseManager" class="job-portal-nav-btn" style="width: 50%;" />
         </div>
+        <div class="col-2"></div>
     </div>
     <div class="job-portal-inner-bottom">
         <XebecPortal.UI.Pages.HR.ApplicantPortal JobId="displayJobDetail.Id"/>
@@ -519,16 +548,12 @@
 </div>
 <div class="job-portal-inner-container" hidden="@PhaseManagerIsHidden">
     <div class="row job-portal-inner-top">
-        <div class="col-1">
+        <div class="col-2"></div>
+        <div class="col-2">
             <input type="button" value="Applicant Portal" class="job-portal-nav-btn" @onclick="() => ShowApplicantPortal(hrJobState.JobId)" style="margin-left: 20px" />
         </div>
-        <div class="col-10">
-            <div class="job-search-bar">
-                <div class="input-group d-flex justify-content-center form-group">
-                    @*<input type="text" placeholder="Search for a jobs" />*@
-                </div>
-            </div>
-        </div>
+        <div class="col-4 hr-job-name">@displayJobDetail.Title</div>
+        <div class="col-4"></div>
     </div>
     <div class="job-portal-inner-bottom">
         <XebecPortal.UI.Pages.HR.PhaseManager CurrentJobId="displayJobDetail.Id"/>

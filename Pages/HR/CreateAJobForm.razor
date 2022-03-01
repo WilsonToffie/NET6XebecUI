@@ -31,86 +31,107 @@
         margin-right: 2.5%;
         height: 5vh;
     }
-
-    input[type="text"], input[type="email"], input[type="password"], input[type="date"] {
+    .createjob-form-single {
+        width: 50%;
+        margin-left: 25%;
+        margin-right: 25%;
+        height: 5vh;
+    }
+    .createjob-form-date {
+        width: 50%;
+        height: 5vh;
+        justify-content: left;
+        align-content: start;
+        align-items: flex-start;
+    }
+    .createjob-form input[type="text"], input[type="email"], input[type="password"], input[type="date"] {
         background-color: transparent;
         width: 100%;
         height: 5vh;
         font-size: 1em;
-        border: none;
-        border-bottom: solid 0.1em #666666;
-        font-weight: 600;
+        border: solid 0.15em rgba(0,0,0, 0.2);
+        border-radius: 2em;
+        font-weight: 800;
         color: black;
-        font-family: opensans-condensed-light;
+        font-family: opensans-condensed-bold;
         padding-left: 1em;
         padding-bottom: 0.1em;
     }
-    input::placeholder {
+    .createjob-form input[type="date"] {
+        background-color: transparent;
+        width: 100%;
+        height: 5vh;
+        font-size: 1em;
+        border-radius: 2em;
+        border: solid 0.15em rgba(0,0,0, 0.2);
+        font-weight: 800;
         color: black;
         font-family: opensans-condensed-bold;
-        font-size: 1em;
+        padding-top: 0.5em;
+        padding-left: 1em;
+    }
+    .createjob-form select {
+        background-color: transparent;
+        width: 100%;
+        height: 5vh;
+        font-size: 0.6em;
+        border: solid 0.1em rgba(0,0,0, 0.2);
+        font-weight: 500;
+        border-radius: 2em;
+        color: black;
+        font-family: opensans-condensed-bold;
+        padding-left: 1em;
+        padding-bottom: 0.1em;
+    }
+    .createjob-form option {
+        font-size: 0.6em;
+        font-weight: 500;
+        color: black;
+        font-family: opensans-condensed-bold;
+    }
+    .createjob-form input::placeholder {
+        color: black;
+        font-family: opensans-condensed-bold;
+        font-size: 1.15em;
         width: 100%;
         padding-left: 0.3em;
         padding-bottom: 0.1em;
         font-weight: 800;
     }
-    
-    .createjob-select {
-        background-color: transparent;
-        width: 100%;
-        height: 5vh;
-        font-size: 1em;
-        border: none;
-        border-bottom: solid 0.1em #666666;
-        font-weight: 800;
-        color: black;
-        font-family: opensans-condensed-bold;
-        padding-left: 1em;
-        padding-bottom: 0.1em;
-    }
-    textarea {
-        background-color: rgba(0,0,0,0.5);
-        width: 100%;
-        height: 5vh;
-        font-size: 1em;
-        border: solid 0.5em black;
-        border-radius: 2em;
-        font-weight: 600;
-        color: black;
-        font-family: opensans-condensed-light;
-    }
-    .create-job-form-checkbox-div {
-        height: 5vh;
-        display: flex;
-    }
 
-    .create-job-form-checkboxes {
-        height: 5vh;
-        width: 20%;
-    }
-
-    .create-a-job-form-checkbox-label {
-        color: black;
-        width: 100%;
-        font-weight: 600;
-        font-size: 1em;
-        font-family: opensans-condensed-light;
-        text-align: center;
-    }
-    .createjob-textarea{
-        height: auto;
+    .createjob-form textarea {
+        background-color: white;
         width: 85%;
         margin-left: 7.5%;
         margin-right: 7.5%;
-       
+        font-size: 1.15em;
+        border: solid 0.15em rgba(0,0,0, 0.2);
+        border-radius: 2em;
+        font-weight: 800;
+        color: black;
+        padding-top: 2vh;
+        padding-left: 2vh;
+        font-family: opensans-condensed-light;
+        overflow-y: auto;
+    }
+   
+    .createjob-form-date-label {
+        font-family: opensans-condensed-bold;
+        height: 5vh;
+        font-weight: 800;
+        color: black;
+        font-size: 1em;
+        text-align: right;
+        margin-top:1.5vh;
+        padding-top:0;
     }
 </style>
 
 <div class="createjob-form-container">
     <form class="createjob-form">
-        <div class="form-group createjob-form-group">
+        <div class="form-group createjob-form-group" style="margin-top:5vh;">
             <div class="createjob-form-individual">
-                <input type="text" placeholder="Job Name" @bind="TempJob.Title" />
+                <input type="text" placeholder="Job Name"  @bind="TempJob.Title" />
             </div>
         </div>
         <div class="form-group createjob-form-group">
@@ -152,19 +173,11 @@
             <textarea class="form-control" style="resize: none" placeholder="Description" rows="4" @bind="TempJob.Description"></textarea>
         </div>
         <div class="form-group createjob-form-group">
-            
             <div class="createjob-form-individual">
-                <!--I removed the code, caused it was asked of me -Andrew -->
+                <h2 class="createjob-form-date-label">Due Date: </h2>
             </div>
-
             <div class="createjob-form-individual">
-                <input type="date" placeholder="Date Advertised" onfocus="(this.type='date')" onblur="(this.type='text')" @bind="TempJob.CreationDate" />
-            </div>
-        </div>
-        <div class="form-group createjob-form-group">
-            <div class="createjob-form-individual"></div>
-            <div class="createjob-form-individual">
-                <input type="date" placeholder="Due Date" onfocus="(this.type='date')" onblur="(this.type='text')" @bind="TempJob.DueDate" />
+               <input type="date" class="createjob-form-date" onfocus="(this.type='date')" onblur="(this.type='text')" @bind="TempJob.DueDate" />
             </div>
         </div>
     </form>
@@ -183,6 +196,7 @@
         set;
     }
 
+    
     private Task OnLocationChanged(ChangeEventArgs e)
     {
         TempJob.Location = e.Value.ToString();

@@ -5,7 +5,8 @@
 @using System.Linq;
 @using XebecPortal.UI.Shared.Home.Models
 @inject UserState state 
-
+@inject IJSRuntime JSRuntime
+ 
 <style>
     .overlay-login {
         z-index: 0;
@@ -13,6 +14,7 @@
         height: 80vh;
         width: 100%;
     }
+   
 </style>
 <div class="overlay-login" id="login">
     <div class="login-page">
@@ -25,7 +27,7 @@
                     <div class="index-form-icon">
                         <i class="fa fa-user"></i>
                     </div>
-                    <input type="email" required placeholder="Email address" @bind="@Email">
+                    <input type="email" required placeholder="Email address" @bind="@Email"/>
                 </div>
                 <div class="form-group index-form-group index-group">
                     <div class="index-form-icon">
@@ -101,16 +103,18 @@
 
     private SignInModel signIn = new SignInModel();
     private SignInResult thisUser = new SignInResult();
-
+    private string elementId = "";
+  
     protected override async Task OnInitializedAsync()
     {
         RightDisplayLoginIsHidden = false;
         RightDisplayForgotPasswordIsHidden = true;
         validSubmitForgotPasswordMessageIsHidden = true;
         invalidEmailorPasswordMessageIsHidden = true;
-        await Task.Delay(0);
+        await JSRuntime.InvokeVoidAsync("focusInput", elementId);
     }
 
+   
     private async Task Login()
     {
         signIn.Email = Email;

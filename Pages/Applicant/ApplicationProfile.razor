@@ -105,7 +105,7 @@
     }
 
     .row-style {
-        background: linear-gradient(110deg, rgba(0,51,64,0.56) 40%, rgba(0,188,174,0.53) 40%, #00BCAE);
+        background: linear-gradient(110deg, rgba(0,51,64,0.8) 40%, rgba(0,188,174,0.53) 40%, #00BCAE);
         /*background-color: white;*/
         border-radius: 20px;
         padding: 10px;
@@ -306,7 +306,7 @@
 
         <!--Content Panel-->
         <div class="col-12 d-flex justify-content-center align-items-start pt-3 ">
-            <div class="tab-content ">
+            <div class="tab-content">
                 <br />
                 <!--Personal Information-->
                 <div id="personal-information" class="container tab-pane active">
@@ -344,7 +344,7 @@
                                                     }
                                                 </MudPaper>
                                             </div>
-                                            <br />
+                                            
                                             <MudGrid Justify="Justify.Center" Spacing="4">
                                                 <MudItem>
                                                     <MudButton OnClick="Upload" Disabled="@(!(fileNames == null))" Style="color: white; background-color: #00BCAE; font-size: small" Variant="Variant.Filled">Upload</MudButton>
@@ -411,7 +411,8 @@
 
                 <!--Work History-->
                 <div id="work-history" class="container tab-pane">
-                    <form id="work-history-form">
+                    <form id="">
+                        <!--work-history-form       this is using JS-->
                         <div class="row">
                             <div class="col-12">
                                 <div class="row p-3">
@@ -445,7 +446,7 @@
                                                                     <label class="form-check-label text-color-primary" for="flexCheckDefault">
                                                                         Still work there?
                                                                     </label>
-                                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" @bind="@presentWork"  @bind:event="oninput">
+                                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" @bind="@presentWork" @bind:event="oninput">
                                                                 </span>)
                                                             </label>
                                                             <input id="end-date" class="form-control shadow bg-body rounded" @bind="workHistory.EndDate" @bind:event="oninput" @onblur="EndDateCheck" type="date" />
@@ -468,16 +469,10 @@
                                                         <label class="form-label" for="description">Description</label>
                                                         <textarea id="description" class="form-control shadow bg-body rounded" placeholder="Description" @bind="workHistory.Description" @bind:event="oninput" rows="3" @onfocusout="completion"></textarea> <!--@onfocusout="completion" -->
                                                     </div>
-                                                    <div class="col-12 d-flex justify-content-around">
-
-                                                        @if (workHistUpdate)
-                                                        {
-                                                            <button class="btn formButton" type="reset" @onclick="() => UpdateWorkHistory(workHistory)" value="Update" >Update</button>
-                                                        }
-                                                        else
-                                                        {
-                                                            <button class="btn formButton" type="reset" @onclick="() => AddWorkHistoryNew(workHistory)" value="Add">Add</button>
-                                                        }
+                                                    <div class="col-12 d-flex justify-content-around">                                                       
+                                                        
+                                                            <button class="btn formButton" type="reset" @onclick="() => addWorkHistoryTest(workHistory)" value="Add">Add</button>
+                                                        
                                                     </div>
                                                 </div>
                                             </div>
@@ -516,7 +511,8 @@
 
                 <!--Education-->
                 <div id="education" class="container tab-pane">
-                    <form id="education-form">
+                    <form id="">
+                        <!--education-form  this is using JS-->
                         <div class="row">
                             <div class="col-12">
                                 <div class="row p-3">
@@ -570,14 +566,9 @@
                                                 </div>
                                                 <div class="row p-3">
                                                     <div class="col-12 d-flex justify-content-around">
-                                                        @if (eduUpdate)
-                                                        {
-                                                            <button class="btn formButton" type="reset" @onclick="() => UpdateEducation(education)" value="Update">Update</button>
-                                                        }
-                                                        else
-                                                        {
-                                                            <button class="btn formButton" type="reset" @onclick="() => AddEducation(education)" value="Add" >Add</button>
-                                                        }
+                                                        
+                                                        <button class="btn formButton" type="reset" @onclick="() => AddEducationTakeTwo(education)" value="Add">Add</button>
+                                                        
                                                     </div>
                                                 </div>
                                             </div>
@@ -592,10 +583,10 @@
                                                     foreach (var item in educationList)
                                                     {
                                                         <div class="work-card mb-3">
-                                                            <div class="company-name">@education.Insitution</div>
-                                                            <div class="job-position">@education.Qualification</div>
+                                                            <div class="company-name">@item.Insitution</div>
+                                                            <div class="job-position">@item.Qualification</div>
                                                             <div class="start-end-date">
-                                                                <small>@($"{education.StartDate:yyyy MMMM} - {education.EndDate:yyyy MMMM}")</small>
+                                                                <small>@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</small>
                                                                 <span @onclick="() => DeleteEducation(item.Id)">
                                                                     <i class="fa fa-times-circle fa-2x" style="color: red"></i>
                                                                 </span>
