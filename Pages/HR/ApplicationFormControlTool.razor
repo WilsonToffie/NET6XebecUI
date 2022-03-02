@@ -333,6 +333,10 @@
     display: flex;
     justify-content: space-between;
    }
+   .delete-btn:hover{
+       background: red;
+       color: white!important;
+   }
 </style>
 
 <div class="appform-container">
@@ -478,14 +482,14 @@
                     {
                         foreach (var question in Questions)
                         {
-                            <tr>
+                            <tr >
                                 <td class="delete-popup-question" style="font-size: 15px;">@question.questionDescription</td>
                             </tr>
-                            <tr class="appform-right-row pr-2 pl-2 pt-1">
-                                <td class="collaborators-left-td appform-text pt-2 pl-2" style="word-wrap: break-word">@question.questionDescription</td>
+                            <tr class="pr-2 pl-2 pt-1 border rounded-1" style="overflow: hidden;">
+                                <td class="collaborators-left-td appform-text pl-2" style="word-wrap: break-word">@question.questionDescription</td>
 
-                                <td style="max-width: 10%">
-                                    <button class="btn-close" @onclick="() => DeleteQuestion(question)"></button>
+                                <td  style="max-width: 10%;">
+                                    <button class="btn-close delete-btn" @onclick="() => DeleteQuestion(question)"></button>
                                 </td>
                             </tr>
                         }
