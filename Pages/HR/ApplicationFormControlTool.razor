@@ -3,6 +3,7 @@
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager;
 <style>
+
     .appform-container {
         height: 55vh;
         width: 70%;
@@ -12,7 +13,27 @@
         border: solid white 0.1em;
         box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
         display: flex;
+        font-family: opensans-condensed-bold,serif;
     }
+   *::-webkit-scrollbar-track
+   {
+   	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3) !important;
+   	border-radius: 10px;
+   	background-color: #F5F5F5  !important;
+   }
+   
+   *::-webkit-scrollbar
+   {
+   	width: 5px;
+   	background-color: #F5F5F5  !important;
+   }
+   
+   *::-webkit-scrollbar-thumb
+   {
+   	border-radius: 10px;
+   	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3)  !important;
+   	background-color: #D62929;
+   }
 
     .appform-left-buttons {
         margin-top: 5vh;
@@ -44,7 +65,7 @@
         border-radius: 20px !important;
         min-height: 8vh;
         color: black;
-        font-family: opensans-condensed-bold;
+        font-family: opensans-condensed-bold,serif;
         font-weight: 900;
         font-size: 1em;
         min-width: 100%;
@@ -57,7 +78,7 @@
         border-radius: 20px !important;
         min-height: 9vh;
         color: #00bcae;
-        font-family: opensans-condensed-bold;
+        font-family: opensans-condensed-bold,sans-serif;
         font-weight: 900;
         font-size: 1em;
         margin-bottom: 5px;
@@ -69,9 +90,9 @@
     .appform-left-row:hover {
         box-shadow: 0 2px 5px 0 rgba(0,0,0,1), 0 2px 10px 0 rgba(0,0,0,1);
         min-height: 20vh;
-        color: white;
-        font-family: opensans-condensed-bold;
-        font-weight: 900;
+        color: black!important;
+        font-family: opensans-condensed-bold,sans-serif;
+        font-weight: 900!important;
         font-size: 1em;
         margin-bottom: 5px;
         background-color: black;
@@ -82,7 +103,7 @@
     .appform-right-row {
         box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px, rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
         border-radius: 10px !important;
-        min-height: 7vh;
+        min-height: 7vh !important;
         min-width: 100%;
         margin-bottom: 5px;
         background-color: rgba(255,255,255,1);
@@ -260,7 +281,58 @@
     .collaborators-left-main {
         padding: 10px;
     }
+    .question-div{
+        display: flex;
+        align-items: center;
+       
+    }
+    .seven{
+       flex-direction: column;
+       
+    }
     
+   .right-list-item-preview {
+       box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px, rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+       border-radius: 5px !important;
+
+       min-height: 10vh;
+       color: black;
+       font-size: 1em;
+       min-width: 100%;
+       margin-bottom: 5px;
+       background-color: rgba(255, 255, 255, 1);
+   }
+   .right-list-item-preview > div{
+        width: 100%;
+   }
+   .close-item-panel{
+    background: rgba(249,249,251,0.51);
+    border-bottom: #888888;
+    display: flex;
+    justify-content: end;
+    font-size: 1vh;
+   }
+   .close-item-panel > span{
+       background: #F9F9FB;
+       border-left: #888888;
+       padding: 1px 2vw;
+       border-radius: 0 5px 0 0;
+       -moz-border-radius-topright: 5px;
+   }
+   .close-item-panel > span:hover{
+          background: red;
+          color: white;
+      }
+   .preview-item-body{
+       padding: 2px 5px;
+   }
+   .preview-item-description{
+      font-size: 2vh;
+   }
+   .preview-item-control{
+    display: flex;
+    justify-content: space-between;
+   }
 </style>
 
 <div class="appform-container">
@@ -269,47 +341,39 @@
             <h2 class="collaborators-heading-text">Select Questions</h2>
         </div>
         <div class="appform-left-main">
-            <table class="collaborators-left-table">
-
+            <div class="collaborators-left-table">
                 @if (Questions == null)
                 {
                     <div>Loading...</div>
                 }
                 else
                 {
-
-                    <tbody>
-                        @if (Questions != null)
+                    if (Questions != null)
+                    {
+                        foreach (var question in Questions)
                         {
-                            @foreach (var question in Questions)
+                            if (question.answerTypeId == 7)
                             {
-
-                                if (question.answerTypeId == 7)
-                                {
-                                    <tr class="@QuestionCardClass(question)">
-                                        <td @onclick="() => AddToForm(question)">@question.questionDescription</td>
-                                        <td>
-                                            <div><input type="text" @bind="tempString"/></div>
-                                        </td>
-                                    </tr>
-                                }
-                                else
-                                {
-
-                                    <tr class="@QuestionCardClass(question)" @onclick="() => AddToForm(question)">
-                                        <td>@question.questionDescription</td>
-                                    </tr>
-                                }
+                                <div class="@QuestionCardClass(question) question-div seven" @onclick="() => AddToForm(question)">
+                                    @question.questionDescription
+                                    <input type="text" @bind="tempString">
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="@QuestionCardClass(question) question-div" @onclick="() => AddToForm(question)">
+                                    <p>@question.questionDescription</p>
+                                </div>
                             }
                         }
-                    </tbody>
+                    }
                 }
-            </table>
+            </div>
         </div>
         <div class="appform-left-buttons">
             <div class="question-button">
-                @*<button class="btn appform-main-button" @onclick="OpenAddPopup">Add question</button>
-                <button class="btn appform-main-button" @onclick="OpenDeletePopup">Delete questions</button>*@
+                <button class="btn appform-main-button" @onclick="OpenAddPopup">Add question</button>
+                <button class="btn appform-main-button" @onclick="OpenDeletePopup">Delete questions</button>
             </div>
         </div>
     </div>
@@ -318,55 +382,63 @@
             <h2 class="collaborators-heading-text">Chosen Questions</h2>
         </div>
         <div class="collaborators-left-main">
-            <table class="collaborators-left-table">
-                <tbody>
-                    @if (Questions != null)
+            <div class="collaborators-left-table">
+               
+                @if (Questions != null)
+                {
+                    foreach (var formquestion in FormQuestions)
                     {
-                        @foreach (var formquestion in FormQuestions)
-                        {
-                            <tr class="appform-right-row">
-                                <td class="collaborators-left-td">
-                                    <div class="form-preview-question">
-                                        <h3 class="appform-text">@formquestion.question</h3>
-                                        <button class="btn-close appform-close-button" @onclick="() => DeleteFormQuestion(formquestion.question)"></button>
-                                    </div>
-                                    <div class="form-preview-input">
-                                        @switch (formquestion.answerTypeId)
-                                        {
-                                            case 1:
-                                                <input type="number" class="form-control" style="width: 100%" @bind="formquestion.answer">
-                                                break;
-                                            case 2:
-                                                <textarea type="text" class="form-control" placeholder="Answer..." style="width: 100%" @bind="formquestion.answer"></textarea>
-                                                break;
-                                            case 3:
-                                                <input type="text" class="form-control" placeholder="Answer..." style="width: 100%" @bind="formquestion.answer">
-                                                break;
-                                            case 4:
-                                                <input type="date" id="test" class="form-control" style="width: 100%" @onchange="(e) => { formquestion.answer = e.Value.ToString(); }">
-                                                break;
-                                            case 5:
-                                                <select @bind="formquestion.answer">
-                                                    <option value="yes" selected>Yes</option>
-                                                    <option value="no">No</option>
-                                                </select>
-                                                break;
-                                            case 6:
-                                                <input type="file" class="form-control" style="width: 100%" @bind="formquestion.answer">
-                                                break;
-                                      
-                                            case 7:
-                                                <input type="text" class="form-control" placeholder="Answer..." style="width: 100%" @bind="formquestion.answer">
-                                                break;
-                                        }
+                        
+                        <div class="right-list-item-preview">
+                            <div class="close-item-panel">
+                                <span @onclick="() => DeleteFormQuestion(formquestion)">
+                                    <i class="fas fa-times"></i>
+                                </span>
+                            </div>
+                            <div class="preview-item-body">
+                                <div class="preview-item-description ">
+                                    <p class="">@formquestion.question</p>
+                                </div>
+                                <div class="preview-item-control">
+                                    @{var placeholder = "Explected answer";}
+                                    @switch (formquestion.answerTypeId)
+                                    {
+                                        
+                                        case 1:
+                                            <input type="number" class="form-control" placeholder="@placeholder" style="width: 100%" @bind="formquestion.answer">
+                                            break;
+                                        case 2:
+                                            <textarea type="text" class="form-control" placeholder="@placeholder" style="width: 100%" @bind="formquestion.answer"></textarea>
+                                            break;
+                                        case 3:
+                                            <input type="text" class="form-control" placeholder="@placeholder" style="width: 100%" @bind="formquestion.answer">
+                                            break;
+                                        case 4:
+                                            <input type="date" id="test" class="form-control" placeholder="@placeholder" style="width: 100%" @onchange="(e) => { formquestion.answer = e.Value.ToString(); }">
+                                            break;
+                                        case 5:
+                                            <select @bind="formquestion.answer">
+                                                <option value="yes" selected>Yes</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                            break;
+                                            <small class="text-muted text-small">(Select expected answer)</small>
+                                        case 6:
+                                            <input type="file" class="form-control" placeholder="@placeholder" style="width: 100%" @bind="formquestion.answer">
+                                            break;
 
-                                    </div>
-                                </td>
-                            </tr>
-                        }
+                                        case 7:
+                                            <input type="text" class="form-control" placeholder="@placeholder" style="width: 100%" @bind="formquestion.answer">
+                                            break;
+                                    }
+                                    
+                                </div>
+                            </div>
+                        </div>
                     }
-                </tbody>
-            </table>
+                }
+                
+            </div>
         </div>
     </div>
     @if (ShowAddPopup)
@@ -402,34 +474,35 @@
             <div class="delete-popup-body">
                 <table class="collaborators-left-table">
                     <tbody>
-                        @if (Questions != null)
+                    @if (Questions != null)
+                    {
+                        foreach (var question in Questions)
                         {
-                            @foreach (var question in Questions)
-                            {
+                            <tr>
+                                <td class="delete-popup-question" style="font-size: 15px;">@question.questionDescription</td>
+                            </tr>
+                            <tr class="appform-right-row pr-2 pl-2 pt-1">
+                                <td class="collaborators-left-td appform-text pt-2 pl-2" style="word-wrap: break-word">@question.questionDescription</td>
 
-                                <tr>
-                                    <td class="delete-popup-question" style="font-size: 15px;">@question.questionDescription</td>
-                                    </tr>
-                                <tr class="appform-right-row pr-2 pl-2 pt-1">
-                                    <td class="collaborators-left-td appform-text pt-2 pl-2" style="word-wrap: break-word">@question.questionDescription</td>
-
-                                    <td style="max-width: 10%">
-                                        <button class="btn-close" @onclick="() => DeleteQuestion(question)"></button>
-                                    </td>
-                                </tr>
-                            }
+                                <td style="max-width: 10%">
+                                    <button class="btn-close" @onclick="() => DeleteQuestion(question)"></button>
+                                </td>
+                            </tr>
                         }
+                    }
                     </tbody>
                 </table>
             </div>
         </div>
     }
 </div>
-<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save" />
+<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save"/>
 
 @code {
+
     [Parameter]
     public CreateJobPost TempJob { get; set; }
+
     [Parameter]
     public EventCallback<CreateJobPost> TempJobChanged { get; set; }
 
@@ -446,41 +519,45 @@
     bool ShowAddPopup = false;
     bool ShowDeletePopup = false;
     public CustomQuestion tempQuestion = new CustomQuestion();
+
     protected override async Task OnInitializedAsync()
     {
         Questions = await httpClient.GetFromJsonAsync<List<CustomQuestion>>("https://xebecapi.azurewebsites.net/api/question");
         Jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
         Types = await httpClient.GetFromJsonAsync<List<QuestionType>>("https://xebecapi.azurewebsites.net/api/answertype");
     }
+
     public void AddToForm(CustomQuestion question)
     {
-
         FormQuestion temp = new FormQuestion();
+        temp.id = question.Id;
         temp.question = question.questionDescription + " " + tempString;
         temp.answerTypeId = question.answerTypeId;
         temp.jobId = TempJob.Id;
-        if (!FormQuestions.Contains(temp))
+        if (!FormQuestions.FindAll(q => q.id == question.Id).Any())
         {
             FormQuestions.Add(temp);
         }
-
-
     }
+
     public async Task DeleteQuestion(CustomQuestion q)
     {
         await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/question/{q.Id}");
         await OnInitializedAsync();
     }
+
     public void OpenAddPopup()
     {
         ShowAddPopup = !ShowAddPopup;
         ShowDeletePopup = false;
     }
+
     public void OpenDeletePopup()
     {
         ShowDeletePopup = !ShowDeletePopup;
         ShowAddPopup = false;
     }
+
     public async Task AddQuestion()
     {
         if (tempQuestion.questionDescription != "")
@@ -491,17 +568,20 @@
             await OnInitializedAsync();
         }
     }
+
     public void CloseAddPopup()
     {
         ShowAddPopup = !ShowAddPopup;
     }
+
     public void CloseDeletePopup()
     {
         ShowDeletePopup = !ShowDeletePopup;
     }
-    public void DeleteFormQuestion(string QuestionString)
+
+    public void DeleteFormQuestion(FormQuestion question)
     {
-        FormQuestions.RemoveAll(q => q.question == QuestionString);
+        FormQuestions.RemoveAll(q => q.id == question.id);
     }
 
     private async Task Save()
@@ -513,7 +593,7 @@
 
     private string QuestionCardClass(CustomQuestion question)
     {
-        if (FormQuestions.FindAll(q => q.question == question.questionDescription).Count() > 0)
+        if (FormQuestions.FindAll(q => q.id == question.Id).Any())
             return "appform-left-row-selected";
         return "appform-left-row";
     }
