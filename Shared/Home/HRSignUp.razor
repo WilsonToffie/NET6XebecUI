@@ -27,7 +27,7 @@
         background-position: center;
     }
 
-    .register-page input[type="text"], input[type="email"], input[type="password"]{
+    .index-form-register input[type="text"], input[type="email"], input[type="password"] {
         background-color: transparent;
         width: 85%;
         height: 7vh;
@@ -186,6 +186,36 @@
         border-radius: 1em;
         display: flex;
     }
+    .key-confirmation-form {
+        width: 90%;
+        margin-left: 5%;
+        margin-right: 5%;
+        margin-top: 20vh;
+        height: auto;
+    }
+    .key-input-group{
+        height: 15vh;
+        width: 100%;
+        display: flex;
+    }
+    .key-confirmation-form input[type="text"]{
+        height: 15vh;
+        width: 12%;
+        margin-left: 3%;
+        border-radius: 1em;
+        border: #00bcae solid 0.2em;
+        background-color: transparent;
+        text-align: center;
+        color: black;
+        font-size: 1.8em;
+        font-weight: 900;
+        font-family: opensans-bold;
+    }
+    .key-confirmation-form::placeholder {
+        height: 15vh;
+        text-align: center;
+        color: lightgrey;
+    }
 </style>
 <div class="register-page">
     <div class="register-left"></div>
@@ -199,7 +229,7 @@
                     <div class="index-form-icon">
                         <i class="fas fa-user"></i>
                     </div>
-                    <input type="text" placeholder="Name" @bind="@Name">
+                    <input type="text" placeholder="Name" @bind="@Name" @ref="SignUpElementInFocus">
                 </div>
                 <div class="index-group-register">
                     <div class="index-form-icon">
@@ -278,15 +308,17 @@
             </div>
             <input type="button" class="index-form-button" @onclick="Register" value="Submit" />
         </form>
-        <form class="index-form-login" hidden="@confirmationFormIsHidden">
+        <form class="key-confirmation-form" hidden="@confirmationFormIsHidden">
             <div class="form-group index-form-heading">
                 <h1 class="index-form-heading-1">CONFIRMATION</h1>
             </div>
-            <div class="form-group index-form-group index-group">
-                <div class="index-form-icon">
-                    <i class="fa fa-key "></i>
-                </div>
-                <input type="text" placeholder="Key" @bind="@Key">
+            <div class="form-group key-input-group">
+                <input type="text" placeholder="0" @ref="RefKey1" @onchange="Key1Filled">
+                <input type="text" placeholder="0" @ref="RefKey2" @onchange="Key2Filled">
+                <input type="text" placeholder="0" @ref="RefKey3" @onchange="Key3Filled">
+                <input type="text" placeholder="0" @ref="RefKey4" @onchange="Key4Filled">
+                <input type="text" placeholder="0" @ref="RefKey5" @onchange="Key5Filled">
+                <input type="text" placeholder="0" @ref="RefKey6" @onchange="Key6Filled">
             </div>
             <div class="form-group index-form-or" hidden="@invalidKeyMessageIsHidden">
                 <h1 class="index-form-heading-3">Invalid Key</h1>
@@ -309,7 +341,7 @@
     private string Password2 = "";
     private string Email = "";
     private string Password = "";
-    private string Key = "";
+    private string Key,Key1,Key2,Key3,Key4,Key5,Key6 = "";
 
     private bool existingUserMessageIsHidden;
     private bool passwordMessageIsHidden;
@@ -338,6 +370,9 @@
         set;
     }
 
+    ElementReference SignUpElementInFocus;
+    ElementReference RefKey1, RefKey2, RefKey3, RefKey4, RefKey5, RefKey6;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -353,7 +388,53 @@
 
         await Task.Delay(0);
     }
+    protected override void OnAfterRender(bool firstRender)
+    {
 
+        SignUpElementInFocus.FocusAsync();
+        RefKey1.FocusAsync();
+
+    }
+
+    private Task Key1Filled(ChangeEventArgs e)
+    {
+        Key1 = e.Value.ToString();
+        RefKey2.FocusAsync();
+        return ValueChanged.InvokeAsync(Key1);
+    }
+
+    private Task Key2Filled(ChangeEventArgs e)
+    {
+        Key2 = e.Value.ToString();
+        RefKey3.FocusAsync();
+        return ValueChanged.InvokeAsync(Key2);
+    }
+    private Task Key3Filled(ChangeEventArgs e)
+    {
+        Key3 = e.Value.ToString();
+        RefKey4.FocusAsync();
+        return ValueChanged.InvokeAsync(Key3);
+    }
+
+    private Task Key4Filled(ChangeEventArgs e)
+    {
+        Key4 = e.Value.ToString();
+        RefKey5.FocusAsync();
+        return ValueChanged.InvokeAsync(Key4);
+    }
+    private Task Key5Filled(ChangeEventArgs e)
+    {
+        Key5 = e.Value.ToString();
+        RefKey6.FocusAsync();
+        return ValueChanged.InvokeAsync(Key5);
+    }
+    private Task Key6Filled(ChangeEventArgs e)
+    {
+        Key6 = e.Value.ToString();
+        RefKey6.FocusAsync(); 
+        Key = Key1 + Key2 + Key3 + Key4 + Key5 + Key6;
+        return ValueChanged.InvokeAsync(Key6);
+    }
     private Task OnRoleChanged(ChangeEventArgs e)
     {
         user.Role = e.Value.ToString();
@@ -431,6 +512,8 @@
         bool passwordIsValid = RegisterPasswordCheck();
         bool emailIsValid = RegisterEmailCheck();
 
+        confirmationFormIsHidden = false;
+        registrationFormIsHidden = true;
         if (passwordIsValid && emailIsValid)
         {
             user.Name = Name;

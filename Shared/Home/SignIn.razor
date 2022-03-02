@@ -27,7 +27,7 @@
                     <div class="index-form-icon">
                         <i class="fa fa-user"></i>
                     </div>
-                    <input type="email" required placeholder="Email address" @bind="@Email"/>
+                    <input type="email" required placeholder="Email address" @bind="@Email" @ref="SignInElementInFocus"/>
                 </div>
                 <div class="form-group index-form-group index-group">
                     <div class="index-form-icon">
@@ -66,7 +66,7 @@
                     <div class="index-form-icon">
                         <i class="fa fa-user"></i>
                     </div>
-                    <input type="email" required placeholder="Email address" @bind="@Email">
+                    <input type="email" required placeholder="Email address" @bind="@Email" @ref="ForgotPasswordElementInFocus">
                 </div>
                 <div class="form-group">
                     <h1 class="forgotpassword" @onclick="GoToLogin">login</h1>
@@ -103,18 +103,23 @@
 
     private SignInModel signIn = new SignInModel();
     private SignInResult thisUser = new SignInResult();
-    private string elementId = "";
-  
+
+    ElementReference SignInElementInFocus, ForgotPasswordElementInFocus;
+
     protected override async Task OnInitializedAsync()
     {
         RightDisplayLoginIsHidden = false;
         RightDisplayForgotPasswordIsHidden = true;
         validSubmitForgotPasswordMessageIsHidden = true;
         invalidEmailorPasswordMessageIsHidden = true;
-        await JSRuntime.InvokeVoidAsync("focusInput", elementId);
     }
 
-   
+    protected override void OnAfterRender(bool firstRender)
+    {      
+        SignInElementInFocus.FocusAsync();
+        ForgotPasswordElementInFocus.FocusAsync();       
+    }
+
     private async Task Login()
     {
         signIn.Email = Email;

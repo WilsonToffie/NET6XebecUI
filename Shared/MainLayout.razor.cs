@@ -15,85 +15,53 @@ namespace XebecPortal.UI.Shared
         private IList<Job> jobs = new List<Job>();
         private IList<JobType> jobTypes = new List<JobType>();
 
-        private bool HRIsHidden, ApplicantIsHidden = true;
+        private bool applicantApplicationProfile, applicantJobPortal, applicantMyJobs = false;
 
-        private bool applicantApplicationProfileIsHidden, applicantJobPortalIsHidden, applicantMyJobsIsHidden = true;
-
-        private bool hrDataAnalyticsToolIsHidden, hrJobPortalIsHidden, hrCreateAJobIsHidden = true;
+        private bool hrDataAnalyticsTool, hrJobPortal, hrCreateAJob = false;
 
         protected override async Task OnInitializedAsync()
         {
-            if (state.Role.Equals("Candidate"))
-            {
-                ApplicantIsHidden = false;
-                HRIsHidden = true;
-
-                applicantApplicationProfileIsHidden = true;
-                applicantJobPortalIsHidden = false;
-                applicantMyJobsIsHidden = true;
-
-                hrDataAnalyticsToolIsHidden = true;
-                hrJobPortalIsHidden = true;
-                hrCreateAJobIsHidden = true;
-
-
-                jobs = await HttpClient.GetFromJsonAsync<IList<Job>>("https://xebecapi.azurewebsites.net/api/Job");
-                jobTypes = await HttpClient.GetFromJsonAsync<IList<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
-            }
-
-            else if (state.Role.Equals("HRAdmin"))
-            {
-                HRIsHidden = false;
-                ApplicantIsHidden = true;
-
-                hrDataAnalyticsToolIsHidden = true;
-                hrJobPortalIsHidden = false;
-                hrCreateAJobIsHidden = true;
-
-                applicantApplicationProfileIsHidden = true;
-                applicantJobPortalIsHidden = true;
-                applicantMyJobsIsHidden = true;
-            }
-            await Task.Delay(0);
-
+            applicantJobPortal = hrJobPortal = true;
+            jobs = await HttpClient.GetFromJsonAsync<IList<Job>>("https://xebecapi.azurewebsites.net/api/Job");
+            jobTypes = await HttpClient.GetFromJsonAsync<IList<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
         }
 
         private void showApplicantApplicationProfile()
         {
-            applicantApplicationProfileIsHidden = false;
-            applicantJobPortalIsHidden = true;
-            applicantMyJobsIsHidden = true;
+            applicantApplicationProfile = true;
+            applicantJobPortal = false;
+            applicantMyJobs = false;
         }
         private void showApplicantJobPortal()
         {
-            applicantApplicationProfileIsHidden = true;
-            applicantJobPortalIsHidden = false;
-            applicantMyJobsIsHidden = true;
+            applicantApplicationProfile = false;
+            applicantJobPortal = true;
+            applicantMyJobs = false;
         }
         private void showApplicantMyJobs()
         {
-            applicantApplicationProfileIsHidden = true;
-            applicantJobPortalIsHidden = true;
-            applicantMyJobsIsHidden = false;
+            applicantApplicationProfile = false;
+            applicantJobPortal = false;
+            applicantMyJobs = true;
         }
 
         private void showHRDataAnalyticsTool()
         {
-            hrDataAnalyticsToolIsHidden = false;
-            hrJobPortalIsHidden = true;
-            hrCreateAJobIsHidden = true;
+            hrDataAnalyticsTool = true;
+            hrJobPortal = false;
+            hrCreateAJob = false;
         }
         private void showHRJobPortal()
         {
-            hrDataAnalyticsToolIsHidden = true;
-            hrJobPortalIsHidden = false;
-            hrCreateAJobIsHidden = true;
+            hrDataAnalyticsTool = false;
+            hrJobPortal = true;
+            hrCreateAJob = false;
         }
         private void showHRCreateAJob()
         {
-            hrDataAnalyticsToolIsHidden = true;
-            hrJobPortalIsHidden = true;
-            hrCreateAJobIsHidden = false;
+            hrDataAnalyticsTool = false;
+            hrJobPortal = false;
+            hrCreateAJob = true;
         }
 
         private void Logout()

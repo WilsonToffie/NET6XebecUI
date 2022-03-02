@@ -282,7 +282,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 //var response = await httpClient.GetAsync("https://xebecapi.azurewebsites.net/api/ResumeParser");
                 
                 
-                var resp =  await httpClient.PostAsync("http://localhost:5002/api/ResumeParser/", content);
+                var resp =  await httpClient.PostAsync("http://localhost:5005/api/ResumeParser/", content);
                 //status = new StringBuilder(resp.StatusCode.ToString());
                 var respContent = await resp.Content.ReadAsStringAsync();
 
