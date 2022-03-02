@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -123,7 +124,7 @@ namespace XebecPortal.UI.Pages.Applicant
         public IList<JobPhaseHelpers> PhaseHelpers { get; set; }
     }
 
-    public class WorkHistory
+    public class WorkHistory : ICloneable
     {
         public int Id { get; set; }
         public string CompanyName { get; set; }
@@ -133,9 +134,18 @@ namespace XebecPortal.UI.Pages.Applicant
         public DateTime EndDate { get; set; }
         public int AppUserId { get; set; }
         public IList<AppUser> AppUser { get; set; }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 
-    public class Education
+    public class Education : ICloneable
     {
         public int Id { get; set; }
         public string Insitution { get; set; }
@@ -144,9 +154,18 @@ namespace XebecPortal.UI.Pages.Applicant
         public DateTime EndDate { get; set; }
         public int AppUserId { get; set; }
         public IList<AppUser> AppUser { get; set; }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
     /* Newly added stuffs*/
-    public class References
+    public class References : ICloneable
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -155,6 +174,15 @@ namespace XebecPortal.UI.Pages.Applicant
         public string ContactNum { get; set; }
         public int AppUserId { get; set; }
         public IList<AppUser> AppUser { get; set; }
+
+        public object Clone() 
+        {
+            return MemberwiseClone();
+        }
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
     
     public class ProfilePortfolioLink
