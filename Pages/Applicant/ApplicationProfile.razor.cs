@@ -27,6 +27,9 @@ namespace XebecPortal.UI.Pages.Applicant
         private int increment = 1;
         private bool workHistUpdate;
         private bool eduUpdate;
+        private bool editMode;
+        private bool workEditMode;
+        private bool eduEditMode;
         private List<WorkHistory> workHistoryList = new();
         private WorkHistory workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         private List<Education> educationList = new();
@@ -52,18 +55,42 @@ namespace XebecPortal.UI.Pages.Applicant
         
         private void AddReferences(References referencesValues)
         {
-            
-            referencesList.Add(new()
+            var validCheck = referencesList.FindAll(r => r.Name.Equals(references.Name) && string.Equals(r.Surname, references.Surname, StringComparison.OrdinalIgnoreCase) && string.Equals(r.Email, references.Email, StringComparison.OrdinalIgnoreCase) && string.Equals(r.ContactNum, references.ContactNum, StringComparison.OrdinalIgnoreCase));
+            if (validCheck.Count == 0)
             {
-                Id = increment,
-                AppUserId = 1,
-                Name = referencesValues.Name,
-                Surname = referencesValues.Surname,
-                Email = referencesValues.Email,
-                ContactNum = referencesValues.ContactNum,
-            });
+                referencesList.Add(new()
+                {
+                    Id = increment,
+                    AppUserId = 1,
+                    Name = references.Name,
+                    Surname = references.Surname,
+                    Email = references.Email,
+                    ContactNum = references.ContactNum,
+                });
+                increment++;
+                references = new();
+            }
+            else{
+                // To alert user
+            }
+        }   
+            
+        private References tempRef;
 
-            increment++;
+        private void Save(References referenceValues)
+        {
+            editMode = false;
+            int index = referencesList.FindIndex(x => x.Id == referenceValues.Id);
+            referencesList[index] = references;
+            references = new();
+        }
+
+        private void Cancel(References referenceValues)
+        {
+            int index = referencesList.FindIndex(x => x.Id == referenceValues.Id);
+            referencesList[index] = tempRef;
+            references = new();
+            editMode = false;
         }
 
         private void DeleteReference(int refID)
@@ -71,12 +98,15 @@ namespace XebecPortal.UI.Pages.Applicant
             referencesList.RemoveAll(x => x.Id == refID);
         }
 
-        // Not entire sure how to set the data, still working on that
-        private void SelectReference(int refID)
-        {
-           int val =  referencesList.FindIndex(x => x.Id == refID); // this refers to the List position to where it should be, just not sure how to set the input values
-        }
         
+        private void SelectReference(References referenceValues)
+        {
+            editMode = true;        
+            int index =  referencesList.FindIndex(x => x.Id == referenceValues.Id);             
+            references = referencesList[index];           
+            tempRef = (References)references.Clone();            
+        }
+        /*
         private async Task AddWorkHistory(WorkHistory workHistoryValues)
         {
             if (await _jsModule.InvokeAsync<bool>("WorkHistory"))
@@ -96,6 +126,8 @@ namespace XebecPortal.UI.Pages.Applicant
                 workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             }
         }
+        */
+        private WorkHistory tempWorkHistory;
 
         private void addWorkHistoryTest(WorkHistory workHistoryValues) {
 
@@ -103,11 +135,11 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 Id = increment,
                 AppUserId = 1,
-                CompanyName = workHistoryValues.CompanyName,
-                JobTitle = workHistoryValues.JobTitle,
-                StartDate = workHistoryValues.StartDate,
-                EndDate = workHistoryValues.EndDate,
-                Description = workHistoryValues.Description
+                CompanyName = workHistory.CompanyName,
+                JobTitle = workHistory.JobTitle,
+                StartDate = workHistory.StartDate,
+                EndDate = workHistory.EndDate,
+                Description = workHistory.Description
             });
 
             increment++;
@@ -119,6 +151,30 @@ namespace XebecPortal.UI.Pages.Applicant
             workHistoryList.RemoveAll(x => x.Id == id);
             workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             workHistUpdate = false;
+        }
+
+        private void SelectWorkHistory(WorkHistory workHistoryValues)
+        {
+            workEditMode = true;
+            int index = workHistoryList.FindIndex(x => x.Id == workHistoryValues.Id);
+            workHistory = workHistoryList[index];
+            tempWorkHistory = (WorkHistory)workHistory.Clone();
+        }
+
+        private void SaveWorkHistory(WorkHistory workHistoryValues)
+        {
+            workEditMode = false;
+            int index = workHistoryList.FindIndex(x => x.Id == workHistoryValues.Id);
+            workHistoryList[index] = workHistory;
+            workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
+        }
+
+        private void CancelWorkHistory(WorkHistory workHistoryValues)
+        {
+            int index = workHistoryList.FindIndex(x => x.Id == workHistoryValues.Id);
+            workHistoryList[index] = tempWorkHistory;
+            workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
+            workEditMode = false;
         }
 
         private async Task UpdateWorkHistory(WorkHistory workHistoryValues)
@@ -137,7 +193,7 @@ namespace XebecPortal.UI.Pages.Applicant
             workHistory = workHistoryList.FirstOrDefault(x => x.Id == id);
             workHistUpdate = true;
         }
-
+        /*
         private async Task AddEducation(Education educationValues)
         {
             if (await _jsModule.InvokeAsync<bool>("Education"))
@@ -156,17 +212,18 @@ namespace XebecPortal.UI.Pages.Applicant
                 education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             }
         }
-
+        */
+        private Education tempEducation;
         private void AddEducationTakeTwo(Education educationValues)
         {
             educationList.Add(new()
             {
                 Id = increment,
                 AppUserId = 1,
-                Insitution = educationValues.Insitution,
-                Qualification = educationValues.Qualification,
-                StartDate = educationValues.StartDate,
-                EndDate = educationValues.EndDate,
+                Insitution = education.Insitution,
+                Qualification = education.Qualification,
+                StartDate = education.StartDate,
+                EndDate = education.EndDate,
             });
 
             increment++;
@@ -178,6 +235,30 @@ namespace XebecPortal.UI.Pages.Applicant
             educationList.RemoveAll(x => x.Id == id);
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             eduUpdate = false;
+        }
+
+        private void SelectEducation(Education educationValues)
+        {
+            eduEditMode = true;
+            int index = educationList.FindIndex(x => x.Id == educationValues.Id);
+            education = educationList[index];
+            tempEducation = (Education)education.Clone();
+        }
+
+        private void SaveEducation(Education educationValues)
+        {
+            eduEditMode = false;
+            int index = educationList.FindIndex(x => x.Id == educationValues.Id);
+            educationList[index] = education;
+            education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
+        }
+
+        private void CancelEducation(Education educationValues)
+        {
+            int index = educationList.FindIndex(x => x.Id == educationValues.Id);
+            educationList[index] = tempEducation;
+            education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
+            eduEditMode = false;
         }
 
         private async Task UpdateEducation(Education educationValues)
