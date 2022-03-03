@@ -504,17 +504,23 @@
 <input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save"/>
 
 @code {
-
+    [Parameter]
+    public EventCallback<List<FormQuestion>> FormQuestionsChanged { get; set; }
     [Parameter]
     public CreateJobPost TempJob { get; set; }
 
     [Parameter]
     public EventCallback<CreateJobPost> TempJobChanged { get; set; }
 
+    [Parameter]
+    public List<FormQuestion> FormQuestions { get; set; }
+
     string tempString = "";
 
     List<CustomQuestion> Questions = new List<CustomQuestion>();
-    List<FormQuestion> FormQuestions = new List<FormQuestion>();
+    
+    
+    
     List<QuestionType> Types = new List<QuestionType>();
     string tempType = null;
     //temporary
@@ -527,12 +533,15 @@
 
     protected override async Task OnInitializedAsync()
     {
+        if (FormQuestions == null)
+            FormQuestions = new();
+        
         Questions = await httpClient.GetFromJsonAsync<List<CustomQuestion>>("https://xebecapi.azurewebsites.net/api/question");
         Jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
         Types = await httpClient.GetFromJsonAsync<List<QuestionType>>("https://xebecapi.azurewebsites.net/api/answertype");
     }
 
-    public void AddToForm(CustomQuestion question)
+    public async Task AddToForm(CustomQuestion question)
     {
         FormQuestion temp = new FormQuestion();
         temp.id = question.Id;
@@ -542,6 +551,7 @@
         if (!FormQuestions.FindAll(q => q.id == question.Id).Any())
         {
             FormQuestions.Add(temp);
+            await FormQuestionsChanged.InvokeAsync(FormQuestions);
         }
     }
 
@@ -584,9 +594,10 @@
         ShowDeletePopup = !ShowDeletePopup;
     }
 
-    public void DeleteFormQuestion(FormQuestion question)
+    public async Task DeleteFormQuestion(FormQuestion question)
     {
         FormQuestions.RemoveAll(q => q.id == question.id);
+        await FormQuestionsChanged.InvokeAsync(FormQuestions);
     }
 
     private async Task Save()

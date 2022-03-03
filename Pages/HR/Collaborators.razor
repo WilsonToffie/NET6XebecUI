@@ -353,7 +353,24 @@
      .collaborator-name{
         font-size: 2rem;
      }
+     .selected-question{
+        background: red;
+     }
      
+   
+    details > summary {
+        list-style-type: '▶';
+    }
+    
+    details[open] > summary {
+        list-style-type: '🔽';
+        color: black;
+        display: inline-block;
+    }
+    .form-control:hover, .access-question:hover{
+        cursor: pointer;
+    }
+
 </style>
 <!--Tables of developers/HR-->
 <div class="appform-container">
@@ -396,7 +413,11 @@
             <h2 class="collaborators-heading-text">Chosen Collaborators</h2>
             @if (collaboratorsAdded != null && collaboratorsAdded.Count > 0)
             {
-                <a href="mailto:@collaboratorsAdded[0].email?subject=Recruit Team Assignment&cc=@GetCC(collaboratorsAdded)&body=@GetBody(collaboratorsAdded)!" class="btn btn-info mb-3">Email Team|<i class="fas fa-paper-plane"></i></a>
+                <a href="mailto:@collaboratorsAdded[0].email?subject=Recruit Team Assignment&cc=@GetCC(collaboratorsAdded)&body=@GetBody(collaboratorsAdded)!"
+                   class="btn btn-info mb-3"
+                   data-toggle="tooltip" data-placement="top" title="Send an email to all team members">
+                    Email Team|<i class="fas fa-paper-plane"></i>
+                </a>
             }
         </div>
         <div class="collaborators-left-main">
@@ -415,12 +436,36 @@
                             </div>
                             <div class="preview-item-body">
                                 <div class="preview-item-description">
-                                    <p class="">@developer.name @developer.surname</p>
+                                    <p class="">
+                                        @developer.name @developer.surname
+                                        <a href="mailto:@(developer.email)?subject=Recruit Team Assignment&body=@GetBody(developer)!" data-toggle="tooltip" data-placement="top" title="Send an email to @developer.email">
+                                            <i class="fa fa-envelope" aria-hidden="true"></i>
+                                        </a>
+                                    </p>
                                 </div>
                                 <div class="preview-item-control">
-                                    <p type="email" class="form-control" style="width: 100%">
-                                        <a href="mailto:@(developer.email)?subject=Recruit Team Assignment&body=@GetBody(developer)!">@developer.email</a>
-                                    </p>
+                                    <div class="form-control" style="width: 100%;">
+                                        @if (ChosenQuestions is {Count: > 0 })
+                                        {
+                                            <details style="max-height: 20vh; overflow-y: auto; width: 100%">
+                                                <summary style="width: 100%">Question & Answer access <small style="margin-left: 5vw;" class="text-right font-italic" >Click here!</small></summary><br/>
+                                                <small class="text-muted">Choose which candidate questions & answers the <u>@developer.name</u> has access to.</small><br/>
+                                                @for (var index = 0; index < ChosenQuestions.Count; index++)
+                                                {
+                                                    List<FormQuestion> questions = new();
+
+                                                    var question = ChosenQuestions[index];
+                                                    <label class="access-question @GetHighlighting(question, developer)"  >
+                                                       @(index + 1). @question.question <input style="display: block" type="checkbox" @onchange="() => AddOrRemoveQuestion(question, developer)"/>
+                                                    </label>
+                                                }
+                                            </details>
+                                        }
+                                        else
+                                        {
+                                            <p>No custom questions selected</p>
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -438,10 +483,17 @@
 @code {
 
     [Parameter]
+    public List<FormQuestion> ChosenQuestions { get; set; }
+
+
+    [Parameter]
     public CreateJobPost TempJob { get; set; }
 
     [Parameter]
     public EventCallback<CreateJobPost> TempJobChanged { get; set; }
+    
+    [Parameter]
+    public Dictionary<AppUser, List<FormQuestion>> Map  {get; set; }
 
 
     private List<AppUser> collaborators = new List<AppUser>();
@@ -458,6 +510,14 @@
                 .RuleFor(a => a.Id, faker => faker.IndexFaker)
                 .RuleFor(a => a.Avatar, faker => faker.Person.Avatar);
             avatars = f.Generate(collaborators.Count);
+        }
+        if (Map == null)
+        {
+            Map = new();
+        }
+        foreach (var collaborator in collaborators)
+        {
+            Map.Add(collaborator,new());
         }
     }
 
@@ -517,4 +577,50 @@
         return cc.ToString();
     }
 
+    private string GetHighlighting(FormQuestion question,  AppUser collaborator)
+    {
+        if (!Map.ContainsKey(collaborator))
+        {
+            Map.Add(collaborator, new());
+        }
+
+        List<FormQuestion> formQuestions = Map[collaborator];
+        if (formQuestions == null)
+            formQuestions = new();
+        
+        if (formQuestions.FindAll(q => q.id == question.id).Any())
+        {
+            Console.WriteLine($"Styling {question.question} - {collaborator.name}");
+            return "bg-info text-white font-weight-bold col-12";
+        }
+        Console.WriteLine($"no style for {question.question} - {collaborator.name}");
+        return "";
+    }
+
+    private void AddOrRemoveQuestion(FormQuestion question, AppUser collaborator)
+    {
+        //Check if collaborator exists
+        if (!Map.ContainsKey(collaborator))
+        {
+            Map.Add(collaborator, new());
+        }
+
+        List<FormQuestion> formQuestions = Map[collaborator];
+        if (formQuestions == null)
+            formQuestions = new();
+        
+        if (formQuestions.FindAll(q => q.id == question.id).Any())
+        {
+            Console.WriteLine($"Removing {question.question} - {collaborator.name}");
+            formQuestions.RemoveAll(q => q.id == question.id);
+        }
+        else
+        {
+            Console.WriteLine($"Add {question.question} - {collaborator.name}");
+            formQuestions.Add(question);
+        }
+        Map[collaborator] = formQuestions;
+    }
+
 }
+

@@ -156,6 +156,12 @@
 </style>
 
 <!--Body Page-->
+<ul>
+    @foreach (var question in ChosenQuestions)
+    {
+        <li>@question.question</li>
+    }
+</ul>
 <div class="container-createjob">
     <div class="createjob-top">
         <div class="hr-createjob-div-space"></div>
@@ -232,7 +238,7 @@
             <div class="col-1"></div>
             <div class="col-10 createjob-bottom-main-container">
                 <div class="createjob-bottom-main">
-                    <XebecPortal.UI.Pages.HR.Collaborators @bind-TempJob="tempJob" />
+                    <XebecPortal.UI.Pages.HR.Collaborators ChosenQuestions="ChosenQuestions" @bind-TempJob="tempJob" />
                 </div>
             </div>
             <div class="col-1"></div>
@@ -241,7 +247,7 @@
             <div class="col-1"></div>
             <div class="col-10 createjob-bottom-main-container">
                 <div class="createjob-bottom-main">
-                    <XebecPortal.UI.Pages.HR.ApplicationFormControlTool @bind-TempJob="tempJob" />
+                    <XebecPortal.UI.Pages.HR.ApplicationFormControlTool @bind-FormQuestions="ChosenQuestions" @bind-TempJob="tempJob" />
                 </div>
             </div>
             <div class="col-1"></div>
@@ -263,9 +269,14 @@
     private bool CreateJobIsHidden, LinkedInIsHidden, CollaboratorsIsHidden, ApplicationFormIsHidden, PhasesIsHidden;
 
     CreateJobPost tempJob = new CreateJobPost {Collaborators = new List<AppUser>(), JobPlatforms = new List<JobPlatform>(), formQuestions = new List<FormQuestion>(), JobPhases = new List<ApplicationPhase>(), JobType = new JobType()};
-
+    
+    public List<FormQuestion> ChosenQuestions { get; set; }
     protected override async Task OnInitializedAsync()
     {
+        if (ChosenQuestions == null)
+        {
+            ChosenQuestions = new();
+        }
         CreateJobIsHidden = false;
         LinkedInIsHidden = CollaboratorsIsHidden = ApplicationFormIsHidden = PhasesIsHidden = true;
     }
