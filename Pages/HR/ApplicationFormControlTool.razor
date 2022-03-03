@@ -2,6 +2,7 @@
 @inject HttpClient httpClient
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager;
+@inject UserState _state;
 <style>
 
     .appform-container {
@@ -375,12 +376,15 @@
                 }
             </div>
         </div>
-        <div class="appform-left-buttons">
-            <div class="question-button">
-                <button class="btn appform-main-button" @onclick="OpenAddPopup">Add question</button>
-                <button class="btn appform-main-button" @onclick="OpenDeletePopup">Delete questions</button>
+        @if (string.Equals("super admin", _state.Role, StringComparison.OrdinalIgnoreCase))
+        {
+            <div class="appform-left-buttons">
+                <div class="question-button">
+                    <button class="btn appform-main-button" @onclick="OpenAddPopup">Add question</button>
+                    <button class="btn appform-main-button" @onclick="OpenDeletePopup">Delete questions</button>
+                </div>
             </div>
-        </div>
+        }
     </div>
     <div class="collaborators-right">
         <div class="collaborators-heading">

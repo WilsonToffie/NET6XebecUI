@@ -2,6 +2,7 @@
 @inject HttpClient httpClient
 @inject IJSRuntime jsr
 @inject NavigationManager NavigationManager
+@inject UserState _state;
 
 <style>
  
@@ -415,12 +416,16 @@
                 }
             </div>
         </div>
-        <div class="appform-left-buttons">
-            <div class="question-button">
-                <button class="btn appform-main-button" @onclick="ToggleModalSubmitPhase">Add Phase</button>
-                <button class="btn appform-main-button" @onclick="ToggleModalDeletePhase">Delete Phase</button>
+        @if (string.Equals("super admin", _state.Role, StringComparison.OrdinalIgnoreCase))
+        {
+            <div class="appform-left-buttons">
+                <div class="question-button">
+                    <button class="btn appform-main-button" @onclick="ToggleModalSubmitPhase">Add Phase</button>
+                    <button class="btn appform-main-button" @onclick="ToggleModalDeletePhase">Delete Phase</button>
+                </div>
             </div>
-        </div>
+        }
+        
     </div>
     <div class="collaborators-right">
         <div class="collaborators-heading">
