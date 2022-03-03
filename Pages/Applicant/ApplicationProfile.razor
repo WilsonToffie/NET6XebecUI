@@ -105,8 +105,8 @@
     }
 
     .row-style {
-        background: linear-gradient(110deg, rgba(0,51,64,0.8) 40%, rgba(0,188,174,0.53) 40%, #00BCAE);
-        /*background-color: white;*/
+        /*background: linear-gradient(110deg, rgba(0,51,64,0.8) 40%, rgba(0,188,174,0.53) 40%, #00BCAE);
+        background-color: white;*/
         border-radius: 20px;
         padding: 10px;
         min-height: 75vh;
@@ -128,9 +128,12 @@
         font-weight: 500 !important;
         color: #003340 !important;
     }
-
     .work-card {
         color: black !important;
+    }
+
+    .work-card:hover{
+        background-color: pink;
     }
 
     .white-back {
@@ -469,10 +472,18 @@
                                                         <label class="form-label" for="description">Description</label>
                                                         <textarea id="description" class="form-control shadow bg-body rounded" placeholder="Description" @bind="workHistory.Description" @bind:event="oninput" rows="3" @onfocusout="completion"></textarea> <!--@onfocusout="completion" -->
                                                     </div>
-                                                    <div class="col-12 d-flex justify-content-around">                                                       
+                                                    <div class="col-12 d-flex justify-content-around">
+                                                        @if (workEditMode)
+                                                        {
+                                                            <input class="btn formButton" type="button" value="Save" @onclick="() => SaveWorkHistory(workHistory)" />
+                                                            <input class="btn formButton" type="button" value="Cancel" @onclick="() => CancelWorkHistory(workHistory)" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input class="btn formButton" type="button" value="Add" @onclick="() => addWorkHistoryTest(workHistory)" />
+                                                        }
                                                         
-                                                            <button class="btn formButton" type="reset" @onclick="() => addWorkHistoryTest(workHistory)" value="Add">Add</button>
-                                                        
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -486,7 +497,7 @@
                                                 {
                                                     foreach (var item in workHistoryList)
                                                     {
-                                                        <div class="work-card">
+                                                        <div class="work-card" @onclick="() => SelectWorkHistory(item)">
                                                             <div class="company-name">@item.CompanyName</div>
                                                             <div class="job-position">@item.JobTitle</div>
                                                             <div class="start-end-date">
@@ -566,9 +577,17 @@
                                                 </div>
                                                 <div class="row p-3">
                                                     <div class="col-12 d-flex justify-content-around">
-                                                        
-                                                        <button class="btn formButton" type="reset" @onclick="() => AddEducationTakeTwo(education)" value="Add">Add</button>
-                                                        
+                                                        @if (eduEditMode)
+                                                        {
+                                                            <input class="btn formButton" type="button" value="Save" @onclick="() => SaveEducation(education)" />
+                                                            <input class="btn formButton" type="button" value="Cancel" @onclick="() => CancelEducation(education)" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input class="btn formButton" type="button" value="Add" @onclick="() => AddEducationTakeTwo(education)" />
+                                                        }
+                                                        <!--<button class="btn formButton" type="reset" @onclick="() => AddEducationTakeTwo(education)" value="Add">Add</button> -->
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -582,7 +601,7 @@
                                                 {
                                                     foreach (var item in educationList)
                                                     {
-                                                        <div class="work-card mb-3">
+                                                        <div class="work-card mb-3" @onclick="() => SelectEducation(item)">
                                                             <div class="company-name">@item.Insitution</div>
                                                             <div class="job-position">@item.Qualification</div>
                                                             <div class="start-end-date">
@@ -615,33 +634,42 @@
                                             <div class="col-12" style="height: 47vh">                                                 
                                                 <input type="hidden" @bind="references.Id" /> <!--remember to add references ID and AppUserID-->
                                                 <input type="hidden" @bind="references.AppUserId"/>
-                                                <div class="row p-3">
+                                                <div class="row p-3" >
                                                     <div class="col-6">
                                                         <label class="form-label" for="referenceName">Name</label>
-                                                        <input id="referenceName" class="form-control shadow bg-body rounded" type="text"  required placeholder="John" @bind="references.Name" @bind:event="oninput"/> <!--@onfocusout="completion" -->
+                                                        <input id="referenceName" class="form-control shadow bg-body rounded" type="text"  required placeholder="John" @bind="references.Name"  @onfocusout="completion"/> <!--@onfocusout="completion" -->
                                                     </div>
                                                     <div class="col-6">
                                                         <label class="form-label" for="referenceSurname">Surname</label>
-                                                        <input id="referenceSurname" class="form-control shadow bg-body rounded" type="text" required placeholder="Smith" @bind="references.Surname" @bind:event="oninput"/> <!--@onfocusout="completion" -->
+                                                        <input id="referenceSurname" class="form-control shadow bg-body rounded" type="text" required placeholder="Smith" @bind="references.Surname"  @onfocusout="completion"/> <!--@onfocusout="completion" -->
                                                     </div>
                                                 </div>
 
                                                 <div class="row p-3">
                                                     <div class="col-6">
                                                         <label class="form-label" for="referenceEmail">Email</label>
-                                                        <input id="referenceEmail" class="form-control shadow bg-body rounded" type="text" required placeholder="john@gmail.com" @bind="references.Email" @bind:event="oninput"/> <!--@onfocusout="completion" -->
+                                                        <input id="referenceEmail" class="form-control shadow bg-body rounded" type="text" required placeholder="john@gmail.com" @bind="references.Email" @onfocusout="completion"/> <!--@onfocusout="completion" -->
                                                     </div>
                                                     <div class="col-6">
                                                         <label class="form-label" for="referenceContactNum">Phone Number</label>
-                                                        <input id="referenceContactNum" class="form-control shadow bg-body rounded" type="text" required placeholder="071 336 9875" @bind="references.ContactNum" @bind:event="oninput"/> <!--@onfocusout="completion" -->
+                                                        <input id="referenceContactNum" class="form-control shadow bg-body rounded" type="text" required placeholder="071 336 9875" @bind="references.ContactNum"  @onfocusout="completion"/> <!--@onfocusout="completion" -->
                                                     </div>
                                                 </div>
                                                 <div class="row p-3">
                                                     <div class="col-12 d-flex justify-content-around">
-                                                        <!--Remember to change the functionality-->                                                        
-                                                            <button class="btn formButton" type="reset" @onclick="() => AddReferences(references)">Add</button>   <!--This allows us to reset the input fields without losing the text-->
-                                                        
+
+                                                        @if (editMode)
+                                                        {
+                                                            <input class="btn formButton" type="button" value="Save" @onclick="() => Save(references)" />
+                                                            <input class="btn formButton" type="button" value="Cancel" @onclick="() => Cancel(references)" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input class="btn formButton" type="button" value="Add" @onclick="() => AddReferences(references)" />
+                                                        }
+
                                                     </div>
+                                                    <div id="demo"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -655,7 +683,7 @@
                                                 {
                                                     foreach (var items in referencesList)
                                                     {
-                                                    <div class="work-card mb-3">
+                                                    <div class="work-card mb-3" @onclick="() => SelectReference(items)" >
                                                         <div class="referenceName">@items.Name</div>
                                                         <div class="referenceSurname">@items.Surname</div>
                                                         <div>
@@ -798,6 +826,13 @@
     // Education history inputs is empty / null
     private int institution = 0;
     private int qualification = 0;
+
+    // References history inputs is empty / null
+    private int refName = 0;
+    private int refSurname = 0;
+    private int refEmail = 0;
+    private int refContactNum = 0;
+
 
 
     private int count = 0;
@@ -982,6 +1017,46 @@
             }
 
             // startDate and endDate for Qualification validation...
+
+            // Start of references progress validation
+
+            if (referencesList.Count == 0)
+            {
+                if (!string.IsNullOrEmpty(references.Name) && refName != 1 )
+                {
+                    count++;
+                    refName = 1;
+                }
+                else if (string.IsNullOrEmpty(references.Name) && refName == 1)
+                {
+                    count--;
+                    refName = 0;
+                }
+
+                else if (!string.IsNullOrEmpty(references.Surname) && refSurname !=1)
+                {
+                    count++;
+                    refSurname = 1;
+                }
+                else if (string.IsNullOrEmpty(references.Surname) && refSurname == 1)
+                {
+                    count--;
+                    refSurname = 0;
+                }
+
+                else if (!string.IsNullOrEmpty(references.Email) && refEmail != 1 || !string.IsNullOrEmpty(references.ContactNum) && refContactNum !=1)
+                {
+                    count++;
+                    refEmail = 1;
+                    refContactNum = 1;
+                }
+                else if (string.IsNullOrEmpty(references.Email) && refEmail == 1 || !string.IsNullOrEmpty(references.ContactNum) && refContactNum == 1)
+                {
+                    count--;
+                    refEmail = 0;
+                    refContactNum = 0;
+                }
+            }
         }
     }
 }
