@@ -1,0 +1,495 @@
+﻿@page "/services"
+@inject NavigationManager navmanager
+@layout EmptyLayout
+@inject HttpClient HttpClient
+@using System.Linq
+@using XebecPortal.UI.Shared.Home.Models
+@using Microsoft.AspNetCore.Components;
+@inject IJSRuntime JsRuntime
+
+<style>
+
+    .service-div {
+        height: auto;
+    }
+
+    .services-container {
+        height: auto;
+    }
+
+    .services-label {
+        height: 10vh;
+        margin-top: 15vh;
+        margin-bottom: 5vh;
+    }
+
+    .services-label-h2 {
+        text-align: center;
+        color: black;
+        font-family: opensans-condensed-bold;
+        font-size: 2em;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .services-block {
+        height: auto;
+    }
+
+    .services-top {
+        height: 10vh;
+        width: 100%;
+    }
+
+    .services-middle {
+        height: 10vh;
+        width: 100%;
+    }
+
+    .services-bottom-applicants {
+        height: 10vh;
+        width: 80%;
+        margin: auto;
+        background-color: #00bcae;
+        border-radius: 1em;
+        line-height: 10vh;
+        color: white;
+        font-size: 1.3em;
+        font-family: opensans-condensed-light;
+        text-align: center;
+        font-weight: 700;
+    }
+
+    ul li {
+        padding-top: 1em;
+    }
+
+    .services-bottom-hr {
+        height: 20vh;
+        width: 80%;
+        margin: auto;
+        background-color: #00bcae;
+        border-radius: 1em;
+        line-height: 2.5vh;
+        padding-left: 1em;
+        color: white;
+        font-size: 1.3em;
+        font-family: opensans-condensed-light;
+        text-align: center;
+        font-weight: 700;
+    }
+
+    .applicant-applicant-profile {
+        height: inherit;
+        max-width: 5em;
+        margin: auto;
+        background-image: url(/Img/upload.svg);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .applicant-job-portal {
+        height: inherit;
+        max-width: 5em;
+        margin: auto;
+        background-image: url(/Img/search.svg);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .applicant-my-jobs {
+        height: inherit;
+        max-width: 5em;
+        margin: auto;
+        background-image: url(/Img/saved.svg);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .applicant-middle-text {
+        height: 10vh;
+        width: 100%;
+        text-align: center;
+        color: #d35bc9;
+        font-family: opensans-condensed-bold;
+        font-weight: 800;
+        font-size: 1.2em;
+        text-transform: uppercase;
+    }
+
+    .applicant-bottom-text {
+        height: 35vh;
+        background-color: white;
+        font-family: opensans-condensed-light;
+    }
+
+    .developer-tool {
+        height: inherit;
+        max-width: 5em;
+        margin: auto;
+        background-image: url(/Img/checklist.svg);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .hr-applicant-control {
+        height: inherit;
+        max-width: 5em;
+        margin: auto;
+        background-image: url(/Img/checklist.svg);
+        background-size: cover;
+        background-position: center;
+    }
+    .home-job-portal{
+        height: 80vh;
+        width: 100%;
+        overflow-y: scroll;
+    }
+    .home-job-portal::-webkit-scrollbar{
+        width: 1vw;
+        background-color: black;
+        z-index: 2;
+    }
+        .home-job-portal::-webkit-scrollbar-track {
+            width: 1vw;
+            background-color: black;
+            z-index: 2;
+        }
+        .home-job-portal::-webkit-scrollbar-thumb {
+            background-color: #00bcae;
+            z-index: 2;
+        }
+
+    .hr-applicant-portal {
+        height: inherit;
+        max-width: 5em;
+        margin: auto;
+        background-image: url(/Img/search.svg);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .hr-job-portal {
+        height: inherit;
+        max-width: 5em;
+        margin: auto;
+        background-image: url(/Img/send.svg);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .hr-data-analytics {
+        height: inherit;
+        max-width: 5em;
+        margin: auto;
+        background-image: url(/Img/chart.svg);
+        background-size: cover;
+        background-position: center;
+    }
+    .hr-create-a-job {
+        height: inherit;
+        max-width: 5em;
+        margin: auto;
+        background-image: url(/Img/paper.svg);
+        background-size: cover;
+        background-position: center;
+    }
+    .handPointer {
+        cursor: pointer;
+    }
+
+    .container-main {
+        height: 80vh;
+        width: 100%;
+    }
+
+    .container-button {
+        height: 5vh;
+        width: 100%;
+    }
+
+    .mini-button {
+        height: 5vh;
+        text-align: center;
+        background-color: #00bcae;
+        width: auto;
+        border-radius: 1em;
+    }
+
+    .job-board-container {
+        height: 100%;
+        width: 80%;
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+
+    .job-portal-header {
+        display: flex;
+        margin-top: -5vh;
+        height: 5vh;
+        margin-bottom: 2vh;
+    }
+    .services-applicant-navigation{
+        height: 2vh;
+        margin-top: 2vh;
+        display: flex;
+        width: 30%;
+        margin-left: 35%;
+        margin-right: 35%;
+    }
+    .services-circle{
+        height: 2vh;
+        width: 30px;
+        margin-right: 10px;
+        background-color: transparent;
+        border-radius: 50%;
+        border: black solid 0.15em;
+    }
+    .services-circle-selected {
+        height: 2vh;
+        width: 30px;
+        margin-right: 10px;
+        background-color: black;
+        border-radius: 50%;
+        border: none;
+    }
+</style>
+<div class="overlay-services" id="services">
+    <div class="service-div" hidden="@applicantServicesIsHidden">
+        <div class="row">
+            <div class="col-12 services-label">
+                <h2 class="services-label-h2">Applicant Services</h2>
+            </div>
+        </div>
+        <div class="row services-container">
+            <div class="col-4 services-block">
+                <div class="services-top">
+                    <div class="applicant-applicant-profile"></div>
+                </div>
+                <div class="services-middle">
+                    <h3 class="applicant-middle-text">APPLICATION PROFILE</h3>
+                </div>
+                <div class="services-bottom-applicants">
+                    <p>Upload your CV to our AI built form processor</p>
+                </div>
+            </div>
+            <div class="col-4 services-block">
+                <div class="services-top">
+                    <div class="applicant-job-portal"></div>
+                </div>
+                <div class="services-middle">
+                    <h3 class="applicant-middle-text">JOBS PORTAL</h3>
+                </div>
+                <div class="services-bottom-applicants">
+                    <p>Search and apply for jobs </p>
+                </div>
+            </div>
+            <div class="col-4 services-block">
+                <div class="services-top">
+                    <div class="applicant-my-jobs"></div>
+                </div>
+                <div class="services-middle">
+                    <h3 class="applicant-middle-text">MY JOBS</h3>
+                </div>
+                <div class="services-bottom-applicants">
+                    <p>Track the status of your applications</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+
+            </div>
+            <div class="col-2">
+                <div class="services-applicant-navigation">
+                    <div class="services-circle" hidden="@(!applicantServicesIsHidden)" @onclick="ToApplicant">
+
+                    </div>
+                    <div class="services-circle-selected" hidden="@applicantServicesIsHidden" @onclick="ToApplicant">
+
+                    </div>
+                    <div class="services-circle" hidden="@(!hrServicesIsHidden)" @onclick="ToHR">
+
+                    </div>
+                    <div class="services-circle-selected" hidden="@hrServicesIsHidden" @onclick="ToHR">
+
+                    </div>
+                    <div class="services-circle" hidden="@(!jobPortalIsHidden)" @onclick="ToJobPortal">
+
+                    </div>
+                    <div class="services-circle-selected" hidden="@jobPortalIsHidden" @onclick="ToJobPortal">
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-5">
+
+            </div>
+           
+        </div>
+    </div>
+
+    <div class="service-div" hidden="@hrServicesIsHidden">
+        <div class="row">
+            <div class="col-12 services-label">
+                <h2 class="services-label-h2">Human Resource Services</h2>
+            </div>
+        </div>    
+
+        <div class="row services-container">
+            <div class="col-4 services-block">
+                <div class="services-top">
+                    <div class="hr-job-portal"></div>
+                </div>
+                <div class="services-middle">
+                    <h3 class="applicant-middle-text">JOB PORTAL</h3>
+                </div>
+                <div class="services-bottom-hr">
+                    <ul>
+                        <li>A display of all jobs created and advertised</li>
+                        <li>The abilty to review advertised jobs in detail</li>
+                        <li>The ability to edit and delete advertised jobs</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-4 services-block">
+                <div class="services-top">
+                    <div class="hr-create-a-job"></div>
+                </div>
+                <div class="services-middle">
+                    <h3 class="applicant-middle-text">JOB ADVERT CREATOR</h3>
+                </div>
+                <div class="services-bottom-hr">
+                    <ul>
+                        <li>Create/Post a new job advert </li>
+                        <li>Create a specialized application form</li>
+                        <li>Select Collaborators and Phases for job advert</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-4 services-block">
+                <div class="services-top">
+                    <div class="hr-data-analytics"></div>
+                </div>
+                <div class="services-middle">
+                    <h3 class="applicant-middle-text">DATA ANALYTICS TOOL</h3>
+                </div>
+                <div class="services-bottom-hr">
+                    <ul>
+                        <li>Data-driven insights for candidate selection</li>
+                        <li>Charts based on KPI recruitment metrics</li>
+                        <li>A summary of platform-based data</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+
+            </div>
+            <div class="col-2">
+                <div class="services-applicant-navigation">
+                    <div class="services-circle" hidden="@(!applicantServicesIsHidden)" @onclick="ToApplicant">
+
+                    </div>
+                    <div class="services-circle-selected" hidden="@applicantServicesIsHidden" @onclick="ToApplicant">
+
+                    </div>
+                    <div class="services-circle" hidden="@(!hrServicesIsHidden)" @onclick="ToHR">
+
+                    </div>
+                    <div class="services-circle-selected" hidden="@hrServicesIsHidden" @onclick="ToHR">
+
+                    </div>
+                    <div class="services-circle" hidden="@(!jobPortalIsHidden)" @onclick="ToJobPortal">
+
+                    </div>
+                    <div class="services-circle-selected" hidden="@jobPortalIsHidden" @onclick="ToJobPortal">
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-5">
+
+            </div>
+
+        </div>
+
+    </div>
+    <div class="service-div" hidden="@jobPortalIsHidden">
+        <div class="row">
+            <div class="services-top"></div>
+        </div>
+        <div class="row service-container">
+            <div class="col-12 home-job-portal">
+                <XebecPortal.UI.Pages.Applicant.JobPortal />
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-5">
+
+            </div>
+            <div class="col-2">
+                <div class="services-applicant-navigation">
+                    <div class="services-circle" hidden="@(!applicantServicesIsHidden)" @onclick="ToApplicant">
+
+                    </div>
+                    <div class="services-circle-selected" hidden="@applicantServicesIsHidden" @onclick="ToApplicant">
+
+                    </div>
+                    <div class="services-circle" hidden="@(!hrServicesIsHidden)" @onclick="ToHR">
+
+                    </div>
+                    <div class="services-circle-selected" hidden="@hrServicesIsHidden" @onclick="ToHR">
+
+                    </div>
+                    <div class="services-circle" hidden="@(!jobPortalIsHidden)" @onclick="ToJobPortal">
+
+                    </div>
+                    <div class="services-circle-selected" hidden="@jobPortalIsHidden" @onclick="ToJobPortal">
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-5">
+
+            </div>
+
+        </div>     
+    </div>
+</div>
+
+@code {
+
+    private bool applicantServicesIsHidden = false;
+    private bool jobPortalIsHidden = true;
+    private bool hrServicesIsHidden = true;
+
+
+    protected async Task OnInitialized()
+    {
+        applicantServicesIsHidden = false;
+        jobPortalIsHidden = true;
+        hrServicesIsHidden = true;
+    }
+
+    private void ToApplicant()
+    {
+        applicantServicesIsHidden = false;
+        jobPortalIsHidden = true;
+        hrServicesIsHidden = true;
+    }
+    private void ToJobPortal()
+    {
+        applicantServicesIsHidden = true;
+        jobPortalIsHidden = false;
+        hrServicesIsHidden = true;
+    }
+    private void ToHR()
+    {
+        applicantServicesIsHidden = true;
+        jobPortalIsHidden = true;
+        hrServicesIsHidden = false;
+    }
+
+}

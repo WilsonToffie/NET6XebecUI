@@ -1,0 +1,908 @@
+﻿@page "/applicantportal"
+@using XebecPortal.UI.Services.Models
+@inject HttpClient httpClient
+@inject HrJobState hrJobState
+
+<style>
+
+    .container-main {
+        width: 100vw;
+        height: 65vh;
+        margin: 0;
+        display: grid;
+        grid-template-columns: 1fr 0.2fr 1.8fr 1fr;
+        grid-template-rows: repeat(2, 1fr);
+        grid-auto-flow: row;
+        grid-gap: 10px;
+        padding: 5px;
+        overflow-x: hidden;
+        overflow-y: hidden;
+    }
+
+    .container-applicant-portal {
+        width: 100%;
+        height: 100vh;
+    }
+
+    .page-bottom {
+        width: 100vw;
+        height: 50vh;
+        margin: 0 !important;
+        display: grid;
+        grid-template-columns: 1fr 0.2fr 1.8fr 1fr;
+        grid-template-rows: repeat(2, 1fr);
+        grid-auto-flow: row;
+        grid-gap: 10px;
+        padding: 5px;
+    }
+
+        .page-bottom > div {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+        }
+
+    .candidate-section {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 10% 1fr;
+        grid-auto-flow: row;
+        grid-area: 1 / 1 / 3 / 3;
+        grid-gap: 10px;
+        padding: 5px;
+        background: transparent !important;
+        height: 75vh;
+    }
+
+        .candidate-section > div {
+            background: #fff;
+            border-radius: 10px;
+        }
+
+    /*filter plane styling - start*/
+
+    .filter-plane {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        grid-template-rows: repeat(1, 1fr);
+        grid-auto-flow: row;
+    }
+
+    .filter-plane-heading {
+        text-align: center;
+        font-weight: 900;
+        font-size: 40px;
+        transform: translateY(-15%);
+    }
+    /*filter plane styling - end*/
+
+    /*Candidate list styling - start*/
+    .candidate-list {
+        grid-area: 2 / 1 / 3 / 2;
+        display: grid;
+        grid-auto-rows: 20%;
+        grid-template-columns: 1fr;
+        grid-gap: 10px;
+        overflow-y: auto;
+    }
+
+
+        .candidate-list > div {
+            box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0, rgba(60, 64, 67, 0.15) 0 1px 3px 1px;
+            background: white !important;
+        }
+
+
+    .candidate-card {
+        display: grid;
+        grid-template-columns: 28% 69%;
+        grid-template-rows: 1fr;
+        grid-column-gap: 2px;
+        cursor: pointer;
+    }
+
+        .candidate-card .profile-picture {
+            border: none !important;
+            border-radius: 0 !important;
+            grid-area: 1 / 1 / 2 / 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .candidate-card .profile-picture img {
+                height: 7vh;
+                width: 7vh;
+                border-radius: 50%;
+                box-shadow: rgba(6, 24, 44, 0.4) 0 0 0 2px, rgba(6, 24, 44, 0.65) 0 4px 6px -1px, rgba(255, 255, 255, 0.08) 0 1px 0 inset;
+            }
+
+        .candidate-card .candidate-details {
+            grid-area: 1 / 2 / 2 / 3;
+            height: 100%;
+            width: calc(100% - 16px);
+            padding: 5px;
+        }
+
+            .candidate-card .candidate-details .name {
+                font-weight: 800;
+                line-height: 3vh;
+                font-size: 3vh;
+            }
+
+            .candidate-card .candidate-details .job {
+                line-height: 2vh;
+                font-size: 1.5vh;
+                font-weight: 400;
+            }
+
+            .candidate-card .candidate-details .phase {
+                line-height: 1vh;
+                font-size: 1vh;
+                font-weight: 500;
+            }
+
+    /*Candidate list styling - start*/
+
+    .profile-section {
+        grid-area: 1 / 3 / 4 / 5;
+        padding: 10px;
+    }
+
+    .col-1 {
+        max-width: 8.33%;
+    }
+
+    .col-2 {
+        max-width: 16.67%;
+    }
+
+    .col-3 {
+        min-width: 25%;
+        max-width: 25%;
+    }
+
+    .col-12 {
+        min-width: 100%;
+    }
+
+    .col-small {
+        width: 4.5%;
+    }
+    /* Chrome, Safari, Edge, Opera */
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    .rank {
+        margin-bottom: 5px;
+        margin-left: 5px;
+    }
+
+    .this-wrap {
+        height: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .nav-tab {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        max-width: 100% !important;
+        width: 100% !important;
+        border-bottom: solid 1px slategrey;
+    }
+
+    .this-personal-detail {
+        font-size: 3vh;
+        font-weight: 600;
+        align-items: flex-end;
+    }
+
+    .this-nav {
+        width: 80%;
+        height: 5vh;
+        overflow: hidden;
+        border: none;
+    }
+
+        .this-nav > li {
+            height: 100%;
+        }
+
+        .this-nav .active {
+            height: 100%;
+        }
+
+    .this-content {
+        padding: 5px;
+    }
+
+    .work-history-section {
+        height: 100% !important;
+        width: 100% !important;
+        display: grid !important;
+        grid-auto-columns: 1fr;
+        grid-auto-rows: 1fr;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 10px;
+        padding: 10px;
+        overflow-y: auto;
+    }
+
+    .work-card:nth-child(4n + 0), .work-card:nth-child(4n + 1) {
+        background: rgba(239,239,239,0.51);
+    }
+
+    .work-card {
+        border: solid 1px #fff;
+        box-shadow: rgba(0, 0, 0, 0.35) 0 5px 15px;
+        border-radius: 10px;
+        height: 15vh;
+        padding: 10px 10px 0 10px;
+        display: grid !important;
+        grid-template-columns: 1fr 1fr 1.5fr;
+        grid-template-rows: repeat(2, 1fr);
+    }
+
+        .work-card > * {
+            text-overflow: ellipsis;
+            overflow-y: auto;
+        }
+
+    .work-description {
+        grid-area: 2 / 1 / 3 / 4;
+    }
+
+    .company-name {
+        grid-area: 1 / 1 / 2 / 2;
+    }
+
+    .job-position {
+        grid-area: 1 / 2 / 2 / 3;
+    }
+
+    .start-end-date {
+        grid-area: 1 / 3 / 2 / 4;
+    }
+
+    .view-applicants-top {
+        height: 20vh;
+        width: 100%;
+    }
+
+    .view-applicants-search {
+        width: 50%;
+        height: 5vh;
+        margin-top: 2.5vh;
+        margin-bottom: 2.5vh;
+        margin-left: 25%;
+        margin-right: 25%;
+    }
+
+    .view-applicants-filter {
+        height: 5vh;
+        margin-top: 2.5vh;
+        margin-bottom: 2.5vh;
+    }
+
+    .application-form {
+        width: 550px;
+        height: 275px;
+        /*        background-color: #f2f2f2;*/
+        border-radius: 5px;
+        /*        border: 2px solid grey;*/
+    }
+
+    .application-form-title {
+        width: 100%;
+        height: 10%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+        font-size: 20px;
+    }
+
+    .application-form-question-area {
+        width: 100%;
+        height: 75%;
+        overflow-y: auto;
+    }
+
+    .application-form-button {
+        width: 100%;
+        height: 15%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .application-form-question {
+        max-width: 90%;
+        align-items: center;
+        justify-content: center;
+        margin-left: 10px;
+        word-wrap: break-word;
+    }
+
+    .application-form-wrapper {
+        margin-left: 15%;
+    }
+
+    .btnNavigate {
+        height: 5vh;
+        background-color: #00bcae;
+        border: none;
+        border-radius: 100px;
+        color: white;
+        text-align: center;
+        font-family: opensans-bold;
+        font-weight: 700;
+    }
+
+        .btnNavigate:hover {
+            height: 5vh;
+            background-color: #d35bc9;
+            border: none;
+            border-radius: 100px;
+            color: white;
+            text-align: center;
+            font-family: opensans-bold;
+            font-weight: 700;
+        }
+
+    .page-top {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+</style>
+
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+
+<div class="page-top">
+    <div class="hr-job-search-bar">
+        <input class="hr-job-search-bar-input" type="text" placeholder="Search" @oninput="SearchCandidate" />
+    </div>
+</div>
+
+<div class="container-main">
+    <div class="candidate-section">
+        <div class="filter-plane">
+            <div class="filter-plane-heading">
+                Candidates
+            </div>
+        </div>
+        <div class="candidate-list">
+            @if (candidates != null @*|| candidates.Count != 0*@)
+            {
+                FilterCandidatesByJob();
+                @if (candidates.Count == 0)
+                {
+                    <p>No applicants for this job.</p>
+                }
+                foreach (var candidate in candidates)
+                {
+                    AppUser currentUser = null;
+                    CandidateRecommender tempCandidate = null;
+                    @if (usersFiltered == null || searchCandidate == "" || searchCandidate == " ")
+                    {
+                        currentUser = users.Where(x => x.id == candidate.AppUserId).FirstOrDefault();
+                    }
+                    else if (usersFiltered.Where(x => x.id == candidate.AppUserId).FirstOrDefault() != null)
+                    {
+                        currentUser = usersFiltered.Where(x => x.id == candidate.AppUserId).FirstOrDefault();
+                    }
+
+                    @if (currentUser != null)
+                    { 
+                        <div @onclick="() => SetSelectedCandidate(candidate)" style="@(GetStyle(candidate))" class="candidate-card">
+                            <div class="profile-picture">
+                                <img src="@currentUser.imageUrl" alt="Avatar">
+                            </div>
+
+                            <div class="candidate-details">
+                                @(candidates.IndexOf(candidate) + 1)
+                                <span class="name">@($"{currentUser.name} {currentUser.surname}")</span>
+                                <br>
+
+                                @foreach (var job in jobs)
+                                {
+                                    @if (candidate.jobId == job.Id)
+                                    {
+                                        <span class="job">@job.Title</span>
+                                    }
+                                }
+
+                                <br>
+
+                                <span class="phase-pill">@FindCurrentPhase(currentUser, selectedJob)</span>
+                                @*style=" @(GetColor(phase.Description))"*@
+
+
+                                <div>
+                                    @if (candidates.Where(x => x.AppUserId == currentUser.id).FirstOrDefault() != null)
+                                    {
+                                        tempCandidate = candidates.Where(x => x.AppUserId == currentUser.id).FirstOrDefault();
+
+                                        <div class="phase-pill" style="@(GetPillStyle(candidate))">@tempCandidate.TotalMatch %</div>
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+            else
+            {
+                <p>Please wait whilst we get all Applicants</p>
+            }
+        </div>
+    </div>
+
+    <div class="profile-section">
+        <div class="container-fluid this-wrap">
+
+            <!--Navigation Tab-->
+            <div class="nav-tab">
+                <ul class="nav this-nav nav-tabs" role="tablist">
+                    <li class="nav-item p-1">
+                        <a class="nav-link nav-link1 active" data-bs-toggle="tab" href="#personal-information" @onclick="() => _tabEnum = TabEnum.PersonalInfo">Personal Information</a>
+                    </li>
+                    <li class="nav-item p-1">
+                        <a class="nav-link nav-link1" data-bs-toggle="tab" href="#work-history" @onclick="() => _tabEnum = TabEnum.WorkHistory">Work History</a>
+                    </li>
+                    <li class="nav-item p-1">
+                        <a class="nav-link nav-link1" data-bs-toggle="tab" href="#education" @onclick="() => _tabEnum = TabEnum.Educa">Education</a>
+                    </li>
+                    <li class="nav-item p-1">
+                        <a class="nav-link nav-link1" data-bs-toggle="tab" href="#online-profile" @onclick="() => _tabEnum = TabEnum.Online">Online Profile</a>
+                    </li>
+                    <li class="nav-item p-1">
+                        <a class="nav-link nav-link1" data-bs-toggle="tab" href="#applicationform-list" @onclick="() => _tabEnum = TabEnum.ApplicationForm">Application Form</a>
+                    </li>
+                </ul>
+            </div>
+            <!--Content Panel-->
+            <div class="col-12 this-content">
+                <!--Personal Information-->
+                <div id="personal-information" class="tab-pane person-info rounded" style="@GetActivity(TabEnum.PersonalInfo)">
+                    @if (personalInformations != null && selectedCandidate != null)
+                    {
+                        @if (personalInformations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
+                        {
+                            <div>
+                                Candidate doesn't have any information saved.
+                            </div>
+                        }
+                        else
+                        {
+                            PersonalInformation personalInformation = personalInformations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
+                            <div class="" style="height: 100%;">
+                                <div class="row p-3">
+                                    <div class="col-4">
+                                        <label class="form-label" for="first-name">First Name</label>
+                                        <p id="first-name" class="form-control name">@personalInformation.FirstName</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" for="last-name">Last Name</label>
+                                        <p id="last-name" class="form-control name">@personalInformation.LastName</p>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="form-label" for="email-address">Email Address</label>
+                                        <p id="email-address" class="form-control">@personalInformation.Email</p>
+                                    </div>
+                                </div>
+                                <div class="row p-3">
+                                    <div class="col-4">
+                                        <label class="form-label" for="phone-number">Phone Number</label>
+                                        <p id="phone-number" class="form-control">@personalInformation.PhoneNumber</p>
+                                    </div>
+                                    @if (additionalInformations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
+                                    {
+                                        <div>
+                                            Candidate doesn't have any additional information saved.
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        AdditionalInformation additionalInformation = additionalInformations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
+                                        <div class="col-4">
+                                            <label class="form-label" for="ethnicity">Ethnicity</label>
+                                            <p id="ethnicity" class="form-control">@additionalInformation.Ethnicity</p>
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="form-label" for="gender">Gender</label>
+                                            <p id="gender" class="form-control">@additionalInformation.Gender</p>
+                                        </div>
+
+                                    }
+                                </div>
+                                <div class="row p-3">
+                                    <div class="col-4">
+                                        <label class="form-label" for="id-number">ID Number</label>
+                                        <p id="id-number" class="form-control">@personalInformation.IdNumber</p>
+                                    </div>
+                                    <div class="col-8">
+                                        <label class="form-label" for="address">Address</label>
+                                        <p id="address" class="form-control" rows="4">@personalInformation.Address </p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    }
+                    else if (personalInformations == null)
+                    {
+                        <p>Getting personal information...</p>
+                    }
+                    else
+                    {
+                        <p>No candidate selected...</p>
+                    }
+                </div>
+
+                <div id="work-history" class="tab-pane" style="@GetActivity(TabEnum.WorkHistory)">
+                    <div class="work-history-section">
+                        @if (workHistories != null && selectedCandidate != null)
+                        {
+                            @if (workHistories.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
+                            {
+                                <div>
+                                    Candidate doesn't have any work histories.
+                                </div>
+                            }
+                            else
+                            {
+                                WorkHistory workHistory = workHistories.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
+                                <div class="work-card">
+                                    <div class="company-name">@workHistory.CompanyName</div>
+                                    <div class="job-position">@workHistory.JobTitle</div>
+                                    <div class="start-end-date">
+                                        <small>@($"{workHistory.StartDate:yyyy MMMM} - {workHistory.EndDate:yyyy MMMM}")</small>
+                                    </div>
+                                    <div class="work-description">@workHistory.Description</div>
+                                </div>
+                            }
+                        }
+                        else if (workHistories == null)
+                        {
+                            <p>Getting Work history...</p>
+                        }
+                        else
+                        {
+                            <p>No candidate selected...</p>
+                        }
+                    </div>
+                </div>
+
+                <div id="education" class="tab-pane" style="@GetActivity(TabEnum.Educa)">
+                    <div class="work-history-section">
+                        @if (educations != null && selectedCandidate != null)
+                        {
+                            @if (educations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
+                            {
+                                <div>
+                                    Candidate doesn't have any education history.
+                                </div>
+                            }
+                            else
+                            {
+                                Education education = educations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
+
+                                <div class="work-card">
+                                    <div class="company-name">@education.Qualification</div>
+                                    <div class="job-position"></div>
+                                    <div class="start-end-date">
+                                        <small>@($"{education.StartDate:yyyy MMMM} - {education.EndDate:yyyy MMMM}")</small>
+                                    </div>
+                                    <div class="work-description">@education.Insitution</div>
+                                </div>
+                            }
+                        }
+                        else if (educations == null)
+                        {
+                            <p>Getting education history...</p>
+                        }
+                        else
+                        {
+                            <p>No candidate selected...</p>
+                        }
+
+                    </div>
+                </div>
+
+                <div id="online-profile" class="container tab-pane" style="@GetActivity(TabEnum.Online)">
+                    @if (profilePortfolio != null && selectedCandidate != null)
+                    {
+
+                        @if (profilePortfolio.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
+                        {
+                            <div>
+                                Candidate doesn't have any portfolio links.
+                            </div>
+                        }
+                        else
+                        {
+                            ProfilePortfolioLink portfolioLinks = profilePortfolio.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
+
+                            <div class="col-9 hadow-sm bg-body rounded" style="background-color: white">
+                                <div class="row p-3">
+                                    <div class="col-6">
+                                        <div>
+                                            <label class="form-label" for="github">Github</label>
+                                            &ensp;
+                                            <i class="fab fa-github fa-2x"></i>
+                                        </div>
+                                        <p id="github" class="form-control shadow bg-body rounded"><a href="@portfolioLinks.GitHubLink">@portfolioLinks.GitHubLink</a></p>
+                                    </div>
+                                    <div class="col-6">
+                                        <div>
+                                            <label class="form-label" for="linkedin">LinkedIn</label>
+                                            &ensp;
+                                            <i class="fab fa-linkedin-in fa-2x" style="color: #0077b5"></i>
+                                        </div>
+                                        <p id="linkedin" class="form-control shadow bg-body rounded">
+                                            <a href="@portfolioLinks.LinkedInLink">@portfolioLinks.LinkedInLink</a>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="row p-3">
+                                    <div class="col-6">
+                                        <div>
+                                            <label class="form-label" for="twitter">Twitter</label>
+                                            &ensp;
+                                            <i class="fab fa-twitter-square fa-2x" style="color: #00acee"></i>
+                                        </div>
+                                        <p id="twitter" class="form-control shadow bg-body rounded">
+                                            <a href="@portfolioLinks.TwitterLink">@portfolioLinks.TwitterLink</a>
+                                        </p>
+                                    </div>
+                                    <div class="col-6">
+                                        <div>
+                                            <label class="form-label" for="personal-website">Personal Website</label>
+                                            &ensp;
+                                            <i class="fas fa-globe fa-2x" style="color: #35afc0"></i>
+                                        </div>
+                                        <p id="personal-website" class="form-control shadow bg-body rounded">
+                                            <a href="@portfolioLinks.PersonalWebsiteUrl">@portfolioLinks.PersonalWebsiteUrl</a>
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </div>
+                        }
+
+                    }
+                    else if (profilePortfolio == null)
+                    {
+                        <p>Getting profile links...</p>
+                    }
+                    else
+                    {
+                        <p>No candidate selected...</p>
+                    }
+                </div>
+
+                <div class="tab-pane" style="@GetActivity(TabEnum.ApplicationForm)">
+                    <table style="height: 50vh; overflow: auto">
+                        <thead>
+                            <tr>
+                                <td class="row p-3 col-4">Question</td>
+                                <td class="row p-3 col-4">Answer</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (AnswerList != null && QuestionList != null)
+                            {
+                                @*@foreach (var answer in AnswerList)
+                                {
+                                    @if (answer.appUserId == selectedCandidate.AppUserId)
+                                    {
+                                        FormQuestion question = QuestionList.Where(x => x.id == answer.questionnaireHRFormId && answer.appUserId == selectedCandidate.AppUserId).FirstOrDefault();
+                                        <tr>
+                                            <td class="row p-3 col-4">
+                                                <label>@question.question</label>
+                                            </td>
+                                            <td class="row p-3 col-4">
+                                                <p>@answer.applicantAnswer</p>
+                                            </td>
+                                        </tr>
+                                    }
+                                }*@
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>
+                                        <p>No application form was found.</p>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    private List<FormQuestion> QuestionList = new List<FormQuestion>();
+    private List<ApplicantAnswer> AnswerList = new List<ApplicantAnswer>();
+    private ApplicationModel tempApplication;
+    private IList<ApplicationPhaseHelper> tempPhaseHelper;
+    private int tempRank;
+    private string tempJobTitle;
+    private string searchCandidate;
+    private ApplicationPhase phaseFinal;
+    private string selectedJob = "";
+    private string searchTerm = "";
+    private CandidateRecommender selectedCandidate;
+    private IList<AppUser> usersFiltered;
+    private IList<Job> jobs = new List<Job>();
+    private IList<CandidateRecommender> candidates = null;
+    private IList<AppUser> users = new List<AppUser>();
+    private IList<ApplicationPhaseHelper> phasesHelpers = new List<ApplicationPhaseHelper>();
+    private IList<ApplicationModel> applications = new List<ApplicationModel>();
+    private IList<ApplicationPhase> phases = new List<ApplicationPhase>();
+    private IList<PersonalInformation> personalInformations { get; set; }
+    private IList<AdditionalInformation> additionalInformations { get; set; }
+    private IList<WorkHistory> workHistories { get; set; }
+    private IList<Education> educations { get; set; }
+    private IList<ProfilePortfolioLink> profilePortfolio { get; set; }
+    [Parameter] public int JobId { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
+        candidates = await httpClient.GetFromJsonAsync<List<CandidateRecommender>>("https://xebecapi.azurewebsites.net/api/candidaterecommender");
+        personalInformations = await httpClient.GetFromJsonAsync<List<PersonalInformation>>("https://xebecapi.azurewebsites.net/api/PersonalInformation");
+        additionalInformations = await httpClient.GetFromJsonAsync<List<AdditionalInformation>>("https://xebecapi.azurewebsites.net/api/AdditionalInformation");
+        workHistories = await httpClient.GetFromJsonAsync<List<WorkHistory>>("https://xebecapi.azurewebsites.net/api/WorkHistory");
+        educations = await httpClient.GetFromJsonAsync<List<Education>>("https://xebecapi.azurewebsites.net/api/Education");
+        applications = await httpClient.GetFromJsonAsync<List<ApplicationModel>>("https://xebecapi.azurewebsites.net/api/application");
+        AnswerList = await httpClient.GetFromJsonAsync<List<ApplicantAnswer>>("https://xebecapi.azurewebsites.net/api/ApplicantQuestionnaire");
+        QuestionList = await httpClient.GetFromJsonAsync<List<FormQuestion>>("https://xebecapi.azurewebsites.net/api/Questionnaire");
+
+        users = await httpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
+        phasesHelpers = await httpClient.GetFromJsonAsync<List<ApplicationPhaseHelper>>("https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper");
+        applications = await httpClient.GetFromJsonAsync<List<ApplicationModel>>("https://xebecapi.azurewebsites.net/api/Application");
+        phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/ApplicationPhase");
+        profilePortfolio = await httpClient.GetFromJsonAsync<List<ProfilePortfolioLink>>("https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink");
+
+        FilterCandidatesByJob();
+        SetSelectedCandidate(candidates.FirstOrDefault());
+    }
+
+    private void SearchCandidate(ChangeEventArgs e)
+    {
+        searchCandidate = e.Value.ToString();
+
+        usersFiltered = users.Where(x => x.name.ToLower().Contains(searchCandidate.ToLower()) || x.surname.ToLower().Contains(searchCandidate.ToLower())).ToList();
+    }
+
+    private void FilterCandidatesByJob()
+   {
+        Console.WriteLine(JobId);
+
+        GetCandidates();
+
+
+        candidates = candidates.Where(o => o.jobId == JobId).ToList();
+        candidates = candidates.OrderByDescending(o => o.TotalMatch).ToList();
+    }
+
+    private async Task GetCandidates()
+    {
+        candidates = await httpClient.GetFromJsonAsync<List<CandidateRecommender>>("https://xebecapi.azurewebsites.net/api/candidaterecommender");
+    }
+
+    private void AssignApplication(ApplicationModel application)
+    {
+        tempApplication = application;
+    }
+
+    private string FindCurrentPhase(AppUser candidate, string jobTitle)
+    {
+        List<ApplicationModel> applications_ = applications.Where(x => x.AppUserId == candidate.id).ToList();
+        int jobId;
+
+        @if (jobs.Where(x => x.Title == jobTitle).FirstOrDefault() != null)
+        {
+            jobId = jobs.Where(x => x.Title == jobTitle).FirstOrDefault().Id;
+        }
+        else
+        {
+            return "No phase found";
+        }
+
+        int applicationId = applications_.Where(x => x.JobId == jobId).FirstOrDefault().Id;
+
+        List<ApplicationPhaseHelper> phases_ = phasesHelpers.Where(x => x.ApplicationId == applicationId).ToList();
+        phases_ = phases_.OrderByDescending(x => x.ApplicationPhaseId).ToList();
+
+        ApplicationPhaseHelper currentPhase = phases_.FirstOrDefault();
+
+        string phaseDescription = phases.Where(x => x.id == currentPhase.ApplicationPhaseId).FirstOrDefault().description;
+
+        return phaseDescription;
+
+    }
+
+    private void SetSelectedCandidate(CandidateRecommender candidate)
+    {
+        if (candidate != null)
+            selectedCandidate = candidate;
+    }
+
+    TabEnum _tabEnum = new();
+
+
+    private enum TabEnum
+    {
+        PersonalInfo,
+        WorkHistory,
+        Educa,
+        AddInfo,
+        Online,
+        Jobs,
+        ApplicationForm,
+        PhaseManager
+    }
+
+    private string GetActivity(TabEnum tab)
+    {
+        if (_tabEnum == tab)
+        {
+            return "display: block;";
+        }
+        return "display: none;";
+    }
+
+    private object GetPillStyle(CandidateRecommender candidate)
+    {
+        double totalMatch = candidate.TotalMatch;
+        if (totalMatch <= 30)
+            return "background: #ff5201; color: rgba(0, 0, 0, 0.35)";
+        else if (totalMatch <= 40)
+            return "background: #ff8401; color: rgba(0, 0, 0, 0.35)";
+        else if (totalMatch <= 50)
+            return "background: #ff9d01; color: rgba(0, 0, 0, 0.35)";
+        else if (totalMatch <= 60)
+            return "background: #ffbc01; color: rgba(0, 0, 0, 0.35)";
+        else if (totalMatch <= 70)
+            return "background: #ffd401; color: rgba(0, 0, 0, 0.35)";
+        else if (totalMatch <= 80)
+            return "background: #ebff01; color: rgba(0, 0, 0, 0.35)";
+        else if (totalMatch <= 90)
+            return "background: #baff01; color: rgba(0, 0, 0, 0.35)";
+        else if (totalMatch <= 100)
+            return "background: #05ff01; color: rgba(0, 0, 0, 0.35)";
+
+        return "";
+    }
+
+    private object GetStyle(CandidateRecommender candidate)
+    {
+        if (selectedCandidate == candidate)
+            return "border-left: 5px solid #00bcae;";
+        return "";
+    }
+
+}

@@ -1,0 +1,185 @@
+﻿@page "/signin"
+@inject NavigationManager navmanager
+@layout EmptyLayout
+@inject HttpClient HttpClient
+@using System.Linq;
+@using XebecPortal.UI.Shared.Home.Models
+@inject UserState state 
+@inject IJSRuntime JSRuntime
+ 
+<style>
+    .overlay-login {
+        z-index: 0;
+        top: 0;
+        height: 80vh;
+        width: 100%;
+    }
+   
+</style>
+<div class="overlay-login" id="login">
+    <div class="login-page">
+        <div class="login-left">
+            <form class="index-form-login" hidden="@RightDisplayLoginIsHidden">
+                <div class="form-group index-form-heading">
+                    <h1 class="index-form-heading-1">SIGN IN</h1>
+                </div>
+                <div class="form-group index-form-group index-group">
+                    <div class="index-form-icon">
+                        <i class="fa fa-user"></i>
+                    </div>
+                    <input type="email" required placeholder="Email address" @bind="@Email" @ref="SignInElementInFocus"/>
+                </div>
+                <div class="form-group index-form-group index-group">
+                    <div class="index-form-icon">
+                        <i class="fa fa-lock "></i>
+                    </div>
+                    <input type="password" placeholder="Password" @bind="@Password">
+                </div>
+                <div class="form-group index-form-or">
+                    <h1 class="index-form-heading-3">or using</h1>
+                </div>
+                <div class="form-group index-form-socials">
+                    <div class="index-socialmedia-div">
+                        <i class="fab fa-google"></i>
+                    </div>
+                    <div class="index-socialmedia-div">
+                        <i class="fab fa-microsoft"></i>
+                    </div>
+                    <div class="index-socialmedia-div">
+                        <i class="fab fa-facebook"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <h1 class="forgotpassword" @onclick="GoToForgotPassword">forgot password?</h1>
+                </div>
+                <div class="form-group index-form-or" hidden="@invalidEmailorPasswordMessageIsHidden">
+                    <h1 class="index-form-heading-3">incorrect credentials</h1>
+                </div>
+                <input type="button" class="index-form-button" @onclick="Login" value="Submit" />
+            </form>
+
+            <form class="index-form-login" hidden="@RightDisplayForgotPasswordIsHidden">
+                <div class="form-group index-form-heading">
+                    <h1 class="index-form-heading-1">FORGOT PASSWORD</h1>
+                </div>
+                <div class="form-group index-form-group index-group">
+                    <div class="index-form-icon">
+                        <i class="fa fa-user"></i>
+                    </div>
+                    <input type="email" required placeholder="Email address" @bind="@Email" @ref="ForgotPasswordElementInFocus">
+                </div>
+                <div class="form-group">
+                    <h1 class="forgotpassword" @onclick="GoToLogin">login</h1>
+                </div>
+                <div class="form-group index-form-or" hidden="@invalidEmailorPasswordMessageIsHidden">
+                    <h1 class="index-form-heading-3">invalid email</h1>
+                </div>
+                <div class="form-group index-form-or" hidden="@validSubmitForgotPasswordMessageIsHidden">
+                    <h1 class="index-form-heading-3">check your email for a link from us</h1>
+                </div>
+                <input type="button" class="index-form-button" @onclick="SubmitForgotPassword" value="Submit" />
+            </form>
+        </div>
+        <div class="login-right"></div>
+
+    </div>
+</div>
+
+@code{
+
+    // See login or forgot password form
+    private bool RightDisplayLoginIsHidden;
+    private bool RightDisplayForgotPasswordIsHidden;
+
+    //login invalid messages
+    private bool invalidEmailorPasswordMessageIsHidden;
+    private bool validSubmitForgotPasswordMessageIsHidden;
+
+    private string Email = "";
+    private string Password = "";
+
+    private string message = "";
+    private ForgotPasswordModel forgotPassword = new ForgotPasswordModel();
+
+    private SignInModel signIn = new SignInModel();
+    private SignInResult thisUser = new SignInResult();
+
+    ElementReference SignInElementInFocus, ForgotPasswordElementInFocus;
+
+    protected override async Task OnInitializedAsync()
+    {
+        RightDisplayLoginIsHidden = false;
+        RightDisplayForgotPasswordIsHidden = true;
+        validSubmitForgotPasswordMessageIsHidden = true;
+        invalidEmailorPasswordMessageIsHidden = true;
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {      
+        SignInElementInFocus.FocusAsync();
+        ForgotPasswordElementInFocus.FocusAsync();       
+    }
+
+    private async Task Login()
+    {
+        signIn.Email = Email;
+        signIn.Password = Password;
+
+        try
+        {
+            using (var msg = await HttpClient.PostAsJsonAsync<SignInModel>("https://xebecapi.azurewebsites.net/api/auth/loginnew", signIn))
+            {
+                if (msg.IsSuccessStatusCode)
+                {
+                    SignInResult result = await msg.Content.ReadFromJsonAsync<SignInResult>();
+
+                    state.AppUserId = result.AppUserId;
+                    state.Email = result.Email;
+                    state.Name = result.Name;
+                    state.Surname = result.Surname;
+                    state.Role = result.Role;
+                    state.Avator = result.Avator;
+                    state.Title = result.Title;
+
+                    message = result.Message;
+
+                    if (result.Success)
+                    {
+                        state.isLoggedIn = true;
+                        navmanager.NavigateTo("/main");
+
+                    }
+                    else if (message.Equals("User/password not found."))
+                    {
+                        invalidEmailorPasswordMessageIsHidden = false;
+                    }
+                }
+            }
+
+        }
+        catch
+        {
+            invalidEmailorPasswordMessageIsHidden = false;
+        }
+    }
+
+    private async Task SubmitForgotPassword()
+    {
+        forgotPassword.Email = Email;
+        forgotPassword.Link = "https://localhost:44364/forgotpassword";
+        await Task.Delay(0);
+    }
+
+    private async Task GoToLogin()
+    {
+        await OnInitializedAsync();
+    }
+    private void GoToForgotPassword()
+    {
+        RightDisplayLoginIsHidden = true;
+        RightDisplayForgotPasswordIsHidden = false;
+        validSubmitForgotPasswordMessageIsHidden = true;
+        invalidEmailorPasswordMessageIsHidden = true;
+    }
+}
+ 

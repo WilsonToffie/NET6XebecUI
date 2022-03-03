@@ -1,0 +1,582 @@
+﻿@page "/hrjobportal"
+@inject HttpClient httpClient
+@inject IJSRuntime jsRuntime
+@inject NavigationManager nav
+@inject HrJobState hrJobState
+@inject IDialogService DialogService
+
+<style>
+
+    .handPointer {
+        cursor: pointer;
+    }
+        input.smallerCheckBox {
+            width: 15px;
+            height: 15px;
+            margin: 2px;
+        }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #fff;
+        border-radius: 5px;
+    }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00BCAE;
+        }
+
+    .hr-job-search-bar {
+        width: 40%;
+        height: 5vh;
+        margin-bottom: 2.5vh;
+        margin-top: 2.5vh;
+        margin-left: 30%;
+        margin-right: 30%;
+        border: none;
+    }
+    .hr-job-filters{
+        height: 5vh;
+    }
+    .job-search-icon {
+        color: #00BCAE;
+        font-size: 2em;
+        text-align: center;
+    }
+
+    .job-search-icon-div {
+        cursor: pointer;
+        background-color: rgba(255,255,255,0.6);
+        border-radius: 2em;
+        width: 5%;
+        text-align: center;
+        border: 0.1em solid rgba(0,0,0,0.2);
+    }
+
+    .job-portal-card {
+        cursor: pointer;
+        background-color: rgba(255,255,255,1);
+        border-radius: 20px;
+        border: solid white 0.25em;
+        box-shadow: rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+    }
+
+        .job-portal-card:hover {
+            cursor: pointer;
+            background-color: rgba(255,255,255,1);
+            border: solid white 0.25em;
+            box-shadow: rgba(0, 0, 0, 0.25) 0px 0.0625em 0.0625em, rgba(0, 0, 0, 0.25) 0px 0.125em 0.5em, rgba(255, 255, 255, 0.1) 0px 0px 0px 1px inset;
+            position: relative;
+        }
+
+    .job-portal-card-body {
+        height: 20vh;
+        margin-left: 1vh;
+        margin-right: 1vh;
+        margin-bottom: 1vh;
+    }
+
+    .headingPage {
+        height: 5vh;
+        color: #003340;
+        font-size: 2rem;
+    }
+
+    .formButton {
+        background-color: #00BCAE;
+        color: white;
+        font-weight: 600;
+        height: 5vh;
+        margin-top: 2vh;
+        width: auto;
+        font-family: opensans-bold;
+    }
+
+        .formButton:hover {
+            background-color: #d35bc9;
+            color: white;
+            font-weight: 600;
+            height: 5vh;
+            margin-top: 2vh;
+            width: auto;
+            font-family: opensans-bold;
+        }
+
+    .my-container {
+        height: 65vh;
+        width: 100%;
+    }
+
+    .small-card-name {
+        color: black;
+        font-weight: 600;
+        font-size: 1em;
+        font-family: opensans-bold;
+    }
+
+    .small-card-company {
+        color: rgba(0,0,0,0.5);
+        font-weight: 600;
+        font-size: 1em;
+        font-family: opensans-bold;
+    }
+
+    .small-card-location {
+        color: rgba(0,0,0,0.5);
+        font-weight: 600;
+        font-size: 1em;
+        font-family: opensans-light;
+    }
+
+    .small-card-date {
+        color: #d35bc9;
+        font-weight: 800;
+        font-size: 1em;
+        font-family: opensans-bold;
+    }
+
+    .job-portal-right {
+        background-color: rgba(255,255,255,1);
+        border-radius: 20px;
+        border: solid white 0.25em;
+        box-shadow: rgba(0,51,64,0.86) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset, rgba(9, 30, 66, 0.25) 0px 1px 1px, rgba(9, 30, 66, 0.13) 0px 0px 1px 1px;
+        margin-top: 1vh;
+    }
+
+    .job-portal-form {
+        width: 90%;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .big-card-name {
+        color: black;
+        font-weight: 900;
+        font-size: 2em;
+        font-family: opensans-bold;
+    }
+
+    .big-card-description {
+        color: #666666;
+        font-weight: 800;
+        font-size: 1em;
+        font-family: opensans-condensed-light;
+    }
+
+    .big-card-type {
+        color: black;
+        font-weight: 800;
+        font-size: 1em;
+        font-family: opensans-bold;
+    }
+
+    li.active a {
+        background: #00BCAE !important;
+        color: white;
+        border-color: #00BCAE !important;
+    }
+
+    .pagination {
+        box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+    }
+
+    .job-portal-inner-container {
+        width: 100%;
+        height: 85vh;
+    }
+
+    .job-portal-inner-top {
+        height: 5vh;
+        margin-top: 2.5vh;
+        margin-bottom: 2.5vh;
+    }
+
+    .job-portal-inner-bottom {
+        height: 65vh;
+        width: 100%;
+    }
+
+    .job-portal-nav-btn {
+        height: 5vh;
+        width: 100%;
+        border-radius: 2em;
+        border: none;
+        color: white;
+        background-color: #00BCAE;
+        font-weight: 700;
+        font-family: opensans-condensed-bold;
+    }
+    job-portal-nav-btn:hover{
+        background-color: #d35bc9;
+    }
+    .hr-jobportal-mudselect {
+        cursor: pointer;
+        background-color: white;
+        height: 7vh;
+        font-size: 1.5em;
+        font-weight: 800;
+        font-family: opensans-condensed-bold;
+        color: black;
+        border-radius: 1em;
+        padding-bottom: 5vh;
+        padding-left: 4vh;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
+    }
+
+        .hr-jobportal-mudselect:hover {
+            border-radius: 1em;
+            border: 0.1em solid black;
+        }
+    .hr-job-search-bar-input {
+        background-color: white;
+        height: 5vh;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
+        border: white solid 0.1em;
+        border-radius: 1em;
+    }
+    .hr-job-search-bar-input::placeholder {
+        color: #666666;
+        font-weight: 900;
+        font-size: 0.8em;
+        padding-left: 1em;
+        padding-top: 1em;
+        font-family: opensans-condensed-bold;
+    }
+    .hr-job-name{
+        height: 5vh;
+        line-height: 5vh;
+        font-weight: 800;
+        font-size: 2em;
+        color: #00BCAE;
+        font-family: opensans-condensed-light;
+        text-align: center;
+    }
+    
+</style>
+
+<div class="container" style="height: 55vh" hidden="@JobPortalIsHidden">
+
+    <div style="height: 15vh">
+        <div class="hr-job-search-bar">
+            <input class="hr-job-search-bar-input" type="text" placeholder="Search" @oninput="SearchListJob" />
+        </div>
+        <div class="row hr-job-filters">
+            <div class="col-3">
+                <!--Location-->
+                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextLocation)" Label="Location" SelectedValuesChanged="SearchListLocation">
+                    @if (jobListFilter?.Any() == true)
+                    {
+                        @foreach (var item in jobList.Select(x => x.Location).OrderBy(x => x).Distinct())
+                        {
+                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                        }
+
+                    }
+                </MudSelect>
+            </div>
+            <div class="col-3">
+                <!--Company-->
+                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextCompany)" Label="Company" SelectedValuesChanged="SearchListCompany">
+                    @if (jobListFilter?.Any() == true)
+                    {
+                        @foreach (var item in jobList.Select(x => x.Company).OrderBy(x => x).Distinct())
+                        {
+                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                        }
+
+                    }
+                </MudSelect>
+            </div>
+            <div class="col-3">
+                <!--Department-->
+                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
+                    @if (jobListFilter?.Any() == true)
+                    {
+                        @foreach (var item in jobList.Select(x => x.Department).OrderBy(x => x).Distinct())
+                        {
+                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                        }
+
+                    }
+                </MudSelect>
+            </div>
+            <div class="col-3">
+                <!--Status-->
+                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Status" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextStatus)" Label="Status" SelectedValuesChanged="SearchListStatus">
+                    @if (jobListFilter?.Any() == true)
+                    {
+                        @foreach (var item in status.Select(x => x.name))
+                        {
+                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                        }
+
+                    }
+                </MudSelect>
+            </div>
+        </div>
+    </div>
+    <br />
+
+    @if (jobListFilter?.Any() == true)
+    {
+        <div class="row" style="height: 55vh; padding: 20px">
+            <div class="col-3 overflow-auto job-portal-left">
+
+                <!--Card list for jobss-->
+                <div class="col-12" style="height: 53vh !important; margin-top: 1vh;">
+                    @foreach (var item in jobPagedList)
+                    {
+                        <div class="card job-portal-card" @onclick="() => DisplayJobDetail(item.Id)" style="@GetStyling(item)">
+                            <div class="card-body job-portal-card-body">
+                                <div class="row">
+                                    <div class="col-10"><h3 class="card-title small-card-name">@item.Title</h3></div>
+                                    <div class="col-2"> <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteData(item.Id)"></i> </div>
+                                    <div class="col-12"><h5 class="card-subtitle text-muted small-card-company">@item.Company</h5></div>
+                                    <br />
+                                    <div class="col-12"><h5 class="card-text small-card-location">@item.Location</h5></div>
+                                    <div class="col-12"><h5 class="card-text small-card-date">Due Date: @item.DueDate.ToString("d MMMM yyyy")</h5></div>
+                                    <div class="col-12"><h5 class="card-text">Status: <strong>@item.Status</strong></h5></div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                    }
+                </div>
+            </div>
+
+            <div class="col-9 job-portal-right-main" style="height: 55vh;">
+
+                <!--The Form for editing and deleting a job-->
+                <div class="col-12" style="height:55vh!important;margin-top:1vh;">
+                    <div class="col-12 job-portal-right">
+                        <form class="job-portal-form ">
+                            <div class="row">
+                                <div class="col-6 p-2">
+                                    @if (changeForm)
+                                    {
+                                        <label>Job Title</label>
+                                        <input type="text" class="form-control" placeholder="Job Name" @bind="displayJobDetail.Title" />
+                                    }
+                                    else
+                                    {
+                                        <h3 class="big-card-name">@displayJobDetail.Title</h3>
+                                    }
+                                </div>
+                                <div class="col-6 p-3 d-flex justify-content-end">
+                                    <div class="row">
+                                        @if (changeForm)
+                                        {
+                                        <div class="col">
+                                            <button class="job-portal-nav-btn btn-danger" type="button" style="width: 7em" @onclick="() => FormType(false)">Cancel</button>
+                                        </div>
+                                        <div class="col">
+                                            <button class="job-portal-nav-btn" type="button" style="width: 7em" @onclick="() => SaveData(displayJobDetail)">Save</button>
+                                        </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="col">
+                                                <button class="job-portal-nav-btn" type="button" style="width: 7em" @onclick="OpenJobCollabDialog">Collaborators</button>
+                                            </div>
+                                            <div class="col">
+                                                <button class="job-portal-nav-btn" type="button" style="width: 7em" @onclick="() => ShowApplicantPortal(displayJobDetail.Id)">Applicant Portal</button>
+                                            </div>
+                                            <div class="col">
+                                                <button class="job-portal-nav-btn" type="button" style="width: 7em" @onclick="() => FormType(true)">Edit</button>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="col-6 p-2">
+                                    @if (changeForm)
+                                    {
+                                        <label>Company</label>
+                                        <input type="text" class="form-control" placeholder="Company Name" @bind="displayJobDetail.Company" />
+                                    }
+                                    else
+                                    {
+                                        <h5 class="text-muted">@displayJobDetail.Company</h5>
+                                    }
+                                </div>
+                                <div class="col-6 p-2 justify-content-end">
+                                    @if (changeForm)
+                                    {
+                                        <label>Location</label>
+                                        <select class="form-select" @bind="displayJobDetail.Location">
+                                            @foreach (var item in Locations)
+                                            {
+                                                <option>@item</option>
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <p class="small-card-company text-right">@displayJobDetail.Location</p>
+                                    }
+                                </div>
+                                <div class="col-6 p-2">
+
+                                    @if (changeForm)
+                                    {
+                                        <label>Job Type</label>
+                                        <select class="form-select">
+                                            <option>Full-time</option>
+                                            <option>Part-time</option>
+                                            <option>Contract</option>
+                                        </select>
+                                    }
+                                    @if (!changeForm)
+                                    {
+                                        if (displayJobDetail.JobTypes != null && displayJobDetail.JobTypes.Count > 0)
+                                        {
+                                            <p class="big-card-type">@GetJobType(displayJobDetail.Id)</p>
+                                        }
+                                    }
+                                </div>
+                                <div class="col-6 p-2">
+
+                                    @if (changeForm)
+                                    {
+                                        <label>Department</label>
+                                        <select class="form-select" @bind="displayJobDetail.Department">
+                                            @foreach (var item in Departments)
+                                            {
+                                                <option>@item</option>
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <p class="big-card-type text-right"> @displayJobDetail.Department</p>
+                                    }
+                                </div>
+                                <div class="col-12 p-2">
+                                    @if (changeForm)
+                                    {
+                                        <label>Job Description</label>
+                                        <textarea class="form-control" placeholder="Description" rows="4" @bind="displayJobDetail.Description"></textarea>
+                                    }
+                                    else
+                                    {
+                                        <p class="text-left overflow-auto" style="height: 12em">@displayJobDetail.Description</p>
+                                    }
+                                </div>
+                                <div class="col-6 p-2">
+                                    @if (changeForm)
+                                    {
+                                        <label class="form-label">Date Advertised</label>
+                                        <input class="form-control" type="date" @bind="displayJobDetail.DueDate" />
+                                    }
+                                    else
+                                    {
+                                        <p class="small-card-date">Date Advertised: @displayJobDetail.CreationDate.ToString("d MMMM yyyy")</p>
+                                    }
+                                </div>
+                                <div class="col-6 p-2 d-flex justify-content-end">
+                                    @if (changeForm)
+                                    {
+                                        <label class="form-label">Due Date</label>
+                                        <input class="form-control" type="date" @bind="displayJobDetail.DueDate" />
+                                    }
+                                    else
+                                    {
+                                        <p class="small-card-date">Due Date: @displayJobDetail.DueDate.ToString("d MMMM yyyy")</p>
+                                    }
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row p-3">
+            <div class="col-3">
+                <br />
+                <br />
+                <div class="col-12 d-flex justify-content-center">
+                    <MudPagination Rectangular="true" Variant="Variant.Filled" Size="Size.Small" BoundaryCount="1" MiddleCount="1" Count="jobPagedList.PageCount" SelectedChanged="PageListNav" ShowNextButton="!nextButton" ShowPreviousButton="!preButton" />
+                </div>
+            </div>
+        </div>
+    }
+    else if (jobListFilter?.Any() == false && isFilterContainAnyVal)
+    {
+        @for (int i = 0; i < 5; i++)
+        {
+            <br />
+        }
+        <h1 class="text-center align-middle">No Job Are Available</h1>
+    }
+    else
+    {
+        @for (int i = 0; i < 5; i++)
+        {
+            <br />
+        }
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                <MudProgressCircular Color="Color.Primary" Style="height:140px;width:140px;" Indeterminate="true" />
+            </div>
+        </div>
+    }
+</div>
+
+<div class="job-portal-inner-container" hidden="@ApplicantPortalIsHidden">
+    <div class="row job-portal-inner-top">
+        <div class="col-2"></div>
+        <div class="col-2">
+            <input type="button" value="Job Portal" @onclick="ShowJobPortal" class="job-portal-nav-btn" style="margin-left: 100px; width: 50%" />
+        </div>
+        <div class="col-4 hr-job-name">@displayJobDetail.Title</div>
+        <div class="col-2">
+            <input type="button" value="Phase Manager" @onclick="ShowPhaseManager" class="job-portal-nav-btn" style="width: 50%;" />
+        </div>
+        <div class="col-2"></div>
+    </div>
+    <div class="job-portal-inner-bottom">
+        <XebecPortal.UI.Pages.HR.ApplicantPortal JobId="displayJobDetail.Id"/>
+    </div>
+</div>
+<div class="job-portal-inner-container" hidden="@PhaseManagerIsHidden">
+    <div class="row job-portal-inner-top">
+        <div class="col-2"></div>
+        <div class="col-2">
+            <input type="button" value="Applicant Portal" class="job-portal-nav-btn" @onclick="() => ShowApplicantPortal(hrJobState.JobId)" style="margin-left: 20px" />
+        </div>
+        <div class="col-4 hr-job-name">@displayJobDetail.Title</div>
+        <div class="col-4"></div>
+    </div>
+    <div class="job-portal-inner-bottom">
+        <XebecPortal.UI.Pages.HR.PhaseManager CurrentJobId="displayJobDetail.Id"/>
+    </div>
+</div>
+
+<MudDialog @bind-IsVisible="isDialogVisible" Options="options">
+    <TitleContent>
+        <MudText Typo="Typo.h5" Align="Align.Center">
+            List Of Collaborators For Job Title: <strong>@displayJobDetail.Title</strong>
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudText Typo="Typo.body1">Collaborator 1</MudText>
+    </DialogContent>
+</MudDialog>
+
+@{
+    isFilterContainAnyVal = !string.IsNullOrEmpty(searchJob) || mudSelectLocation?.Any() == true || mudSelectCompany?.Any() == true || mudSelectDepartment?.Any() == true || mudSelectStatus?.Any() == true;
+}
+
+@code {
+    private bool isDialogVisible;
+    private MudBlazor.DialogOptions options = new() { CloseButton = true, FullWidth = true };
+    private void OpenJobCollabDialog() => isDialogVisible = true;
+}

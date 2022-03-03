@@ -1,0 +1,190 @@
+﻿@page "/dataanalyticstool"
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    .da-container {
+        width: 97%;
+        margin-left: 1.5%;
+        margin-right: 1.5%;
+        height: 100%;
+        border-radius: 3em;
+        display: flex;
+    }
+    .da-nav {
+        width: 5%;
+        background-color: black;
+        box-shadow: 0 2px 5px 0 rgba(255,255,255, 1), 0 2px 10px 0 rgba(255,255,255, 1);
+        height: 90%;
+        margin-top: 3%;
+        border-top-left-radius: 30px;
+        border-bottom-left-radius: 30px;
+        border-top-right-radius: 30px;
+        border-bottom-right-radius: 30px;
+        padding-top: 5vh;
+        padding-bottom: 5vh;
+    }
+    .da-nav-option {
+        width: 100%;
+        height: 8vh;
+        text-align: center;
+        color: #00bcae;
+        font-size: 1em;
+        margin-top: 1vh;
+        text-align: center;
+    }
+        .da-nav-option:hover {
+            width: 100%;
+            height: 8vh;
+            text-align: center;
+            background-color: #00bcae;
+            color: white;
+            margin-top: 1vh;
+            text-align: center;
+        }
+    .da-nav-icon {
+        width: 100%;
+        height: 8vh;
+        font-size: 1.5em;
+        line-height: 8vh;
+    }
+    .bottom-cover {
+        height: 42px;
+        width: 92%;
+        background-color: white;
+        position: absolute;
+        z-index: 1;
+        margin-left:5%;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 30px;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 30px;
+        background-color: rgba(255,255,255,1);
+        border: none;
+        top: 87%;
+    }
+    .da-main {
+        width: 95%;
+        height: 90%;
+        margin-top: 3%;
+        border-top-left-radius: 30px;
+        border-bottom-left-radius: 30px;
+        border-top-right-radius: 30px;
+        border-bottom-right-radius: 30px;
+    }
+    iframe {
+        width: 100%;
+        height: 100%;
+        padding:0;
+        background-color: transparent;
+        border: none;
+        border-top-left-radius: 30px;
+        border-bottom-left-radius: 30px;
+        border-top-right-radius: 30px;
+        border-bottom-right-radius: 30px;
+    }
+</style>
+
+<div class="da-container">
+    <div class="da-nav">
+        <div class="da-nav-option" @onclick="showConversionRates">
+            <i class="fas fa-exchange-alt da-nav-icon"></i>
+        </div>
+        <div class="da-nav-option" @onclick="showGenderRatios">
+            <i class="fas fa-venus-mars da-nav-icon"></i>
+        </div>
+        <div class="da-nav-option" @onclick="showJobPortalStats">
+            <i class="fas fa-briefcase da-nav-icon"></i>
+        </div>
+        <div class="da-nav-option" @onclick="showJobTypeStats">
+            <i class="fas fa-file-signature da-nav-icon"></i>
+        </div>
+        <div class="da-nav-option" @onclick="showRecruitingFunnelStats">
+            <i class="fas fa-filter da-nav-icon"></i>
+        </div>
+        <div class="da-nav-option" @onclick="showTrafficStats">
+            <i class="fas fa-traffic-light da-nav-icon"></i>
+        </div>
+        <div class="da-nav-option" @onclick="showTalentRating">
+            <i class="fas fa-percent da-nav-icon"></i>
+        </div>
+    </div>
+    <div class="da-main" hidden="@conversionRateIsHidden">
+        <iframe src="https://app.powerbi.com/reportEmbed?reportId=ef534312-422e-4d52-9ceb-a611301fd95c&autoAuth=true&ctid=92454335-564e-4ccf-b0b0-24445b8c03f7&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1pLXByaW1hcnktcmVkaXJlY3QuYW5hbHlzaXMud2luZG93cy5uZXQvIn0%3D" frameborder="0" allowFullScreen="true"></iframe>
+    </div>
+    <div class="da-main" hidden="@genderRatioIsHidden">
+        <iframe src="https://app.powerbi.com/reportEmbed?reportId=b8825e2f-87e3-4f04-a6e8-ebf8abcba78d&autoAuth=true&ctid=92454335-564e-4ccf-b0b0-24445b8c03f7&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1pLXByaW1hcnktcmVkaXJlY3QuYW5hbHlzaXMud2luZG93cy5uZXQvIn0%3D" frameborder="0" allowFullScreen="true"></iframe>
+    </div>
+    <div class="da-main" hidden="@jobPortalIsHidden">
+        <iframe src="https://app.powerbi.com/reportEmbed?reportId=fcbb72f4-4b75-45f3-8dc7-4d243faf5734&autoAuth=true&ctid=92454335-564e-4ccf-b0b0-24445b8c03f7&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1pLXByaW1hcnktcmVkaXJlY3QuYW5hbHlzaXMud2luZG93cy5uZXQvIn0%3D" frameborder="0" allowFullScreen="true"></iframe>
+    </div>
+    <div class="da-main" hidden="@jobTypeIsHidden">
+        <iframe src="https://app.powerbi.com/reportEmbed?reportId=e5c3b29b-ad29-4866-aff3-2df6945cb946&autoAuth=true&ctid=92454335-564e-4ccf-b0b0-24445b8c03f7&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1pLXByaW1hcnktcmVkaXJlY3QuYW5hbHlzaXMud2luZG93cy5uZXQvIn0%3D" frameborder="0" allowFullScreen="true"></iframe>
+    </div>
+    <div class="da-main" hidden="@recruitingFunnelIsHidden">
+        <iframe src="https://app.powerbi.com/reportEmbed?reportId=dc3922a2-f5a6-48e5-b7b2-923cd1ffadc1&autoAuth=true&ctid=92454335-564e-4ccf-b0b0-24445b8c03f7&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1pLXByaW1hcnktcmVkaXJlY3QuYW5hbHlzaXMud2luZG93cy5uZXQvIn0%3D" frameborder="0" allowFullScreen="true"></iframe>
+    </div>
+    <div class="da-main" hidden="@trafficIsHidden">
+        <iframe src="https://app.powerbi.com/reportEmbed?reportId=b48e6a02-22a5-421a-81e5-12caa5327a11&autoAuth=true&ctid=92454335-564e-4ccf-b0b0-24445b8c03f7&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1pLXByaW1hcnktcmVkaXJlY3QuYW5hbHlzaXMud2luZG93cy5uZXQvIn0%3D" frameborder="0" allowFullScreen="true"></iframe> 
+    </div>
+    <div class="da-main" hidden="@talentRatingIsHidden">
+        @* <iframe title="Site Activity - Site Activity" src="" frameborder="0" allowFullScreen="true"></iframe> *@
+    </div>
+    <div class="bottom-cover"></div>
+</div>
+
+@code{
+    private bool conversionRateIsHidden, genderRatioIsHidden, jobPortalIsHidden, jobTypeIsHidden, trafficIsHidden, talentRatingIsHidden, recruitingFunnelIsHidden;
+
+    protected override async Task OnInitializedAsync()
+    {
+        trafficIsHidden = false;
+        genderRatioIsHidden = jobPortalIsHidden = jobTypeIsHidden = conversionRateIsHidden = talentRatingIsHidden = recruitingFunnelIsHidden = true;
+    }
+
+    private void showConversionRates()
+    {
+        conversionRateIsHidden = false;
+        genderRatioIsHidden = jobPortalIsHidden = jobTypeIsHidden = trafficIsHidden = talentRatingIsHidden = recruitingFunnelIsHidden = true;
+    }
+
+    private void showGenderRatios()
+    {
+        genderRatioIsHidden = false;
+        conversionRateIsHidden = jobPortalIsHidden = jobTypeIsHidden = trafficIsHidden = talentRatingIsHidden = recruitingFunnelIsHidden = true;
+    }
+
+    private void showJobPortalStats()
+    {
+        jobPortalIsHidden = false;
+        genderRatioIsHidden = conversionRateIsHidden = jobTypeIsHidden = trafficIsHidden = talentRatingIsHidden = recruitingFunnelIsHidden = true;
+    }
+
+    private void showJobTypeStats()
+    {
+        jobTypeIsHidden = false;
+        genderRatioIsHidden = jobPortalIsHidden = conversionRateIsHidden = trafficIsHidden = talentRatingIsHidden = recruitingFunnelIsHidden = true;
+    }
+
+    private void showRecruitingFunnelStats()
+    {
+        recruitingFunnelIsHidden = false;
+        genderRatioIsHidden = jobPortalIsHidden = jobTypeIsHidden = trafficIsHidden = talentRatingIsHidden = conversionRateIsHidden = true;
+    }
+
+    private void showTrafficStats()
+    {
+        trafficIsHidden = false;
+        genderRatioIsHidden = jobPortalIsHidden = jobTypeIsHidden = conversionRateIsHidden = talentRatingIsHidden = recruitingFunnelIsHidden = true;
+
+    }
+
+    private void showTalentRating()
+    {
+        talentRatingIsHidden = false;
+        genderRatioIsHidden = jobPortalIsHidden = jobTypeIsHidden = trafficIsHidden = conversionRateIsHidden = recruitingFunnelIsHidden = true;
+    }
+
+}

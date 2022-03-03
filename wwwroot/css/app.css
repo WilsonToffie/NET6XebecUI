@@ -1,0 +1,27 @@
+﻿@import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
+
+@font-face {
+    src: url("fonts/static/OpenSans/OpenSans-Bold.ttf");
+    font-family: opensans-bold;
+}
+
+@font-face {
+    src: url("fonts/static/OpenSans/OpenSans-ExtraBold.ttf");
+    font-family: opensans-extra-bold;
+}
+
+@font-face {
+    src: url("fonts/static/OpenSans/OpenSans-Light.ttf");
+    font-family: opensans-light;
+}
+
+@font-face {
+    src: url("fonts/static/OpenSans_Condensed/OpenSans_Condensed-Bold.ttf");
+    font-family: opensans-condensed-bold;
+}
+
+@font-face {
+    src: url("fonts/static/OpenSans_Condensed/OpenSans_Condensed-Light.ttf");
+    font-family: opensans-condensed-light;
+}
+

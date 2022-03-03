@@ -1,0 +1,1106 @@
+﻿@inject HrJobState hrJobState
+@inject HttpClient httpClient
+
+
+<style>
+    .phase-manager-container {
+        width: 100%;
+        height: 90%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .page-top-select-job {
+        height: 5vh;
+        width: 100%;
+        margin-bottom: 2.5vh;
+    }
+
+    .phase-container {
+        width: 190px;
+        max-height: 75%;
+        background-color: white;
+        border-radius: 20px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        display: flex;
+        justify-content: center;
+    }
+
+    .jobs-container {
+        display: flex;
+        justify-content: space-evenly;
+        width: 90%;
+    }
+
+    .job-status {
+        display: flex;
+        flex-direction: column;
+        width: 175px;
+        background-color: white;
+        height: 400px;
+        max-height: 400px;
+    }
+
+        .job-status ul {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: block;
+            justify-content: center;
+        }
+
+    .no-drop {
+        border: 2px dashed red;
+    }
+
+    .can-drop {
+        border: 2px dashed green;
+    }
+
+    .draggable {
+        margin-bottom: 5px;
+        padding: 5px 5px;
+        border: 1px solid #424d5c;
+        cursor: grab;
+        background: grey;
+        color: #ffffff;
+        border-radius: 8px;
+        width: 160px;
+        height: 65px;
+        display: flex;
+        align-items: center;
+    }
+
+        .draggable:active {
+            cursor: grabbing;
+        }
+
+    .phase-dropzone {
+        padding: 30px;
+        border: 1px dashed #75868a;
+        list-style: none;
+    }
+
+    .mydialog {
+        width: 350px;
+        height: 350px;
+        background-color: lightgrey;
+    }
+
+    .mydialog-title {
+        height: 10%;
+        width: 100%;
+        background-color: lightgrey;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 15px;
+        color: black;
+    }
+
+    .screening-dialog-body {
+        height: 40%;
+        width: 100%;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
+    .screening-dialog-textarea {
+        width: 100%;
+        height: 40%;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
+    .email-button{
+        position: absolute;
+        top: 90%;
+        left: 65%;
+    }
+
+
+    .mycard {
+        width: 100px;
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .edit-icon {
+        color: #00BCAE;
+        font-size: 1em;
+        text-align: center;
+    }
+
+    .currentphase {
+        background-color: #d35bc9;
+    }
+
+    .disabled-phase{
+        color: grey;
+    }
+
+    .active-phase{
+        color: black;
+        font-weight: bold;
+    }
+
+    .disabled-card{
+        color: grey;
+        background-color: lightgrey;
+    }
+    .phase-manager-textarea{
+        border-radius: 5px;
+        border: 1px solid grey;
+        background-color: white;
+    }
+</style>
+
+
+<div class="page-top-select-job">
+    <div class="hr-job-search-bar">
+        <input class="hr-job-search-bar-input" type="text" placeholder="Search" @bind-value="searchTerm" @bind-value:event="oninput" />
+    </div>
+</div>
+<div class="phase-manager-container">
+
+    <div class="jobs-container">
+
+        <div class="phase-container shadow @AppliedDropClass">
+            <div class="job-status">
+                <h5 class="active-phase">Applied (@Items.Where((item) => item.ApplicationPhaseId == 1).Count())</h5>
+
+                <ul class="dropzone"
+                    ondragover="event.preventDefault();"
+                    ondragstart="event.dataTransfer.setData('', event.target.id);"
+                    @ondrop='() => HandleDrop(1)'
+                    @ondragenter='() => HandleDragEnter(1)'
+                    @ondragleave="HandleDragLeave">
+
+                    @foreach (var item in FilteredItems)
+                    {
+                        @if (item.ApplicationPhaseId == 1)
+                        {
+                            <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
+                                <p class="description">@item.Name @item.Surname</p>
+                            </li>
+                        }
+                    }
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="phase-container shadow @ScreeningDropClass">
+            <div class="job-status">
+                <h5 class="@ScreeningActive">Screening (@Items.Where((item) => item.ApplicationPhaseId is 3 or 5 or 25 or 10).Count())</h5>
+
+                <ul class="dropzone"
+                    ondragover="event.preventDefault();"
+                    ondragstart="event.dataTransfer.setData('', event.target.id);"
+                    @ondrop='() => HandleDrop(10)'
+                    @ondragenter='() => HandleDragEnter(10)'
+                    @ondragleave="HandleDragLeave">
+
+                    @foreach (var item in FilteredItems)
+                    {
+                        @if (item.ApplicationPhaseId is 3 or 5 or 25 or 10)
+                        {
+                            <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
+                                <p class="description">
+                                    @item.Name @item.Surname
+                                    <span @onclick='() => ShowDialog(item)'>
+                                        <i class="fas fa-edit edit-icon"></i>
+                                    </span>
+                                </p>
+                            </li>
+                        }
+                    }
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="phase-container shadow @AssessmentDropClass">
+            <div class="job-status">
+                <h5  class="@AssessmentActive">Assessment (@Items.Where((item) => item.ApplicationPhaseId == 27).Count())</h5>
+
+                <ul class="dropzone"
+                    ondragover="event.preventDefault();"
+                    ondragstart="event.dataTransfer.setData('', event.target.id);"
+                    @ondrop='() => HandleDrop(27)'
+                    @ondragenter='() => HandleDragEnter(27)'
+                    @ondragleave="HandleDragLeave">
+
+                    @foreach (var item in FilteredItems)
+                    {
+                        @if (item.ApplicationPhaseId == 27)
+                        {
+                            <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
+                                <p class="description">
+                                    @item.Name @item.Surname
+                                    <span @onclick='() => ShowDialog(item)'>
+                                        <i class="fas fa-edit edit-icon"></i>
+                                    </span>
+                                </p>
+                            </li>
+                        }
+                    }
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="phase-container shadow @InterviewDropClass">
+            <div class="job-status">
+                <h5 class="@InterviewActive">Interview (@Items.Where((item) => item.ApplicationPhaseId is 26 or 28 or 29 or 30 or 31 or 11).Count())</h5>
+
+                <ul class="dropzone"
+                    ondragover="event.preventDefault();"
+                    ondragstart="event.dataTransfer.setData('', event.target.id);"
+                    @ondrop='() => HandleDrop(11)'
+                    @ondragenter='() => HandleDragEnter(11)'
+                    @ondragleave="HandleDragLeave">
+
+                    @foreach (var item in FilteredItems)
+                    {
+                        @if (item.ApplicationPhaseId is 26 or 28 or 29 or 30 or 31 or 11)
+                        {
+                            <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
+                                <p class="description">
+                                    @item.Name @item.Surname
+                                    <span @onclick='() => ShowDialog(item)'>
+                                        <i class="fas fa-edit edit-icon"></i>
+                                    </span>
+                                </p>
+                            </li>
+                        }
+                    }
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="phase-container shadow @ReferenceDropClass">
+            <div class="job-status">
+                <h5 class="@ReferenceActive">Reference Check (@Items.Where((item) => item.ApplicationPhaseId == 32).Count())</h5>
+
+                <ul class="dropzone"
+                    ondragover="event.preventDefault();"
+                    ondragstart="event.dataTransfer.setData('', event.target.id);"
+                    @ondrop='() => HandleDrop(32)'
+                    @ondragenter='() => HandleDragEnter(32)'
+                    @ondragleave="HandleDragLeave">
+
+                    @foreach (var item in FilteredItems)
+                    {
+                        @if (item.ApplicationPhaseId == 32)
+                        {
+                            <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
+                                <p class="description">
+                                    @item.Name @item.Surname
+                                    <span @onclick='() => ShowDialog(item)'>
+                                        <i class="fas fa-edit edit-icon"></i>
+                                    </span>
+                                </p>
+                            </li>
+                        }
+                    }
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="phase-container shadow @OfferDropClass">
+            <div class="job-status">
+                <h5  class="@OfferActive">Offer (@Items.Where((item) => item.ApplicationPhaseId is 33 or 34 or 35 or 12).Count())</h5>
+
+                <ul class="dropzone"
+                    ondragover="event.preventDefault();"
+                    ondragstart="event.dataTransfer.setData('', event.target.id);"
+                    @ondrop='() => HandleDrop(12)'
+                    @ondragenter='() => HandleDragEnter(12)'
+                    @ondragleave="HandleDragLeave">
+
+                    @foreach (var item in FilteredItems)
+                    {
+                        @if (item.ApplicationPhaseId is 33 or 34 or 35 or 12)
+                        {
+                            <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
+                                <p class="description">
+                                    @item.Name @item.Surname
+                                    <span @onclick='() => ShowDialog(item)'>
+                                        <i class="fas fa-edit edit-icon"></i>
+                                    </span>
+                                </p>
+                            </li>
+                        }
+                    }
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="phase-container shadow @SuccessDropClass">
+            <div class="job-status">
+                <h5 class="active-phase">Hired/Not Hired (@Items.Where((item) => item.ApplicationPhaseId is 36 or 13).Count())</h5>
+
+                <ul class="dropzone"
+                    ondragover="event.preventDefault();"
+                    ondragstart="event.dataTransfer.setData('', event.target.id);"
+                    @ondrop='() => HandleDrop(13)'
+                    @ondragenter='() => HandleDragEnter(13)'
+                    @ondragleave="HandleDragLeave">
+
+                    @foreach (var item in FilteredItems)
+                    {
+                        @if (item.ApplicationPhaseId is 36 or 13)
+                        {
+                            <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
+                                <p class="description">
+                                    @item.Name @item.Surname
+                                    <span @onclick='() => ShowDialog(item)'>
+                                        <i class="fas fa-edit edit-icon"></i>
+                                    </span>
+                                </p>
+                            </li>
+                        }
+                    }
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <MatDialog @bind-IsOpen="@ScreeningDialogIsOpen">
+        <div class="mydialog">
+            <div class="mydialog-title">
+                <b>Screening</b>
+            </div>
+            <div class="screening-dialog-body">
+                <div class="card rounded shadow mycard @ScreeningOne" @onclick="() => MovePhase(3)"><b>Schedule Phone Screen</b></div>
+                <div class="card rounded shadow mycard @ScreeningTwo" @onclick="() => MovePhase(5)"><b>Phone Screened</b></div>
+                <div class="card rounded shadow mycard @ScreeningThree" @onclick="() => MovePhase(25)"><b>MS Teams Meeting</b></div>
+            </div>
+            <div class="screening-dialog-textarea">
+                <textarea class="phase-manager-textarea" style="width: 300px; height: 150px; padding: 5px;" placeholder="Email template"></textarea>
+            </div>
+        </div>
+    </MatDialog>
+
+    <MatDialog @bind-IsOpen="@AssessmentDialogIsOpen">
+        <div class="mydialog">
+            <div class="mydialog-title">
+                <b>Assessment</b>
+            </div>
+            <div class="screening-dialog-body">
+                <p style="font-size: 40px;">88</p>
+            </div>
+            <div class="screening-dialog-textarea">
+                <textarea class="phase-manager-textarea" style="width: 300px; height: 150px; padding: 5px;" placeholder="Email template"></textarea>
+            </div>
+        </div>
+    </MatDialog>
+
+    <MatDialog @bind-IsOpen="@InterviewDialogIsOpen">
+        <div class="mydialog">
+            <div class="mydialog-title">
+                <b>Interview</b>
+            </div>
+            <div class="screening-dialog-body">
+                <div class="card rounded shadow mycard @InterviewOne" @onclick="() => MovePhase(26)"><b>First Round</b></div>
+                <div class="card rounded shadow mycard @InterviewTwo" @onclick="() => MovePhase(28)"><b>Second Round</b></div>
+                <div class="card rounded shadow mycard @InterviewThree" @onclick="() => MovePhase(29)"><b>Manager Feedback</b></div>
+                <div class="card rounded shadow mycard @InterviewFour" @onclick="() => MovePhase(30)"><b>CTO/MD</b></div>
+                <div class="card rounded shadow mycard @InterviewFive" @onclick="() => MovePhase(31)"><b>CEO</b></div>
+            </div>
+            <div class="screening-dialog-textarea">
+                <textarea class="phase-manager-textarea" style="width: 300px; height: 150px; padding: 5px;" placeholder="Email template"></textarea>
+            </div>
+        </div>
+    </MatDialog>
+
+    <MatDialog @bind-IsOpen="@ReferenceCheckDialogIsOpen">
+        <div class="mydialog">
+            <div class="mydialog-title">
+                <b>Reference Check</b>
+            </div>
+            <div class="screening-dialog-body">
+
+            </div>
+            <div class="screening-dialog-textarea">
+                <textarea class="phase-manager-textarea" style="width: 300px; height: 150px; padding: 5px;" placeholder="Email template"></textarea>
+            </div>
+        </div>
+    </MatDialog>
+
+    <MatDialog @bind-IsOpen="@OfferDialogIsOpen">
+        <div class="mydialog">
+            <div class="mydialog-title">
+                <b>Offer</b>
+            </div>
+            <div class="screening-dialog-body">
+                <div class="card rounded shadow mycard @OfferOne" @onclick="() => MovePhase(33)"><b>Send Offer</b></div>
+                <div class="card rounded shadow mycard @OfferTwo" @onclick="() => MovePhase(34)"><b>Unsuccessful</b></div>
+                <div class="card rounded shadow mycard @OfferThree" @onclick="() => MovePhase(35)"><b>Reviewed</b></div>
+            </div>
+            <div class="screening-dialog-textarea">
+                <textarea class="phase-manager-textarea" style="width: 300px; height: 150px; padding: 5px;" placeholder="Email template"></textarea>
+            </div>
+        </div>
+    </MatDialog>
+
+    <MatDialog @bind-IsOpen="@HiredDialogIsOpen">
+        <div class="mydialog">
+            <div class="mydialog-title">
+                <b>Successful/Unsuccessful</b>
+            </div>
+            <div class="screening-dialog-body">
+                <div class="card rounded shadow mycard @Hired" @onclick="() => MovePhase(36)"><b>Hired</b></div>
+                <div class="card rounded shadow mycard @NotHired" @onclick="Deny"><b>Not Hired</b></div>
+            </div>
+            <div class="screening-dialog-textarea">
+                <textarea class="phase-manager-textarea" style="width: 300px; height: 150px; padding: 5px;" placeholder="Email template"></textarea>
+            </div>
+            <button class="btn btn-success email-button">Send email</button>
+        </div>
+    </MatDialog>
+
+    <MatDialog @bind-IsOpen="@ReasonDialogIsOpen" Style="left: 30%;">
+        <div class="mydialog" style="height: 200px;">
+            <div class="mydialog-title">
+                <b>Reasoning</b>
+            </div>
+            <div class="screening-dialog-body">
+                <select @bind="tempReasonId" class="form-select">
+                    @foreach (var reason in Unsuccessful)
+                    {
+                        <option value="@reason.Id" selected>@reason.Reason</option>
+                    }
+                </select>
+            </div>
+            <div class="d-flex justify-content-center align-items-center">
+                <button class="btn" style="background-color: white; border: 1px solid black" @onclick="Reject">Submit</button>
+            </div>
+        </div>
+    </MatDialog>
+
+</div>
+
+
+
+@code {
+
+    [Parameter] public int CurrentJobId { get; set; }
+
+    public ApplicationPhaseItem CurrentItem;
+
+    public string searchTerm = "";
+    public int tempReasonId = -1;
+    public string CurrentJobTitle = "";
+
+    public int[] AllowedPhasesFinal = new int[] { 1, 3, 5, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 10, 11, 12, 13 };
+
+    List<int> TotalPhases = new List<int>();
+
+    //tables we need
+    List<ApplicationPhase> AppPhases = new List<ApplicationPhase>();
+    List<ApplicationPhasesHelper> CurrentApplicantPhases = new List<ApplicationPhasesHelper>();
+    List<AppUser> tempAppUsers = new List<AppUser>();
+    List<UnsuccessfulReason> Unsuccessful = new List<UnsuccessfulReason>();
+    List<RejectedCandidate> RejectedUsers = new List<RejectedCandidate>();
+
+    //tables to be filtered
+    List<Job> AllJobs = new List<Job>();
+    List<Application> AllApplications = new List<Application>();
+    List<JobApplicationPhase> AllJobApplicationPhases = new List<JobApplicationPhase>();
+
+    //filtered output
+    List<Application> CurrentApplications;
+    List<JobApplicationPhase> JobPhases;
+    Job CurrentJob;
+
+    //list for draggable items
+    List<ApplicationPhaseItem> Items = new List<ApplicationPhaseItem>();
+    List<ApplicationPhaseItem> FilteredItems => Items.Where(item => item.Name.ToLower().Contains(searchTerm.ToLower()) || item.Surname.ToLower().Contains(searchTerm.ToLower())).ToList();
+
+    //phase titles
+    string ScreeningActive = "disabled-phase";
+    string AssessmentActive = "disabled-phase";
+    string InterviewActive = "disabled-phase";
+    string ReferenceActive = "disabled-phase";
+    string OfferActive = "disabled-phase";
+
+
+    //dialogs
+    bool ScreeningDialogIsOpen = false;
+    bool AssessmentDialogIsOpen = false;
+    bool InterviewDialogIsOpen = false;
+    bool ReferenceCheckDialogIsOpen = false;
+    bool OfferDialogIsOpen = false;
+    bool HiredDialogIsOpen = false;
+    bool ReasonDialogIsOpen = false;
+
+    //css borders
+    string AppliedDropClass = "";
+    string ScreeningDropClass = "";
+    string AssessmentDropClass = "";
+    string InterviewDropClass = "";
+    string ReferenceDropClass = "";
+    string OfferDropClass = "";
+    string SuccessDropClass = "";
+
+    //dialog phases
+    string ScreeningOne = "";
+    string ScreeningTwo = "";
+    string ScreeningThree = "";
+
+    string InterviewOne = "";
+    string InterviewTwo = "";
+    string InterviewThree = "";
+    string InterviewFour = "";
+    string InterviewFive = "";
+
+    string OfferOne = "";
+    string OfferTwo = "";
+    string OfferThree = "";
+
+    string Hired = "";
+    string NotHired = "";
+
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if(AllJobs.Exists(x => x.Id == CurrentJobId))
+        {
+            CurrentApplications = AllApplications.Where(x => x.JobId == CurrentJobId).ToList();
+            JobPhases = AllJobApplicationPhases.Where(x => x.JobId == CurrentJobId).ToList();
+            CurrentJob = AllJobs.SingleOrDefault(x => x.Id == CurrentJobId);
+
+            CurrentJobTitle = CurrentJob.Title;
+
+            TotalPhases.Clear();
+            TotalPhases.Add(1);
+            TotalPhases.Add(13);
+            TotalPhases.Add(36);
+
+            foreach (var phase in JobPhases)
+            {
+                TotalPhases.Add(phase.ApplicationPhaseId);
+            }
+
+            if (JobPhases.Exists((x) => x.ApplicationPhaseId is 3 or 5 or 25))
+            {
+                ScreeningActive = "active-phase";
+                TotalPhases.Add(10);
+            }
+            if (JobPhases.Exists((x) => x.ApplicationPhaseId == 27))
+            {
+                AssessmentActive = "active-phase";
+            }
+            if (JobPhases.Exists((x) => x.ApplicationPhaseId is 26 or 28 or 29 or 30 or 31))
+            {
+                InterviewActive = "active-phase";
+                TotalPhases.Add(11);
+            }
+            if (JobPhases.Exists((x) => x.ApplicationPhaseId == 32))
+            {
+                ReferenceActive = "active-phase";
+            }
+            if (JobPhases.Exists((x) => x.ApplicationPhaseId is 33 or 34 or 35))
+            {
+                OfferActive = "active-phase";
+                TotalPhases.Add(12);
+            }
+
+            Items.Clear();
+            FilteredItems.Clear();
+
+            foreach (var application in CurrentApplications)
+            {
+                ApplicationPhaseItem temp = new ApplicationPhaseItem();
+                temp.ApplicationId = application.Id;
+                temp.Name = tempAppUsers.First((x) => x.id == application.AppUserId).name;
+                temp.Surname = tempAppUsers.First((x) => x.id == application.AppUserId).surname;
+
+                temp.ApplicationPhaseId = CurrentApplications.First((x) => x.Id == temp.ApplicationId).ApplicationPhaseId;
+
+                Items.Add(temp);
+            }
+        }
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        AllJobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
+        AllApplications = await httpClient.GetFromJsonAsync<List<Application>>("https://xebecapi.azurewebsites.net/api/application");
+        AllJobApplicationPhases = await httpClient.GetFromJsonAsync<List<JobApplicationPhase>>("https://xebecapi.azurewebsites.net/api/jobapplicationphase");
+
+        tempAppUsers = await httpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
+        CurrentApplicantPhases = await httpClient.GetFromJsonAsync<List<ApplicationPhasesHelper>>("https://xebecapi.azurewebsites.net/api/applicationphasehelper");
+        AppPhases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
+        Unsuccessful = await httpClient.GetFromJsonAsync<List<UnsuccessfulReason>>("https://xebecapi.azurewebsites.net/api/unsuccessfulreason");
+        RejectedUsers = await httpClient.GetFromJsonAsync<List<RejectedCandidate>>("https://xebecapi.azurewebsites.net/api/rejectedcandidate");
+    }
+
+
+
+
+    private void HandleDragEnter(int applicationPhase)
+    {
+        if (applicationPhase == CurrentItem.ApplicationPhaseId) return;
+
+        AppliedDropClass = "can-drop";
+        SuccessDropClass = "can-drop";
+
+        ScreeningDropClass = "no-drop";
+        AssessmentDropClass = "no-drop";
+        InterviewDropClass = "no-drop";
+        ReferenceDropClass = "no-drop";
+        OfferDropClass = "no-drop";
+
+
+        if (TotalPhases.Contains(3) || TotalPhases.Contains(5) || TotalPhases.Contains(25))
+        {
+            ScreeningDropClass = "can-drop";
+        }
+        if (TotalPhases.Contains(27))
+        {
+            AssessmentDropClass = "can-drop";
+        }
+        if (TotalPhases.Contains(26) || TotalPhases.Contains(28) || TotalPhases.Contains(29) || TotalPhases.Contains(30) || TotalPhases.Contains(31))
+        {
+            InterviewDropClass = "can-drop";
+        }
+        if (TotalPhases.Contains(32))
+        {
+            ReferenceDropClass = "can-drop";
+        }
+        if (TotalPhases.Contains(33) || TotalPhases.Contains(34) || TotalPhases.Contains(35))
+        {
+            OfferDropClass = "can-drop";
+        }
+
+    }
+
+    private void HandleDragLeave()
+    {
+        AppliedDropClass = "";
+        ScreeningDropClass = "";
+        AssessmentDropClass = "";
+        InterviewDropClass = "";
+        ReferenceDropClass = "";
+        OfferDropClass = "";
+        SuccessDropClass = "";
+    }
+
+    private async Task HandleDrop(int phase)
+    {
+        AppliedDropClass = "";
+        ScreeningDropClass = "";
+        AssessmentDropClass = "";
+        InterviewDropClass = "";
+        ReferenceDropClass = "";
+        OfferDropClass = "";
+        SuccessDropClass = "";
+
+        if (!TotalPhases.Contains(phase)) return;
+
+
+        if (phase == CurrentItem.ApplicationPhaseId) return;
+
+        if (phase == 10)
+        {
+            if (CurrentItem.ApplicationPhaseId is 3 or 5 or 25 or 10) return;
+        }
+        if (phase == 11)
+        {
+            if (CurrentItem.ApplicationPhaseId is 26 or 28 or 29 or 30 or 31 or 11) return;
+        }
+        if (phase == 12)
+        {
+            if (CurrentItem.ApplicationPhaseId is 33 or 34 or 35 or 12) return;
+        }
+        if (phase is 36 or 13)
+        {
+            if (CurrentItem.ApplicationPhaseId is 36 or 13) return;
+        }
+
+        await UpdateJobAsync(phase);
+
+    }
+
+    private void HandleDragStart(ApplicationPhaseItem selectedItem)
+    {
+        CurrentItem = selectedItem;
+    }
+
+    public async Task UpdateJobAsync(int phase)
+    {
+        CurrentItem.ApplicationPhaseId = phase;
+
+        var task = Items.SingleOrDefault(x => x.Id == CurrentItem.Id);
+
+        if (phase is 10 or 11 or 12 or 13 && task != null)
+        {
+            task.ApplicationPhaseId = phase;
+            return;
+        }
+
+        if (task != null)
+        {
+            task.ApplicationPhaseId = phase;
+
+            Application temp = new Application();
+
+            temp = CurrentApplications.Single(i => i.Id == CurrentItem.ApplicationId);
+            temp.ApplicationPhaseId = phase;
+
+            await httpClient.PutAsJsonAsync<Application>($"https://xebecapi.azurewebsites.net/api/application/{CurrentItem.ApplicationId}", temp);
+
+            ApplicationPhasesHelper tempHelper = new ApplicationPhasesHelper();
+            tempHelper.ApplicationId = CurrentItem.ApplicationId;
+            tempHelper.ApplicationPhaseId = phase;
+            tempHelper.TimeMoved = DateTime.Now;
+
+            await httpClient.PostAsJsonAsync<ApplicationPhasesHelper>("https://xebecapi.azurewebsites.net/api/applicationphasehelper", tempHelper);
+        }
+    }
+
+    public void ShowDialog(ApplicationPhaseItem item)
+    {
+        CurrentItem = item;
+
+        ScreeningOne = "";
+        ScreeningTwo = "";
+        ScreeningThree = "";
+
+        InterviewOne = "";
+        InterviewTwo = "";
+        InterviewThree = "";
+        InterviewFour = "";
+        InterviewFive = "";
+
+        OfferOne = "";
+        OfferTwo = "";
+        OfferThree = "";
+
+        Hired = "";
+        NotHired = "";
+
+
+        if (item.ApplicationPhaseId is 3 or 5 or 25 or 10)
+        {
+            ScreeningDialogIsOpen = true;
+
+            if (item.ApplicationPhaseId == 3)
+            {
+                ScreeningOne = "currentphase";
+            }
+            else if (item.ApplicationPhaseId == 5)
+            {
+                ScreeningTwo = "currentphase";
+            }
+            else if (item.ApplicationPhaseId == 25)
+            {
+                ScreeningThree = "currentphase";
+            }
+
+            if (!TotalPhases.Contains(3))
+            {
+                ScreeningOne = "disabled-card";
+            }
+            if (!TotalPhases.Contains(5))
+            {
+                ScreeningTwo = "disabled-card";
+            }
+            if (!TotalPhases.Contains(25))
+            {
+                ScreeningThree = "disabled-card";
+            }
+        }
+
+        else if (item.ApplicationPhaseId == 27)
+        {
+            AssessmentDialogIsOpen = true;
+        }
+
+        else if (item.ApplicationPhaseId is 26 or 28 or 29 or 30 or 31 or 11)
+        {
+            InterviewDialogIsOpen = true;
+
+            if (item.ApplicationPhaseId == 26)
+            {
+                InterviewOne = "currentphase";
+            }
+            else if (item.ApplicationPhaseId == 28)
+            {
+                InterviewTwo = "currentphase";
+            }
+            else if (item.ApplicationPhaseId == 29)
+            {
+                InterviewThree = "currentphase";
+            }
+            else if (item.ApplicationPhaseId == 30)
+            {
+                InterviewFour = "currentphase";
+            }
+            else if (item.ApplicationPhaseId == 31)
+            {
+                InterviewFive = "currentphase";
+            }
+            if (!TotalPhases.Contains(26))
+            {
+                InterviewOne = "disabled-card";
+            }
+            if (!TotalPhases.Contains(28))
+            {
+                InterviewTwo = "disabled-card";
+            }
+            if (!TotalPhases.Contains(29))
+            {
+                InterviewThree = "disabled-card";
+            }
+            if (!TotalPhases.Contains(39))
+            {
+                InterviewFour = "disabled-card";
+            }
+            if (!TotalPhases.Contains(31))
+            {
+                InterviewFive = "disabled-card";
+            }
+        }
+
+        else if (item.ApplicationPhaseId == 32)
+        {
+            ReferenceCheckDialogIsOpen = true;
+        }
+
+        else if (item.ApplicationPhaseId is 33 or 34 or 35 or 12)
+        {
+            OfferDialogIsOpen = true;
+
+            if (item.ApplicationPhaseId == 33)
+            {
+                OfferOne = "currentphase";
+            }
+            else if (item.ApplicationPhaseId == 34)
+            {
+                OfferTwo = "currentphase";
+            }
+            else if (item.ApplicationPhaseId == 35)
+            {
+                OfferThree = "currentphase";
+            }
+            if (!TotalPhases.Contains(33))
+            {
+                OfferOne = "disabled-card";
+            }
+            if (!TotalPhases.Contains(34))
+            {
+                OfferTwo = "disabled-card";
+            }
+            if (!TotalPhases.Contains(35))
+            {
+                OfferThree = "disabled-card";
+            }
+        }
+
+        else if (item.ApplicationPhaseId is 36 or 13)
+        {
+            HiredDialogIsOpen = true;
+
+            if (item.ApplicationPhaseId == 36)
+            {
+                if (RejectedUsers.Exists(x => x.ApplicationId == CurrentItem.ApplicationId))
+                {
+                    NotHired = "currentphase";
+                }
+                else
+                {
+                    Hired = "currentphase";
+                }
+            }
+        }
+
+    }
+
+    public async Task MovePhase(int i)
+    {
+        if (!TotalPhases.Contains(i)) return;
+
+        var task = Items.SingleOrDefault(x => x.Id == CurrentItem.Id);
+
+        CurrentItem.ApplicationPhaseId = i;
+
+        if (task != null)
+        {
+            Application temp = new Application();
+
+            temp = CurrentApplications.Single(i => i.Id == CurrentItem.ApplicationId);
+            temp.ApplicationPhaseId = i;
+
+            await httpClient.PutAsJsonAsync<Application>($"https://xebecapi.azurewebsites.net/api/application/{CurrentItem.ApplicationId}", temp);
+        }
+
+        ApplicationPhasesHelper tempHelper = new ApplicationPhasesHelper();
+        tempHelper.ApplicationId = CurrentItem.ApplicationId;
+        tempHelper.ApplicationPhaseId = i;
+        tempHelper.TimeMoved = DateTime.Now;
+
+        await httpClient.PostAsJsonAsync<ApplicationPhasesHelper>("https://xebecapi.azurewebsites.net/api/applicationphasehelper", tempHelper);
+
+        ScreeningOne = "";
+        ScreeningTwo = "";
+        ScreeningThree = "";
+
+        InterviewOne = "";
+        InterviewTwo = "";
+        InterviewThree = "";
+        InterviewFour = "";
+        InterviewFive = "";
+
+        OfferOne = "";
+        OfferTwo = "";
+        OfferThree = "";
+
+        Hired = "";
+        NotHired = "";
+
+        if (!TotalPhases.Contains(3))
+        {
+            ScreeningOne = "disabled-card";
+        }
+        if (!TotalPhases.Contains(5))
+        {
+            ScreeningTwo = "disabled-card";
+        }
+        if (!TotalPhases.Contains(25))
+        {
+            ScreeningThree = "disabled-card";
+        }
+        if (!TotalPhases.Contains(26))
+        {
+            InterviewOne = "disabled-card";
+        }
+        if (!TotalPhases.Contains(28))
+        {
+            InterviewTwo = "disabled-card";
+        }
+        if (!TotalPhases.Contains(29))
+        {
+            InterviewThree = "disabled-card";
+        }
+        if (!TotalPhases.Contains(39))
+        {
+            InterviewFour = "disabled-card";
+        }
+        if (!TotalPhases.Contains(31))
+        {
+            InterviewFive = "disabled-card";
+        }
+        if (!TotalPhases.Contains(33))
+        {
+            OfferOne = "disabled-card";
+        }
+        if (!TotalPhases.Contains(34))
+        {
+            OfferTwo = "disabled-card";
+        }
+        if (!TotalPhases.Contains(35))
+        {
+            OfferThree = "disabled-card";
+        }
+
+
+        if (i == 3)
+        {
+            ScreeningOne = "currentphase";
+        }
+        else if (i == 5)
+        {
+            ScreeningTwo = "currentphase";
+        }
+        else if (i == 25)
+        {
+            ScreeningThree = "currentphase";
+        }
+        else if (i == 26)
+        {
+            InterviewOne = "currentphase";
+        }
+        else if (i == 28)
+        {
+            InterviewTwo = "currentphase";
+        }
+        else if (i == 29)
+        {
+            InterviewThree = "currentphase";
+        }
+        else if (i == 30)
+        {
+            InterviewFour = "currentphase";
+        }
+        else if (i == 31)
+        {
+            InterviewFive = "currentphase";
+        }
+        else if (i == 33)
+        {
+            OfferOne = "currentphase";
+        }
+        else if (i == 34)
+        {
+            OfferTwo = "currentphase";
+        }
+        else if (i == 35)
+        {
+            OfferThree = "currentphase";
+        }
+        else if (i == 36)
+        {
+            if (RejectedUsers.Exists(x => x.ApplicationId == CurrentItem.ApplicationId))
+            {
+                NotHired = "currentphase";
+            }
+            else
+            {
+                Hired = "currentphase";
+            }
+        }
+
+    }
+
+    public async Task Deny()
+    {
+        tempReasonId = -1;
+
+        ReasonDialogIsOpen = true;
+    }
+
+    public async Task Reject()
+    {
+        if (tempReasonId != -1)
+        {
+            RejectedCandidate temp = new RejectedCandidate();
+
+            temp.ApplicationId = CurrentItem.ApplicationId;
+            temp.UnsuccessfulReasonId = tempReasonId;
+
+            await httpClient.PostAsJsonAsync<RejectedCandidate>("https://xebecapi.azurewebsites.net/api/rejectedcandidate", temp);
+            RejectedUsers = await httpClient.GetFromJsonAsync<List<RejectedCandidate>>("https://xebecapi.azurewebsites.net/api/rejectedcandidate");
+
+            MovePhase(36);
+        }
+
+        ReasonDialogIsOpen = false;
+    }
+}

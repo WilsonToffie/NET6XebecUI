@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "jquery@3.6.0",
+      "destination": "wwwroot/jquery/"
+    },
+    {
+      "library": "select2@4.0.13",
+      "destination": "wwwroot/select2/"
+    },
+    {
+      "library": "font-awesome@5.15.4",
+      "destination": "wwwroot/font-awesome/"
+    },
+    {
+      "library": "bootstrap@5.1.3",
+      "destination": "wwwroot/bootstrap/"
+    },
+    {
+      "library": "dropzone@5.9.3",
+      "destination": "wwwroot/dropzone/"
+    }
+  ]
+}

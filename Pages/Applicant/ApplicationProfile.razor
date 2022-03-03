@@ -1,0 +1,1062 @@
+﻿@page "/applicationprofile"
+@inject HttpClient httpClient
+@inject IJSRuntime jsRuntime
+@inject ISnackbar Snackbar
+
+<style>
+    .nav1 {
+        width: auto !important;
+        height: auto !important;
+        top: auto !important;
+        justify-content: normal !important;
+        justify-items: normal !important;
+        box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+        border-radius: 5px;
+    }
+
+    .nav-link1 {
+        width: auto !important;
+        height: auto !important;
+        margin-bottom: auto !important;
+        display: normal !important;
+        vertical-align: auto !important;
+        border-radius: 0px;
+        background-color: white;
+        color: #00bcae;
+        cursor: pointer;
+    }
+
+    .nav-link-text1 {
+        display: normal !important;
+        padding-top: 0px;
+        width: auto !important;
+        height: auto !important;
+    }
+
+    select {
+        font-size: medium !important
+    }
+
+    .formButton {
+        background-color: #00BCAE;
+        color: white;
+        font-weight: 600;
+        height: 5vh;
+        margin-top: 2vh;
+        width: auto;
+    }
+
+    .drag-drop-zone {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all .4s;
+        height: 140px;
+    }
+
+    .drag-drop-input {
+        position: absolute;
+        width: 690px;
+        height: 140px;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 2;
+        border: unset;
+    }
+
+    .drop-corner {
+        border: #00BCAE dashed 2px !important;
+        box-shadow: unset;
+    }
+
+    .drag-enter {
+        box-shadow: var(--mud-elevation-10);
+    }
+
+    .list {
+        padding: 2em;
+        min-width: 100%;
+    }
+
+    .card:hover {
+        border: 4px solid #d0d0d0;
+        background: #e1e1e1;
+        box-shadow: 0 0 0 4px #d0d0d0;
+    }
+
+    .cardBorderChange {
+        border: 4px solid #00BCAE;
+        background: #00BCAE;
+        box-shadow: 0 0 0 4px #00BCAE;
+    }
+
+        .cardBorderChange:hover {
+            border: 4px solid #00BCAE;
+            background: #00BCAE;
+            box-shadow: 0 0 0 4px #00BCAE;
+        }
+
+    .form-check-label:hover {
+        cursor: pointer;
+    }
+
+    .form-check-input {
+        display: none;
+    }
+
+    .row-style {
+        /*background: linear-gradient(110deg, rgba(0,51,64,0.8) 40%, rgba(0,188,174,0.53) 40%, #00BCAE);
+        background-color: white;*/
+        border-radius: 20px;
+        padding: 10px;
+        min-height: 75vh;
+    }
+
+    .rounded-edges {
+        border-radius: 20px;
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgb(209, 213, 219) 0px 0px 0px 1px inset;
+    }
+
+    .nav-item > .active {
+        background: #ffffff !important;
+        font-weight: 800;
+        font-size: 2vh;
+    }
+
+    .nav-item > .nav-link1 {
+        font-size: 1.8vh;
+        font-weight: 500 !important;
+        color: #003340 !important;
+    }
+    .work-card {
+        color: black !important;
+    }
+
+    .work-card:hover{
+        background-color: pink;
+    }
+
+    .white-back {
+        background: white !important;
+        box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px !important;
+    }
+
+    .text-color-primary {
+        color: rgba(0,51,64,0.76);
+        text-decoration: underline;
+    }
+
+    /*Newly added stuffs*/
+    .main-page-overflow {
+        overflow: hidden;
+    }
+    .space-below-nav-bar-for-progress-bar {
+        height: 10vh;
+    }
+
+    .progress-layout {
+        position: absolute;
+        height: 60vh;
+        background-color: rgba(0,0,0,0.5);
+        left: 92%;
+        border-radius: 20px;
+        width: 10vh;
+    }
+
+    .progress-text-layout {
+        color: #00bcae;
+    }
+
+    .rocket-layout {
+        position: relative;
+        /*z-index: 1;*/
+        height: 60px;
+        bottom: 0%;
+        transition: all 1s;
+        left: 9%;
+    }
+
+    .progress-layout-side {
+        position: absolute;
+        left: 10%;
+        height: 8vh;
+        background-image: url(/Img/space.png);
+        background-size: cover;
+        /*background-repeat: repeat;*/
+        /*background-color: rgba(0,0,0,0.5);*/
+        border-radius: 20px;
+        width: 80%;
+        margin-top: 0.5%;
+    }
+
+    .progress-text-layout-side {
+        position: absolute;
+        color: #00bcae;
+        top: 35%;
+    }
+
+    .rocket-layout-side {
+        position: relative;
+        /*z-index: 1;*/
+        height: 60px;
+        bottom: 0%;
+        transition: all 1s;
+        left: 9%;
+        transform: rotate(90deg);
+        animation: vibrate-1 0.1s 0s 50 linear, vibrate-2 0.1s 0.5s 150 linear, vibrate-1 0.1s 4s infinite linear;
+    }
+
+    .space-text-layout {
+        position: absolute;
+        left: 91%;
+    }
+
+    .lift-off-text {
+        position: absolute;
+    }
+
+    .left-atmosphere-text {
+        position: absolute;
+    }
+
+    .into-orbit-text {
+        position: absolute;
+    }
+
+    .to-the-mooon-text {
+        position: absolute;
+    }
+
+    .you-done-text {
+        position: absolute;
+    }
+
+    /*animation for space */
+    .stars-display-effects{
+
+    }
+
+    /* Vibrate effect*/
+    @@keyframes vibrate-1 {
+        0% {
+            transform: rotate(90deg) translate3d(0, 0, 0);
+        }
+
+        50% {
+            transform: rotate(90deg) translate3d(-0.1rem, 0, 0);
+        }
+
+        100% {
+            transform: rotate(90deg) translate3d(0.1rem, 0, 0);
+        }
+    }
+
+    @@keyframes vibrate-2 {
+        0% {
+            transform: rotate(90deg) translate3d(0, 0, 0);
+        }
+
+        50% {
+            transform: rotate(90deg) translate3d(-0.3rem, 0, 0);
+        }
+
+        100% {
+            transform: rotate(90deg) translate3d(0.3rem, 0, 0);
+        }
+    }
+
+</style>
+
+
+<div class="space-below-nav-bar-for-progress-bar">
+    <!--count: @count;-->
+    
+        <div class="progress-layout-side align-middle">
+            <div class="progress-text-layout-side align-middle" style="left: 100%;">100%</div>
+            <div class="progress-text-layout-side align-middle" style="left: 75%;">75%</div>
+            <div class="progress-text-layout-side justify-content-center" style="left: 50%;">50%</div>
+            <div class="progress-text-layout-side justify-content-center" style="left: 25%;">25% </div>
+            <div class="progress-text-layout-side align-middle" style="left: 1%;">0%</div>
+            <img class="rocket-layout-side" style="left: calc(@completionVar);" src="https://cdn4.iconfinder.com/data/icons/whsr-january-flaticon-set/512/rocket.png">
+        </div>
+    
+</div>
+
+<div class="h-95 container-fluid d-flex justify-content-center align-items-center overflow-hidden">
+    <div class="col-1"></div>
+    <div class="row col-10 d-flex justify-content-center row-style" >
+
+        <!--Navigation Tab-->
+        <div class="col-12 align-self-start d-flex justify-content-center align-items-center">
+            <ul class="nav nav1 nav-tabs" role="tablist">
+                <li class="nav-item p-1">
+                    <a id="personal-tab" class="nav-link nav-link1 active" data-bs-toggle="tab" href="#personal-information" @onclick="progressCheck">Personal Information</a>
+                </li>
+                <li class="nav-item p-1">
+                    <a class="nav-link nav-link1" data-bs-toggle="tab" href="#work-history" @onclick="progressCheck">Work History</a>
+                </li>
+                <li class="nav-item p-1">
+                    <a class="nav-link nav-link1" data-bs-toggle="tab" href="#education" @onclick="progressCheck">Education</a>
+                </li>
+                <li class="nav-item p-1">
+                    <a class="nav-link nav-link1" data-bs-toggle="tab" href="#references" @onclick="progressCheck">References</a>
+                </li>
+                <li class="nav-item p-1">
+                    <a id="online-tag" class="nav-link nav-link1" data-bs-toggle="tab" href="#online-profile" @onclick="progressCheck">Online Presence</a>
+                </li>
+            </ul>
+        </div>
+
+        <!--Content Panel-->
+        <div class="col-12 d-flex justify-content-center align-items-start pt-3 ">
+            <div class="tab-content">
+                <br />
+                <!--Personal Information-->
+                <div id="personal-information" class="container tab-pane active">
+                    <div class="d-flex justify-content-center">
+                        <form id="personal-information-form" style="width: 60%">
+                            <div class="row">
+                                <div class="col-12 shadow-sm bg-body rounded-edges white-back">
+                                    <div class="row p-3">
+                                        <div class="col-12">
+                                            <div class="rounded-edges">
+                                                <MudPaper @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
+                                                          @ondragleave="@(() => _dragEnterStyle = null)"
+                                                          @ondragend="@(() => _dragEnterStyle = null)"
+                                                          Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
+
+                                                    <InputFile OnChange="OnInputFileChangedAsync" multiple class="drag-drop-input" />
+                                                    @if (fileNames == null)
+                                                    {
+                                                        <MudText Typo="Typo.h3" Align="Align.Center">
+                                                            <i class="fa fa-upload"></i>
+                                                            <br />
+                                                            Upload File
+                                                        </MudText>
+                                                    }
+                                                    else
+                                                    {
+                                                        <MudList Style="padding:2em;width:100%;" Dense="true">
+                                                            <MudListItem @key="@fileNames.Name">
+                                                                <MudChip Color="Color.Dark"
+                                                                         Style="width:60px; overflow:hidden;"
+                                                                         Text="@(fileNames.Name.Split(".").Last())" />
+                                                                @fileNames.Name
+                                                            </MudListItem>
+                                                        </MudList>
+                                                    }
+                                                </MudPaper>
+                                            </div>
+                                            
+                                            <MudGrid Justify="Justify.Center" Spacing="4">
+                                                <MudItem>
+                                                    <MudButton OnClick="Upload" Disabled="@(!(fileNames == null))" Style="color: white; background-color: #00BCAE; font-size: small" Variant="Variant.Filled">Upload</MudButton>
+                                                </MudItem>
+                                                <MudItem>
+                                                    <MudButton OnClick="@ResetFileNames" Disabled="@(fileNames == null)" Style="color: white; background-color: #00BCAE; font-size: small" Variant="Variant.Filled">Clear</MudButton>
+                                                </MudItem>
+                                            </MudGrid>
+                                        </div>
+                                    </div>
+                                    <div class="row p-3">
+                                        <div class="col-4">
+                                            <label class="form-label" for="first-name">First Name</label>
+                                            <input id="first-name" class="form-control shadow bg-body rounded" type="text" @bind="personalInformation.FirstName" placeholder="John" required @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="form-label" for="last-name">Last Name</label>
+                                            <input id="last-name" class="form-control shadow bg-body rounded" type="text" @bind="personalInformation.LastName" placeholder="Smith" required @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="form-label" for="email-address">Email Address</label>
+                                            <input id="email-address" class="form-control shadow bg-body rounded" type="email" @bind="personalInformation.Email" placeholder="John@gmail.com" required @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                        </div>
+                                    </div>
+                                    <div class="row p-3">
+                                        <div class="col-4">
+                                            <label class="form-label" for="phone-number">Phone Number</label>
+                                            <input id="phone-number" class="form-control shadow bg-body rounded" type="tel" @bind="personalInformation.PhoneNumber" placeholder="0713369875" required @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="form-label" for="ethnicity">Ethnicity</label>
+                                            <select id="ethnicity" class="form-select shadow bg-body rounded" @bind="additionalInformation.Ethnicity" @bind:event="oninput" required @onfocusout="completion">
+                                                <!--@onfocusout="completion" -->
+                                                <option value="" disabled selected>Select Ethnicity</option>
+                                                <option value="African">African</option>
+                                                <option value="White">White</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-4">
+                                            <label class="form-label" for="gender">Gender</label>
+                                            <select id="gender" class="form-select shadow bg-body rounded" @bind="additionalInformation.Gender" @bind:event="oninput" required @onfocusout="completion">
+                                                <!--@onfocusout="completion" -->
+                                                <option value="" disabled selected>Select Gender</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row p-3">
+                                        <div class="col-4">
+                                            <label class="form-label" for="id-number">ID Number</label>
+                                            <input id="id-number" class="form-control shadow bg-body rounded" type="text" min="13" max="13" @bind="personalInformation.IdNumber" @bind:event="oninput" placeholder="010205365987" required @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                        </div>
+                                        <div class="col-8">
+                                            <label class="form-label" for="address">Address</label>
+                                            <textarea id="address" class="form-control shadow bg-body rounded" @bind="personalInformation.Address" @bind:event="oninput" placeholder="Address" rows="1" required @onfocusout="completion"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!--Work History-->
+                <div id="work-history" class="container tab-pane">
+                    <form id="">
+                        <!--work-history-form       this is using JS-->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row p-3">
+                                    <div class="col-6 p-5">
+                                        <div class="row shadow-sm bg-body rounded-edges white-back" style="height: 47vh;">
+                                            <div class="col-12" style="height: 365px">
+                                                <input type="hidden" @bind="workHistory.Id" />
+                                                <input type="hidden" @bind="workHistory.AppUserId" />
+                                                <div class="row p-3">
+                                                    <div class="col-6">
+                                                        <label class="form-label" for="company-name">Company Name</label>
+                                                        <input id="company-name" class="form-control shadow bg-body rounded" type="text" @bind="workHistory.CompanyName" @bind:event="oninput" placeholder="1Nebula" required @onfocusout="completion" />
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <label class="form-label" for="job-title">Job Title</label>
+                                                        <input id="job-title" class="form-control shadow bg-body rounded" type="text" @bind="workHistory.JobTitle" @bind:event="oninput" placeholder="Software Developer" required @onfocusout="completion" />
+                                                    </div>
+                                                </div>
+                                                <div class="row p-3">
+                                                    <div class="col-6">
+                                                        <label class="form-label" for="start-date">Start Date</label>
+                                                        <input id="start-date" class="form-control shadow bg-body rounded" @bind="workHistory.StartDate" @bind:event="oninput" @onblur="StartDateCheck" type="date" required />
+                                                    </div>
+                                                    @if (presentWork)
+                                                    {
+                                                        <div class="col-6">
+
+                                                            <label class="form-label" for="end-date">
+                                                                End Date (
+                                                                <span>
+                                                                    <label class="form-check-label text-color-primary" for="flexCheckDefault">
+                                                                        Still work there?
+                                                                    </label>
+                                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" @bind="@presentWork" @bind:event="oninput">
+                                                                </span>)
+                                                            </label>
+                                                            <input id="end-date" class="form-control shadow bg-body rounded" @bind="workHistory.EndDate" @bind:event="oninput" @onblur="EndDateCheck" type="date" />
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="col-6">
+                                                            <div class="form-check">
+                                                                <label class="form-check-label text-color-primary" for="flexCheckDefault">
+                                                                    Don't work there anymore?
+                                                                </label>
+                                                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" @bind="@presentWork" @bind:event="oninput">
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                                <div class="row p-3">
+                                                    <div class="col-12">
+                                                        <label class="form-label" for="description">Description</label>
+                                                        <textarea id="description" class="form-control shadow bg-body rounded" placeholder="Description" @bind="workHistory.Description" @bind:event="oninput" rows="3" @onfocusout="completion"></textarea> <!--@onfocusout="completion" -->
+                                                    </div>
+                                                    <div class="col-12 d-flex justify-content-around">
+                                                        @if (workEditMode)
+                                                        {
+                                                            <input class="btn formButton" type="button" value="Save" @onclick="() => SaveWorkHistory(workHistory)" />
+                                                            <input class="btn formButton" type="button" value="Cancel" @onclick="() => CancelWorkHistory(workHistory)" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input class="btn formButton" type="button" value="Add" @onclick="() => addWorkHistoryTest(workHistory)" />
+                                                        }
+                                                        
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 p-5 align-self-start">
+                                        <div class="row shadow-sm bg-body rounded-edges" style="background-color: white; height: 47vh;">
+                                            <div class="col-12 overflow-auto" style="height: 365px">
+                                                <br />
+                                                @if (workHistoryList != null)
+                                                {
+                                                    foreach (var item in workHistoryList)
+                                                    {
+                                                        <div class="work-card" @onclick="() => SelectWorkHistory(item)">
+                                                            <div class="company-name">@item.CompanyName</div>
+                                                            <div class="job-position">@item.JobTitle</div>
+                                                            <div class="start-end-date">
+                                                                <small>@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</small>
+
+                                                                <span @onclick="() => DeleteWorkHistory(item.Id)">
+                                                                    <i class="fa fa-times-circle fa-2x" style="color: red"></i>
+                                                                </span>
+                                                            </div>
+                                                            <div class="work-description">@item.Description</div>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!--Education-->
+                <div id="education" class="container tab-pane">
+                    <form id="">
+                        <!--education-form  this is using JS-->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row p-3">
+                                    <div class="col-6 p-5">
+                                        <div class="row shadow-sm bg-body rounded-edges white-back">
+                                            <div class="col-12" style="height: 47vh">
+                                                <input type="hidden" @bind="education.Id" />
+                                                <input type="hidden" @bind="education.AppUserId" />
+                                                <div class="row p-3">
+                                                    <div class="col-6">
+                                                        <label class="form-label" for="institution">Institution</label>
+                                                        <input id="institution" class="form-control shadow bg-body rounded" type="text" @bind="education.Insitution" @bind:event="oninput" placeholder="University of Cape Town" required @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <label class="form-label" for="qualification">Qualification</label>
+                                                        <input id="qualification" class="form-control shadow bg-body rounded" type="text" @bind="education.Qualification" @bind:event="oninput" placeholder="BSc Chemical Engineering" required @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                                    </div>
+                                                </div>
+                                                <div class="row p-3">
+                                                    <div class="col-6">
+                                                        <label class="form-label" for="start-date">Start Date</label>
+                                                        <input id="start-date" class="form-control shadow bg-body rounded" @bind="education.StartDate" @bind:event="oninput" @onblur="StartDateCheck" type="date" required />
+                                                    </div>
+                                                    @if (presentSchool)
+                                                    {
+                                                        <div class="col-6">
+
+                                                            <label class="form-label" for="end-date">
+                                                                End Date (
+                                                                <span>
+                                                                    <label class="form-check-label text-color-primary" for="edu-check">
+                                                                        Completed?
+                                                                    </label>
+                                                                    <input class="form-check-input" type="checkbox" id="edu-check" @bind="@presentSchool" @bind:event="oninput">
+                                                                </span>)
+                                                            </label>
+                                                            <input id="end-date" class="form-control shadow bg-body rounded" @bind="education.EndDate" @bind:event="oninput" @onblur="EndDateCheck" type="date" />
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="col-6">
+                                                            <div class="form-check">
+                                                                <label class="form-check-label text-color-primary" for="edu-check">
+                                                                    Not Completed
+                                                                </label>
+                                                                <input class="form-check-input" type="checkbox" id="edu-check" @bind="@presentSchool" @bind:event="oninput">
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                </div>
+                                                <div class="row p-3">
+                                                    <div class="col-12 d-flex justify-content-around">
+                                                        @if (eduEditMode)
+                                                        {
+                                                            <input class="btn formButton" type="button" value="Save" @onclick="() => SaveEducation(education)" />
+                                                            <input class="btn formButton" type="button" value="Cancel" @onclick="() => CancelEducation(education)" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input class="btn formButton" type="button" value="Add" @onclick="() => AddEducationTakeTwo(education)" />
+                                                        }
+                                                        <!--<button class="btn formButton" type="reset" @onclick="() => AddEducationTakeTwo(education)" value="Add">Add</button> -->
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 p-5">
+                                        <div class="row shadow-sm bg-body rounded-edges white-back">
+                                            <div class="col-12 overflow-auto" style="height: 47vh">
+                                                <br />
+                                                @if (educationList != null && educationList.Count > 0)
+                                                {
+                                                    foreach (var item in educationList)
+                                                    {
+                                                        <div class="work-card mb-3" @onclick="() => SelectEducation(item)">
+                                                            <div class="company-name">@item.Insitution</div>
+                                                            <div class="job-position">@item.Qualification</div>
+                                                            <div class="start-end-date">
+                                                                <small>@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</small>
+                                                                <span @onclick="() => DeleteEducation(item.Id)">
+                                                                    <i class="fa fa-times-circle fa-2x" style="color: red"></i>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!--References tab-->
+
+                <div id="references" class="container tab-pane">
+                    <form id="references-form">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row p-3">
+                                    <div class="col-6 p-5">
+                                        <div class="row shadow-sm bg-body rounded-edges white-back">
+                                            <div class="col-12" style="height: 47vh">                                                 
+                                                <input type="hidden" @bind="references.Id" /> <!--remember to add references ID and AppUserID-->
+                                                <input type="hidden" @bind="references.AppUserId"/>
+                                                <div class="row p-3" >
+                                                    <div class="col-6">
+                                                        <label class="form-label" for="referenceName">Name</label>
+                                                        <input id="referenceName" class="form-control shadow bg-body rounded" type="text"  required placeholder="John" @bind="references.Name"  @onfocusout="completion"/> <!--@onfocusout="completion" -->
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <label class="form-label" for="referenceSurname">Surname</label>
+                                                        <input id="referenceSurname" class="form-control shadow bg-body rounded" type="text" required placeholder="Smith" @bind="references.Surname"  @onfocusout="completion"/> <!--@onfocusout="completion" -->
+                                                    </div>
+                                                </div>
+
+                                                <div class="row p-3">
+                                                    <div class="col-6">
+                                                        <label class="form-label" for="referenceEmail">Email</label>
+                                                        <input id="referenceEmail" class="form-control shadow bg-body rounded" type="text" required placeholder="john@gmail.com" @bind="references.Email" @onfocusout="completion"/> <!--@onfocusout="completion" -->
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <label class="form-label" for="referenceContactNum">Phone Number</label>
+                                                        <input id="referenceContactNum" class="form-control shadow bg-body rounded" type="text" required placeholder="071 336 9875" @bind="references.ContactNum"  @onfocusout="completion"/> <!--@onfocusout="completion" -->
+                                                    </div>
+                                                </div>
+                                                <div class="row p-3">
+                                                    <div class="col-12 d-flex justify-content-around">
+
+                                                        @if (editMode)
+                                                        {
+                                                            <input class="btn formButton" type="button" value="Save" @onclick="() => Save(references)" />
+                                                            <input class="btn formButton" type="button" value="Cancel" @onclick="() => Cancel(references)" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <input class="btn formButton" type="button" value="Add" @onclick="() => AddReferences(references)" />
+                                                        }
+
+                                                    </div>
+                                                    <div id="demo"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                    <div class="col-6 p-5">
+                                        <div class="row shadow-sm bg-body rounded-edges white-back">
+                                            <div class="col-12 overflow-auto" style="height: 47vh">
+                                                <br />
+                                                
+                                                @if (referencesList != null && referencesList.Count > 0)
+                                                {
+                                                    foreach (var items in referencesList)
+                                                    {
+                                                    <div class="work-card mb-3" @onclick="() => SelectReference(items)" >
+                                                        <div class="referenceName">@items.Name</div>
+                                                        <div class="referenceSurname">@items.Surname</div>
+                                                        <div>
+                                                            <span class="fa-layers-top-right" @onclick="() => DeleteReference(items.Id)">
+                                                                <i class="fa fa-times-circle fa-2x" style="color: red"></i>
+                                                            </span>
+                                                        </div>
+                                                        <div class="referenceEmail">@items.Email</div>
+                                                        <div class="referenceContactNum">@items.ContactNum </div>
+                                                    </div>
+                                                    }
+                                                 }                                                 
+                                            </div>
+                                        </div>
+                                    </div>    
+                                 </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!--Online Presence-->
+                <div id="online-profile" class="container tab-pane" style="height: 60vh;">
+                    <form class="col-12 d-flex justify-content-center align-items-start">
+                        <div class="row col-9">
+                            <div class="col-12 shadow-sm bg-body rounded-edges align-self-start white-back">
+                                <div class="row p-3">
+                                    <div class="col-6">
+                                        <div>
+                                            <label class="form-label" for="github">Github</label>
+                                            &ensp;
+                                            <i class="fab fa-github fa-2x"></i>
+                                        </div>
+                                        <input id="github" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.GitHubLink" placeholder="github.com/1Nebula"/>
+                                    </div>
+                                    <div class="col-6">
+                                        <div>
+                                            <label class="form-label" for="linkedin">LinkedIn</label>
+                                            &ensp;
+                                            <i class="fab fa-linkedin-in fa-2x" style="color: #0077b5"></i>
+                                        </div>
+                                        <input id="linkedin" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.LinkedInLink" placeholder="linkedin.com/company/nebula"/>
+                                    </div>
+                                </div>
+                                <div class="row p-3">
+                                    <div class="col-6">
+                                        <div>
+                                            <label class="form-label" for="twitter">Twitter</label>
+                                            &ensp;
+                                            <i class="fab fa-twitter-square fa-2x" style="color: #00acee"></i>
+                                        </div>
+                                        <input id="twitter" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.TwitterLink" placeholder="twitter.com/1nebula_global" />
+                                    </div>
+                                    <div class="col-6">
+                                        <div>
+                                            <label class="form-label" for="personal-website">Personal Website</label>
+                                            &ensp;
+                                            <i class="fas fa-globe fa-2x" style="color: #35afc0"></i>
+                                        </div>
+                                        <input id="personal-website" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.PersonalWebsiteUrl" placeholder="1nebula.com" />
+                                    </div>
+                                </div>
+                                <div class="row p-3">
+                                    <div class="col-12 d-flex justify-content-center">
+                                        <input class="btn formButton" type="button" value="Done" @onclick="Submit" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Newly added stuffs-->
+    <div class="col-1">
+
+        @if (calc > 0 && calc <= 25)
+        {
+            <!--Change the background images here-->
+            <!--
+        <div class=" space-text-layout lift-off-text" style="bottom: 25%">We have lift off!</div>-->
+        }
+        else if (calc > 25 && calc <= 50)
+        {
+            <!--<div class="space-text-layout left-atmosphere-text" style="bottom: 35%;">We've just left the atmosphere!</div>-->
+        }
+        else if (calc > 50 && calc <= 75)
+        {
+            <!--<div class="space-text-layout into-orbit-text" style="bottom: 50%;">Into orbit we go!</div>-->
+        }
+        else if (calc > 75 && calc < 100)
+        {
+            <!--<div class="space-text-layout to-the-mooon-text" style="bottom: 65%">To the moon!</div> -->
+        }
+        else if (calc == 100)
+        {
+            <!--<div class="space-text-layout you-done-text" style="bottom: 80%">Congratulations! You are done</div> -->
+        }
+    </div>
+</div>
+
+@code {
+    private bool presentWork = false;
+    private bool presentSchool = false;
+    private int id = 1;
+
+    private void AddWorkHistoryNew(WorkHistory workHistory1)
+    {
+        workHistory.Id = id++;
+        if (!workHistoryList.Contains(workHistory) || !FindWork(workHistory1))
+            workHistoryList.Add(workHistory);
+        else
+            jsRuntime.InvokeVoidAsync("alert", "Job Added");
+    }
+
+    private bool FindWork(WorkHistory workHistory1)
+    {
+        var temp = workHistoryList.FirstOrDefault(w => w.Id == workHistory1.Id || w.CompanyName.ToLower().Equals(workHistory1.CompanyName.ToLower()));
+        return temp == null;
+    }
+
+    // The following is required for the progress visualization feature
+    // First page testing if input is empty/null;
+    private int firstName = 0;
+    private int lastName = 0;
+    private int emailAddress = 0;
+    private int phoneNum = 0;
+    private int ethnicity = 0;
+    private int gender = 0;
+    private int idNum = 0;
+    private int address = 0;
+
+    // Work history / page 2 inputs is empty/null
+
+    private int compName = 0;
+    private int jobTitle = 0;
+    private int desc = 0;
+
+    // Education history inputs is empty / null
+    private int institution = 0;
+    private int qualification = 0;
+
+    // References history inputs is empty / null
+    private int refName = 0;
+    private int refSurname = 0;
+    private int refEmail = 0;
+    private int refContactNum = 0;
+
+
+
+    private int count = 0;
+    private double totalInputs = 13.0;
+    private string completionVar = "0%";
+    private double calc = 0.00;
+
+
+    private void progressCheck()
+    {
+        //This is the check that is used on the "Personal Information" page
+
+        calc = Math.Round(((count / totalInputs) * 100));
+
+        if (calc <= 100)
+        {
+            completionVar = calc.ToString() + "%";
+
+        }
+        else
+        {
+            completionVar = "100%";
+        }
+    }
+
+    private void completion()
+    {
+
+        //This is the check that is used on the "Personal Information" page
+
+        @if (!string.IsNullOrEmpty(personalInformation.FirstName) && firstName != 1)
+        {
+            count++;
+            firstName = 1;
+        }
+        else if (string.IsNullOrEmpty(personalInformation.FirstName) && firstName == 1)
+        {
+            count--;
+            firstName = 0;
+        }
+
+        else if (!string.IsNullOrEmpty(personalInformation.LastName) && lastName != 1)
+        {
+            count++;
+            lastName = 1;
+        }
+        else if (string.IsNullOrEmpty(personalInformation.LastName) && lastName == 1)
+        {
+            count--;
+            lastName = 0;
+        }
+
+        else if (!string.IsNullOrEmpty(personalInformation.Email) && emailAddress != 1)
+        {
+            count++;
+            emailAddress = 1;
+        }
+        else if (string.IsNullOrEmpty(personalInformation.Email) && emailAddress == 1)
+        {
+            count--;
+            emailAddress = 0;
+        }
+
+        else if (!string.IsNullOrEmpty(personalInformation.PhoneNumber) && phoneNum != 1)
+        {
+            count++;
+            phoneNum = 1;
+        }
+        else if (string.IsNullOrEmpty(personalInformation.PhoneNumber) && phoneNum == 1)
+        {
+            count--;
+            phoneNum = 0;
+        }
+
+        else if (!string.IsNullOrEmpty(additionalInformation.Ethnicity) && ethnicity != 1)
+        {
+            count++;
+            ethnicity = 1;
+        }
+        else if (string.IsNullOrEmpty(additionalInformation.Ethnicity) && ethnicity == 1)
+        {
+            count--;
+            ethnicity = 0;
+        }
+
+        else if (!string.IsNullOrEmpty(additionalInformation.Gender) && gender != 1)
+        {
+            count++;
+            gender = 1;
+        }
+        else if (string.IsNullOrEmpty(additionalInformation.Gender) && gender == 1)
+        {
+            count--;
+            gender = 0;
+        }
+
+        else if (!string.IsNullOrEmpty(personalInformation.IdNumber) && idNum != 1)
+        {
+            count++;
+            idNum = 1;
+        }
+        else if (string.IsNullOrEmpty(personalInformation.IdNumber) && idNum == 1)
+        {
+            count--;
+            idNum = 0;
+        }
+
+        else if (!string.IsNullOrEmpty(personalInformation.Address) && address != 1)
+        {
+            count++;
+            address = 1;
+        }
+        else if (string.IsNullOrEmpty(personalInformation.Address) && address == 1)
+        {
+            count--;
+            address = 0;
+        }
+
+        // This is the checks for the "Work history" page
+
+        if (workHistoryList.Count == 0)
+        {
+            if (!string.IsNullOrEmpty(workHistory.CompanyName) && compName != 1)
+            {
+                count++;
+                compName = 1;
+            }
+            else if (string.IsNullOrEmpty(workHistory.CompanyName) && compName == 1)
+            {
+                count--;
+                compName = 0;
+            }
+
+            else if (!string.IsNullOrEmpty(workHistory.JobTitle) && jobTitle != 1)
+            {
+                count++;
+                jobTitle = 1;
+            }
+            else if (string.IsNullOrEmpty(workHistory.JobTitle) && jobTitle == 1)
+            {
+                count--;
+                jobTitle = 0;
+            }
+            //workHistory.StartDate just neeed to do the date still
+
+            else if (!string.IsNullOrEmpty(workHistory.Description) && desc != 1)
+            {
+                count++;
+                desc = 1;
+            }
+            else if (string.IsNullOrEmpty(workHistory.Description) && desc == 1)
+            {
+                count--;
+                desc = 0;
+            }
+        }
+
+        //Start of Education validation for progression
+
+        if (educationList.Count == 0)
+        {
+            if (!string.IsNullOrEmpty(education.Insitution) && institution != 1)
+            {
+                count++;
+                institution = 1;
+            }
+            else if (string.IsNullOrEmpty(education.Insitution) && institution == 1)
+            {
+                count--;
+                institution = 0;
+            }
+
+            else if (!string.IsNullOrEmpty(education.Qualification) && qualification != 1)
+            {
+                count++;
+                qualification = 1;
+            }
+            else if (string.IsNullOrEmpty(education.Qualification) && qualification == 1)
+            {
+                count--;
+                qualification = 0;
+            }
+
+            // startDate and endDate for Qualification validation...
+
+            // Start of references progress validation
+
+            if (referencesList.Count == 0)
+            {
+                if (!string.IsNullOrEmpty(references.Name) && refName != 1 )
+                {
+                    count++;
+                    refName = 1;
+                }
+                else if (string.IsNullOrEmpty(references.Name) && refName == 1)
+                {
+                    count--;
+                    refName = 0;
+                }
+
+                else if (!string.IsNullOrEmpty(references.Surname) && refSurname !=1)
+                {
+                    count++;
+                    refSurname = 1;
+                }
+                else if (string.IsNullOrEmpty(references.Surname) && refSurname == 1)
+                {
+                    count--;
+                    refSurname = 0;
+                }
+
+                else if (!string.IsNullOrEmpty(references.Email) && refEmail != 1 || !string.IsNullOrEmpty(references.ContactNum) && refContactNum !=1)
+                {
+                    count++;
+                    refEmail = 1;
+                    refContactNum = 1;
+                }
+                else if (string.IsNullOrEmpty(references.Email) && refEmail == 1 || !string.IsNullOrEmpty(references.ContactNum) && refContactNum == 1)
+                {
+                    count--;
+                    refEmail = 0;
+                    refContactNum = 0;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,315 @@
+﻿@page "/contact"
+<style>
+    .overlay-contact {
+        z-index: 0;
+        height: auto;
+        width: 100%;
+    }
+
+    .contact-top {
+        height: auto;
+    }
+
+
+    .contact-bottom {
+        height: 5vh;
+        margin-top: 21vh;
+    }
+
+
+    .overlay-contact input[type=text], select {
+        color: black;
+        padding: 0.8em 1em 0.8em 1em;
+        font-family: opensans-condensed-light;
+        font-weight: 800;
+        font-size: 1em;
+        width: 70%;
+        border: 0.15em solid #00bcae;
+        border-radius: 1em;
+        background-color: transparent;
+        height: 7vh;
+        margin-bottom: 1vh;
+        /*Newly added, if need to change, then change the width to 100%*/
+        display: block;
+        margin-left: 15%;
+        margin-right: 15%;
+    }
+
+    .overlay-contact::placeholder {
+        color: black;
+        font-family: opensans-condensed-light;
+        font-size: 1em;
+        font-weight: 900;
+    }
+
+    .subButton {
+        width: 40%;
+        background-color: #00bcae;
+        color: white;
+        margin-left: 30%;
+        margin-right: 30%;
+        /*Maybe keep the bottom margin?*/
+        margin-bottom: 2%;
+        text-align: center;
+        font-size: 1.2em;
+        border: none;
+        border-radius: 16px;
+        cursor: pointer;
+        height: 5vh;
+    }
+
+        .subButton:hover {
+            background-color: #d35bc9;
+        }
+
+    .emailDisclaimer {
+        position: relative;
+        left: 50%;
+    }
+
+    .privacyPolicy {
+        position: relative;
+        left: 55%;
+    }
+
+    .rightsReserved {
+        position: relative;
+        left: 55%;
+    }
+
+    .logo {
+        position: relative;
+        bottom: 10%;
+        background-image: url(/Img/logo.svg);
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 10vh;
+        height: 5vh;
+    }
+
+    .firstDiv {
+        position: relative;
+        text-align: center;
+        font-family: opensans-condensed-bold;
+        font-weight: 800;
+        font-size: 14px;
+        top: 20%;
+    }
+
+    .secondDiv {
+        font-family: opensans-condensed-bold;
+        font-weight: 800;
+        /*Newly added stuffs*/
+        border: none;
+        border-radius: 2em;
+        background: rgba(255, 255, 255, 0.8) !important;
+        position: relative;
+        top: 20%;
+        padding: 5px 5px;
+    }
+
+    .thirdDiv {
+        position: relative;
+        text-align: center;
+        font-family: opensans-condensed-bold;
+        font-weight: 800;
+        top: 20%;
+    }
+
+    .contact-Bottom-Style {
+        font-family: opensans-condensed-bold;
+        font-weight: 800;
+        text-align: center;
+    }
+
+    .applicant-profile {
+        height: inherit;
+        max-width: 5em;
+        margin: auto;
+        background-image: url(/Img/upload.svg);
+        background-size: cover;
+        background-position: center;
+        width: 20px;
+    }
+
+    .linkStyle {
+        color: #000000;
+    }
+
+        .linkStyle:hover {
+            color: #00bcae;
+            text-decoration: none;
+        }
+
+    p {
+        font-size: 1.2em;
+        font-family: opensans-condensed-light;
+        font-weight: 800;
+    }
+
+    .contactIcons {
+        font-size: 2em;
+        color: #00bcae;
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+        .contactIcons:hover {
+            font-size: 2em;
+            color: #d35bc9;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+    .contactHeading {
+        font-size: 2em;
+        font-family: opensans-condensed-bold;
+        font-weight: 500;
+        color: #000000;
+        text-transform: uppercase;
+        text-align: center;
+        margin-top: 60px;
+        padding-bottom: 10px;
+    }
+
+    .contact-form-heading {
+        font-size: 2em;
+        font-family: opensans-condensed-bold;
+        font-weight: 500;
+        color: #000000;
+        text-transform: uppercase;
+        text-align: center;
+        padding-bottom: 25px;
+    }
+
+    .contact-drop-style {
+        font-family: opensans-condensed-light;
+        font-weight: 800;
+    }
+</style>
+
+<div class="overlay-contact">
+    <div class="row contact-top">
+        <div class="col-4">
+            <div class="firstDiv">
+                <h1 class="contactHeading">Head Office</h1>
+                <p>
+                    22 Park Lane<br>
+                    Century City<br>
+                    Cape Town<br>
+                    7441<br>
+                    South Africa<br>
+                </p>
+                <h1 class="contactHeading">Contact Details</h1>
+                <p>contactus@1nebula.com </p>
+                <p>+27 21 555 3227 </p>
+
+                <a href="https://www.linkedin.com/company/nebula/"><i class="fab fa-linkedin contactIcons"></i></a>
+                <a href="https://www.instagram.com/1nebula_global/"><i class="fab fa-instagram contactIcons"></i></a>
+                <a href="https://www.facebook.com/1Nebula/"><i class="fab fa-facebook contactIcons"></i></a>
+                <br>
+            </div>
+        </div>
+
+
+
+        <div class="col-4">
+            <div class="secondDiv">
+                <h1 class="contact-form-heading">Drop us a message.</h1>
+
+                <form>
+                    <select name="contactUsAbout" required>
+                        <option value="" disabled selected hidden>Select Department</option>
+                        <option value="sales">Nebula Sales</option>
+                        <option value="demoRequest">I'd like a demo</option>
+                        <option value="careers">Nebula Careers</option>
+                        <option value="support">Nebula Support</option>
+                        <option value="other">Other</option>
+                    </select>
+
+
+
+                    <input placeholder="Email" type="text" name="email" id="userEmail" required>
+
+
+
+                    <input placeholder="First Name" type="text" name="firstName" id="fName" required>
+
+
+
+                    <input placeholder="Last Name" type="text" name="lastName" id="lName" required>
+
+
+
+                    <select name="querySelect" required>
+                        <option value="" disabled selected hidden>Select Query</option>
+                        <option value="sales">OneView Demo</option>
+                        <option value="demoRequest">Stactize Demo</option>
+                        <option value="careers">Other</option>
+                    </select>
+
+<textarea name="userMessage" id="userMessage" rows="3" style="width: 70%; margin-left: 15%; margin-right: 15%; padding: 1em 1em 1em 1em; display: inline-block; border: 0.2em solid #00bcae; border-radius: 2em; box-sizing: border-box; background-color: transparent; font-family: opensans-condensed-light; font-weight: 800; font-size: 1em;"></textarea>
+
+
+
+                    <input class="subButton" type="button" value="Submit">
+                </form>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="thirdDiv">
+                <h1 class="contactHeading">Applicant Services</h1>
+                <p>
+                    Application Profile
+                    <br>
+                    Jobs Portal
+                    <br>
+                    My Jobs
+                    <br>
+                    <br>
+                    <br>
+                </p>
+                <h1 class="contactHeading">HR Services</h1>
+                <p>
+                    Applicant Viewer
+                    <br>
+                    Job Portal
+                    <br>
+                    Data Analytics
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row contact-bottom">
+
+        <div class="col-2">
+            <div class="emailDisclaimer contact-Bottom-Style">
+                <a href="https://www.1nebula.com/email-disclaimer?hsLang=en" class="linkStyle">Email Disclaimer</a>
+            </div>
+        </div>
+
+        <div class="col-2"></div>
+
+        <div class="col-2">
+            <div class="privacyPolicy contact-Bottom-Style">
+                <a href="https://www.1nebula.com/privacy-policy?hsLang=en" class="linkStyle">Privacy Policy</a>
+            </div>
+        </div>
+
+        <div class="col-2"></div>
+
+        <div class="col-2">
+            <div class="rightsReserved contact-Bottom-Style">
+                All Rights Reserved
+            </div>
+        </div>
+
+        <div class="col-1"></div>
+
+        <div class="col-1">
+            <div class="logo"></div>
+        </div>
+    </div>
+</div>

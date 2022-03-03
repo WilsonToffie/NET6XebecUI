@@ -1,0 +1,152 @@
+@page "/home"
+@inject NavigationManager navmanager
+@layout EmptyLayout
+@inject HttpClient HttpClient
+@using System.Linq;
+@using XebecPortal.UI.Shared.Home.Models
+
+<style>
+    .overlay-home {
+        top: 0;
+        z-index: 0;
+        height: 100vh;
+        width: 100%;
+    }
+
+    .xebec-left {
+        color: black;
+        font-size: 1em;
+        font-weight: 400;
+        height: 100%;
+    }
+
+    .xebec-right {
+        color: black;
+        font-size: 1em;
+        font-weight: 800;
+        height: 100%;
+    }
+
+    .home-left {
+        height: 100vh;
+    }
+
+    .home-right {
+        height: 100vh;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .home-left-block {
+        height: 70vh;
+        width: 80%;
+        margin-left: 10%;
+        margin-right: 10%;
+        margin-top: 30vh;
+        text-align: center;
+    }
+
+    .home-left-heading {
+        height: 30vh;
+        margin-bottom: 5vh;
+        width: 70%;
+        margin: auto;
+    }
+    .home-xebec-logo {
+        height: 30vh;
+        max-width: 100%;
+        background-image: url(/Img/xebeclogoblack.png);
+        background-size: cover;
+        background-position: center;
+    }
+    .home-left-body {
+        height: 15vh;
+        width: 100%;
+        margin: auto;
+        color: black;
+        text-align: center;
+        font-family: opensans-condensed-bold;
+        font-weight: 900;
+        font-size: 1.5em;
+    }
+
+    .home-xebec {
+        font-size: 3em;
+        color: #00bcae;
+        font-weight: 900;
+        font-family: opensans-extra-bold;
+        text-align: center;
+    }
+
+    .home-image-container {
+        height: 60vh;
+        border-top-left-radius: 7em;
+        border-top-right-radius: 7em;
+    }
+
+    .image1 {
+        height: 50vh;
+        margin-top: 20vh;
+        border-top-left-radius: 7em;
+        border-top-right-radius: 7em;
+        background-image: linear-gradient(rgba(0, 188, 174,0.3),rgba(0, 188, 174,0.3)),url(/Img/c.jpg);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .image2 {
+        height: 50vh;
+        margin-top: 25vh;
+        border-top-left-radius: 7em;
+        border-top-right-radius: 7em;
+        background-image: linear-gradient(rgba(0, 188, 174,0.3),rgba(0, 188, 174,0.3)),url(/Img/a.jpg);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .image3 {
+        height: 50vh;
+        margin-top: 30vh;
+        border-top-left-radius: 7em;
+        border-top-right-radius: 7em;
+        background-image: linear-gradient(rgba(0, 188, 174,0.3),rgba(0, 188, 174,0.3)),url(/Img/d.jpg);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .home-image-label {
+        height: 10vh;
+        border-bottom-left-radius: 7em;
+        border-bottom-right-radius: 7em;
+        color: white;
+        text-align: center;
+        background-color: #00bcae;
+        font-weight: 700;
+        font-size: 1em;
+        line-height: 10vh;
+        font-family: opensans-bold;
+    }
+    
+</style>
+<div class="row overlay-home" id="home">
+    <div class="col-4 home-left">
+        <div class="home-left-block">
+            <div class="home-left-heading">
+                <div class="home-xebec-logo"></div>
+            </div>
+            <div class="home-left-body">
+                <p>We streamline the recruitment experience with analytical feedback in a unified space.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-1"></div>
+    <div class="col-3 home-image-container">
+        <div class="image1"></div>
+        <div class="home-image-label">APPLICANTS PORTAL</div>
+    </div>
+    <div class="col-3 home-image-container">
+        <div class="image3"></div>
+        <div class="home-image-label">HUMAN RESOURCES PORTAL</div>
+    </div>
+    <div class="col-1"></div>
+</div>

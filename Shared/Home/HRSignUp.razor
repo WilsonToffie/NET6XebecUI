@@ -1,0 +1,553 @@
+﻿@inject NavigationManager navmanager
+@layout EmptyLayout
+@inject HttpClient HttpClient
+@using System.Linq;
+@using XebecPortal.UI.Shared.Home.Models;
+
+<style>
+    .register-page {
+        height: 100vh;
+        width: 100%;
+        display: flex;
+    }
+
+    .register-right {
+        margin-top: 10vh;
+        height: 90vh;
+        background-color: rgb(255,255,255,0.5);
+        width: 50%;
+    }
+
+    .register-left {
+        background-image: linear-gradient(rgba(0, 188, 174,0.2),rgba(0, 188, 174,0.2)),url(/Img/pexels3.jpg);
+        height: 90vh;
+        margin-top: 10vh;
+        width: 50%;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .index-form-register input[type="text"], input[type="email"], input[type="password"] {
+        background-color: transparent;
+        width: 85%;
+        height: 7vh;
+        line-height: 7vh;
+        font-size: 1em;
+        border: none;
+        font-weight: 800;
+        color: black;
+        font-family: opensans-condensed-light;
+        padding: 1em 1em 1em 1em;
+    }
+    .register-page select {
+        border: solid #00bcae 0.2em;
+        background-color: transparent;
+        border-radius: 1em;
+        width: 70%;
+        margin-left: 15%;
+        margin-right: 15%;
+        height: 7vh;
+        line-height: 7vh;
+        font-size: 1em;
+        font-weight: 800;
+        color: black;
+        font-family: opensans-condensed-light;
+        padding: 1em 1em 1em 1em;
+    }
+    .register-page option{
+        height: 4vh;
+        width: 100%;
+        border-bottom: solid 0.2em black;
+        margin-bottom: 1vh;
+    }
+    .register-page option:hover {
+        height: 4vh;
+        width: 100%;
+        border-bottom: solid 0.2em black;
+        background-color: yellow;
+        margin-bottom: 1vh;
+    }
+    .select-role-words {
+        height: 4vh;
+        line-height: 4vh;
+        color: #666666;
+        font-family: opensans-condensed-bold;
+        font-size: 1.2em;
+        font-weight: 800;
+    }
+    .selecting-role{
+        height: 4vh;
+        line-height: 4vh;
+        color: black;
+        font-family: opensans-condensed-bold;
+        font-size: 1em;
+        font-weight: 500;
+    }
+    .selecting-role:hover{
+        background-color: #00bcae;
+        color: white;
+        font-weight: 900;
+    }
+    .register-page .index-form-icon {
+        width: 15%;
+        padding-left: 5%;
+        text-align: left;
+        background-color: transparent;
+        color: #00bcae;
+        font-size: 2em;
+        height: 7vh;
+        line-height: 7vh;
+    }
+
+    .register-page input:focus, textarea:focus, select:focus {
+        outline: none;
+    }
+
+    .register-page::placeholder {
+        color: black;
+        font-family: opensans-condensed-light;
+        font-size: 1em;
+        width: 100%;
+        font-weight: 900;
+    }
+
+    .index-form-socials-register {
+        width: 100%;
+        height: 8vh;
+        margin-bottom: 5vh;
+    }
+    .index-select-register {
+        height: 7vh;
+        margin-top: 3vh;
+        margin-bottom: 3vh;
+        width: 70%;
+        margin-left: 15%;
+        margin-right: 15%;
+    }
+    .socials-register-heading {
+        width: 100%;
+        height: 3vh;
+        color: #666666;
+        font-family: opensans-condensed-bold;
+        font-weight: 900;
+        font-size: 1em;
+        text-align: center;
+    }
+
+    .socials-register-div {
+        width: 100%;
+        height: 5vh;
+        display: flex;
+    }
+
+    .social-media-register {
+        width: 33%;
+        height: 5vh;
+        text-align: center;
+        color: #00bcae;
+        font-size: 2em;
+    }
+
+    .index-role {
+        height: 10vh;
+        width: 100%;
+        display: flex;
+    }
+
+    .register-role-heading {
+        height: 4vh;
+        text-align: center;
+        font-weight: 900;
+        font-size: 1em;
+        color: black;
+        width: 100%;
+        font-family: opensans-condensed-light;
+        margin-top: 0;
+        padding-bottom: 1vh;
+    }
+
+    .register-role-icon {
+        height: 7vh;
+        width: 100%;
+        font-size: 2em;
+        color: #00bcae;
+        text-align: center;
+        margin-top: 0;
+        padding-top: 1vh;
+    }
+
+    .index-group-register {
+        border: solid #00bcae 0.2em;
+        background-color: transparent;
+        height: 7vh;
+        width: 40%;
+        margin-left: 5%;
+        margin-right: 5%;
+        border-radius: 1em;
+        display: flex;
+    }
+    .key-confirmation-form {
+        width: 90%;
+        margin-left: 5%;
+        margin-right: 5%;
+        margin-top: 20vh;
+        height: auto;
+    }
+    .key-input-group{
+        height: 15vh;
+        width: 100%;
+        display: flex;
+    }
+    .key-confirmation-form input[type="text"]{
+        height: 15vh;
+        width: 12%;
+        margin-left: 3%;
+        border-radius: 1em;
+        border: #00bcae solid 0.2em;
+        background-color: transparent;
+        text-align: center;
+        color: black;
+        font-size: 1.8em;
+        font-weight: 900;
+        font-family: opensans-bold;
+    }
+    .key-confirmation-form::placeholder {
+        height: 15vh;
+        text-align: center;
+        color: lightgrey;
+    }
+</style>
+<div class="register-page">
+    <div class="register-left"></div>
+    <div class="register-right">
+        <form class="index-form-register" style="margin-top: 10vh;" hidden="@registrationFormIsHidden">
+            <div class="form-group index-form-heading">
+                <h1 class="index-form-heading-1">REGISTER</h1>
+            </div>
+            <div class="form-group index-form-group">
+                <div class="index-group-register">
+                    <div class="index-form-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <input type="text" placeholder="Name" @bind="@Name" @ref="SignUpElementInFocus">
+                </div>
+                <div class="index-group-register">
+                    <div class="index-form-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <input type="text" placeholder="Surname" @bind="@Surname">
+                </div>
+            </div>
+            <div class="form-group index-form-group">
+                <div class="index-group-register">
+                    <div class="index-form-icon">
+                        <i class="fas fa-at"></i>
+                    </div>
+                    <input type="email" placeholder="Email address" @bind="@Email1">
+                </div>
+                <div class="index-group-register">
+                    <div class="index-form-icon">
+                        <i class="fas fa-at"></i>
+                    </div>
+                    <input type="email" placeholder="Confirm Email address" @bind="@Email2">
+                </div>
+            </div>
+            <div class="form-group index-form-group">
+                <div class="index-group-register">
+                    <div class="index-form-icon">
+                        <i class="fa fa-lock "></i>
+                    </div>
+                    <input type="password" placeholder="Password" @bind="@Password1">
+                </div>
+                <div class="index-group-register">
+                    <div class="index-form-icon">
+                        <i class="fa fa-lock "></i>
+                    </div>
+                    <input type="password" placeholder="Confirm password" @bind="@Password2">
+                </div>
+            </div>
+            <div class="form-group index-select-register">
+                <select @onchange="OnRoleChanged">
+                    <option class="select-role-words">Select Role</option>
+                    <option class="selecting-role" value="Collaborator">Collaborator</option>
+                    <option class="selecting-role" value="HRAdmin">HR Administrator</option>
+                    <option class="selecting-role" value="Super Admin">Super Admin</option>
+                </select>
+            </div>
+            <div class="form-group index-form-socials-register">
+                <h2 class="socials-register-heading">or sign up using</h2>
+                <div class="socials-register-div">
+                    <div class="social-media-register">
+                        <i class="fab fa-google" style="width: 100%;"></i>
+                    </div>
+                    <div class="social-media-register">
+                        <i class="fab fa-microsoft" style="width: 100%;"></i>
+                    </div>
+                    <div class="social-media-register">
+                        <i class="fab fa-facebook" style="width: 100%;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group index-form-or" hidden="@emailMessageIsHidden">
+                <h1 class="index-form-heading-3">emails do not match</h1>
+            </div>
+            <div class="form-group index-form-or" hidden="@passwordMessageIsHidden">
+                <h1 class="index-form-heading-3">passwords do not match</h1>
+            </div>
+            <div class="form-group index-form-or" hidden="@existingUserMessageIsHidden">
+                <h1 class="index-form-heading-3">this email is already registered on the platform</h1>
+            </div>
+            <div class="form-group index-form-or" hidden="@selectCheckBoxMessageIsHidden">
+                <h1 class="index-form-heading-3">checkbox not selected</h1>
+            </div>
+            <div class="form-group index-form-or" hidden="@successfulRegistrationMessageIsHidden">
+                <h1 class="index-form-heading-3">You have been successfully registered to xebec. Sign In.</h1>
+            </div>
+            <div class="form-group index-form-or" hidden="@confirmAccountMessageIsHidden">
+                <h1 class="index-form-heading-3">we will send you a key and link to activate your account</h1>
+            </div>
+            <input type="button" class="index-form-button" @onclick="Register" value="Submit" />
+        </form>
+        <form class="key-confirmation-form" hidden="@confirmationFormIsHidden">
+            <div class="form-group index-form-heading">
+                <h1 class="index-form-heading-1">CONFIRMATION</h1>
+            </div>
+            <div class="form-group key-input-group">
+                <input type="text" placeholder="0" @ref="RefKey1" @onchange="Key1Filled">
+                <input type="text" placeholder="0" @ref="RefKey2" @onchange="Key2Filled">
+                <input type="text" placeholder="0" @ref="RefKey3" @onchange="Key3Filled">
+                <input type="text" placeholder="0" @ref="RefKey4" @onchange="Key4Filled">
+                <input type="text" placeholder="0" @ref="RefKey5" @onchange="Key5Filled">
+                <input type="text" placeholder="0" @ref="RefKey6" @onchange="Key6Filled">
+            </div>
+            <div class="form-group index-form-or" hidden="@invalidKeyMessageIsHidden">
+                <h1 class="index-form-heading-3">Invalid Key</h1>
+            </div>
+            <div class="form-group index-form-or" hidden="@successfulRegistrationMessageIsHidden">
+                <h1 class="index-form-heading-3">You have been successfully registered to xebec. Sign In.</h1>
+            </div>
+            <input type="button" class="index-form-button" @onclick="ConfirmAccount" value="Submit" />
+        </form>
+    </div>
+</div>
+
+@code{
+
+    private string Name = "";
+    private string Surname = "";
+    private string Email1 = "";
+    private string Email2 = "";
+    private string Password1 = "";
+    private string Password2 = "";
+    private string Email = "";
+    private string Password = "";
+    private string Key,Key1,Key2,Key3,Key4,Key5,Key6 = "";
+
+    private bool existingUserMessageIsHidden;
+    private bool passwordMessageIsHidden;
+    private bool selectCheckBoxMessageIsHidden;
+    private bool successfulRegistrationMessageIsHidden;
+    private bool confirmAccountMessageIsHidden;
+    private bool emailMessageIsHidden;
+
+    private bool registrationFormIsHidden;
+    private bool confirmationFormIsHidden;
+
+    private bool invalidKeyMessageIsHidden;
+
+    private string message;
+    private object RoleSelected;
+
+    private KeyRequest request = new KeyRequest();
+
+    private UserModel user = new UserModel();
+    private List<UserModel> users = new List<UserModel>();
+
+    [Parameter]
+    public EventCallback<string> ValueChanged
+    {
+        get;
+        set;
+    }
+
+    ElementReference SignUpElementInFocus;
+    ElementReference RefKey1, RefKey2, RefKey3, RefKey4, RefKey5, RefKey6;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        passwordMessageIsHidden = true;
+        existingUserMessageIsHidden = true;
+        selectCheckBoxMessageIsHidden = true;
+        successfulRegistrationMessageIsHidden = true;
+        confirmAccountMessageIsHidden = true;
+        emailMessageIsHidden = true;
+
+        registrationFormIsHidden = false;
+        confirmationFormIsHidden = true;
+
+        await Task.Delay(0);
+    }
+    protected override void OnAfterRender(bool firstRender)
+    {
+
+        SignUpElementInFocus.FocusAsync();
+        RefKey1.FocusAsync();
+
+    }
+
+    private Task Key1Filled(ChangeEventArgs e)
+    {
+        Key1 = e.Value.ToString();
+        RefKey2.FocusAsync();
+        return ValueChanged.InvokeAsync(Key1);
+    }
+
+    private Task Key2Filled(ChangeEventArgs e)
+    {
+        Key2 = e.Value.ToString();
+        RefKey3.FocusAsync();
+        return ValueChanged.InvokeAsync(Key2);
+    }
+    private Task Key3Filled(ChangeEventArgs e)
+    {
+        Key3 = e.Value.ToString();
+        RefKey4.FocusAsync();
+        return ValueChanged.InvokeAsync(Key3);
+    }
+
+    private Task Key4Filled(ChangeEventArgs e)
+    {
+        Key4 = e.Value.ToString();
+        RefKey5.FocusAsync();
+        return ValueChanged.InvokeAsync(Key4);
+    }
+    private Task Key5Filled(ChangeEventArgs e)
+    {
+        Key5 = e.Value.ToString();
+        RefKey6.FocusAsync();
+        return ValueChanged.InvokeAsync(Key5);
+    }
+    private Task Key6Filled(ChangeEventArgs e)
+    {
+        Key6 = e.Value.ToString();
+        RefKey6.FocusAsync(); 
+        Key = Key1 + Key2 + Key3 + Key4 + Key5 + Key6;
+        return ValueChanged.InvokeAsync(Key6);
+    }
+    private Task OnRoleChanged(ChangeEventArgs e)
+    {
+        user.Role = e.Value.ToString();
+        return ValueChanged.InvokeAsync(user.Role);
+    }
+
+    private async Task ConfirmAccount()
+    {
+        using (var msg = await HttpClient.GetAsync("https://xebecapi.azurewebsites.net/api/auth/keys"))
+        {
+            KeyRequest keyresult = await msg.Content.ReadFromJsonAsync<KeyRequest>();
+            if (msg.IsSuccessStatusCode)
+            {
+
+                if (keyresult.Key.Equals(Key))
+                {
+                    successfulRegistrationMessageIsHidden = false;
+                }
+                else
+                {
+                    invalidKeyMessageIsHidden = false;
+                }
+            }
+        }
+    }
+
+
+
+    private async Task showConfirmationForm()
+    {
+        confirmationFormIsHidden = false;
+        registrationFormIsHidden = true;
+        await Task.Delay(0);
+    }
+
+    private bool RegisterPasswordCheck()
+    {
+        if (Password1 != Password2)
+        {
+            passwordMessageIsHidden = false;
+            existingUserMessageIsHidden = true;
+            selectCheckBoxMessageIsHidden = true;
+            successfulRegistrationMessageIsHidden = true;
+            confirmAccountMessageIsHidden = true;
+            return false;
+        }
+        else
+        {
+            passwordMessageIsHidden = true;
+            existingUserMessageIsHidden = true;
+            selectCheckBoxMessageIsHidden = true;
+            successfulRegistrationMessageIsHidden = true;
+            confirmAccountMessageIsHidden = true;
+            Password = Password1;
+            return true;
+        }
+    }
+    private bool RegisterEmailCheck()
+    {
+        if (Email1 != Email2)
+        {
+            emailMessageIsHidden = false;
+            return false;
+        }
+        else
+        {
+            emailMessageIsHidden = true;
+            return true;
+        }
+    }
+
+
+    private async Task Register()
+    {
+        bool passwordIsValid = RegisterPasswordCheck();
+        bool emailIsValid = RegisterEmailCheck();
+
+        confirmationFormIsHidden = false;
+        registrationFormIsHidden = true;
+        if (passwordIsValid && emailIsValid)
+        {
+            user.Name = Name;
+            user.Surname = Surname;
+            user.Email = Email;
+            user.Password = Password;
+
+            user.Key = "";
+
+            //Post model to dB
+            using (var msg = await HttpClient.PostAsJsonAsync<UserModel>("https://xebecapi.azurewebsites.net/api/auth/registernew", user))
+            {
+                if (msg.IsSuccessStatusCode)
+                {
+                    SignInResult result = await msg.Content.ReadFromJsonAsync<SignInResult>();
+                    message = result.Message;
+                    if (result.Success)
+                    {
+                        //await showConfirmationForm();
+                        //send key via email
+
+                        successfulRegistrationMessageIsHidden = false;
+                        await HttpClient.PostAsJsonAsync<UserModel>("https://xebecapi.azurewebsites.net/api/auth/registernew", user);
+                    }
+                    else if (message.Equals("User already exists."))
+                    {
+                        existingUserMessageIsHidden = false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Failed to register user.");
+                    }
+                }
+            }
+        }
+    }
+}

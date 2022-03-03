@@ -1,0 +1,203 @@
+﻿@inject HttpClient httpClient;
+<style>
+
+    .layout {
+        position: relative;
+        height: 90%;
+    }
+
+    .content-bottom {
+        height: 10%;
+    }
+
+    .cardStyle {
+        height: 29vh;
+        /*width: 37vh; can adjust this or remove it if it get's to big*/
+        position: relative;
+        top: 30%;
+        border-radius: 16px;
+        border: 5px double #00bcae;
+        margin-left: 10px;
+        margin-right: 10px;
+        background: rgba(0, 0, 0, 0.5); /*rgba(255, 255, 255, 0.5);*/
+        text-align: center;
+        padding-top: 0.2em;
+    }
+
+        .cardStyle:hover {
+            box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px; /*box-shadow: rgba(0, 0, 0, 0.56) 0px 22px 70px 4px;*/
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 5px solid #00bcae;
+        }
+
+    .cardStyle-selected {
+        height: 29vh;
+        top: 30%;
+        position: relative;
+        border-radius: 16px;
+        border: 5px double rgba(0, 0, 0, 0.5);
+        margin-left: 10px;
+        margin-right: 10px;
+        /*box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;*/
+        padding-top: 0.2em;
+        /*this is what causes the border colour*/
+        background-color: #FFFFFF;
+        text-align: center;
+    }
+
+    .cardLayout {
+        left: 10%;
+    }
+
+    .buttonStyle {
+        width: 80%;
+        margin-left: 10%;
+        margin-right: 10%;
+        background-color: #00bcae;
+        color: white;
+        text-align: center;
+        font-size: 1.2em;
+        border: none;
+        border-radius: 16px;
+        cursor: pointer;
+        height: 5vh;
+    }
+
+        .buttonStyle:hover {
+            background-color: #d35bc9;
+        }
+</style>
+
+<div class="layout">
+    <div class="row content-middle">
+
+        <div class="col-1"></div>
+
+        @if (profiles != null)
+        {
+            @for (int i = 0; i < profiles.Count; i++)
+            {
+
+                var companyProfileID = profiles[i];
+
+                @if (selectedProfile.Contains(companyProfileID))
+                {
+                    <div class="col-2">
+                        <div class="cardStyle-selected" @onclick="() => RemoveSelectProfile(companyProfileID)">
+
+                            <!--This is the profiles are chosen-->
+                            @if ((profiles[i].platformName).Equals("Main 1Nebula Platform"))
+                            {
+                                <img src="/Img/logo.svg" style="height: 40%; width: 80%; margin-top: 35%; ">
+                            }
+                            else if ((profiles[i].platformName).Equals("Xebec Platform"))
+                            {
+
+                                <img src="/Img/Xebec Logo black.png" style="height: 60%; width: 80%; margin-top: 20%; object-fit: cover; object-position:center">
+                            }
+                            else if ((profiles[i].platformName).Equals("48Software"))
+                            {
+                                <img src="/Img/48 full-logo-colour.png" style="height: auto; width: 100%; margin-top: 40%; object-fit: cover; object-fit: cover; object-position: center">
+                            }
+                            else if ((profiles[i].platformName).Equals("OneView"))
+                            {
+                                <img src="/Img/OneView dark logo.png" style="height: auto; width: 100%; margin-top: 35%; object-fit: cover; object-position: center ">
+                            }
+                            else if ((profiles[i].platformName).Equals("Stactize"))
+                            {
+                                <img src="/Img/Stactize logo colour-01.png" style="height: auto; width: 100%; margin-top: 40%; object-fit: cover; object-position: center ">
+                            }
+                        </div>
+                    </div>
+                }
+                else if (profiles.Contains(companyProfileID))
+                {
+                    <div class="col-2">
+                        <div class="cardStyle card-text-Style" @onclick="() => AddSelectProfile(companyProfileID)">
+                            <!--This is the profiles are getting chosen-->
+                            @if ((profiles[i].platformName).Equals("Main 1Nebula Platform"))
+                            {
+                                <img src="/Img/logo.svg" style="height: 40%; width: 80%; margin-top: 35%;  ">
+                            }
+                            else if ((profiles[i].platformName).Equals("Xebec Platform"))
+                            {
+
+                                <img src="/Img/Xebec Logo white.png" style="height: 60%; width: 80%; margin-top: 20%; object-fit: cover; object-position: center ">
+                            }
+                            else if ((profiles[i].platformName).Equals("48Software"))
+                            {
+                                <img src="/Img/48 full logo white.png" style="color: rgba(62,179,231,255); height: auto; width: 100%; margin-top: 40%; object-fit: cover; object-position: center ">
+                            }
+                            else if ((profiles[i].platformName).Equals("OneView"))
+                            {
+                                <img src="/Img/OneView light logo.png" style="height: auto; width: 100%; margin-top: 35%; object-fit: cover; object-position: center ">
+                            }
+                            else if ((profiles[i].platformName).Equals("Stactize"))
+                            {
+                                <img src="/Img/Stactize logo light-01.png" style="height: auto; width: 100%; margin-top: 40%; object-fit: cover; object-position: center ">
+                            }
+                        </div>
+                    </div>
+                }
+            }
+        }
+    </div>
+</div>
+
+<div class="row content-bottom">
+    <div class="col-5"></div>
+    <div class="col-2">
+        <input class="buttonStyle" type="button" value="Save" @onclick="Save">
+    </div>
+    <div class="col-5"></div>
+</div>
+
+@code {
+    [Parameter]
+    public CreateJobPost TempJob { get; set; }
+    [Parameter]
+    public EventCallback<CreateJobPost> TempJobChanged { get; set; }
+
+    private List<JobPlatform> profiles;
+    private List<JobPlatform> selectedProfile = new List<JobPlatform>();
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        profiles = await httpClient.GetFromJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform");
+
+    }
+
+    protected void AddSelectProfile(JobPlatform profile)
+    {
+        selectedProfile.Add(profile);
+    }
+
+    protected void RemoveSelectProfile(JobPlatform profile)
+    {
+        selectedProfile.Remove(profile);
+    }
+
+    /*
+    private object selectedCompanyProfile(JobPlatform profile)
+    {
+        if (selectedProfile.FindAll(d => d.id == profile.id).Count() >0)
+            return "cardStyle-selected";
+        return "cardStyle";
+    }
+    */
+    private object deselectCompanyProfile(JobPlatform profile)
+    {
+        if (selectedProfile.FindAll(d => d.id == profile.id).Count() > 0)
+            return "cardStyle";
+        return "cardStyle-selected";
+    }
+
+    private async Task Save()
+    {
+        TempJob.JobPlatforms = selectedProfile;
+        Console.WriteLine("Saving the Profiles");
+        await TempJobChanged.InvokeAsync(TempJob);
+    }
+
+}
