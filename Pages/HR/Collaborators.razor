@@ -57,7 +57,7 @@
         }
 
     .collaborators-left-table {
-        height: 40vh;
+        height: 45vh;
         width: 80%;    
         margin-left: 10%;
         margin-right: 10%;
@@ -335,7 +335,7 @@
     }
     .developer-profile-picture{
         height: 7vh;
-        width:  100%;
+        
         margin-right: 1vw;
     }
     .developer-profile-picture img {
@@ -448,7 +448,7 @@
                                         @if (ChosenQuestions is {Count: > 0 })
                                         {
                                             <details style="max-height: 20vh; overflow-y: auto; width: 100%">
-                                                <summary style="width: 100%">Question & Answer access <small style="margin-left: 5vw;" class="text-right font-italic" >Click here!</small></summary><br/>
+                                                <summary style="width: 100%">Question & Answer access <small style="" class="text-right font-italic" >Click here!</small></summary><br/>
                                                 <small class="text-muted">Choose which candidate questions & answers the <u>@developer.name</u> has access to.</small><br/>
                                                 @for (var index = 0; index < ChosenQuestions.Count; index++)
                                                 {
