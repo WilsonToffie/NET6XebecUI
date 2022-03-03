@@ -1,5 +1,4 @@
-﻿
-/*
+﻿/*
 export function PersonalInformation() {
 
     var myform = $("#personal-information-form")[0];

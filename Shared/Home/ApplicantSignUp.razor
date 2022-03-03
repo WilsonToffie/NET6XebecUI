@@ -156,7 +156,7 @@
                     <div class="index-form-icon">
                         <i class="fas fa-user"></i>
                     </div>
-                    <input type="text" placeholder="Name" @bind="@Name">
+                    <input type="text" placeholder="Name" @bind="@Name" @ref="ElementInFocus">
                 </div>
                 <div class="index-group-register">
                     <div class="index-form-icon">
@@ -250,6 +250,8 @@
     private UserModel user = new UserModel();
     private List<UserModel> users = new List<UserModel>();
 
+    ElementReference ElementInFocus;
+
     protected override async Task OnInitializedAsync()
     {
         passwordMessageIsHidden = true;
@@ -259,6 +261,14 @@
         emailMessageIsHidden = true;
 
         await Task.Delay(0);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            ElementInFocus.FocusAsync();
+        }
     }
 
     private bool RegisterPasswordCheck()
@@ -295,7 +305,7 @@
         }
     }
 
-    
+
     private async Task Register()
     {
         bool passwordIsValid = RegisterPasswordCheck();
@@ -309,7 +319,7 @@
             user.Password = Password;
             user.Role = "Candidate";
 
-            
+
             using (var msg = await HttpClient.PostAsJsonAsync<UserModel>("https://xebecapi.azurewebsites.net/api/auth/registernew", user))
             {
                 if (msg.IsSuccessStatusCode)

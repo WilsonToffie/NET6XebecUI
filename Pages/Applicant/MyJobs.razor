@@ -16,7 +16,7 @@
         min-height: 100%;
         overflow: hidden;
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: 1fr 1fr 1.2fr 1.5fr;
         grid-template-rows: 10% auto;
         grid-gap: 10px;
         max-height: 100%;
@@ -105,6 +105,7 @@
         box-sizing: border-box;
         height: fit-content;
         transition: 0.3s fade;
+        
         
         /*box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;*/
     }
@@ -220,6 +221,12 @@
         border-radius: 1em;
         font-size: 1em;
     }
+    .job-search-bar-input {
+        width: 100%;
+        background-color: rgba(255,255,255,1) !important;
+        border-radius: 2em;
+        border: 0.1em solid rgba(0,0,0,0.2);
+    }
 </style>
 @if (_allJobs != null)
 {
@@ -227,11 +234,11 @@
         <!--Search-Box-->
         <div class="row" style="height:5vh; grid-column: span 4;">
             <div class="col">
-                <div class="input-group d-flex justify-content-center">
-                    <span class="input-group-text">
+                <div class="input-group d-flex justify-content-center form-group">
+                    @*<span class="input-group-text">
                         <i class="fa fa-search"></i>
-                    </span>
-                    <input class="form-control" style="max-width: 50%" type="text" placeholder="Search" value="@_keyword" @oninput="@OnKeywordChanged"/>
+                    </span>*@
+                    <input class="job-search-bar-input" style="max-width: 50%" type="text" placeholder="Search" value="@_keyword" @oninput="@OnKeywordChanged"/>
                 </div>
             </div>
         </div>
@@ -248,8 +255,8 @@
                     <small class="phase left-text">
                         <span class="phase-pill" style="@(GetColor(application.Phase))">@application.Phase</span>
                     </small>
-                    <small class="addition-details text-muted">Date Advertized: @application.LastMoved</small>
-                    <small class="addition-details left-text text-muted">ApplicationModel Date : @application.ApplicationDate</small>
+                    <small class="addition-details text-muted">Date Advertised: @application.LastMoved</small>
+                    @*<small class="addition-details left-text text-muted">ApplicationModel Date : @application.ApplicationDate</small>*@
                 </div>
             }
         </div>
@@ -266,14 +273,14 @@
                     <small class="phase left-text">
                         <span class="phase-pill" style="@(GetColor(application.Phase))">@application.Phase</span>
                     </small>
-                    <small class="addition-details text-muted">Date Advertized: @application.LastMoved</small>
-                    <small class="addition-details left-text text-muted">ApplicationModel Date : @application.ApplicationDate</small>
+                    <small class="addition-details text-muted">Date Advertised: @application.LastMoved</small>
+                    @*<small class="addition-details left-text text-muted">ApplicationModel Date : @application.ApplicationDate</small>*@
                 </div>
             }
         </div>
         <div class="main-wrapper-child job-cards">
             <div class="card-header  d-flex align-content-center justify-content-center accepted-heading">
-                <span class="count">@_offers.Count</span><span>Successful</span><p>Application</p>
+                <span class="count">@_offers.Count </span><span style="margin-left:5px;">Successful</span><p style="margin-left:5px;">Application</p>
             </div>
             @foreach (var application in _offers)
             {
@@ -284,14 +291,14 @@
                     <small class="phase left-text">
                         <button class="phase-pill" style="@(GetColor(application.Phase))">@application.Phase</button>
                     </small>
-                    <small class="addition-details text-muted">Date Advertized: @application.LastMoved</small>
-                    <small class="addition-details left-text text-muted">ApplicationModel Date : @application.ApplicationDate</small>
+                    <small class="addition-details text-muted">Date Advertised: @application.LastMoved</small>
+                    @*<small class="addition-details left-text text-muted">ApplicationModel Date : @application.ApplicationDate</small>*@
                 </div>
             }
         </div>
         <div class="main-wrapper-child job-cards rejection-card">
             <div class="card-header  d-flex align-content-center justify-content-center rejection-heading">
-                <span class="count">@_rejections.Count</span><span>successful</span><br><span>Application</span>
+                <span class="count">@_rejections.Count</span><span style="margin-left:5px;">Unsuccessful</span><br><span style="margin-left:5px;">Application</span>
             </div>
             @foreach (var rejection in _rejections)
             {
@@ -300,7 +307,7 @@
                     <span class="company">@rejection.Company</span>
                     <small class="addition-details">@rejection.Location</small>
                     <small class="phase left-text">Last Phase : <button class="rejection-phase">@rejection.Phase</button></small>
-                    <small class="addition-details">Date Advertized: @rejection.ApplicationDate</small>
+                    <small class="addition-details">Date Advertised: @rejection.ApplicationDate</small>
                     <small class="addition-details left-text">Date Closed : @rejection.LastMoved</small>
                 </div>
             }

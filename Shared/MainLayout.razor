@@ -292,210 +292,218 @@
     }
 </style>
 
-<div class="page" hidden="@ApplicantIsHidden">
-    <div class="header">
-        <div class="d-flex justify-content-between align-items-center">
-            <div class="mainlayout-heading">
-                <div class="mainlayout-xebec-heading">
-                    <div class="mainlayout-xebec-logo"></div>
+@if (state.Role.Equals("Candidate"))
+{
+    <div class="page">
+        <div class="header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="mainlayout-heading">
+                    <div class="mainlayout-xebec-heading">
+                        <div class="mainlayout-xebec-logo"></div>
+                    </div>
+                </div>
+                <div class="nav">
+                    <img class="icon-menu" src="/Img/list.svg" data-bs-toggle="offcanvas" data-bs-target="#showApplicantNav" aria-controls="offcanvasRight" />
+                    <img class="icon-menu" src="/Img/settings.svg" data-bs-toggle="offcanvas" data-bs-target="#showApplicantNavAlert" aria-controls="offcanvasRight" />
                 </div>
             </div>
-            <div class="nav">
-                <img class="icon-menu" src="/Img/list.svg" data-bs-toggle="offcanvas" data-bs-target="#showApplicantNav" aria-controls="offcanvasRight" />
-                <img class="icon-menu" src="/Img/settings.svg" data-bs-toggle="offcanvas" data-bs-target="#showApplicantNavAlert" aria-controls="offcanvasRight" />
-            </div>
         </div>
-    </div>
 
-    <!--Work on this navigation-->
-    <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showApplicantNav" aria-labelledby="offcanvasRightLabel">
-        <div class="offcanvas-header offcanvas-header-color">
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="mainlayout-profile">
-            <div class="profile-div">
-                <div class="profile-image-div-cover">
-                    <div class="profile-image-div">
+        <!--Work on this navigation-->
+        <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showApplicantNav" aria-labelledby="offcanvasRightLabel">
+            <div class="offcanvas-header offcanvas-header-color">
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="mainlayout-profile">
+                <div class="profile-div">
+                    <div class="profile-image-div-cover">
+                        <div class="profile-image-div">
+                        </div>
+                    </div>
+                    <div class="profile-name-div">
+                        <h2 class="profile-name">@state.Name &nbsp @state.Surname</h2>
+                    </div>
+                    <div class="profile-role-div">
+                        <h2 class="profile-role">@state.Role</h2>
                     </div>
                 </div>
-                <div class="profile-name-div">
-                    <h2 class="profile-name">@state.Name &nbsp @state.Surname</h2>
+            </div>
+            <div class="offcanvas-body offcanvas-body-main">
+                <div class="nav-link" @onclick="showApplicantApplicationProfile">
+                    <div class="icons"><i class="fa fa-book" aria-hidden="true"></i></div><h2 class="nav-link-text">Application Profile</h2>
                 </div>
-                <div class="profile-role-div">
-                    <h2 class="profile-role">@state.Role</h2>
+                <div class="nav-link" @onclick="showApplicantJobPortal">
+                    <div class="icons"><i class="fa fa-briefcase" aria-hidden="true"></i></div><h2 class="nav-link-text">Job Portal</h2>
+                </div>
+                <div class="nav-link" @onclick="showApplicantMyJobs">
+                    <div class="icons"><i class="fa fa-users" aria-hidden="true"></i></div><h2 class="nav-link-text">My Jobs</h2>
                 </div>
             </div>
-        </div>
-        <div class="offcanvas-body offcanvas-body-main">
-            <div class="nav-link" @onclick="showApplicantApplicationProfile">
-                <div class="icons"><i class="fa fa-book" aria-hidden="true"></i></div><h2 class="nav-link-text">Application Profile</h2>
-            </div>
-            <div class="nav-link" @onclick="showApplicantJobPortal">
-                <div class="icons"><i class="fa fa-briefcase" aria-hidden="true"></i></div><h2 class="nav-link-text">Job Portal</h2>
-            </div>
-            <div class="nav-link" @onclick="showApplicantMyJobs">
-                <div class="icons"><i class="fa fa-users" aria-hidden="true"></i></div><h2 class="nav-link-text">My Jobs</h2>
+            <div class="infodiv">
+                <h2 class="profile-logout" @onclick="Logout">Sign Out</h2>
             </div>
         </div>
-        <div class="infodiv">
-            <h2 class="profile-logout" @onclick="Logout">Sign Out</h2>
-        </div>
-    </div>
 
-    <!--Alert Navigation-->
-    <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showApplicantNavAlert" aria-labelledby="offcanvasRightLabel">
-        <div class="offcanvas-header offcanvas-header-color1">
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body offcanvas-body-main">
-            <div class="row" style="margin-left: auto !important; margin-right: auto !important">
-                <div class="col-12">
-                    <h3 class="configure-alerts-heading">Configure Alerts</h3>
-                </div>
-                <div class="col-12 d-grid gap-4">
+        <!--Alert Navigation-->
+        <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showApplicantNavAlert" aria-labelledby="offcanvasRightLabel">
+            <div class="offcanvas-header offcanvas-header-color1">
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body offcanvas-body-main">
+                <div class="row" style="margin-left: auto !important; margin-right: auto !important">
                     <div class="col-12">
-                        <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" Label="Filter by Department" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" >
-                            @if (jobs?.Any() == true)
-                            {
-                                @foreach (var item in jobs.Select(x => x.Department).Distinct())
-                                {
-                                    <MudSelectItem T="string" Value="item">@item</MudSelectItem>
-                                }
-                            }
-                        </MudSelect>
+                        <h3 class="configure-alerts-heading">Configure Alerts</h3>
                     </div>
-                    <div class="col-12">
-                        <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Jobs" MultiSelection="true" Label="Filter by Job Title" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextJob)">
-                            @if (jobs?.Any() == true)
-                            {
-                                @foreach (var item in jobs.Select(x => x.Title).Distinct())
+                    <div class="col-12 d-grid gap-4">
+                        <div class="col-12">
+                            <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" Label="Filter by Department" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)">
+                                @if (jobs?.Any() == true)
                                 {
-                                    <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                    @foreach (var item in jobs.Select(x => x.Department).Distinct())
+                                    {
+                                        <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                    }
                                 }
-                            }
-                        </MudSelect>
-                    </div>
-                    <div class="col-12">
-                        <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Companies" MultiSelection="true" Label="Filter by Company" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextCompany)">
-                            @if (jobs?.Any() == true)
-                            {
-                                @foreach (var item in jobs.Select(x => x.Company).Distinct())
+                            </MudSelect>
+                        </div>
+                        <div class="col-12">
+                            <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Jobs" MultiSelection="true" Label="Filter by Job Title" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextJob)">
+                                @if (jobs?.Any() == true)
                                 {
-                                    <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                    @foreach (var item in jobs.Select(x => x.Title).Distinct())
+                                    {
+                                        <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                    }
                                 }
-                            }
-                        </MudSelect>
-                    </div>
-                    <div class="col-12">
-                        <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer; font-size: 2em;" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" Label="Filter by Location" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextLocation)">
-                            @if (jobs?.Any() == true)
-                            {
-                                @foreach (var item in jobs.Select(x => x.Location).Distinct())
+                            </MudSelect>
+                        </div>
+                        <div class="col-12">
+                            <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Companies" MultiSelection="true" Label="Filter by Company" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextCompany)">
+                                @if (jobs?.Any() == true)
                                 {
-                                    <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                    @foreach (var item in jobs.Select(x => x.Company).Distinct())
+                                    {
+                                        <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                    }
                                 }
-                            }
-                        </MudSelect>
-                    </div>
-                    <div class="col-12">
-                        <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Types" MultiSelection="true" Label="Filter by Job Type" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextType)">
-                            @if (jobTypes?.Any() == true)
-                            {
-                                @foreach (var item in jobTypes.Select(x => x.Type).Distinct())
+                            </MudSelect>
+                        </div>
+                        <div class="col-12">
+                            <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer; font-size: 2em;" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" Label="Filter by Location" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextLocation)">
+                                @if (jobs?.Any() == true)
                                 {
-                                    <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                    @foreach (var item in jobs.Select(x => x.Location).Distinct())
+                                    {
+                                        <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                    }
                                 }
-                            }
-                        </MudSelect>
-                    </div>
-                    <div class="col-12 d-flex justify-content-center">
-                        <input type="button" class="configure-alerts-button" value="Configure"/>
+                            </MudSelect>
+                        </div>
+                        <div class="col-12">
+                            <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Types" MultiSelection="true" Label="Filter by Job Type" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextType)">
+                                @if (jobTypes?.Any() == true)
+                                {
+                                    @foreach (var item in jobTypes.Select(x => x.Type).Distinct())
+                                    {
+                                        <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                    }
+                                }
+                            </MudSelect>
+                        </div>
+                        <div class="col-12 d-flex justify-content-center">
+                            <input type="button" class="configure-alerts-button" value="Configure" />
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="main" hidden="@applicantApplicationProfileIsHidden">
-        <div class="main-component">
-            <XebecPortal.UI.Pages.Applicant.ApplicationProfile />
+        <div class="main">
+            <div class="main-component">
+                @if (applicantApplicationProfile)
+                {
+                    <XebecPortal.UI.Pages.Applicant.ApplicationProfile />
+                }
+                @if (applicantJobPortal)
+                {
+                    <XebecPortal.UI.Pages.Applicant.JobPortal />
+                }
+                @if (applicantMyJobs)
+                {
+                    <XebecPortal.UI.Pages.Applicant.MyJobs />
+                }
+            </div>
         </div>
     </div>
-    <div class="main" hidden="@applicantJobPortalIsHidden">
-        <div class="main-component">
-            <XebecPortal.UI.Pages.Applicant.JobPortal />
-        </div>
-    </div>
-    <div class="main" hidden="@applicantMyJobsIsHidden">
-        <div class="main-component">
-            <XebecPortal.UI.Pages.Applicant.MyJobs />
-        </div>
-    </div>
-</div>
+}
 
-<div class="page" hidden="@HRIsHidden">
-    <div class="header">
-        <div class="d-flex justify-content-between align-items-center">
-            <div class="mainlayout-heading">
-                <div class="mainlayout-xebec-heading">
-                    <div class="mainlayout-xebec-logo"></div>
-                </div>
-            </div>
-            <div class="nav">
-                <img class="icon-menu" src="/Img/list.svg" data-bs-toggle="offcanvas" data-bs-target="#showHRNav" aria-controls="offcanvasRight" />
-            </div>
-        </div>
-    </div>
-    <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showHRNav" aria-labelledby="offcanvasRightLabel">
-        <div class="offcanvas-header offcanvas-header-color">
-            <button type="button" class="btn-close text-reset myclosebutton" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="mainlayout-profile">
-            <div class="profile-div">
-                <div class="profile-image-div-cover">
-                    <div class="profile-image-div">
+@if (!state.Role.Equals("Candidate")) 
+{
+    <div class="page">
+        <div class="header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="mainlayout-heading">
+                    <div class="mainlayout-xebec-heading">
+                        <div class="mainlayout-xebec-logo"></div>
                     </div>
                 </div>
-                <div class="profile-name-div">
-                    <h2 class="profile-name">@state.Name &nbsp @state.Surname</h2>
-                </div>
-                <div class="profile-role-div">
-                    <h2 class="profile-role">@state.Role</h2>
+                <div class="nav">
+                    <img class="icon-menu" src="/Img/list.svg" data-bs-toggle="offcanvas" data-bs-target="#showHRNav" aria-controls="offcanvasRight" />
                 </div>
             </div>
         </div>
-        <div class="offcanvas-body offcanvas-body-main">
-            <div class="nav-link" @onclick="showHRDataAnalyticsTool">
-                <div class="icons"><i class="fa fa-chart-bar" aria-hidden="true"></i></div><h2 class="nav-link-text">Data Analytics Tool</h2>
+        <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showHRNav" aria-labelledby="offcanvasRightLabel">
+            <div class="offcanvas-header offcanvas-header-color">
+                <button type="button" class="btn-close text-reset myclosebutton" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
-            <div class="nav-link" @onclick="showHRJobPortal">
-                <div class="icons"><i class="fa fa-briefcase" aria-hidden="true"></i></div><h2 class="nav-link-text">Job Portal</h2>
+            <div class="mainlayout-profile">
+                <div class="profile-div">
+                    <div class="profile-image-div-cover">
+                        <div class="profile-image-div">
+                        </div>
+                    </div>
+                    <div class="profile-name-div">
+                        <h2 class="profile-name">@state.Name &nbsp @state.Surname</h2>
+                    </div>
+                    <div class="profile-role-div">
+                        <h2 class="profile-role">@state.Role</h2>
+                    </div>
+                </div>
             </div>
-            <div class="nav-link" @onclick="showHRCreateAJob">
-                <div class="icons"><i class="fas fa-cubes"></i></div><h2 class="nav-link-text">Create A Job</h2>
+            <div class="offcanvas-body offcanvas-body-main">
+                <div class="nav-link" @onclick="showHRDataAnalyticsTool">
+                    <div class="icons"><i class="fa fa-chart-bar" aria-hidden="true"></i></div><h2 class="nav-link-text">Data Analytics Tool</h2>
+                </div>
+                <div class="nav-link" @onclick="showHRJobPortal">
+                    <div class="icons"><i class="fa fa-briefcase" aria-hidden="true"></i></div><h2 class="nav-link-text">Job Portal</h2>
+                </div>
+                <div class="nav-link" @onclick="showHRCreateAJob">
+                    <div class="icons"><i class="fas fa-cubes"></i></div><h2 class="nav-link-text">Create A Job</h2>
+                </div>
+            </div>
+            <div class="infodiv">
+                <h2 class="profile-logout" @onclick="Logout">Sign Out</h2>
             </div>
         </div>
-        <div class="infodiv">
-            <h2 class="profile-logout" @onclick="Logout">Sign Out</h2>
+        <div class="main">
+            <div class="main-component">
+                @if (hrDataAnalyticsTool)
+                {
+                    <XebecPortal.UI.Pages.HR.DataAnalyticsTool />
+                }
+                @if (hrJobPortal)
+                {
+                    <XebecPortal.UI.Pages.HR.JobPortal />
+                }
+                @if (hrCreateAJob)
+                {
+                    <XebecPortal.UI.Pages.HR.CreateJob />
+                }
+            </div>
         </div>
     </div>
-    <div class="main" hidden="@hrDataAnalyticsToolIsHidden">
-        <div class="main-component">
-            <XebecPortal.UI.Pages.HR.DataAnalyticsTool />
-        </div>
-    </div>
-    <div class="main" hidden="@hrJobPortalIsHidden">
-        <div class="main-component">
-            <XebecPortal.UI.Pages.HR.JobPortal />
-        </div>
-    </div>
-    <div class="main" hidden="@hrCreateAJobIsHidden">
-        <div class="main-component">
-            @*<XebecPortal.UI.Pages.HR.PhaseManager />*@
-            <XebecPortal.UI.Pages.HR.CreateJob />
-        </div>
-    </div>
-</div>
+}
+
 @if (state.isLoggedIn == false)
 {
     navmanager.NavigateTo("/");
@@ -503,7 +511,3 @@
 <MudThemeProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
-
-@code{
-
-}
