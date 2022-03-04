@@ -28,6 +28,14 @@
         justify-content: center;
     }
 
+    .phase-title {
+        background-color: #00BCAE;
+        text-align: center;
+        height: 30px;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
     .jobs-container {
         display: flex;
         justify-content: space-evenly;
@@ -37,7 +45,7 @@
     .job-status {
         display: flex;
         flex-direction: column;
-        width: 175px;
+        width: 100%;
         background-color: white;
         height: 400px;
         max-height: 400px;
@@ -173,7 +181,9 @@
 
         <div class="phase-container shadow @AppliedDropClass">
             <div class="job-status">
-                <h5 class="active-phase">Applied (@Items.Where((item) => item.ApplicationPhaseId == 1).Count())</h5>
+                <div class="phase-title">
+                    <h5 class="active-phase" style="color: white;">Applied</h5>
+                </div>
 
                 <ul class="dropzone"
                     ondragover="event.preventDefault();"
@@ -198,7 +208,10 @@
 
         <div class="phase-container shadow @ScreeningDropClass">
             <div class="job-status">
-                <h5 class="@ScreeningActive">Screening (@Items.Where((item) => item.ApplicationPhaseId is 3 or 5 or 25 or 10).Count())</h5>
+                <div class="phase-title"> 
+                    <h5 class="@ScreeningActive" style="color: white;">Screening</h5>
+                </div>
+               
 
                 <ul class="dropzone"
                     ondragover="event.preventDefault();"
@@ -228,7 +241,10 @@
 
         <div class="phase-container shadow @AssessmentDropClass">
             <div class="job-status">
-                <h5  class="@AssessmentActive">Assessment (@Items.Where((item) => item.ApplicationPhaseId == 27).Count())</h5>
+                <div class="phase-title">
+                    <h5 class="@AssessmentActive" style="color: white;">Assessment</h5>
+                </div>
+                
 
                 <ul class="dropzone"
                     ondragover="event.preventDefault();"
@@ -258,7 +274,9 @@
 
         <div class="phase-container shadow @InterviewDropClass">
             <div class="job-status">
-                <h5 class="@InterviewActive">Interview (@Items.Where((item) => item.ApplicationPhaseId is 26 or 28 or 29 or 30 or 31 or 11).Count())</h5>
+                <div class="phase-title">
+                    <h5 class="@InterviewActive" style="color: white;">Interview</h5>
+                </div>
 
                 <ul class="dropzone"
                     ondragover="event.preventDefault();"
@@ -288,7 +306,10 @@
 
         <div class="phase-container shadow @ReferenceDropClass">
             <div class="job-status">
-                <h5 class="@ReferenceActive">Reference Check (@Items.Where((item) => item.ApplicationPhaseId == 32).Count())</h5>
+                <div class="phase-title">
+                    <h5 class="@ReferenceActive" style="color: white;">Reference Check</h5>
+                </div>
+                
 
                 <ul class="dropzone"
                     ondragover="event.preventDefault();"
@@ -318,7 +339,10 @@
 
         <div class="phase-container shadow @OfferDropClass">
             <div class="job-status">
-                <h5  class="@OfferActive">Offer (@Items.Where((item) => item.ApplicationPhaseId is 33 or 34 or 35 or 12).Count())</h5>
+                <div class="phase-title">
+                    <h5 class="@OfferActive" style="color: white;">Offer</h5>
+                </div>
+                
 
                 <ul class="dropzone"
                     ondragover="event.preventDefault();"
@@ -348,7 +372,10 @@
 
         <div class="phase-container shadow @SuccessDropClass">
             <div class="job-status">
-                <h5 class="active-phase">Hired/Not Hired (@Items.Where((item) => item.ApplicationPhaseId is 36 or 13).Count())</h5>
+                <div class="phase-title">
+                    <h5 class="active-phase" style="color: white;">Hired/Not Hired</h5>
+                </div>
+                
 
                 <ul class="dropzone"
                     ondragover="event.preventDefault();"
