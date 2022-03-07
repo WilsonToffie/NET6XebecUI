@@ -388,7 +388,7 @@
 
         await Task.Delay(0);
     }
-    protected override void OnAfterRender(bool firstRender)
+    protected override Task OnAfterRender(bool firstRender)
     {
 
         SignUpElementInFocus.FocusAsync();
