@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 namespace XebecPortal.UI.Pages.Applicant
 {
@@ -127,10 +128,15 @@ namespace XebecPortal.UI.Pages.Applicant
     public class WorkHistory : ICloneable
     {
         public int Id { get; set; }
+        [Required]
         public string CompanyName { get; set; }
+        [Required]
         public string JobTitle { get; set; }
+        [Required]
         public string Description { get; set; }
+        [Required]
         public DateTime StartDate { get; set; }
+        [Required]
         public DateTime EndDate { get; set; }
         public int AppUserId { get; set; }
         public IList<AppUser> AppUser { get; set; }
@@ -148,9 +154,13 @@ namespace XebecPortal.UI.Pages.Applicant
     public class Education : ICloneable
     {
         public int Id { get; set; }
+        [Required]
         public string Insitution { get; set; }
+        [Required]
         public string Qualification { get; set; }
+        [Required]
         public DateTime StartDate { get; set; }
+        [Required]
         public DateTime EndDate { get; set; }
         public int AppUserId { get; set; }
         public IList<AppUser> AppUser { get; set; }
@@ -168,14 +178,21 @@ namespace XebecPortal.UI.Pages.Applicant
     public class References : ICloneable
     {
         public int Id { get; set; }
+        [Required]        
         public string Name { get; set; }
+        [Required]
         public string Surname { get; set; }
+        [Required]
+        [EmailAddress]
         public string Email { get; set; }
+        [Required]
+        [Phone]
         public string ContactNum { get; set; }
+
         public int AppUserId { get; set; }
         public IList<AppUser> AppUser { get; set; }
 
-        public object Clone() 
+        public object Clone()
         {
             return MemberwiseClone();
         }
@@ -184,7 +201,7 @@ namespace XebecPortal.UI.Pages.Applicant
             return JsonConvert.SerializeObject(this);
         }
     }
-    
+
     public class ProfilePortfolioLink
     {
         public int Id { get; set; }
@@ -199,8 +216,11 @@ namespace XebecPortal.UI.Pages.Applicant
     public class AdditionalInformation
     {
         public int Id { get; set; }
+        [Required]
         public string Disability { get; set; }
+        [Required]
         public string Gender { get; set; }
+        [Required]
         public string Ethnicity { get; set; }
         public int AppUserId { get; set; }
         public IList<AppUser> AppUser { get; set; }
@@ -209,11 +229,20 @@ namespace XebecPortal.UI.Pages.Applicant
     public class PersonalInformation
     {
         public int Id { get; set; }
+        [Required]
         public string FirstName { get; set; }
+        [Required]
         public string LastName { get; set; }
+        [Required]
+        [Phone]
         public string PhoneNumber { get; set; }
+        [Required]
+
         public string IdNumber { get; set; }
+        [Required]
+        [EmailAddress]
         public string Email { get; set; }
+        [Required]
         public string Address { get; set; }
         public string ImageUrl { get; set; }
         public int AppUserId { get; set; }
