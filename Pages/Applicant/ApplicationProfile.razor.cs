@@ -16,31 +16,32 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using XebecPortal.UI.Pages.Model;
-
+using Microsoft.Extensions.Logging;
 namespace XebecPortal.UI.Pages.Applicant
 {
     public partial class ApplicationProfile
     {
         private StringBuilder status = new StringBuilder("waiting");
         private ResumeResultModel resumeResultModel = new ResumeResultModel();
-        
+
         private int increment = 1;
         private bool workHistUpdate;
         private bool eduUpdate;
         private bool editMode;
         private bool workEditMode;
         private bool eduEditMode;
+
         private List<WorkHistory> workHistoryList = new();
         private WorkHistory workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         private List<Education> educationList = new();
         private Education education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         private ProfilePortfolioLink profilePortfolio = new() { AppUserId = 1 };
         private AdditionalInformation additionalInformation = new() { AppUserId = 1, Disability = "No" };
-        private PersonalInformation personalInformation = new() { AppUserId = 1 };
-        
+        private PersonalInformation personalInformation = new() { AppUserId = 1 }; // Not sure if it even stores the information correctly
+        private List<PersonalInformation> personalInformationList = new();
         private List<References> referencesList = new();
-        private References references = new() { AppUserId = 1};
-        
+        private References references = new() { AppUserId = 1 };
+
 
         private IJSObjectReference _jsModule;
         string _dragEnterStyle;
@@ -48,38 +49,42 @@ namespace XebecPortal.UI.Pages.Applicant
         private int maxAllowedSize = 10 * 1024 * 1024;
         private string progressBar = 0.ToString("0");
 
+
+        private bool educationProgressVal = false;
+        private bool workProgressVal = false;
+        private bool referenceProgressVal = false;
+
+
         protected override async Task OnInitializedAsync()
         {
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/ApplicationProfile.js");
         }
-        
-        private void AddReferences(References referencesValues)
+
+        private void AddReferences()
         {
             var validCheck = referencesList.FindAll(r => r.Name.Equals(references.Name) && string.Equals(r.Surname, references.Surname, StringComparison.OrdinalIgnoreCase) && string.Equals(r.Email, references.Email, StringComparison.OrdinalIgnoreCase) && string.Equals(r.ContactNum, references.ContactNum, StringComparison.OrdinalIgnoreCase));
-            if (validCheck.Count == 0)
+
+            var emptyCheck = referencesList.FindAll(r => string.IsNullOrEmpty(r.Name) || string.IsNullOrEmpty(r.Surname) || string.IsNullOrEmpty(r.Email) || string.IsNullOrEmpty(r.ContactNum));
+
+            referencesList.Add(new()
             {
-                referencesList.Add(new()
-                {
-                    Id = increment,
-                    AppUserId = 1,
-                    Name = references.Name,
-                    Surname = references.Surname,
-                    Email = references.Email,
-                    ContactNum = references.ContactNum,
-                });
-                increment++;
-                references = new();
-            }
-            else{
-                // To alert user
-            }
-        }   
-            
+                Id = increment,
+                AppUserId = 1,
+                Name = references.Name,
+                Surname = references.Surname,
+                Email = references.Email,
+                ContactNum = references.ContactNum,
+            });
+            increment++;            
+            references = new();
+        } 
+
         private References tempRef;
 
         private void Save(References referenceValues)
         {
             editMode = false;
+            Logger.LogInformation("Valid submit called");
             int index = referencesList.FindIndex(x => x.Id == referenceValues.Id);
             referencesList[index] = references;
             references = new();
@@ -87,24 +92,29 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private void Cancel(References referenceValues)
         {
-            int index = referencesList.FindIndex(x => x.Id == referenceValues.Id);
+            int index = referencesList.FindIndex(x => x.Id == referenceValues.Id);            
             referencesList[index] = tempRef;
             references = new();
             editMode = false;
+
         }
 
         private void DeleteReference(int refID)
-        {
+        {            
+            if (referencesList.Count == 1)
+            {
+                referenceProgressVal = true;
+            }
             referencesList.RemoveAll(x => x.Id == refID);
         }
 
-        
+
         private void SelectReference(References referenceValues)
         {
-            editMode = true;        
-            int index =  referencesList.FindIndex(x => x.Id == referenceValues.Id);             
-            references = referencesList[index];           
-            tempRef = (References)references.Clone();            
+            editMode = true;
+            int index = referencesList.FindIndex(x => x.Id == referenceValues.Id);
+            references = referencesList[index];
+            tempRef = (References)references.Clone();
         }
         /*
         private async Task AddWorkHistory(WorkHistory workHistoryValues)
@@ -129,8 +139,8 @@ namespace XebecPortal.UI.Pages.Applicant
         */
         private WorkHistory tempWorkHistory;
 
-        private void addWorkHistoryTest(WorkHistory workHistoryValues) {
-
+        private void addWorkHistoryTest()
+        {            
             workHistoryList.Add(new()
             {
                 Id = increment,
@@ -141,13 +151,16 @@ namespace XebecPortal.UI.Pages.Applicant
                 EndDate = workHistory.EndDate,
                 Description = workHistory.Description
             });
-
             increment++;
             workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         }
 
         private void DeleteWorkHistory(int id)
         {
+            if (workHistoryList.Count == 1)
+            {
+                workProgressVal = true;
+            }            
             workHistoryList.RemoveAll(x => x.Id == id);
             workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             workHistUpdate = false;
@@ -155,6 +168,7 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private void SelectWorkHistory(WorkHistory workHistoryValues)
         {
+            
             workEditMode = true;
             int index = workHistoryList.FindIndex(x => x.Id == workHistoryValues.Id);
             workHistory = workHistoryList[index];
@@ -213,8 +227,26 @@ namespace XebecPortal.UI.Pages.Applicant
             }
         }
         */
+
+        /*
+        private void AddPersonallInformation()
+        {           
+            personalInformation.Add(new()
+            {
+                Id = increment,
+                AppUserId = 1,
+                Name = personalInformation.FirstName,
+                Surname = references.Surname,
+                Email = references.Email,
+                ContactNum = references.ContactNum,
+            });
+            increment++;
+            references = new();
+        }
+
+        */
         private Education tempEducation;
-        private void AddEducationTakeTwo(Education educationValues)
+        private void AddEducationTakeTwo()
         {
             educationList.Add(new()
             {
@@ -226,12 +258,17 @@ namespace XebecPortal.UI.Pages.Applicant
                 EndDate = education.EndDate,
             });
 
-            increment++;
+            increment++;            
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         }
 
         private void DeleteEducation(int id)
         {
+            if (educationList.Count == 1)
+            {
+                educationProgressVal = true;
+            }
+            
             educationList.RemoveAll(x => x.Id == id);
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             eduUpdate = false;
@@ -304,11 +341,22 @@ namespace XebecPortal.UI.Pages.Applicant
                 await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/AdditionalInformation", additionalInformation);
                 await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/WorkHistory/List", workHistoryList);
                 await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Education/List", educationList);
+                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/References/List", referencesList); // Just need API confirmation
                 await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink", profilePortfolio);
 
                 await jsRuntime.InvokeVoidAsync("alert", "You Data Has Been Captured");
             }
         }
+        // This is just used to indicate to the user that their info has been successfully added to the DB
+        /* using (var msg = await httpClient.PostAsJsonAsync<LoginModel>("/api/auth/login", user,
+         System.Threading.CancellationToken.None))
+         {
+            if (msg.IsSuccessStatusCode)
+                 {
+                     //Stuff posted successfully
+                 }
+             }
+        */
 
         private static int num = 1;
         async Task OnInputFileChangedAsync(InputFileChangeEventArgs e)
@@ -316,13 +364,13 @@ namespace XebecPortal.UI.Pages.Applicant
             fileNames = e.File;
             progressBar = 0.ToString("0");
             status = new StringBuilder($"Uploading file {num++}");
-            
-            
+
+
             //Upload to blob - start
             status = new StringBuilder($"current file {fileNames.Name}");
 
             status.AppendLine("\n");
-            
+
             var blobUri = new Uri("https://"
                                   + "amafilewam" +
                                   ".blob.core.windows.net/" +
@@ -331,7 +379,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 "sp=racwdli&st=2022-02-28T08:30:27Z&se=2022-03-11T16:30:27Z&sv=2020-08-04&sr=c&sig=TE%2B2VCz%2B6KKFbYHIkQwxGPOYWVUtht3xBPYZ8bE3kH4%3D");
             BlobClient blobClient = new BlobClient(blobUri, credential, new BlobClientOptions());
             status.AppendLine("Created blob client");
-            
+
             status.AppendLine("\n");
             status.AppendLine("Sending to blob");
             //displayProgress = true;
@@ -349,40 +397,40 @@ namespace XebecPortal.UI.Pages.Applicant
                 })
             });
 
-             if (Convert.ToInt32(progressBar) == 100)
+            if (Convert.ToInt32(progressBar) == 100)
             {
                 //var content = new StringContent($"\"{blobUri.ToString()}\"",  Encoding.UTF8, "applicationModel/json");
-                
+
                 var content = new FormUrlEncodedContent(new[]
                                 {
                                     new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
                                 });
                 // var urlJson =
                 //     new StringContent(JsonSerializer.Serialize("content"""), Encoding.UTF8, "applicationModel/json");
-                
+
                 //var response = await httpClient.GetAsync("https://xebecapi.azurewebsites.net/api/ResumeParser");
-                
-                
-                var resp =  await httpClient.PostAsync("http://localhost:5005/api/ResumeParser/", content);
+
+
+                var resp = await httpClient.PostAsync("http://localhost:5002/api/ResumeParser/", content);
                 //status = new StringBuilder(resp.StatusCode.ToString());
                 var respContent = await resp.Content.ReadAsStringAsync();
 
                 resumeResultModel = JsonConvert.DeserializeObject<ResumeResultModel>(respContent);
-                
+
                 Console.WriteLine($"Content {respContent}");
                 Console.WriteLine($"Result model {resumeResultModel}");
                 //resumeResultModel =  System.Text.Json.JsonSerializer.Deserialize<ResumeResultModel>(respContent);
 
-                
-                    personalInformation.FirstName = resumeResultModel.Name;
-                    personalInformation.Email = resumeResultModel.EmailAddress;
 
-                    education.Insitution = resumeResultModel.CollegeName;
-                    education.Qualification = resumeResultModel.CollegeName;
+                personalInformation.FirstName = resumeResultModel.Name;
+                personalInformation.Email = resumeResultModel.EmailAddress;
 
-                    workHistory.CompanyName = resumeResultModel.CompaniesWorkedAt;
-                    workHistory.JobTitle = resumeResultModel.Designation;
-                
+                education.Insitution = resumeResultModel.CollegeName;
+                education.Qualification = resumeResultModel.CollegeName;
+
+                workHistory.CompanyName = resumeResultModel.CompaniesWorkedAt;
+                workHistory.JobTitle = resumeResultModel.Designation;
+
 
 
                 //status = new StringBuilder(await resp.Content.ReadAsStringAsync());
