@@ -349,7 +349,7 @@
                                 <div class="card-body job-portal-card-body">
                                     <div class="row">
                                         <div class="col-10"><h3 class="card-title small-card-name">@item.Title</h3></div>
-                                        <div class="col-2"> <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteData(item.Id)"></i> </div>
+                                        <div class="col-2"> <h3 class="card-title small-card-name"><i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteData(item.Id)"></i></h3></div>
                                         <div class="col-12"><h5 class="card-subtitle text-muted small-card-company">@item.Company</h5></div>
                                         <br />
                                         <div class="col-12"><h5 class="card-text small-card-location">@item.Location</h5></div>
@@ -382,26 +382,36 @@
                                         }
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
-                                        <div class="row">
+                                        <div class="row d-flex justify-content-center">
                                             @if (changeForm)
                                             {
-                                                <div class="col">
-                                                    <button class="job-portal-nav-btn btn-danger" type="button" style="width: 7em" @onclick="() => FormType(false)">Cancel</button>
+                                                <div class="col mt-2">
+                                                    <h5>
+                                                        <button class="job-portal-nav-btn" type="button" style="width: 7em" @onclick="() => FormType(false)">Cancel</button>
+                                                    </h5>
                                                 </div>
-                                                <div class="col">
-                                                    <button class="job-portal-nav-btn" type="button" style="width: 7em" @onclick="() => SaveData(displayJobDetail)">Save</button>
+                                                <div class="col mt-2">
+                                                    <h5>
+                                                        <button class="job-portal-nav-btn" type="button" style="width: 7em" @onclick="() => SaveData(displayJobDetail)">Save</button>
+                                                    </h5>
                                                 </div>
                                             }
                                             else
                                             {
-                                                <div class="col">
-                                                    <button class="job-portal-nav-btn" type="button" style="width: 7em" @onclick="() => OpenJobCollabDialog(displayJobDetail.Id)">Collaborators</button>
+                                                <div class="col mt-2">
+                                                    <h5>
+                                                        <button class="job-portal-nav-btn" type="button" style="width: 7em" @onclick="() => OpenJobCollabDialog(displayJobDetail.Id)">Collaborators</button>
+                                                    </h5>
                                                 </div>
-                                                <div class="col">
-                                                    <button class="job-portal-nav-btn" type="button" style="width: 7em" @onclick="() => ShowApplicantPortal(displayJobDetail.Id)">Applicant Portal</button>
+                                                <div class="col mt-2">
+                                                    <h5>
+                                                        <button class="job-portal-nav-btn" type="button" style="width: 9em" @onclick="() => ShowApplicantPortal(displayJobDetail.Id)">Applicant Portal</button>
+                                                    </h5>
                                                 </div>
-                                                <div class="col">
-                                                    <button class="job-portal-nav-btn" type="button" style="width: 7em" @onclick="() => FormType(true)">Edit</button>
+                                                <div class="col mt-2">
+                                                    <h5>
+                                                        <button class="job-portal-nav-btn" type="button" style="width: 7em" @onclick="() => FormType(true)">Edit</button>
+                                                    </h5>
                                                 </div>
                                             }
                                         </div>
@@ -584,7 +594,7 @@
         @if (appUserFilter?.Any() == true)
         {
             <div class="row">
-                <div class="col-12">
+                <div class="col-12 border border-2 mb-1 pb-2">
                     <h2 class="text-center"><strong>Hiring Lead</strong></h2>
                     <div class="row">
                         <div class="col-12">
@@ -598,8 +608,8 @@
                         </div>
                     </div>
                 </div>
-                <br />
-                <div class="col-12">
+
+                <div class="col-12 border border-2 mt-1">
                     <h2 class="text-center"><strong>Team Assigned For This Job</strong></h2>
                     <div class="row overflow-auto d-flex justify-content-center" style="height: 15em">
                         @foreach (var item in appUserFilter)
