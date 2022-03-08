@@ -129,6 +129,8 @@ namespace XebecPortal.UI.Pages.HR
         public int id { get; set; }
 
         public string description { get; set; }
+
+        public string EmailTemplate { get; set; }
     }
 
     public class AppUser
@@ -245,7 +247,9 @@ namespace XebecPortal.UI.Pages.HR
 
         public int ApplicationPhaseId { get; set; }
 
-        public string EmailTemplate { get; set; }
+        public string Picture { get; set; }
+
+        public string Email { get; set; }
     }
 
     public class UnsuccessfulReason
