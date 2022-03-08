@@ -115,9 +115,12 @@
     }
 
     protected override void OnAfterRender(bool firstRender)
-    {      
-        SignInElementInFocus.FocusAsync();
-        ForgotPasswordElementInFocus.FocusAsync();       
+    {
+
+        if (firstRender) {
+            SignInElementInFocus.FocusAsync();
+        }
+        ForgotPasswordElementInFocus.FocusAsync();
     }
 
     private async Task Login()
