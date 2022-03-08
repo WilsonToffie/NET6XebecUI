@@ -15,6 +15,8 @@ namespace XebecPortal.UI.Shared
         private IList<Job> jobs = new List<Job>();
         private IList<JobType> jobTypes = new List<JobType>();
 
+        private string Initials = "";
+        private string Avator = "";
         private bool applicantApplicationProfile, applicantJobPortal, applicantMyJobs = false;
 
         private bool hrDataAnalyticsTool, hrJobPortal, hrCreateAJob = false;
@@ -92,6 +94,13 @@ namespace XebecPortal.UI.Shared
         private static string GetMultiSelectionTextType(List<string> selectedValues)
         {
             return $"Selected Type{(selectedValues.Count > 1 ? "s" : " ")}: {string.Join(", ", selectedValues.Select(x => x))}";
+        }
+        private void getInitials()
+        {
+            Avator = state.Avator;
+            string firstInitial = state.Name.Substring(0, 1);
+            string lastInitial = state.Surname.Substring(0, 1);
+            Initials = firstInitial + lastInitial;
         }
 
     }
