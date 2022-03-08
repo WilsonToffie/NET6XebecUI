@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'xebecportal'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_59B0A31C64EC4EBC8C4DC757FD1B0BAD }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7A46CD8BFDDB455DBEC116B942540C74 }}
           package: .
