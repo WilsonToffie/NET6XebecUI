@@ -2,6 +2,7 @@
 @inject HttpClient httpClient
 @inject IJSRuntime jsr
 @inject NavigationManager NavigationManager
+@inject UserState _state;
 
 <style>
  
@@ -107,8 +108,10 @@
         width: 100%;
         height: 100%;
         overflow: auto;
-        background-color: rgb(0,0,0);
         background-color: rgba(0,0,0,0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     td:hover {
@@ -169,7 +172,7 @@
     .appform-left-row {
         box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px, rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
         border-radius: 20px !important;
-        min-height: 8vh;
+        min-height: 6vh;
         color: black;
         font-family: opensans-condensed-bold;
         font-weight: 900;
@@ -181,9 +184,9 @@
     }
     .appform-left-row-selected{
                 border-radius: 20px !important;
-                min-height: 9vh;
+                min-height: 7vh;
                 color:#00bcae; !important;
-                font-family: opensans-condensed-bold;
+                font-family: opensans-condensed-bold,serif;
                 font-weight: 900;
                 font-size: 1em;
                 margin-bottom: 5px;
@@ -377,6 +380,13 @@
 .collaborators-left-main{
     padding: 10px;
 }
+.phase-div{
+    display:flex;
+    align-items: center;
+}
+.phase-div > .phase-name{
+    font-size: 1.5rem;
+}
 </style>
 
 
@@ -386,72 +396,75 @@
             <h2 class="collaborators-heading-text">Select Phases</h2>
         </div>
         <div class="appform-left-main">
-            <table class="collaborators-left-table">
+            <div class="collaborators-left-table">
                 @if (phases == null)
                 {
                     <div>Loading...</div>
                 }
                 else
                 {
-                    <tbody>
                     @if (phases != null)
                     {
-                        @foreach (var phase in phases)
+                        foreach (var phase in phases)
                         {
-                            <tr class="@PhaseCardClass(phase)" @onclick="() => AddPhase(phase)">
-                                <td class="collaborators-left-td">@phase.description</td>
-                            </tr>
+                            <div class="@PhaseCardClass(phase) pl-2 phase-div" @onclick="() => AddPhase(phase)">
+                                <p class="phase-name">@phase.description</p>
+                                @* <span class="phase-pill" @GetPillStyle(phase)></span> *@
+                            </div>
                         }
                     }
-                    </tbody>
                 }
-            </table>
-        </div>
-        <div class="appform-left-buttons">
-            <div class="question-button">
-                <button class="btn appform-main-button" @onclick="ToggleModalSubmitPhase">Add Phase</button>
-                <button class="btn appform-main-button" @onclick="ToggleModalDeletePhase">Delete Phase</button>
             </div>
         </div>
+        @if (string.Equals("super admin", _state.Role, StringComparison.OrdinalIgnoreCase))
+        {
+            <div class="appform-left-buttons">
+                <div class="question-button">
+                    <button class="btn appform-main-button" @onclick="ToggleModalSubmitPhase">Add Phase</button>
+                    <button class="btn appform-main-button" @onclick="ToggleModalDeletePhase">Delete Phase</button>
+                </div>
+            </div>
+        }
+        
     </div>
     <div class="collaborators-right">
         <div class="collaborators-heading">
             <h2 class="collaborators-heading-text">Chosen Phases</h2>
         </div>
         <div class="appform-left-main">
-            <table class="collaborators-left-table">
+            <div class="collaborators-left-table">
                 @if (phases == null)
                 {
                     <div>Loading...</div>
                 }
                 else
                 {
-                    <tbody>
-                        @if (phasesAdded != null)
+                    @if (phasesAdded != null)
+                    {
+                        foreach (var phase in phasesAdded)
                         {
-                            @foreach (var phase in phasesAdded)
-                            {
-                                <tr class="appform-right-row">
-                                    <td class="collaborators-left-td">
-                                        <div class="form-preview-question">
-                                            <h3 class="appform-text">@phase.description</h3>
-                                            <button class="btn-close appform-close-button" @onclick="() => DeletePhaseOrderPhase(phase)"></button>
+                            <div class="right-list-item-preview">
+                                <div class="close-item-panel">
+                                    <span @onclick="() => DeletePhaseOrderPhase(phase)">
+                                        <i class="fas fa-times"></i>
+                                    </span>
+                                </div>
+                                <div class="preview-item-body">
+                                    <div class="preview-item-description">
+                                        <p class="">@phase.description</p>
+                                    </div>
+                                    @if (phase.description.ToLower().Contains("interview"))
+                                    {
+                                        <div class="preview-item-control">
+                                            <p type="email" class="form-control" style="width: 100%">Interviewer : @developerAssigned</p>
                                         </div>
-                                        @if (phase.description.ToLower().Contains("interview"))
-                                        {
-                                            <div class="form-preview-input">
-                                                <p type="email" class="form-control" style="width: 100%">
-                                                    Interviewer : @developerAssigned
-                                                </p>
-                                            </div>
-                                        }
-                                    </td>
-                                </tr>
-                            }
+                                    }
+                                </div>
+                            </div>
                         }
-                    </tbody>
+                    }
                 }
-            </table>
+            </div>
         </div>
     </div>
 </div>
@@ -472,20 +485,28 @@
 
 @if (showModalDeletePhase)
 {
-    <div class="modalbox">
-        <div class="modal-content" style="height: 250px">
-            <span class="close" @onclick="ToggleModalDeletePhase">&times;</span>
-            <p>Delete phase:</p>
-            <div style="overflow: auto">
-                <table>
-                    @foreach (var phase in phases)
-                    {
-                        <tr class="collaborators-left-row">
-                            <td class="collaborators-left-td">@phase.description</td>
-                            <td class="collaborators-left-td" @onclick="() => DeletePhase(phase)">&times;</td>
-                        </tr>
-                    }
-                </table>
+    <div class="modalbox p-1">
+       
+        <div class="card" style="height: 50vh; width: 40vw;">
+
+            <div class="card-header">
+                <span class="text-dark">Delete a Phase</span>
+                <span class="close" @onclick="ToggleModalDeletePhase">
+                    <i class="fas fa-times"></i>
+                </span>
+            </div>
+            <div style="overflow: auto;" class="card-body">
+
+                @foreach (var phase in phases)
+                {
+                    <p type="email" class="form-control modal-delete-phase" style="width: 100%">
+                        <span class="lead"><strong>@phase.description</strong></span>
+                        <br>
+                        <a class="btn btn-danger" @onclick="() => DeletePhase(phase)">Delete Phase <i class="fa fa-trash" aria-hidden="true"></i></a>
+                        <br>
+                        <small class="text-muted">Please Note: this process cannot be undone</small>
+                    </p>
+                }
             </div>
         </div>
     </div>
@@ -516,7 +537,6 @@
 
         jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
         //Todo get developer
-        
     }
 
     private void ToggleModalSubmitPhase()
@@ -674,5 +694,28 @@
         if (phasesAdded.FindAll(d => d.id == phase.id).Count() > 0)
             return "appform-left-row-selected";
         return "appform-left-row";
+    }
+
+    private string GetPillStyle(ApplicationPhase phase)
+    {
+        var thisPhase = phase.description.ToLower();
+        if (thisPhase.Contains("application") || thisPhase.Contains("applied"))
+            return "background: #ff5201; color: rgba(0, 0, 0, 0.35)";
+        else if (thisPhase.Contains("screen"))
+            return "background: #ff9d01 ; color: rgba(0, 0, 0, 0.35)";
+        else if (thisPhase.Contains("screen"))
+            return "background: #ffbc01; color: rgba(0, 0, 0, 0.35)";
+        else if (thisPhase.Contains("screen"))
+            return "background: #ffbc01; color: rgba(0, 0, 0, 0.35)";
+        else if (thisPhase.Contains("screen"))
+            return "background: #ffd401; color: rgba(0, 0, 0, 0.35)";
+        else if (thisPhase.Contains("screen"))
+            return "background: #ebff01; color: rgba(0, 0, 0, 0.35);";
+        else if (thisPhase.Contains("screen"))
+            return "background: #baff01; color: rgba(0, 0, 0, 0.35)";
+        else if (thisPhase.Contains("screen"))
+            return "background: #05ff01; color: rgba(0, 0, 0, 0.35)";
+
+        return "";
     }
 }
