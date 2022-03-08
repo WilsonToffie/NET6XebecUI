@@ -12,6 +12,7 @@ namespace XebecPortal.UI.Pages.HR
     public partial class JobPortal
     {
         private bool changeForm;
+        private bool isDialogVisible;
         private string searchJob;
         private bool nextButton, preButton = true;
         private bool isFilterContainAnyVal;
@@ -26,17 +27,23 @@ namespace XebecPortal.UI.Pages.HR
         private List<JobType> JobTypes;
         private List<JobTypeHelper> jobTypeHelper;
         private List<Status> status;
+        private List<AppUser> appUser;
+        private List<AppUser> appUserFilter;
+        private List<CollaboratorsAssigned> collaboratorsAssigned;
         private List<string> Departments = new List<string>() { "Accounting & Finance", "HR", "Sales & Marketing", "Legal", "Research & Development", "IT", "Admin", "Customer Support" };
         private List<string> Locations = new List<string>() { "Eastern Cape", "Free State", " Gauteng", "KwaZulu-Natal", "Limpopo", "Mpumalanga", "Northen Cape", "North West", "Western Cape" };
+        private MudBlazor.DialogOptions options = new() { CloseButton = true, FullWidth = true };
 
         private IEnumerable<string> mudSelectLocation;
         private IEnumerable<string> mudSelectCompany;
         private IEnumerable<string> mudSelectDepartment;
         private IEnumerable<string> mudSelectStatus;
 
-        private bool ApplicantPortalIsHidden = true;
-        private bool JobPortalIsHidden = true;
-        private bool PhaseManagerIsHidden = true;
+        private bool ShowingJobPortal = true;
+        private bool ShowingApplicantPortal;
+        private bool ShowingPhaseManager;
+
+        private IJSObjectReference _jsModule;
 
         protected override async Task OnInitializedAsync()
         {
@@ -47,7 +54,11 @@ namespace XebecPortal.UI.Pages.HR
             jobPlatforms = await httpClient.GetFromJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform");
             jobPlatformHelpers = await httpClient.GetFromJsonAsync<List<JobPlatformHelper>>("https://xebecapi.azurewebsites.net/api/jobplatformhelper");
             jobTypeHelper = await httpClient.GetFromJsonAsync<List<JobTypeHelper>>("https://xebecapi.azurewebsites.net/api/JobTypeHelper");
+            appUser = await httpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/User");
+            collaboratorsAssigned = await httpClient.GetFromJsonAsync<List<CollaboratorsAssigned>>("https://xebecapi.azurewebsites.net/api/CollaboratorsAssigned");
             status = await httpClient.GetFromJsonAsync<List<Status>>("/mockData/Status.json");
+
+            _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/HR/JobPortal.js");
 
             jobListFilter = jobList;
             jobPagedList = jobListFilter.ToPagedList(1, 17);
@@ -58,24 +69,23 @@ namespace XebecPortal.UI.Pages.HR
         private void ShowApplicantPortal(int id)
         {
             hrJobState.JobId = id;
-
-            ApplicantPortalIsHidden = false;
-            JobPortalIsHidden = true;
-            PhaseManagerIsHidden = true;
+            ShowingApplicantPortal = true;
+            ShowingJobPortal = false;
+            ShowingPhaseManager = false;
         }
 
         private void ShowPhaseManager()
         {
-            ApplicantPortalIsHidden = true;
-            JobPortalIsHidden = true;
-            PhaseManagerIsHidden = false;
+            ShowingApplicantPortal = false;
+            ShowingJobPortal = false;
+            ShowingPhaseManager = true;
         }
 
         private void ShowJobPortal()
         {
-            ApplicantPortalIsHidden = true;
-            JobPortalIsHidden = false;
-            PhaseManagerIsHidden = true;
+            ShowingApplicantPortal = false;
+            ShowingJobPortal = true;
+            ShowingPhaseManager = false;
         }
 
         protected override Task OnAfterRenderAsync(bool firstRender)
@@ -118,51 +128,58 @@ namespace XebecPortal.UI.Pages.HR
             }
         }
 
-        private void PageListNav(int value)
+        private async Task PageListNav(int value)
         {
             jobPagedList = jobListFilter.ToPagedList(value, 17);
             nextButton = value == jobPagedList.PageCount || jobPagedList.PageCount == 1;
             preButton = value == 1;
+            await _jsModule.InvokeVoidAsync("Scroll");
+            DisplayJobDetail(jobPagedList.FirstOrDefault().Id);
         }
 
-        private void SearchListJob(ChangeEventArgs e)
+        private async Task SearchListJob(ChangeEventArgs e)
         {
             searchJob = e.Value.ToString();
             jobListFilter = jobList;
             FilterDataHelper();
             FilterDataDisplayHelper();
+            await _jsModule.InvokeVoidAsync("Scroll");
         }
 
-        private void SearchListLocation(IEnumerable<string> value)
+        private async Task SearchListLocation(IEnumerable<string> value)
         {
             mudSelectLocation = value;
             jobListFilter = jobList;
             FilterDataHelper();
             FilterDataDisplayHelper();
+            await _jsModule.InvokeVoidAsync("Scroll");
         }
 
-        private void SearchListCompany(IEnumerable<string> value)
+        private async Task SearchListCompany(IEnumerable<string> value)
         {
             mudSelectCompany = value;
             jobListFilter = jobList;
             FilterDataHelper();
             FilterDataDisplayHelper();
+            await _jsModule.InvokeVoidAsync("Scroll");
         }
 
-        private void SearchListDepartment(IEnumerable<string> value)
+        private async Task SearchListDepartment(IEnumerable<string> value)
         {
             mudSelectDepartment = value;
             jobListFilter = jobList;
             FilterDataHelper();
             FilterDataDisplayHelper();
+            await _jsModule.InvokeVoidAsync("Scroll");
         }
 
-        private void SearchListStatus(IEnumerable<string> value)
+        private async Task SearchListStatus(IEnumerable<string> value)
         {
             mudSelectStatus = value;
             jobListFilter = jobList;
             FilterDataHelper();
             FilterDataDisplayHelper();
+            await _jsModule.InvokeVoidAsync("Scroll");
         }
 
         private void DisplayJobDetail(int id)
@@ -230,6 +247,7 @@ namespace XebecPortal.UI.Pages.HR
             jobPagedList = jobListFilter.ToPagedList(1, 17);
             nextButton = jobPagedList.PageNumber == jobPagedList.PageCount;
             preButton = jobPagedList.PageNumber == 1;
+            jsRuntime.InvokeVoidAsync("");
             displayJobDetail = jobListFilter.FirstOrDefault();
         }
 
@@ -242,8 +260,16 @@ namespace XebecPortal.UI.Pages.HR
 
         private string GetJobType(int id)
         {
-            int jobTypeId = jobTypeHelper.FirstOrDefault(x => x.JobId == id).JobTypeId;
-            return JobTypes.FirstOrDefault(x => x.Id == jobTypeId).Type;
+            int jobTypeId = jobTypeHelper.Find(x => x.JobId == id).JobTypeId;
+            return JobTypes.Find(x => x.Id == jobTypeId).Type;
+        }
+
+        private void OpenJobCollabDialog(int id)
+        {
+            isDialogVisible = true;
+
+            var collabId = collaboratorsAssigned.Where(x => x.JobId == id).Select(x => x.AppUserId);
+            appUserFilter = appUser.Where(x => collabId.Contains(x.id) && x.role != "Candidate").ToList();
         }
     }
 }

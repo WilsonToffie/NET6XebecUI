@@ -7,10 +7,16 @@
 
   <ItemGroup>
     <Content Remove="Pages\Applicant\RocketAnimation.razor" />
+    <Content Remove="wwwroot\jsPages\Applicant\JobPortal.razor.js" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="Pages\HR\ApplicantControlTool.razor.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\jsPages\Applicant\JobPortal.razor.js" />
+    <None Include="wwwroot\jsPages\HR\JobPortal.razor.js" />
   </ItemGroup>
 
   <ItemGroup>

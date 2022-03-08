@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +38,9 @@ namespace XebecPortal.UI.Pages.Applicant
         private IEnumerable<string> mudSelectLocation;
         private IEnumerable<string> mudSelectCompany;
         private IEnumerable<string> mudSelectDepartment;
-        private IEnumerable<string> mudSelectStatus;
+        private IEnumerable<string> mudSelectJobType;
+
+        private IJSObjectReference _jsModule;
 
         protected override async Task OnInitializedAsync()
         {
@@ -53,6 +56,8 @@ namespace XebecPortal.UI.Pages.Applicant
             jobPortalIsHidden = false;
             applicationFormIsHidden = true;
             JobTypes = await httpClient.GetFromJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
+
+            _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/JobPortal.js");
         }
 
         private async Task Apply(int id)
@@ -87,50 +92,57 @@ namespace XebecPortal.UI.Pages.Applicant
             }
         }
 
-        private void PageListNav(int value)
+        private async Task PageListNav(int value)
         {
             jobPagedList = jobListFilter.ToPagedList(value, 17);
             nextButton = value == jobPagedList.PageCount || jobPagedList.PageCount == 1;
             preButton = value == 1;
+            await _jsModule.InvokeVoidAsync("Scroll");
+            DisplayJobDetail(jobPagedList.FirstOrDefault().Id);
         }
 
-        private void SearchListJob(ChangeEventArgs e)
+        private async Task SearchListJob(ChangeEventArgs e)
         {
             searchJob = e.Value.ToString();
             jobListFilter = jobList;
             FilterDataHelper();
             FilterDataDisplayHelper();
+            await _jsModule.InvokeVoidAsync("Scroll");
         }
 
-        private void SearchListLocation(IEnumerable<string> value)
+        private async Task SearchListLocation(IEnumerable<string> value)
         {
             mudSelectLocation = value;
             jobListFilter = jobList;
             FilterDataHelper();
             FilterDataDisplayHelper();
+            await _jsModule.InvokeVoidAsync("Scroll");
         }
-        private void SearchListCompany(IEnumerable<string> value)
+        private async Task SearchListCompany(IEnumerable<string> value)
         {
             mudSelectCompany = value;
             jobListFilter = jobList;
             FilterDataHelper();
             FilterDataDisplayHelper();
+            await _jsModule.InvokeVoidAsync("Scroll");
         }
 
-        private void SearchListDepartment(IEnumerable<string> value)
+        private async Task SearchListDepartment(IEnumerable<string> value)
         {
             mudSelectDepartment = value;
             jobListFilter = jobList;
             FilterDataHelper();
             FilterDataDisplayHelper();
+            await _jsModule.InvokeVoidAsync("Scroll");
         }
 
-        private void SearchListStatus(IEnumerable<string> value)
+        private async Task SearchListJobType(IEnumerable<string> value)
         {
-            mudSelectStatus = value;
+            mudSelectJobType = value;
             jobListFilter = jobList;
             FilterDataHelper();
             FilterDataDisplayHelper();
+            await _jsModule.InvokeVoidAsync("Scroll");
         }
 
         private void DisplayJobDetail(int id)
@@ -179,9 +191,9 @@ namespace XebecPortal.UI.Pages.Applicant
             return $"Selected Department{(selectedValues.Count > 1 ? "s" : " ")}: {string.Join(", ", selectedValues.Select(x => x))}";
         }
 
-        private static string GetMultiSelectionTextStatus(List<string> selectedValues)
+        private static string GetMultiSelectionTextJobType(List<string> selectedValues)
         {
-            return $"Selected Status{(selectedValues.Count > 1 ? "es" : " ")}: {string.Join(", ", selectedValues.Select(x => x))}";
+            return $"Selected Job Type{(selectedValues.Count > 1 ? "s" : " ")}: {string.Join(", ", selectedValues.Select(x => x))}";
         }
 
         private void FilterDataHelper()
@@ -209,10 +221,11 @@ namespace XebecPortal.UI.Pages.Applicant
                 jobListFilter = jobListFilter.Where(x => !listDepartments.Contains(x.Department)).ToList();
             }
 
-            if (mudSelectStatus?.Any() == true)
+            if (mudSelectJobType?.Any() == true)
             {
-                var listStatus = jobListFilter.Select(x => x.Status).Except(mudSelectStatus).ToList();
-                jobListFilter = jobListFilter.Where(x => !listStatus.Contains(x.Status)).ToList();
+                var listjobTypeIds = JobTypes.Where(x => mudSelectJobType.Contains(x.Type)).Select(x => x.Id);
+                var listJobIds = jobTypeHelper.Where(x => listjobTypeIds.Contains(x.JobTypeId)).Select(x => x.JobId);
+                jobListFilter = jobListFilter.Where(x => listJobIds.Contains(x.Id)).ToList();
             }
         }
 
