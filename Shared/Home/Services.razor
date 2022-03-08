@@ -141,24 +141,11 @@
         background-position: center;
     }
     .home-job-portal{
-        height: 80vh;
+        height: 75vh;
         width: 100%;
         overflow-y: scroll;
     }
-    .home-job-portal::-webkit-scrollbar{
-        width: 1vw;
-        background-color: black;
-        z-index: 2;
-    }
-        .home-job-portal::-webkit-scrollbar-track {
-            width: 1vw;
-            background-color: black;
-            z-index: 2;
-        }
-        .home-job-portal::-webkit-scrollbar-thumb {
-            background-color: #00bcae;
-            z-index: 2;
-        }
+    
 
     .hr-applicant-portal {
         height: inherit;
@@ -251,7 +238,7 @@
         margin-right: 10px;
         background-color: black;
         border-radius: 50%;
-        border: none;
+        border: black solid 0.15em;
     }
 </style>
 <div class="overlay-services" id="services">
@@ -420,7 +407,7 @@
         <div class="row">
             <div class="services-top"></div>
         </div>
-        <div class="row service-container">
+        <div class="row services-container">
             <div class="col-12 home-job-portal">
                 <XebecPortal.UI.Pages.Applicant.JobPortal />
             </div>
