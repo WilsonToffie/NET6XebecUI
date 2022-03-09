@@ -379,68 +379,83 @@
         border-radius: 5px !important;
     }
 
-    .table-applicants-header {
-        height: 7vh;
-        background: #00bcae;
-        color: white;
-        font-weight: 800;
-        font-family: opensans-condensed-bold;
-        font-size: 1em;
-        border-radius: 15px 15px 0px 0px;
-        width: 95%;
-        text-align: center;
-    }
-
-    .table-applicants-body {
-        height: 53vh;
-        overflow: auto;
-        width: 95%;
-    }
-
-    .table-applicants-container .table-applicants-body tr {
-        border-bottom: 1px solid #e2e2e2;
-        height: 9vh;
-        background: #fff;
-    }
-
     .table-applicants-container {
         display: flex;
         align-items: center;
         flex-direction: column;
         height: 60vh;
-        overflow: auto;
-        background: #ff0000;
     }
 
-    td {
-        text-align: center;
-    }
+        .table-applicants-container td {
+            text-align: center;
+        }
 
+        .table-applicants-container table {
+            width: 95%;
+        }
 
-    .phase-pill-candidate {
+        .table-applicants-container thead tr {
+            height: 7vh;
+            background: #00bcae;
+            color: white;
+            font-weight: 800;
+            font-family: opensans-condensed-bold;
+            font-size: 1em;
+        }
+
+        .table-applicants-container tbody tr {
+            border-bottom: 1px solid #e2e2e2;
+            height: 9vh;
+            background: #fff;
+        }
+
+        .table-applicants-container tbody {
+            display: block;
+            height: 53vh;
+            overflow: auto;
+        }
+
+        .table-applicants-container thead, tbody tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .table-applicants-container tr:first-child td:first-child {
+            border-top-left-radius: 10px;
+        }
+
+        .table-applicants-container tr:first-child td:last-child {
+            border-top-right-radius: 10px;
+        }
+
+        /*    .phase-pill-candidate {
         height: 4px;
         width: 8px;
         border-radius: 4px;
         background: #62cfff;
         color: white;
-    }
+    }*/
 
-    img {
-        height: 7vh;
-        width: 6vw;
-        background-size: cover;
-        background-position: center;
-        margin-top: 1vh;
-        margin-right: 3vh;
-    }
+        .table-applicants-container img {
+            height: 7vh;
+            width: 7vh;
+        }
 
-    .btn-view {
+        .dimmed{
+            background: rgb(0 0 0 / 0.20);
+            width: 100%;
+            height: 100%;
+        }
+
+    /*    .btn-view {
         height: 2px;
         width: 4px;
         background: #00bcae;
         color: white;
         border-radius: 4px;
-    }
+    }*/
+
 </style>
 
 @*<link rel="stylesheet" href="style.css">
@@ -456,101 +471,96 @@
 
 
 <div class="table-applicants-container">
+
     @if (candidates != null && candidates.Count != 0)
     {
-        //FilterCandidatesByJob();
-        <div class="table-applicants-header">
-            <table>
+        FilterCandidatesByJob();
+
+        <table>
+            <thead>
                 <tr>
-                    <td class="col-1"></td>
-                    <td class="col-1"></td>
-                    <td class="col-1"></td>
-                    <td class="col-1"></td>
-                    <td class="col-1"></td>
-                    <td class="col-1">Phase</td>
-                    <td class="col-1">Date Applied</td>
-                    <td class="col-1">Personal Data</td>
-                    <td class="col-1">Work History</td>
-                    <td class="col-1">Education</td>
-                    <td class="col-1">Portfolio Links</td>
-                    <td class="col-1">References</td>
-                    <td class="col-1">Application Form</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Phase</td>
+                    <td>Date Applied</td>
+                    <td>Personal Data</td>
+                    <td>Work History</td>
+                    <td>Education</td>
+                    <td>Portfolio Links</td>
+                    <td>References</td>
+                    <td>Application Form</td>
                 </tr>
-            </table>
-        </div>
+            </thead>
+            <tbody>
+                @foreach (var candidate in candidates)
+                {
+                    AppUser currentUser = null;
+                    CandidateRecommender tempCandidate = null;
+                    @if (usersFiltered == null || searchCandidate == "" || searchCandidate == " ")
+                    {
+                        currentUser = users.Where(x => x.id == candidate.AppUserId).FirstOrDefault();
+                    }
+                    else if (usersFiltered.Where(x => x.id == candidate.AppUserId).FirstOrDefault() != null)
+                    {
+                        currentUser = usersFiltered.Where(x => x.id == candidate.AppUserId).FirstOrDefault();
+                    }
 
 
-        <div class="table-applicants-body">
-            @foreach (var candidate in candidates)
-            {
-                AppUser currentUser = null;
-                CandidateRecommender tempCandidate = null;
-                @if (usersFiltered == null || searchCandidate == "" || searchCandidate == " ")
-                {
-                    currentUser = users.Where(x => x.id == candidate.AppUserId).FirstOrDefault();
-                }
-                else if (usersFiltered.Where(x => x.id == candidate.AppUserId).FirstOrDefault() != null)
-                {
-                    currentUser = usersFiltered.Where(x => x.id == candidate.AppUserId).FirstOrDefault();
-                }
-                @if (currentUser != null)
-                {
-
-                    <table>
+                    @if (currentUser != null)
+                    {
                         <tr>
-
-                            <td class="col-1" style="text-align: center; font-weight: 900; font-family: opensans-extra-bold; font-size: 1.2em">
+                            <td style="font-weight: 900; font-family: opensans-extra-bold; font-size: 1.2em">
                                 @(candidates.IndexOf(candidate) + 1)
                             </td>
 
-                            <td class="col-1">
-
-
+                            <td>
                                 <img src="@currentUser.imageUrl" alt="Avatar">
-
-
-
-
-
-
                             </td>
-                            <td class="col-1"><h4 style="font-size: 1em; font-family: opensans-condensed-bold;">@($"{currentUser.name}")</h4></td>
-                            <td class="col-1"><h4 style="font-size: 1em; font-family: opensans-condensed-bold;">@($"{currentUser.surname}")</h4></td>
-
+                            <td><h4 style="font-size: 1.2em; font-family: opensans-condensed-bold; text-align:left">@currentUser.name @empty @currentUser.surname</h4></td>
 
                             @if (candidates.Where(x => x.AppUserId == currentUser.id).FirstOrDefault() != null)
                             {
                                 tempCandidate = candidates.Where(x => x.AppUserId == currentUser.id).FirstOrDefault();
 
-                                <td class="col-1">@tempCandidate.TotalMatch %</td>
+                                <td>@tempCandidate.TotalMatch %</td>
                             }
 
-
-                            <td class="col-1">@FindCurrentPhase(currentUser, selectedJob)</td>
-                            <td class="col-1" style="font-weight: 400; font-family: opensans-condensed-bold; font-size: 1em; color: #d35bc9">Date Applied</td>
-                            <td class="col-1" style=" font-weight: 600">...</td>
-                            <td class="col-1" style=" font-weight: 600">...</td>
-                            <td class="col-1" style=" font-weight: 600">...</td>
-                            <td class="col-1" style=" font-weight: 600">...</td>
-                            <td class="col-1" style=" font-weight: 600">...</td>
-                            <td class="col-1" style=" font-weight: 600">...</td>
+                            <td style="font-weight: 400;">@FindCurrentPhase(currentUser, selectedJob)</td>
+                            <td style="font-weight: 400; font-family: opensans-condensed-bold; font-size: 1em; color: #d35bc9">Date Applied</td>
+                            <td style=" font-weight: 600">...</td>
+                            <td style=" font-weight: 600">...</td>
+                            <td style=" font-weight: 600">...</td>
+                            <td style=" font-weight: 600">...</td>
+                            <td style=" font-weight: 600">...</td>
+                            <td style=" font-weight: 600">...</td>
                         </tr>
 
-
-                    </table>
+                    }
 
                 }
-
-            }
-        </div>
+            </tbody>
+        </table>
     }
     else
     {
         <p>No applicants for this job.</p>
+
     }
+
 </div>
 
+@if (showModal)
+{
+    <div>
+        <div>
+            <div>
 
+            </div>
+        </div>
+    </div>
+}
 
 
 
@@ -911,6 +921,9 @@
 </div>-->
 
 @code {
+
+    bool showModal = false;
+    string empty = "  ";
 
     private List<FormQuestion> QuestionList = new List<FormQuestion>();
     private List<ApplicantAnswer> AnswerList = new List<ApplicantAnswer>();
