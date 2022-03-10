@@ -5,7 +5,7 @@
 
 <style>
 
-    .container-main {
+    /*.container-main {
         width: 100vw;
         height: 65vh;
         margin: 0;
@@ -15,8 +15,8 @@
         grid-auto-flow: row;
         grid-gap: 10px;
         padding: 5px;
-        overflow-x: hidden;
-        overflow-y: hidden;
+        overflow-x: hidden !important;
+        overflow-y: hidden !important;
     }
 
     .container-applicant-portal {
@@ -57,11 +57,11 @@
         .candidate-section > div {
             background: #fff;
             border-radius: 10px;
-        }
+        }*/
 
     /*filter plane styling - start*/
 
-    .filter-plane {
+    /*.filter-plane {
         display: grid;
         grid-template-columns: repeat(1, 1fr);
         grid-template-rows: repeat(1, 1fr);
@@ -73,11 +73,11 @@
         font-weight: 900;
         font-size: 40px;
         transform: translateY(-15%);
-    }
+    }*/
     /*filter plane styling - end*/
 
     /*Candidate list styling - start*/
-    .candidate-list {
+    /*.candidate-list {
         grid-area: 2 / 1 / 3 / 2;
         display: grid;
         grid-auto-rows: 20%;
@@ -140,11 +140,11 @@
                 line-height: 1vh;
                 font-size: 1vh;
                 font-weight: 500;
-            }
+            }*/
 
     /*Candidate list styling - start*/
 
-    .profile-section {
+    /*.profile-section {
         grid-area: 1 / 3 / 4 / 5;
         padding: 10px;
     }
@@ -168,16 +168,16 @@
 
     .col-small {
         width: 4.5%;
-    }
+    }*/
     /* Chrome, Safari, Edge, Opera */
-    input[type=number]::-webkit-outer-spin-button,
+    /*input[type=number]::-webkit-outer-spin-button,
     input[type=number]::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
-    }
+    }*/
 
     /* Firefox */
-    input[type=number] {
+    /*input[type=number] {
         -moz-appearance: textfield;
     }
 
@@ -295,11 +295,11 @@
 
     .application-form {
         width: 550px;
-        height: 275px;
-        /*        background-color: #f2f2f2;*/
-        border-radius: 5px;
-        /*        border: 2px solid grey;*/
-    }
+        height: 275px;*/
+    /*        background-color: #f2f2f2;*/
+    /*border-radius: 5px;*/
+    /*        border: 2px solid grey;*/
+    /*}
 
     .application-form-title {
         width: 100%;
@@ -335,7 +335,7 @@
 
     .application-form-wrapper {
         margin-left: 15%;
-    }
+    }*/
 
     .btnNavigate {
         height: 5vh;
@@ -365,12 +365,103 @@
         align-items: center;
         margin-bottom: 15px;
     }
+
+    /*    .app-form-candidates{
+        display: flex;
+        justify-content: center;
+        height: 60vh;
+        width: 25%;
+        overflow: auto;
+    }*/
+
+    ::-webkit-scrollbar-thumb {
+        background: #00bcae !important;
+        border-radius: 5px !important;
+    }
+
+    .table-applicants-container {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        height: 60vh;
+    }
+
+        .table-applicants-container td {
+            text-align: center;
+        }
+
+        .table-applicants-container table {
+            width: 95%;
+        }
+
+        .table-applicants-container thead tr {
+            height: 7vh;
+            background: #00bcae;
+            color: white;
+            font-weight: 800;
+            font-family: opensans-condensed-bold;
+            font-size: 1em;
+        }
+
+        .table-applicants-container tbody tr {
+            border-bottom: 1px solid #e2e2e2;
+            height: 9vh;
+            background: #fff;
+        }
+
+        .table-applicants-container tbody {
+            display: block;
+            height: 53vh;
+            overflow: auto;
+        }
+
+        .table-applicants-container thead, tbody tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .table-applicants-container tr:first-child td:first-child {
+            border-top-left-radius: 10px;
+        }
+
+        .table-applicants-container tr:first-child td:last-child {
+            border-top-right-radius: 10px;
+        }
+
+        /*    .phase-pill-candidate {
+        height: 4px;
+        width: 8px;
+        border-radius: 4px;
+        background: #62cfff;
+        color: white;
+    }*/
+
+        .table-applicants-container img {
+            height: 7vh;
+            width: 7vh;
+        }
+
+        .dimmed{
+            background: rgb(0 0 0 / 0.20);
+            width: 100%;
+            height: 100%;
+        }
+
+    /*    .btn-view {
+        height: 2px;
+        width: 4px;
+        background: #00bcae;
+        color: white;
+        border-radius: 4px;
+    }*/
+
 </style>
 
-<link rel="stylesheet" href="style.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+@*<link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">*@
 
 <div class="page-top">
     <div class="hr-job-search-bar">
@@ -378,7 +469,103 @@
     </div>
 </div>
 
-<div class="container-main">
+
+<div class="table-applicants-container">
+
+    @if (candidates != null && candidates.Count != 0)
+    {
+        FilterCandidatesByJob();
+
+        <table>
+            <thead>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Phase</td>
+                    <td>Date Applied</td>
+                    <td>Personal Data</td>
+                    <td>Work History</td>
+                    <td>Education</td>
+                    <td>Portfolio Links</td>
+                    <td>References</td>
+                    <td>Application Form</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var candidate in candidates)
+                {
+                    AppUser currentUser = null;
+                    CandidateRecommender tempCandidate = null;
+                    @if (usersFiltered == null || searchCandidate == "" || searchCandidate == " ")
+                    {
+                        currentUser = users.Where(x => x.id == candidate.AppUserId).FirstOrDefault();
+                    }
+                    else if (usersFiltered.Where(x => x.id == candidate.AppUserId).FirstOrDefault() != null)
+                    {
+                        currentUser = usersFiltered.Where(x => x.id == candidate.AppUserId).FirstOrDefault();
+                    }
+
+
+                    @if (currentUser != null)
+                    {
+                        <tr>
+                            <td style="font-weight: 900; font-family: opensans-extra-bold; font-size: 1.2em">
+                                @(candidates.IndexOf(candidate) + 1)
+                            </td>
+
+                            <td>
+                                <img src="@currentUser.imageUrl" alt="Avatar">
+                            </td>
+                            <td><h4 style="font-size: 1.2em; font-family: opensans-condensed-bold; text-align:left">@currentUser.name @empty @currentUser.surname</h4></td>
+
+                            @if (candidates.Where(x => x.AppUserId == currentUser.id).FirstOrDefault() != null)
+                            {
+                                tempCandidate = candidates.Where(x => x.AppUserId == currentUser.id).FirstOrDefault();
+
+                                <td>@tempCandidate.TotalMatch %</td>
+                            }
+
+                            <td style="font-weight: 400;">@FindCurrentPhase(currentUser, selectedJob)</td>
+                            <td style="font-weight: 400; font-family: opensans-condensed-bold; font-size: 1em; color: #d35bc9">Date Applied</td>
+                            <td style=" font-weight: 600">...</td>
+                            <td style=" font-weight: 600">...</td>
+                            <td style=" font-weight: 600">...</td>
+                            <td style=" font-weight: 600">...</td>
+                            <td style=" font-weight: 600">...</td>
+                            <td style=" font-weight: 600">...</td>
+                        </tr>
+
+                    }
+
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No applicants for this job.</p>
+
+    }
+
+</div>
+
+@if (showModal)
+{
+    <div>
+        <div>
+            <div>
+
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+<!--<div class="container-main">
     <div class="candidate-section">
         <div class="filter-plane">
             <div class="filter-plane-heading">
@@ -386,7 +573,7 @@
             </div>
         </div>
         <div class="candidate-list">
-            @if (candidates != null @*|| candidates.Count != 0*@)
+            @if (candidates != null)
             {
                 FilterCandidatesByJob();
                 @if (candidates.Count == 0)
@@ -407,7 +594,7 @@
                     }
 
                     @if (currentUser != null)
-                    { 
+                    {
                         <div @onclick="() => SetSelectedCandidate(candidate)" style="@(GetStyle(candidate))" class="candidate-card">
                             <div class="profile-picture">
                                 <img src="@currentUser.imageUrl" alt="Avatar">
@@ -429,7 +616,7 @@
                                 <br>
 
                                 <span class="phase-pill">@FindCurrentPhase(currentUser, selectedJob)</span>
-                                @*style=" @(GetColor(phase.Description))"*@
+
 
 
                                 <div>
@@ -454,32 +641,31 @@
     </div>
 
     <div class="profile-section">
-        <div class="container-fluid this-wrap">
-
-            <!--Navigation Tab-->
-            <div class="nav-tab">
-                <ul class="nav this-nav nav-tabs" role="tablist">
-                    <li class="nav-item p-1">
-                        <a class="nav-link nav-link1 active" data-bs-toggle="tab" href="#personal-information" @onclick="() => _tabEnum = TabEnum.PersonalInfo">Personal Information</a>
-                    </li>
-                    <li class="nav-item p-1">
-                        <a class="nav-link nav-link1" data-bs-toggle="tab" href="#work-history" @onclick="() => _tabEnum = TabEnum.WorkHistory">Work History</a>
-                    </li>
-                    <li class="nav-item p-1">
-                        <a class="nav-link nav-link1" data-bs-toggle="tab" href="#education" @onclick="() => _tabEnum = TabEnum.Educa">Education</a>
-                    </li>
-                    <li class="nav-item p-1">
-                        <a class="nav-link nav-link1" data-bs-toggle="tab" href="#online-profile" @onclick="() => _tabEnum = TabEnum.Online">Online Profile</a>
-                    </li>
-                    <li class="nav-item p-1">
-                        <a class="nav-link nav-link1" data-bs-toggle="tab" href="#applicationform-list" @onclick="() => _tabEnum = TabEnum.ApplicationForm">Application Form</a>
-                    </li>
-                </ul>
-            </div>
-            <!--Content Panel-->
-            <div class="col-12 this-content">
-                <!--Personal Information-->
-                <div id="personal-information" class="tab-pane person-info rounded" style="@GetActivity(TabEnum.PersonalInfo)">
+        <div class="container-fluid this-wrap">-->
+<!--Navigation Tab-->
+<!--<div class="nav-tab">
+    <ul class="nav this-nav nav-tabs" role="tablist">
+        <li class="nav-item p-1">
+            <a class="nav-link nav-link1 active" data-bs-toggle="tab" href="#personal-information" @onclick="() => _tabEnum = TabEnum.PersonalInfo">Personal Information</a>
+        </li>
+        <li class="nav-item p-1">
+            <a class="nav-link nav-link1" data-bs-toggle="tab" href="#work-history" @onclick="() => _tabEnum = TabEnum.WorkHistory">Work History</a>
+        </li>
+        <li class="nav-item p-1">
+            <a class="nav-link nav-link1" data-bs-toggle="tab" href="#education" @onclick="() => _tabEnum = TabEnum.Educa">Education</a>
+        </li>
+        <li class="nav-item p-1">
+            <a class="nav-link nav-link1" data-bs-toggle="tab" href="#online-profile" @onclick="() => _tabEnum = TabEnum.Online">Online Profile</a>
+        </li>
+        <li class="nav-item p-1">
+            <a class="nav-link nav-link1" data-bs-toggle="tab" href="#applicationform-list" @onclick="() => _tabEnum = TabEnum.ApplicationForm">Application Form</a>
+        </li>
+    </ul>
+</div>-->
+<!--Content Panel-->
+<!--<div class="col-12 this-content">-->
+<!--Personal Information-->
+<!--<div id="personal-information" class="tab-pane person-info rounded" style="@GetActivity(TabEnum.PersonalInfo)">
                     @if (personalInformations != null && selectedCandidate != null)
                     {
                         @if (personalInformations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
@@ -698,31 +884,24 @@
                 </div>
 
                 <div class="tab-pane" style="@GetActivity(TabEnum.ApplicationForm)">
+                    <div class="app-form-candidates">
                     <table style="height: 50vh; overflow: auto">
-                        <thead>
-                            <tr>
-                                <td class="row p-3 col-4">Question</td>
-                                <td class="row p-3 col-4">Answer</td>
-                            </tr>
-                        </thead>
                         <tbody>
-                            @if (AnswerList != null && QuestionList != null)
+                            @if (AnswerList != null && QuestionList != null && selectedCandidate != null)
                             {
-                                @*@foreach (var answer in AnswerList)
+                                @foreach (var answer in AnswerList)
                                 {
                                     @if (answer.appUserId == selectedCandidate.AppUserId)
                                     {
                                         FormQuestion question = QuestionList.Where(x => x.id == answer.questionnaireHRFormId && answer.appUserId == selectedCandidate.AppUserId).FirstOrDefault();
-                                        <tr>
-                                            <td class="row p-3 col-4">
-                                                <label>@question.question</label>
-                                            </td>
-                                            <td class="row p-3 col-4">
-                                                <p>@answer.applicantAnswer</p>
-                                            </td>
-                                        </tr>
+                            <tr>
+                                <td >
+                                    <label class="form-label" for="last-name">@question.question</label>
+                                    <p id="last-name" class="form-control name">@answer.applicantAnswer</p>
+                                </td>
+                            </tr>
                                     }
-                                }*@
+                                }
                             }
                             else
                             {
@@ -734,13 +913,17 @@
                             }
                         </tbody>
                     </table>
+                        </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</div>-->
 
 @code {
+
+    bool showModal = false;
+    string empty = "  ";
 
     private List<FormQuestion> QuestionList = new List<FormQuestion>();
     private List<ApplicantAnswer> AnswerList = new List<ApplicantAnswer>();
@@ -786,7 +969,6 @@
         phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/ApplicationPhase");
         profilePortfolio = await httpClient.GetFromJsonAsync<List<ProfilePortfolioLink>>("https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink");
 
-        FilterCandidatesByJob();
         SetSelectedCandidate(candidates.FirstOrDefault());
     }
 
@@ -798,7 +980,7 @@
     }
 
     private void FilterCandidatesByJob()
-   {
+    {
         Console.WriteLine(JobId);
 
         GetCandidates();
@@ -829,7 +1011,7 @@
         }
         else
         {
-            return "No phase found";
+            return "No phase";
         }
 
         int applicationId = applications_.Where(x => x.JobId == jobId).FirstOrDefault().Id;
@@ -870,7 +1052,7 @@
     {
         if (_tabEnum == tab)
         {
-            return "display: block;";
+            return "display: block; display: flex; justify-content: center";
         }
         return "display: none;";
     }

@@ -274,20 +274,22 @@
                     <option class="selecting-role" value="Super Admin">Super Admin</option>
                 </select>
             </div>
-            <div class="form-group index-form-socials-register">
-                <h2 class="socials-register-heading">or sign up using</h2>
-                <div class="socials-register-div">
-                    <div class="social-media-register">
-                        <i class="fab fa-google" style="width: 100%;"></i>
-                    </div>
-                    <div class="social-media-register">
-                        <i class="fab fa-microsoft" style="width: 100%;"></i>
-                    </div>
-                    <div class="social-media-register">
-                        <i class="fab fa-facebook" style="width: 100%;"></i>
-                    </div>
+            @*
+           <div class="form-group index-form-socials-register">
+            <h2 class="socials-register-heading">or sign up using</h2>
+            <div class="socials-register-div">
+                <div class="social-media-register">
+                    <i class="fab fa-google" style="width: 100%;"></i>
+                </div>
+                <div class="social-media-register">
+                    <i class="fab fa-microsoft" style="width: 100%;"></i>
+                </div>
+                <div class="social-media-register">
+                    <i class="fab fa-facebook" style="width: 100%;"></i>
                 </div>
             </div>
+        </div>
+            *@
             <div class="form-group index-form-or" hidden="@emailMessageIsHidden">
                 <h1 class="index-form-heading-3">emails do not match</h1>
             </div>
@@ -313,12 +315,12 @@
                 <h1 class="index-form-heading-1">CONFIRMATION</h1>
             </div>
             <div class="form-group key-input-group">
-                <input type="text" placeholder="0" @ref="RefKey1" @onchange="Key1Filled">
-                <input type="text" placeholder="0" @ref="RefKey2" @onchange="Key2Filled">
-                <input type="text" placeholder="0" @ref="RefKey3" @onchange="Key3Filled">
-                <input type="text" placeholder="0" @ref="RefKey4" @onchange="Key4Filled">
-                <input type="text" placeholder="0" @ref="RefKey5" @onchange="Key5Filled">
-                <input type="text" placeholder="0" @ref="RefKey6" @onchange="Key6Filled">
+                <input type="text" @ref="RefKey1" @onchange="Key1Filled">
+                <input type="text" @ref="RefKey2" @onchange="Key2Filled">
+                <input type="text" @ref="RefKey3" @onchange="Key3Filled">
+                <input type="text" @ref="RefKey4" @onchange="Key4Filled">
+                <input type="text" @ref="RefKey5" @onchange="Key5Filled">
+                <input type="text" @ref="RefKey6" @onchange="Key6Filled">
             </div>
             <div class="form-group index-form-or" hidden="@invalidKeyMessageIsHidden">
                 <h1 class="index-form-heading-3">Invalid Key</h1>

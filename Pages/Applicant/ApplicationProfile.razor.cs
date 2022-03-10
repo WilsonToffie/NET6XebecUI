@@ -167,14 +167,33 @@ namespace XebecPortal.UI.Pages.Applicant
         }
 
         private void SelectWorkHistory(WorkHistory workHistoryValues)
-        {
-            
+        {            
             workEditMode = true;
             int index = workHistoryList.FindIndex(x => x.Id == workHistoryValues.Id);
             workHistory = workHistoryList[index];
-            tempWorkHistory = (WorkHistory)workHistory.Clone();
+            tempWorkHistory = (WorkHistory)workHistory.Clone();           
         }
 
+        // This is to display the selectedHistory tab
+        private object GetStyling(WorkHistory item)
+        {
+            if (workHistory.Id == item.Id)
+                return "box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;background: rgba(255, 255, 255, 0);backdrop - filter: blur(5.6px);-webkit - backdrop - filter: blur(5.6px);border: 1px solid rgba(255, 255, 255, 0.04);max - height: 60vh;overflow - y: auto; ";
+            return "";
+        }
+
+        private object GetEduStyling(Education item)
+        {
+            if (education.Id == item.Id)
+                return "box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;backdrop - filter: blur(5.6px);-webkit - backdrop - filter: blur(5.6px);border: 1px solid rgba(255, 255, 255, 0.04);max - height: 60vh;overflow - y: auto; ";
+            return "";
+        }
+        private object GetRefStyling(References item)
+        {
+            if (references.Id == item.Id)
+                return "box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;backdrop - filter: blur(5.6px);-webkit - backdrop - filter: blur(5.6px);border: 1px solid rgba(255, 255, 255, 0.04);max - height: 60vh;overflow - y: auto; ";
+            return "";
+        }
         private void SaveWorkHistory(WorkHistory workHistoryValues)
         {
             workEditMode = false;
@@ -327,28 +346,30 @@ namespace XebecPortal.UI.Pages.Applicant
             education.EndDate = education.EndDate < education.StartDate ? education.StartDate : education.EndDate;
         }
 
-        private async Task Submit()
-        {
-            if (await _jsModule.InvokeAsync<bool>("PersonalInformation"))
-            {
+        private async  Task Submit()
+        {            
+            /*
                 foreach (var item in workHistoryList)
                     item.Id = 0;
 
                 foreach (var item in educationList)
                     item.Id = 0;
-
+            */
                 await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/PersonalInformation", personalInformation);
                 await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/AdditionalInformation", additionalInformation);
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/WorkHistory/List", workHistoryList);
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Education/List", educationList);
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/References/List", referencesList); // Just need API confirmation
+                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/WorkHistory", workHistoryList);
+                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Education", educationList);
+                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Reference", referencesList); // Just need API confirmation
                 await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink", profilePortfolio);
 
+            if (await _jsModule.InvokeAsync<bool>("PersonalInformation"))
+            {
                 await jsRuntime.InvokeVoidAsync("alert", "You Data Has Been Captured");
             }
         }
         // This is just used to indicate to the user that their info has been successfully added to the DB
-        /* using (var msg = await httpClient.PostAsJsonAsync<LoginModel>("/api/auth/login", user,
+        /* using 
+         (var msg = await httpClient.PostAsJsonAsync<LoginModel>("/api/auth/login", user,
          System.Threading.CancellationToken.None))
          {
             if (msg.IsSuccessStatusCode)

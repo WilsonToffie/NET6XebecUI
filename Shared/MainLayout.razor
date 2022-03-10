@@ -317,6 +317,54 @@
         background-color: black;
         z-index: 1;
     }
+
+    .upload-profile-btn {
+        width: 2em;
+        height: 2em;
+        background: white;
+        margin-top: 14vh;
+        margin-left: 6vw;
+        border-radius: 50%;
+        text-align: center;
+    }
+
+
+    .to-top {
+        color: #00bcae;
+        padding-top: 1.8em;
+        margin-top: 0.4em;
+        display: inline-block;
+        position: relative;
+        border-color: #00bcae;
+        text-decoration: none;
+        transition: all .3s ease-out;
+    }
+
+        .to-top:before {
+            content: '▲';
+            font-size: .9em;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            margin-left: -.7em;
+            border: solid .13em #00bcae;
+            border-radius: 10em;
+            width: 1.4em;
+            height: 1.4em;
+            line-height: 1.3em;
+            border-color: inherit;
+            transition: transform .5s ease-in;
+        }
+
+        .to-top:hover {
+            color: #d35bc9;
+            border-color: #d35bc9;
+        }
+
+            .to-top:hover:before {
+                transform: rotate(360deg);
+            }
+
 </style>
 
 @if (state.Role.Equals("Candidate"))
@@ -344,22 +392,10 @@
             <div class="mainlayout-profile">
                 <div class="profile-div">
                     <div class="profile-image-div-cover">
-                        <div class="profile-image-div">
-                            @{ 
-                                if (state.Avator.Equals(null) || state.Avator.Equals(""))
-                                {
-                                    <div class="mainlayout-profile-initials">
-                                        <h1 class="mainlayout-profile-initials-text">@Initials</h1>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <img src="@Avator" />
-                                }
-                            }
-                        </div>
-                        <div class="add-profile-image">
-                            
+                        @*State.profile.Avatar.Avatar*@
+                        <div class="upload-profile-btn">
+                            <div class="to-top">
+                            </div>    
                         </div>
                     </div>
                     <div class="profile-name-div">
@@ -501,7 +537,9 @@
             <div class="mainlayout-profile">
                 <div class="profile-div">
                     <div class="profile-image-div-cover">
-                        <div class="profile-image-div">
+                        <div class="upload-profile-btn">
+                            <div class="to-top">
+                            </div>
                         </div>
                     </div>
                     <div class="profile-name-div">
