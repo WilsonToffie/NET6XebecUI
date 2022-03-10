@@ -337,8 +337,6 @@
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     }
 
-
-
     .history-list {
         /* From https://css.glass */
         background: rgba(255, 255, 255);
@@ -350,8 +348,20 @@
         max-height: 60vh;
         overflow-y: auto;
     }
-        .history-list :hover {
-            box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+
+    .history-item {
+       /* border-left: 1px solid #e5e5e5;
+        */ 
+       position: relative;
+       padding: 2rem 1.5rem 0rem 2.5rem;
+       font-size: .9rem;
+        /*margin-left: 3rem;*/
+       min-height: 4rem;
+       background-color: rgba(250, 250, 250, 0.9);
+    }
+        .history-item:hover {
+            box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;
+            /*box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;*/
             background: rgba(255, 255, 255,0);
             /*box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);*/
             backdrop-filter: blur(5.6px);
@@ -361,16 +371,7 @@
             max-height: 60vh;
             overflow-y: auto;
         }
-
-    .history-item {
-        border-left: 1px solid #e5e5e5;
-        position: relative;
-        padding: 2rem 1.5rem 0rem 2.5rem;
-        font-size: .9rem;
-        margin-left: 3rem;
-        min-height: 4rem;
-        background-color: rgba(249, 249, 251, 1);
-    }
+        
         .history-item:last-child {
             padding-bottom: 4rem;
         }
@@ -388,6 +389,8 @@
         /*        Scholl*/
 
         .history-item .history-content {
+            position: relative;
+            left: 2.5rem;
             padding: .5rem .8rem;
             background-color: #f4f4f4;
             border-radius: .5rem;
@@ -413,17 +416,17 @@
 
         .history-item .history-icon {
             line-height: 2.6rem;
-            position: absolute;
-            left: -1.3rem;
+            /*position: absolute;*/
+            left: 1.5rem;
             width: 2.6rem;
             height: 2.6rem;
             text-align: center;
             border-radius: 50%;
             font-size: 1.1rem;
-            background-color: #fff;
+            /*background-color: #fff;*/
         }
 
-            .history-item .history-icon.status-inforeceived {
+            .history-item .history-icon .status-inforeceived {
                 background-color: #214977;
             }
 
@@ -460,6 +463,7 @@
     .position-history-card {
         position: relative;
         left: 20%;
+        top: -4%;
     }
 
     .nav-bar-progress {
@@ -711,7 +715,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-3 align-self-start">
+                                    <div class="col-3 ">
                                         <div class="history-container position-history-card rounded-edges">
                                             <div class="history ">
                                                 <div class="text-center history-status-intransit">
@@ -722,19 +726,20 @@
                                                 {
                                                     foreach (var item in workHistoryList)
                                                     {
-                                                        <div class="history-list" @onclick="() => SelectWorkHistory(item)">
-                                                            <div class="history-item">
-                                                                <div class="history-icon status-intransit">
-                                                                    <span @onclick="() => DeleteWorkHistory(item.Id)">
-                                                                        <i class="fa fa-times-circle fa-2x" style="color: red"></i>
-                                                                    </span>
+                                                        
+                                                            <div class="history-item" @onclick="() => SelectWorkHistory(item)" style="@GetStyling(item)" >
+                                                                <div class="history-icon">                                                                    
+                                                                        <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteWorkHistory(item.Id)"></i>
+                                                                        <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->                                                                    
                                                                 </div>
                                                                 <div class="history-date">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")<br></div>
                                                                 <div class="history-content">@item.CompanyName<p>@item.JobTitle</p><span>@item.Description</span></div>
                                                             </div>
-                                                        </div>
+                                                                                                                
                                                     }
                                                 }
+                                                <!--To display to the user which card has been chosen-->
+
                                             </div>
                                         </div>
                                     </div>
@@ -810,18 +815,15 @@
                                                     foreach (var item in educationList)
                                                     {
 
-                                                        <div class="history-list" @onclick="() => SelectEducation(item)">
-                                                            <div class="history-item">
-                                                                <div class="history-icon status-intransit ">
-                                                                    <span @onclick="() => DeleteEducation(item.Id)">
-                                                                        <i class="fa fa-times-circle fa-2x fa-inverse" style="color: red;"></i>
-                                                                    </span>
-                                                                </div>
-                                                                <div class="history-date">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</div>
-                                                                <div class="history-content">@item.Qualification<span>@item.Insitution</span></div>
+                                                        <div class="history-item" @onclick="() => SelectEducation(item)" style="@GetEduStyling(item)">
+                                                            <div class="history-icon">
+                                                                <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteEducation(item.Id)"></i>
+                                                                <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
                                                             </div>
-                                                        </div>
 
+                                                            <div class="history-date">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</div>
+                                                            <div class="history-content">@item.Qualification<span>@item.Insitution</span></div>
+                                                        </div>
                                                     }
                                                 }
                                                 <!--</div>-->
@@ -899,27 +901,27 @@
                                                 @if (referencesList != null && referencesList.Count > 0)
                                                 {
                                                     foreach (var items in referencesList)
-                                                    {
-
-                                                        <div class="history-list" @onclick="() => SelectReference(items)">
-                                                            <div class="history-item">
-                                                                <div class="history-icon status-intransit ">
-                                                                    <span @onclick="() => DeleteReference(items.Id)">
-                                                                        <i class="fa fa-times-circle fa-2x fa-inverse" style="color: red;"></i>
-                                                                    </span>
-                                                                </div>
-                                                                <div class="history-content">
-                                                                    @items.Name
-                                                                    <br>
-                                                                    @items.Surname
-                                                                    <br>
-                                                                    @items.Email
-                                                                    <br>
-                                                                    @items.ContactNum
-                                                                </div>
-
-                                                            </div>
+                                                    {                                                      
+                                                        
+                                                    <div class="history-item" @onclick="() => SelectReference(items)" style="@GetRefStyling(items)">
+                                                        <div class="history-icon">
+                                                            <span @onclick="() => DeleteReference(items.Id)">
+                                                                <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteReference(items.Id)"></i>
+                                                                <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
+                                                            </span>
                                                         </div>
+                                                        <div class="history-content">
+                                                            @items.Name
+                                                            <br>
+                                                            @items.Surname
+                                                            <br>
+                                                            @items.Email
+                                                            <br>
+                                                            @items.ContactNum
+                                                        </div>
+
+                                                    </div>        
+                                                        
                                                     }
                                                 }
                                             </div>
