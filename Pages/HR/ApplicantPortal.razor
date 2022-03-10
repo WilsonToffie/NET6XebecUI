@@ -366,14 +366,6 @@
         margin-bottom: 15px;
     }
 
-    /*    .app-form-candidates{
-        display: flex;
-        justify-content: center;
-        height: 60vh;
-        width: 25%;
-        overflow: auto;
-    }*/
-
     ::-webkit-scrollbar-thumb {
         background: #00bcae !important;
         border-radius: 5px !important;
@@ -429,39 +421,137 @@
             border-top-right-radius: 10px;
         }
 
-        /*    .phase-pill-candidate {
-        height: 4px;
-        width: 8px;
-        border-radius: 4px;
-        background: #62cfff;
-        color: white;
-    }*/
-
         .table-applicants-container img {
             height: 7vh;
             width: 7vh;
         }
 
-        .dimmed{
-            background: rgb(0 0 0 / 0.20);
+    .dimmed {
+        background: rgb(0 0 0 / 0.20);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-frame {
+        width: 35%;
+        height: 45%;
+        border-radius: 15px;
+        background: white;
+    }
+
+        .modal-frame thead, tbody tr {
+            display: table;
             width: 100%;
-            height: 100%;
+            table-layout: fixed;
         }
 
-    /*    .btn-view {
-        height: 2px;
-        width: 4px;
+    .close-modal {
+        font-size: 20px;
+        font-weight: bold;
+        color: white;
+        text-align: right;
+        padding-bottom: 10px;
+        padding-right: 15px;
+    }
+
+        .close-modal:hover {
+            color: #d35bc9;
+            cursor: pointer;
+        }
+
+    .title-column {
+        font-weight: 600;
+    }
+
+    .title-modal {
+        font-size: 20px;
+    }
+
+    .modal-frame thead td {
+        font-weight: bold;
         background: #00bcae;
         color: white;
-        border-radius: 4px;
-    }*/
+    }
 
+        .modal-frame thead td:first-child {
+            border-top-left-radius: 15px;
+        }
+
+        .modal-frame thead td:last-child {
+            border-top-right-radius: 15px;
+        }
+
+    .modal-frame td {
+        margin-bottom: 5px;
+        margin-top: 5px;
+        padding-left: 10px;
+    }
+
+    .info-empty {
+        color: #ec0f0f;
+    }
+
+    .modal-frame tbody {
+        display: block;
+        height: 38vh;
+        overflow-y: auto;
+    }
+
+    .show-more-td {
+        font-weight: 600;
+    }
+
+        .show-more-td:hover {
+            cursor: pointer;
+            color: #d35bc9;
+        }
+
+
+    .work-history-card {
+        height: 20vh !important;
+        width: 65vh;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 0 5px 5px #dddddd;
+        margin-top: 10px;
+        margin-left: 15px;
+    }
+
+    .work-history-company-name {
+        grid-area: companyName;
+        text-align: left;
+    }
+
+    .work-history-job-title {
+        grid-area: jobTitle;
+        text-align: left;
+    }
+
+    .work-history-date {
+        grid-area: date;
+        text-align: right;
+    }
+
+    .work-history-description {
+        grid-area: description;
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-areas:
+            'companyName companyName companyName companyName'
+            'jobTitle jobTitle jobTitle jobTitle'
+            'description description description description'
+            'date date date date';
+        padding: 10px;
+    }
 </style>
-
-@*<link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">*@
 
 <div class="page-top">
     <div class="hr-job-search-bar">
@@ -529,17 +619,22 @@
 
                             <td style="font-weight: 400;">@FindCurrentPhase(currentUser, selectedJob)</td>
                             <td style="font-weight: 400; font-family: opensans-condensed-bold; font-size: 1em; color: #d35bc9">Date Applied</td>
-                            <td style=" font-weight: 600">...</td>
-                            <td style=" font-weight: 600">...</td>
-                            <td style=" font-weight: 600">...</td>
-                            <td style=" font-weight: 600">...</td>
-                            <td style=" font-weight: 600">...</td>
-                            <td style=" font-weight: 600">...</td>
+                            <td class="show-more-td" @onclick="() => togglePersonalInformations(candidate)">...</td>
+                            <td class="show-more-td" @onclick="() => toggleWorkHistory(candidate)">...</td>
+                            <td class="show-more-td">...</td>
+                            <td class="show-more-td">...</td>
+                            <td class="show-more-td">...</td>
+                            <td class="show-more-td">...</td>
                         </tr>
 
                     }
 
                 }
+                @if (candidates == null || candidates.Count == 0)
+                {
+                    <p style="text-align: center">No applicants for this job.</p>
+                }
+
             </tbody>
         </table>
     }
@@ -551,15 +646,177 @@
 
 </div>
 
-@if (showModal)
+<!--Personal Information Model-->
+@if (showPersonalInformation)
 {
-    <div>
-        <div>
-            <div>
+    @if (personalInformations != null && selectedCandidate != null)
+    {
+        @if (personalInformations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
+        {
 
+            <div class="dimmed" @onclick="togglePersonalInformations">
+                <div class="modal-frame">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td class="title-modal">Personal Information: </td>
+                                <td class="close-modal" @onclick="togglePersonalInformations">x</td>
+                            </tr>
+                            <tr></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="info-empty">Candidate doesn't have any information saved.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </div>
-    </div>
+        }
+        else
+        {
+            PersonalInformation personalInformation = personalInformations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
+
+            <div class="dimmed" @onclick="togglePersonalInformations">
+                <div class="modal-frame">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td class="title-modal">Personal Information: </td>
+                                <td class="close-modal" @onclick="togglePersonalInformations">x</td>
+                            </tr>
+                            <tr></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="title-column">First Name</td>
+                                <td class="form-control">@personalInformation.FirstName</td>
+                            </tr>
+
+                            <tr>
+                                <td class="title-column">Last Name</td>
+                                <td class="form-control">@personalInformation.LastName</td>
+                            </tr>
+
+                            <tr>
+                                <td class="title-column">Email</td>
+                                <td class="form-control">@personalInformation.Email</td>
+                            </tr>
+
+                            <tr>
+                                <td class="title-column">Phone Number</td>
+                                <td class="form-control">@personalInformation.PhoneNumber</td>
+                            </tr>
+
+                            @if (additionalInformations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
+                            {
+                                <tr>
+                                    <td class="title-column">Ethnicity</td>
+                                    <td class="form-control info-empty">Empty</td>
+                                </tr>
+                                <tr>
+                                    <td class="title-column">Gender</td>
+                                    <td class="form-control info-empty">Empty</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                AdditionalInformation additionalInformation = additionalInformations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
+                                <tr>
+                                    <td class="title-column">Ethnicity</td>
+                                    <td class="form-control">@additionalInformation.Ethnicity</td>
+                                </tr>
+                                <tr>
+                                    <td class="title-column">Gender</td>
+                                    <td class="form-control">@additionalInformation.Gender</td>
+                                </tr>
+
+                            }
+
+                            <tr>
+                                <td class="title-column">ID Number</td>
+                                <td id="id-number" class="form-control">@personalInformation.IdNumber</td>
+                            </tr>
+                            <tr>
+                                <td class="title-column">Address</td>
+                                <td class="form-control" rows="4">@personalInformation.Address </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+
+    }
+    else if (personalInformations == null)
+    {
+        <p>Getting personal information...</p>
+    }
+}
+
+
+<!--Work History Modal-->
+@if (showWorkHistory)
+{
+
+
+    @if (workHistories != null && selectedCandidate != null)
+    {
+        @if (workHistories.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
+        {
+            <div class="dimmed" @onclick="toggleWorkHistory">
+                <div class="modal-frame">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td class="title-modal">Work History: </td>
+                                <td class="close-modal" @onclick="toggleWorkHistory">x</td>
+                            </tr>
+                            <tr></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="info-empty">Candidate doesn't have any work history.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        else
+        {
+            WorkHistory workHistory = workHistories.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
+
+
+            <div class="dimmed" @onclick="toggleWorkHistory">
+                <div class="modal-frame">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td class="title-modal">Work History: </td>
+                                <td class="close-modal" @onclick="toggleWorkHistory">x</td>
+                            </tr>
+                            <tr></tr>
+                        </thead>
+                        <tbody class="work-history-card" style="padding-left: 10px">
+                            <tr class="grid-container">
+                                <td class="work-history-company-name">@workHistory.CompanyName</td>
+                                <td class="work-history-job-title">@workHistory.JobTitle</td>
+                                <td class="work-history-description">@workHistory.Description</td>
+                                <td class="work-history-date">@($"{workHistory.StartDate:yyyy MMMM} - {workHistory.EndDate:yyyy MMMM}")</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    }
+    else if (workHistories == null)
+    {
+        <p>Getting Work history...</p>
+    }
+
 }
 
 
@@ -921,9 +1178,9 @@
 </div>-->
 
 @code {
-
-    bool showModal = false;
     string empty = "  ";
+    bool showPersonalInformation = false;
+    bool showWorkHistory = false;
 
     private List<FormQuestion> QuestionList = new List<FormQuestion>();
     private List<ApplicantAnswer> AnswerList = new List<ApplicantAnswer>();
@@ -993,6 +1250,28 @@
     private async Task GetCandidates()
     {
         candidates = await httpClient.GetFromJsonAsync<List<CandidateRecommender>>("https://xebecapi.azurewebsites.net/api/candidaterecommender");
+    }
+
+    private void togglePersonalInformations(CandidateRecommender candidate)
+    {
+        showPersonalInformation = !showPersonalInformation;
+        SetSelectedCandidate(candidate);
+    }
+
+    private void togglePersonalInformations()
+    {
+        showPersonalInformation = !showPersonalInformation;
+    }
+
+    private void toggleWorkHistory(CandidateRecommender candidate)
+    {
+        showWorkHistory = !showWorkHistory;
+        SetSelectedCandidate(candidate);
+    }
+
+    private void toggleWorkHistory()
+    {
+        showWorkHistory = !showWorkHistory;
     }
 
     private void AssignApplication(ApplicationModel application)
