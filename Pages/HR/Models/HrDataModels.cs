@@ -257,6 +257,8 @@ namespace XebecPortal.UI.Pages.HR
         public int Id { get; set; }
 
         public string Reason { get; set; }
+
+        public string EmailTemplate { get; set; }
     }
 
     public class RejectedCandidate
@@ -285,6 +287,16 @@ namespace XebecPortal.UI.Pages.HR
         public AppUser AppUser { get; set; }
         public int JobId { get; set; }
         public Job Job { get; set; }
+    }
+
+    public class EmailModel
+    {
+        public int Id { get; set; }
+        public string Subject { get; set; }
+        public string ToEmail { get; set; }
+        public string ToName { get; set; }
+        public string PlainText { get; set; }
+        public string Htmlcontent { get; set; }
     }
 
 }
