@@ -15,6 +15,8 @@ namespace XebecPortal.UI.Shared.Home.Models
         public string Surname { get; set; }
         public string Avator { get;set;}
         public string Title { get;set;}
+
+        public string Key { get; set; }
         public bool Success { get; set; }   //Used as a flag to indicate whether everything was a success or not
         
     }
