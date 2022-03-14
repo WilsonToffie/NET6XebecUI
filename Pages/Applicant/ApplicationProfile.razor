@@ -507,39 +507,47 @@
         width: 50%;
         top: 60%;
     }
-    
+
+    .nav-tab{
+        position: relative;
+        width: 60vw;
+    }
+
+    .child {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+    }
+    .progress {
+        /* Old browsers */
+        background: -moz-linear-gradient(to right, #49E5EF 0%, #2294E3 20%, #d35bc9 45%, #00bcae 100%);
+        /* FF3.6-15 */
+        background: -webkit-linear-gradient(to right, #49E5EF 0%, #2294E3 20%, #d35bc9 45%, #00bcae 100%);
+        /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to right, #49E5EF 0%, #2294E3 20%, #d35bc9 45%, #00bcae 100%);
+    }
+    .shrinker {
+        background-color: white;
+        top: 0;
+        right: 0;
+        width: calc(100% - @completionVar);
+    }
+    .nav-link{
+        background: white !important;
+    }
 
 </style>
-
-<div class="space-below-nav-bar-for-progress-bar">
-    <div class="progress-layout-side align-middle">
-        <div class="progress-bar-indicator" style="width: calc(@completionVar);"></div>
-        <div class="progress-text-layout-side align-middle" style="left: 100%;">100%</div>
-        <div class="progress-text-layout-side align-middle" style="left: 75%;">75%</div>
-        <div class="progress-text-layout-side justify-content-center" style="left: 50%; color: #d35bc9;">50%</div>
-        <div class="progress-text-layout-side justify-content-center" style="left: 25%; color: #2294E3; ">25% </div>
-        <div class="progress-text-layout-side align-middle" style="left: 1%; color: #49E5EF;">0%</div>
-    </div>
-
-</div>
-
 <div class="h-95 container-fluid d-flex justify-content-center align-items-center overflow-hidden">
     <div class="col-1"></div>
-    <div class="row col-10 d-flex justify-content-center row-style">
+    <div class="row d-flex justify-content-center row-style">
 
         <!--Navigation Tab-->
-        <div class="col-12" style="width:100%;">
-            <!--
-    <div class="progress-layout-side-test align-middle">
-        <div class="progress-bar-indicator" style="width: calc(@completionVar);"></div>
-        <div class="progress-text-layout-side align-middle" style="left: 100%;">100%</div>
-        <div class="progress-text-layout-side align-middle" style="left: 75%;">75%</div>
-        <div class="progress-text-layout-side justify-content-center" style="left: 50%; color: #d35bc9;">50%</div>
-        <div class="progress-text-layout-side justify-content-center" style="left: 25%; color: #2294E3; ">25% </div>
-        <div class="progress-text-layout-side align-middle" style="left: 1%; color: #49E5EF;">0%</div>
-    </div>
-        -->
+        <div class="col-12 nav-tab" style="width: 100vw">
+            
+
             <ul class="nav nav1 nav-tabs" role="tablist">
+                <div class="child progress"></div>
+                <div class="child shrinker timelapse"></div>
                 <!--Container-->
                 <li class="nav-item p-1">
                     <a id="personal-tab" class="nav-link nav-link1 active" data-bs-toggle="tab" href="#personal-information" @onclick="progressCheck">Personal Information</a>
@@ -802,7 +810,7 @@
                                                         {
                                                             <button class="btn formButton" type="submit" value="Add">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
                                                         }
-                                                        <!--<button class="btn formButton" type="reset" @onclick="() => AddEducationTakeTwo(education)" value="Add">Add</button> -->
+                                                        
 
                                                     </div>
                                                 </div>
