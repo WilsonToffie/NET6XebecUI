@@ -11,6 +11,8 @@
         right: 50%;
         transform: translate(50%);
 
+        background-color: #FFFFFF !important;
+
         width: auto !important;
         height: auto !important;
         top: auto !important;
@@ -50,6 +52,7 @@
         height: 5vh;
         margin-top: 2vh;
         width: auto;
+        margin-bottom: 1vh;
     }
 
     .drag-drop-zone {
@@ -124,9 +127,10 @@
     }
 
     .nav-item > .active {
-        background: #ffffff !important;
+        background: #d35bc9 !important;
         font-weight: 800;
         font-size: 2vh;
+        color: #ffffff;
     }
 
     .nav-item > .nav-link1 {
@@ -454,10 +458,10 @@
 
     .position-white {
         position: relative;
-        height: 47vh;
+        height: 60vh;
         width: 75%;
         left: 32%;
-        top: 10%;
+        top: 5%;
     }
 
     .position-history-card {
@@ -503,7 +507,7 @@
         width: 50%;
         top: 60%;
     }
-    }
+    
 
 </style>
 
@@ -556,15 +560,16 @@
         </div>
 
         <!--Content Panel-->
-        <div class="col-12 d-flex justify-content-center align-items-start ">
+        <div class="col-12 d-flex justify-content-center align-items-start " >
             <div class="tab-content">
                 <br />
                 <!--Personal Information-->
                 <div id="personal-information" class="container tab-pane active">
-                    <div class="d-flex justify-content-center">
-                        <EditForm Model="@personalInformation" OnValidSubmit="addWorkHistoryTest" style="width: 60%">
-                            <div class="row">
+                    <div class="d-flex justify-content-center" >
+                        <EditForm Model="@personalInformation" OnValidSubmit="addWorkHistoryTest" style="width: 60%;">
+                            <div class="row" style="margin-top: 50px;">
                                 <div class="col-12 shadow-sm bg-body rounded-edges white-back">
+                                    <div class="education-header">Personal Information</div>
                                     <div class="row p-3">
                                         <div class="col-12">
                                             <div class="rounded-edges">
@@ -598,10 +603,10 @@
 
                                             <MudGrid Justify="Justify.Center" Spacing="4">
                                                 <MudItem>
-                                                    <MudButton OnClick="Upload" Disabled="@(!(fileNames == null))" Style="color: white; background-color: #00BCAE; font-size: small" Variant="Variant.Filled">Upload</MudButton>
+                                                    <MudButton OnClick="Upload" Disabled="@(!(fileNames == null))" Style="color: white; background-color: #00BCAE; font-size: small; margin-top: 5px;" Variant="Variant.Filled">Upload</MudButton>
                                                 </MudItem>
                                                 <MudItem>
-                                                    <MudButton OnClick="@ResetFileNames" Disabled="@(fileNames == null)" Style="color: white; background-color: #00BCAE; font-size: small" Variant="Variant.Filled">Clear</MudButton>
+                                                    <MudButton OnClick="@ResetFileNames" Disabled="@(fileNames == null)" Style="color: white; background-color: #00BCAE; font-size: small; margin-top: 5px;" Variant="Variant.Filled">Clear</MudButton>
                                                 </MudItem>
                                             </MudGrid>
                                         </div>
@@ -629,8 +634,11 @@
                                             <label class="form-label" for="ethnicity">Ethnicity</label>
                                             <select id="ethnicity" class="form-select shadow bg-body rounded" @bind="additionalInformation.Ethnicity" @onfocusout="completion">
                                                 <!--@onfocusout="completion" -->
-                                                <option value="" disabled selected>Select Ethnicity</option>
+                                                <option value="" disabled selected>Ethnicity</option>
                                                 <option value="African">African</option>
+                                                <option value="Asain">Asain</option>
+                                                <option value="Coloured">Coloured</option>
+                                                <option value="Indian">Indian</option>
                                                 <option value="White">White</option>
                                             </select>
                                         </div>
@@ -846,7 +854,7 @@
                             <div class="col-12">
                                 <div class="row">
                                     <div class="col-9 p-5">
-                                        <div class="row shadow-sm bg-body rounded-edges white-back position-white">
+                                        <div class="row shadow-sm bg-body rounded-edges white-back position-white" style="height: auto;">
                                             <div class="education-header">References</div>
                                             <div class="col-12" style="height: 35vh">
 
@@ -934,10 +942,11 @@
                 </div>
 
                 <!--Online Presence-->
-                <div id="online-profile" class="container tab-pane" style="height: 60vh;">
-                    <form class="col-12 d-flex justify-content-center align-items-start">
+                <div id="online-profile" class="container tab-pane" style="height: 60vh; width: 120vh; margin-top: 50px;">
+                    <form class="col-12 d-flex justify-content-center align-items-start">                        
                         <div class="row col-9">
                             <div class="col-12 shadow-sm bg-body rounded-edges align-self-start white-back ">
+                                <div class="education-header">Online Presence</div>
                                 <div class="row p-3">
                                     <div class="col-6">
                                         <div>
