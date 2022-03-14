@@ -74,7 +74,7 @@
         background-color: transparent;
         width: 100%;
         height: 5vh;
-        font-size: 0.6em;
+        font-size: 1em;
         border: solid 0.1em rgba(0,0,0, 0.2);
         font-weight: 500;
         border-radius: 2em;
@@ -106,7 +106,7 @@
         margin-right: 7.5%;
         font-size: 1.15em;
         border: solid 0.15em rgba(0,0,0, 0.2);
-        border-radius: 2em;
+       
         font-weight: 800;
         color: black;
         padding-top: 2vh;
@@ -125,6 +125,14 @@
         margin-top:1.5vh;
         padding-top:0;
     }
+    .createjob-select{
+    
+    }
+    
+    *:focus{
+        border: solid #00B2E5 1px !important;
+    }
+    
 </style>
 
 <div class="createjob-form-container">
@@ -170,7 +178,7 @@
             </div>
         </div>
         <div class="form-group createjob-textarea">
-            <textarea class="form-control" style="resize: none" placeholder="Description" rows="4" @bind="TempJob.Description"></textarea>
+            <textarea class="form-control rounded-1" style="resize: none" placeholder="Description" rows="4" @bind="TempJob.Description"></textarea>
         </div>
         <div class="form-group createjob-form-group">
             <div class="createjob-form-individual">
