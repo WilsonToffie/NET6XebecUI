@@ -7,6 +7,11 @@ using System.Threading.Tasks;
 using XebecPortal.UI.Shared.Home.Models;
 using XebecPortal.UI.Pages.Applicant.Models;
 using XebecPortal.UI.Pages.Applicant;
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.Extensions.Logging;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using static System.Net.WebRequestMethods;
 
 namespace XebecPortal.UI.Shared
 {
@@ -14,7 +19,11 @@ namespace XebecPortal.UI.Shared
     {
         private IList<Job> jobs = new List<Job>();
         private IList<JobType> jobTypes = new List<JobType>();
-
+        // Newly added stuffs
+        /*
+        private List<UploadResults> uploadResults = new();
+        private List<Files> files = new();
+        */
         private string Initials = "";
         private string Avator = "";
         private bool applicantApplicationProfile, applicantJobPortal, applicantMyJobs = false;
@@ -95,6 +104,102 @@ namespace XebecPortal.UI.Shared
         {
             return $"Selected Type{(selectedValues.Count > 1 ? "s" : " ")}: {string.Join(", ", selectedValues.Select(x => x))}";
         }
+
+
+        /*
+        private bool shouldRender;
+        protected override bool ShouldRender() => shouldRender;
+
+
+        private List<IBrowserFile> loadedFiles = new();
+        private long maxFileSize = 1024 * 15;
+        private int maxAllowedFiles = 1;
+        private bool isLoading;
+        int count = 0;
+
+        private async Task ImageFileUpload(InputFileChangeEventArgs e)
+        {
+            shouldRender = false;
+            long maxFileSize = 1024 * 1024 * 15;
+            var upload = false;
+
+            using var content = new MultipartFormDataContent();
+
+            foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+            {
+                if (uploadResults.SingleOrDefault(
+                    f => f.FileName == file.Name) is null)
+                {
+                    try
+                    {
+                        var fileContent =
+                            new StreamContent(file.OpenReadStream(maxFileSize));
+
+                        fileContent.Headers.ContentType =
+                            new MediaTypeHeaderValue(file.ContentType);
+
+                        files.Add(new() { Name = file.Name });
+
+                        content.Add(
+                            content: fileContent,
+                            name: "\"files\"",
+                            fileName: file.Name);
+
+                        upload = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.LogInformation(
+                            "{FileName} not uploaded (Err: 6): {Message}",
+                            file.Name, ex.Message);
+
+                        uploadResults.Add(
+                            new()
+                            {
+                                FileName = file.Name,
+                                ErrorCode = 6,
+                                Uploaded = false
+                            });
+                    }
+                }
+            }
+
+            if (upload)
+            {
+                // /Filesave this needs to change to the official
+                var response = await HttpClient.PostAsJsonAsync("/Filesave", content);
+
+                var newUploadResults = await response.Content
+                    .ReadFromJsonAsync<IList<UploadResults>>();
+
+                if (newUploadResults is not null)
+                {
+                    uploadResults = uploadResults.Concat(newUploadResults).ToList();
+                }
+            }
+
+            shouldRender = true;
+        }
+
+        private static bool FileUpload(IList<UploadResults> uploadResults,  string? fileName, ILogger<MainLayout> logger, out UploadResults result)
+        {
+            result = uploadResults.SingleOrDefault(f => f.FileName == fileName) ?? new();
+
+            if (!result.Uploaded)
+            {
+                logger.LogInformation("{FileName} not uploaded (Err: 5)", fileName);
+                result.ErrorCode = 5;
+            }
+
+            return result.Uploaded;
+        }
+
+        */
+
+        public void ImageFileUpload()
+        {       
+            
+        }
         private void getInitials()
         {
             Avator = state.Avator;
@@ -102,7 +207,5 @@ namespace XebecPortal.UI.Shared
             string lastInitial = state.Surname.Substring(0, 1);
             Initials = firstInitial + lastInitial;
         }
-
     }
-
 }
