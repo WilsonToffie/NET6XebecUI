@@ -17,6 +17,18 @@ namespace XebecPortal.UI.Pages.HR
         public string phase { get; set; }
     }
 
+    public class References
+    {
+        public int id { get; set; }
+        public string refFirstName { get; set; }
+        public string refLastName { get; set; }
+        public string refPhone { get; set; }
+        public string refEmail { get; set; }
+        public string relationship { get; set; }
+        public int appUserId { get; set; }
+        public AppUser appUser { get; set; }
+    }
+
     public class Job
     {
         public int Id { get; set; }
