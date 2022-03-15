@@ -12,16 +12,16 @@
     }
 
     .register-right {
-        margin-top: 10vh;
+        margin-top: 6vh;
         height: 90vh;
-        background-color: rgb(255,255,255,0.5);
+        background-color: white;
         width: 50%;
     }
 
     .register-left {
         background-image: linear-gradient(rgba(0, 188, 174,0.2),rgba(0, 188, 174,0.2)),url(/Img/pexels3.jpg);
         height: 90vh;
-        margin-top: 10vh;
+        margin-top: 6vh;
         width: 50%;
         background-size: cover;
         background-position: center;
@@ -94,11 +94,11 @@
         text-align: left;
         background-color: transparent;
         color: #00bcae;
-        font-size: 2em;
+        font-size: 1.5em;
         height: 7vh;
         line-height: 7vh;
     }
-
+    
     .register-page input:focus, textarea:focus, select:focus {
         outline: none;
     }
@@ -274,22 +274,6 @@
                     <option class="selecting-role" value="Super Admin">Super Admin</option>
                 </select>
             </div>
-            @*
-           <div class="form-group index-form-socials-register">
-            <h2 class="socials-register-heading">or sign up using</h2>
-            <div class="socials-register-div">
-                <div class="social-media-register">
-                    <i class="fab fa-google" style="width: 100%;"></i>
-                </div>
-                <div class="social-media-register">
-                    <i class="fab fa-microsoft" style="width: 100%;"></i>
-                </div>
-                <div class="social-media-register">
-                    <i class="fab fa-facebook" style="width: 100%;"></i>
-                </div>
-            </div>
-        </div>
-            *@
             <div class="form-group index-form-or" hidden="@emailMessageIsHidden">
                 <h1 class="index-form-heading-3">emails do not match</h1>
             </div>
@@ -308,7 +292,9 @@
             <div class="form-group index-form-or" hidden="@confirmAccountMessageIsHidden">
                 <h1 class="index-form-heading-3">we will send you a key and link to activate your account</h1>
             </div>
-            <input type="button" class="index-form-button" @onclick="Register" value="Submit" />
+            <div class="form-group login-button-div">
+                <input type="button" class="index-form-button" @onclick="Register" value="Submit" />
+            </div>
         </form>
         <form class="key-confirmation-form" hidden="@confirmationFormIsHidden">
             <div class="form-group index-form-heading">
