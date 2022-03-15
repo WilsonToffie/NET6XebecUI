@@ -196,9 +196,31 @@ namespace XebecPortal.UI.Shared
 
         */
 
-        public void ImageFileUpload()
-        {       
-            
+        private List<IBrowserFile> loadedFiles = new();
+        private long maxFileSize = 1024 * 15;
+        private int maxAllowedFiles = 3;
+        private bool isLoading;
+        private string imageName;
+        private void ProfilePic(InputFileChangeEventArgs e)
+        {
+            isLoading = true;
+            loadedFiles.Clear();
+
+            foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+            {
+                try
+                {
+                    loadedFiles.Add(file);
+                    imageName = file.Name;
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError("File: {Filename} Error: {Error}",
+                        file.Name, ex.Message);
+                }
+            }
+
+            isLoading = false;
         }
         private void getInitials()
         {
