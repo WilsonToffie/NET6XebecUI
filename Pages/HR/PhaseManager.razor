@@ -62,7 +62,8 @@
         }
 
     .can-drop {
-        border: 2px dashed green;
+        border: 2px dashed #00BCAE;
+        box-shadow: 3px 3px 10px #00BCAE;
     }
 
     .draggable {
@@ -639,7 +640,7 @@
                     <div class=" rounded shadow mycard @InterviewFive" @onclick="() => MovePhase(31)"><b>CEO</b></div>
                 }
             </div>
-            <div class="screening-dialog-email" style="font-family: opensans-light">
+            <div class="screening-dialog-email" style="font-family: opensans-light; width: 315px; margin-left: 120px;">
                 Send to:
                 <input type="email" style="width: 60%;" @bind="CurrentEmailRecipient"  class="@EmailAlert"/>
                 <MudButton Disabled="@EmailSent" OnClick="SendEmail" Variant="Variant.Text" Style="height: 25px; width: 25px;">
@@ -969,7 +970,7 @@
         DropClass = "";
 
         CurrentEmailTemplate = "";
-        CurrentEmailRecipient = "";
+        CurrentEmailRecipient = CurrentItem.Email;
 
 
         if (phase == CurrentItem.ApplicationPhaseId) return;
@@ -1171,29 +1172,6 @@
 
     public async Task MovePhase(int i)
     {
-        var task = Items.SingleOrDefault(x => x.Id == CurrentItem.Id);
-
-        CurrentItem.ApplicationPhaseId = i;
-
-        EmailAlert = "";
-
-        if (task != null)
-        {
-            Application temp = new Application();
-
-            temp = CurrentApplications.Single(i => i.Id == CurrentItem.ApplicationId);
-            temp.ApplicationPhaseId = i;
-
-            await httpClient.PutAsJsonAsync<Application>($"https://xebecapi.azurewebsites.net/api/application/{CurrentItem.ApplicationId}", temp);
-        }
-
-        ApplicationPhasesHelper tempHelper = new ApplicationPhasesHelper();
-        tempHelper.ApplicationId = CurrentItem.ApplicationId;
-        tempHelper.ApplicationPhaseId = i;
-        tempHelper.TimeMoved = DateTime.Now;
-
-        await httpClient.PostAsJsonAsync<ApplicationPhasesHelper>("https://xebecapi.azurewebsites.net/api/applicationphasehelper", tempHelper);
-
         ScreeningOne = "";
         ScreeningTwo = "";
         ScreeningThree = "";
@@ -1279,6 +1257,31 @@
             }
         }
 
+        var task = Items.SingleOrDefault(x => x.Id == CurrentItem.Id);
+
+        CurrentItem.ApplicationPhaseId = i;
+
+        EmailAlert = "";
+
+        if (task != null)
+        {
+            Application temp = new Application();
+
+            temp = CurrentApplications.Single(i => i.Id == CurrentItem.ApplicationId);
+            temp.ApplicationPhaseId = i;
+
+            await httpClient.PutAsJsonAsync<Application>($"https://xebecapi.azurewebsites.net/api/application/{CurrentItem.ApplicationId}", temp);
+        }
+
+        ApplicationPhasesHelper tempHelper = new ApplicationPhasesHelper();
+        tempHelper.ApplicationId = CurrentItem.ApplicationId;
+        tempHelper.ApplicationPhaseId = i;
+        tempHelper.TimeMoved = DateTime.Now;
+
+        await httpClient.PostAsJsonAsync<ApplicationPhasesHelper>("https://xebecapi.azurewebsites.net/api/applicationphasehelper", tempHelper);
+
+
+
     }
 
     public async Task Deny()
@@ -1333,7 +1336,6 @@
 
     public async Task SendEmail()
     {
-        Console.WriteLine("Email function");
 
         if(IsValidEmail(CurrentEmailRecipient) && CurrentEmailTemplate!="")
         {
@@ -1347,7 +1349,6 @@
             CurrentEmail.PlainText = CurrentEmailTemplate;
             CurrentEmail.Htmlcontent = "";
 
-            Console.WriteLine("Valid");
             EmailSent = true;
 
             await httpClient.PostAsJsonAsync<EmailModel>("https://mailingservice2022.azurewebsites.net/api/email/sendgrid", CurrentEmail);
