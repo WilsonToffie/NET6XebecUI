@@ -1,7 +1,6 @@
 ﻿@inject HrJobState hrJobState
 @inject HttpClient httpClient
 @inject UserState userstate
-@inject JobState jobstate 
 
 <style>
     .phase-manager-container {
@@ -35,6 +34,7 @@
         height: 30px;
         width: 100%;
         margin-bottom: 5px;
+        align-items: center;
     }
 
     .jobs-container {
@@ -67,7 +67,7 @@
 
     .draggable {
         margin-bottom: 5px;
-        border: 1px solid #424d5c;
+        border: 1px solid #00BCAE;
         cursor: grab;
         background: lightgrey;
         color: black;
@@ -89,7 +89,7 @@
     }
 
     .draggable-content {
-        width: 65%;
+        width: 50%;
 
         height: 100%;
         border-radius: 8px;
@@ -100,7 +100,7 @@
     }
 
     .draggable-picture {
-        width: 20%;
+        width: 35%;
 
         height: 100%;
         border-radius: 8px;
@@ -216,11 +216,11 @@
         padding: 5px;
     }
 
-    .profile-picture{
+    .profile-picture {
         border-radius: 50%;
-        width: 30px;
-        height: 30px;
-        border: 1px solid black;
+        width: 40px;
+        height: 40px;
+        border: 1px solid #00BCAE;
     }
 
     .loading-dialog {
@@ -231,6 +231,11 @@
         justify-content: space-evenly;
         align-items: center;
         color: #00BCAE;
+        font-family: opensans-bold;
+    }
+
+    .invalid-email{
+        border: 1px solid red;
     }
 
 </style>
@@ -553,11 +558,15 @@
             </div>
             <div class="screening-dialog-email" style="font-family: opensans-light">
                 Send to:
-                <input type="text" style="width: 60%;" @bind="CurrentEmailRecipient" />
+                <input type="email" style="width: 60%;" @bind="CurrentEmailRecipient" class="@EmailAlert"/>
                 <MudButton Disabled="@EmailSent" OnClick="SendEmail" Variant="Variant.Text" Style="height: 25px; width: 25px;">
                     @if (EmailSent)
                     {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    }
+                    else if (EmailComplete)
+                    {
+                        <i class="fas fa-check edit-icon" style="font-size: 20px;"></i>
                     }
                     else
                     {
@@ -581,11 +590,15 @@
             </div>
             <div class="screening-dialog-email" style="font-family: opensans-light">
                 Send to:
-                <input type="email" style="width: 60%;" @bind="CurrentEmailRecipient" required />
+                <input type="email" style="width: 60%;" @bind="CurrentEmailRecipient"  class="@EmailAlert" />
                 <MudButton Disabled="@EmailSent" OnClick="SendEmail" Variant="Variant.Text" Style="height: 25px; width: 25px;">
                     @if (EmailSent)
                     {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    }
+                    else if (EmailComplete)
+                    {
+                        <i class="fas fa-check edit-icon" style="font-size: 20px;"></i>
                     }
                     else
                     {
@@ -628,11 +641,15 @@
             </div>
             <div class="screening-dialog-email" style="font-family: opensans-light">
                 Send to:
-                <input type="text" style="width: 60%;" @bind="CurrentEmailRecipient" />
+                <input type="email" style="width: 60%;" @bind="CurrentEmailRecipient"  class="@EmailAlert"/>
                 <MudButton Disabled="@EmailSent" OnClick="SendEmail" Variant="Variant.Text" Style="height: 25px; width: 25px;">
                     @if (EmailSent)
                     {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    }
+                    else if (EmailComplete)
+                    {
+                        <i class="fas fa-check edit-icon" style="font-size: 20px;"></i>
                     }
                     else
                     {
@@ -656,11 +673,15 @@
             </div>
             <div class="screening-dialog-email" style="font-family: opensans-light">
                 Send to:
-                <input type="text" style="width: 60%;" @bind="CurrentEmailRecipient" />
+                <input type="email" style="width: 60%;" @bind="CurrentEmailRecipient"  class="@EmailAlert"/>
                 <MudButton Disabled="@EmailSent" OnClick="SendEmail" Variant="Variant.Text" Style="height: 25px; width: 25px;">
                     @if (EmailSent)
                     {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    }
+                    else if (EmailComplete)
+                    {
+                        <i class="fas fa-check edit-icon" style="font-size: 20px;"></i>
                     }
                     else
                     {
@@ -692,17 +713,18 @@
                 {
                     <div class=" rounded shadow mycard @OfferThree" @onclick="() => MovePhase(35)"><b>Reviewed</b></div>
                 }
-
-
-
             </div>
             <div class="screening-dialog-email" style="font-family: opensans-light">
                 Send to:
-                <input type="text" style="width: 60%;" @bind="CurrentEmailRecipient" />
+                <input type="email" style="width: 60%;" @bind="CurrentEmailRecipient"  class="@EmailAlert"/>
                 <MudButton Disabled="@EmailSent" OnClick="SendEmail" Variant="Variant.Text" Style="height: 25px; width: 25px;">
                     @if (EmailSent)
                     {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    }
+                    else if (EmailComplete)
+                    {
+                        <i class="fas fa-check edit-icon" style="font-size: 20px;"></i>
                     }
                     else
                     {
@@ -727,11 +749,15 @@
             </div>
             <div class="screening-dialog-email" style="font-family: opensans-light">
                 Send to:
-                <input type="text" style="width: 60%;" @bind="CurrentEmailRecipient" />
+                <input type="email" style="width: 60%;" @bind="CurrentEmailRecipient"  class="@EmailAlert"/>
                 <MudButton Disabled="@EmailSent" OnClick="SendEmail" Variant="Variant.Text" Style="height: 25px; width: 25px;">
                     @if (EmailSent)
                     {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                    }
+                    else if (EmailComplete)
+                    {
+                        <i class="fas fa-check edit-icon" style="font-size: 20px;"></i>
                     }
                     else
                     {
@@ -781,6 +807,7 @@
 
     [Parameter] public int CurrentJobId { get; set; }
 
+
     public ApplicationPhaseItem CurrentItem;
 
     public string searchTerm = "";
@@ -789,7 +816,10 @@
     public string CurrentEmailRecipient = "";
     public string CurrentEmailTemplate = "";
 
+    string EmailAlert = "";
+
     bool EmailSent = false;
+    bool EmailComplete = false;
 
     List<int> TotalPhases = new List<int>();
 
@@ -1012,6 +1042,10 @@
         CurrentItem = item;
         CurrentEmailRecipient = CurrentItem.Email;
 
+        EmailComplete = false;
+
+        EmailAlert = "";
+
         ScreeningOne = "";
         ScreeningTwo = "";
         ScreeningThree = "";
@@ -1141,6 +1175,8 @@
 
         CurrentItem.ApplicationPhaseId = i;
 
+        EmailAlert = "";
+
         if (task != null)
         {
             Application temp = new Application();
@@ -1268,7 +1304,7 @@
             await httpClient.PostAsJsonAsync<RejectedCandidate>("https://xebecapi.azurewebsites.net/api/rejectedcandidate", temp);
             RejectedUsers = await httpClient.GetFromJsonAsync<List<RejectedCandidate>>("https://xebecapi.azurewebsites.net/api/rejectedcandidate");
 
-            MovePhase(36);
+            await MovePhase(36);
         }
 
         ReasonDialogIsOpen = false;
@@ -1276,7 +1312,7 @@
 
     public string ConvertEmail(string email)
     {
-        if(email!=null)
+        if(email!="" && email!= null)
         {
             email = email.Replace("{firstname}", CurrentItem.Name);
             email = email.Replace("{surname}", CurrentItem.Surname);
@@ -1297,22 +1333,50 @@
 
     public async Task SendEmail()
     {
-        EmailModel CurrentEmail = new EmailModel();
+        Console.WriteLine("Email function");
 
-        CurrentEmail.Subject = "Nebula Application";
-        CurrentEmail.ToEmail = CurrentEmailRecipient;
-        CurrentEmail.ToName = CurrentItem.Name;
-        CurrentEmail.PlainText = CurrentEmailTemplate;
-        CurrentEmail.Htmlcontent = "";
-
-
-        if(CurrentEmail.ToEmail!="")
+        if(IsValidEmail(CurrentEmailRecipient) && CurrentEmailTemplate!="")
         {
+            EmailAlert = "";
+
+            EmailModel CurrentEmail = new EmailModel();
+
+            CurrentEmail.Subject = "Nebula Application";
+            CurrentEmail.ToEmail = CurrentEmailRecipient;
+            CurrentEmail.ToName = CurrentItem.Name;
+            CurrentEmail.PlainText = CurrentEmailTemplate;
+            CurrentEmail.Htmlcontent = "";
+
+            Console.WriteLine("Valid");
             EmailSent = true;
 
             await httpClient.PostAsJsonAsync<EmailModel>("https://mailingservice2022.azurewebsites.net/api/email/sendgrid", CurrentEmail);
 
             EmailSent = false;
+            EmailComplete = true;
+        }
+        else
+        {
+            EmailAlert = "invalid-email";
+        }
+    }
+
+    bool IsValidEmail(string email)
+    {
+        var trimmedEmail = email.Trim();
+
+        if (trimmedEmail.EndsWith("."))
+        {
+            return false;
+        }
+        try
+        {
+            var addr = new System.Net.Mail.MailAddress(email);
+            return addr.Address == trimmedEmail;
+        }
+        catch
+        {
+            return false;
         }
     }
 }

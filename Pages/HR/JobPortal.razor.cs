@@ -271,5 +271,11 @@ namespace XebecPortal.UI.Pages.HR
             var collabId = collaboratorsAssigned.Where(x => x.JobId == id).Select(x => x.AppUserId);
             appUserFilter = appUser.Where(x => collabId.Contains(x.id) && x.role != "Candidate").ToList();
         }
+
+        private void OpenJobCollabToolTip(int id)
+        {
+            var collabId = collaboratorsAssigned.Where(x => x.JobId == id).Select(x => x.AppUserId);
+            appUserFilter = appUser.Where(x => collabId.Contains(x.id) && x.role != "Candidate").ToList();
+        }
     }
 }

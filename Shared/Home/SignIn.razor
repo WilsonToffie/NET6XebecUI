@@ -35,30 +35,15 @@
                     </div>
                     <input type="password" placeholder="Password" @bind="@Password">
                 </div>
-                <div class="form-group index-form-or">
-                    <h1 class="index-form-heading-3">or using</h1>
-                </div>
-                @*
-                    <div class="form-group index-form-socials">
-                        <div class="index-socialmedia-div">
-                            <i class="fab fa-google"></i>
-                        </div>
-                        <div class="index-socialmedia-div">
-                            <i class="fab fa-microsoft"></i>
-                        </div>
-                        <div class="index-socialmedia-div">
-                            <i class="fab fa-facebook"></i>
-                        </div>
-                    </div>
-                *@
-
                 <div class="form-group">
-                    <h1 class="forgotpassword" @onclick="GoToForgotPassword">forgot password?</h1>
+                    <h1 class="forgotpassword" @onclick="GoToForgotPassword">Forgot Password?</h1>
                 </div>
                 <div class="form-group index-form-or" hidden="@invalidEmailorPasswordMessageIsHidden">
                     <h1 class="index-form-heading-3">incorrect credentials</h1>
                 </div>
-                <input type="button" class="index-form-button" @onclick="Login" value="Submit" />
+                <div class="form-group login-button-div">
+                    <input type="button" class="index-form-button" @onclick="Login" value="Submit" />
+                </div>
             </form>
 
             <form class="index-form-login" hidden="@RightDisplayForgotPasswordIsHidden">
