@@ -228,7 +228,6 @@
         font-size: 1.5em;
         font-weight: 800;
         font-family: opensans-condensed-bold;
-        color: black;
         border-radius: 1em;
         padding-bottom: 5vh;
         padding-left: 4vh;
@@ -242,7 +241,7 @@
 
     .hr-job-search-bar-input {
         background-color: white;
-        height: 5vh;
+        height: 6vh;
         width: 100%;
         box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
         border: white solid 0.1em;
@@ -251,11 +250,16 @@
 
         .hr-job-search-bar-input::placeholder {
             color: #666666;
-            font-weight: 900;
+            /*font-weight: 900;
             font-size: 0.8em;
             padding-left: 1em;
-            padding-top: 1em;
+            padding-top: 1em;*/
             font-family: opensans-condensed-bold;
+        }
+
+        .hr-job-search-bar-input:hover {
+            border-radius: 1em;
+            border: 0.1em solid black;
         }
 
     .hr-job-name {
@@ -267,6 +271,7 @@
         font-family: opensans-condensed-light;
         text-align: center;
     }
+
 </style>
 
 @if (ShowingJobPortal)
@@ -276,18 +281,18 @@
         <div style="height: 15vh">
             <div class="hr-job-search-bar">
                 <div class="input-group d-flex justify-content-center form-group">
-                    <input class="hr-job-search-bar-input" type="text" placeholder="Search For Jobs" @oninput="SearchListJob" />
+                    <input class="form-control rounded-pill hr-job-search-bar-input" type="text" placeholder="Search For Jobs" @oninput="SearchListJob" />
                 </div>
             </div>
             <div class="row" style="height:5vh">
                 <div class="col-3">
                     <!--Location-->
-                    <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextLocation)" Label="Location" SelectedValuesChanged="SearchListLocation">
+                    <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="@($"color: {Colors.LightGreen.Accent3}; cursor: pointer")" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" FullWidth="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextLocation)" Label="Location" SelectedValuesChanged="SearchListLocation">
                         @if (jobListFilter?.Any() == true)
                         {
                             @foreach (var item in jobList.Select(x => x.Location).OrderBy(x => x).Distinct())
                             {
-                                <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                <MudSelectItem T="string" Style="color: #00BCAE" Value="item">@item</MudSelectItem>
                             }
 
                         }
@@ -295,7 +300,7 @@
                 </div>
                 <div class="col-3">
                     <!--Company-->
-                    <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextCompany)" Label="Company" SelectedValuesChanged="SearchListCompany">
+                    <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Companies" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextCompany)" Label="Company" SelectedValuesChanged="SearchListCompany">
                         @if (jobListFilter?.Any() == true)
                         {
                             @foreach (var item in jobList.Select(x => x.Company).OrderBy(x => x).Distinct())
@@ -308,7 +313,7 @@
                 </div>
                 <div class="col-3">
                     <!--Department-->
-                    <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
+                    <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
                         @if (jobListFilter?.Any() == true)
                         {
                             @foreach (var item in jobList.Select(x => x.Department).OrderBy(x => x).Distinct())
@@ -338,63 +343,57 @@
 
         @if (jobListFilter?.Any() == true)
         {
-            <div class="row" style="height: 55vh; padding: 20px">
-                <div id="small-cards" class="col-3 overflow-auto job-portal-left">
-
-                    <!--Card list for jobss-->
-                    <div class="col-12" style="height: 53vh !important; margin-top: 1vh">
-                        @foreach (var item in jobPagedList)
-                        {
-                            <MudTooltip Class="shades white shades-text text-black" @onmouseover="() => OpenJobCollabToolTip(item.Id)" Placement="Placement.Right" Style="@($"color:{Colors.Shades.Black}; background:{Colors.Grey.Lighten5};")">
-                                <ChildContent>
-
-                                    <div class="card job-portal-card" @onclick="() => DisplayJobDetail(item.Id)" style="@GetStyling(item)">
+            <div class="row" style="height: 55vh">
+                <div class="col-3  job-portal-left">
+                    <MudTooltip Class="shades white shades-text text-black" Placement="Placement.Right">
+                        <ChildContent>
+                            <!--Card list for jobs-->
+                            <div id="small-cards" class="col-12 overflow-auto p-3" style="height: 53vh !important; margin-top: 1vh">
+                                @foreach (var item in jobPagedList)
+                                {
+                                    <div class="card job-portal-card m-1" @onclick="() => DisplayJobDetail(item.Id)" @onmouseover="() => OpenJobCollabToolTip(item.Id)" style="@GetStyling(item)">
                                         <div class="card-body job-portal-card-body">
                                             <div class="row">
                                                 <div class="col-10"><h3 class="card-title small-card-name">@item.Title</h3></div>
-                                                <div class="col-2"> <h3 class="card-title small-card-name"><i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteData(item.Id)"></i></h3></div>
-                                                <div class="col-12"><h5 class="card-subtitle text-muted small-card-company">@item.Company</h5></div>
-                                                <br />
-                                                <div class="col-12"><h5 class="card-text small-card-location">@item.Location</h5></div>
+                                                <div class="col-2"> <h3 class="card-title small-card-name"><i class="handPointer fa fa-trash" style="color: black; font-size: x-large" @onclick="() => DeleteData(item.Id)"></i></h3></div>
+                                                <div class="col-12"><h5 class="card-subtitle"><strong>@item.Company</strong></h5></div>
+                                                <div class="col-12"><h5 class="card-text">@item.Location</h5></div>
                                                 <div class="col-12"><h5 class="card-text small-card-date">Due Date: @item.DueDate.ToString("d MMMM yyyy")</h5></div>
                                                 <div class="col-12"><h5 class="card-text">Status: <strong>@item.Status</strong></h5></div>
                                             </div>
                                         </div>
                                     </div>
                                     <br />
-
-                                </ChildContent>
-                                <TooltipContent>
-                                    @if (appUserFilter?.Any() == true)
-                                    {
+                                }
+                            </div>
+                        </ChildContent>
+                        <TooltipContent>
+                            @if (appUserFilter?.Any() == true)
+                            {
+                                <div class="col-12">
+                                    <h2 class="text-center"><strong>Hiring Lead</strong></h2>
+                                    <div class="row">
                                         <div class="col-12">
-                                            <h2 class="text-center"><strong>Hiring Lead</strong></h2>
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <img class="img-fluid rounded-circle mx-auto d-block" src="@appUserFilter.FirstOrDefault().imageUrl" />
-                                                </div>
-                                                <div class="col-12">
-                                                    <h4 class="text-center">@appUserFilter.FirstOrDefault().name @appUserFilter.FirstOrDefault().surname</h4>
-                                                </div>
-                                                <div class="col-12">
-                                                    <h5 class="text-center">@appUserFilter.FirstOrDefault().role</h5>
-                                                </div>
-                                            </div>
+                                            <img class="img-fluid rounded-circle mx-auto d-block" src="@appUserFilter.FirstOrDefault().imageUrl" />
                                         </div>
-                                    }
-                                    else
-                                    {
-                                        <h4 class="text-center">There Are No Hiring Lead For This Job.</h4>
-                                    }
-
-                                </TooltipContent>
-                            </MudTooltip>
-                        }
-                    </div>
-
+                                        <div class="col-12">
+                                            <h4 class="text-center">@appUserFilter.FirstOrDefault().name @appUserFilter.FirstOrDefault().surname</h4>
+                                        </div>
+                                        <div class="col-12">
+                                            <h5 class="text-center">@appUserFilter.FirstOrDefault().role</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <h4 class="text-center">There Are No Hiring Lead For This Job.</h4>
+                            }
+                        </TooltipContent>
+                    </MudTooltip>
                 </div>
 
-                <div class="col-9 job-portal-right-main" style="height: 55vh;">
+                <div class="col-9 job-portal-right-main" style="height: 55vh">
 
                     <!--The Form for editing and deleting a job-->
                     <div class="col-12" style="height: 55vh !important; margin-top: 1vh">
@@ -455,10 +454,10 @@
                                         }
                                         else
                                         {
-                                            <h5 class="text-muted">@displayJobDetail.Company</h5>
+                                            <h4 class="card-text"><strong>@displayJobDetail.Company</strong></h4>
                                         }
                                     </div>
-                                    <div class="col-6 p-2 justify-content-end">
+                                    <div class="col-6 p-2 d-flex justify-content-end">
                                         @if (changeForm)
                                         {
                                             <label>Location</label>
@@ -471,7 +470,7 @@
                                         }
                                         else
                                         {
-                                            <p class="small-card-company text-right">@displayJobDetail.Location</p>
+                                            <h4 class="card-text">@displayJobDetail.Location</h4>
                                         }
                                     </div>
                                     <div class="col-6 p-2">
@@ -489,11 +488,11 @@
                                         {
                                             if (displayJobDetail.JobTypes != null && displayJobDetail.JobTypes.Count > 0)
                                             {
-                                                <p class="big-card-type">@GetJobType(displayJobDetail.Id)</p>
+                                                <h4 class="card-text">@GetJobType(displayJobDetail.Id)</h4>
                                             }
                                         }
                                     </div>
-                                    <div class="col-6 p-2">
+                                    <div class="col-6 p-2 d-flex justify-content-end">
 
                                         @if (changeForm)
                                         {
@@ -507,7 +506,7 @@
                                         }
                                         else
                                         {
-                                            <p class="big-card-type text-right"> @displayJobDetail.Department</p>
+                                            <h4 class="card-text"> @displayJobDetail.Department</h4>
                                         }
                                     </div>
                                     <div class="col-12 p-2">
@@ -529,7 +528,7 @@
                                         }
                                         else
                                         {
-                                            <p class="small-card-date">Date Advertised: @displayJobDetail.CreationDate.ToString("d MMMM yyyy")</p>
+                                            <h4 class="small-card-date">Date Advertised: @displayJobDetail.CreationDate.ToString("d MMMM yyyy")</h4>
                                         }
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
@@ -540,7 +539,7 @@
                                         }
                                         else
                                         {
-                                            <p class="small-card-date">Due Date: @displayJobDetail.DueDate.ToString("d MMMM yyyy")</p>
+                                            <h4 class="small-card-date">Due Date: @displayJobDetail.DueDate.ToString("d MMMM yyyy")</h4>
                                         }
                                     </div>
                                 </div>
@@ -550,12 +549,12 @@
                 </div>
             </div>
 
-            <div class="row p-3">
+            <div class="row">
                 <div class="col-3">
                     <br />
                     <br />
                     <div class="col-12 d-flex justify-content-center">
-                        <MudPagination Rectangular="true" Variant="Variant.Filled" Size="Size.Small" BoundaryCount="1" MiddleCount="1" Count="jobPagedList.PageCount" SelectedChanged="PageListNav" ShowNextButton="!nextButton" ShowPreviousButton="!preButton" />
+                        <MudPagination Color="Color.Info" Rectangular="true" Variant="Variant.Filled" Size="Size.Small" BoundaryCount="1" MiddleCount="2" Count="jobPagedList.PageCount" SelectedChanged="PageListNav" ShowNextButton="!nextButton" ShowPreviousButton="!preButton" />
                     </div>
                 </div>
             </div>
@@ -576,7 +575,7 @@
             }
             <div class="row">
                 <div class="col-12 d-flex justify-content-center">
-                    <MudProgressCircular Color="Color.Primary" Style="height:140px;width:140px;" Indeterminate="true" />
+                    <MudProgressCircular Color="Color.Primary" Style="height:140px; width:140px;" Indeterminate="true" />
                 </div>
             </div>
         }
