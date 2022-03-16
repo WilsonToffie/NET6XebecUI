@@ -17,6 +17,34 @@ namespace XebecPortal.UI.Pages.HR
         public string phase { get; set; }
     }
 
+
+    public class currentPhase
+    {
+        public currentPhases[] phases { get; set; }
+    }
+
+    public class currentPhases
+    {
+        public int id { get; set; }
+        public DateTime timeMoved { get; set; }
+        public object comments { get; set; }
+        public int rating { get; set; }
+        public int applicationId { get; set; }
+        public Application application { get; set; }
+        public int applicationPhaseId { get; set; }
+        public Applicationphase applicationPhase { get; set; }
+    }
+
+    public class Applicationphase
+    {
+        public int id { get; set; }
+        public string description { get; set; }
+        public string emailTemplate { get; set; }
+        public object[] phaseHelpers { get; set; }
+        public object jobPhases { get; set; }
+    }
+
+
     public class References
     {
         public int id { get; set; }
