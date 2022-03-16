@@ -321,7 +321,6 @@
         }
     
         .appform-main-button:hover {
-            height: 5vh;
             background-color: #d35bc9;
             border: none;
             border-radius: 100px;
@@ -370,7 +369,13 @@
     .form-control:hover, .access-question:hover{
         cursor: pointer;
     }
-
+    .btn-info-email{
+        background-color: #d35bc9;
+        color: whitesmoke;
+    }
+    .info-email{
+        color: #d35bc9;
+    }
 </style>
 <!--Tables of developers/HR-->
 <div class="appform-container">
@@ -393,7 +398,7 @@
                             var collaborator = collaborators[index];
                             var avatar = avatars.FirstOrDefault(i => i.Id == index)?.Avatar;
 
-                            <div class="@DeveloperCardClass(collaborator) pl-2 collaborator-div" @onclick="() => AddCollaborator(collaborator)">
+                            <div class="@DeveloperCardClass(collaborator) pl-2 collaborator-div" @onclick="() => AddCollaborator(collaborator)" style="height: 8vh;">
 
                                 <div class="developer-profile-picture col-2 ml-2">
                                     <img src="@avatar" alt="Avatar">
@@ -414,9 +419,9 @@
             @if (collaboratorsAdded != null && collaboratorsAdded.Count > 0)
             {
                 <a href="mailto:@collaboratorsAdded[0].email?subject=Recruit Team Assignment&cc=@GetCC(collaboratorsAdded)&body=@GetBody(collaboratorsAdded)!"
-                   class="btn btn-info mb-3"
+                   class="btn btn-info-email mb-3"
                    data-toggle="tooltip" data-placement="top" title="Send an email to all team members">
-                    Email Team|<i class="fas fa-paper-plane"></i>
+                    Email Team<span style="margin-left: 1vw"></span><i class="fas fa-paper-plane"></i>
                 </a>
             }
         </div>
@@ -438,7 +443,7 @@
                                 <div class="preview-item-description">
                                     <p class="">
                                         @developer.name @developer.surname
-                                        <a href="mailto:@(developer.email)?subject=Recruit Team Assignment&body=@GetBody(developer)!" data-toggle="tooltip" data-placement="top" title="Send an email to @developer.email">
+                                        <a class="info-email" href="mailto:@(developer.email)?subject=Recruit Team Assignment&body=@GetBody(developer)!" data-toggle="tooltip" data-placement="top" title="Send an email to @developer.email">
                                             <i class="fa fa-envelope" aria-hidden="true"></i>
                                         </a>
                                     </p>
