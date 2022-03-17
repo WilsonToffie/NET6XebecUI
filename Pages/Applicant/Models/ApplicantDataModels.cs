@@ -105,7 +105,7 @@ namespace XebecPortal.UI.Pages.Applicant
 
     public class AppUser
     {
-
+        
     }
 
     public class JobPhaseHelpers
@@ -174,11 +174,10 @@ namespace XebecPortal.UI.Pages.Applicant
             return JsonConvert.SerializeObject(this);
         }
     }
-    /* Newly added stuffs*/
     public class References : ICloneable
     {
         public int Id { get; set; }
-        [Required]        
+        [Required]
         public string Name { get; set; }
         [Required]
         public string Surname { get; set; }
@@ -248,20 +247,7 @@ namespace XebecPortal.UI.Pages.Applicant
         public int AppUserId { get; set; }
         public IList<AppUser> AppUser { get; set; }
     }
-    /*
-    public class UploadResults
-    {
-        public bool Uploaded { get; set; }
-        public string? FileName { get; set; }
-        public string? StoredFileName { get; set; }
-        public int ErrorCode { get; set; }
-    }
-
-    public class Files
-    {
-        public string? Name { get; set; }
-    }
-    */
+   
     public class Status
     {
         public string name { get; set; }
