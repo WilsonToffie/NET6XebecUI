@@ -290,6 +290,8 @@
                     @if (currentUser != null)
                     {
                         ApplicationModel currentApplication = applications.Where(x => x.AppUserId == currentUser.id).FirstOrDefault();
+                        
+
                         <tr>
                             <td style="font-weight: 900; font-family: opensans-extra-bold; font-size: 1.2em">
                                 @(candidates.IndexOf(candidate) + 1)
@@ -304,10 +306,12 @@
                             {
                                 tempCandidate = candidates.Where(x => x.AppUserId == currentUser.id).FirstOrDefault();
 
-                                <td style="padding-left: 35px"><td  class="total-match-pill" style="@(GetPillStyle(candidate))">@tempCandidate.TotalMatch %</td></td>
+                                <td style="padding-left: 35px">
+                                <td class="total-match-pill" style="@(GetPillStyle(candidate))">@tempCandidate.TotalMatch %</td></td>
                             }
 
-                            <td style="font-weight: 400;">@FindCurrentPhase(currentUser, JobId)</td>
+
+                        <td style="font-weight: 400;">@FindCurrentPhase(currentUser.id, JobId)</td>
                             <td style="font-weight: 400; font-family: opensans-condensed-bold; font-size: 1em; color: #d35bc9">@($"{currentApplication.TimeApplied:dd MMM yyyy}")</td>
                             <td class="show-more-td" @onclick="() => togglePersonalInformations(candidate)">...</td>
                             <td class="show-more-td" @onclick="() => toggleWorkHistory(candidate)">...</td>
@@ -798,6 +802,8 @@
     bool showReferences = false;
     bool showApplicationForm = false;
 
+    string currentPhase;
+
     private List<FormQuestion> QuestionList = new List<FormQuestion>();
     private List<ApplicantAnswer> AnswerList = new List<ApplicantAnswer>();
     private ApplicationModel tempApplication;
@@ -822,6 +828,7 @@
     private IList<Education> educations { get; set; }
     private IList<ProfilePortfolioLink> profilePortfolio { get; set; }
     private IList<References> references { get; set; }
+    private currentPhase phase { get; set; }
     [Parameter] public int JobId { get; set; }
 
 
@@ -941,19 +948,32 @@
         tempApplication = application;
     }
 
-    private string FindCurrentPhase(AppUser candidate, int jobId)
+    private string FindCurrentPhase(int candidateId, int jobId)
     {
-        int applicationId = applications.Where(x => x.JobId == jobId).FirstOrDefault().Id;
+        int applicationId = applications.Where(x => x.JobId == jobId && x.AppUserId == candidateId).FirstOrDefault().Id;
 
         List<ApplicationPhaseHelper> phases_ = phasesHelpers.Where(x => x.ApplicationId == applicationId).ToList();
-        phases_ = phases_.OrderByDescending(x => x.ApplicationPhaseId).ToList();
+        phases_ = phases_.OrderByDescending(x => x.TimeMoved).ToList();
 
         ApplicationPhaseHelper currentPhase = phases_.FirstOrDefault();
 
         string phaseDescription = phases.Where(x => x.id == currentPhase.ApplicationPhaseId).FirstOrDefault().description;
 
         return phaseDescription;
+    }
 
+    private string SetCurrentPhase()
+    {
+        @if (phase != null)
+        {
+            currentPhase = phases.Where(x => x.id == phase.phases.LastOrDefault().applicationPhaseId).FirstOrDefault().description;
+        }
+        else
+        {
+            currentPhase = "none";
+        }
+
+        return currentPhase;
     }
 
     private void SetSelectedCandidate(CandidateRecommender candidate)
