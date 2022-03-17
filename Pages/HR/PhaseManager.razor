@@ -82,10 +82,9 @@
 
     .draggable-edit {
         width: 15%;
-
         height: 100%;
         border-radius: 8px;
-        display: flex;
+        display: block;
         justify-content: center;
     }
 
@@ -131,19 +130,66 @@
         border-radius: 12px;
     }
 
+    .mydialog-final {
+        width: 300px;
+        height: 200px;
+        background-color: white;
+        border-radius: 12px;
+    }
+
+    .mydialog-final-title {
+        width: 100%;
+        height: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: opensans-bold;
+        font-size: 1em;
+        color: black;
+        text-align: center;
+    }
+
+    .mydialog-final-body {
+        width: 100%;
+        height: 25%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .mydialog-final-button {
+        width: 100%;
+        height: 25%;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+
     .mydialog-title {
         height: 10%;
         width: 100%;
         display: flex;
-        justify-content: center;
         align-items: center;
         font-size: 15px;
         font-family: opensans-bold;
         color: black;
     }
 
+    .mydialog-title-heading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 80%;
+    }
+    .mydialog-title-close {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 10%;
+    }
+
     .screening-dialog-body {
-        height: 40%;
+        height: 35%;
         width: 100%;
         display: flex;
         justify-content: space-evenly;
@@ -154,17 +200,30 @@
         width: 100%;
         height: 40%;
         display: flex;
-        justify-content: space-evenly;
+        justify-content: center;
         align-items: center;
     }
 
     .screening-dialog-email {
         height: 10%;
-        width: 90%;
-        margin-left: 5%;
+        width: 100%;
         display: flex;
-        justify-content: space-evenly;
+        justify-content: center;
         align-items: center;
+        font-family: opensans-condensed-bold;
+        font-weight: 800;
+    }
+
+    .dialog-email-address {
+        display: flex;
+        align-items: center;
+        width: 80%;
+    }
+    .dialog-email-send-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 10%;
     }
 
     .email-button{
@@ -180,27 +239,44 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: white;
-        font-family: opensans-bold;
+        background-color: #00BCAE;
+        color: white;
+        font-size: 1em;
+        font-family: opensans-condensed-bold;
         text-align: center;
-        border: 1px solid rgba(255, 255, 255, 0.20);
         border-radius: 12px;
-        background: linear-gradient(-45deg, rgba(0,0,0,0.22), rgba(255,255,255,0.25));
-        box-shadow: 12px 12px 16px 0 rgba(0, 0, 0, 0.25), -8px -8px 12px 0 rgba(255, 255, 255, 0.3);
     }
 
     .edit-icon {
         color: black;
         font-size: 1em;
         text-align: center;
+        cursor: pointer;
     }
 
         .edit-icon:hover {
             color: #d35bc9;
         }
 
+    .email-icon {
+        color: #00BCAE;
+        font-size: 1em;
+        text-align: center;
+        cursor: pointer;
+    }
+
+        .email-icon:hover {
+            color: #d35bc9;
+        }
+
+    .email-sent-icon {
+        color: #00BCAE;
+        font-size: 1em;
+        text-align: center;
+    }
+
     .currentphase {
-        background: linear-gradient(135deg, rgba(0, 188, 174, 1), rgba(255,255,255,0.25));
+        background: #d35bc9;
     }
 
     .active-phase {
@@ -224,19 +300,18 @@
         border: 1px solid #00BCAE;
     }
 
-    .loading-dialog {
-        height: 100%;
-        width: 100%;
-        overflow-y: hidden;
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-        color: #00BCAE;
-        font-family: opensans-bold;
-    }
-
     .invalid-email{
         border: 1px solid red;
+    }
+
+    .invalid-email-text {
+        width: 100%;
+        height: 5%;
+        color: red;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: opensans-bold;
     }
 
 </style>
@@ -249,331 +324,387 @@
 </div>
 <div class="phase-manager-container">
 
-    <div class="jobs-container">
+    @if (LoadingDialog)
+    {
+        <MudProgressCircular Color="Color.Primary" Style="height:140px;width:140px;" Indeterminate="true" />
+    }
+    else if (LoadingError)
+    {
+        <div class="jobs-container">
+            <h1>An error occured, please reload the page.</h1>
+        </div>
+    }
+    else
+    {
+        <div class="jobs-container">
 
-        @if (TotalPhases.Contains(1))
-        {
-            <div class="phase-container shadow @DropClass">
-                <div class="job-status">
-                    <div class="phase-title">
-                        <h5 class="active-phase">Applied</h5>
-                    </div>
+            @if (TotalPhases.Contains(1))
+            {
+                <div class="phase-container shadow @AppliedDrop">
+                    <div class="job-status">
+                        <div class="phase-title">
+                            <h5 class="active-phase">Applied</h5>
+                        </div>
 
-                    <ul class="dropzone"
-                        ondragover="event.preventDefault();"
-                        ondragstart="event.dataTransfer.setData('', event.target.id);"
-                        @ondrop='() => HandleDrop(1)'
-                        @ondragenter='() => HandleDragEnter(1)'
-                        @ondragleave="HandleDragLeave">
+                        <ul class="dropzone"
+                            ondragover="event.preventDefault();"
+                            ondragstart="event.dataTransfer.setData('', event.target.id);"
+                            @ondrop='() => HandleDrop(1)'
+                            @ondragenter='() => HandleDragEnter(1)'
+                            @ondragleave="() => HandleDragLeave(1)">
 
-                        @foreach (var item in FilteredItems)
-                        {
-                            @if (item.ApplicationPhaseId == 1)
+                            @foreach (var item in FilteredItems.OrderBy(x => x.Name))
                             {
-                                <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
-                                    <div class="draggable-picture">
-                                        <img class="profile-picture" src="@item.Picture" />
-                                    </div>
-                                    <div class="draggable-content">
-                                        <p class="drag-item-text" style="margin-top: 10px;">@item.Name @item.Surname</p>
-                                    </div>
-                                    <div class="draggable-edit">
-                                    </div>
-                                </li>
+                                @if (item.ApplicationPhaseId == 1)
+                                {
+                                    <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
+                                        <div class="draggable-picture">
+                                            <img class="profile-picture" src="@item.Picture" />
+                                        </div>
+                                        <div class="draggable-content">
+                                            <p class="drag-item-text" style="margin-top: 10px;">@item.Name @item.Surname</p>
+                                        </div>
+                                        <div class="draggable-edit">
+                                        </div>
+                                    </li>
+                                }
                             }
-                        }
 
-                    </ul>
-                </div>
-            </div>
-        }
-
-        @if (TotalPhases.Exists(x => x is 10 or 3 or 5 or 25))
-        {
-            <div class="phase-container shadow @DropClass">
-                <div class="job-status">
-                    <div class="phase-title">
-                        <h5 class="active-phase">Screening</h5>
+                        </ul>
                     </div>
-
-
-                    <ul class="dropzone"
-                        ondragover="event.preventDefault();"
-                        ondragstart="event.dataTransfer.setData('', event.target.id);"
-                        @ondrop='() => HandleDrop(10)'
-                        @ondragenter='() => HandleDragEnter(10)'
-                        @ondragleave="HandleDragLeave">
-
-                        @foreach (var item in FilteredItems)
-                        {
-                            @if (item.ApplicationPhaseId is 3 or 5 or 25 or 10)
-                            {
-                                <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
-                                    <div class="draggable-picture">
-                                        <img class="profile-picture" src="@item.Picture" />
-                                    </div>
-                                    <div class="draggable-content">
-                                        <p class="drag-item-text" style="margin-top: 10px;">@item.Name @item.Surname</p>
-                                    </div>
-                                    <div class="draggable-edit">
-                                        <span @onclick='() => ShowDialog(item)'>
-                                            <i class="fas fa-edit edit-icon"></i>
-                                        </span>
-                                    </div>
-                                </li>
-                            }
-                        }
-
-                    </ul>
                 </div>
-            </div>
-        }
+            }
 
-        @if (TotalPhases.Contains(27))
-        {
-            <div class="phase-container shadow @DropClass">
-                <div class="job-status">
-                    <div class="phase-title">
-                        <h5 class="active-phase">Assessment</h5>
+            @if (TotalPhases.Exists(x => x is 10 or 3 or 5 or 25))
+            {
+                <div class="phase-container shadow @ScreeningDrop">
+                    <div class="job-status">
+                        <div class="phase-title">
+                            <h5 class="active-phase">Screening</h5>
+                        </div>
+
+
+                        <ul class="dropzone"
+                            ondragover="event.preventDefault();"
+                            ondragstart="event.dataTransfer.setData('', event.target.id);"
+                            @ondrop='() => HandleDrop(10)'
+                            @ondragenter='() => HandleDragEnter(10)'
+                            @ondragleave="() => HandleDragLeave(10)">
+
+                            @foreach (var item in FilteredItems.OrderBy(x => x.Name))
+                            {
+                                @if (item.ApplicationPhaseId is 3 or 5 or 25 or 10)
+                                {
+                                    <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
+                                        <div class="draggable-picture">
+                                            <img class="profile-picture" src="@item.Picture" />
+                                        </div>
+                                        <div class="draggable-content">
+                                            <p class="drag-item-text" style="margin-top: 10px;">@item.Name @item.Surname</p>
+                                        </div>
+                                        <div class="draggable-edit">
+                                            <span @onclick='() => ShowDialog(item)'>
+                                                <i class="fas fa-edit edit-icon"></i>
+                                            </span>
+                                            @if (item.ApplicationPhaseId == 10)
+                                            {
+                                                <span title="No phase selected">
+                                                    <i class="fa fa-question-circle edit-icon"></i>
+                                                </span>
+                                            }
+
+                                        </div>
+                                    </li>
+                                }
+                            }
+
+                        </ul>
                     </div>
-
-
-                    <ul class="dropzone"
-                        ondragover="event.preventDefault();"
-                        ondragstart="event.dataTransfer.setData('', event.target.id);"
-                        @ondrop='() => HandleDrop(27)'
-                        @ondragenter='() => HandleDragEnter(27)'
-                        @ondragleave="HandleDragLeave">
-
-                        @foreach (var item in FilteredItems)
-                        {
-                            @if (item.ApplicationPhaseId == 27)
-                            {
-                                <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
-                                    <div class="draggable-picture">
-                                        <img class="profile-picture" src="@item.Picture" />
-                                    </div>
-                                    <div class="draggable-content">
-                                        <p class="drag-item-text" style="margin-top: 10px;">@item.Name @item.Surname</p>
-                                    </div>
-                                    <div class="draggable-edit">
-                                        <span @onclick='() => ShowDialog(item)'>
-                                            <i class="fas fa-edit edit-icon"></i>
-                                        </span>
-                                    </div>
-                                </li>
-                            }
-                        }
-
-                    </ul>
                 </div>
-            </div>
-        }
+            }
+
+            @if (TotalPhases.Contains(27))
+            {
+                <div class="phase-container shadow @AssessmentDrop">
+                    <div class="job-status">
+                        <div class="phase-title">
+                            <h5 class="active-phase">Assessment</h5>
+                        </div>
 
 
-        @if (TotalPhases.Exists(x => x is 11 or 26 or 28 or 29 or 30 or 31))
-        {
-            <div class="phase-container shadow @DropClass">
-                <div class="job-status">
-                    <div class="phase-title">
-                        <h5 class="active-phase">Interview</h5>
+                        <ul class="dropzone"
+                            ondragover="event.preventDefault();"
+                            ondragstart="event.dataTransfer.setData('', event.target.id);"
+                            @ondrop='() => HandleDrop(27)'
+                            @ondragenter='() => HandleDragEnter(27)'
+                            @ondragleave="() => HandleDragLeave(27)">
+
+                            @foreach (var item in FilteredItems.OrderBy(x => x.Name))
+                            {
+                                @if (item.ApplicationPhaseId == 27)
+                                {
+                                    <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
+                                        <div class="draggable-picture">
+                                            <img class="profile-picture" src="@item.Picture" />
+                                        </div>
+                                        <div class="draggable-content">
+                                            <p class="drag-item-text" style="margin-top: 10px;">@item.Name @item.Surname</p>
+                                        </div>
+                                        <div class="draggable-edit">
+                                            <span @onclick='() => ShowDialog(item)'>
+                                                <i class="fas fa-edit edit-icon"></i>
+                                            </span>
+                                        </div>
+                                    </li>
+                                }
+                            }
+
+                        </ul>
                     </div>
-
-                    <ul class="dropzone"
-                        ondragover="event.preventDefault();"
-                        ondragstart="event.dataTransfer.setData('', event.target.id);"
-                        @ondrop='() => HandleDrop(11)'
-                        @ondragenter='() => HandleDragEnter(11)'
-                        @ondragleave="HandleDragLeave">
-
-                        @foreach (var item in FilteredItems)
-                        {
-                            @if (item.ApplicationPhaseId is 26 or 28 or 29 or 30 or 31 or 11)
-                            {
-                                <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
-                                    <div class="draggable-picture">
-                                        <img class="profile-picture" src="@item.Picture" />
-                                    </div>
-                                    <div class="draggable-content">
-                                        <p class="drag-item-text" style="margin-top: 10px;">@item.Name @item.Surname</p>
-                                    </div>
-                                    <div class="draggable-edit">
-                                        <span @onclick='() => ShowDialog(item)'>
-                                            <i class="fas fa-edit edit-icon"></i>
-                                        </span>
-                                    </div>
-                                </li>
-                            }
-                        }
-
-                    </ul>
                 </div>
-            </div>
-        }
+            }
 
-        @if (TotalPhases.Contains(32))
-        {
-            <div class="phase-container shadow @DropClass">
-                <div class="job-status">
-                    <div class="phase-title">
-                        <h5 class="active-phase">Reference Check</h5>
+
+            @if (TotalPhases.Exists(x => x is 11 or 26 or 28 or 29 or 30 or 31))
+            {
+                <div class="phase-container shadow @InterviewDrop">
+                    <div class="job-status">
+                        <div class="phase-title">
+                            <h5 class="active-phase">Interview</h5>
+                        </div>
+
+                        <ul class="dropzone"
+                            ondragover="event.preventDefault();"
+                            ondragstart="event.dataTransfer.setData('', event.target.id);"
+                            @ondrop='() => HandleDrop(11)'
+                            @ondragenter='() => HandleDragEnter(11)'
+                            @ondragleave="() => HandleDragLeave(11)">
+
+                            @foreach (var item in FilteredItems.OrderBy(x => x.Name))
+                            {
+                                @if (item.ApplicationPhaseId is 26 or 28 or 29 or 30 or 31 or 11)
+                                {
+                                    <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
+                                        <div class="draggable-picture">
+                                            <img class="profile-picture" src="@item.Picture" />
+                                        </div>
+                                        <div class="draggable-content">
+                                            <p class="drag-item-text" style="margin-top: 10px;">@item.Name @item.Surname</p>
+                                        </div>
+                                        <div class="draggable-edit">
+                                            <span @onclick='() => ShowDialog(item)'>
+                                                <i class="fas fa-edit edit-icon"></i>
+                                            </span>
+                                            @if (item.ApplicationPhaseId == 11)
+                                            {
+                                                <span title="No phase selected">
+                                                    <i class="fa fa-question-circle edit-icon"></i>
+                                                </span>
+                                            }
+                                        </div>
+                                    </li>
+                                }
+                            }
+
+                        </ul>
                     </div>
-
-
-                    <ul class="dropzone"
-                        ondragover="event.preventDefault();"
-                        ondragstart="event.dataTransfer.setData('', event.target.id);"
-                        @ondrop='() => HandleDrop(32)'
-                        @ondragenter='() => HandleDragEnter(32)'
-                        @ondragleave="HandleDragLeave">
-
-                        @foreach (var item in FilteredItems)
-                        {
-                            @if (item.ApplicationPhaseId == 32)
-                            {
-                                <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
-                                    <div class="draggable-picture">
-                                        <img class="profile-picture" src="@item.Picture" />
-                                    </div>
-                                    <div class="draggable-content">
-                                        <p class="drag-item-text" style="margin-top: 10px;">@item.Name @item.Surname</p>
-                                    </div>
-                                    <div class="draggable-edit">
-                                        <span @onclick='() => ShowDialog(item)'>
-                                            <i class="fas fa-edit edit-icon"></i>
-                                        </span>
-                                    </div>
-                                </li>
-                            }
-                        }
-
-                    </ul>
                 </div>
-            </div>
-        }
+            }
 
-        @if (TotalPhases.Exists(x => x is 12 or 33 or 34 or 35))
-        {
-            <div class="phase-container shadow @DropClass">
-                <div class="job-status">
-                    <div class="phase-title">
-                        <h5 class="active-phase">Offer</h5>
+            @if (TotalPhases.Contains(32))
+            {
+                <div class="phase-container shadow @ReferenceDrop">
+                    <div class="job-status">
+                        <div class="phase-title">
+                            <h5 class="active-phase">Reference Check</h5>
+                        </div>
+
+
+                        <ul class="dropzone"
+                            ondragover="event.preventDefault();"
+                            ondragstart="event.dataTransfer.setData('', event.target.id);"
+                            @ondrop='() => HandleDrop(32)'
+                            @ondragenter='() => HandleDragEnter(32)'
+                            @ondragleave="() => HandleDragLeave(32)">
+
+                            @foreach (var item in FilteredItems.OrderBy(x => x.Name))
+                            {
+                                @if (item.ApplicationPhaseId == 32)
+                                {
+                                    <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
+                                        <div class="draggable-picture">
+                                            <img class="profile-picture" src="@item.Picture" />
+                                        </div>
+                                        <div class="draggable-content">
+                                            <p class="drag-item-text" style="margin-top: 10px;">@item.Name @item.Surname</p>
+                                        </div>
+                                        <div class="draggable-edit">
+                                            <span @onclick='() => ShowDialog(item)'>
+                                                <i class="fas fa-edit edit-icon"></i>
+                                            </span>
+                                        </div>
+                                    </li>
+                                }
+                            }
+
+                        </ul>
                     </div>
-
-
-                    <ul class="dropzone"
-                        ondragover="event.preventDefault();"
-                        ondragstart="event.dataTransfer.setData('', event.target.id);"
-                        @ondrop='() => HandleDrop(12)'
-                        @ondragenter='() => HandleDragEnter(12)'
-                        @ondragleave="HandleDragLeave">
-
-                        @foreach (var item in FilteredItems)
-                        {
-                            @if (item.ApplicationPhaseId is 33 or 34 or 35 or 12)
-                            {
-                                <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
-                                    <div class="draggable-picture">
-                                        <img class="profile-picture" src="@item.Picture" />
-                                    </div>
-                                    <div class="draggable-content">
-                                        <p class="drag-item-text" style="margin-top: 10px;">@item.Name @item.Surname</p>
-                                    </div>
-                                    <div class="draggable-edit">
-                                        <span @onclick='() => ShowDialog(item)'>
-                                            <i class="fas fa-edit edit-icon"></i>
-                                        </span>
-                                    </div>
-                                </li>
-                            }
-                        }
-
-                    </ul>
                 </div>
-            </div>
-        }
+            }
 
-        @if (TotalPhases.Exists(x => x is 13 or 36))
-        {
-            <div class="phase-container shadow @DropClass">
-                <div class="job-status">
-                    <div class="phase-title">
-                        <h5 class="active-phase">Hired/Not Hired</h5>
+            @if (TotalPhases.Exists(x => x is 12 or 33 or 34 or 35))
+            {
+                <div class="phase-container shadow @OfferDrop">
+                    <div class="job-status">
+                        <div class="phase-title">
+                            <h5 class="active-phase">Offer</h5>
+                        </div>
+
+
+                        <ul class="dropzone"
+                            ondragover="event.preventDefault();"
+                            ondragstart="event.dataTransfer.setData('', event.target.id);"
+                            @ondrop='() => HandleDrop(12)'
+                            @ondragenter='() => HandleDragEnter(12)'
+                            @ondragleave="() => HandleDragLeave(12)">
+
+                            @foreach (var item in FilteredItems.OrderBy(x => x.Name))
+                            {
+                                @if (item.ApplicationPhaseId is 33 or 34 or 35 or 12)
+                                {
+                                    <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
+                                        <div class="draggable-picture">
+                                            <img class="profile-picture" src="@item.Picture" />
+                                        </div>
+                                        <div class="draggable-content">
+                                            <p class="drag-item-text" style="margin-top: 10px;">@item.Name @item.Surname</p>
+                                        </div>
+                                        <div class="draggable-edit">
+                                            <span @onclick='() => ShowDialog(item)'>
+                                                <i class="fas fa-edit edit-icon"></i>
+                                            </span>
+                                            @if (item.ApplicationPhaseId == 12)
+                                            {
+                                                <span title="No phase selected">
+                                                    <i class="fa fa-question-circle edit-icon"></i>
+                                                </span>
+                                            }
+                                        </div>
+                                    </li>
+                                }
+                            }
+
+                        </ul>
                     </div>
-
-
-                    <ul class="dropzone"
-                        ondragover="event.preventDefault();"
-                        ondragstart="event.dataTransfer.setData('', event.target.id);"
-                        @ondrop='() => HandleDrop(13)'
-                        @ondragenter='() => HandleDragEnter(13)'
-                        @ondragleave="HandleDragLeave">
-
-                        @foreach (var item in FilteredItems)
-                        {
-                            @if (item.ApplicationPhaseId is 36 or 13)
-                            {
-                                <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
-                                    <div class="draggable-picture">
-                                        <img class="profile-picture" src="@item.Picture" />
-                                    </div>
-                                    <div class="draggable-content">
-                                        <p class="drag-item-text" style="margin-top: 10px;">@item.Name @item.Surname</p>
-                                    </div>
-                                    <div class="draggable-edit">
-                                        <span @onclick='() => ShowDialog(item)'>
-                                            <i class="fas fa-edit edit-icon"></i>
-                                        </span>
-                                    </div>
-                                </li>
-                            }
-                        }
-
-                    </ul>
                 </div>
-            </div>
-        }
+            }
+
+            @if (TotalPhases.Exists(x => x is 13 or 36))
+            {
+                <div class="phase-container shadow @FinalDrop">
+                    <div class="job-status">
+                        <div class="phase-title">
+                            <h5 class="active-phase">Hired/Not Hired</h5>
+                        </div>
 
 
-    </div>
+                        <ul class="dropzone"
+                            ondragover="event.preventDefault();"
+                            ondragstart="event.dataTransfer.setData('', event.target.id);"
+                            @ondrop='() => HandleDrop(13)'
+                            @ondragenter='() => HandleDragEnter(13)'
+                            @ondragleave="() => HandleDragLeave(13)">
+
+                            @foreach (var item in FilteredItems.OrderBy(x => x.Name))
+                            {
+                                @if (item.ApplicationPhaseId is 36 or 13)
+                                {
+                                    <li class="draggable" draggable="true" title="@item.Name" @ondragstart="@(() => HandleDragStart(item))">
+                                        <div class="draggable-picture">
+                                            <img class="profile-picture" src="@item.Picture" />
+                                        </div>
+                                        <div class="draggable-content">
+                                            <p class="drag-item-text" style="margin-top: 10px;">@item.Name @item.Surname</p>
+                                        </div>
+                                        <div class="draggable-edit">
+                                            <span @onclick='() => ShowDialog(item)'>
+                                                <i class="fas fa-edit edit-icon"></i>
+                                            </span>
+                                            @if (item.ApplicationPhaseId == 13)
+                                            {
+                                                <span title="No phase selected">
+                                                    <i class="fa fa-question-circle edit-icon"></i>
+                                                </span>
+                                            }
+                                        </div>
+                                    </li>
+                                }
+                            }
+
+                        </ul>
+                    </div>
+                </div>
+            }
+
+
+        </div>
+    }
+
+
 
 
     <MatDialog @bind-IsOpen="@ScreeningDialogIsOpen">
         <div class="mydialog">
             <div class="mydialog-title">
-                <b>Screening</b>
+                <div class="mydialog-title-close">
+
+                </div>
+                <div class="mydialog-title-heading">
+                    <b>Screening</b>
+                </div>
+                <div class="mydialog-title-close">
+                    <i class="fa fa-times edit-icon" @onclick="() => { ScreeningDialogIsOpen = false; }"></i>
+                </div>
+
             </div>
             <div class="screening-dialog-body">
                 @if (TotalPhases.Contains(3))
                 {
-                    <div class=" rounded shadow mycard @ScreeningOne" @onclick="() => MovePhase(3)"><b>Schedule Phone Screen</b></div>
+                    <div class=" shadow mycard @ScreeningOne" @onclick="() => MovePhase(3)"><b>Schedule Phone Screen</b></div>
                 }
                 @if (TotalPhases.Contains(5))
                 {
-                    <div class=" rounded shadow mycard @ScreeningTwo" @onclick="() => MovePhase(5)"><b>Phone Screened</b></div>
+                    <div class=" shadow mycard @ScreeningTwo" @onclick="() => MovePhase(5)"><b>Phone Screened</b></div>
                 }
                 @if (TotalPhases.Contains(25))
                 {
-                    <div class=" rounded shadow mycard @ScreeningThree" @onclick="() => MovePhase(25)"><b>MS Teams Meeting</b></div>
+                    <div class=" shadow mycard @ScreeningThree" @onclick="() => MovePhase(25)"><b>MS Teams Meeting</b></div>
                 }
             </div>
-            <div class="screening-dialog-email" style="font-family: opensans-light">
-                Send to:
-                <input type="email" style="width: 60%;" @bind="CurrentEmailRecipient" class="@EmailAlert"/>
-                <MudButton Disabled="@EmailSent" OnClick="SendEmail" Variant="Variant.Text" Style="height: 25px; width: 25px;">
-                    @if (EmailSent)
+            <div class="invalid-email-text">
+                <p hidden="@EmailInvalid">Invalid Email</p>
+            </div>
+            <div class="screening-dialog-email">
+                <div class="dialog-email-address">
+                    Send to:
+                    <input type="email" style="width: 75%; margin-left: 5px;" @bind="CurrentEmailRecipient" class="@EmailInvalidAlert rounded" />
+                </div>
+                <div class="dialog-email-send-button">
+                    @if (EmailSending)
                     {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
                     }
-                    else if (EmailComplete)
+                    else if (EmailSent)
                     {
-                        <i class="fas fa-check edit-icon" style="font-size: 20px;"></i>
+                        <i class="fas fa-check email-sent-icon" style="font-size: 20px;"></i>
                     }
                     else
                     {
-                        <i class="fas fa-paper-plane edit-icon" style="font-size: 20px;"></i>
+                        <span @onclick="SendEmail">
+                            <i class="fas fa-paper-plane email-icon" style="font-size: 20px;"></i>
+                        </span>
                     }
-                </MudButton>
+                </div>
             </div>
             <div class="screening-dialog-textarea">
                 <textarea class="phase-manager-textarea" @bind="CurrentEmailTemplate"></textarea>
@@ -584,28 +715,44 @@
     <MatDialog @bind-IsOpen="@AssessmentDialogIsOpen">
         <div class="mydialog">
             <div class="mydialog-title">
-                <b>Assessment</b>
+                <div class="mydialog-title-close">
+
+                </div>
+                <div class="mydialog-title-heading">
+                    <b>Assessment</b>
+                </div>
+                <div class="mydialog-title-close">
+                    <i class="fa fa-times edit-icon" @onclick="() => { AssessmentDialogIsOpen = false; }"></i>
+                </div>
+
             </div>
             <div class="screening-dialog-body">
                 <input type="number" placeholder="0" style="width: 160px; height: 80px; font-size: 70px;" min="0" max="100" />
             </div>
-            <div class="screening-dialog-email" style="font-family: opensans-light">
-                Send to:
-                <input type="email" style="width: 60%;" @bind="CurrentEmailRecipient"  class="@EmailAlert" />
-                <MudButton Disabled="@EmailSent" OnClick="SendEmail" Variant="Variant.Text" Style="height: 25px; width: 25px;">
-                    @if (EmailSent)
+            <div class="invalid-email-text">
+                <p hidden="@EmailInvalid">Invalid Email</p>
+            </div>
+            <div class="screening-dialog-email">
+                <div class="dialog-email-address">
+                    Send to:
+                    <input type="email" style="width: 75%; margin-left: 5px;" @bind="CurrentEmailRecipient" class="@EmailInvalidAlert rounded" />
+                </div>
+                <div class="dialog-email-send-button">
+                    @if (EmailSending)
                     {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
                     }
-                    else if (EmailComplete)
+                    else if (EmailSent)
                     {
-                        <i class="fas fa-check edit-icon" style="font-size: 20px;"></i>
+                        <i class="fas fa-check email-sent-icon" style="font-size: 20px;"></i>
                     }
                     else
                     {
-                        <i class="fas fa-paper-plane edit-icon" style="font-size: 20px;"></i>
+                        <span @onclick="SendEmail">
+                            <i class="fas fa-paper-plane email-icon" style="font-size: 20px;"></i>
+                        </span>
                     }
-                </MudButton>
+                </div>
             </div>
             <div class="screening-dialog-textarea">
                 <textarea class="phase-manager-textarea" @bind="CurrentEmailTemplate"></textarea>
@@ -616,47 +763,63 @@
     <MatDialog @bind-IsOpen="@InterviewDialogIsOpen">
         <div class="mydialog" style="width: 550px">
             <div class="mydialog-title">
-                <b>Interview</b>
+                <div class="mydialog-title-close">
+
+                </div>
+                <div class="mydialog-title-heading">
+                    <b>Interview</b>
+                </div>
+                <div class="mydialog-title-close">
+                    <i class="fa fa-times edit-icon" @onclick="() => { InterviewDialogIsOpen = false; }"></i>
+                </div>
+
             </div>
             <div class="screening-dialog-body">
                 @if (TotalPhases.Contains(26))
                 {
-                    <div class=" rounded shadow mycard @InterviewOne" @onclick="() => MovePhase(26)"><b>First Round</b></div>
+                    <div class=" shadow mycard @InterviewOne" @onclick="() => MovePhase(26)"><b>First Round</b></div>
                 }
                 @if (TotalPhases.Contains(28))
                 {
-                    <div class=" rounded shadow mycard @InterviewTwo" @onclick="() => MovePhase(28)"><b>Second Round</b></div>
+                    <div class=" shadow mycard @InterviewTwo" @onclick="() => MovePhase(28)"><b>Second Round</b></div>
                 }
                 @if (TotalPhases.Contains(29))
                 {
-                    <div class=" rounded shadow mycard @InterviewThree" @onclick="() => MovePhase(29)"><b>Manager Feedback</b></div>
+                    <div class=" shadow mycard @InterviewThree" @onclick="() => MovePhase(29)"><b>Manager Feedback</b></div>
                 }
                 @if (TotalPhases.Contains(30))
                 {
-                    <div class=" rounded shadow mycard @InterviewFour" @onclick="() => MovePhase(30)"><b>CTO/MD</b></div>
+                    <div class=" shadow mycard @InterviewFour" @onclick="() => MovePhase(30)"><b>CTO/MD</b></div>
                 }
                 @if (TotalPhases.Contains(31))
                 {
-                    <div class=" rounded shadow mycard @InterviewFive" @onclick="() => MovePhase(31)"><b>CEO</b></div>
+                    <div class=" shadow mycard @InterviewFive" @onclick="() => MovePhase(31)"><b>CEO</b></div>
                 }
             </div>
-            <div class="screening-dialog-email" style="font-family: opensans-light; width: 315px; margin-left: 120px;">
-                Send to:
-                <input type="email" style="width: 60%;" @bind="CurrentEmailRecipient"  class="@EmailAlert"/>
-                <MudButton Disabled="@EmailSent" OnClick="SendEmail" Variant="Variant.Text" Style="height: 25px; width: 25px;">
-                    @if (EmailSent)
+            <div class="invalid-email-text">
+                <p hidden="@EmailInvalid">Invalid Email</p>
+            </div>
+            <div class="screening-dialog-email">
+                <div class="dialog-email-address" style="width: 52.2%;">
+                    Send to:
+                    <input type="email" style="width: 75%; margin-left: 5px;" @bind="CurrentEmailRecipient" class="@EmailInvalidAlert rounded" />
+                </div>
+                <div class="dialog-email-send-button" style="width: 5.8%;">
+                    @if (EmailSending)
                     {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
                     }
-                    else if (EmailComplete)
+                    else if (EmailSent)
                     {
-                        <i class="fas fa-check edit-icon" style="font-size: 20px;"></i>
+                        <i class="fas fa-check email-sent-icon" style="font-size: 20px;"></i>
                     }
                     else
                     {
-                        <i class="fas fa-paper-plane edit-icon" style="font-size: 20px;"></i>
+                        <span @onclick="SendEmail">
+                            <i class="fas fa-paper-plane email-icon" style="font-size: 20px;"></i>
+                        </span>
                     }
-                </MudButton>
+                </div>
             </div>
             <div class="screening-dialog-textarea">
                 <textarea class="phase-manager-textarea" @bind="CurrentEmailTemplate"></textarea>
@@ -665,30 +828,46 @@
     </MatDialog>
 
     <MatDialog @bind-IsOpen="@ReferenceCheckDialogIsOpen">
-        <div class="mydialog">
+        <div class="mydialog" style="height: 300px;">
             <div class="mydialog-title">
-                <b>Reference Check</b>
-            </div>
-            <div class="screening-dialog-body" style="height: 50px;">
+                <div class="mydialog-title-close">
+
+                </div>
+                <div class="mydialog-title-heading">
+                    <b>Reference Check</b>
+                </div>
+                <div class="mydialog-title-close">
+                    <i class="fa fa-times edit-icon" @onclick="() => { ReferenceCheckDialogIsOpen = false; }"></i>
+                </div>
 
             </div>
-            <div class="screening-dialog-email" style="font-family: opensans-light">
-                Send to:
-                <input type="email" style="width: 60%;" @bind="CurrentEmailRecipient"  class="@EmailAlert"/>
-                <MudButton Disabled="@EmailSent" OnClick="SendEmail" Variant="Variant.Text" Style="height: 25px; width: 25px;">
-                    @if (EmailSent)
+            <div class="screening-dialog-body" style="height: 20px;">
+
+            </div>
+            <div class="invalid-email-text">
+                <p hidden="@EmailInvalid">Invalid Email</p>
+            </div>
+            <div class="screening-dialog-email">
+                <div class="dialog-email-address">
+                    Send to:
+                    <input type="email" style="width: 75%; margin-left: 5px;" @bind="CurrentEmailRecipient" class="@EmailInvalidAlert rounded" />
+                </div>
+                <div class="dialog-email-send-button">
+                    @if (EmailSending)
                     {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
                     }
-                    else if (EmailComplete)
+                    else if (EmailSent)
                     {
-                        <i class="fas fa-check edit-icon" style="font-size: 20px;"></i>
+                        <i class="fas fa-check email-sent-icon" style="font-size: 20px;"></i>
                     }
                     else
                     {
-                        <i class="fas fa-paper-plane edit-icon" style="font-size: 20px;"></i>
+                        <span @onclick="SendEmail">
+                            <i class="fas fa-paper-plane email-icon" style="font-size: 20px;"></i>
+                        </span>
                     }
-                </MudButton>
+                </div>
             </div>
             <div class="screening-dialog-textarea" style="margin-top: 50px;">
                 <textarea class="phase-manager-textarea" @bind="CurrentEmailTemplate"></textarea>
@@ -699,39 +878,55 @@
     <MatDialog @bind-IsOpen="@OfferDialogIsOpen">
         <div class="mydialog">
             <div class="mydialog-title">
-                <b>Offer</b>
+                <div class="mydialog-title-close">
+
+                </div>
+                <div class="mydialog-title-heading">
+                    <b>Offer</b>
+                </div>
+                <div class="mydialog-title-close">
+                    <i class="fa fa-times edit-icon" @onclick="() => { OfferDialogIsOpen = false; }"></i>
+                </div>
+
             </div>
             <div class="screening-dialog-body">
                 @if (TotalPhases.Contains(33))
                 {
-                    <div class=" rounded shadow mycard @OfferOne" @onclick="() => MovePhase(33)"><b>Send Offer</b></div>
+                    <div class=" shadow mycard @OfferOne" @onclick="() => MovePhase(33)"><b>Send Offer</b></div>
                 }
                 @if (TotalPhases.Contains(34))
                 {
-                    <div class=" rounded shadow mycard @OfferTwo" @onclick="() => MovePhase(34)"><b>Unsuccessful</b></div>
+                    <div class=" shadow mycard @OfferTwo" @onclick="() => MovePhase(34)"><b>Unsuccessful</b></div>
                 }
                 @if (TotalPhases.Contains(35))
                 {
-                    <div class=" rounded shadow mycard @OfferThree" @onclick="() => MovePhase(35)"><b>Reviewed</b></div>
+                    <div class=" shadow mycard @OfferThree" @onclick="() => MovePhase(35)"><b>Reviewed</b></div>
                 }
             </div>
-            <div class="screening-dialog-email" style="font-family: opensans-light">
-                Send to:
-                <input type="email" style="width: 60%;" @bind="CurrentEmailRecipient"  class="@EmailAlert"/>
-                <MudButton Disabled="@EmailSent" OnClick="SendEmail" Variant="Variant.Text" Style="height: 25px; width: 25px;">
-                    @if (EmailSent)
+            <div class="invalid-email-text">
+                <p hidden="@EmailInvalid">Invalid Email</p>
+            </div>
+            <div class="screening-dialog-email">
+                <div class="dialog-email-address">
+                    Send to:
+                    <input type="email" style="width: 75%; margin-left: 5px;" @bind="CurrentEmailRecipient" class="@EmailInvalidAlert rounded" />
+                </div>
+                <div class="dialog-email-send-button">
+                    @if (EmailSending)
                     {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
                     }
-                    else if (EmailComplete)
+                    else if (EmailSent)
                     {
-                        <i class="fas fa-check edit-icon" style="font-size: 20px;"></i>
+                        <i class="fas fa-check email-sent-icon" style="font-size: 20px;"></i>
                     }
                     else
                     {
-                        <i class="fas fa-paper-plane edit-icon" style="font-size: 20px;"></i>
+                        <span @onclick="SendEmail">
+                            <i class="fas fa-paper-plane email-icon" style="font-size: 20px;"></i>
+                        </span>
                     }
-                </MudButton>
+                </div>
             </div>
             <div class="screening-dialog-textarea">
                 <textarea class="phase-manager-textarea" @bind="CurrentEmailTemplate"></textarea>
@@ -742,29 +937,45 @@
     <MatDialog @bind-IsOpen="@HiredDialogIsOpen">
         <div class="mydialog">
             <div class="mydialog-title">
-                <b>Successful/Unsuccessful</b>
+                <div class="mydialog-title-close">
+
+                </div>
+                <div class="mydialog-title-heading">
+                    <b>Successful/Unsuccessful</b>
+                </div>
+                <div class="mydialog-title-close">
+                    <i class="fa fa-times edit-icon" @onclick="() => { HiredDialogIsOpen = false; }"></i>
+                </div>
+
             </div>
             <div class="screening-dialog-body">
-                <div class=" rounded shadow mycard @Hired" @onclick="() => MovePhase(36)"><b>Hired</b></div>
-                <div class=" rounded shadow mycard @NotHired" @onclick="Deny"><b>Not Hired</b></div>
+                <div class=" shadow mycard @Hired" @onclick="() => Confirm(true)"><b>Hired</b></div>
+                <div class=" shadow mycard @NotHired" @onclick="() => Confirm(false)"><b>Not Hired</b></div>
             </div>
-            <div class="screening-dialog-email" style="font-family: opensans-light">
-                Send to:
-                <input type="email" style="width: 60%;" @bind="CurrentEmailRecipient"  class="@EmailAlert"/>
-                <MudButton Disabled="@EmailSent" OnClick="SendEmail" Variant="Variant.Text" Style="height: 25px; width: 25px;">
-                    @if (EmailSent)
+            <div class="invalid-email-text">
+                <p hidden="@EmailInvalid">Invalid Email</p>
+            </div>
+            <div class="screening-dialog-email">
+                <div class="dialog-email-address">
+                    Send to:
+                    <input type="email" style="width: 75%; margin-left: 5px;" @bind="CurrentEmailRecipient" class="@EmailInvalidAlert rounded" />
+                </div>
+                <div class="dialog-email-send-button">
+                    @if (EmailSending)
                     {
                         <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
                     }
-                    else if (EmailComplete)
+                    else if (EmailSent)
                     {
-                        <i class="fas fa-check edit-icon" style="font-size: 20px;"></i>
+                        <i class="fas fa-check email-sent-icon" style="font-size: 20px;"></i>
                     }
                     else
                     {
-                        <i class="fas fa-paper-plane edit-icon" style="font-size: 20px;"></i>
+                        <span @onclick="SendEmail">
+                            <i class="fas fa-paper-plane email-icon" style="font-size: 20px;"></i>
+                        </span>
                     }
-                </MudButton>
+                </div>
             </div>
             <div class="screening-dialog-textarea">
                 <textarea class="phase-manager-textarea" @bind="CurrentEmailTemplate"></textarea>
@@ -772,33 +983,40 @@
         </div>
     </MatDialog>
 
-    <MatDialog @bind-IsOpen="@ReasonDialogIsOpen" Style="left: 30%;">
-        <div class="mydialog" style="height: 170px;">
-            <div class="mydialog-title">
-                <b>Reasoning</b>
+    <MatDialog @bind-IsOpen="@SuccessfulDialog">
+        <div class="mydialog-final">
+            <div class="mydialog-final-title">
+                <p>Are you sure you want to hire?</p>
             </div>
-            <div class="screening-dialog-body">
+            <div class="mydialog-final-body">
+
+            </div>
+            <div class="mydialog-final-button">
+                <button class="btn" style="background-color: white; border: 1px solid black" @onclick="() => MovePhase(36)">Confirm</button>
+                <button class="btn" style="background-color: white; border: 1px solid black" @onclick="() => { SuccessfulDialog = false; }">Cancel</button>
+            </div>
+        </div>
+    </MatDialog>
+
+    <MatDialog @bind-IsOpen="@UnsuccessfulDialog">
+        <div class="mydialog-final">
+            <div class="mydialog-final-title">
+                <p>Please select why the user was unsuccessful:</p>
+            </div>
+            <div class="mydialog-final-body">
                 <select @bind="tempReasonId" class="form-select" style="width: 80%;">
                     @foreach (var reason in Unsuccessful)
                     {
-                        <option value="@reason.Id">@reason.Reason</option>
+                        <option value="@reason.Id" selected>@reason.Reason</option>
                     }
                 </select>
             </div>
-            <div class="d-flex justify-content-center align-items-center">
-                <button class="btn" style="background-color: white; border: 1px solid black" @onclick="Reject">Submit</button>
+            <div class="mydialog-final-button">
+                <button class="btn" style="background-color: white; border: 1px solid black" @onclick="Reject">Confirm</button>
+                <button class="btn" style="background-color: white; border: 1px solid black" @onclick="() => { UnsuccessfulDialog = false; }">Cancel</button>
             </div>
         </div>
     </MatDialog>
-
-    <MatDialog @bind-IsOpen="@LoadingDialog">
-        <div class="loading-dialog">
-            <MudText Style="font-size: 15px; font-family: opensans-bold;">Loading data</MudText>
-            <MudProgressCircular Class="ms-n1" Size="Size.Medium" Indeterminate="true" />
-        </div>
-    </MatDialog>
-
-
 
 </div>
 
@@ -817,23 +1035,25 @@
     public string CurrentEmailRecipient = "";
     public string CurrentEmailTemplate = "";
 
-    string EmailAlert = "";
+    //invalid email styling
+    string EmailInvalidAlert = "";
+    bool EmailInvalid = true;
 
+    //Email button
+    bool EmailSending = false;
     bool EmailSent = false;
-    bool EmailComplete = false;
 
+    //try catch
+    bool LoadingError = false;
+
+    //which phases the page will display
     List<int> TotalPhases = new List<int>();
 
     //tables we need
     List<ApplicationPhase> AppPhases = new List<ApplicationPhase>();
-    List<ApplicationPhasesHelper> CurrentApplicantPhases = new List<ApplicationPhasesHelper>();
     List<AppUser> tempAppUsers = new List<AppUser>();
     List<UnsuccessfulReason> Unsuccessful = new List<UnsuccessfulReason>();
     List<RejectedCandidate> RejectedUsers = new List<RejectedCandidate>();
-
-    //tables to be filtered
-    List<Application> AllApplications = new List<Application>();
-    List<JobApplicationPhase> AllJobApplicationPhases = new List<JobApplicationPhase>();
 
     //filtered output
     List<Application> CurrentApplications;
@@ -853,13 +1073,20 @@
     bool ReferenceCheckDialogIsOpen = false;
     bool OfferDialogIsOpen = false;
     bool HiredDialogIsOpen = false;
-    bool ReasonDialogIsOpen = false;
+    bool SuccessfulDialog = false;
+    bool UnsuccessfulDialog = false;
     bool LoadingDialog = true;
 
     //css borders
-    string DropClass = "";
+    string AppliedDrop = "";
+    string ScreeningDrop = "";
+    string AssessmentDrop = "";
+    string InterviewDrop = "";
+    string ReferenceDrop = "";
+    string OfferDrop = "";
+    string FinalDrop = "";
 
-    //dialog phases
+    //dialog subphases
     string ScreeningOne = "";
     string ScreeningTwo = "";
     string ScreeningThree = "";
@@ -879,17 +1106,18 @@
 
 
 
+
     protected override async Task OnParametersSetAsync()
     {
         CurrentJob = await httpClient.GetFromJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/job/{CurrentJobId}");
+
+        CurrentApplications = await httpClient.GetFromJsonAsync<List<Application>>($"https://xebecapi.azurewebsites.net/api/application/job/{CurrentJobId}");
+        JobPhases = await httpClient.GetFromJsonAsync<List<JobApplicationPhase>>($"https://xebecapi.azurewebsites.net/api/jobapplicationphase/job/{CurrentJobId}");
 
         CurrentJobTitle = CurrentJob.Title;
 
         if(CurrentJobId!=0)
         {
-            CurrentApplications = AllApplications.Where(x => x.JobId == CurrentJobId).ToList();
-            JobPhases = AllJobApplicationPhases.Where(x => x.JobId == CurrentJobId).ToList();
-
             TotalPhases.Clear();
             TotalPhases.Add(1);
             TotalPhases.Add(13);
@@ -941,15 +1169,17 @@
 
     protected override async Task OnInitializedAsync()
     {
-        AllApplications = await httpClient.GetFromJsonAsync<List<Application>>("https://xebecapi.azurewebsites.net/api/application");
-        AllJobApplicationPhases = await httpClient.GetFromJsonAsync<List<JobApplicationPhase>>("https://xebecapi.azurewebsites.net/api/jobapplicationphase");
-
-        tempAppUsers = await httpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
-        CurrentApplicantPhases = await httpClient.GetFromJsonAsync<List<ApplicationPhasesHelper>>("https://xebecapi.azurewebsites.net/api/applicationphasehelper");
-        AppPhases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
-        Unsuccessful = await httpClient.GetFromJsonAsync<List<UnsuccessfulReason>>("https://xebecapi.azurewebsites.net/api/unsuccessfulreason");
-        RejectedUsers = await httpClient.GetFromJsonAsync<List<RejectedCandidate>>("https://xebecapi.azurewebsites.net/api/rejectedcandidate");
-
+        try
+        {
+            tempAppUsers = await httpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
+            AppPhases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
+            Unsuccessful = await httpClient.GetFromJsonAsync<List<UnsuccessfulReason>>("https://xebecapi.azurewebsites.net/api/unsuccessfulreason");
+            RejectedUsers = await httpClient.GetFromJsonAsync<List<RejectedCandidate>>("https://xebecapi.azurewebsites.net/api/rejectedcandidate");
+        }
+        catch
+        {
+            LoadingError = true;
+        }
     }
 
 
@@ -957,17 +1187,73 @@
 
     private void HandleDragEnter(int applicationPhase)
     {
-        DropClass = "can-drop";
+        if(applicationPhase==1)
+        {
+            AppliedDrop = "can-drop";
+        }
+        if (applicationPhase == 10)
+        {
+            ScreeningDrop = "can-drop";
+        }
+        if (applicationPhase == 27)
+        {
+            AssessmentDrop = "can-drop";
+        }
+        if (applicationPhase == 11)
+        {
+            InterviewDrop = "can-drop";
+        }
+        if (applicationPhase == 32)
+        {
+            ReferenceDrop = "can-drop";
+        }
+        if (applicationPhase == 12)
+        {
+            OfferDrop = "can-drop";
+        }
+        if (applicationPhase == 13)
+        {
+            FinalDrop = "can-drop";
+        }
     }
 
-    private void HandleDragLeave()
+    private void HandleDragLeave(int applicationPhase)
     {
-        //AppliedDropClass = "";
+        AppliedDrop = "";
+        ScreeningDrop = "";
+        AssessmentDrop = "";
+        InterviewDrop = "";
+        ReferenceDrop = "";
+        OfferDrop = "";
+        FinalDrop = "";
     }
 
     private async Task HandleDrop(int phase)
     {
-        DropClass = "";
+        ScreeningOne = "";
+        ScreeningTwo = "";
+        ScreeningThree = "";
+
+        InterviewOne = "";
+        InterviewTwo = "";
+        InterviewThree = "";
+        InterviewFour = "";
+        InterviewFive = "";
+
+        OfferOne = "";
+        OfferTwo = "";
+        OfferThree = "";
+
+        Hired = "";
+        NotHired = "";
+
+        AppliedDrop = "";
+        ScreeningDrop = "";
+        AssessmentDrop = "";
+        InterviewDrop = "";
+        ReferenceDrop = "";
+        OfferDrop = "";
+        FinalDrop = "";
 
         CurrentEmailTemplate = "";
         CurrentEmailRecipient = CurrentItem.Email;
@@ -1043,9 +1329,10 @@
         CurrentItem = item;
         CurrentEmailRecipient = CurrentItem.Email;
 
-        EmailComplete = false;
+        EmailSent = false;
+        EmailInvalid = true;
 
-        EmailAlert = "";
+        EmailInvalidAlert = "";
 
         ScreeningOne = "";
         ScreeningTwo = "";
@@ -1261,7 +1548,7 @@
 
         CurrentItem.ApplicationPhaseId = i;
 
-        EmailAlert = "";
+        EmailInvalidAlert = "";
 
         if (task != null)
         {
@@ -1284,13 +1571,20 @@
 
     }
 
-    public async Task Deny()
+    public void Confirm(bool Hired)
     {
         CurrentEmailTemplate = "";
 
         tempReasonId = -1;
 
-        ReasonDialogIsOpen = true;
+        if(Hired)
+        {
+            SuccessfulDialog = true;
+        }
+        else
+        {
+            UnsuccessfulDialog = true;
+        }
     }
 
     public async Task Reject()
@@ -1310,7 +1604,8 @@
             await MovePhase(36);
         }
 
-        ReasonDialogIsOpen = false;
+        SuccessfulDialog = false;
+        UnsuccessfulDialog = false;
     }
 
     public string ConvertEmail(string email)
@@ -1337,9 +1632,10 @@
     public async Task SendEmail()
     {
 
-        if(IsValidEmail(CurrentEmailRecipient) && CurrentEmailTemplate!="")
+        if(IsValidEmail(CurrentEmailRecipient))
         {
-            EmailAlert = "";
+            EmailInvalidAlert = "";
+            EmailInvalid = true;
 
             EmailModel CurrentEmail = new EmailModel();
 
@@ -1349,16 +1645,17 @@
             CurrentEmail.PlainText = CurrentEmailTemplate;
             CurrentEmail.Htmlcontent = "";
 
-            EmailSent = true;
+            EmailSending = true;
 
             await httpClient.PostAsJsonAsync<EmailModel>("https://mailingservice2022.azurewebsites.net/api/email/sendgrid", CurrentEmail);
 
-            EmailSent = false;
-            EmailComplete = true;
+            EmailSending = false;
+            EmailSent = true;
         }
         else
         {
-            EmailAlert = "invalid-email";
+            EmailInvalid = false;
+            EmailInvalidAlert = "invalid-email";
         }
     }
 
