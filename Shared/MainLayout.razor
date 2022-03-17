@@ -7,7 +7,8 @@
 @inject NavigationManager navmanager
 @using XebecPortal.UI.Shared.Home.Models
 @inject UserState state
-
+@using Microsoft.Extensions.Logging
+@inject ILogger<MainLayout> Logger
 <style>
 
     .page {
@@ -61,8 +62,9 @@
     .mainlayout-xebec-heading {
         height: 10vh;
         width: 90px;
-        margin-left:15px;
+        margin-left: 15px;
     }
+
     .mainlayout-xebec-logo {
         height: 10vh;
         min-width: 100%;
@@ -70,6 +72,7 @@
         background-size: cover;
         background-position: center;
     }
+
     .icon-user {
         width: 50px;
         height: 5vh;
@@ -169,13 +172,19 @@
             text-align: center;
         }
 
-    .offcanvas-header{
+    .offcanvas-header {
         background-color: #00bcae;
         margin-bottom: 0;
-        padding-bottom:0;
+        padding-bottom: 0;
         height: 5vh;
     }
-   
+    .offcanvas-header-alert {
+        /*background-color: #00bcae;*/
+        margin-bottom: 0;
+        padding-bottom: 0;
+        height: 5vh;
+    }
+
     .offcanvas-body-main {
         overflow-y: hidden;
     }
@@ -198,8 +207,11 @@
     .profile-image-div-cover {
         height: 18vh;
         width: 50%;
-        margin:auto;
-        background-color: none;
+        margin: auto;
+        background: url(@personalInfo.ImageUrl);        
+        background-size: cover;
+        /*background-repeat: no-repeat;*
+        /*background-color: none;*/
         border: 0.4em rgba(0,0,0,0.2) solid;
         border-radius: 100%;
     }
@@ -212,7 +224,6 @@
         margin-right: 5%;
         margin-left: 5%;
         border-radius: 100%;
-       
     }
 
     profile-image-div img {
@@ -222,17 +233,19 @@
         min-width: 100%;
     }
 
-    .mainlayout-profile-initials{
-        height: 16vh;       
+    .mainlayout-profile-initials {
+        height: 16vh;
         text-align: center;
         line-height: 16vh;
     }
+
     .mainlayout-profile-initials-text {
         font-family: opensans-bold;
         background-color: #d35bc9;
         font-size: 2em;
         font-weight: 900;
     }
+
     .profile-name-div {
         height: 3vh;
         width: 100%;
@@ -270,18 +283,21 @@
         margin-top: 0;
         padding-top: 0;
     }
-    .configure-alerts-heading{
+
+    .configure-alerts-heading {
         font-family: opensans-condensed-light;
         font-weight: 800;
         font-size: 2em;
         color: rgba(0, 188, 174,1);
+        /*color: #FFFFFF;*/
         text-align: center;
-        margin-top: 3vh;
+        /*margin-top: 3vh;*/
         margin-bottom: 3vh;
     }
+
     .mainlayout-mudselect {
         cursor: pointer;
-        background-color: white; 
+        background-color: white;
         border: 0.05em solid lightgrey;
         height: 9vh;
         font-size: 1.5em;
@@ -290,12 +306,15 @@
         color: black;
         padding-bottom: 3vh;
         padding-left: 4vh;
+        padding-right: 4vh;
     }
+
         .mainlayout-mudselect:hover {
             border-radius: 1em;
             border-color: white;
             box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
         }
+
     .configure-alerts-button {
         cursor: pointer;
         border-radius: 2em;
@@ -311,7 +330,8 @@
         text-align: center;
         line-height: 5vh;
     }
-    .add-profile-image{
+
+    .add-profile-image {
         height: 10px;
         width: 10px;
         background-color: black;
@@ -328,6 +348,14 @@
         text-align: center;
     }
 
+    .user-initial {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        font-family: opensans-condensed-bold;
+        font-size: 6em;
+        font-weight: 800;
+    }
 
     .to-top {
         color: #00bcae;
@@ -365,6 +393,31 @@
                 transform: rotate(360deg);
             }
 
+    .index-form-button {
+        background-color: rgba(0, 188, 174,1);
+        color: white;
+        width: 50%;
+        height: 5vh;
+        border: none;
+        text-align: center;
+        font-size: 1em;
+        font-weight: 700;
+        border: none;
+        margin-left: 25%;
+        border-radius: 1em;
+    }
+        .index-form-button:hover {
+            color: white;
+            width: 50%;
+            height: 5vh;
+            border: none;
+            text-align: center;
+            background-color: #d35bc9;
+            font-size: 1em;
+            font-weight: 700;
+            border: none;
+            margin-left: 25%;
+        }
 </style>
 
 @if (state.Role.Equals("Candidate"))
@@ -391,12 +444,17 @@
             </div>
             <div class="mainlayout-profile">
                 <div class="profile-div">
-                    <div class="profile-image-div-cover">
+                    <div class="profile-image-div-cover" style="background: src(@state.Avator)">
+                        @*<img src="@personalInfo.ImageUrl" style="height: 18vh; width: 50%;" />*@
+                        @*<div class="user-initial" >@state.Avator</div>*@
                         @*State.profile.Avatar.Avatar*@
-                        <div class="upload-profile-btn">
-                            <div class="to-top">
-                            </div>    
-                        </div>
+                        <InputFile OnChange="@UploadingProfilePic" />
+
+                        @*<div class="upload-profile-btn">
+              <div class="to-top">
+              </div>
+        </div>*@
+
                     </div>
                     <div class="profile-name-div">
                         <h2 class="profile-name">@state.Name &nbsp @state.Surname</h2>
@@ -418,104 +476,107 @@
                 </div>
             </div>
             <div class="infodiv">
-                <h2 class="profile-logout" @onclick="Logout">Sign Out</h2>
+                <!--class="profile-logout"-->
+                <input type="button" class="index-form-button" @onclick="Logout" value="Sign Out" />
+                <!--<h2 class="index-form-button" @onclick="Logout">Sign Out</h2>-->
             </div>
         </div>
 
         <!--Alert Navigation-->
         <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showApplicantNavAlert" aria-labelledby="offcanvasRightLabel">
-            <div class="offcanvas-header offcanvas-header-color1">
+            <div class="offcanvas-header-alert offcanvas-header-color1">
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
-            <div class="offcanvas-body offcanvas-body-main">
-                <div class="row" style="margin-left: auto !important; margin-right: auto !important">
-                    <div class="col-12">
-                        <h3 class="configure-alerts-heading">Configure Alerts</h3>
-                    </div>
-                    <div class="col-12 d-grid gap-4">
-                        <div class="col-12">
-                            <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" Label="Filter by Department" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)">
-                                @if (jobs?.Any() == true)
-                                {
-                                    @foreach (var item in jobs.Select(x => x.Department).Distinct())
+            <div class="align-items-center">
+                <p class="configure-alerts-heading">Configure Alerts</p>
+            </div>
+                <div class="offcanvas-body offcanvas-body-main">
+                    <div class="row" style="margin-left: auto !important; margin-right: auto !important">
+                        
+                        <div class="col-12 d-grid gap-4">
+                            <div class="col-12">
+                                <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" Label="Filter by Department" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)">
+                                    @if (jobs?.Any() == true)
                                     {
-                                        <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                        @foreach (var item in jobs.Select(x => x.Department).Distinct())
+                                        {
+                                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                        }
                                     }
-                                }
-                            </MudSelect>
-                        </div>
-                        <div class="col-12">
-                            <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Jobs" MultiSelection="true" Label="Filter by Job Title" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextJob)">
-                                @if (jobs?.Any() == true)
-                                {
-                                    @foreach (var item in jobs.Select(x => x.Title).Distinct())
+                                </MudSelect>
+                            </div>
+                            <div class="col-12">
+                                <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Jobs" MultiSelection="true" Label="Filter by Job Title" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextJob)">
+                                    @if (jobs?.Any() == true)
                                     {
-                                        <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                        @foreach (var item in jobs.Select(x => x.Title).Distinct())
+                                        {
+                                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                        }
                                     }
-                                }
-                            </MudSelect>
-                        </div>
-                        <div class="col-12">
-                            <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Companies" MultiSelection="true" Label="Filter by Company" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextCompany)">
-                                @if (jobs?.Any() == true)
-                                {
-                                    @foreach (var item in jobs.Select(x => x.Company).Distinct())
+                                </MudSelect>
+                            </div>
+                            <div class="col-12">
+                                <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Companies" MultiSelection="true" Label="Filter by Company" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextCompany)">
+                                    @if (jobs?.Any() == true)
                                     {
-                                        <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                        @foreach (var item in jobs.Select(x => x.Company).Distinct())
+                                        {
+                                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                        }
                                     }
-                                }
-                            </MudSelect>
-                        </div>
-                        <div class="col-12">
-                            <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer; font-size: 2em;" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" Label="Filter by Location" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextLocation)">
-                                @if (jobs?.Any() == true)
-                                {
-                                    @foreach (var item in jobs.Select(x => x.Location).Distinct())
+                                </MudSelect>
+                            </div>
+                            <div class="col-12">
+                                <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer; font-size: 2em;" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" Label="Filter by Location" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextLocation)">
+                                    @if (jobs?.Any() == true)
                                     {
-                                        <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                        @foreach (var item in jobs.Select(x => x.Location).Distinct())
+                                        {
+                                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                        }
                                     }
-                                }
-                            </MudSelect>
-                        </div>
-                        <div class="col-12">
-                            <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Types" MultiSelection="true" Label="Filter by Job Type" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextType)">
-                                @if (jobTypes?.Any() == true)
-                                {
-                                    @foreach (var item in jobTypes.Select(x => x.Type).Distinct())
+                                </MudSelect>
+                            </div>
+                            <div class="col-12">
+                                <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Types" MultiSelection="true" Label="Filter by Job Type" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextType)">
+                                    @if (jobTypes?.Any() == true)
                                     {
-                                        <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                        @foreach (var item in jobTypes.Select(x => x.Type).Distinct())
+                                        {
+                                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                        }
                                     }
-                                }
-                            </MudSelect>
-                        </div>
-                        <div class="col-12 d-flex justify-content-center">
-                            <input type="button" class="configure-alerts-button" value="Configure" />
+                                </MudSelect>
+                            </div>
+                            <div class="col-12 d-flex justify-content-center">
+                                <input type="button" class="configure-alerts-button" value="Configure" />
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="main">
-            <div class="main-component">
-                @if (applicantApplicationProfile)
-                {
-                    <XebecPortal.UI.Pages.Applicant.ApplicationProfile />
-                }
-                @if (applicantJobPortal)
-                {
-                    <XebecPortal.UI.Pages.Applicant.JobPortal />
-                }
-                @if (applicantMyJobs)
-                {
-                    <XebecPortal.UI.Pages.Applicant.MyJobs />
-                }
+            <div class="main">
+                <div class="main-component">
+                    @if (applicantApplicationProfile)
+                    {
+                        <XebecPortal.UI.Pages.Applicant.ApplicationProfile />
+                    }
+                    @if (applicantJobPortal)
+                    {
+                        <XebecPortal.UI.Pages.Applicant.JobPortal />
+                    }
+                    @if (applicantMyJobs)
+                    {
+                        <XebecPortal.UI.Pages.Applicant.MyJobs />
+                    }
+                </div>
             </div>
         </div>
-    </div>
 }
 
-@if (!state.Role.Equals("Candidate")) 
+@if (!state.Role.Equals("Candidate"))
 {
     <div class="page">
         <div class="header">
@@ -537,10 +598,8 @@
             <div class="mainlayout-profile">
                 <div class="profile-div">
                     <div class="profile-image-div-cover">
-                        <div class="upload-profile-btn">
-                            <div class="to-top">
-                            </div>
-                        </div>
+                        <!--Profile images for HR -->
+                        <div class="user-initial">@state.Avator</div>
                     </div>
                     <div class="profile-name-div">
                         <h2 class="profile-name">@state.Name &nbsp @state.Surname</h2>
@@ -562,7 +621,8 @@
                 </div>
             </div>
             <div class="infodiv">
-                <h2 class="profile-logout" @onclick="Logout">Sign Out</h2>
+                <!--class="profile-logout"-->
+                <input type="button" class="index-form-button" @onclick="Logout" value="Sign Out" />
             </div>
         </div>
         <div class="main">

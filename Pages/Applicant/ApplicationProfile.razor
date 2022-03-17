@@ -11,6 +11,8 @@
         right: 50%;
         transform: translate(50%);
 
+        background-color: #FFFFFF !important;
+
         width: auto !important;
         height: auto !important;
         top: auto !important;
@@ -50,6 +52,7 @@
         height: 5vh;
         margin-top: 2vh;
         width: auto;
+        margin-bottom: 1vh;
     }
 
     .drag-drop-zone {
@@ -124,9 +127,10 @@
     }
 
     .nav-item > .active {
-        background: #ffffff !important;
+        background: #d35bc9 !important;
         font-weight: 800;
         font-size: 2vh;
+        color: #ffffff;
     }
 
     .nav-item > .nav-link1 {
@@ -454,10 +458,10 @@
 
     .position-white {
         position: relative;
-        height: 47vh;
+        height: 60vh;
         width: 75%;
         left: 32%;
-        top: 10%;
+        top: 5%;
     }
 
     .position-history-card {
@@ -503,39 +507,47 @@
         width: 50%;
         top: 60%;
     }
+
+    .nav-tab{
+        position: relative;
+        width: 60vw;
+    }
+
+    .child {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+    }
+    .progress {
+        /* Old browsers */
+        background: -moz-linear-gradient(to right, #49E5EF 0%, #2294E3 20%, #d35bc9 45%, #00bcae 100%);
+        /* FF3.6-15 */
+        background: -webkit-linear-gradient(to right, #49E5EF 0%, #2294E3 20%, #d35bc9 45%, #00bcae 100%);
+        /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to right, #49E5EF 0%, #2294E3 20%, #d35bc9 45%, #00bcae 100%);
+    }
+    .shrinker {
+        background-color: white;
+        top: 0;
+        right: 0;
+        width: calc(100% - @completionVar);
+    }
+    .nav-link{
+        background: white !important;
     }
 
 </style>
-
-<div class="space-below-nav-bar-for-progress-bar">
-    <div class="progress-layout-side align-middle">
-        <div class="progress-bar-indicator" style="width: calc(@completionVar);"></div>
-        <div class="progress-text-layout-side align-middle" style="left: 100%;">100%</div>
-        <div class="progress-text-layout-side align-middle" style="left: 75%;">75%</div>
-        <div class="progress-text-layout-side justify-content-center" style="left: 50%; color: #d35bc9;">50%</div>
-        <div class="progress-text-layout-side justify-content-center" style="left: 25%; color: #2294E3; ">25% </div>
-        <div class="progress-text-layout-side align-middle" style="left: 1%; color: #49E5EF;">0%</div>
-    </div>
-
-</div>
-
 <div class="h-95 container-fluid d-flex justify-content-center align-items-center overflow-hidden">
     <div class="col-1"></div>
-    <div class="row col-10 d-flex justify-content-center row-style">
+    <div class="row d-flex justify-content-center row-style">
 
         <!--Navigation Tab-->
-        <div class="col-12" style="width:100%;">
-            <!--
-    <div class="progress-layout-side-test align-middle">
-        <div class="progress-bar-indicator" style="width: calc(@completionVar);"></div>
-        <div class="progress-text-layout-side align-middle" style="left: 100%;">100%</div>
-        <div class="progress-text-layout-side align-middle" style="left: 75%;">75%</div>
-        <div class="progress-text-layout-side justify-content-center" style="left: 50%; color: #d35bc9;">50%</div>
-        <div class="progress-text-layout-side justify-content-center" style="left: 25%; color: #2294E3; ">25% </div>
-        <div class="progress-text-layout-side align-middle" style="left: 1%; color: #49E5EF;">0%</div>
-    </div>
-        -->
+        <div class="col-12 nav-tab" style="width: 100vw">
+            
+
             <ul class="nav nav1 nav-tabs" role="tablist">
+                <div class="child progress"></div>
+                <div class="child shrinker timelapse"></div>
                 <!--Container-->
                 <li class="nav-item p-1">
                     <a id="personal-tab" class="nav-link nav-link1 active" data-bs-toggle="tab" href="#personal-information" @onclick="progressCheck">Personal Information</a>
@@ -556,15 +568,16 @@
         </div>
 
         <!--Content Panel-->
-        <div class="col-12 d-flex justify-content-center align-items-start ">
+        <div class="col-12 d-flex justify-content-center align-items-start " >
             <div class="tab-content">
                 <br />
                 <!--Personal Information-->
                 <div id="personal-information" class="container tab-pane active">
-                    <div class="d-flex justify-content-center">
-                        <EditForm Model="@personalInformation" OnValidSubmit="addWorkHistoryTest" style="width: 60%">
-                            <div class="row">
+                    <div class="d-flex justify-content-center" >
+                        <EditForm Model="@personalInformation" OnValidSubmit="addWorkHistoryTest" style="width: 60%;">
+                            <div class="row" style="margin-top: 50px;">
                                 <div class="col-12 shadow-sm bg-body rounded-edges white-back">
+                                    <div class="education-header">Personal Information</div>
                                     <div class="row p-3">
                                         <div class="col-12">
                                             <div class="rounded-edges">
@@ -598,10 +611,10 @@
 
                                             <MudGrid Justify="Justify.Center" Spacing="4">
                                                 <MudItem>
-                                                    <MudButton OnClick="Upload" Disabled="@(!(fileNames == null))" Style="color: white; background-color: #00BCAE; font-size: small" Variant="Variant.Filled">Upload</MudButton>
+                                                    <MudButton OnClick="Upload" Disabled="@(!(fileNames == null))" Style="color: white; background-color: #00BCAE; font-size: small; margin-top: 5px;" Variant="Variant.Filled">Upload</MudButton>
                                                 </MudItem>
                                                 <MudItem>
-                                                    <MudButton OnClick="@ResetFileNames" Disabled="@(fileNames == null)" Style="color: white; background-color: #00BCAE; font-size: small" Variant="Variant.Filled">Clear</MudButton>
+                                                    <MudButton OnClick="@ResetFileNames" Disabled="@(fileNames == null)" Style="color: white; background-color: #00BCAE; font-size: small; margin-top: 5px;" Variant="Variant.Filled">Clear</MudButton>
                                                 </MudItem>
                                             </MudGrid>
                                         </div>
@@ -629,8 +642,11 @@
                                             <label class="form-label" for="ethnicity">Ethnicity</label>
                                             <select id="ethnicity" class="form-select shadow bg-body rounded" @bind="additionalInformation.Ethnicity" @onfocusout="completion">
                                                 <!--@onfocusout="completion" -->
-                                                <option value="" disabled selected>Select Ethnicity</option>
+                                                <option value="" disabled selected>Ethnicity</option>
                                                 <option value="African">African</option>
+                                                <option value="Asain">Asain</option>
+                                                <option value="Coloured">Coloured</option>
+                                                <option value="Indian">Indian</option>
                                                 <option value="White">White</option>
                                             </select>
                                         </div>
@@ -794,7 +810,7 @@
                                                         {
                                                             <button class="btn formButton" type="submit" value="Add">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
                                                         }
-                                                        <!--<button class="btn formButton" type="reset" @onclick="() => AddEducationTakeTwo(education)" value="Add">Add</button> -->
+                                                        
 
                                                     </div>
                                                 </div>
@@ -846,7 +862,7 @@
                             <div class="col-12">
                                 <div class="row">
                                     <div class="col-9 p-5">
-                                        <div class="row shadow-sm bg-body rounded-edges white-back position-white">
+                                        <div class="row shadow-sm bg-body rounded-edges white-back position-white" style="height: auto;">
                                             <div class="education-header">References</div>
                                             <div class="col-12" style="height: 35vh">
 
@@ -934,10 +950,11 @@
                 </div>
 
                 <!--Online Presence-->
-                <div id="online-profile" class="container tab-pane" style="height: 60vh;">
-                    <form class="col-12 d-flex justify-content-center align-items-start">
+                <div id="online-profile" class="container tab-pane" style="height: 60vh; width: 120vh; margin-top: 50px;">
+                    <form class="col-12 d-flex justify-content-center align-items-start">                        
                         <div class="row col-9">
                             <div class="col-12 shadow-sm bg-body rounded-edges align-self-start white-back ">
+                                <div class="education-header">Online Presence</div>
                                 <div class="row p-3">
                                     <div class="col-6">
                                         <div>
