@@ -12,11 +12,6 @@
         margin-bottom: 15px;
     }
 
-    ::-webkit-scrollbar-thumb {
-        background: #00bcae !important;
-        border-radius: 5px !important;
-    }
-
     .table-applicants-container {
         display: flex;
         align-items: center;
@@ -86,7 +81,7 @@
 
     .modal-frame {
         width: 35%;
-        height: 45%;
+        height: 48%;
         border-radius: 15px;
         background: white;
         position: relative;
@@ -99,12 +94,14 @@
         }
 
     .close-modal {
-        font-size: 20px;
+        font-size: 30px;
         font-weight: bold;
         color: white;
         text-align: right;
         padding-bottom: 10px;
-        padding-right: 15px;
+        padding-right: 30px;
+        width: 20px;
+        overflow: hidden !important;
     }
 
         .close-modal:hover {
@@ -150,6 +147,7 @@
         height: 38vh;
         overflow-y: auto;
         overflow-x: hidden;
+        padding-right: 10px;
     }
 
     .show-more-td {
@@ -172,19 +170,34 @@
         margin-left: 35px;
     }
 
+    .work-references-card {
+        height: 10vh !important;
+        width: 65vh;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 0 5px 5px #dddddd;
+        margin-top: 10px;
+        margin-left: 35px;
+        overflow: hidden;
+    }
+
     .work-history-company-name {
         grid-area: companyName;
+        font-weight: bold;
         text-align: left;
     }
 
     .work-history-job-title {
         grid-area: jobTitle;
         text-align: left;
+        font-weight: 600;
+        color: #414141
     }
 
     .work-history-date {
         grid-area: date;
         text-align: right;
+        color: #d35bc9;
     }
 
     .work-history-description {
@@ -193,6 +206,7 @@
 
     .grid-container {
         display: grid;
+        height: 100%;
         grid-template-areas:
             'companyName companyName companyName companyName'
             'jobTitle jobTitle jobTitle jobTitle'
@@ -201,8 +215,9 @@
         padding: 10px;
     }
 
-    .ref-name{
+    .ref-name {
         grid-area: name;
+        font-weight: bold;
     }
 
     .ref-lastname {
@@ -215,20 +230,20 @@
 
     .ref-email {
         grid-area: email;
+        text-align: right;
     }
 
     .ref-relationship {
         grid-area: relationship;
+        text-align: right;
+        font-weight: bold;
     }
 
     .grid-container-references {
         display: grid;
         grid-template-areas:
-            'name name name name'
-            'lastname lastname lastname lastname'
-            'phone phone phone phone'
-            'email email email email'
-            'relationship relationship relationship relationship';
+            'name name relationship relationship'
+            'phone phone email email';
         padding: 10px;
     }
 
@@ -239,7 +254,6 @@
         font-weight: bold;
         border-color: #2f2f2f;
     }
-
 </style>
 
 <div class="page-top">
@@ -254,7 +268,6 @@
     @if (candidates != null && candidates.Count != 0)
     {
         FilterCandidatesByJob();
-
         <table>
             <thead>
                 <tr>
@@ -290,7 +303,7 @@
                     @if (currentUser != null)
                     {
                         ApplicationModel currentApplication = applications.Where(x => x.AppUserId == currentUser.id).FirstOrDefault();
-                        
+
 
                         <tr>
                             <td style="font-weight: 900; font-family: opensans-extra-bold; font-size: 1.2em">
@@ -311,7 +324,7 @@
                             }
 
 
-                        <td style="font-weight: 400;">@FindCurrentPhase(currentUser.id, JobId)</td>
+                            <td style="font-weight: 400;">@FindCurrentPhase(currentUser.id, JobId)</td>
                             <td style="font-weight: 400; font-family: opensans-condensed-bold; font-size: 1em; color: #d35bc9">@($"{currentApplication.TimeApplied:dd MMM yyyy}")</td>
                             <td class="show-more-td" @onclick="() => togglePersonalInformations(candidate)">...</td>
                             <td class="show-more-td" @onclick="() => toggleWorkHistory(candidate)">...</td>
@@ -453,8 +466,6 @@
 <!--Work History Modal-->
 @if (showWorkHistory)
 {
-
-
     @if (workHistories != null && selectedCandidate != null)
     {
         @if (workHistories.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
@@ -480,8 +491,7 @@
         }
         else
         {
-            WorkHistory workHistory = workHistories.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
-
+            List<WorkHistory> workHistory = workHistories.Where(x => x.AppUserId == selectedCandidate.AppUserId).ToList();
 
             <div class="dimmed">
                 <div class="modal-frame">
@@ -494,12 +504,15 @@
                             <tr></tr>
                         </thead>
                         <tbody class="work-history-card" style="padding-left: 10px">
-                            <tr class="grid-container">
-                                <td class="work-history-company-name">@workHistory.CompanyName</td>
-                                <td class="work-history-job-title">@workHistory.JobTitle</td>
-                                <td class="work-history-description">@workHistory.Description</td>
-                                <td class="work-history-date">@($"{workHistory.StartDate:yyyy MMMM} - {workHistory.EndDate:yyyy MMMM}")</td>
-                            </tr>
+                            @foreach (var item in workHistory)
+                            {
+                                <tr class="grid-container">
+                                    <td class="work-history-company-name">@item.CompanyName</td>
+                                    <td class="work-history-job-title">@item.JobTitle</td>
+                                    <td class="work-history-description">@item.Description</td>
+                                    <td class="work-history-date">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -510,9 +523,7 @@
     {
         <p>Getting Work history...</p>
     }
-
 }
-
 
 <!--Education modal-->
 
@@ -543,9 +554,7 @@
         }
         else
         {
-            Education education = educations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
-
-
+            List<Education> education = educations.Where(x => x.AppUserId == selectedCandidate.AppUserId).ToList();
 
             <div class="dimmed">
                 <div class="modal-frame">
@@ -558,12 +567,15 @@
                             <tr></tr>
                         </thead>
                         <tbody class="work-history-card" style="padding-left: 10px">
-                            <tr class="grid-container">
-                                <td class="work-history-company-name">@education.Qualification</td>
-                                <td class="work-history-job-title"></td>
-                                <td class="work-history-description">@education.Insitution</td>
-                                <td class="work-history-date">@($"{education.StartDate:yyyy MMMM} - {education.EndDate:yyyy MMMM}")</td>
-                            </tr>
+                            @foreach (var item in education)
+                            {
+                                <tr class="grid-container">
+                                    <td class="work-history-company-name">@item.Qualification</td>
+                                    <td class="work-history-job-title"></td>
+                                    <td class="work-history-description">@item.Insitution</td>
+                                    <td class="work-history-date">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -704,8 +716,7 @@
         }
         else
         {
-            References modalReference = references.Where(x => x.appUserId == selectedCandidate.AppUserId).FirstOrDefault();
-
+            List<References> modalReference = references.Where(x => x.appUserId == selectedCandidate.AppUserId).ToList();
 
             <div class="dimmed">
                 <div class="modal-frame">
@@ -717,14 +728,16 @@
                             </tr>
                             <tr></tr>
                         </thead>
-                        <tbody class="work-history-card" style="padding-left: 10px">
-                            <tr class="grid-container-references">
-                                <td class="ref-name">@modalReference.refFirstName</td>
-                                <td class="ref-lastname">@modalReference.refLastName</td>
-                                <td class="ref-phone">@modalReference.refPhone</td>
-                                <td class="ref-email">@modalReference.refEmail</td>
-                                <td class="ref-relationship">@modalReference.relationship</td>
-                            </tr>
+                        <tbody class="work-references-card" style="padding-left: 10px; overflow: hidden">
+                            @foreach (var item in modalReference)
+                            {
+                                <tr class="grid-container-references">
+                                    <td class="ref-name">@item.refFirstName  @item.refLastName</td>
+                                    <td class="ref-phone">@item.refPhone</td>
+                                    <td class="ref-email">@item.refEmail</td>
+                                    <td class="ref-relationship">@item.relationship</td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
