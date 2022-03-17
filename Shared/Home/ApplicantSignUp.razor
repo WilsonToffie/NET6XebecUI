@@ -12,16 +12,16 @@
     }
 
     .register-right {
-        margin-top: 10vh;
+        margin-top: 6vh;
         height: 90vh;
-        background-color: rgb(255,255,255,0.5);
+        background-color: white;
         width: 50%;
     }
 
     .register-left {
         background-image: linear-gradient(rgba(0, 188, 174,0.2),rgba(0, 188, 174,0.2)),url(/Img/pexels3.jpg);
         height: 90vh;
-        margin-top: 10vh;
+        margin-top: 6vh;
         width: 50%;
         background-size: cover;
         background-position: center;
@@ -44,7 +44,7 @@
         text-align: left;
         background-color: transparent;
         color: #00bcae;
-        font-size: 2em;
+        font-size: 1.5em;
         height: 7vh;
         line-height: 7vh;
     }
@@ -222,7 +222,9 @@
             <div class="form-group index-form-or" hidden="@successfulRegistrationMessageIsHidden">
                 <h1 class="index-form-heading-3">You have been successfully registered to xebec. Sign In.</h1>
             </div>
-            <input type="button" class="index-form-button" @onclick="Register" value="Submit" />
+            <div class="form-group login-button-div">
+                <input type="button" class="index-form-button" @onclick="Register" value="Submit" />
+            </div>
         </form>
     </div>
 </div>

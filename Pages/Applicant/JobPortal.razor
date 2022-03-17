@@ -241,7 +241,7 @@
 
     .hr-job-search-bar-input {
         background-color: white;
-        height: 5vh;
+        height: 6vh;
         width: 100%;
         box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
         border: white solid 0.1em;
@@ -250,11 +250,16 @@
 
         .hr-job-search-bar-input::placeholder {
             color: #666666;
-            font-weight: 900;
+            /*font-weight: 900;
             font-size: 0.8em;
             padding-left: 1em;
-            padding-top: 1em;
+            padding-top: 1em;*/
             font-family: opensans-condensed-bold;
+        }
+
+        .hr-job-search-bar-input:hover {
+            border-radius: 1em;
+            border: 0.1em solid black;
         }
 
     .hr-job-name {
@@ -266,13 +271,48 @@
         font-family: opensans-condensed-light;
         text-align: center;
     }
+
+    .applicant-application-form {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #00BCAE;
+    }
+
+    .applicant-application-form-title{
+        background: rgb(255 0 0);
+
+    }
+
+    .applicant-application-form-button{
+        background:rgb(255 216 0);
+    }
+
+
+    .applicant-application-form-questions{
+        background:rgb(255 106 0);
+        width: 80%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .applicant-application-form-container {
+        background: #fff;
+        width: 30%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
 </style>
 
 <div class="container" style="height: 55vh;" hidden="@jobPortalIsHidden">
     <!--Search-Box-->
     <div style="height: 15vh">
         <div class="hr-job-search-bar">
-            <input class="hr-job-search-bar-input" type="text" placeholder="Search For Jobs" @oninput="SearchListJob" />
+            <input class="form-control rounded-pill hr-job-search-bar-input" type="text" placeholder="Search For Jobs" @oninput="SearchListJob" />
         </div>
         <div class="row hr-job-filters">
             <div class="col-3">
@@ -284,7 +324,6 @@
                         {
                             <MudSelectItem T="string" Value="item">@item</MudSelectItem>
                         }
-
                     }
                 </MudSelect>
             </div>
@@ -293,7 +332,7 @@
                 <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Companies" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextCompany)" Label="Company" SelectedValuesChanged="SearchListCompany">
                     @if (jobListFilter != null && jobListFilter.Count > 0)
                     {
-                        @foreach (var item in jobListFilter.Select(x => x.Company).OrderBy(x => x).Distinct())
+                        @foreach (var item in jobList.Select(x => x.Company).OrderBy(x => x).Distinct())
                         {
                             <MudSelectItem T="string" Value="item">@item</MudSelectItem>
                         }
@@ -306,7 +345,7 @@
                 <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
                     @if (jobListFilter != null && jobListFilter.Count > 0)
                     {
-                        @foreach (var item in jobListFilter.Select(x => x.Department).OrderBy(x => x).Distinct())
+                        @foreach (var item in jobList.Select(x => x.Department).OrderBy(x => x).Distinct())
                         {
                             <MudSelectItem T="string" Value="item">@item</MudSelectItem>
                         }
@@ -333,7 +372,7 @@
 
     @if (jobListFilter?.Any() == true)
     {
-        <div class="row" style="height:55vh; padding: 20px;">
+        <div class="row" style="height:55vh">
             <div id="small-cards" class="col-3 job-portal-left overflow-auto">
 
                 <!--Card list for jobs-->
@@ -346,7 +385,7 @@
                                 <h5 class="card-subtitle text-muted small-card-company">@item.Company</h5>
                                 <br />
                                 <h5 class="card-text small-card-location">@item.Location</h5>
-                                <h5 class="card-text small-card-date">@item.DueDate.ToString("d MMMM yyyy")</h5>
+                                <h5 class="card-text small-card-date">Due Date: @item.DueDate.ToString("d MMMM yyyy")</h5>
                             </div>
                         </div>
                         <br />
@@ -376,10 +415,10 @@
                                         }
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-start">
-                                        <h5 class="text-muted">@displayJobDetail.Company</h5>
+                                        <h5 class="card-subtitle text-muted small-card-company">@displayJobDetail.Company</h5>
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
-                                        <p class="small-card-company">@displayJobDetail.Location</p>
+                                        <p class="card-text small-card-location">@displayJobDetail.Location</p>
                                     </div>
                                     <div class="col-6 p-2 justify-content-start">
 
@@ -408,12 +447,12 @@
             </div>
         </div>
 
-        <div class="row p-3">
+        <div class="row">
             <div class="col-3">
                 <br />
                 <br />
                 <div class="col-12 d-flex justify-content-center">
-                    <MudPagination Rectangular="true" Variant="Variant.Filled" Size="Size.Small" BoundaryCount="1" MiddleCount="1" Count="jobPagedList.PageCount" SelectedChanged="PageListNav" ShowNextButton="!nextButton" ShowPreviousButton="!preButton" />
+                    <MudPagination Rectangular="true" Variant="Variant.Filled" Size="Size.Small" BoundaryCount="1" MiddleCount="2" Count="jobPagedList.PageCount" SelectedChanged="PageListNav" ShowNextButton="!nextButton" ShowPreviousButton="!preButton" />
                 </div>
             </div>
         </div>
@@ -439,14 +478,13 @@
         </div>
     }
 </div>
-<div class="row app-form-wrapper" hidden="@applicationFormIsHidden">
-    <div class="col-4"></div>
-    <div class="col-4 application-form">
-        <div class="application-form-title">
+<div class="applicant-application-form" hidden="@applicationFormIsHidden">
+    <div class="applicant-application-form-container">
+        <div class="applicant-application-form-title">
             <h4 class="collaborators-heading-text">Application Form</h4>
         </div>
-        <div class="job-portal-application-form">
-            <table class="collaborators-left-table">
+        <div class="applicant-application-form-questions">
+            <table>
                 <tbody>
                     @if (ApplicantAnswers != null)
                     {
@@ -459,16 +497,16 @@
                                         @switch (customquestion.TypeId)
                                         {
                                             case 1:
-                                                <input type="number" class="form-control" style="width: 80%" @bind="customquestion.Applicantanswer">
+                                                <input type="number" class="form-control" @bind="customquestion.Applicantanswer">
                                                 break;
                                             case 2:
-                                                <textarea type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="customquestion.Applicantanswer"></textarea>
+                                                <textarea type="text" class="form-control" placeholder="Answer..." @bind="customquestion.Applicantanswer"></textarea>
                                                 break;
                                             case 3:
-                                                <input type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="customquestion.Applicantanswer">
+                                                <input type="text" class="form-control" placeholder="Answer..." @bind="customquestion.Applicantanswer">
                                                 break;
                                             case 4:
-                                                <input type="date" id="test" class="form-control" style="width: 80%" @onchange="(e) => { customquestion.Applicantanswer = e.Value.ToString(); }">
+                                                <input type="date" id="test" class="form-control" @onchange="(e) => { customquestion.Applicantanswer = e.Value.ToString(); }">
                                                 break;
                                             case 5:
                                                 <select @bind="customquestion.Applicantanswer">
@@ -477,7 +515,7 @@
                                                 </select>
                                                 break;
                                             case 6:
-                                                <input type="file" class="form-control" style="width: 80%" @bind="customquestion.Applicantanswer">
+                                                <input type="file" class="form-control" @bind="customquestion.Applicantanswer">
                                                 break;
                                         }
                                     </div>
@@ -488,15 +526,13 @@
                 </tbody>
             </table>
         </div>
-        <div class="application-form-button">
+        <div class="applicant-application-form-button">
             <button class="btn appform-main-button" @onclick="ToJobPortal">Job Portal</button>
             <button class="btn" style="color: transparent; background-color: transparent; border:none" @onclick="ToJobPortal">Space</button>
             <button class="btn appform-main-button" @onclick="SaveAnswers">Submit</button>
         </div>
     </div>
-    <div class="col-4"></div>
-
-</div>
+    </div>
 
 @{
     isFilterContainAnyVal = !string.IsNullOrEmpty(searchJob) || mudSelectLocation?.Any() == true || mudSelectCompany?.Any() == true || mudSelectDepartment?.Any() == true || mudSelectJobType?.Any() == true;
