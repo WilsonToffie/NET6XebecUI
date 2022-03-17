@@ -23,6 +23,8 @@ namespace XebecPortal.UI.Shared
 
         protected override async Task OnInitializedAsync()
         {
+            state.Role = "Candidate";
+            state.isLoggedIn = true;
             applicantJobPortal = hrJobPortal = true;
             jobs = await HttpClient.GetFromJsonAsync<IList<Job>>("https://xebecapi.azurewebsites.net/api/Job");
             jobTypes = await HttpClient.GetFromJsonAsync<IList<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");

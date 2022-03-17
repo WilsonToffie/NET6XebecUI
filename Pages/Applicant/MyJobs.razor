@@ -10,17 +10,26 @@
 @inject IApplicationPhaseHelperDataService _applicationPhaseHelperDataService
 @inject IMyJobListDataService _myJobListDataService
 <style>
+    .main{
+        overflow:hidden;
+        
+    }
+   
     .main-wrapper {
         background: transparent;
         width: 100%;
         min-height: 100%;
-        overflow: hidden;
-        display: grid;
+        padding:0 5%;
+        /*display: grid;
         grid-template-columns: 1fr 1fr 1.2fr 1.5fr;
         grid-template-rows: 10% auto;
         grid-gap: 10px;
         max-height: 100%;
-        padding: 20px 10% 0 10%;
+        padding: 20px 10% 0 10%;*/
+        display:flex;
+        justify-content:center;
+        gap:10px;
+        margin-top: 30px;
     }
 
     .search-panel, .heading, .line {
@@ -40,29 +49,38 @@
     }
 
     .job-cards {
-        display: grid;
+       /* display: grid;
         grid-template-columns: repeat(2, fr);
-        align-content: start;
+        align-content: start;*/
         /*grid-template-columns: repeat(@@maxJobs, 1fr);*/
         background: rgba(0, 188, 174,0.1);
-        overflow-y: auto;
-        grid-row-gap: 1vh;
+        height:75vh;
+        gap:10px;
         padding: 5px;
+        display:flex;
+        flex-direction:column;
+        overflow-y:auto;
+        width:100%;
+        scrollbar-track-color:white;
+        
     }
 
         .job-cards::-webkit-scrollbar-track {
             background: linear-gradient(#a7a9ab 0%, rgba(0,51,64,0.09) 30%);
-            border-radius: 5px;
+            border-radius: 10px;
             transform: translateX(10vw);
         }
 
         .job-cards::-webkit-scrollbar {
-            width: 0.09vw;
-            rgba(0, 188, 174,0.6)
+            width: 10px;
+            background-color: rgba(0, 188, 174,0.6);
+            
         }
 
         .job-cards::-webkit-scrollbar-thumb {
-            background: linear-gradient(transparent 30%, #fff 30%);
+            background:linear-gradient(transparent 30%, #fff 30%);
+            width:10px;
+            height:10px;
         }
 
         .job-cards div {
@@ -81,23 +99,26 @@
                 font-weight: 700;
                 box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px !important;
             }
+
             .job-cards div.rejection {
-                border-left: #ff4d5a  10px solid;
+                border-left: #ff4d5a 10px solid;
                 box-shadow: rgba(253,139,151,0.3) 0px 2px 2px, rgba(253,139,151,0.01) 0px 15px 12px;
             }
-            .job-cards .accepted {
-                            border-left: rgba(0, 188, 80, 1)  10px solid;
-                            box-shadow: rgba(253,139,151,0.3) 0px 2px 2px, rgba(253,139,151,0.01) 0px 15px 12px;
-                        }
-            
-            .job-cards div:first-child.rejection-heading {
-                            background: #ff4d5a;
-                            border: none !important;
-              }
-              .job-cards div:first-child.accepted-heading {
-                                          background: rgba(0, 188, 80, 1);
-                                          border: none !important;
-                            }
+
+        .job-cards .accepted {
+            border-left: rgba(0, 188, 80, 1) 10px solid;
+            box-shadow: rgba(253,139,151,0.3) 0px 2px 2px, rgba(253,139,151,0.01) 0px 15px 12px;
+        }
+
+        .job-cards div:first-child.rejection-heading {
+            background: #ff4d5a;
+            border: none !important;
+        }
+
+        .job-cards div:first-child.accepted-heading {
+            background: rgba(0, 188, 80, 1);
+            border: none !important;
+        }
 
     .card-header {
         position: sticky;
@@ -105,21 +126,22 @@
         box-sizing: border-box;
         height: fit-content;
         transition: 0.3s fade;
-        
-        
         /*box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;*/
     }
-    .card-header .rejection-heading{
-        
-    }
+
+        .card-header .rejection-heading {
+        }
 
     .job-card {
-        display: grid;
+        /*display: grid;
         grid-template-columns: repeat(2, 1fr);
         grid-template-rows: repeat(4, fit-content());
-        grid-row-gap: 0;
+        grid-row-gap: 0;*/
+        display:flex;
+        flex-direction:column;
         height: fit-content;
         box-shadow: rgba(0, 188, 174,0.3) 0px 2px 2px, rgba(0, 188, 174,0.22) 0px 15px 12px;
+        
     }
 
     .position, .company {
@@ -146,13 +168,15 @@
             font-size: 0.5vw;
         }
 
-    
+
 
     .card-header {
-        font-size: 1.5vw;
+        font-size: 20px;
         text-align: center;
         color: white;
         margin-bottom: 3vh;
+        width:100%;
+        height:35px;
     }
 
     .job-card {
@@ -189,59 +213,85 @@
     }
 
 
-    .phase-pill, .rejection-phase{
-     
-      border-radius: 999px;
-      
-      box-sizing: border-box;
-      cursor: pointer;
-      
-      width: fit-content;
-      word-break: break-word;
-      border: 0;
+    .phase-pill, .rejection-phase {
+        border-radius: 999px;
+        box-sizing: border-box;
+        cursor: pointer;
+        width: fit-content;
+        word-break: break-word;
+        border: 0;
     }
-    .rejection-phase{
+
+    .rejection-phase {
         color: rgba(188, 0, 14, 1);
         background: rgba(188, 0, 14, 0.33);
         font-size: 1vh;
-              font-weight: 700;
-              opacity: 1;
-              padding: 0.2vh 1vh;
+        font-weight: 700;
+        opacity: 1;
+        padding: 0.2vh 1vh;
     }
-    .phase-pill{
-         background: rgba(94,93,240,0.22);
-         color: rgb(94,93,240);
-         font-size: 1.5vh;
-               font-weight: 700;
-               opacity: 1;
-               padding: 0.2vh 1vh;
+
+    .phase-pill {
+        background: rgba(94,93,240,0.22);
+        color: rgb(94,93,240);
+        font-size: 1.5vh;
+        font-weight: 700;
+        opacity: 1;
+        padding: 0.2vh 1vh;
     }
-    .count{
-        text-decoration: underline;
+
+    .count {
+        text-decoration: none;
         border-radius: 1em;
         font-size: 1em;
     }
+
     .job-search-bar-input {
-        width: 100%;
+        /*width: 100%;
         background-color: rgba(255,255,255,1) !important;
         border-radius: 2em;
-        border: 0.1em solid rgba(0,0,0,0.2);
+        border: 0.1em solid rgba(0,0,0,0.2);*/
+        /* background-color: white;
+        height: 5vh;
+        width: 50%;
+        box-shadow: 0 2px 5px 0 rgb(0 0 0 / 20%), 0 2px 10px 0 rgb(0 0 0 / 20%);
+        border: white solid 0.1em;
+        border-radius:1em;
+        margin-top:10px;*/
+        background-color: white;
+        height: 5vh;
+        width: 100%;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
+        border: white solid 0.1em;
+        border-radius: 1em;
     }
+    .search-bar {
+        width: 50%;
+        height: 5vh;
+        margin-top: 3vh;
+        margin-left: 30%;
+        margin-right: 30%;
+        border: none;
+    }
+    
 </style>
 @if (_allJobs != null)
+
 {
-    <div class="main-wrapper">
-        <!--Search-Box-->
-        <div class="row" style="height:5vh; grid-column: span 4;">
-            <div class="col">
-                <div class="input-group d-flex justify-content-center form-group">
-                    @*<span class="input-group-text">
+    <div class="row d-flex justify-content-center" style="height:5vh; margin-bottom:20px; width:100%;">
+        <div class="search-bar">
+            <div class="input-group d-flex justify-content-center form-group">
+                @*<span class="input-group-text">
                         <i class="fa fa-search"></i>
                     </span>*@
-                    <input class="job-search-bar-input" style="max-width: 50%" type="text" placeholder="Search" value="@_keyword" @oninput="@OnKeywordChanged"/>
-                </div>
+                <input class="job-search-bar-input" style="max-width: 50%" type="text" placeholder="Search" value="@_keyword" @oninput="@OnKeywordChanged" />
             </div>
         </div>
+        <span></span>
+    </div>
+    <div class="main-wrapper" >
+        <!--Search-Box-->
+
         <div class="main-wrapper-child job-cards">
             <div class="card-header d-flex align-content-center justify-content-center ">
                 <span>Application</span>
@@ -343,7 +393,7 @@ else
     protected override void OnInitialized()
     {
         _allJobs = _myJobListDataService.GetAllJobs();
-    //_allJobs = (await _myJobListDataService.GetAllJobsByAppUserId(3)).ToList();
+        //_allJobs = (await _myJobListDataService.GetAllJobsByAppUserId(3)).ToList();
 
         _initJobs = _allJobs;
         _applications = _allJobs.FindAll(
@@ -393,7 +443,7 @@ else
 
     public enum ApplicationPhase
     {
-    //get desciption
+        //get desciption
         Application,
         Testing,
         InterviewStaff,
@@ -427,7 +477,7 @@ else
             bg_colour = "rgba(0, 155, 174, 0.22)";
             text_colour = "rgba(0, 155, 174, 1)";
         }
-    // ReSharper disable once PossibleNullReferenceException
+        // ReSharper disable once PossibleNullReferenceException
         else if (Enum.GetName(ApplicationPhase.InterviewHR).Equals(applicationPhase))
         {
             bg_colour = "rgba(131, 97, 67, 0.22)";
