@@ -208,9 +208,9 @@
         height: 18vh;
         width: 50%;
         margin: auto;
-        background-image: url(/Img/workInProgress.png);
+        background: url(@personalInfo.ImageUrl);        
         background-size: cover;
-        /*background-repeat: no-repeat;*/
+        /*background-repeat: no-repeat;*
         /*background-color: none;*/
         border: 0.4em rgba(0,0,0,0.2) solid;
         border-radius: 100%;
@@ -348,6 +348,14 @@
         text-align: center;
     }
 
+    .user-initial {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        font-family: opensans-condensed-bold;
+        font-size: 6em;
+        font-weight: 800;
+    }
 
     .to-top {
         color: #00bcae;
@@ -436,15 +444,17 @@
             </div>
             <div class="mainlayout-profile">
                 <div class="profile-div">
-                    <div class="profile-image-div-cover" style="background-image: url(/Img/@imageName);  ">
+                    <div class="profile-image-div-cover" style="background: src(@state.Avator)">
+                        @*<img src="@personalInfo.ImageUrl" style="height: 18vh; width: 50%;" />*@
+                        @*<div class="user-initial" >@state.Avator</div>*@
                         @*State.profile.Avatar.Avatar*@
-                        <!--<div class="upload-profile-btn">-->
-                            <!-- Candidates Profile image-->
-                            <!--<div class="to-top">
+                        <InputFile OnChange="@UploadingProfilePic" />
 
-                            </div>
-                        </div>-->
-                        <InputFile OnChange="@ProfilePic" class="upload-profile-btn" />
+                        @*<div class="upload-profile-btn">
+              <div class="to-top">
+              </div>
+        </div>*@
+
                     </div>
                     <div class="profile-name-div">
                         <h2 class="profile-name">@state.Name &nbsp @state.Surname</h2>
@@ -589,10 +599,7 @@
                 <div class="profile-div">
                     <div class="profile-image-div-cover">
                         <!--Profile images for HR -->
-                        <div class="upload-profile-btn">
-                            <div class="to-top">
-                            </div>
-                        </div>
+                        <div class="user-initial">@state.Avator</div>
                     </div>
                     <div class="profile-name-div">
                         <h2 class="profile-name">@state.Name &nbsp @state.Surname</h2>

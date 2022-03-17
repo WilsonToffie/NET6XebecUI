@@ -330,24 +330,24 @@
     <div class="row overlay-nav">
         <div class="col-6" @onmouseover="CloseSignUpModal"></div>
         <div class="col-1" @onmouseover="CloseSignUpModal">
-            <input type="button" class="nav-buttons" @onmouseover="ToHome" value="HOME" @onclick="ToHome" hidden="@Home"/>
-            <input type="button" class="nav-buttons-pressed" @onmouseover="ToHome" value="HOME" @onclick="ToHome" hidden="@(!Home)" />
+            <input type="button" class="nav-buttons" value="HOME" @onclick="ToHome" hidden="@Home"/>
+            <input type="button" class="nav-buttons-pressed" value="HOME" @onclick="ToHome" hidden="@(!Home)" />
         </div>
         <div class="col-1" @onmouseover="CloseSignUpModal">
-            <input type="button" class="nav-buttons" value="SERVICES" @onmouseover="ToServices" @onclick="ToServices" hidden="@Services"/>
-            <input type="button" class="nav-buttons-pressed" value="SERVICES" @onmouseover="ToServices" @onclick="ToServices" hidden="@(!Services)" />
+            <input type="button" class="nav-buttons" value="SERVICES"  @onclick="ToServices" hidden="@Services"/>
+            <input type="button" class="nav-buttons-pressed" value="SERVICES" @onclick="ToServices" hidden="@(!Services)" />
         </div>
         <div class="col-1" @onmouseover="CloseSignUpModal">
-            <input type="button" class="nav-buttons" value="SIGN IN" @onmouseover="ToSignIn" @onclick="ToSignIn" hidden="@SignIn"/>
-            <input type="button" class="nav-buttons-pressed" value="SIGN IN" @onmouseover="ToSignIn" @onclick="ToSignIn" hidden="@(!SignIn)"/>
+            <input type="button" class="nav-buttons" value="SIGN IN"  @onclick="ToSignIn" hidden="@SignIn"/>
+            <input type="button" class="nav-buttons-pressed" value="SIGN IN" @onclick="ToSignIn" hidden="@(!SignIn)"/>
         </div>
-        <div class="col-1" @onmouseover="ShowSignUpModal">
-            <input type="button" class="nav-buttons" value="SIGN UP" @onmouseover="ShowSignUpModal" hidden="@SignUp"/>
-            <input type="button" class="nav-buttons-pressed" value="SIGN UP" @onmouseover="ShowSignUpModal" hidden="@(!SignUp)"/>
+        <div class="col-1">
+            <input type="button" class="nav-buttons" value="SIGN UP" @onclick="ShowSignUpModal" hidden="@SignUp"/>
+            <input type="button" class="nav-buttons-pressed" value="SIGN UP" @onclick="ShowSignUpModal" hidden="@(!SignUp)"/>
         </div>
         <div class="col-1" @onmouseover="CloseSignUpModal">
-            <input type="button" class="nav-buttons" value="CONTACT" @onmouseover="ToContact" @onclick="ToContact" hidden="@Contact"/>
-            <input type="button" class="nav-buttons-pressed" value="CONTACT" @onmouseover="ToContact" @onclick="ToContact" hidden="@(!Contact)"/>
+            <input type="button" class="nav-buttons" value="CONTACT" @onclick="ToContact" hidden="@Contact"/>
+            <input type="button" class="nav-buttons-pressed" value="CONTACT" @onclick="ToContact" hidden="@(!Contact)"/>
         </div>
         <div class="col-1" @onmouseover="CloseSignUpModal"></div>
     </div>s
@@ -368,27 +368,27 @@
         }
     </div>
     <div class="overlay">
-        @if (Home)
+        @if (ShowHome)
         {
             <XebecPortal.UI.Shared.Home.Home />
         }
-        @if (Services)
+        @if (ShowServices)
         {
             <XebecPortal.UI.Shared.Home.Services />
         }
-        @if (HRSignUp)
+        @if (ShowHRSignUp)
         {
             <XebecPortal.UI.Shared.Home.HRSignUp />
         }
-        @if (ApplicantSignUp)
+        @if (ShowApplicantSignUp)
         {
             <XebecPortal.UI.Shared.Home.ApplicantSignUp />
         }
-        @if (SignIn)
+        @if (ShowSignIn)
         {
             <XebecPortal.UI.Shared.Home.SignIn />
         }
-        @if (Contact)
+        @if (ShowContact)
         {
             <XebecPortal.UI.Shared.Home.Contact />
         }
@@ -406,6 +406,13 @@
     private bool ApplicantSignUp;
     private bool HRSignUp;
 
+    private bool ShowHome;
+    private bool ShowServices;
+    private bool ShowHRSignUp;
+    private bool ShowApplicantSignUp;
+    private bool ShowSignIn;
+    private bool ShowContact;
+
     protected override async Task OnInitializedAsync()
     {
         ToHome();
@@ -414,46 +421,58 @@
 
     private void ToHome()
     {
+        ShowHome = true;
         Home = true;
         Services = SignIn = Contact = SignUpModal = ApplicantSignUp = HRSignUp = SignUp = false;
+        ShowServices = ShowSignIn = ShowContact = ShowApplicantSignUp = ShowHRSignUp = false;
     }
 
     private void ToServices()
     {
+        ShowServices = true;
         Services = true;
         Home = SignIn = SignUpModal = Contact = ApplicantSignUp = HRSignUp = SignUp = false;
+        ShowHome = ShowSignIn = ShowContact = ShowApplicantSignUp = ShowHRSignUp = false;
     }
 
     private void ToSignIn()
     {
+        ShowSignIn = true;
         SignIn = true;
         Services = Home = SignUpModal = Contact = ApplicantSignUp = HRSignUp = SignUp = false;
+        ShowServices = ShowHome = ShowContact = ShowApplicantSignUp = ShowHRSignUp = false;
     }
 
     private void ToApplicantSignUp()
     {
+        ShowApplicantSignUp = true;
         ApplicantSignUp = SignUp = true;
         Services = HRSignUp = SignUpModal = SignIn = Home = Contact = false;
+        ShowServices = ShowSignIn = ShowContact = ShowHome = ShowHRSignUp = false;
     }
     private void ToHRSignUp()
     {
+        ShowHRSignUp = true;
         HRSignUp = SignUp = true;
         Services = ApplicantSignUp = SignUpModal = SignIn = Home = Contact = false;
+        ShowServices = ShowSignIn = ShowContact = ShowApplicantSignUp = ShowHome = false;
     }
     private void ToContact()
     {
+        ShowContact = true;
         Contact = true;
         Services = SignIn = SignUpModal = Home = ApplicantSignUp = HRSignUp = SignUp = false;
+        ShowServices = ShowSignIn = ShowHome = ShowApplicantSignUp = ShowHRSignUp = false;
     }
 
     private void ShowSignUpModal()
     {
         SignUpModal = SignUp = true;
-        Services = HRSignUp = ApplicantSignUp = SignIn = Home = Contact = false;
+        Services = SignIn = Home = ApplicantSignUp = HRSignUp = Contact = false;
     }
 
     private void CloseSignUpModal()
     {
-        SignUp = SignUpModal = false;
+        SignUpModal = false;
     }
 }
