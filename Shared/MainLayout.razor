@@ -418,6 +418,26 @@
             border: none;
             margin-left: 25%;
         }
+    .upload-image {
+        color: transparent;
+        width: 2em;
+        height: 2em;
+        background: white;
+        margin-top: 14vh;
+        margin-left: 6vw;
+        border-radius: 50%;
+        text-align: center;
+    }
+
+    .drag-drop-input {
+        position: absolute;
+        width: 690px;
+        height: 140px;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 2;
+        border: unset;
+    }
 </style>
 
 @if (state.Role.Equals("Candidate"))
@@ -444,16 +464,12 @@
             </div>
             <div class="mainlayout-profile">
                 <div class="profile-div">
-                    <div class="profile-image-div-cover" style="background: src(@state.Avator)">
-                        @*<img src="@personalInfo.ImageUrl" style="height: 18vh; width: 50%;" />*@
-                        @*<div class="user-initial" >@state.Avator</div>*@
-                        @*State.profile.Avatar.Avatar*@
-                        <InputFile OnChange="@UploadingProfilePic" />
-
-                        @*<div class="upload-profile-btn">
-              <div class="to-top">
-              </div>
-        </div>*@
+                    <div class="profile-image-div-cover">                  
+                        <div class="upload-profile-btn" >
+                            <label class="to-top" >
+                                <InputFile OnChange="@UploadingProfilePic" class="drag-drop-input" id="fileInput"/>
+                            </label>
+                        </div>
 
                     </div>
                     <div class="profile-name-div">
