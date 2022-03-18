@@ -31,10 +31,7 @@ namespace XebecPortal.UI.Shared
         private bool hrDataAnalyticsTool, hrJobPortal, hrCreateAJob = false;
 
         protected override async Task OnInitializedAsync()
-        {
-            //state.Role = "Candidate";
-            //state.isLoggedIn = true;
-            applicantJobPortal = hrJobPortal = true;
+        {           
             jobs = await HttpClient.GetFromJsonAsync<IList<Job>>("https://xebecapi.azurewebsites.net/api/Job");
             jobTypes = await HttpClient.GetFromJsonAsync<IList<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
             personalInfo = await HttpClient.GetFromJsonAsync<PersonalInformation>("https://xebecapi.azurewebsites.net/api/personalinformation/1"); // !!!!!! Change later 
@@ -111,11 +108,12 @@ namespace XebecPortal.UI.Shared
         
         private string storageAcc = "storageaccountxebecac6b";
         private string imgContainer = "images";
+        private string userPicInfo;
         private async Task UploadingProfilePic(InputFileChangeEventArgs e)
         {
             // Getting the file
             var fileArray = e.File.Name.Split('.');
-
+            userPicInfo = e.File.Name;
             var fileName = fileArray[0] + Guid.NewGuid().ToString().Substring(0, 5) + "." + fileArray[1];
             var fileInfo = e.File;
             // You require a azure account with a storage account. You use that link for below. The 'images' is the file that the file image is stored in in Azure.

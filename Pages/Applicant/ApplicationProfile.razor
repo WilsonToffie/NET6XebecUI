@@ -354,14 +354,12 @@
     }
 
     .history-item {
-       /* border-left: 1px solid #e5e5e5;
-        */ 
        position: relative;
        padding: 2rem 1.5rem 0rem 2.5rem;
        font-size: .9rem;
-        /*margin-left: 3rem;*/
-       min-height: 4rem;
+       min-height: 2rem;
        background-color: rgba(250, 250, 250, 0.9);
+       border-radius: 10px;
     }
         .history-item:hover {
             box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;
@@ -459,8 +457,8 @@
     .position-white {
         position: relative;
         height: 60vh;
-        width: 75%;
-        left: 32%;
+        width: 84%;
+        left: 28%;
         top: 5%;
     }
 
@@ -536,6 +534,90 @@
         background: white !important;
     }
 
+    .card-class-for-skills {
+        /*height: 7vh;*/
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px, rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+        border-radius: 20px !important;
+        min-height: 5vh;
+        color: black;
+        font-family: opensans-condensed-bold;
+        font-weight: 900;
+        font-size: 1em;
+        min-width: 100%;
+        margin-bottom: 5px;
+        background-color: rgba(255,255,255,1);
+        padding: 5px !important;
+    }
+        .card-class-for-skills:hover {
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,1), 0 2px 10px 0 rgba(0,0,0,1);
+            color: #00bcae;
+            font-family: opensans-condensed-bold;
+            font-weight: 900;
+            font-size: 1em;
+            margin-bottom: 5px;
+            background-color: rgb(243,242,242);
+            min-width: 100%;
+            transition: 0.1s;
+            cursor: pointer;
+        }
+
+    .skill-table-size {
+        border-right: solid 5px;
+        height: 35vh;
+        width:50%;
+        padding-left: 3em;
+        padding-bottom: 3em;
+    }
+
+    .skill-table-size-right {        
+        height: 35vh;
+        width: 50%;
+        padding-left: 2em;
+        padding-bottom: 3em;
+    }
+    .content-size-left {
+        position: absolute;
+        height: 30vh;
+        width: 40%;
+        overflow-y: auto;
+        padding-left: 2vh;
+        padding-right: 2vh;
+        padding-top: 1vh;
+    }
+    .content-size-right {
+        position: absolute;
+        height: 30vh;
+        width: 40%;
+        overflow-y: auto;
+        padding-left: 2vh;
+        padding-right: 2vh;
+        padding-top: 1vh;
+    }
+
+    .skills-heading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+        font-family: opensans-condensed-bold;
+        font-weight: 800;
+        font-size: 1.5em;
+        color: #00bcae;
+    }
+
+    .skills-selected-heading {
+        position: relative;
+        left: 25%;
+        margin-bottom: 10px;
+        font-family: opensans-condensed-bold;
+        font-weight: 800;
+        font-size: 1.5em;
+        color: #00bcae;
+    }
+
 </style>
 <div class="h-95 container-fluid d-flex justify-content-center align-items-center overflow-hidden">
     <div class="col-1"></div>
@@ -559,6 +641,9 @@
                     <a class="nav-link nav-link1" data-bs-toggle="tab" href="#education" @onclick="progressCheck">Education</a>
                 </li>
                 <li class="nav-item p-1">
+                    <a class="nav-link nav-link1" data-bs-toggle="tab" href="#skills" @onclick="progressCheck">Skills</a>
+                </li>
+                <li class="nav-item p-1">
                     <a class="nav-link nav-link1" data-bs-toggle="tab" href="#references" @onclick="progressCheck">References</a>
                 </li>
                 <li class="nav-item p-1">
@@ -573,7 +658,7 @@
                 <br />
                 <!--Personal Information-->
                 <div id="personal-information" class="container tab-pane active">
-                    <div class="d-flex justify-content-center" >
+                    <div class="d-flex justify-content-center">
                         <EditForm Model="@personalInformation" OnValidSubmit="addWorkHistoryTest" style="width: 60%;">
                             <div class="row" style="margin-top: 50px;">
                                 <div class="col-12 shadow-sm bg-body rounded-edges white-back">
@@ -733,7 +818,7 @@
                                     </div>
                                     <div class="col-3 ">
                                         <div class="history-container position-history-card rounded-edges">
-                                            <div class="history ">
+                                            <div class="history">
                                                 <div class="text-center history-status-intransit">
                                                     <p class="history-status  text-tight">Work History</p>
                                                 </div>
@@ -742,16 +827,16 @@
                                                 {
                                                     foreach (var item in workHistoryList)
                                                     {
-                                                        
-                                                            <div class="history-item" @onclick="() => SelectWorkHistory(item)" style="@GetStyling(item)" >
-                                                                <div class="history-icon">                                                                    
-                                                                        <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteWorkHistory(item.Id)"></i>
-                                                                        <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->                                                                    
-                                                                </div>
-                                                                <div class="history-date">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")<br></div>
-                                                                <div class="history-content">@item.CompanyName<p>@item.JobTitle</p><span>@item.Description</span></div>
+
+                                                        <div class="history-item" @onclick="() => SelectWorkHistory(item)" style="@GetStyling(item)">
+                                                            <div class="history-icon">
+                                                                <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteWorkHistory(item)"></i>
+                                                                <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
                                                             </div>
-                                                                                                                
+                                                            <div class="history-date">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")<br></div>
+                                                            <div class="history-content">@item.CompanyName<p>@item.JobTitle</p><span>@item.Description</span></div>
+                                                        </div>
+
                                                     }
                                                 }
                                                 <!--To display to the user which card has been chosen-->
@@ -780,11 +865,12 @@
                                                 <div class="row p-3">
                                                     <div class="col-6">
                                                         <!--<label class="form-label" for="institution">Institution</label>-->
-                                                        <InputText id="Institution" class="form-control shadow bg-body rounded" @bind-Value="education.Insitution" placeholder="Institution" @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                                        <InputText id="qualification" class="form-control shadow bg-body rounded" @bind-Value="education.Qualification" placeholder="Qualification" @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                                        
                                                     </div>
                                                     <div class="col-6">
                                                         <!--<label class="form-label" for="qualification">Qualification</label>-->
-                                                        <InputText id="qualification" class="form-control shadow bg-body rounded" @bind-Value="education.Qualification" placeholder="Qualification" @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                                        <InputText id="Institution" class="form-control shadow bg-body rounded" @bind-Value="education.Insitution" placeholder="Institution" @onfocusout="completion" /> <!--@onfocusout="completion" -->
                                                     </div>
                                                 </div>
                                                 <div class="row p-3">
@@ -810,7 +896,7 @@
                                                         {
                                                             <button class="btn formButton" type="submit" value="Add">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
                                                         }
-                                                        
+
 
                                                     </div>
                                                 </div>
@@ -833,7 +919,7 @@
 
                                                         <div class="history-item" @onclick="() => SelectEducation(item)" style="@GetEduStyling(item)">
                                                             <div class="history-icon">
-                                                                <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteEducation(item.Id)"></i>
+                                                                <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteEducation(item)"></i>
                                                                 <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
                                                             </div>
 
@@ -851,6 +937,100 @@
                             </div>
                         </div>
                     </EditForm>
+                </div>
+
+                <!--Skills tab-->
+                
+                <div id="skills" class="container tab-pane">
+                    <form>
+                        <!--Remember to test add the model-->
+                        <!--<DataAnnotationsValidator />  -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-9 p-5">
+                                        <div class="row shadow-sm bg-body rounded-edges white-back position-white">
+                                            <div class="education-header">Skill information</div>
+                                            <div class="col-12" style="height: 45vh">
+
+                                                <div class="row">
+                                                    <div class="col-6 skill-table-size">
+                                                        <div class="skills-heading">Select Skills</div>
+                                                        <div class="content-size-left">
+                                                            @foreach (var item in skills)
+                                                            {
+                                                                <div class="card-class-for-skills" @onclick="() => addToSelectedInfo(item)">
+                                                                    <div>@item</div>
+                                                                </div>
+
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6 skill-table-size-right">
+                                                        <div class="skills-selected-heading">Skills selected</div>
+                                                        <div class="content-size-right">
+                                                            @foreach (var item in selectedSkillsList2)
+                                                            {
+                                                                <div class="card-class-for-skills" @onclick="() => removeFromSelectedInfo(item)">
+                                                                    <div>@item.Description</div>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row p-3">
+                                                    <div class="validation-message"></div><!--<ValidationSummary />-->
+                                                    <div class="col-12 d-flex justify-content-around">
+                                                        @if (eduEditMode)
+                                                        {
+                                                            <input class="btn formButton" type="button" value="Save" @onclick="() => SaveEducation(education)" />
+                                                            <input class="btn formButton" type="button" value="Cancel" @onclick="() => CancelEducation(education)" />
+                                                        }
+                                                        else
+                                                        {
+                                                            <button class="btn formButton" type="submit" value="Add" onclick="">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
+                                                        }
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <!--<div class="row shadow-sm bg-body rounded-edges white-back">-->
+                                        <!--<div class="col-12 overflow-auto" style="height: 47vh">-->
+                                        <div class="history-container position-history-card rounded-edges">
+                                            <div class="history">
+                                                <div class="text-center history-status-intransit ">
+                                                    <p class="history-status  text-tight">Skills Information</p>
+                                                </div>
+                                                <br />
+                                                @if (selectedSkillsList2 != null && selectedSkillsList2.Count > 0)
+                                                {
+                                                    foreach (var item in selectedSkillsList2)
+                                                    {
+
+                                                        <div class="history-item">
+                                                            <!--@onclick="() => SelectEducation(item)" style="@GetEduStyling(item)-->
+                                                            <div class="history-icon">
+                                                                <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => removeFromSelectedInfo(item)"></i> <!---->
+                                                                <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
+                                                            </div>
+                                                            <div class="history-content">@item.Description</div>
+                                                        </div>
+                                                    }
+                                                }
+                                                <!--</div>-->
+                                                <!--</div>-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
 
                 <!--References tab-->
@@ -917,27 +1097,27 @@
                                                 @if (referencesList != null && referencesList.Count > 0)
                                                 {
                                                     foreach (var items in referencesList)
-                                                    {                                                      
-                                                        
-                                                    <div class="history-item" @onclick="() => SelectReference(items)" style="@GetRefStyling(items)">
-                                                        <div class="history-icon">
-                                                            <span @onclick="() => DeleteReference(items.Id)">
-                                                                <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteReference(items.Id)"></i>
-                                                                <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
-                                                            </span>
-                                                        </div>
-                                                        <div class="history-content">
-                                                            @items.Name
-                                                            <br>
-                                                            @items.Surname
-                                                            <br>
-                                                            @items.Email
-                                                            <br>
-                                                            @items.ContactNum
+                                                    {
+
+                                                        <div class="history-item" @onclick="() => SelectReference(items)" style="@GetRefStyling(items)">
+                                                            <div class="history-icon">
+                                                                <span @onclick="() => DeleteReference(items.Id)">
+                                                                    <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteReference(items.Id)"></i>
+                                                                    <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
+                                                                </span>
+                                                            </div>
+                                                            <div class="history-content">
+                                                                @items.Name
+                                                                <br>
+                                                                @items.Surname
+                                                                <br>
+                                                                @items.Email
+                                                                <br>
+                                                                @items.ContactNum
+                                                            </div>
+
                                                         </div>
 
-                                                    </div>        
-                                                        
                                                     }
                                                 }
                                             </div>
@@ -951,7 +1131,7 @@
 
                 <!--Online Presence-->
                 <div id="online-profile" class="container tab-pane" style="height: 60vh; width: 120vh; margin-top: 50px;">
-                    <form class="col-12 d-flex justify-content-center align-items-start">                        
+                    <form class="col-12 d-flex justify-content-center align-items-start">
                         <div class="row col-9">
                             <div class="col-12 shadow-sm bg-body rounded-edges align-self-start white-back ">
                                 <div class="education-header">Online Presence</div>
@@ -990,12 +1170,16 @@
                                         </div>
                                         <input id="personal-website" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.PersonalWebsiteUrl" placeholder="1nebula.com" />
                                     </div>
-                                </div>
-                                <div class="row p-3">
-                                    <div class="col-12 d-flex justify-content-center">
-                                        <input class="btn formButton" type="button" value="Done" @onclick="Submit" />
+                                </div> 
+                                <!--Validation to ensure that the page is 100% completed-->
+                                @if (calc == 100)
+                                {
+                                    <div class="row p-3">
+                                        <div class="col-12 d-flex justify-content-center">
+                                            <input class="btn formButton" type="button" value="Done" @onclick="Submit" />
+                                        </div>
                                     </div>
-                                </div>
+                                }
                             </div>
                         </div>
                     </form>
