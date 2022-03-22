@@ -200,7 +200,7 @@
     }
     .key-confirmation-form input[type="text"]{
         height: 15vh;
-        width: 12%;
+        width: 100%;
         margin-left: 3%;
         border-radius: 1em;
         border: #00bcae solid 0.2em;
@@ -274,24 +274,42 @@
                     <option class="selecting-role" value="Super Admin">Super Admin</option>
                 </select>
             </div>
-            <div class="form-group index-form-or" hidden="@emailMessageIsHidden">
-                <h1 class="index-form-heading-3">emails do not match</h1>
-            </div>
-            <div class="form-group index-form-or" hidden="@passwordMessageIsHidden">
-                <h1 class="index-form-heading-3">passwords do not match</h1>
-            </div>
-            <div class="form-group index-form-or" hidden="@existingUserMessageIsHidden">
-                <h1 class="index-form-heading-3">this email is already registered on the platform</h1>
-            </div>
-            <div class="form-group index-form-or" hidden="@selectCheckBoxMessageIsHidden">
-                <h1 class="index-form-heading-3">checkbox not selected</h1>
-            </div>
-            <div class="form-group index-form-or" hidden="@successfulRegistrationMessageIsHidden">
-                <h1 class="index-form-heading-3">You have been successfully registered to xebec. Sign In.</h1>
-            </div>
-            <div class="form-group index-form-or" hidden="@confirmAccountMessageIsHidden">
-                <h1 class="index-form-heading-3">we will send you a key and link to activate your account</h1>
-            </div>
+            @if (invalidEmail)
+            {
+                <div class="form-group index-form-or">
+                    <h1 class="index-form-heading-3">Emails do not match.</h1>
+                </div>
+            }
+            @if (invalidPassword)
+            {
+                <div class="form-group index-form-or">
+                    <h1 class="index-form-heading-3">Passwords do not match.</h1>
+                </div>
+            }
+            @if (registeredEmail)
+            {
+                <div class="form-group index-form-or">
+                    <h1 class="index-form-heading-3">This email is already registered on the platform.</h1>
+                </div>
+            }
+            @if (invalidRole)
+            {
+                <div class="form-group index-form-or">
+                    <h1 class="index-form-heading-3">Invalid role selection.</h1>
+                </div>
+            }
+            @if (validRegistration)
+            {
+                <div class="form-group index-form-or">
+                    <h1 class="index-form-heading-3">Success! We will send you a key via email to activate your account.</h1>
+                </div>
+            }
+            @if (invalidRegistration)
+            {
+                <div class="form-group index-form-or">
+                    <h1 class="index-form-heading-3">We have failed to register you.</h1>
+                </div>
+            }
             <div class="form-group login-button-div">
                 <input type="button" class="index-form-button" @onclick="Register" value="Submit" />
             </div>
@@ -301,19 +319,21 @@
                 <h1 class="index-form-heading-1">CONFIRMATION</h1>
             </div>
             <div class="form-group key-input-group">
-                <input type="text" @ref="RefKey1" @onchange="Key1Filled">
-                <input type="text" @ref="RefKey2" @onchange="Key2Filled">
-                <input type="text" @ref="RefKey3" @onchange="Key3Filled">
-                <input type="text" @ref="RefKey4" @onchange="Key4Filled">
-                <input type="text" @ref="RefKey5" @onchange="Key5Filled">
-                <input type="text" @ref="RefKey6" @onchange="Key6Filled">
+                <input type="text" @bind="@user.UserKey" @ref="KeyReference">
             </div>
-            <div class="form-group index-form-or" hidden="@invalidKeyMessageIsHidden">
-                <h1 class="index-form-heading-3">Invalid Key</h1>
-            </div>
-            <div class="form-group index-form-or" hidden="@successfulRegistrationMessageIsHidden">
-                <h1 class="index-form-heading-3">You have been successfully registered to xebec. Sign In.</h1>
-            </div>
+            @if (invalidKey)
+            {
+                <div class="form-group index-form-or">
+                    <h1 class="index-form-heading-3">Invalid Key</h1>
+                </div>
+            }
+            @if (validKey)
+            {
+                <div class="form-group index-form-or">
+                    <h1 class="index-form-heading-3">Valid Key. You can sign in.</h1>
+                </div>
+            }
+            
             <input type="button" class="index-form-button" @onclick="ConfirmAccount" value="Submit" />
         </form>
     </div>
@@ -329,24 +349,22 @@
     private string Password2 = "";
     private string Email = "";
     private string Password = "";
-    private string Key,Key1,Key2,Key3,Key4,Key5,Key6 = "";
 
-    private bool existingUserMessageIsHidden;
-    private bool passwordMessageIsHidden;
-    private bool selectCheckBoxMessageIsHidden;
-    private bool successfulRegistrationMessageIsHidden;
-    private bool confirmAccountMessageIsHidden;
-    private bool emailMessageIsHidden;
+    private bool invalidEmail;
+    private bool invalidPassword;
+    private bool validRegistration;
+    private bool invalidRegistration;
+    private bool registeredEmail;
+    private bool invalidRole;
+    private bool validKey;
+    private bool invalidKey;
 
     private bool registrationFormIsHidden;
     private bool confirmationFormIsHidden;
 
     private bool invalidKeyMessageIsHidden;
-
+    private bool SubmitPressed;
     private string message;
-    private object RoleSelected;
-
-    private KeyRequest request = new KeyRequest();
 
     private UserModel user = new UserModel();
     private List<UserModel> users = new List<UserModel>();
@@ -358,18 +376,11 @@
         set;
     }
 
-    ElementReference SignUpElementInFocus;
-    ElementReference RefKey1, RefKey2, RefKey3, RefKey4, RefKey5, RefKey6;
+    ElementReference SignUpElementInFocus, KeyReference;
 
 
     protected override async Task OnInitializedAsync()
     {
-        passwordMessageIsHidden = true;
-        existingUserMessageIsHidden = true;
-        selectCheckBoxMessageIsHidden = true;
-        successfulRegistrationMessageIsHidden = true;
-        confirmAccountMessageIsHidden = true;
-        emailMessageIsHidden = true;
 
         registrationFormIsHidden = false;
         confirmationFormIsHidden = true;
@@ -381,75 +392,16 @@
     {
 
         SignUpElementInFocus.FocusAsync();
-        RefKey1.FocusAsync();
+        KeyReference.FocusAsync();
+        invalidKeyMessageIsHidden = true;
 
     }
 
-    private Task Key1Filled(ChangeEventArgs e)
-    {
-        Key1 = e.Value.ToString();
-        RefKey2.FocusAsync();
-        return ValueChanged.InvokeAsync(Key1);
-    }
-
-    private Task Key2Filled(ChangeEventArgs e)
-    {
-        Key2 = e.Value.ToString();
-        RefKey3.FocusAsync();
-        return ValueChanged.InvokeAsync(Key2);
-    }
-    private Task Key3Filled(ChangeEventArgs e)
-    {
-        Key3 = e.Value.ToString();
-        RefKey4.FocusAsync();
-        return ValueChanged.InvokeAsync(Key3);
-    }
-
-    private Task Key4Filled(ChangeEventArgs e)
-    {
-        Key4 = e.Value.ToString();
-        RefKey5.FocusAsync();
-        return ValueChanged.InvokeAsync(Key4);
-    }
-    private Task Key5Filled(ChangeEventArgs e)
-    {
-        Key5 = e.Value.ToString();
-        RefKey6.FocusAsync();
-        return ValueChanged.InvokeAsync(Key5);
-    }
-    private Task Key6Filled(ChangeEventArgs e)
-    {
-        Key6 = e.Value.ToString();
-        RefKey6.FocusAsync(); 
-        Key = Key1 + Key2 + Key3 + Key4 + Key5 + Key6;
-        return ValueChanged.InvokeAsync(Key6);
-    }
     private Task OnRoleChanged(ChangeEventArgs e)
     {
         user.Role = e.Value.ToString();
         return ValueChanged.InvokeAsync(user.Role);
     }
-
-    private async Task ConfirmAccount()
-    {
-        using (var msg = await HttpClient.GetAsync("https://xebecapi.azurewebsites.net/api/auth/keys"))
-        {
-            KeyRequest keyresult = await msg.Content.ReadFromJsonAsync<KeyRequest>();
-            if (msg.IsSuccessStatusCode)
-            {
-
-                if (keyresult.Key.Equals(Key))
-                {
-                    successfulRegistrationMessageIsHidden = false;
-                }
-                else
-                {
-                    invalidKeyMessageIsHidden = false;
-                }
-            }
-        }
-    }
-
 
 
     private async Task showConfirmationForm()
@@ -463,54 +415,80 @@
     {
         if (Password1 != Password2)
         {
-            passwordMessageIsHidden = false;
-            existingUserMessageIsHidden = true;
-            selectCheckBoxMessageIsHidden = true;
-            successfulRegistrationMessageIsHidden = true;
-            confirmAccountMessageIsHidden = true;
+            invalidPassword = true;
             return false;
         }
         else
         {
-            passwordMessageIsHidden = true;
-            existingUserMessageIsHidden = true;
-            selectCheckBoxMessageIsHidden = true;
-            successfulRegistrationMessageIsHidden = true;
-            confirmAccountMessageIsHidden = true;
-            Password = Password1;
+            invalidPassword = false;
             return true;
         }
+
     }
     private bool RegisterEmailCheck()
     {
         if (Email1 != Email2)
         {
-            emailMessageIsHidden = false;
+            invalidEmail = true;
             return false;
         }
         else
         {
-            emailMessageIsHidden = true;
+            invalidEmail = false;
+            Email = Email1;
             return true;
         }
     }
 
+    private bool RegisterCheckbox()
+    {
+        if (user.Role.Equals(null) || user.Role.Equals(""))
+        {
+            invalidRole = true;
+            return false;
+        }
+        else
+        {
+            invalidRole = false;
+            return true;
+        }
+    }
+
+    private async Task ConfirmAccount()
+    {
+        using (var msg = await HttpClient.PostAsJsonAsync<UserModel>("https://xebecapi.azurewebsites.net/keyConfirm", user))
+        {
+            string keyresult = await msg.Content.ReadAsStringAsync();
+            if (msg.IsSuccessStatusCode)
+            {
+                if (keyresult.Contains("true"))
+                {
+                    validKey = true;
+                    invalidKey = false;
+                }
+                else
+                {
+                    validKey = false;
+                    invalidKey = true;
+                }
+
+            }
+
+        }
+    }
 
     private async Task Register()
     {
         bool passwordIsValid = RegisterPasswordCheck();
         bool emailIsValid = RegisterEmailCheck();
+        bool roleIsValid = RegisterCheckbox();
 
-        confirmationFormIsHidden = false;
-        registrationFormIsHidden = true;
-        if (passwordIsValid && emailIsValid)
+        if (passwordIsValid && emailIsValid && roleIsValid)
         {
             user.Name = Name;
             user.Surname = Surname;
             user.Email = Email;
             user.Password = Password;
-
-            user.Key = "";
 
             //Post model to dB
             using (var msg = await HttpClient.PostAsJsonAsync<UserModel>("https://xebecapi.azurewebsites.net/api/auth/registernew", user))
@@ -518,25 +496,33 @@
                 if (msg.IsSuccessStatusCode)
                 {
                     SignInResult result = await msg.Content.ReadFromJsonAsync<SignInResult>();
+                    user.ID = result.AppUserId;
                     message = result.Message;
                     if (result.Success)
                     {
-                        //await showConfirmationForm();
-                        //send key via email
+                        validRegistration = true;
+                        invalidRegistration = false;
+                        confirmationFormIsHidden = false;
+                        registrationFormIsHidden = true;
 
-                        successfulRegistrationMessageIsHidden = false;
-                        await HttpClient.PostAsJsonAsync<UserModel>("https://xebecapi.azurewebsites.net/api/auth/registernew", user);
                     }
                     else if (message.Equals("User already exists."))
                     {
-                        existingUserMessageIsHidden = false;
+                        registeredEmail = true;
                     }
                     else
                     {
-                        Console.WriteLine("Failed to register user.");
+                        invalidRegistration = true;
+                        validRegistration = false;
                     }
                 }
             }
+
+        }
+        else
+        {
+            validRegistration = false;
+            invalidRegistration = true;
         }
     }
 }

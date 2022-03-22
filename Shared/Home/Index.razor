@@ -330,28 +330,28 @@
     <div class="row overlay-nav">
         <div class="col-6" @onmouseover="CloseSignUpModal"></div>
         <div class="col-1" @onmouseover="CloseSignUpModal">
-            <input type="button" class="nav-buttons" value="HOME" @onclick="ToHome" hidden="@Home"/>
+            <input type="button" class="nav-buttons" value="HOME" @onclick="ToHome" hidden="@Home" />
             <input type="button" class="nav-buttons-pressed" value="HOME" @onclick="ToHome" hidden="@(!Home)" />
         </div>
         <div class="col-1" @onmouseover="CloseSignUpModal">
-            <input type="button" class="nav-buttons" value="SERVICES"  @onclick="ToServices" hidden="@Services"/>
+            <input type="button" class="nav-buttons" value="SERVICES" @onclick="ToServices" hidden="@Services" />
             <input type="button" class="nav-buttons-pressed" value="SERVICES" @onclick="ToServices" hidden="@(!Services)" />
         </div>
         <div class="col-1" @onmouseover="CloseSignUpModal">
-            <input type="button" class="nav-buttons" value="SIGN IN"  @onclick="ToSignIn" hidden="@SignIn"/>
-            <input type="button" class="nav-buttons-pressed" value="SIGN IN" @onclick="ToSignIn" hidden="@(!SignIn)"/>
+            <input type="button" class="nav-buttons" value="SIGN IN" @onclick="ToSignIn" hidden="@SignIn" />
+            <input type="button" class="nav-buttons-pressed" value="SIGN IN" @onclick="ToSignIn" hidden="@(!SignIn)" />
         </div>
         <div class="col-1">
-            <input type="button" class="nav-buttons" value="SIGN UP" @onclick="ShowSignUpModal" hidden="@SignUp"/>
-            <input type="button" class="nav-buttons-pressed" value="SIGN UP" @onclick="ShowSignUpModal" hidden="@(!SignUp)"/>
+            <input type="button" class="nav-buttons" value="SIGN UP" @onclick="ShowSignUpModal" hidden="@SignUp" />
+            <input type="button" class="nav-buttons-pressed" value="SIGN UP" @onclick="ShowSignUpModal" hidden="@(!SignUp)" />
         </div>
         <div class="col-1" @onmouseover="CloseSignUpModal">
-            <input type="button" class="nav-buttons" value="CONTACT" @onclick="ToContact" hidden="@Contact"/>
-            <input type="button" class="nav-buttons-pressed" value="CONTACT" @onclick="ToContact" hidden="@(!Contact)"/>
+            <input type="button" class="nav-buttons" value="CONTACT" @onclick="ToContact" hidden="@Contact" />
+            <input type="button" class="nav-buttons-pressed" value="CONTACT" @onclick="ToContact" hidden="@(!Contact)" />
         </div>
         <div class="col-1" @onmouseover="CloseSignUpModal"></div>
-    </div>s
-    <div class="row underlay-nav" >
+    </div>
+    <div class="row underlay-nav">
         @if (SignUpModal)
         {
             <div class="col-8"></div>
@@ -367,6 +367,7 @@
 
         }
     </div>
+
     <div class="overlay">
         @if (ShowHome)
         {
@@ -393,6 +394,7 @@
             <XebecPortal.UI.Shared.Home.Contact />
         }
     </div>
+    
 </div>
 
 @code {

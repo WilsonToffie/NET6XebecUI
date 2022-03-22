@@ -193,22 +193,6 @@
                     <input type="password" placeholder="Confirm password" @bind="@Password2">
                 </div>
             </div>
-            @*
-            <div class="form-group index-form-socials-register">
-            <h2 class="socials-register-heading">or sign up using</h2>
-            <div class="socials-register-div">
-                <div class="social-media-register">
-                    <i class="fab fa-google" style="width: 100%;"></i>
-                </div>
-                <div class="social-media-register">
-                    <i class="fab fa-microsoft" style="width: 100%;"></i>
-                </div>
-                <div class="social-media-register">
-                    <i class="fab fa-facebook" style="width: 100%;"></i>
-                </div>
-            </div>
-        </div>
-            *@
 
             <div class="form-group index-form-or" hidden="@emailMessageIsHidden">
                 <h1 class="index-form-heading-3">emails do not match</h1>
@@ -250,7 +234,6 @@
     private bool invalidKeyMessageIsHidden;
 
     private string message;
-    private KeyRequest request = new KeyRequest();
 
     private UserModel user = new UserModel();
     private List<UserModel> users = new List<UserModel>();
@@ -306,6 +289,7 @@
         else
         {
             emailMessageIsHidden = true;
+            Email = Email1;
             return true;
         }
     }
@@ -324,28 +308,36 @@
             user.Password = Password;
             user.Role = "Candidate";
 
-
-            using (var msg = await HttpClient.PostAsJsonAsync<UserModel>("https://xebecapi.azurewebsites.net/api/auth/registernew", user))
+            try
             {
-                if (msg.IsSuccessStatusCode)
+                using (var msg = await HttpClient.PostAsJsonAsync<UserModel>("https://xebecapi.azurewebsites.net/api/auth/registernew", user))
                 {
-                    SignInResult result = await msg.Content.ReadFromJsonAsync<SignInResult>();
-                    message = result.Message;
-                    if (result.Success)
+                    if (msg.IsSuccessStatusCode)
                     {
-                        successfulRegistrationMessageIsHidden = false;
-                    }
-                    else if (message.Equals("User already exists."))
-                    {
-                        existingUserMessageIsHidden = false;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Failed to register user.");
+                        SignInResult result = await msg.Content.ReadFromJsonAsync<SignInResult>();
+                        message = result.Message;
+                        if (result.Success)
+                        {
+                            successfulRegistrationMessageIsHidden = false;
+                        }
+                        else if (message.Equals("User already exists."))
+                        {
+                            existingUserMessageIsHidden = false;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Failed to register user.");
+                        }
                     }
                 }
+
             }
 
+            catch
+            {
+                Console.WriteLine("Catching something");
+            }
         }
+        
     }
 }

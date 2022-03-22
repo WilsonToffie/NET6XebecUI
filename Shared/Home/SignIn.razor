@@ -14,105 +14,249 @@
         height: 80vh;
         width: 100%;
     }
+    .key-input-group input[type="text"] {
+        
+        height: 15vh;
+        width: 100%;
+        margin-left: 3%;
+        border-radius: 1em;
+        border: #00bcae solid 0.2em;
+        background-color: transparent;
+        text-align: center;
+        color: black;
+        font-size: 1.8em;
+        font-weight: 900;
+        font-family: opensans-bold;
+    }
    
 </style>
+
 <div class="overlay-login" id="login">
     <div class="login-page">
         <div class="login-left">
-            <form class="index-form-login" hidden="@RightDisplayLoginIsHidden">
-                <div class="form-group index-form-heading">
-                    <h1 class="index-form-heading-1">SIGN IN</h1>
-                </div>
-                <div class="form-group index-form-group index-group">
-                    <div class="index-form-icon">
-                        <i class="fa fa-user"></i>
-                    </div>
-                    <input type="email" required placeholder="Email address" @bind="@Email" @ref="SignInElementInFocus" />
-                </div>
-                <div class="form-group index-form-group index-group">
-                    <div class="index-form-icon">
-                        <i class="fa fa-lock "></i>
-                    </div>
-                    <input type="password" placeholder="Password" @bind="@Password">
-                </div>
-                <div class="form-group">
-                    <h1 class="forgotpassword" @onclick="GoToForgotPassword">Forgot Password?</h1>
-                </div>
-                <div class="form-group index-form-or" hidden="@invalidEmailorPasswordMessageIsHidden">
-                    <h1 class="index-form-heading-3">incorrect credentials</h1>
-                </div>
-                <div class="form-group login-button-div">
-                    <input type="button" class="index-form-button" @onclick="Login" value="Submit" />
-                </div>
-            </form>
 
-            <form class="index-form-login" hidden="@RightDisplayForgotPasswordIsHidden">
-                <div class="form-group index-form-heading">
-                    <h1 class="index-form-heading-1">FORGOT PASSWORD</h1>
-                </div>
-                <div class="form-group index-form-group index-group">
-                    <div class="index-form-icon">
-                        <i class="fa fa-user"></i>
+            @if (LoginForm)
+            {
+                <form class="index-form-login">
+                    <div class="form-group index-form-heading">
+                        <h1 class="index-form-heading-1">SIGN IN</h1>
                     </div>
-                    <input type="email" required placeholder="Email address" @bind="@Email" @ref="ForgotPasswordElementInFocus">
-                </div>
-                <div class="form-group">
-                    <h1 class="forgotpassword" @onclick="GoToLogin">login</h1>
-                </div>
-                <div class="form-group index-form-or" hidden="@invalidEmailorPasswordMessageIsHidden">
-                    <h1 class="index-form-heading-3">invalid email</h1>
-                </div>
-                <div class="form-group index-form-or" hidden="@validSubmitForgotPasswordMessageIsHidden">
-                    <h1 class="index-form-heading-3">check your email for a link from us</h1>
-                </div>
-                <input type="button" class="index-form-button" @onclick="SubmitForgotPassword" value="Submit" />
-            </form>
+                    <div class="form-group index-form-group index-group">
+                        <div class="index-form-icon">
+                            <i class="fa fa-user"></i>
+                        </div>
+                        <input type="email" required placeholder="Email address" @bind="@Email" @ref="SignInElementInFocus" />
+                    </div>
+                    <div class="form-group index-form-group index-group">
+                        <div class="index-form-icon">
+                            <i class="fa fa-lock "></i>
+                        </div>
+                        <input type="password" placeholder="Password" @bind="@Password">
+                    </div>
+                    <div class="form-group">
+                        <h1 class="forgotpassword" @onclick="GoToEmail">Forgot Password?</h1>
+                    </div>
+                    @if (invalidCredentials)
+                    {
+                        <div class="form-group index-form-or">
+                            <h1 class="index-form-heading-3">invalid credentials</h1>
+                        </div>
+                    }
+                     @if (successfullLogin)
+                     {
+                        <div class="form-group index-form-or">
+                            <h1 class="index-form-heading-3">successful login</h1>
+                        </div>
+                     }
+                    @if (SubmitPressed)
+                    {
+                        <div class="form-group index-form-or">
+                            <h1 class="index-form-heading-3">Submit Pressed</h1>
+                        </div>
+                    }
+                    <div class="form-group login-button-div">
+                        <input type="button" class="index-form-button" @onclick="Login" value="Submit" />
+                    </div>
+                </form>
+            }
+
+
+            @if (EmailForgotPasswordForm)
+            {
+                <form class="index-form-login">
+                    <div class="form-group index-form-heading">
+                        <h1 class="index-form-heading-1">ENTER EMAIL</h1>
+                    </div>
+                    <div class="form-group index-form-group index-group">
+                        <div class="index-form-icon">
+                            <i class="fa fa-user"></i>
+                        </div>
+                        <input type="email" required placeholder="Email address" @bind="@Email" @ref="SignInElementInFocus">
+                    </div>
+                    <div class="form-group">
+                        <h1 class="forgotpassword" @onclick="GoToLogin">Back</h1>
+                    </div>
+                    @if (invalidEmail)
+                    {
+                        <div class="form-group index-form-or">
+                            <h1 class="index-form-heading-3">Invalid Email</h1>
+                        </div>
+                    }
+                     @if (validEmail)
+                     {
+                        <div class="form-group index-form-or">
+                            <h1 class="index-form-heading-3">Check your email for a confirmation key</h1>
+                        </div>
+                     }
+                    @if (SubmitPressed)
+                    {
+                        <div class="form-group index-form-or">
+                            <h1 class="index-form-heading-3">Submit Pressed</h1>
+                        </div>
+                    }
+                    <input type="button" class="index-form-button" @onclick="SubmitEmail" value="Submit" />
+                </form>
+            }
+
+
+            @if (KeyForgotPasswordForm)
+            {
+                <form class="index-form-login">
+                    <div class="form-group index-form-heading">
+                        <h1 class="index-form-heading-1">ENTER KEY</h1>
+                    </div>
+                    <div class="form-group key-input-group">
+                        <input type="text" @bind="@Key" @ref="SignInElementInFocus">
+                    </div>
+                    @if (invalidKey)
+                    {
+                        <div class="form-group index-form-or">
+                            <h1 class="index-form-heading-3">Invalid Key</h1>
+                        </div>
+                    } 
+                     @if (validKey)
+                     {
+                        <div class="form-group index-form-or">
+                            <h1 class="index-form-heading-3">Valid Key</h1>
+                        </div>
+                     } 
+                     @if (SubmitPressed)
+                    {
+                        <div class="form-group index-form-or">
+                            <h1 class="index-form-heading-3">Submit Pressed</h1>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <h1 class="forgotpassword" @onclick="GoToEmail">Back</h1>
+                    </div>
+                    <input type="button" class="index-form-button" @onclick="SubmitKey" value="Submit" />
+                </form>
+            }
+
+            @if (ForgotPasswordForm)
+            {
+                <form class="index-form-login">
+                    <div class="form-group index-form-heading">
+                        <h1 class="index-form-heading-1">RESET PASSWORD</h1>
+                    </div>
+                   
+                    <div class="form-group index-form-group index-group">
+                        <div class="index-form-icon">
+                            <i class="fa fa-lock "></i>
+                        </div>
+                        <input type="password" placeholder="Enter Password" @bind="@Password1">
+                    </div>
+                    <div class="form-group index-form-group index-group">
+                        <div class="index-form-icon">
+                            <i class="fa fa-lock "></i>
+                        </div>
+                        <input type="password" placeholder="Confirm Password" @bind="@Password2">
+                    </div>
+                    <div class="form-group">
+                        <h1 class="forgotpassword" @onclick="GoToKey">Back</h1>
+                    </div>
+                     @if (SubmitPressed)
+                    {
+                        <div class="form-group index-form-or">
+                            <h1 class="index-form-heading-3">Submit Pressed</h1>
+                        </div>
+                    }
+                      @if (validReset)
+                    {
+                        <div class="form-group index-form-or">
+                            <h1 class="index-form-heading-3">Successful Reset</h1>
+                        </div>
+                    }
+                      @if (invalidReset)
+                    {
+                        <div class="form-group index-form-or">
+                            <h1 class="index-form-heading-3">Unsuccessful Reset</h1>
+                        </div>
+                    }
+                      @if (passwordMessage)
+                      {
+                        <div class="form-group index-form-or">
+                            <h1 class="index-form-heading-3">Passwords do not match</h1>
+                        </div>
+                      } 
+                    <div class="form-group login-button-div">
+                        <input type="button" class="index-form-button" @onclick="SubmitReset" value="Submit" />
+                    </div>
+                </form>
+            }
+
         </div>
         <div class="login-right"></div>
-
     </div>
 </div>
 
 @code{
 
-    // See login or forgot password form
-    private bool RightDisplayLoginIsHidden;
-    private bool RightDisplayForgotPasswordIsHidden;
-
-    //login invalid messages
-    private bool invalidEmailorPasswordMessageIsHidden;
-    private bool validSubmitForgotPasswordMessageIsHidden;
-
+    private bool LoginForm, EmailForgotPasswordForm, KeyForgotPasswordForm, ForgotPasswordForm;
+    private bool SubmitPressed;
+    private bool successfullLogin, invalidCredentials;
+    private bool validEmail, invalidEmail;
+    private bool validKey, invalidKey;
+    private bool BackPressed;
+    private bool passwordMessage;
+    private bool validReset, invalidReset;
     private string Email = "";
     private string Password = "";
+    private string Password1 = "";
+    private string Password2 = "";
+    private string Key = "";
 
     private string message = "";
-    private ForgotPasswordModel forgotPassword = new ForgotPasswordModel();
 
     private SignInModel signIn = new SignInModel();
     private SignInResult thisUser = new SignInResult();
+    private UserModel user = new UserModel();
 
     ElementReference SignInElementInFocus, ForgotPasswordElementInFocus;
 
     protected override async Task OnInitializedAsync()
     {
-        RightDisplayLoginIsHidden = false;
-        RightDisplayForgotPasswordIsHidden = true;
-        validSubmitForgotPasswordMessageIsHidden = true;
-        invalidEmailorPasswordMessageIsHidden = true;
+        await GoToLogin();
     }
 
-    protected override void OnAfterRender(bool firstRender)
+    private bool RegisterPasswordCheck()
     {
-
-        if (firstRender) {
-            SignInElementInFocus.FocusAsync();
+        if (Password1 != Password2)
+        {
+            passwordMessage = true;
+            return false;
         }
-        ForgotPasswordElementInFocus.FocusAsync();
-    }
+        else
+        {
+            passwordMessage = false;
+            Password = Password1;
+            return true;
+        }
 
+    }
     private async Task Login()
     {
+        SubmitPressed = true;
         signIn.Email = Email;
         signIn.Password = Password;
 
@@ -136,41 +280,167 @@
 
                     if (result.Success)
                     {
+                        successfullLogin = true;
                         state.isLoggedIn = true;
                         navmanager.NavigateTo("/main");
 
                     }
                     else if (message.Equals("User/password not found."))
                     {
-                        invalidEmailorPasswordMessageIsHidden = false;
+                        invalidCredentials = true;
                     }
                 }
             }
-
         }
         catch
         {
-            invalidEmailorPasswordMessageIsHidden = false;
+            invalidCredentials = true;
         }
-    }
-
-    private async Task SubmitForgotPassword()
-    {
-        forgotPassword.Email = Email;
-        forgotPassword.Link = "https://localhost:44364/forgotpassword";
-        await Task.Delay(0);
     }
 
     private async Task GoToLogin()
     {
-        await OnInitializedAsync();
+        SubmitPressed = false;
+        LoginForm = true;
+        EmailForgotPasswordForm = KeyForgotPasswordForm = ForgotPasswordForm = false;
+
+        invalidCredentials = successfullLogin = false;
+        await Task.Delay(0);
     }
-    private void GoToForgotPassword()
+
+    private async Task GoToEmail()
     {
-        RightDisplayLoginIsHidden = true;
-        RightDisplayForgotPasswordIsHidden = false;
-        validSubmitForgotPasswordMessageIsHidden = true;
-        invalidEmailorPasswordMessageIsHidden = true;
+        SubmitPressed = false;
+        EmailForgotPasswordForm = true;
+        LoginForm = KeyForgotPasswordForm = ForgotPasswordForm = false;
+        await Task.Delay(0);
+
+    }
+
+    private async Task GoToKey()
+    {
+        SubmitPressed = false;
+        KeyForgotPasswordForm = true;
+        LoginForm = EmailForgotPasswordForm = ForgotPasswordForm = false;
+        await Task.Delay(0);
+    }
+
+    private async Task GoToForgotPassword()
+    {
+        SubmitPressed = false;
+        ForgotPasswordForm = true;
+        LoginForm = EmailForgotPasswordForm = KeyForgotPasswordForm = false;
+        await Task.Delay(0);
+    }
+
+    private async Task SubmitEmail()
+    {
+
+        SubmitPressed = true;
+        try
+        {
+            using (var msg = await HttpClient.PostAsJsonAsync<String>("https://xebecapi.azurewebsites.net/keyForgot", Email))
+            {
+                string res = await msg.Content.ReadAsStringAsync();
+                if (msg.IsSuccessStatusCode)
+                {
+                    if (res.Contains("true"))
+                    {
+                        validEmail = true;
+                        invalidEmail = false;
+                        await GoToKey();
+                    }
+
+                    else
+                    {
+                        invalidEmail = true;
+                        validEmail = false;
+                    }
+                }
+            }
+        }
+        catch
+        {
+            invalidEmail = true;
+            validEmail = false;
+        }
+
+    }
+    private async Task SubmitKey()
+    {
+        SubmitPressed = true;
+        user.Email = Email;
+        user.UserKey = Key;
+        try
+        {
+            using (var msg = await HttpClient.PostAsJsonAsync<UserModel>("https://xebecapi.azurewebsites.net/keyConfirm", user))
+            {
+                string res = await msg.Content.ReadAsStringAsync();
+                if (msg.IsSuccessStatusCode)
+                {
+                    if (res.Contains("true"))
+                    {
+                        validKey = true;
+                        invalidKey = false;
+                        await GoToForgotPassword();
+                    }
+
+                    else
+                    {
+                        invalidKey = true;
+                        validKey = false;
+                    }
+                }
+            }
+        }
+        catch
+        {
+            invalidKey = true;
+            validKey = false;
+
+        }
+    }
+    private async Task SubmitReset()
+    {
+        SubmitPressed = true;
+        bool validPassword = RegisterPasswordCheck();
+        if (validPassword)
+        {
+            try
+            {
+                using (var msg = await HttpClient.PostAsJsonAsync<UserModel>("https://xebecapi.azurewebsites.net/keyConfirm", user))
+                {
+                    string res = await msg.Content.ReadAsStringAsync();
+                    if (msg.IsSuccessStatusCode)
+                    {
+                        if (res.Contains("true"))
+                        {
+                            validReset = true;
+                            invalidReset = false;
+                            await GoToLogin();
+                        }
+
+                        else
+                        {
+                            invalidReset = true;
+                            validReset = false;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                invalidReset = true;
+                validReset = false;
+            }
+
+        }
+        else
+        {
+            invalidReset = true;
+            validReset = false;
+        }
+
     }
 }
  
