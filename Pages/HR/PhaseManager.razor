@@ -334,6 +334,12 @@
             <h1>An error occured, please reload the page.</h1>
         </div>
     }
+    else if (NoApplicants)
+    {
+        <div class="jobs-container">
+            <h1>There are no applicants for this job.</h1>
+        </div>
+    }
     else
     {
         <div class="jobs-container">
@@ -1045,6 +1051,7 @@
 
     //try catch
     bool LoadingError = false;
+    bool NoApplicants = false;
 
     //which phases the page will display
     List<int> TotalPhases = new List<int>();
@@ -1162,6 +1169,11 @@
             if (FilteredItems.Count != 0)
             {
                 LoadingDialog = false;
+            }
+            else
+            {
+                LoadingDialog = false;
+                NoApplicants = true;
             }
         }
 
