@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using XebecPortal.UI.Pages.HR;
 
 namespace XebecPortal.UI.Pages.Applicant
 {
@@ -19,6 +20,31 @@ namespace XebecPortal.UI.Pages.Applicant
         public string phase { get; set; }
     }
 
+    public class ApplicationModel
+    {
+        [JsonProperty("id")] public int Id { get; set; }
+
+        [JsonProperty("jobId")] public int JobId { get; set; }
+
+        [JsonProperty("job")] public Job Job { get; set; }
+
+        [JsonProperty("appUserId")] public int AppUserId { get; set; }
+
+        [JsonProperty("appUser")] public AppUser AppUser { get; set; }
+
+        [JsonProperty("timeApplied")] public DateTimeOffset TimeApplied { get; set; }
+
+        [JsonProperty("beginApplication")] public DateTime BeginApplication { get; set; }
+
+        [JsonProperty("applicationPhaseId")] 
+        public int ApplicationPhaseId { get; set; }
+
+        [JsonProperty("applicationPhase")]
+        public ApplicationPhase ApplicationPhase{ get; set; }
+
+        [JsonProperty("phaseHelpers")]
+        public ApplicationPhasesHelper applicationPhasesHelper { get; set; }
+    }
     public class Job
     {
         public int Id { get; set; }
@@ -145,6 +171,13 @@ namespace XebecPortal.UI.Pages.Applicant
         {
             return MemberwiseClone();
         }
+
+        public override bool Equals(object obj)
+        {
+            WorkHistory test = (WorkHistory)obj;            
+            return string.Equals(this.CompanyName, test.CompanyName,StringComparison.OrdinalIgnoreCase) && string.Equals(this.JobTitle, test.JobTitle, StringComparison.OrdinalIgnoreCase) && string.Equals(this.Description, test.Description, StringComparison.OrdinalIgnoreCase);
+        }
+
         public override string ToString()
         {
             return JsonConvert.SerializeObject(this);
@@ -168,6 +201,12 @@ namespace XebecPortal.UI.Pages.Applicant
         public object Clone()
         {
             return MemberwiseClone();
+        }
+
+        public override bool Equals(object obj)
+        {
+            Education test = (Education)obj;
+            return string.Equals(this.Insitution, test.Insitution, StringComparison.OrdinalIgnoreCase) && string.Equals(this.Qualification, test.Qualification, StringComparison.OrdinalIgnoreCase);
         }
         public override string ToString()
         {
@@ -195,6 +234,13 @@ namespace XebecPortal.UI.Pages.Applicant
         {
             return MemberwiseClone();
         }
+
+        public override bool Equals(object obj)
+        {
+            References test = (References)obj;
+            return string.Equals(this.ContactNum, test.ContactNum, StringComparison.OrdinalIgnoreCase) && string.Equals(this.Email, test.Email, StringComparison.OrdinalIgnoreCase) && string.Equals(this.Name, test.Name, StringComparison.OrdinalIgnoreCase) && string.Equals(this.Surname, test.Surname, StringComparison.OrdinalIgnoreCase);
+        }
+
         public override string ToString()
         {
             return JsonConvert.SerializeObject(this);
@@ -246,6 +292,13 @@ namespace XebecPortal.UI.Pages.Applicant
         public string ImageUrl { get; set; }
         public int AppUserId { get; set; }
         public IList<AppUser> AppUser { get; set; }
+    }
+
+    public class SkillsInformation
+    {
+        public int Id { get; set;}
+        public string Description { get; set;}
+        public int AppUserId { get; set; }
     }
    
     public class Status

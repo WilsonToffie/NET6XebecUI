@@ -271,6 +271,65 @@
         font-family: opensans-condensed-light;
         text-align: center;
     }
+
+    .applicant-application-form {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .applicant-application-form-button {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 50%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+
+    .applicant-application-form-questions {
+        display: flex;
+        justify-content: center;
+        height: 60vh;
+        overflow-y: auto;
+    }
+
+        .applicant-application-form-questions td {
+            width: 300px;
+        }
+
+    .applicant-application-form-container {
+        background: #fff;
+        width: 30%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        border-radius: 10px;
+        border: 1px solid rgba(0,0,0,0.5);
+    }
+
+    .applicant-appform-button {
+        width: 90px;
+        border-radius: 10px;
+        background: #00BCAE;
+        color: #fff;
+    }
+
+    .appform-submit-modal {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+
+
 </style>
 
 <div class="container" style="height: 55vh;" hidden="@jobPortalIsHidden">
@@ -289,7 +348,6 @@
                         {
                             <MudSelectItem T="string" Value="item">@item</MudSelectItem>
                         }
-
                     }
                 </MudSelect>
             </div>
@@ -351,7 +409,7 @@
                                 <h5 class="card-subtitle text-muted small-card-company">@item.Company</h5>
                                 <br />
                                 <h5 class="card-text small-card-location">@item.Location</h5>
-                                <h5 class="card-text small-card-date">@item.DueDate.ToString("d MMMM yyyy")</h5>
+                                <h5 class="card-text small-card-date">Due Date: @item.DueDate.ToString("d MMMM yyyy")</h5>
                             </div>
                         </div>
                         <br />
@@ -371,7 +429,7 @@
                                         <h3 class="big-card-name">@displayJobDetail.Title</h3>
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
-                                        @if (IsApplyHidden)
+                                        @if (candidates.Where(x => x.AppUserId == state.AppUserId && x.jobId == currentJob).FirstOrDefault() != null)
                                         {
                                             <p>You Have Applied For This Post</p>
                                         }
@@ -381,10 +439,10 @@
                                         }
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-start">
-                                        <h5 class="text-muted">@displayJobDetail.Company</h5>
+                                        <h5 class="card-subtitle text-muted small-card-company">@displayJobDetail.Company</h5>
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
-                                        <p class="small-card-company">@displayJobDetail.Location</p>
+                                        <p class="card-text small-card-location">@displayJobDetail.Location</p>
                                     </div>
                                     <div class="col-6 p-2 justify-content-start">
 
@@ -429,7 +487,7 @@
         {
             <br />
         }
-        <h1 class="text-center align-middle">No Job Are Available</h1>
+        <h1 class="text-center align-middle">No jobs are available</h1>
     }
     else
     {
@@ -444,14 +502,13 @@
         </div>
     }
 </div>
-<div class="row app-form-wrapper" hidden="@applicationFormIsHidden">
-    <div class="col-4"></div>
-    <div class="col-4 application-form">
-        <div class="application-form-title">
+<div class="applicant-application-form" hidden="@applicationFormIsHidden">
+    <div class="applicant-application-form-container">
+        <div class="applicant-application-form-title">
             <h4 class="collaborators-heading-text">Application Form</h4>
         </div>
-        <div class="job-portal-application-form">
-            <table class="collaborators-left-table">
+        <div class="applicant-application-form-questions">
+            <table>
                 <tbody>
                     @if (ApplicantAnswers != null)
                     {
@@ -464,16 +521,16 @@
                                         @switch (customquestion.TypeId)
                                         {
                                             case 1:
-                                                <input type="number" class="form-control" style="width: 80%" @bind="customquestion.Applicantanswer">
+                                                <input type="number" class="form-control" @bind="customquestion.Applicantanswer">
                                                 break;
                                             case 2:
-                                                <textarea type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="customquestion.Applicantanswer"></textarea>
+                                                <textarea type="text" class="form-control" placeholder="Answer..." @bind="customquestion.Applicantanswer"></textarea>
                                                 break;
                                             case 3:
-                                                <input type="text" class="form-control" placeholder="Answer..." style="width: 80%" @bind="customquestion.Applicantanswer">
+                                                <input type="text" class="form-control" placeholder="Answer..." @bind="customquestion.Applicantanswer">
                                                 break;
                                             case 4:
-                                                <input type="date" id="test" class="form-control" style="width: 80%" @onchange="(e) => { customquestion.Applicantanswer = e.Value.ToString(); }">
+                                                <input type="date" id="test" class="form-control" @onchange="(e) => { customquestion.Applicantanswer = e.Value.ToString(); }">
                                                 break;
                                             case 5:
                                                 <select @bind="customquestion.Applicantanswer">
@@ -482,7 +539,7 @@
                                                 </select>
                                                 break;
                                             case 6:
-                                                <input type="file" class="form-control" style="width: 80%" @bind="customquestion.Applicantanswer">
+                                                <input type="file" class="form-control" @bind="customquestion.Applicantanswer">
                                                 break;
                                         }
                                     </div>
@@ -493,15 +550,20 @@
                 </tbody>
             </table>
         </div>
-        <div class="application-form-button">
-            <button class="btn appform-main-button" @onclick="ToJobPortal">Job Portal</button>
-            <button class="btn" style="color: transparent; background-color: transparent; border:none" @onclick="ToJobPortal">Space</button>
-            <button class="btn appform-main-button" @onclick="SaveAnswers">Submit</button>
+        <div class="applicant-application-form-button">
+            <button class="btn applicant-appform-button" @onclick="ToJobPortal">Job Portal</button>
+            <button class="btn applicant-appform-button" @onclick="SaveAnswers">Submit</button>
         </div>
     </div>
-    <div class="col-4"></div>
-
 </div>
+
+@if (submitModal)
+{
+    <div class="appform-submit-modal">
+        <MudProgressCircular Class="loading-icon" Size="Size.Large" Indeterminate="true" />
+    </div>
+}
+
 
 @{
     isFilterContainAnyVal = !string.IsNullOrEmpty(searchJob) || mudSelectLocation?.Any() == true || mudSelectCompany?.Any() == true || mudSelectDepartment?.Any() == true || mudSelectJobType?.Any() == true;

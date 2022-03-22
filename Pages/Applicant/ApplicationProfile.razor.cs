@@ -43,6 +43,14 @@ namespace XebecPortal.UI.Pages.Applicant
         private References references = new() { AppUserId = 1 };
 
 
+        private List<string> skills = new List<string>(); // The skills that we current display
+        private SkillsInformation skillInfo = new() { AppUserId = 1}; // the skill information model 
+        private List<string> selectedSkillsList = new List<string>();
+
+        private List<SkillsInformation> selectedSkillsList2 = new(); // the list that contains the information
+
+
+
         private IJSObjectReference _jsModule;
         string _dragEnterStyle;
         IBrowserFile fileNames;
@@ -54,12 +62,70 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool workProgressVal = false;
         private bool referenceProgressVal = false;
 
+        //Create a skills list , with mock data just for now
+        //Create a selected skill list
+        //Then wriite that selected skill to the DB
 
         protected override async Task OnInitializedAsync()
         {
+            
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/ApplicationProfile.js");
+            populateSkillLists();
         }
 
+        public void populateSkillLists()
+        {
+            skills.Add("Java");
+            skills.Add("Python");
+            skills.Add("C#");
+            skills.Add("C");
+            skills.Add("C++");
+            skills.Add("mySQL");
+            skills.Add("Blazor Framework");
+            skills.Add("Azure services");
+        }
+
+        private void addToSelectedInfo(string info)
+        {
+            //if (!selectedSkillsList.Contains(info))
+            //{
+            //    selectedSkillsList.Add(info);
+            //}
+            //else
+            //{
+            //    // inform user that it existed already
+            //}
+
+            //  var test = selectedSkillsList2.FindAll(r => r.Description.Equals(info));
+
+            selectedSkillsList2.Add(new()
+               {
+                   // Id = skillsId,// Is it auto increment
+                    Description = info,
+                    AppUserId = 1,
+              });
+
+            
+
+        }
+        private void removeFromSelectedInfo(SkillsInformation info)
+        {
+            selectedSkillsList2.RemoveAll(x => x.Description.Equals(info.Description)); ;
+        }
+        /* Use later
+        private static string GetMultiSelectionTextSkills(List<string> selectedValues)
+        {
+            return $"Selected Skill{(selectedValues.Count > 1 ? "s" : " ")}: {string.Join(", ", selectedValues.Select(x => x))}";
+        }
+        */
+        /* wait for the DB  then I can use this
+        private object CardClassSelect(Skills developer)
+        {
+            if (selectedSkills.FindAll(d => d.id == developer.id).Count() > 0)
+                return "card-class-for-skills-selected";
+            return "card-class-for-skills";
+        }
+        */
         private void AddReferences()
         {
             var validCheck = referencesList.FindAll(r => r.Name.Equals(references.Name) && string.Equals(r.Surname, references.Surname, StringComparison.OrdinalIgnoreCase) && string.Equals(r.Email, references.Email, StringComparison.OrdinalIgnoreCase) && string.Equals(r.ContactNum, references.ContactNum, StringComparison.OrdinalIgnoreCase));
@@ -68,14 +134,12 @@ namespace XebecPortal.UI.Pages.Applicant
 
             referencesList.Add(new()
             {
-                Id = increment,
                 AppUserId = 1,
                 Name = references.Name,
                 Surname = references.Surname,
                 Email = references.Email,
                 ContactNum = references.ContactNum,
-            });
-            increment++;            
+            });           
             references = new();
         } 
 
@@ -85,14 +149,14 @@ namespace XebecPortal.UI.Pages.Applicant
         {
             editMode = false;
             Logger.LogInformation("Valid submit called");
-            int index = referencesList.FindIndex(x => x.Id == referenceValues.Id);
+            int index = referencesList.FindIndex(x => x.Equals(referenceValues));
             referencesList[index] = references;
             references = new();
         }
 
         private void Cancel(References referenceValues)
         {
-            int index = referencesList.FindIndex(x => x.Id == referenceValues.Id);            
+            int index = referencesList.FindIndex(x => x.Equals(referenceValues));            
             referencesList[index] = tempRef;
             references = new();
             editMode = false;
@@ -112,38 +176,17 @@ namespace XebecPortal.UI.Pages.Applicant
         private void SelectReference(References referenceValues)
         {
             editMode = true;
-            int index = referencesList.FindIndex(x => x.Id == referenceValues.Id);
+            int index = referencesList.FindIndex(x => x.Equals(referenceValues));
             references = referencesList[index];
             tempRef = (References)references.Clone();
         }
-        /*
-        private async Task AddWorkHistory(WorkHistory workHistoryValues)
-        {
-            if (await _jsModule.InvokeAsync<bool>("WorkHistory"))
-            {
-                workHistoryList.Add(new()
-                {
-                    Id = increment,
-                    AppUserId = 1,
-                    CompanyName = workHistoryValues.CompanyName,
-                    JobTitle = workHistoryValues.JobTitle,
-                    StartDate = workHistoryValues.StartDate,
-                    EndDate = workHistoryValues.EndDate,
-                    Description = workHistoryValues.Description
-                });
-
-                increment++;
-                workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
-            }
-        }
-        */
+      
         private WorkHistory tempWorkHistory;
 
         private void addWorkHistoryTest()
-        {            
+        {
             workHistoryList.Add(new()
             {
-                Id = increment,
                 AppUserId = 1,
                 CompanyName = workHistory.CompanyName,
                 JobTitle = workHistory.JobTitle,
@@ -151,17 +194,16 @@ namespace XebecPortal.UI.Pages.Applicant
                 EndDate = workHistory.EndDate,
                 Description = workHistory.Description
             });
-            increment++;
             workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         }
 
-        private void DeleteWorkHistory(int id)
+        private void DeleteWorkHistory(WorkHistory workHistoryValues)
         {
             if (workHistoryList.Count == 1)
             {
                 workProgressVal = true;
             }            
-            workHistoryList.RemoveAll(x => x.Id == id);
+            workHistoryList.RemoveAll(x => x == (workHistoryValues));
             workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             workHistUpdate = false;
         }
@@ -169,7 +211,7 @@ namespace XebecPortal.UI.Pages.Applicant
         private void SelectWorkHistory(WorkHistory workHistoryValues)
         {            
             workEditMode = true;
-            int index = workHistoryList.FindIndex(x => x.Id == workHistoryValues.Id);
+            int index = workHistoryList.FindIndex(x => x == (workHistoryValues)); 
             workHistory = workHistoryList[index];
             tempWorkHistory = (WorkHistory)workHistory.Clone();           
         }
@@ -177,34 +219,34 @@ namespace XebecPortal.UI.Pages.Applicant
         // This is to display the selectedHistory tab
         private object GetStyling(WorkHistory item)
         {
-            if (workHistory.Id == item.Id)
+            if ((workHistory.CompanyName == item.CompanyName) && (workHistory.JobTitle == item.JobTitle) && (workHistory.Description == item.Description))
                 return "box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;background: rgba(255, 255, 255, 0);backdrop - filter: blur(5.6px);-webkit - backdrop - filter: blur(5.6px);border: 1px solid rgba(255, 255, 255, 0.04);max - height: 60vh;overflow - y: auto; ";
             return "";
         }
 
         private object GetEduStyling(Education item)
         {
-            if (education.Id == item.Id)
+            if ((education.Insitution == item.Insitution) && (education.Qualification == item.Qualification))
                 return "box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;backdrop - filter: blur(5.6px);-webkit - backdrop - filter: blur(5.6px);border: 1px solid rgba(255, 255, 255, 0.04);max - height: 60vh;overflow - y: auto; ";
             return "";
         }
         private object GetRefStyling(References item)
         {
-            if (references.Id == item.Id)
+            if ((references.Email == item.Email) && (references.Name == item.Name) && (references.ContactNum == item.ContactNum) && (references.Email == item.Email))
                 return "box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;backdrop - filter: blur(5.6px);-webkit - backdrop - filter: blur(5.6px);border: 1px solid rgba(255, 255, 255, 0.04);max - height: 60vh;overflow - y: auto; ";
             return "";
         }
         private void SaveWorkHistory(WorkHistory workHistoryValues)
         {
             workEditMode = false;
-            int index = workHistoryList.FindIndex(x => x.Id == workHistoryValues.Id);
+            int index = workHistoryList.FindIndex(x => x.Equals(workHistoryValues));
             workHistoryList[index] = workHistory;
             workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         }
 
         private void CancelWorkHistory(WorkHistory workHistoryValues)
         {
-            int index = workHistoryList.FindIndex(x => x.Id == workHistoryValues.Id);
+            int index = workHistoryList.FindIndex(x => x.Equals(workHistoryValues));
             workHistoryList[index] = tempWorkHistory;
             workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             workEditMode = false;
@@ -227,27 +269,6 @@ namespace XebecPortal.UI.Pages.Applicant
             workHistUpdate = true;
         }
         /*
-        private async Task AddEducation(Education educationValues)
-        {
-            if (await _jsModule.InvokeAsync<bool>("Education"))
-            {
-                educationList.Add(new()
-                {
-                    Id = increment,
-                    AppUserId = 1,
-                    Insitution = educationValues.Insitution,
-                    Qualification = educationValues.Qualification,
-                    StartDate = educationValues.StartDate,
-                    EndDate = educationValues.EndDate,
-                });
-
-                increment++;
-                education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
-            }
-        }
-        */
-
-        /*
         private void AddPersonallInformation()
         {           
             personalInformation.Add(new()
@@ -269,26 +290,23 @@ namespace XebecPortal.UI.Pages.Applicant
         {
             educationList.Add(new()
             {
-                Id = increment,
                 AppUserId = 1,
                 Insitution = education.Insitution,
                 Qualification = education.Qualification,
                 StartDate = education.StartDate,
                 EndDate = education.EndDate,
-            });
-
-            increment++;            
+            });         
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         }
 
-        private void DeleteEducation(int id)
+        private void DeleteEducation(Education educationValues)
         {
             if (educationList.Count == 1)
             {
                 educationProgressVal = true;
             }
             
-            educationList.RemoveAll(x => x.Id == id);
+            educationList.RemoveAll(x => x.Equals(educationValues));
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             eduUpdate = false;
         }
@@ -296,7 +314,7 @@ namespace XebecPortal.UI.Pages.Applicant
         private void SelectEducation(Education educationValues)
         {
             eduEditMode = true;
-            int index = educationList.FindIndex(x => x.Id == educationValues.Id);
+            int index = educationList.FindIndex(x => x.Equals(educationValues));
             education = educationList[index];
             tempEducation = (Education)education.Clone();
         }
@@ -304,14 +322,14 @@ namespace XebecPortal.UI.Pages.Applicant
         private void SaveEducation(Education educationValues)
         {
             eduEditMode = false;
-            int index = educationList.FindIndex(x => x.Id == educationValues.Id);
+            int index = educationList.FindIndex(x => x.Equals(educationValues));
             educationList[index] = education;
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         }
 
         private void CancelEducation(Education educationValues)
         {
-            int index = educationList.FindIndex(x => x.Id == educationValues.Id);
+            int index = educationList.FindIndex(x => x.Equals(educationValues));
             educationList[index] = tempEducation;
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             eduEditMode = false;
@@ -346,25 +364,35 @@ namespace XebecPortal.UI.Pages.Applicant
             education.EndDate = education.EndDate < education.StartDate ? education.StartDate : education.EndDate;
         }
 
-        private async  Task Submit()
+        private async Task Submit()
         {            
-            /*
-                foreach (var item in workHistoryList)
-                    item.Id = 0;
-
-                foreach (var item in educationList)
-                    item.Id = 0;
-            */
                 await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/PersonalInformation", personalInformation);
                 await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/AdditionalInformation", additionalInformation);
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/WorkHistory", workHistoryList);
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Education", educationList);
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Reference", referencesList); // Just need API confirmation
+
+                foreach (var item in workHistoryList)
+                {
+                    await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/WorkHistory", item);
+                }
+                foreach (var item in educationList)
+                {
+                    await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Education", item);
+                }
+                foreach (var item in referencesList)
+                {
+                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Reference", item);
+                }
+
+                foreach (var item in selectedSkillsList2)
+                {
+                   // await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Education", item);
+                }
+             
+                
                 await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink", profilePortfolio);
 
             if (await _jsModule.InvokeAsync<bool>("PersonalInformation"))
             {
-                await jsRuntime.InvokeVoidAsync("alert", "You Data Has Been Captured");
+                
             }
         }
         // This is just used to indicate to the user that their info has been successfully added to the DB
@@ -374,7 +402,7 @@ namespace XebecPortal.UI.Pages.Applicant
          {
             if (msg.IsSuccessStatusCode)
                  {
-                     //Stuff posted successfully
+                    await jsRuntime.InvokeVoidAsync("alert", "You Data Has Been Captured");
                  }
              }
         */
