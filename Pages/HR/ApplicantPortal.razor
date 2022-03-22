@@ -254,6 +254,11 @@
         font-weight: bold;
         border-color: #2f2f2f;
     }
+
+    .loading-icon{
+        margin-top: 150px;
+    }
+
 </style>
 
 <div class="page-top">
@@ -320,7 +325,7 @@
                                 tempCandidate = candidates.Where(x => x.AppUserId == currentUser.id).FirstOrDefault();
 
                                 <td style="padding-left: 35px">
-                                <td class="total-match-pill" style="@(GetPillStyle(candidate))">@tempCandidate.TotalMatch %</td></td>
+                                <td class="total-match-pill" style="@(GetPillStyle(candidate))">@Math.Round(tempCandidate.TotalMatch) %</td></td>
                             }
 
 
@@ -347,8 +352,7 @@
     }
     else
     {
-        <p>No applicants for this job.</p>
-
+            <MudProgressCircular Class="loading-icon" Size="Size.Large" Indeterminate="true" />
     }
 
 </div>
@@ -963,7 +967,14 @@
 
     private string FindCurrentPhase(int candidateId, int jobId)
     {
+        if (applications.Where(x => x.JobId == jobId && x.AppUserId == candidateId).FirstOrDefault() == null)
+        {
+            Console.WriteLine("error found");
+            return "No Phase found";
+        }
+
         int applicationId = applications.Where(x => x.JobId == jobId && x.AppUserId == candidateId).FirstOrDefault().Id;
+        Console.WriteLine(applicationId);
 
         List<ApplicationPhaseHelper> phases_ = phasesHelpers.Where(x => x.ApplicationId == applicationId).ToList();
         phases_ = phases_.OrderByDescending(x => x.TimeMoved).ToList();
