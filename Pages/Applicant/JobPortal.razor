@@ -278,25 +278,27 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background: #00BCAE;
     }
 
-    .applicant-application-form-title{
-        background: rgb(255 0 0);
-
+    .applicant-application-form-button {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 50%;
+        display: flex;
+        justify-content: space-between;
     }
 
-    .applicant-application-form-button{
-        background:rgb(255 216 0);
-    }
 
-
-    .applicant-application-form-questions{
-        background:rgb(255 106 0);
-        width: 80%;
+    .applicant-application-form-questions {
         display: flex;
         justify-content: center;
+        height: 60vh;
+        overflow-y: auto;
     }
+
+        .applicant-application-form-questions td {
+            width: 300px;
+        }
 
     .applicant-application-form-container {
         background: #fff;
@@ -304,8 +306,16 @@
         display: flex;
         align-items: center;
         flex-direction: column;
+        border-radius: 10px;
+        border: 1px solid rgba(0,0,0,0.5);
     }
 
+    .applicant-appform-button {
+        width: 90px;
+        border-radius: 10px;
+        background: #00BCAE;
+        color: #fff;
+    }
 </style>
 
 <div class="container" style="height: 55vh;" hidden="@jobPortalIsHidden">
@@ -405,7 +415,7 @@
                                         <h3 class="big-card-name">@displayJobDetail.Title</h3>
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
-                                        @if (IsApplyHidden)
+                                        @if (candidates.Where(x => x.AppUserId == state.AppUserId && x.jobId == currentJob).FirstOrDefault() != null)
                                         {
                                             <p>You Have Applied For This Post</p>
                                         }
@@ -463,7 +473,7 @@
         {
             <br />
         }
-        <h1 class="text-center align-middle">No Job Are Available</h1>
+        <h1 class="text-center align-middle">No jobs are available</h1>
     }
     else
     {
@@ -527,12 +537,21 @@
             </table>
         </div>
         <div class="applicant-application-form-button">
-            <button class="btn appform-main-button" @onclick="ToJobPortal">Job Portal</button>
-            <button class="btn" style="color: transparent; background-color: transparent; border:none" @onclick="ToJobPortal">Space</button>
-            <button class="btn appform-main-button" @onclick="SaveAnswers">Submit</button>
+            <button class="btn applicant-appform-button" @onclick="ToJobPortal">Job Portal</button>
+            @if (!isSubmitted)
+            {
+                <button class="btn applicant-appform-button" @onclick="SaveAnswers">Submit</button>
+            }
+            else
+            {
+                <button class="btn applicant-appform-button">
+                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
+                </button>
+            }
+
         </div>
     </div>
-    </div>
+</div>
 
 @{
     isFilterContainAnyVal = !string.IsNullOrEmpty(searchJob) || mudSelectLocation?.Any() == true || mudSelectCompany?.Any() == true || mudSelectDepartment?.Any() == true || mudSelectJobType?.Any() == true;
