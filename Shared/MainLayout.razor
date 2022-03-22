@@ -178,6 +178,12 @@
         padding-bottom: 0;
         height: 5vh;
     }
+    .offcanvas-header-alert {
+        /*background-color: #00bcae;*/
+        margin-bottom: 0;
+        padding-bottom: 0;
+        height: 5vh;
+    }
 
     .offcanvas-body-main {
         overflow-y: hidden;
@@ -202,9 +208,9 @@
         height: 18vh;
         width: 50%;
         margin: auto;
-        background-image: url(/Img/workInProgress.png);
+        background: url(@personalInfo.ImageUrl);        
         background-size: cover;
-        background-repeat: no-repeat;
+        /*background-repeat: no-repeat;*
         /*background-color: none;*/
         border: 0.4em rgba(0,0,0,0.2) solid;
         border-radius: 100%;
@@ -282,8 +288,8 @@
         font-family: opensans-condensed-light;
         font-weight: 800;
         font-size: 2em;
-        /*color: rgba(0, 188, 174,1);*/
-        color: #FFFFFF;
+        color: rgba(0, 188, 174,1);
+        /*color: #FFFFFF;*/
         text-align: center;
         /*margin-top: 3vh;*/
         margin-bottom: 3vh;
@@ -342,6 +348,14 @@
         text-align: center;
     }
 
+    .user-initial {
+        display: flex;
+        justify-content: center;
+        align-content: center;
+        font-family: opensans-condensed-bold;
+        font-size: 6em;
+        font-weight: 800;
+    }
 
     .to-top {
         color: #00bcae;
@@ -404,6 +418,26 @@
             border: none;
             margin-left: 25%;
         }
+    .upload-image {
+        color: transparent;
+        width: 2em;
+        height: 2em;
+        background: white;
+        margin-top: 14vh;
+        margin-left: 6vw;
+        border-radius: 50%;
+        text-align: center;
+    }
+
+    .drag-drop-input {
+        position: absolute;
+        width: 690px;
+        height: 140px;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 2;
+        border: unset;
+    }
 </style>
 
 @if (state.Role.Equals("Candidate"))
@@ -430,15 +464,13 @@
             </div>
             <div class="mainlayout-profile">
                 <div class="profile-div">
-                    <div class="profile-image-div-cover">
-                        @*State.profile.Avatar.Avatar*@
-                        <div class="upload-profile-btn">
-                            <!-- Candidates Profile image-->
-                            <div class="to-top">
-
-                            </div>
+                    <div class="profile-image-div-cover">                  
+                        <div class="upload-profile-btn" >
+                            <label class="to-top" >
+                                <InputFile OnChange="@UploadingProfilePic" class="drag-drop-input" id="fileInput"/>
+                            </label>
                         </div>
-                        <InputFile OnChange="@ImageFileUpload" />
+
                     </div>
                     <div class="profile-name-div">
                         <h2 class="profile-name">@state.Name &nbsp @state.Surname</h2>
@@ -468,10 +500,10 @@
 
         <!--Alert Navigation-->
         <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showApplicantNavAlert" aria-labelledby="offcanvasRightLabel">
-            <div class="offcanvas-header offcanvas-header-color1">
+            <div class="offcanvas-header-alert offcanvas-header-color1">
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
-            <div class="mainlayout-profile align-items-center">
+            <div class="align-items-center">
                 <p class="configure-alerts-heading">Configure Alerts</p>
             </div>
                 <div class="offcanvas-body offcanvas-body-main">
@@ -583,10 +615,7 @@
                 <div class="profile-div">
                     <div class="profile-image-div-cover">
                         <!--Profile images for HR -->
-                        <div class="upload-profile-btn">
-                            <div class="to-top">
-                            </div>
-                        </div>
+                        <div class="user-initial">@state.Avator</div>
                     </div>
                     <div class="profile-name-div">
                         <h2 class="profile-name">@state.Name &nbsp @state.Surname</h2>

@@ -12,29 +12,29 @@ using Microsoft.Extensions.Logging;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using static System.Net.WebRequestMethods;
+using Azure;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using Azure.Storage;
 
 namespace XebecPortal.UI.Shared
 {
     public partial class MainLayout
     {
+        PersonalInformation personalInfo = new PersonalInformation();
         private IList<Job> jobs = new List<Job>();
         private IList<JobType> jobTypes = new List<JobType>();
-        // Newly added stuffs
-        /*
-        private List<UploadResults> uploadResults = new();
-        private List<Files> files = new();
-        */
+
         private string Initials = "";
-        private string Avator = "";
         private bool applicantApplicationProfile, applicantJobPortal, applicantMyJobs = false;
 
         private bool hrDataAnalyticsTool, hrJobPortal, hrCreateAJob = false;
 
         protected override async Task OnInitializedAsync()
-        {
-            applicantJobPortal = hrJobPortal = true;
+        {           
             jobs = await HttpClient.GetFromJsonAsync<IList<Job>>("https://xebecapi.azurewebsites.net/api/Job");
             jobTypes = await HttpClient.GetFromJsonAsync<IList<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
+            personalInfo = await HttpClient.GetFromJsonAsync<PersonalInformation>("https://xebecapi.azurewebsites.net/api/personalinformation/1"); // !!!!!! Change later 
         }
 
         private void showApplicantApplicationProfile()
@@ -105,107 +105,63 @@ namespace XebecPortal.UI.Shared
             return $"Selected Type{(selectedValues.Count > 1 ? "s" : " ")}: {string.Join(", ", selectedValues.Select(x => x))}";
         }
 
-
-        /*
-        private bool shouldRender;
-        protected override bool ShouldRender() => shouldRender;
-
-
-        private List<IBrowserFile> loadedFiles = new();
-        private long maxFileSize = 1024 * 15;
-        private int maxAllowedFiles = 1;
-        private bool isLoading;
-        int count = 0;
-
-        private async Task ImageFileUpload(InputFileChangeEventArgs e)
+        
+        private string storageAcc = "storageaccountxebecac6b";
+        private string imgContainer = "images";
+        private string userPicInfo;
+        private async Task UploadingProfilePic(InputFileChangeEventArgs e)
         {
-            shouldRender = false;
-            long maxFileSize = 1024 * 1024 * 15;
-            var upload = false;
+            // Getting the file
+            var fileArray = e.File.Name.Split('.');
+            userPicInfo = e.File.Name;
+            var fileName = fileArray[0] + Guid.NewGuid().ToString().Substring(0, 5) + "." + fileArray[1];
+            var fileInfo = e.File;
+            // You require a azure account with a storage account. You use that link for below. The 'images' is the file that the file image is stored in in Azure.
+            var blobUri = new Uri("https://"
+                + storageAcc 
+                + ".blob.core.windows.net/"
+                + imgContainer
+                + "/"
+                + fileName);
 
-            using var content = new MultipartFormDataContent();
-
-            foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+            AzureSasCredential credential = new AzureSasCredential("?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupix&se=2024-12-02T20:36:17Z&st=2022-03-16T12:36:17Z&sip=1.1.1.1-255.255.255.255&spr=https&sig=nSCARiXySz%2BXLmtXJfZw28RkqfYUe%2FvDi11V9Q5Tpyo%3D");
+            BlobClient blobClient = new BlobClient(blobUri, credential);
+                        
+            var res = await blobClient.UploadAsync(fileInfo.OpenReadStream(1512000), new BlobUploadOptions
             {
-                if (uploadResults.SingleOrDefault(
-                    f => f.FileName == file.Name) is null)
-                {
-                    try
-                    {
-                        var fileContent =
-                            new StreamContent(file.OpenReadStream(maxFileSize));
-
-                        fileContent.Headers.ContentType =
-                            new MediaTypeHeaderValue(file.ContentType);
-
-                        files.Add(new() { Name = file.Name });
-
-                        content.Add(
-                            content: fileContent,
-                            name: "\"files\"",
-                            fileName: file.Name);
-
-                        upload = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.LogInformation(
-                            "{FileName} not uploaded (Err: 6): {Message}",
-                            file.Name, ex.Message);
-
-                        uploadResults.Add(
-                            new()
-                            {
-                                FileName = file.Name,
-                                ErrorCode = 6,
-                                Uploaded = false
-                            });
-                    }
+                HttpHeaders = new BlobHttpHeaders { ContentType = fileInfo.ContentType },
+                TransferOptions = new StorageTransferOptions
+                {                    
+                    InitialTransferSize = 1024 * 1024,
+                    MaximumConcurrency = 1
                 }
-            }
-
-            if (upload)
-            {
-                // /Filesave this needs to change to the official
-                var response = await HttpClient.PostAsJsonAsync("/Filesave", content);
-
-                var newUploadResults = await response.Content
-                    .ReadFromJsonAsync<IList<UploadResults>>();
-
-                if (newUploadResults is not null)
-                {
-                    uploadResults = uploadResults.Concat(newUploadResults).ToList();
-                }
-            }
-
-            shouldRender = true;
-        }
-
-        private static bool FileUpload(IList<UploadResults> uploadResults,  string? fileName, ILogger<MainLayout> logger, out UploadResults result)
-        {
-            result = uploadResults.SingleOrDefault(f => f.FileName == fileName) ?? new();
-
-            if (!result.Uploaded)
-            {
-                logger.LogInformation("{FileName} not uploaded (Err: 5)", fileName);
-                result.ErrorCode = 5;
-            }
-
-            return result.Uploaded;
-        }
-
-        */
-
-        public void ImageFileUpload()
-        {       
+            });           
             
+            if (res.GetRawResponse().Status <= 205)
+            {
+                 // remember to fix / change later
+                personalInfo.Id = 1; // 1st person in DB
+                personalInfo.ImageUrl = blobUri.ToString();
+                Console.WriteLine("Result is true whooooo");
+                var content = new FormUrlEncodedContent(new[]
+                                {
+                                    new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
+                                });
+               //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
+               var resp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo);
+            }
+            else
+            {
+                Console.WriteLine("result is false :(");
+            }
         }
+
         private void getInitials()
-        {
-            Avator = state.Avator;
+        {            
             string firstInitial = state.Name.Substring(0, 1);
             string lastInitial = state.Surname.Substring(0, 1);
             Initials = firstInitial + lastInitial;
+            state.Avator = Initials;
         }
     }
 }
