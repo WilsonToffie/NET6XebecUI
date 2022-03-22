@@ -316,6 +316,20 @@
         background: #00BCAE;
         color: #fff;
     }
+
+    .appform-submit-modal {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+
+
 </style>
 
 <div class="container" style="height: 55vh;" hidden="@jobPortalIsHidden">
@@ -538,20 +552,18 @@
         </div>
         <div class="applicant-application-form-button">
             <button class="btn applicant-appform-button" @onclick="ToJobPortal">Job Portal</button>
-            @if (!isSubmitted)
-            {
-                <button class="btn applicant-appform-button" @onclick="SaveAnswers">Submit</button>
-            }
-            else
-            {
-                <button class="btn applicant-appform-button">
-                    <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
-                </button>
-            }
-
+            <button class="btn applicant-appform-button" @onclick="SaveAnswers">Submit</button>
         </div>
     </div>
 </div>
+
+@if (submitModal)
+{
+    <div class="appform-submit-modal">
+        <MudProgressCircular Class="loading-icon" Size="Size.Large" Indeterminate="true" />
+    </div>
+}
+
 
 @{
     isFilterContainAnyVal = !string.IsNullOrEmpty(searchJob) || mudSelectLocation?.Any() == true || mudSelectCompany?.Any() == true || mudSelectDepartment?.Any() == true || mudSelectJobType?.Any() == true;
