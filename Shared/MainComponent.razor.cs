@@ -19,22 +19,32 @@ using Azure.Storage;
 
 namespace XebecPortal.UI.Shared
 {
-    public partial class MainLayout
+    public partial class MainComponent
     {
         PersonalInformation personalInfo = new PersonalInformation();
         private IList<Job> jobs = new List<Job>();
         private IList<JobType> jobTypes = new List<JobType>();
 
         private string Initials = "";
-        private bool applicantApplicationProfile, applicantJobPortal, applicantMyJobs = false;
+        private bool applicantApplicationProfile, applicantJobPortal, applicantMyJobs;
 
-        private bool hrDataAnalyticsTool, hrJobPortal, hrCreateAJob = false;
+        private bool hrDataAnalyticsTool, hrJobPortal, hrCreateAJob;
 
         protected override async Task OnInitializedAsync()
-        {           
+        {
             jobs = await HttpClient.GetFromJsonAsync<IList<Job>>("https://xebecapi.azurewebsites.net/api/Job");
             jobTypes = await HttpClient.GetFromJsonAsync<IList<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
-            personalInfo = await HttpClient.GetFromJsonAsync<PersonalInformation>("https://xebecapi.azurewebsites.net/api/personalinformation/1"); // !!!!!! Change later 
+            personalInfo = await HttpClient.GetFromJsonAsync<PersonalInformation>($"https://xebecapi.azurewebsites.net/api/personalinformation/{state.AppUserId}"); // !!!!!! Change the ID to be the userID later 
+            Console.WriteLine("personalInfo: " + personalInfo.Id);
+            Console.WriteLine("appUserID: " + state.AppUserId);
+            if (state.Role.Equals("Candidate"))
+            {
+                showApplicantJobPortal();
+            }
+            else
+            {
+                showHRJobPortal();
+            }
         }
 
         private void showApplicantApplicationProfile()
@@ -105,7 +115,7 @@ namespace XebecPortal.UI.Shared
             return $"Selected Type{(selectedValues.Count > 1 ? "s" : " ")}: {string.Join(", ", selectedValues.Select(x => x))}";
         }
 
-        
+
         private string storageAcc = "storageaccountxebecac6b";
         private string imgContainer = "images";
         private string userPicInfo;
@@ -118,7 +128,7 @@ namespace XebecPortal.UI.Shared
             var fileInfo = e.File;
             // You require a azure account with a storage account. You use that link for below. The 'images' is the file that the file image is stored in in Azure.
             var blobUri = new Uri("https://"
-                + storageAcc 
+                + storageAcc
                 + ".blob.core.windows.net/"
                 + imgContainer
                 + "/"
@@ -126,29 +136,30 @@ namespace XebecPortal.UI.Shared
 
             AzureSasCredential credential = new AzureSasCredential("?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupix&se=2024-12-02T20:36:17Z&st=2022-03-16T12:36:17Z&sip=1.1.1.1-255.255.255.255&spr=https&sig=nSCARiXySz%2BXLmtXJfZw28RkqfYUe%2FvDi11V9Q5Tpyo%3D");
             BlobClient blobClient = new BlobClient(blobUri, credential);
-                        
+
             var res = await blobClient.UploadAsync(fileInfo.OpenReadStream(1512000), new BlobUploadOptions
             {
                 HttpHeaders = new BlobHttpHeaders { ContentType = fileInfo.ContentType },
                 TransferOptions = new StorageTransferOptions
-                {                    
+                {
                     InitialTransferSize = 1024 * 1024,
                     MaximumConcurrency = 1
                 }
-            });           
-            
+            });
+
             if (res.GetRawResponse().Status <= 205)
             {
-                 // remember to fix / change later
-                personalInfo.Id = 1; // 1st person in DB
+                // remember to fix / change later
+                personalInfo.Id = state.AppUserId; // 1st person in DB
                 personalInfo.ImageUrl = blobUri.ToString();
                 Console.WriteLine("Result is true whooooo");
                 var content = new FormUrlEncodedContent(new[]
                                 {
                                     new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
                                 });
-               //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
-               var resp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo);
+                //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
+
+                var resp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/1", personalInfo); //{personalInfo.Id}
             }
             else
             {
@@ -157,7 +168,7 @@ namespace XebecPortal.UI.Shared
         }
 
         private void getInitials()
-        {            
+        {
             string firstInitial = state.Name.Substring(0, 1);
             string lastInitial = state.Surname.Substring(0, 1);
             Initials = firstInitial + lastInitial;

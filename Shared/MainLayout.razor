@@ -1,669 +1,240 @@
-﻿@page "/main"
-@inherits LayoutComponentBase
-@inject IJSRuntime JsRuntime
-@inject HttpClient HttpClient
-@using Microsoft.AspNetCore.Components
-@layout EmptyLayout
+﻿@inherits LayoutComponentBase
 @inject NavigationManager navmanager
-@using XebecPortal.UI.Shared.Home.Models
-@inject UserState state
-@using Microsoft.Extensions.Logging
-@inject ILogger<MainLayout> Logger
+@inject HttpClient HttpClient
+@layout EmptyLayout
+@using System.Linq;
+@using XebecPortal.UI.Shared.Home.Models;
+
 <style>
-
-    .page {
-        top: 0;
-        left: 0;
+    /* index */
+    .underlay {
+        background-image: linear-gradient(rgba(0, 188, 174,0.05),rgba(0, 188, 174,0.05)),url(/Img/background.svg);
         height: 100vh;
-        background-image: linear-gradient(rgba(0, 188, 174,0.05),rgba(0, 188, 174,0.05)),url("../Img/background.svg");
+        width: 100vw;
         background-size: cover;
+        background-attachment: fixed;
         background-position: center;
     }
 
-    .header {
-        top: 0;
-        left: 0;
-        height: 10vh;
+    .overlay {
+        height: 90vh;
+        width: 100%;
+    }
+
+    .overlay-nav {
         background-color: white;
-    }
-
-    .main {
-        top: 10vh;
-        left: 0;
-        height: 85vh;
-        width: 100%;
-    }
-
-    .main-heading-text-div {
-        width: 93%;
-        margin-top: -1vh;
-    }
-
-    .main-heading-text {
-        font-size: 1.2em;
-        font-weight: 800;
-        display: inline-block;
-        font-family: opensans-condensed-bold;
-        color: rgba(0,0,0,0.5);
-        text-align: left;
-        text-transform: uppercase;
-    }
-
-    .main-component {
-        height: 85vh;
-        width: 100%;
-    }
-
-    .mainlayout-heading {
-        width: 70%;
-        top: 0;
-    }
-
-    .mainlayout-xebec-heading {
         height: 10vh;
-        width: 90px;
-        margin-left: 15px;
-    }
-
-    .mainlayout-xebec-logo {
-        height: 10vh;
-        min-width: 100%;
-        background-image: url(/Img/xebeclogoblack.png);
-        background-size: cover;
-        background-position: center;
-    }
-
-    .icon-user {
-        width: 50px;
-        height: 5vh;
-        margin-right: 1em;
-        margin-top: 2vh;
-    }
-
-    .icon-menu {
-        width: 50px;
-        height: 5vh;
-        margin-top: 2vh;
-        margin-right: 2em;
-        margin-top: 2vh;
-    }
-
-    .nav {
-        width: 30%;
-        height: 10vh;
-        top: 0;
-        justify-content: right;
-        justify-items: right;
-    }
-
-    .nav-menu {
-        height: 100%;
-        background-color: white;
-    }
-
-    .nav-link {
-        width: 100%;
-        height: 10vh;
-        margin-bottom: 0.1em;
-        display: flex;
-        vertical-align: middle;
-        border-radius: 2em;
-        background-color: white;
-        color: #00bcae;
-        cursor: pointer;
-    }
-
-    .icons {
-        font-size: 2em;
-        display: inline-block;
-        width: 20%;
-        height: 100%;
-        padding-top: 0.4em;
-        padding-left: 0.2em;
-    }
-
-    .nav-link-text {
-        font-size: 1.5em;
-        display: inline-block;
-        padding-top: 0.1em;
-        width: 80%;
-        height: 100%;
-        font-family: opensans-condensed-light;
-    }
-
-    .nav-link:hover {
-        background-color: #00bcae;
-        color: white;
-    }
-
-    .nav-link:focus {
-        background-color: #00bcae;
-        color: white;
-    }
-
-    .infodiv {
-        height: 5vh;
-        width: 100%;
-    }
-
-    .myclosebutton {
-        color: rgba(0, 188, 174,1);
-        height: 5vh;
-        background-color: #00bcae;
-    }
-
-    .profile-logout {
-        color: #00bcae;
-        font-size: 1.5em;
-        font-weight: 800;
-        font-family: opensans-bold;
+        padding-top: 4vh;
         width: 100%;
         text-align: center;
-        height: 100%;
     }
 
-        .profile-logout:hover {
-            color: lightgrey;
-            font-size: 1.5em;
-            font-weight: bolder;
-            height: 100%;
-            width: 100%;
-            font-family: opensans-bold;
-            text-align: center;
-        }
-
-    .offcanvas-header {
-        background-color: #00bcae;
-        margin-bottom: 0;
-        padding-bottom: 0;
-        height: 5vh;
-    }
-    .offcanvas-header-alert {
-        /*background-color: #00bcae;*/
-        margin-bottom: 0;
-        padding-bottom: 0;
-        height: 5vh;
-    }
-
-    .offcanvas-body-main {
-        overflow-y: hidden;
-    }
-
-    .mainlayout-profile {
-        height: 30vh;
+    /*nav*/
+    .nav-buttons {
         width: 100%;
-        margin-top: 0;
-        padding-top: 0;
-        background-color: #00bcae;
-    }
-
-    .profile-div {
-        height: 30vh;
-        width: 70%;
-        margin-left: 15%;
-        margin-right: 15%;
-    }
-
-    .profile-image-div-cover {
-        height: 18vh;
-        width: 50%;
-        margin: auto;
-        background: url(@personalInfo.ImageUrl);        
-        background-size: cover;
-        /*background-repeat: no-repeat;*
-        /*background-color: none;*/
-        border: 0.4em rgba(0,0,0,0.2) solid;
-        border-radius: 100%;
-    }
-
-    .profile-image-div {
-        height: 16vh;
-        margin-top: 1vh;
-        margin-bottom: 1vh;
-        width: 90%;
-        margin-right: 5%;
-        margin-left: 5%;
-        border-radius: 100%;
-    }
-
-    profile-image-div img {
-        background-size: cover;
-        background-position: center;
-        height: 16vh;
-        min-width: 100%;
-    }
-
-    .mainlayout-profile-initials {
-        height: 16vh;
-        text-align: center;
-        line-height: 16vh;
-    }
-
-    .mainlayout-profile-initials-text {
-        font-family: opensans-bold;
-        background-color: #d35bc9;
-        font-size: 2em;
-        font-weight: 900;
-    }
-
-    .profile-name-div {
-        height: 3vh;
-        width: 100%;
-        margin-top: 2vh;
-        margin-bottom: 1vh;
-        text-align: center;
-    }
-
-    .profile-name {
-        height: 3vh;
-        color: white;
-        margin-top: 0;
-        padding-top: 0;
-        text-transform: uppercase;
-        font-family: opensans-condensed-light;
-        font-weight: 700;
-        font-size: 1.2em;
-    }
-
-    .profile-role-div {
-        height: 2vh;
-        width: 100%;
-        margin-top: 0;
-        padding-top: 0;
-        text-align: center;
-    }
-
-    .profile-role {
-        height: 2vh;
-        color: rgba(0,0,0,0.2);
-        text-align: center;
-        font-family: opensans-condensed-bold;
-        font-weight: 600;
-        font-size: 1em;
-        margin-top: 0;
-        padding-top: 0;
-    }
-
-    .configure-alerts-heading {
-        font-family: opensans-condensed-light;
-        font-weight: 800;
-        font-size: 2em;
-        color: rgba(0, 188, 174,1);
-        /*color: #FFFFFF;*/
-        text-align: center;
-        /*margin-top: 3vh;*/
-        margin-bottom: 3vh;
-    }
-
-    .mainlayout-mudselect {
-        cursor: pointer;
-        background-color: white;
-        border: 0.05em solid lightgrey;
-        height: 9vh;
-        font-size: 1.5em;
-        font-weight: 800;
-        font-family: opensans-condensed-bold;
-        color: black;
-        padding-bottom: 3vh;
-        padding-left: 4vh;
-        padding-right: 4vh;
-    }
-
-        .mainlayout-mudselect:hover {
-            border-radius: 1em;
-            border-color: white;
-            box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
-        }
-
-    .configure-alerts-button {
-        cursor: pointer;
-        border-radius: 2em;
-        margin-top: 2vh;
-        height: 8vh;
-        background-color: rgba(0, 188, 174,1);
+        height: inherit;
+        background-color: transparent;
         border: none;
-        width: 40%;
-        font-size: 1.5em;
-        font-weight: 800;
+        border-radius: 1em;
+        color: #00bcae;
+        font-size: 1em;
         font-family: opensans-condensed-bold;
+    }
+
+    .nav-buttons-pressed {
+        width: 100%;
+        height: inherit;
+        background-color: #d35bc9;
+        border: none;
+        border-radius: 1em;
         color: white;
+        font-family: opensans-condensed-light;
+        font-size: 1em;
+    }
+
+    .underlay-nav {
+        position: absolute;
+        top: 10vh;
+        z-index: 2;
+        height: 5vh;
+        width: 101vw;
+    }
+
+    .sign-up-modal-div {
+        height: 5vh;
+        width: 35%;
+        margin-left: 7.5%;
+        margin-right: 7.5%;
+    }
+
+    .sign-up-modal {
+        margin-top: 2vh;
+        height: 5vh;
+        border-radius: 1em;
+        z-index: 2;
+        display: flex;
+    }
+
+    .modal-nav-buttons {
+        width: 100%;
+        height: 5vh;
         text-align: center;
         line-height: 5vh;
-    }
-
-    .add-profile-image {
-        height: 10px;
-        width: 10px;
-        background-color: black;
-        z-index: 1;
-    }
-
-    .upload-profile-btn {
-        width: 2em;
-        height: 2em;
-        background: white;
-        margin-top: 14vh;
-        margin-left: 6vw;
-        border-radius: 50%;
-        text-align: center;
-    }
-
-    .user-initial {
-        display: flex;
-        justify-content: center;
-        align-content: center;
-        font-family: opensans-condensed-bold;
-        font-size: 6em;
-        font-weight: 800;
-    }
-
-    .to-top {
-        color: #00bcae;
-        padding-top: 1.8em;
-        margin-top: 0.4em;
-        display: inline-block;
-        position: relative;
-        border-color: #00bcae;
-        text-decoration: none;
-        transition: all .3s ease-out;
-    }
-
-        .to-top:before {
-            content: '▲';
-            font-size: .9em;
-            position: absolute;
-            top: 0;
-            left: 50%;
-            margin-left: -.7em;
-            border: solid .13em #00bcae;
-            border-radius: 10em;
-            width: 1.4em;
-            height: 1.4em;
-            line-height: 1.3em;
-            border-color: inherit;
-            transition: transform .5s ease-in;
-        }
-
-        .to-top:hover {
-            color: #d35bc9;
-            border-color: #d35bc9;
-        }
-
-            .to-top:hover:before {
-                transform: rotate(360deg);
-            }
-
-    .index-form-button {
-        background-color: rgba(0, 188, 174,1);
-        color: white;
-        width: 50%;
-        height: 5vh;
+        background-color: #00bcae;
         border: none;
-        text-align: center;
-        font-size: 1em;
-        font-weight: 700;
-        border: none;
-        margin-left: 25%;
         border-radius: 1em;
-    }
-        .index-form-button:hover {
-            color: white;
-            width: 50%;
-            height: 5vh;
-            border: none;
-            text-align: center;
-            background-color: #d35bc9;
-            font-size: 1em;
-            font-weight: 700;
-            border: none;
-            margin-left: 25%;
-        }
-    .upload-image {
-        color: transparent;
-        width: 2em;
-        height: 2em;
-        background: white;
-        margin-top: 14vh;
-        margin-left: 6vw;
-        border-radius: 50%;
-        text-align: center;
+        color: white;
+        font-size: 1em;
+        font-family: opensans-condensed-bold;
     }
 
-    .drag-drop-input {
-        position: absolute;
-        width: 690px;
-        height: 140px;
-        opacity: 0;
-        cursor: pointer;
-        z-index: 2;
-        border: unset;
-    }
+        .modal-nav-buttons:hover {
+            background-color: #d35bc9;
+            border: none;
+            border-radius: 1em;
+            color: white;
+        }
+
+    
 </style>
 
-@if (state.Role.Equals("Candidate"))
-{
-    <div class="page">
-        <div class="header">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="mainlayout-heading">
-                    <div class="mainlayout-xebec-heading">
-                        <div class="mainlayout-xebec-logo"></div>
-                    </div>
-                </div>
-                <div class="nav">
-                    <img class="icon-menu" src="/Img/list.svg" data-bs-toggle="offcanvas" data-bs-target="#showApplicantNav" aria-controls="offcanvasRight" />
-                    <img class="icon-menu" src="/Img/settings.svg" data-bs-toggle="offcanvas" data-bs-target="#showApplicantNavAlert" aria-controls="offcanvasRight" />
-                </div>
-            </div>
+<div class="underlay">
+    <div class="row overlay-nav">
+        <div class="col-6"></div>
+        <div class="col-1">
+            <input type="button" class="nav-buttons" @onmouseover="HomeHover" value="HOME" @onclick="ToHome" hidden="@Home" />
+            <input type="button" class="nav-buttons-pressed" value="HOME" @onclick="ToHome" hidden="@(!Home)" />
         </div>
-
-        <!--Work on this navigation-->
-        <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showApplicantNav" aria-labelledby="offcanvasRightLabel">
-            <div class="offcanvas-header">
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="mainlayout-profile">
-                <div class="profile-div">
-                    <div class="profile-image-div-cover">                  
-                        <div class="upload-profile-btn" >
-                            <label class="to-top" >
-                                <InputFile OnChange="@UploadingProfilePic" class="drag-drop-input" id="fileInput"/>
-                            </label>
-                        </div>
-
-                    </div>
-                    <div class="profile-name-div">
-                        <h2 class="profile-name">@state.Name &nbsp @state.Surname</h2>
-                    </div>
-                    <div class="profile-role-div">
-                        <h2 class="profile-role">@state.Role</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="offcanvas-body offcanvas-body-main">
-                <div class="nav-link" @onclick="showApplicantApplicationProfile">
-                    <div class="icons"><i class="fa fa-book" aria-hidden="true"></i></div><h2 class="nav-link-text">Application Profile</h2>
-                </div>
-                <div class="nav-link" @onclick="showApplicantJobPortal">
-                    <div class="icons"><i class="fa fa-briefcase" aria-hidden="true"></i></div><h2 class="nav-link-text">Job Portal</h2>
-                </div>
-                <div class="nav-link" @onclick="showApplicantMyJobs">
-                    <div class="icons"><i class="fa fa-users" aria-hidden="true"></i></div><h2 class="nav-link-text">My Jobs</h2>
-                </div>
-            </div>
-            <div class="infodiv">
-                <!--class="profile-logout"-->
-                <input type="button" class="index-form-button" @onclick="Logout" value="Sign Out" />
-                <!--<h2 class="index-form-button" @onclick="Logout">Sign Out</h2>-->
-            </div>
+        <div class="col-1">
+            <input type="button" class="nav-buttons" @onmouseover="ServicesHover" value="SERVICES" @onclick="ToServices" hidden="@Services" />
+            <input type="button" class="nav-buttons-pressed" value="SERVICES" @onclick="ToServices" hidden="@(!Services)" />
         </div>
-
-        <!--Alert Navigation-->
-        <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showApplicantNavAlert" aria-labelledby="offcanvasRightLabel">
-            <div class="offcanvas-header-alert offcanvas-header-color1">
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="align-items-center">
-                <p class="configure-alerts-heading">Configure Alerts</p>
-            </div>
-                <div class="offcanvas-body offcanvas-body-main">
-                    <div class="row" style="margin-left: auto !important; margin-right: auto !important">
-                        
-                        <div class="col-12 d-grid gap-4">
-                            <div class="col-12">
-                                <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" Label="Filter by Department" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)">
-                                    @if (jobs?.Any() == true)
-                                    {
-                                        @foreach (var item in jobs.Select(x => x.Department).Distinct())
-                                        {
-                                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
-                                        }
-                                    }
-                                </MudSelect>
-                            </div>
-                            <div class="col-12">
-                                <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Jobs" MultiSelection="true" Label="Filter by Job Title" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextJob)">
-                                    @if (jobs?.Any() == true)
-                                    {
-                                        @foreach (var item in jobs.Select(x => x.Title).Distinct())
-                                        {
-                                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
-                                        }
-                                    }
-                                </MudSelect>
-                            </div>
-                            <div class="col-12">
-                                <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Companies" MultiSelection="true" Label="Filter by Company" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextCompany)">
-                                    @if (jobs?.Any() == true)
-                                    {
-                                        @foreach (var item in jobs.Select(x => x.Company).Distinct())
-                                        {
-                                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
-                                        }
-                                    }
-                                </MudSelect>
-                            </div>
-                            <div class="col-12">
-                                <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer; font-size: 2em;" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" Label="Filter by Location" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextLocation)">
-                                    @if (jobs?.Any() == true)
-                                    {
-                                        @foreach (var item in jobs.Select(x => x.Location).Distinct())
-                                        {
-                                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
-                                        }
-                                    }
-                                </MudSelect>
-                            </div>
-                            <div class="col-12">
-                                <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Types" MultiSelection="true" Label="Filter by Job Type" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextType)">
-                                    @if (jobTypes?.Any() == true)
-                                    {
-                                        @foreach (var item in jobTypes.Select(x => x.Type).Distinct())
-                                        {
-                                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
-                                        }
-                                    }
-                                </MudSelect>
-                            </div>
-                            <div class="col-12 d-flex justify-content-center">
-                                <input type="button" class="configure-alerts-button" value="Configure" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="main">
-                <div class="main-component">
-                    @if (applicantApplicationProfile)
-                    {
-                        <XebecPortal.UI.Pages.Applicant.ApplicationProfile />
-                    }
-                    @if (applicantJobPortal)
-                    {
-                        <XebecPortal.UI.Pages.Applicant.JobPortal />
-                    }
-                    @if (applicantMyJobs)
-                    {
-                        <XebecPortal.UI.Pages.Applicant.MyJobs />
-                    }
-                </div>
-            </div>
+        <div class="col-1">
+            <input type="button" class="nav-buttons" @onmouseover="SignInHover" value="SIGN IN" @onclick="ToSignIn" hidden="@SignIn" />
+            <input type="button" class="nav-buttons-pressed" value="SIGN IN" @onclick="ToSignIn" hidden="@(!SignIn)" />
         </div>
-}
-
-@if (!state.Role.Equals("Candidate"))
-{
-    <div class="page">
-        <div class="header">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="mainlayout-heading">
-                    <div class="mainlayout-xebec-heading">
-                        <div class="mainlayout-xebec-logo"></div>
-                    </div>
-                </div>
-                <div class="nav">
-                    <img class="icon-menu" src="/Img/list.svg" data-bs-toggle="offcanvas" data-bs-target="#showHRNav" aria-controls="offcanvasRight" />
-                </div>
-            </div>
+        <div class="col-1">
+            <input type="button" class="nav-buttons" @onmouseover="SignUpHover" value="SIGN UP" @onclick="ToSignUp" hidden="@SignUp" />
+            <input type="button" class="nav-buttons-pressed" value="SIGN UP" @onclick="ToSignUp" hidden="@(!SignUp)" />
         </div>
-        <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showHRNav" aria-labelledby="offcanvasRightLabel">
-            <div class="offcanvas-header">
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="mainlayout-profile">
-                <div class="profile-div">
-                    <div class="profile-image-div-cover">
-                        <!--Profile images for HR -->
-                        <div class="user-initial">@state.Avator</div>
-                    </div>
-                    <div class="profile-name-div">
-                        <h2 class="profile-name">@state.Name &nbsp @state.Surname</h2>
-                    </div>
-                    <div class="profile-role-div">
-                        <h2 class="profile-role">@state.Role</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="offcanvas-body offcanvas-body-main">
-                <div class="nav-link" @onclick="showHRDataAnalyticsTool">
-                    <div class="icons"><i class="fa fa-chart-bar" aria-hidden="true"></i></div><h2 class="nav-link-text">Data Analytics Tool</h2>
-                </div>
-                <div class="nav-link" @onclick="showHRJobPortal">
-                    <div class="icons"><i class="fa fa-briefcase" aria-hidden="true"></i></div><h2 class="nav-link-text">Job Portal</h2>
-                </div>
-                <div class="nav-link" @onclick="showHRCreateAJob">
-                    <div class="icons"><i class="fas fa-cubes"></i></div><h2 class="nav-link-text">Create A Job</h2>
-                </div>
-            </div>
-            <div class="infodiv">
-                <!--class="profile-logout"-->
-                <input type="button" class="index-form-button" @onclick="Logout" value="Sign Out" />
-            </div>
+        <div class="col-1">
+            <input type="button" class="nav-buttons" @onmouseover="ContactHover" value="CONTACT" @onclick="ToContact" hidden="@Contact" />
+            <input type="button" class="nav-buttons-pressed" value="CONTACT" @onclick="ToContact" hidden="@(!Contact)" />
         </div>
-        <div class="main">
-            <div class="main-component">
-                @if (hrDataAnalyticsTool)
-                {
-                    <XebecPortal.UI.Pages.HR.DataAnalyticsTool />
-                }
-                @if (hrJobPortal)
-                {
-                    <XebecPortal.UI.Pages.HR.JobPortal />
-                }
-                @if (hrCreateAJob)
-                {
-                    <XebecPortal.UI.Pages.HR.CreateJob />
-                }
-            </div>
-        </div>
+        <div class="col-1"></div>
     </div>
-}
+        <div class="row underlay-nav">
+            @if (SignUp)
+            {
+                <div class="col-8"></div>
+                <div class="col-3 sign-up-modal">
+                    <div class="sign-up-modal-div">
+                        <input type="button" class="modal-nav-buttons" value="Applicant" @onclick="ToApplicantSignUp" />
+                    </div>
+                    <div class="sign-up-modal-div">
+                        <input type="button" class="modal-nav-buttons" value="HR" @onclick="ToHRSignUp" />
+                    </div>
+                </div>
+                <div class="col-1"></div>
+            }
+        </div>
 
-@if (state.isLoggedIn == false)
-{
-    navmanager.NavigateTo("/");
+
+    <div class="overlay">
+        @Body
+    </div>
+
+</div>
+
+@code {
+
+    private bool Home;
+    private bool Services;
+    private bool SignIn;
+    private bool SignUp;
+    private bool Contact;
+    private bool ApplicantSignUp;
+    private bool HRSignUp;
+
+    private bool ShowHome;
+    private bool ShowServices;
+    private bool ShowHRSignUp;
+    private bool ShowApplicantSignUp;
+    private bool ShowSignIn;
+    private bool ShowContact;
+
+    
+    private void ToHome()
+    {
+        HomeHover();
+        navmanager.NavigateTo("/");
+    }
+
+    private void ToServices()
+    {
+        ServicesHover();
+        navmanager.NavigateTo("services");
+    }
+
+    private void ToSignIn()
+    {
+        SignInHover();
+        navmanager.NavigateTo("signin");
+    }
+
+    private void ToSignUp()
+    {
+        SignUpHover();
+    }
+
+    private void ToApplicantSignUp()
+    {
+        SignUp = true;
+        Services = HRSignUp = SignIn = Home = Contact = false;
+        navmanager.NavigateTo("applicantsignup");
+    }
+    private void ToHRSignUp()
+    {
+        SignUp = true;
+        Services = SignUp = ApplicantSignUp = SignIn = Home = Contact = false;
+        navmanager.NavigateTo("hrsignup");
+    }
+    private void ToContact()
+    {
+        ContactHover();
+        navmanager.NavigateTo("contact");
+    }
+
+    private void ShowSignUpModal()
+    {
+        SignUp = true;
+        Services = SignIn = Home = ApplicantSignUp = HRSignUp = Contact = false;
+    }
+
+
+    private void HomeHover()
+    {
+        Home = true;
+        Services = SignIn = SignUp = Contact = false;
+    }
+    private void ServicesHover()
+    {
+        Services = true;
+        Home = SignIn = SignUp = Contact = false;
+    }
+    private void SignInHover()
+    {
+        SignIn = true;
+        Services = Home = SignUp = Contact = false;
+    }
+    private void SignUpHover()
+    {
+        SignUp = true;
+        Services = SignIn = Home = Contact = false;
+    }
+    private void ContactHover()
+    {
+        Contact = true;
+        Services = SignIn = SignUp = Home = false;
+    }
 }
-<MudThemeProvider />
-<MudDialogProvider />
-<MudSnackbarProvider />

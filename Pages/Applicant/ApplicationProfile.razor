@@ -4,6 +4,9 @@
 @inject ISnackbar Snackbar
 @using Microsoft.Extensions.Logging
 @inject ILogger<ApplicationProfile>  Logger
+@implements IAsyncDisposable
+@using System.IO
+
 <style>
     .nav1 {
 
@@ -373,7 +376,7 @@
             max-height: 60vh;
             overflow-y: auto;
         }
-        
+
         .history-item:last-child {
             padding-bottom: 4rem;
         }
@@ -435,7 +438,7 @@
     .history-container {
         width: 35vh;
         height: 70vh;
-        overflow: auto;        
+        overflow: auto;
         background: rgba(255, 255, 255, 0.5);
         left: 10%;
     }
@@ -445,7 +448,7 @@
         margin-top: 2vh;
         font-family: opensans-condensed-bold;
         font-size: 2em;
-        font-weight: 900;        
+        font-weight: 900;
     }
 
     .validation-message {
@@ -572,7 +575,7 @@
         padding-bottom: 3em;
     }
 
-    .skill-table-size-right {        
+    .skill-table-size-right {
         height: 35vh;
         width: 50%;
         padding-left: 2em;
@@ -625,7 +628,7 @@
 
         <!--Navigation Tab-->
         <div class="col-12 nav-tab" style="width: 100vw">
-            
+
 
             <ul class="nav nav1 nav-tabs" role="tablist">
                 <div class="child progress"></div>
@@ -653,7 +656,7 @@
         </div>
 
         <!--Content Panel-->
-        <div class="col-12 d-flex justify-content-center align-items-start " >
+        <div class="col-12 d-flex justify-content-center align-items-start ">
             <div class="tab-content">
                 <br />
                 <!--Personal Information-->
@@ -665,43 +668,11 @@
                                     <div class="education-header">Personal Information</div>
                                     <div class="row p-3">
                                         <div class="col-12">
-                                            <div class="rounded-edges">
-                                                <MudPaper @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
-                                                          @ondragleave="@(() => _dragEnterStyle = null)"
-                                                          @ondragend="@(() => _dragEnterStyle = null)"
-                                                          Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
-
-                                                    <InputFile OnChange="OnInputFileChangedAsync" multiple class="drag-drop-input" />
-                                                    @if (fileNames == null)
-                                                    {
-                                                        <MudText Typo="Typo.h3" Align="Align.Center">
-                                                            <i class="fa fa-upload"></i>
-                                                            <br />
-                                                            Upload File
-                                                        </MudText>
-                                                    }
-                                                    else
-                                                    {
-                                                        <MudList Style="padding:2em;width:100%;" Dense="true">
-                                                            <MudListItem @key="@fileNames.Name">
-                                                                <MudChip Color="Color.Dark"
-                                                                         Style="width:60px; overflow:hidden;"
-                                                                         Text="@(fileNames.Name.Split(".").Last())" />
-                                                                @fileNames.Name
-                                                            </MudListItem>
-                                                        </MudList>
-                                                    }
-                                                </MudPaper>
+                                            <div class="rounded-edges" @ref=" dropzone">
+                                                <InputFile OnChange="@OnFileChange" class="dropzone" @ref="file" />
                                             </div>
+                                            <input type="button" @onclick="Upload" value="Upload Button"/>
 
-                                            <MudGrid Justify="Justify.Center" Spacing="4">
-                                                <MudItem>
-                                                    <MudButton OnClick="Upload" Disabled="@(!(fileNames == null))" Style="color: white; background-color: #00BCAE; font-size: small; margin-top: 5px;" Variant="Variant.Filled">Upload</MudButton>
-                                                </MudItem>
-                                                <MudItem>
-                                                    <MudButton OnClick="@ResetFileNames" Disabled="@(fileNames == null)" Style="color: white; background-color: #00BCAE; font-size: small; margin-top: 5px;" Variant="Variant.Filled">Clear</MudButton>
-                                                </MudItem>
-                                            </MudGrid>
                                         </div>
                                     </div>
                                     <div class="row p-3">
@@ -866,7 +837,7 @@
                                                     <div class="col-6">
                                                         <!--<label class="form-label" for="institution">Institution</label>-->
                                                         <InputText id="qualification" class="form-control shadow bg-body rounded" @bind-Value="education.Qualification" placeholder="Qualification" @onfocusout="completion" /> <!--@onfocusout="completion" -->
-                                                        
+
                                                     </div>
                                                     <div class="col-6">
                                                         <!--<label class="form-label" for="qualification">Qualification</label>-->
@@ -940,7 +911,7 @@
                 </div>
 
                 <!--Skills tab-->
-                
+
                 <div id="skills" class="container tab-pane">
                     <form>
                         <!--Remember to test add the model-->
@@ -1170,7 +1141,7 @@
                                         </div>
                                         <input id="personal-website" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.PersonalWebsiteUrl" placeholder="1nebula.com" />
                                     </div>
-                                </div> 
+                                </div>
                                 <!--Validation to ensure that the page is 100% completed-->
                                 @if (calc == 100)
                                 {
@@ -1219,6 +1190,8 @@
     private bool presentWork = false;
     private bool presentSchool = false;
     private int id = 1;
+
+
 
     private void AddWorkHistoryNew(WorkHistory workHistory1)
     {

@@ -17,6 +17,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using XebecPortal.UI.Pages.Model;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Components;
+
 namespace XebecPortal.UI.Pages.Applicant
 {
     public partial class ApplicationProfile
@@ -30,6 +32,9 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool editMode;
         private bool workEditMode;
         private bool eduEditMode;
+
+        private string storageAcc = "storageaccountxebecac6b";
+        private string imgContainer = "images";
 
         private List<WorkHistory> workHistoryList = new();
         private WorkHistory workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
@@ -62,6 +67,12 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool workProgressVal = false;
         private bool referenceProgressVal = false;
 
+        ElementReference dropzone;
+        InputFile file;
+        private string thisFile;
+        IJSObjectReference module, dropZone;
+
+
         //Create a skills list , with mock data just for now
         //Create a selected skill list
         //Then wriite that selected skill to the DB
@@ -71,6 +82,50 @@ namespace XebecPortal.UI.Pages.Applicant
             
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/ApplicationProfile.js");
             populateSkillLists();
+
+            try
+            {
+                module = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./DragAndDrop.js");
+
+                dropZone = await module.InvokeAsync<IJSObjectReference>("InitializeFileDropZone", dropzone, file);
+            }
+            catch
+            {
+
+            }
+        }
+
+        public class FileModel
+        {
+            public string FileName { get; set; }
+        }
+
+        FileModel newFile = new FileModel();
+
+        [Parameter]
+        public EventCallback<string> FileChanged { get; set; }
+
+
+        public Task OnFileChange(InputFileChangeEventArgs e)
+        {
+            thisFile = e.File.Name.ToString();
+            Console.WriteLine(thisFile+" in OnFileChange");
+            return FileChanged.InvokeAsync(newFile.FileName);
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            if (dropZone != null)
+            {
+                await dropZone.InvokeVoidAsync("Dispose");
+
+                await dropZone.DisposeAsync();
+            }
+
+            if (module != null)
+            {
+                await module.DisposeAsync();
+            }
         }
 
         public void populateSkillLists()
@@ -408,30 +463,22 @@ namespace XebecPortal.UI.Pages.Applicant
         */
 
         private static int num = 1;
-        async Task OnInputFileChangedAsync(InputFileChangeEventArgs e)
+        
+        private async Task Upload()
         {
-            fileNames = e.File;
+            Console.WriteLine(thisFile + " in Upload");
             progressBar = 0.ToString("0");
-            status = new StringBuilder($"Uploading file {num++}");
-
-
-            //Upload to blob - start
-            status = new StringBuilder($"current file {fileNames.Name}");
-
-            status.AppendLine("\n");
 
             var blobUri = new Uri("https://"
-                                  + "amafilewam" +
-                                  ".blob.core.windows.net/" +
-                                  "upload" + "/" + fileNames.Name);
-            AzureSasCredential credential = new AzureSasCredential(
-                "sp=racwdli&st=2022-02-28T08:30:27Z&se=2022-03-11T16:30:27Z&sv=2020-08-04&sr=c&sig=TE%2B2VCz%2B6KKFbYHIkQwxGPOYWVUtht3xBPYZ8bE3kH4%3D");
+                + storageAcc
+                + ".blob.core.windows.net/"
+                + imgContainer
+                + "/"
+                + thisFile);
+            Console.WriteLine(blobUri);
+            AzureSasCredential credential = new AzureSasCredential("?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupix&se=2024-12-02T20:36:17Z&st=2022-03-16T12:36:17Z&sip=1.1.1.1-255.255.255.255&spr=https&sig=nSCARiXySz%2BXLmtXJfZw28RkqfYUe%2FvDi11V9Q5Tpyo%3D");
             BlobClient blobClient = new BlobClient(blobUri, credential, new BlobClientOptions());
-            status.AppendLine("Created blob client");
-
-            status.AppendLine("\n");
-            status.AppendLine("Sending to blob");
-            //displayProgress = true;
+           
             var res = await blobClient.UploadAsync(fileNames.OpenReadStream(maxAllowedSize), new BlobUploadOptions
             {
                 HttpHeaders = new BlobHttpHeaders { ContentType = fileNames.ContentType },
@@ -442,7 +489,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 },
                 ProgressHandler = new Progress<long>((progress) =>
                 {
-                    progressBar = (100.0 * progress / fileNames.Size).ToString("0");
+                    progressBar = (100.0 * progress / 1).ToString("0");
                 })
             });
 
@@ -460,7 +507,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 //var response = await httpClient.GetAsync("https://xebecapi.azurewebsites.net/api/ResumeParser");
 
 
-                var resp = await httpClient.PostAsync("http://localhost:5002/api/ResumeParser/", content);
+                var resp = await httpClient.PostAsync("http://localhost:44364/api/ResumeParser/", content);
                 //status = new StringBuilder(resp.StatusCode.ToString());
                 var respContent = await resp.Content.ReadAsStringAsync();
 
@@ -486,18 +533,9 @@ namespace XebecPortal.UI.Pages.Applicant
             }
 
         }
-
         private void ResetFileNames()
         {
-            fileNames = null;
+            thisFile = "";
         }
-
-        void Upload()
-        {
-            //Upload the files here
-            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-            Snackbar.Add("TODO: Upload your files!", Severity.Normal);
-        }
-
     }
 }
