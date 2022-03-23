@@ -310,4 +310,33 @@ namespace XebecPortal.UI.Pages.Applicant
     {
         public string name { get; set; }
     }
+
+    // This is used to retrieve the skills from an API
+
+    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+    public class Attribution
+    {
+        public string name { get; set; }
+        public string text { get; set; }
+    }
+
+    public class Type
+    {
+        public string id { get; set; }
+        public string name { get; set; }
+    }
+
+    public class Datum
+    {
+        public string id { get; set; }
+        public string infoUrl { get; set; }
+        public string name { get; set; }
+        public Type type { get; set; }
+    }
+
+    public class APIRoot
+    {
+        public List<Attribution> attributions { get; set; }
+        public List<Datum> data { get; set; }
+    }
 }

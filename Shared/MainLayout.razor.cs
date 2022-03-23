@@ -34,7 +34,9 @@ namespace XebecPortal.UI.Shared
         {           
             jobs = await HttpClient.GetFromJsonAsync<IList<Job>>("https://xebecapi.azurewebsites.net/api/Job");
             jobTypes = await HttpClient.GetFromJsonAsync<IList<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
-            personalInfo = await HttpClient.GetFromJsonAsync<PersonalInformation>("https://xebecapi.azurewebsites.net/api/personalinformation/1"); // !!!!!! Change the ID to be the userID later 
+            personalInfo = await HttpClient.GetFromJsonAsync<PersonalInformation>($"https://xebecapi.azurewebsites.net/api/personalinformation/{state.AppUserId}"); // !!!!!! Change the ID to be the userID later 
+            Console.WriteLine("personalInfo: " + personalInfo.Id);
+            Console.WriteLine("appUserID: " + state.AppUserId);
         }
 
         private void showApplicantApplicationProfile()
