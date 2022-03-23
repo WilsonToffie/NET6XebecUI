@@ -118,13 +118,17 @@ namespace XebecPortal.UI.Pages.HR
             }
         }
 
-        private async Task SaveData(Job value)
+        private async Task SaveData(Job jobValue, string jobTypeHelperValue, bool boolValue)
         {
             if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Override This Item?"))
             {
-                var itemSearch = jobList.First(x => x.Id == value.Id);
-                var index = jobList.IndexOf(itemSearch);
-                jobList[index] = value;
+                await _jsModule.InvokeVoidAsync("CursorWait");
+                var newJobTypeHelper = jobTypeHelper.Find(x => x.JobId == jobValue.Id);
+                newJobTypeHelper.JobTypeId = JobTypes.Find(x => x.Type == jobTypeHelperValue).Id;
+                await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/Job/{jobValue.Id}", jobValue);
+                await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/JobTypeHelper/{newJobTypeHelper.Id}", newJobTypeHelper);
+                changeForm = boolValue;
+                await _jsModule.InvokeVoidAsync("CursorDefault");
             }
         }
 

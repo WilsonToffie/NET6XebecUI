@@ -6,6 +6,7 @@
 @inject IDialogService DialogService
 
 <style>
+
     .handPointer {
         cursor: pointer;
     }
@@ -99,7 +100,7 @@
         height: 5vh;
         margin-top: 2vh;
         width: auto;
-        font-family: opensans-bold;
+        font-weight: bold;
     }
 
         .formButton:hover {
@@ -109,7 +110,7 @@
             height: 5vh;
             margin-top: 2vh;
             width: auto;
-            font-family: opensans-bold;
+            font-weight: bold;
         }
 
     .my-container {
@@ -121,28 +122,28 @@
         color: black;
         font-weight: 600;
         font-size: 1em;
-        font-family: opensans-bold;
+        font-weight: bold;
     }
 
     .small-card-company {
         color: rgba(0,0,0,0.5);
         font-weight: 600;
         font-size: 1em;
-        font-family: opensans-bold;
+        font-weight: bold;
     }
 
     .small-card-location {
         color: rgba(0,0,0,0.5);
         font-weight: 600;
         font-size: 1em;
-        font-family: opensans-light;
+        font-weight: lighter;
     }
 
     .small-card-date {
         color: #d35bc9;
         font-weight: 800;
         font-size: 1em;
-        font-family: opensans-bold;
+        font-weight: bold;
     }
 
     .job-portal-right {
@@ -163,21 +164,21 @@
         color: black;
         font-weight: 900;
         font-size: 2em;
-        font-family: opensans-bold;
+        font-weight: bold;
     }
 
     .big-card-description {
         color: #666666;
         font-weight: 800;
         font-size: 1em;
-        font-family: opensans-condensed-light;
+        font-weight: lighter;
     }
 
     .big-card-type {
         color: black;
         font-weight: 800;
         font-size: 1em;
-        font-family: opensans-bold;
+        font-weight: bold;
     }
 
     li.active a {
@@ -214,7 +215,7 @@
         color: white;
         background-color: #00BCAE;
         font-weight: 700;
-        font-family: opensans-condensed-bold;
+        font-weight: bold;
     }
 
     job-portal-nav-btn:hover {
@@ -227,7 +228,6 @@
         height: 7vh;
         font-size: 1.5em;
         font-weight: 800;
-        font-family: opensans-condensed-bold;
         border-radius: 1em;
         padding-bottom: 5vh;
         padding-left: 4vh;
@@ -254,7 +254,6 @@
             font-size: 0.8em;
             padding-left: 1em;
             padding-top: 1em;*/
-            font-family: opensans-condensed-bold;
         }
 
         .hr-job-search-bar-input:hover {
@@ -268,10 +267,42 @@
         font-weight: 800;
         font-size: 2em;
         color: #00BCAE;
-        font-family: opensans-condensed-light;
         text-align: center;
     }
 
+    .mudColour:active {
+        color: red;
+    }
+
+    .inputDefaults {
+        min-width: 100% !important;
+        height: 30px !important;
+        font-size: medium !important
+    }
+
+    .search-image {
+        padding-left: 1em;
+        background: url(/Img/search.svg) no-repeat left;
+        background-size: 30px;
+    }
+
+    .hr-job-search-bar-input {
+        padding-left: 3em;
+        background-color: white;
+        height: 6vh;
+        width: 100%;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
+        border: white solid 0.1em;
+    }
+
+        .hr-job-search-bar-input::placeholder {
+            color: #666666;
+        }
+
+        .hr-job-search-bar-input:hover {
+            border-radius: 1em;
+            border: 0.1em solid black;
+        }
 </style>
 
 @if (ShowingJobPortal)
@@ -280,10 +311,8 @@
 
         <div style="height: 15vh">
             <div class="hr-job-search-bar">
-                <div class="input-group d-flex justify-content-center form-group">
-                    <input class="form-control rounded-pill hr-job-search-bar-input" type="text" placeholder="Search For Jobs" @oninput="SearchListJob" />
-                </div>
-            </div>
+                <input class="search-image hr-job-search-bar-input rounded-pill" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs" @oninput="SearchListJob" />
+            </div>            
             <div class="row" style="height:5vh">
                 <div class="col-3">
                     <!--Location-->
@@ -292,7 +321,7 @@
                         {
                             @foreach (var item in jobList.Select(x => x.Location).OrderBy(x => x).Distinct())
                             {
-                                <MudSelectItem T="string" Style="color: #00BCAE" Value="item">@item</MudSelectItem>
+                                <MudSelectItem T="string" Value="item">@item</MudSelectItem>
                             }
 
                         }
@@ -355,11 +384,11 @@
                                         <div class="card-body job-portal-card-body">
                                             <div class="row">
                                                 <div class="col-10"><h3 class="card-title small-card-name">@item.Title</h3></div>
-                                                <div class="col-2"> <h3 class="card-title small-card-name"><i class="handPointer fa fa-trash" style="color: black; font-size: x-large" @onclick="() => DeleteData(item.Id)"></i></h3></div>
-                                                <div class="col-12"><h5 class="card-subtitle"><strong>@item.Company</strong></h5></div>
-                                                <div class="col-12"><h5 class="card-text">@item.Location</h5></div>
+                                                <div class="col-2"> <h3 class="card-title small-card-name"><i class="handPointer fa fa-trash" style="color: #00BCAE; font-size: x-large" @onclick="() => DeleteData(item.Id)"></i></h3></div>
+                                                <div class="col-12"><h5 class="card-subtitle text-muted small-card-company"><b>@item.Company</b></h5></div>
+                                                <div class="col-12"><h5 class="card-text small-card-location">@item.Location</h5></div>
                                                 <div class="col-12"><h5 class="card-text small-card-date">Due Date: @item.DueDate.ToString("d MMMM yyyy")</h5></div>
-                                                <div class="col-12"><h5 class="card-text">Status: <strong>@item.Status</strong></h5></div>
+                                                <div class="col-12"><h5 class="card-text">Status: <b>@item.Status</b></h5></div>
                                             </div>
                                         </div>
                                     </div>
@@ -370,24 +399,34 @@
                         <TooltipContent>
                             @if (appUserFilter?.Any() == true)
                             {
-                                <div class="col-12">
-                                    <h2 class="text-center"><strong>Hiring Lead</strong></h2>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <img class="img-fluid rounded-circle mx-auto d-block" src="@appUserFilter.FirstOrDefault().imageUrl" />
-                                        </div>
-                                        <div class="col-12">
-                                            <h4 class="text-center">@appUserFilter.FirstOrDefault().name @appUserFilter.FirstOrDefault().surname</h4>
-                                        </div>
-                                        <div class="col-12">
-                                            <h5 class="text-center">@appUserFilter.FirstOrDefault().role</h5>
+                                <div class="row" style="background-color:azure">
+                                    <div class="col-12">
+                                        <h3 class="text-center"><u><i><b>Hiring Lead</b></i></u></h3>
+                                        <div class="row g-0">
+                                            <div class="col-6 d-flex justify-content-center">
+                                                <img class="img-fluid rounded ms-5 mb-2" width="120" src="@appUserFilter.FirstOrDefault().imageUrl" />
+                                            </div>
+                                            <div class="col-6 d-flex align-content-around flex-wrap">
+                                                <div class="col-12">
+                                                    <label class="d-flex justify-content-center text-muted">Full Name:</label>
+                                                    <h4 class="d-flex justify-content-center"><b>@appUserFilter.FirstOrDefault().name @appUserFilter.FirstOrDefault().surname</b></h4>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="d-flex justify-content-center text-muted">Role:</label>
+                                                    <h4 class="d-flex justify-content-center"><b>@appUserFilter.FirstOrDefault().role</b></h4>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             }
                             else
                             {
-                                <h4 class="text-center">There Are No Hiring Lead For This Job.</h4>
+                                <div class="row" style="background-color:azure">
+                                    <div class="col-12">
+                                        <h4 class="text-center">There Are No Hiring Lead For This Job.</h4>
+                                    </div>
+                                </div>
                             }
                         </TooltipContent>
                     </MudTooltip>
@@ -403,8 +442,10 @@
                                     <div class="col-6 p-2">
                                         @if (changeForm)
                                         {
-                                            <label>Job Title</label>
-                                            <input type="text" class="form-control" placeholder="Job Name" @bind="displayJobDetail.Title" />
+                                            <div class="col-12">
+                                                <label for="jobTitle">Job Title</label>
+                                                <input id="jobTitle" type="text" class="form-control" placeholder="Job Name" @bind="displayJobDetail.Title" />
+                                            </div>
                                         }
                                         else
                                         {
@@ -422,7 +463,7 @@
                                                 </div>
                                                 <div class="col mt-2">
                                                     <h5>
-                                                        <button class="job-portal-nav-btn" type="button" style="width: 7em" @onclick="() => SaveData(displayJobDetail)">Save</button>
+                                                        <button class="job-portal-nav-btn" type="button" style="width: 7em" @onclick="() => SaveData(displayJobDetail, GetJobType(displayJobDetail.Id), false)">Save</button>
                                                     </h5>
                                                 </div>
                                             }
@@ -449,46 +490,51 @@
                                     <div class="col-6 p-2">
                                         @if (changeForm)
                                         {
-                                            <label>Company</label>
-                                            <input type="text" class="form-control" placeholder="Company Name" @bind="displayJobDetail.Company" />
+                                            <div class="col-12">
+                                                <label for="company">Company</label>
+                                                <input id="company" type="text" class="form-control" placeholder="Company Name" @bind="displayJobDetail.Company" />
+                                            </div>
                                         }
                                         else
                                         {
-                                            <h4 class="card-text"><strong>@displayJobDetail.Company</strong></h4>
+                                            <h5 class="text-muted small-card-company"><b>@displayJobDetail.Company</b></h5>
                                         }
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
                                         @if (changeForm)
                                         {
-                                            <label>Location</label>
-                                            <select class="form-select" @bind="displayJobDetail.Location">
-                                                @foreach (var item in Locations)
-                                                {
-                                                    <option>@item</option>
-                                                }
-                                            </select>
+                                            <div class="col-12">
+                                                <label for="location">Location</label>
+                                                <select id="location" class="form-select inputDefaults" @bind="displayJobDetail.Location">
+                                                    @foreach (var item in Locations)
+                                                    {
+                                                        <option>@item</option>
+                                                    }
+                                                </select>
+                                            </div>
                                         }
                                         else
                                         {
-                                            <h4 class="card-text">@displayJobDetail.Location</h4>
+                                            <h5 class="card-text small-card-location">@displayJobDetail.Location</h5>
                                         }
                                     </div>
                                     <div class="col-6 p-2">
-
                                         @if (changeForm)
                                         {
-                                            <label>Job Type</label>
-                                            <select class="form-select">
-                                                <option>Full-time</option>
-                                                <option>Part-time</option>
-                                                <option>Contract</option>
-                                            </select>
+                                            <div class="col-12">
+                                                <label for="jobType">Job Type</label>
+                                                <select id="jobType" class="form-select inputDefaults">
+                                                    <option>Full-time</option>
+                                                    <option>Part-time</option>
+                                                    <option>Contract</option>
+                                                </select>
+                                            </div>
                                         }
                                         @if (!changeForm)
                                         {
-                                            if (displayJobDetail.JobTypes != null && displayJobDetail.JobTypes.Count > 0)
+                                            if (displayJobDetail.JobTypes?.Any() == true)
                                             {
-                                                <h4 class="card-text">@GetJobType(displayJobDetail.Id)</h4>
+                                                <h5>@GetJobType(displayJobDetail.Id)</h5>
                                             }
                                         }
                                     </div>
@@ -496,50 +542,56 @@
 
                                         @if (changeForm)
                                         {
-                                            <label>Department</label>
-                                            <select class="form-select" @bind="displayJobDetail.Department">
-                                                @foreach (var item in Departments)
-                                                {
-                                                    <option>@item</option>
-                                                }
-                                            </select>
+                                            <div class="col-12">
+                                                <label for="department">Department</label>
+                                                <select id="department" class="form-select inputDefaults" @bind="displayJobDetail.Department">
+                                                    @foreach (var item in Departments)
+                                                    {
+                                                        <option>@item</option>
+                                                    }
+                                                </select>
+                                            </div>
                                         }
                                         else
                                         {
-                                            <h4 class="card-text"> @displayJobDetail.Department</h4>
+                                            <h5>@displayJobDetail.Department</h5>
                                         }
                                     </div>
                                     <div class="col-12 p-2">
                                         @if (changeForm)
                                         {
-                                            <label>Job Description</label>
-                                            <textarea class="form-control" placeholder="Description" rows="4" @bind="displayJobDetail.Description"></textarea>
+                                            <label for="jobDescription">Job Description</label>
+                                            <textarea id="jobDescription" class="form-control" placeholder="Description" rows="4" @bind="displayJobDetail.Description"></textarea>
                                         }
                                         else
                                         {
-                                            <p class="p-2 text-left overflow-auto border border-2" style="height: 12em">@displayJobDetail.Description</p>
+                                            <textarea readonly class="form-control p-2 text-left overflow-auto border border-2" style="height: 12em; background-color: white; resize: none" @bind="displayJobDetail.Description"></textarea>
                                         }
                                     </div>
                                     <div class="col-6 p-2">
                                         @if (changeForm)
                                         {
-                                            <label class="form-label">Date Advertised</label>
-                                            <input class="form-control" type="date" @bind="displayJobDetail.DueDate" />
+                                            <div class="col-12">
+                                                <label for="dateAdvertised" class="form-label">Date Advertised</label>
+                                                <input id="dateAdvertised" class="form-control inputDefaults" type="date" @bind="displayJobDetail.CreationDate" />
+                                            </div>
                                         }
                                         else
                                         {
-                                            <h4 class="small-card-date">Date Advertised: @displayJobDetail.CreationDate.ToString("d MMMM yyyy")</h4>
+                                            <h5 class="small-card-date">Date Advertised: @displayJobDetail.CreationDate.ToString("d MMMM yyyy")</h5>
                                         }
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
                                         @if (changeForm)
                                         {
-                                            <label class="form-label">Due Date</label>
-                                            <input class="form-control" type="date" @bind="displayJobDetail.DueDate" />
+                                            <div class="col-12">
+                                                <label for="dueDate" class="form-label">Due Date</label>
+                                                <input id="dueDate" class="form-control inputDefaults" type="date" @bind="displayJobDetail.DueDate" />
+                                            </div>
                                         }
                                         else
                                         {
-                                            <h4 class="small-card-date">Due Date: @displayJobDetail.DueDate.ToString("d MMMM yyyy")</h4>
+                                            <h5 class="small-card-date">Due Date: @displayJobDetail.DueDate.ToString("d MMMM yyyy")</h5>
                                         }
                                     </div>
                                 </div>
@@ -554,7 +606,7 @@
                     <br />
                     <br />
                     <div class="col-12 d-flex justify-content-center">
-                        <MudPagination Color="Color.Info" Rectangular="true" Variant="Variant.Filled" Size="Size.Small" BoundaryCount="1" MiddleCount="2" Count="jobPagedList.PageCount" SelectedChanged="PageListNav" ShowNextButton="!nextButton" ShowPreviousButton="!preButton" />
+                        <MudPagination Class="mudColour" Color="Color.Info" Rectangular="true" Variant="Variant.Filled" Size="Size.Small" BoundaryCount="1" MiddleCount="2" Count="jobPagedList.PageCount" SelectedChanged="PageListNav" ShowNextButton="!nextButton" ShowPreviousButton="!preButton" />
                     </div>
                 </div>
             </div>
@@ -625,7 +677,7 @@
         {
             <div class="row">
                 <div class="col-12 border border-2 mb-1 pb-2">
-                    <h2 class="text-center"><strong>Hiring Lead</strong></h2>
+                    <h2 class="text-center"><b>Hiring Lead</b></h2>
                     <div class="row">
                         <div class="col-12">
                             <img class="img-fluid rounded-circle mx-auto d-block" src="@appUserFilter.FirstOrDefault().imageUrl" />
@@ -640,7 +692,7 @@
                 </div>
 
                 <div class="col-12 border border-2 mt-1">
-                    <h2 class="text-center"><strong>Team Assigned For This Job</strong></h2>
+                    <h2 class="text-center"><b>Team Assigned For This Job</b></h2>
                     <div class="row overflow-auto d-flex justify-content-center" style="height: 15em">
                         @foreach (var item in appUserFilter)
                         {
@@ -672,5 +724,4 @@
 }
 
 @code {
-
 }
