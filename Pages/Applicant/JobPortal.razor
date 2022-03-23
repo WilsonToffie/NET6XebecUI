@@ -283,6 +283,62 @@
             border-radius: 1em;
             border: 0.1em solid black;
         }
+
+
+    .applicant-application-form {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .applicant-application-form-button {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 50%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+
+    .applicant-application-form-questions {
+        display: flex;
+        justify-content: center;
+        height: 60vh;
+        overflow-y: auto;
+    }
+
+        .applicant-application-form-questions td {
+            width: 300px;
+        }
+
+    .applicant-application-form-container {
+        background: #fff;
+        width: 30%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        border-radius: 10px;
+        border: 1px solid rgba(0,0,0,0.5);
+    }
+
+    .applicant-appform-button {
+        width: 90px;
+        border-radius: 10px;
+        background: #00BCAE;
+        color: #fff;
+    }
+
+    .appform-submit-modal {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
 </style>
 
 <div class="container" style="height: 55vh;" hidden="@jobPortalIsHidden">
@@ -508,14 +564,15 @@
             <button class="btn applicant-appform-button" @onclick="SaveAnswers">Submit</button>
         </div>
     </div>
-</div>
 
-@if (submitModal)
-{
-    <div class="appform-submit-modal">
-        <MudProgressCircular Class="loading-icon" Size="Size.Large" Indeterminate="true" />
-    </div>
-}
+
+    @if (submitModal)
+    {
+        <div class="appform-submit-modal">
+            <MudProgressCircular Class="loading-icon" Size="Size.Large" Indeterminate="true" />
+        </div>
+    }
+</div>
 
 
 @{
