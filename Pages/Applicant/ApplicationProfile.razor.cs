@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage;
@@ -48,13 +47,8 @@ namespace XebecPortal.UI.Pages.Applicant
         private References references = new() { AppUserId = 1 };
 
 
-        private List<string> skills = new List<string>(); // The skills that we current display
-        private SkillsInformation skillInfo = new() { AppUserId = 1}; // the skill information model 
-        private List<string> selectedSkillsList = new List<string>();
-
-        private List<SkillsInformation> selectedSkillsList2 = new(); // the list that contains the information
-
-
+        private List<SkillsInformation> selectedSkillsList1 = new();
+        private IList<SkillBank> apiSkills = new List<SkillBank>();
 
         private IJSObjectReference _jsModule;
         string _dragEnterStyle;
@@ -76,10 +70,9 @@ namespace XebecPortal.UI.Pages.Applicant
         //Create a skills list , with mock data just for now
         //Create a selected skill list
         //Then wriite that selected skill to the DB
-
         protected override async Task OnInitializedAsync()
         {
-            
+            apiSkills = await httpClient.GetFromJsonAsync<IList<SkillBank>>("https://xebecapi.azurewebsites.net/api/SkillsBank");
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/ApplicationProfile.js");
             populateSkillLists();
 
@@ -142,30 +135,25 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private void addToSelectedInfo(string info)
         {
-            //if (!selectedSkillsList.Contains(info))
-            //{
-            //    selectedSkillsList.Add(info);
-            //}
-            //else
-            //{
-            //    // inform user that it existed already
-            //}
-
-            //  var test = selectedSkillsList2.FindAll(r => r.Description.Equals(info));
-
-            selectedSkillsList2.Add(new()
-               {
-                   // Id = skillsId,// Is it auto increment
-                    Description = info,
+            warning = false;
+            var validCheck = selectedSkillsList1.FindAll(r => r.Description.Equals(info.Description));
+            if (validCheck.Count == 0)
+            {
+                selectedSkillsList1.Add(new()
+                {
+                    Description = info.Description,
                     AppUserId = 1,
-              });
-
-            
-
+                });
+            }
+            else
+            {
+                warning = true;
+                skillWarning = "Skill has already been added!";
+            }
         }
         private void removeFromSelectedInfo(SkillsInformation info)
         {
-            selectedSkillsList2.RemoveAll(x => x.Description.Equals(info.Description)); ;
+            selectedSkillsList1.RemoveAll(x => x.Description.Equals(info.Description)); ;
         }
         /* Use later
         private static string GetMultiSelectionTextSkills(List<string> selectedValues)
@@ -275,7 +263,7 @@ namespace XebecPortal.UI.Pages.Applicant
         private object GetStyling(WorkHistory item)
         {
             if ((workHistory.CompanyName == item.CompanyName) && (workHistory.JobTitle == item.JobTitle) && (workHistory.Description == item.Description))
-                return "box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;background: rgba(255, 255, 255, 0);backdrop - filter: blur(5.6px);-webkit - backdrop - filter: blur(5.6px);border: 1px solid rgba(255, 255, 255, 0.04);max - height: 60vh;overflow - y: auto; ";
+                return "box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;background: rgba(255, 255, 255, 0);backdrop - filter: blur(5.6px);-webkit-backdrop-filter: blur(5.6px); border: 1px solid rgba(255, 255, 255, 0.04); min-height:15vh; overflow-y: auto; ";
             return "";
         }
 
@@ -323,23 +311,7 @@ namespace XebecPortal.UI.Pages.Applicant
             workHistory = workHistoryList.FirstOrDefault(x => x.Id == id);
             workHistUpdate = true;
         }
-        /*
-        private void AddPersonallInformation()
-        {           
-            personalInformation.Add(new()
-            {
-                Id = increment,
-                AppUserId = 1,
-                Name = personalInformation.FirstName,
-                Surname = references.Surname,
-                Email = references.Email,
-                ContactNum = references.ContactNum,
-            });
-            increment++;
-            references = new();
-        }
 
-        */
         private Education tempEducation;
         private void AddEducationTakeTwo()
         {
@@ -437,18 +409,18 @@ namespace XebecPortal.UI.Pages.Applicant
                 await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Reference", item);
                 }
 
-                foreach (var item in selectedSkillsList2)
+                foreach (var item in selectedSkillsList1)
                 {
-                   // await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Education", item);
+                    await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Skill", item);
                 }
              
                 
                 await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink", profilePortfolio);
 
-            if (await _jsModule.InvokeAsync<bool>("PersonalInformation"))
-            {
+            //if (await _jsModule.InvokeAsync<bool>("PersonalInformation"))
+            //{
                 
-            }
+            //}
         }
         // This is just used to indicate to the user that their info has been successfully added to the DB
         /* using 

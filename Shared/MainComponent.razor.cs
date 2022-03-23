@@ -22,6 +22,7 @@ namespace XebecPortal.UI.Shared
     public partial class MainComponent
     {
         PersonalInformation personalInfo = new PersonalInformation();
+        List<PersonalInformation> personalInfoList = new List<PersonalInformation>();
         private IList<Job> jobs = new List<Job>();
         private IList<JobType> jobTypes = new List<JobType>();
 

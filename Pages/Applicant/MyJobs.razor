@@ -1,34 +1,22 @@
 ﻿@page "/myjobs"
-@using XebecPortal.UI.Interfaces
-@using XebecPortal.UI.Services.MockServices
 @using XebecPortal.UI.Services.Models
-@using JetBrains.Annotations
-@using System.Globalization
-@using XebecPortal.UI.Service_Interfaces
-@inject IJobDataService _jobDataService
-@inject IApplicationDataService _applicationDataService
-@inject IApplicationPhaseHelperDataService _applicationPhaseHelperDataService
-@inject IMyJobListDataService _myJobListDataService
+@inject HttpClient httpClient
+@inject UserState state
+
 <style>
-    .main{
-        overflow:hidden;
-        
+
+    .main {
+        overflow: hidden;
     }
-   
+
     .main-wrapper {
         background: transparent;
         width: 100%;
         min-height: 100%;
-        padding:0 5%;
-        /*display: grid;
-        grid-template-columns: 1fr 1fr 1.2fr 1.5fr;
-        grid-template-rows: 10% auto;
-        grid-gap: 10px;
-        max-height: 100%;
-        padding: 20px 10% 0 10%;*/
-        display:flex;
-        justify-content:center;
-        gap:10px;
+        padding: 0 5%;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
         margin-top: 30px;
     }
 
@@ -44,25 +32,19 @@
 
     .main-wrapper-child {
         border-radius: 10px;
-        /* background: rgba(167,169,171,0.22);*/
         padding-top: 10px;
     }
 
     .job-cards {
-       /* display: grid;
-        grid-template-columns: repeat(2, fr);
-        align-content: start;*/
-        /*grid-template-columns: repeat(@@maxJobs, 1fr);*/
         background: rgba(0, 188, 174,0.1);
-        height:75vh;
-        gap:10px;
+        height: 75vh;
+        gap: 10px;
         padding: 5px;
-        display:flex;
-        flex-direction:column;
-        overflow-y:auto;
-        width:100%;
-        scrollbar-track-color:white;
-        
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        width: 100%;
+        scrollbar-track-color: white;
     }
 
         .job-cards::-webkit-scrollbar-track {
@@ -74,17 +56,15 @@
         .job-cards::-webkit-scrollbar {
             width: 10px;
             background-color: rgba(0, 188, 174,0.6);
-            
         }
 
         .job-cards::-webkit-scrollbar-thumb {
-            background:linear-gradient(transparent 30%, #fff 30%);
-            width:10px;
-            height:10px;
+            background: linear-gradient(transparent 30%, #fff 30%);
+            width: 10px;
+            height: 10px;
         }
 
         .job-cards div {
-            /*border: #003340 3px solid;*/
             border: none;
             border-left: rgba(0, 188, 174,0.7) 10px solid;
             border-radius: 10px;
@@ -126,22 +106,16 @@
         box-sizing: border-box;
         height: fit-content;
         transition: 0.3s fade;
-        /*box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;*/
     }
 
         .card-header .rejection-heading {
         }
 
     .job-card {
-        /*display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-template-rows: repeat(4, fit-content());
-        grid-row-gap: 0;*/
-        display:flex;
-        flex-direction:column;
+        display: flex;
+        flex-direction: column;
         height: fit-content;
         box-shadow: rgba(0, 188, 174,0.3) 0px 2px 2px, rgba(0, 188, 174,0.22) 0px 15px 12px;
-        
     }
 
     .position, .company {
@@ -175,8 +149,8 @@
         text-align: center;
         color: white;
         margin-bottom: 3vh;
-        width:100%;
-        height:35px;
+        width: 100%;
+        height: 35px;
     }
 
     .job-card {
@@ -247,17 +221,6 @@
     }
 
     .job-search-bar-input {
-        /*width: 100%;
-        background-color: rgba(255,255,255,1) !important;
-        border-radius: 2em;
-        border: 0.1em solid rgba(0,0,0,0.2);*/
-        /* background-color: white;
-        height: 5vh;
-        width: 50%;
-        box-shadow: 0 2px 5px 0 rgb(0 0 0 / 20%), 0 2px 10px 0 rgb(0 0 0 / 20%);
-        border: white solid 0.1em;
-        border-radius:1em;
-        margin-top:10px;*/
         background-color: white;
         height: 5vh;
         width: 100%;
@@ -265,6 +228,7 @@
         border: white solid 0.1em;
         border-radius: 1em;
     }
+
     .search-bar {
         width: 50%;
         height: 5vh;
@@ -273,95 +237,158 @@
         margin-right: 30%;
         border: none;
     }
-    
 </style>
-@if (_allJobs != null)
 
+
+@if (jobs != null)
 {
+    FindApplications();
     <div class="row d-flex justify-content-center" style="height:5vh; margin-bottom:20px; width:100%;">
         <div class="search-bar">
             <div class="input-group d-flex justify-content-center form-group">
-                @*<span class="input-group-text">
-                        <i class="fa fa-search"></i>
-                    </span>*@
-                <input class="job-search-bar-input" style="max-width: 50%" type="text" placeholder="Search" value="@_keyword" @oninput="@OnKeywordChanged" />
+                @*<input class="job-search-bar-input" style="max-width: 50%" type="text" placeholder="Search" value="@_keyword" @oninput="@OnKeywordChanged" />*@
             </div>
         </div>
         <span></span>
     </div>
-    <div class="main-wrapper" >
+    <div class="main-wrapper">
         <!--Search-Box-->
-
+        <!--Applications-->
         <div class="main-wrapper-child job-cards">
             <div class="card-header d-flex align-content-center justify-content-center ">
                 <span>Application</span>
             </div>
-            @foreach (var application in _applications)
+            @foreach (var application in applications)
             {
-                <div class="job-card">
-                    <span class="position">@application.Position</span>
-                    <span class="company">@application.Company</span>
-                    <small class="addition-details text-muted">@application.Location</small>
-                    <small class="phase left-text">
-                        <span class="phase-pill" style="@(GetColor(application.Phase))">@application.Phase</span>
-                    </small>
-                    <small class="addition-details text-muted">Date Advertised: @application.LastMoved</small>
-                    @*<small class="addition-details left-text text-muted">ApplicationModel Date : @application.ApplicationDate</small>*@
-                </div>
+                Job currentJob = jobs.Where(x => x.Id == application.JobId).FirstOrDefault();
+                ApplicationPhase currentPhase = phases.Where(x => x.id == application.ApplicationPhaseId).FirstOrDefault();
+
+                @if (currentPhase.description.ToLower() == "applied")
+                {
+
+
+
+                    <div class="job-card">
+                        <span class="position">@currentJob.Title</span>
+                        <span class="company">@currentJob.Company</span>
+                        <small class="addition-details text-muted">@currentJob.Location</small>
+                        <small class="phase left-text">
+                            <span class="phase-pill" style="@(GetColor(currentPhase.description))">@currentPhase.description</span>
+                        </small>
+                        <small class="addition-details text-muted">Date Advertised: @currentJob.CreationDate</small>
+                    </div>
+
+
+                }
             }
         </div>
+
+
+        <!--In Progress-->
         <div class="main-wrapper-child job-cards">
             <div class="card-header  d-flex align-content-center justify-content-center">
                 <span>In Progress</span>
             </div>
-            @foreach (var application in _inProgress)
+            @foreach (var application in applications)
             {
-                <div class="job-card">
-                    <span class="position">@application.Position</span>
-                    <span class="company">@application.Company</span>
-                    <small class="addition-details text-muted">@application.Location</small>
-                    <small class="phase left-text">
-                        <span class="phase-pill" style="@(GetColor(application.Phase))">@application.Phase</span>
-                    </small>
-                    <small class="addition-details text-muted">Date Advertised: @application.LastMoved</small>
-                    @*<small class="addition-details left-text text-muted">ApplicationModel Date : @application.ApplicationDate</small>*@
-                </div>
+                Job currentJob = jobs.Where(x => x.Id == application.JobId).FirstOrDefault();
+                ApplicationPhase currentPhase = phases.Where(x => x.id == application.ApplicationPhaseId).FirstOrDefault();
+
+                @if (currentPhase.description.ToLower() != "applied" && !currentPhase.description.ToLower().Contains("final"))
+                {
+
+                    <div class="job-card">
+                        <span class="position">@currentJob.Title</span>
+                        <span class="company">@currentJob.Company</span>
+                        <small class="addition-details text-muted">@currentJob.Location</small>
+                        <small class="phase left-text">
+                            <span class="phase-pill" style="@(GetColor(currentPhase.description))">@currentPhase.description</span>
+                        </small>
+                        <small class="addition-details text-muted">Date Advertised: @currentJob.CreationDate</small>
+                    </div>
+
+                }
             }
         </div>
+
+
+        <!--Successful Application-->
+        @foreach (var application in applications)
+        {
+            Job currentJob = jobs.Where(x => x.Id == application.JobId).FirstOrDefault();
+            ApplicationPhase currentPhase = phases.Where(x => x.id == application.ApplicationPhaseId).FirstOrDefault();
+
+            @if (currentPhase.description.ToLower().Contains("final") && rejectedCandidates.Where(x => x.applicationId == application.Id).FirstOrDefault() == null)
+            {
+                countSuccesfull.Add(application);
+            }
+        }
+
+
         <div class="main-wrapper-child job-cards">
             <div class="card-header  d-flex align-content-center justify-content-center accepted-heading">
-                <span class="count">@_offers.Count </span><span style="margin-left:5px;">Successful</span><p style="margin-left:5px;">Application</p>
+                <span class="count">@countSuccesfull.Count</span><span style="margin-left:5px;">Successful</span><p style="margin-left:5px;">Application</p>
             </div>
-            @foreach (var application in _offers)
+
+            @foreach (var application in applications)
             {
-                <div class="job-card accepted">
-                    <span class="position">@application.Position</span>
-                    <span class="company">@application.Company</span>
-                    <small class="addition-details text-muted">@application.Location</small>
-                    <small class="phase left-text">
-                        <button class="phase-pill" style="@(GetColor(application.Phase))">@application.Phase</button>
-                    </small>
-                    <small class="addition-details text-muted">Date Advertised: @application.LastMoved</small>
-                    @*<small class="addition-details left-text text-muted">ApplicationModel Date : @application.ApplicationDate</small>*@
-                </div>
+                Job currentJob = jobs.Where(x => x.Id == application.JobId).FirstOrDefault();
+                ApplicationPhase currentPhase = phases.Where(x => x.id == application.ApplicationPhaseId).FirstOrDefault();
+
+                @if (currentPhase.description.ToLower().Contains("final") && rejectedCandidates.Where(x => x.applicationId == application.Id).FirstOrDefault() == null)
+                {
+                    <div class="job-card">
+                        <span class="position">@currentJob.Title</span>
+                        <span class="company">@currentJob.Company</span>
+                        <small class="addition-details text-muted">@currentJob.Location</small>
+                        <small class="phase left-text">
+                            <span class="phase-pill" style="@(GetColor(currentPhase.description))">@currentPhase.description</span>
+                        </small>
+                        <small class="addition-details text-muted">Date Advertised: @currentJob.CreationDate</small>
+                    </div>
+
+
+                }
             }
         </div>
+
+        <!--Unsuccessfull Application-->
+
+        @foreach (var application in applications)
+        {
+            Job currentJob = jobs.Where(x => x.Id == application.JobId).FirstOrDefault();
+            ApplicationPhase currentPhase = phases.Where(x => x.id == application.ApplicationPhaseId).FirstOrDefault();
+
+            @if (rejectedCandidates.Where(x => x.applicationId == application.Id).FirstOrDefault() != null)
+            {
+                countUnsuccessfull.Add(application);
+            }
+        }
+
         <div class="main-wrapper-child job-cards rejection-card">
             <div class="card-header  d-flex align-content-center justify-content-center rejection-heading">
-                <span class="count">@_rejections.Count</span><span style="margin-left:5px;">Unsuccessful</span><br><span style="margin-left:5px;">Application</span>
+                <span class="count">@countUnsuccessfull.Count</span><span style="margin-left:5px;">Unsuccessful</span><br><span style="margin-left:5px;">Application</span>
             </div>
-            @foreach (var rejection in _rejections)
+
+            @foreach (var application in applications)
             {
-                <div class="job-card rejection">
-                    <span class="position">@rejection.Position</span>
-                    <span class="company">@rejection.Company</span>
-                    <small class="addition-details">@rejection.Location</small>
-                    <small class="phase left-text">Last Phase : <button class="rejection-phase">@rejection.Phase</button></small>
-                    <small class="addition-details">Date Advertised: @rejection.ApplicationDate</small>
-                    <small class="addition-details left-text">Date Closed : @rejection.LastMoved</small>
-                </div>
+                Job currentJob = jobs.Where(x => x.Id == application.JobId).FirstOrDefault();
+                ApplicationPhase currentPhase = phases.Where(x => x.id == application.ApplicationPhaseId).FirstOrDefault();
+
+                @if (rejectedCandidates.Where(x => x.applicationId == application.Id).FirstOrDefault() != null)
+                {
+                    <div class="job-card rejection">
+                        <span class="position">@currentJob.Title</span>
+                        <span class="company">@currentJob.Company</span>
+                        <small class="addition-details">@currentJob.Location</small>
+                        <small class="phase left-text">Last Phase : <button class="rejection-phase">@currentPhase.description</button></small>
+                        <small class="addition-details">Date Advertised: @currentJob.CreationDate</small>
+                        <small class="addition-details left-text">Date Closed : @currentJob.DueDate</small>
+                    </div>
+                }
             }
         </div>
+
     </div>
 }
 else
@@ -373,88 +400,25 @@ else
 }
 
 @code {
-    List<MyJob> _allJobs;
-    List<MyJob> _applications;
-    List<MyJob> _rejections;
-    List<MyJob> _inProgress;
-    List<MyJob> _offers;
 
-    private string _keyword = string.Empty;
-    private List<MyJob> _initJobs;
+    private IList<Job> jobs = new List<Job>();
+    private IList<ApplicationModel> applications = new List<ApplicationModel>();
+    private IList<ApplicationPhase> phases = new List<ApplicationPhase>();
+    private IList<RejectedCandidate> rejectedCandidates = new List<RejectedCandidate>();
+    private List<ApplicationModel> countSuccesfull = new List<ApplicationModel>();
+    private List<ApplicationModel> countUnsuccessfull = new List<ApplicationModel>();
 
-    [Parameter]
-    [CanBeNull]
-    public string Keyword { get; set; }
-
-    [Parameter]
-    [CanBeNull]
-    public EventCallback<string> KeywordChanged { get; set; }
-
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        _allJobs = _myJobListDataService.GetAllJobs();
-        //_allJobs = (await _myJobListDataService.GetAllJobsByAppUserId(3)).ToList();
-
-        _initJobs = _allJobs;
-        _applications = _allJobs.FindAll(
-            match: a => a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
-        _inProgress = _allJobs.FindAll(
-            match: a => !(a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) || a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
-        _offers = _allJobs.FindAll(
-            match: a => (a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
-        _rejections = _allJobs.FindAll(
-            match: a => a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.Rejected)));
+        jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
+        applications = await httpClient.GetFromJsonAsync<List<ApplicationModel>>("https://xebecapi.azurewebsites.net/api/application");
+        phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/ApplicationPhase");
+        rejectedCandidates = await httpClient.GetFromJsonAsync<List<RejectedCandidate>>("https://xebecapi.azurewebsites.net/api/RejectedCandidate");
     }
 
-    private Task OnKeywordChanged(ChangeEventArgs e)
+    private void FindApplications()
     {
-        _keyword = e?.Value?.ToString();
-
-        if (string.IsNullOrWhiteSpace(_keyword))
-        {
-            _allJobs = _initJobs;
-            _applications = _allJobs.FindAll(
-                match: a => a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
-            _inProgress = _allJobs.FindAll(
-                match: a => !(a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) || a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
-            _offers = _allJobs.FindAll(
-                match: a => (a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
-            _rejections = _allJobs.FindAll(
-                match: a => a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.Rejected)));
-            return Task.CompletedTask;
-        }
-
-        _allJobs = _initJobs.FindAll(a => a.Position.ToLower().Contains(_keyword.ToLower()) || a.Company.ToLower().Contains(_keyword.ToLower()) ||
-                                          a.Location.ToLower().Contains(_keyword.ToLower()) || a.Phase.ToLower().Contains(_keyword.ToLower()) ||
-                                          a.Status.ToLower().Contains(_keyword.ToLower()) ||
-                                          a.LastMoved.ToString(CultureInfo.CurrentCulture).ToLower().Contains(_keyword.ToLower()) ||
-                                          a.ApplicationDate.ToString(CultureInfo.CurrentCulture).ToLower().Contains(_keyword.ToLower()));
-
-        _applications = _allJobs.FindAll(
-            match: a => a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
-        _inProgress = _allJobs.FindAll(
-            match: a => !(a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) || a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
-        _offers = _allJobs.FindAll(
-            match: a => (a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
-        _rejections = _allJobs.FindAll(
-            match: a => a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.Rejected)));
-        return KeywordChanged.InvokeAsync(_keyword);
-    }
-
-    public enum ApplicationPhase
-    {
-        //get desciption
-        Application,
-        Testing,
-        InterviewStaff,
-        InterviewCEO,
-        InterviewHR,
-        Offer,
-        Screening
-    }
-    public enum Statuses
-    {
-        InProgress, Rejected
+        applications = applications.Where(x => x.AppUserId == state.AppUserId).ToList();
     }
 
     private string GetColor(string applicationPhase)
@@ -462,47 +426,9 @@ else
         string bg_colour;
         string text_colour;
 
-        if (Enum.GetName(ApplicationPhase.Application).Equals(applicationPhase))
-        {
-            bg_colour = "rgba(9, 71, 111, 0.22)";
-            text_colour = "rgba(9, 71, 111, 1)";
-        }
-        else if (Enum.GetName(ApplicationPhase.Testing).Equals(applicationPhase))
-        {
-            bg_colour = "rgba(11, 28, 72, 0.22)";
-            text_colour = "rgba(11, 28, 72, 1)";
-        }
-        else if (Enum.GetName(ApplicationPhase.InterviewStaff).Equals(applicationPhase, StringComparison.OrdinalIgnoreCase))
-        {
-            bg_colour = "rgba(0, 155, 174, 0.22)";
-            text_colour = "rgba(0, 155, 174, 1)";
-        }
-        // ReSharper disable once PossibleNullReferenceException
-        else if (Enum.GetName(ApplicationPhase.InterviewHR).Equals(applicationPhase))
-        {
-            bg_colour = "rgba(131, 97, 67, 0.22)";
-            text_colour = "rgba(131, 97, 67, 1)";
-        }
-        else if (Enum.GetName(ApplicationPhase.InterviewCEO).Equals(applicationPhase))
-        {
-            bg_colour = "rgba(224, 213, 204, 0.22)";
-            text_colour = "rgba(131, 97, 67, 1)";
-        }
-        else if (Enum.GetName(ApplicationPhase.Offer).Equals(applicationPhase))
-        {
-            bg_colour = "rgba(0, 188, 80, 0.22)";
-            text_colour = "rgba(0, 188, 80, 1)";
-        }
-        else if (Enum.GetName(ApplicationPhase.Screening).Equals(applicationPhase))
-        {
-            bg_colour = "rgba(0, 108, 188, 0.22)";
-            text_colour = "rgba(0, 108, 188, 1)";
-        }
-        else
-        {
-            bg_colour = "rgba(94,93,240,0.22)";
-            text_colour = "rgba(94,93,240,1)";
-        }
+        bg_colour = "rgba(0, 155, 174, 0.22)";
+        text_colour = "rgba(0, 155, 174, 1)";
+
         return $"background: {bg_colour}; color: {text_colour}; box-shadow: {text_colour} 0 10px 20px -10px;";
     }
 
