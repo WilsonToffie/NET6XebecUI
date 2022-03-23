@@ -880,10 +880,7 @@
 
     private void FilterCandidatesByJob()
     {
-        Console.WriteLine(JobId);
-
         GetCandidates();
-
 
         candidates = candidates.Where(o => o.jobId == JobId).ToList();
         candidates = candidates.OrderByDescending(o => o.TotalMatch).ToList();
@@ -967,21 +964,16 @@
 
     private string FindCurrentPhase(int candidateId, int jobId)
     {
-        if (applications.Where(x => x.JobId == jobId && x.AppUserId == candidateId).FirstOrDefault() == null)
-        {
-            Console.WriteLine("error found");
-            return "No Phase found";
-        }
+        string phaseDescription = "";
 
         int applicationId = applications.Where(x => x.JobId == jobId && x.AppUserId == candidateId).FirstOrDefault().Id;
-        Console.WriteLine(applicationId);
 
         List<ApplicationPhaseHelper> phases_ = phasesHelpers.Where(x => x.ApplicationId == applicationId).ToList();
         phases_ = phases_.OrderByDescending(x => x.TimeMoved).ToList();
 
         ApplicationPhaseHelper currentPhase = phases_.FirstOrDefault();
 
-        string phaseDescription = phases.Where(x => x.id == currentPhase.ApplicationPhaseId).FirstOrDefault().description;
+        phaseDescription = phases.Where(x => x.id == currentPhase.ApplicationPhaseId).FirstOrDefault().description;
 
         return phaseDescription;
     }
