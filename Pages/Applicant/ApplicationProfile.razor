@@ -354,12 +354,14 @@
     }
 
     .history-item {
-       position: relative;
-       padding: 2rem 1.5rem 0rem 2.5rem;
-       font-size: .9rem;
-       min-height: 2rem;
-       background-color: rgba(250, 250, 250, 0.9);
-       border-radius: 10px;
+        position: relative;
+        padding: 2rem 1.5rem 0rem 2.5rem ;
+        font-size: .9rem;
+        /*min-height: 2rem;*/
+        height: 20vh;
+        border-radius: 12px;
+        background-color: rgba(250, 250, 250, 0.9);
+        /*border-radius: 10px;*/
     }
         .history-item:hover {
             box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;
@@ -370,8 +372,8 @@
             -webkit-backdrop-filter: blur(5.6px);
             border: 1px solid rgba(255, 255, 255, 0.04);
             /* min-height: 40vh;*/
-            max-height: 60vh;
-            overflow-y: auto;
+            max-height: 20vh;
+            /*overflow-y: auto;*/
         }
         
         .history-item:last-child {
@@ -386,6 +388,7 @@
             opacity: 0.7;
             font-size: 2vh;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+
         }
 
         /*        Scholl*/
@@ -565,7 +568,6 @@
         }
 
     .skill-table-size {
-        border-right: solid 5px;
         height: 35vh;
         width:50%;
         padding-left: 3em;
@@ -580,16 +582,7 @@
     }
     .content-size-left {
         position: absolute;
-        height: 30vh;
-        width: 40%;
-        overflow-y: auto;
-        padding-left: 2vh;
-        padding-right: 2vh;
-        padding-top: 1vh;
-    }
-    .content-size-right {
-        position: absolute;
-        height: 30vh;
+        height: 35vh;
         width: 40%;
         overflow-y: auto;
         padding-left: 2vh;
@@ -598,9 +591,8 @@
     }
 
     .skills-heading {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        text-align: center;
+        width:100%;
         margin-bottom: 10px;
         font-family: opensans-condensed-bold;
         font-weight: 800;
@@ -617,6 +609,66 @@
         font-size: 1.5em;
         color: #00bcae;
     }
+
+    .work-history-comp-name{
+        text-align: left;
+        padding-left: 1em;
+    }
+
+    .work-history-job-title {
+        text-align: left;
+        padding-left: 1em;
+    }
+
+    .work-history-desc {
+        text-align: left;
+        padding-left: 1em;
+        max-height: 5vh;
+        overflow-y: auto;
+    }
+
+    .work-history-date {
+        text-align: right;
+        padding-right: 1em;
+        padding-bottom: 1em;
+    }
+
+    .work-history-icon {
+        text-align: right;
+        padding-top: 1em;
+        padding-right: 1em;
+    }
+    .ref-contact-Num {
+        text-align: left;
+        padding-left: 1em;
+        padding-bottom: 1em;
+    }
+
+    .text-card {
+        border-radius: 20px;
+        min-height: 10vh;
+        font-family: opensans-condensed-bold;
+        font-weight: 700;
+        color: black;
+        font-size: 1.8vh;
+        background-color: #FFFFFF;
+        margin-bottom: 2px;
+    }
+
+        .text-card:hover {
+            border-radius: 20px;
+            min-height: 10vh;
+            font-family: opensans-condensed-bold;
+            font-weight: 700;
+            color: black;
+            font-size: 1.8vh;
+            margin-bottom: 2px;
+            box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;            
+            background: rgba(255, 255, 255,0);   
+            /*backdrop-filter: blur(5.6px);
+            -webkit-backdrop-filter: blur(5.6px);*/
+            border: 1px solid rgba(255, 255, 255, 0.04);            
+        }
 
 </style>
 <div class="h-95 container-fluid d-flex justify-content-center align-items-center overflow-hidden">
@@ -828,14 +880,18 @@
                                                     foreach (var item in workHistoryList)
                                                     {
 
-                                                        <div class="history-item" @onclick="() => SelectWorkHistory(item)" style="@GetStyling(item)">
-                                                            <div class="history-icon">
-                                                                <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteWorkHistory(item)"></i>
-                                                                <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
-                                                            </div>
-                                                            <div class="history-date">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")<br></div>
-                                                            <div class="history-content">@item.CompanyName<p>@item.JobTitle</p><span>@item.Description</span></div>
-                                                        </div>
+                                                  <div class="text-card" @onclick="() => SelectWorkHistory(item)" style="@GetStyling(item)">
+                                                    <div class="work-history-icon">
+                                                        <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteWorkHistory(item)"></i>
+                                                        <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
+                                                    </div>
+
+                                                    <div class="work-history-comp-name">@item.CompanyName</div>
+                                                    <div class="work-history-job-title">@item.JobTitle</div>
+                                                    <div class="work-history-desc">@item.Description</div>
+                                                    <div class="work-history-date">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</div>
+                                                </div>
+                                            
 
                                                     }
                                                 }
@@ -917,15 +973,15 @@
                                                     foreach (var item in educationList)
                                                     {
 
-                                                        <div class="history-item" @onclick="() => SelectEducation(item)" style="@GetEduStyling(item)">
-                                                            <div class="history-icon">
-                                                                <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteEducation(item)"></i>
-                                                                <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
-                                                            </div>
-
-                                                            <div class="history-date">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</div>
-                                                            <div class="history-content">@item.Qualification<span>@item.Insitution</span></div>
+                                                    <div class="text-card" @onclick="() => SelectEducation(item)" style="@GetEduStyling(item)">
+                                                        <div class="work-history-icon">
+                                                            <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteEducation(item)"></i>
+                                                            <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
                                                         </div>
+                                                        <div class="work-history-comp-name">@item.Qualification</div>
+                                                        <div class="work-history-job-title">@item.Insitution</div>
+                                                        <div class="work-history-date">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</div>
+                                                    </div>                                                        
                                                     }
                                                 }
                                                 <!--</div>-->
@@ -951,51 +1007,25 @@
                                     <div class="col-9 p-5">
                                         <div class="row shadow-sm bg-body rounded-edges white-back position-white">
                                             <div class="education-header">Skill information</div>
-                                            <div class="col-12" style="height: 45vh">
-
-                                                <div class="row">
-                                                    <div class="col-6 skill-table-size">
-                                                        <div class="skills-heading">Select Skills</div>
-                                                        <div class="content-size-left">
-                                                            @foreach (var item in skills)
-                                                            {
-                                                                <div class="card-class-for-skills" @onclick="() => addToSelectedInfo(item)">
-                                                                    <div>@item</div>
-                                                                </div>
-
-                                                            }
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-6 skill-table-size-right">
-                                                        <div class="skills-selected-heading">Skills selected</div>
-                                                        <div class="content-size-right">
-                                                            @foreach (var item in selectedSkillsList2)
-                                                            {
-                                                                <div class="card-class-for-skills" @onclick="() => removeFromSelectedInfo(item)">
-                                                                    <div>@item.Description</div>
-                                                                </div>
-                                                            }
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="row p-3">
-                                                    <div class="validation-message"></div><!--<ValidationSummary />-->
-                                                    <div class="col-12 d-flex justify-content-around">
-                                                        @if (eduEditMode)
+                                            <div class="col-12 d-flex justify-content-center" style="height: 45vh">
+                                                <div class="skill-table-size">
+                                                    <div class="skills-heading">Select Skills</div>
+                                                    <div class="content-size-left">
+                                                        @foreach (var item in apiSkills)
                                                         {
-                                                            <input class="btn formButton" type="button" value="Save" @onclick="() => SaveEducation(education)" />
-                                                            <input class="btn formButton" type="button" value="Cancel" @onclick="() => CancelEducation(education)" />
-                                                        }
-                                                        else
-                                                        {
-                                                            <button class="btn formButton" type="submit" value="Add" onclick="">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
-                                                        }
+                                                            <div class="card-class-for-skills" @onclick="() => addToSelectedInfo(item)">
 
+                                                                <div>@item.Description</div>
+                                                            </div>
 
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>
+                                            @if (warning)
+                                            {
+                                                <div class="d-flex justify-content-center align-bottom align-content-end">  @skillWarning</div>
+                                            }
                                         </div>
                                     </div>
                                     <div class="col-3">
@@ -1007,18 +1037,17 @@
                                                     <p class="history-status  text-tight">Skills Information</p>
                                                 </div>
                                                 <br />
-                                                @if (selectedSkillsList2 != null && selectedSkillsList2.Count > 0)
+                                                @if (selectedSkillsList1 != null && selectedSkillsList1.Count > 0)
                                                 {
-                                                    foreach (var item in selectedSkillsList2)
+                                                    foreach (var item in selectedSkillsList1)
                                                     {
-
-                                                        <div class="history-item">
+                                                        <div class="text-card">
                                                             <!--@onclick="() => SelectEducation(item)" style="@GetEduStyling(item)-->
-                                                            <div class="history-icon">
+                                                            <div class="work-history-icon">
                                                                 <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => removeFromSelectedInfo(item)"></i> <!---->
                                                                 <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
                                                             </div>
-                                                            <div class="history-content">@item.Description</div>
+                                                            <div class="work-history-comp-name">@item.Description</div>
                                                         </div>
                                                     }
                                                 }
@@ -1098,24 +1127,18 @@
                                                 {
                                                     foreach (var items in referencesList)
                                                     {
-
-                                                        <div class="history-item" @onclick="() => SelectReference(items)" style="@GetRefStyling(items)">
-                                                            <div class="history-icon">
+                                                                                                                
+                                                        <div class="text-card" @onclick="() => SelectReference(items)" style="@GetRefStyling(items)">
+                                                            <div class="work-history-icon">
                                                                 <span @onclick="() => DeleteReference(items.Id)">
                                                                     <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteReference(items.Id)"></i>
                                                                     <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
                                                                 </span>
                                                             </div>
-                                                            <div class="history-content">
-                                                                @items.Name
-                                                                <br>
-                                                                @items.Surname
-                                                                <br>
-                                                                @items.Email
-                                                                <br>
-                                                                @items.ContactNum
-                                                            </div>
-
+                                                            <div class="work-history-comp-name">@items.Name</div>
+                                                            <div class="work-history-comp-name">@items.Surname</div>
+                                                            <div class="work-history-comp-name">@items.Email</div>
+                                                            <div class="ref-contact-Num">@items.ContactNum</div> 
                                                         </div>
 
                                                     }

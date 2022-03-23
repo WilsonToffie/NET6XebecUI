@@ -35,10 +35,7 @@ namespace XebecPortal.UI.Shared
         {           
             jobs = await HttpClient.GetFromJsonAsync<IList<Job>>("https://xebecapi.azurewebsites.net/api/Job");
             jobTypes = await HttpClient.GetFromJsonAsync<IList<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
-
-            personalInfo = await HttpClient.GetFromJsonAsync<PersonalInformation>($"https://xebecapi.azurewebsites.net/api/PersonalInformation/1");
-     
-            //Console.WriteLine(personalInfoList.Where(x => x.AppUserId == state.AppUserId).FirstOrDefault().AppUserId);
+            personalInfo = await HttpClient.GetFromJsonAsync<PersonalInformation>("https://xebecapi.azurewebsites.net/api/personalinformation/1"); // !!!!!! Change the ID to be the userID later 
         }
 
         private void showApplicantApplicationProfile()
@@ -150,8 +147,9 @@ namespace XebecPortal.UI.Shared
                                 {
                                     new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
                                 });
-               //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
-               var resp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo);
+                //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
+                
+               var resp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/1", personalInfo); //{personalInfo.Id}
             }
             else
             {
