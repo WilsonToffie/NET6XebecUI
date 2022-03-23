@@ -20,6 +20,34 @@ namespace XebecPortal.UI.Pages.Applicant
         public string phase { get; set; }
     }
 
+    public class RejectedCandidate
+    {
+        public int id { get; set; }
+        public int applicationId { get; set; }
+        public Application application { get; set; }
+        public int unsuccessfulReasonId { get; set; }
+        public UnsuccessfullReasons unsuccessfulReason { get; set; }
+    }
+
+
+    public class UnsuccessfullReasons
+    {
+        public int id { get; set; }
+        public string reason { get; set; }
+        public object emailTemplate { get; set; }
+        public object _RejectedCandidates { get; set; }
+    }
+
+
+    public class ApplicationPhase
+    {
+        public int id { get; set; }
+
+        public string description { get; set; }
+
+        public string EmailTemplate { get; set; }
+    }
+
     public class ApplicationModel
     {
         [JsonProperty("id")] public int Id { get; set; }
@@ -36,11 +64,11 @@ namespace XebecPortal.UI.Pages.Applicant
 
         [JsonProperty("beginApplication")] public DateTime BeginApplication { get; set; }
 
-        [JsonProperty("applicationPhaseId")] 
+        [JsonProperty("applicationPhaseId")]
         public int ApplicationPhaseId { get; set; }
 
         [JsonProperty("applicationPhase")]
-        public ApplicationPhase ApplicationPhase{ get; set; }
+        public ApplicationPhase ApplicationPhase { get; set; }
 
         [JsonProperty("phaseHelpers")]
         public ApplicationPhasesHelper applicationPhasesHelper { get; set; }
@@ -131,7 +159,7 @@ namespace XebecPortal.UI.Pages.Applicant
 
     public class AppUser
     {
-        
+
     }
 
     public class JobPhaseHelpers
@@ -174,8 +202,8 @@ namespace XebecPortal.UI.Pages.Applicant
 
         public override bool Equals(object obj)
         {
-            WorkHistory test = (WorkHistory)obj;            
-            return string.Equals(this.CompanyName, test.CompanyName,StringComparison.OrdinalIgnoreCase) && string.Equals(this.JobTitle, test.JobTitle, StringComparison.OrdinalIgnoreCase) && string.Equals(this.Description, test.Description, StringComparison.OrdinalIgnoreCase);
+            WorkHistory test = (WorkHistory)obj;
+            return string.Equals(this.CompanyName, test.CompanyName, StringComparison.OrdinalIgnoreCase) && string.Equals(this.JobTitle, test.JobTitle, StringComparison.OrdinalIgnoreCase) && string.Equals(this.Description, test.Description, StringComparison.OrdinalIgnoreCase);
         }
 
         public override string ToString()
@@ -296,11 +324,11 @@ namespace XebecPortal.UI.Pages.Applicant
 
     public class SkillsInformation
     {
-        public int Id { get; set;}
-        public string Description { get; set;}
+        public int Id { get; set; }
+        public string Description { get; set; }
         public int AppUserId { get; set; }
     }
-   
+
     public class SkillBank
     {
         public int Id { get; set; }
