@@ -314,12 +314,35 @@
         font-family: opensans-bold;
     }
 
+    .hr-job-search-bar-input {
+        padding-left: 3em;
+        background-color: white;
+        height: 6vh;
+        width: 100%;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
+        border: white solid 0.1em;
+    }
+
+
+
+        .hr-job-search-bar-input::placeholder {
+            color: #666666;
+            font-family: opensans-condensed-bold;
+        }
+
+
+
+        .hr-job-search-bar-input:hover {
+            border-radius: 1em;
+            border: 0.1em solid black;
+        }
+
 </style>
 
 
 <div class="page-top-select-job">
     <div class="hr-job-search-bar">
-        <input class="hr-job-search-bar-input" type="text" placeholder="Search" @bind-value="searchTerm" @bind-value:event="oninput" />
+        <input class="hr-job-search-bar-input" type="text" placeholder="Search Applicants" @bind-value="searchTerm" @bind-value:event="oninput"/>
     </div>
 </div>
 <div class="phase-manager-container">
@@ -332,6 +355,12 @@
     {
         <div class="jobs-container">
             <h1>An error occured, please reload the page.</h1>
+        </div>
+    }
+    else if (NoApplicants)
+    {
+        <div class="jobs-container">
+            <h1>There are no applicants for this job.</h1>
         </div>
     }
     else
@@ -727,7 +756,9 @@
 
             </div>
             <div class="screening-dialog-body">
-                <input type="number" placeholder="0" style="width: 160px; height: 80px; font-size: 70px;" min="0" max="100" />
+                @*<input type="number" placeholder="0" style="width: 160px; height: 80px; font-size: 70px;" min="0" max="100" />*@
+                <i class="fa fa-exclamation-triangle" style="font-size: 80px;"></i>
+                <p>Feature in progress.</p>
             </div>
             <div class="invalid-email-text">
                 <p hidden="@EmailInvalid">Invalid Email</p>
@@ -896,11 +927,11 @@
                 }
                 @if (TotalPhases.Contains(34))
                 {
-                    <div class=" shadow mycard @OfferTwo" @onclick="() => MovePhase(34)"><b>Unsuccessful</b></div>
+                    <div class=" shadow mycard @OfferTwo" @onclick="() => MovePhase(34)"><b>Offer Pending - Candidate</b></div>
                 }
                 @if (TotalPhases.Contains(35))
                 {
-                    <div class=" shadow mycard @OfferThree" @onclick="() => MovePhase(35)"><b>Reviewed</b></div>
+                    <div class=" shadow mycard @OfferThree" @onclick="() => MovePhase(35)"><b>Offer Pending - Second Opinion</b></div>
                 }
             </div>
             <div class="invalid-email-text">
@@ -1045,6 +1076,7 @@
 
     //try catch
     bool LoadingError = false;
+    bool NoApplicants = false;
 
     //which phases the page will display
     List<int> TotalPhases = new List<int>();
@@ -1116,7 +1148,8 @@
 
         CurrentJobTitle = CurrentJob.Title;
 
-        if(CurrentJobId!=0)
+
+        if (CurrentJobId!=0)
         {
             TotalPhases.Clear();
             TotalPhases.Add(1);
@@ -1159,9 +1192,15 @@
                 Items.Add(temp);
             }
 
+
             if (FilteredItems.Count != 0)
             {
                 LoadingDialog = false;
+            }
+            else
+            {
+                LoadingDialog = false;
+                NoApplicants = true;
             }
         }
 
