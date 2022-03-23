@@ -366,6 +366,8 @@
         border-color: #00bcae;
         text-decoration: none;
         transition: all .3s ease-out;
+        width: 1vh;
+        height: 1vh;
     }
 
         .to-top:before {
@@ -430,13 +432,13 @@
     }
 
     .drag-drop-input {
-        position: absolute;
-        width: 690px;
-        height: 140px;
-        opacity: 0;
         cursor: pointer;
-        z-index: 2;
-        border: unset;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -2;
     }
 </style>
 
@@ -466,7 +468,7 @@
                 <div class="profile-div">
                     <div class="profile-image-div-cover">                  
                         <div class="upload-profile-btn" >
-                            <label class="to-top" >
+                            <label class="to-top">
                                 <InputFile OnChange="@UploadingProfilePic" class="drag-drop-input" id="fileInput"/>
                             </label>
                         </div>
@@ -614,8 +616,12 @@
             <div class="mainlayout-profile">
                 <div class="profile-div">
                     <div class="profile-image-div-cover">
-                        <!--Profile images for HR -->
-                        <div class="user-initial">@state.Avator</div>
+                        <div class="upload-profile-btn">
+                            <label class="to-top">
+                                <InputFile OnChange="@UploadingProfilePic" class="drag-drop-input" id="fileInput" />
+                            </label>
+                        </div>
+
                     </div>
                     <div class="profile-name-div">
                         <h2 class="profile-name">@state.Name &nbsp @state.Surname</h2>

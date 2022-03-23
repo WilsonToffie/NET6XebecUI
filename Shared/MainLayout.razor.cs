@@ -140,7 +140,7 @@ namespace XebecPortal.UI.Shared
             if (res.GetRawResponse().Status <= 205)
             {
                  // remember to fix / change later
-                personalInfo.Id = 1; // 1st person in DB
+                personalInfo.Id = state.AppUserId; // 1st person in DB
                 personalInfo.ImageUrl = blobUri.ToString();
                 Console.WriteLine("Result is true whooooo");
                 var content = new FormUrlEncodedContent(new[]
