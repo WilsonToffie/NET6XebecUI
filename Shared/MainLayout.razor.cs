@@ -22,6 +22,7 @@ namespace XebecPortal.UI.Shared
     public partial class MainLayout
     {
         PersonalInformation personalInfo = new PersonalInformation();
+        List<PersonalInformation> personalInfoList = new List<PersonalInformation>();
         private IList<Job> jobs = new List<Job>();
         private IList<JobType> jobTypes = new List<JobType>();
 
@@ -34,7 +35,10 @@ namespace XebecPortal.UI.Shared
         {           
             jobs = await HttpClient.GetFromJsonAsync<IList<Job>>("https://xebecapi.azurewebsites.net/api/Job");
             jobTypes = await HttpClient.GetFromJsonAsync<IList<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
-            personalInfo = await HttpClient.GetFromJsonAsync<PersonalInformation>("https://xebecapi.azurewebsites.net/api/personalinformation/1"); // !!!!!! Change later 
+
+            personalInfo = await HttpClient.GetFromJsonAsync<PersonalInformation>($"https://xebecapi.azurewebsites.net/api/PersonalInformation/1");
+     
+            //Console.WriteLine(personalInfoList.Where(x => x.AppUserId == state.AppUserId).FirstOrDefault().AppUserId);
         }
 
         private void showApplicantApplicationProfile()
@@ -139,8 +143,7 @@ namespace XebecPortal.UI.Shared
             
             if (res.GetRawResponse().Status <= 205)
             {
-                 // remember to fix / change later
-                personalInfo.Id = state.AppUserId; // 1st person in DB
+                personalInfo.Id = 1;
                 personalInfo.ImageUrl = blobUri.ToString();
                 Console.WriteLine("Result is true whooooo");
                 var content = new FormUrlEncodedContent(new[]
