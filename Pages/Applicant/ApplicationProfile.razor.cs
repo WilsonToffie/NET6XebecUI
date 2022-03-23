@@ -16,6 +16,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using XebecPortal.UI.Pages.Model;
 using Microsoft.Extensions.Logging;
+using System.Net.Http.Headers;
+
 namespace XebecPortal.UI.Pages.Applicant
 {
     public partial class ApplicationProfile
@@ -56,31 +58,30 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool workProgressVal = false;
         private bool referenceProgressVal = false;
 
+        private APIRoot apiroot = new APIRoot();
         //Create a skills list , with mock data just for now
         //Create a selected skill list
         //Then wriite that selected skill to the DB
-
         protected override async Task OnInitializedAsync()
         {
-            // apiSkills = await httpClient.GetFromJsonAsync<IList<SkillBank>>("https://api.linkedin.com/v2/skills?locale.language=en&locale.country=US");
             apiSkills = await httpClient.GetFromJsonAsync<IList<SkillBank>>("https://xebecapi.azurewebsites.net/api/SkillsBank");
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/ApplicationProfile.js");
-           
+            
+            //var token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNDNjZCRjIzMjBGNkY4RDQ2QzJERDhCMjI0MEVGMTFENTZEQkY3MUYiLCJ0eXAiOiJKV1QiLCJ4NXQiOiJQR2FfSXlEMi1OUnNMZGl5SkE3eEhWYmI5eDgifQ.eyJuYmYiOjE2NDgwMzg4MjQsImV4cCI6MTY0ODA0MjQyNCwiaXNzIjoiaHR0cHM6Ly9hdXRoLmVtc2ljbG91ZC5jb20iLCJhdWQiOlsiZW1zaV9vcGVuIiwiaHR0cHM6Ly9hdXRoLmVtc2ljbG91ZC5jb20vcmVzb3VyY2VzIl0sImNsaWVudF9pZCI6InF0dGF5Y2Y4cDdodWEwamIiLCJlbWFpbCI6ImFuZHJldy50cmF1dG1hbm5AMW5lYnVsYS5jb20iLCJjb21wYW55IjoiTmVidWxhIiwibmFtZSI6IkFuZHJldyBUcmF1dG1hbm4iLCJpYXQiOjE2NDgwMzg4MjQsInNjb3BlIjpbImVtc2lfb3BlbiJdfQ.lw8hOaeBK6LoLas4Cdfd3cH59h3lNjih03xdJ_1GmAIGt1Gp6B0CDrRlVlaVRHs3vAiwiM9BuJeWhCgiDQgLZ9h7rNwtcc0wE2krIdlludlvVMSSlEo8U8OWUhXSwyaWDKvlgI_QOfdzyGES6jh2fGU3SRUuyc-z9TQTwQoCXd9U2QauSn0W0hMHUpc2-90DYjHndsCwDYouVrfWR_MoGDxMoTQpaLitCOE3pmUHFYfmsrnxyRWaMKtX1mgnSW3SQqu-z2JmTAFwtSWFx1OPJ2vFxdnWoitJKCpIbkJPGQfHivvxLUufvUWqLP-QKO2W6JiZ0yoxolOtXxZEovn9gg";
+            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            //apiroot = await httpClient.GetFromJsonAsync<APIRoot>("https://emsiservices.com/skills/versions/latest/skills");
+            //var client = new RestClient("https://emsiservices.com/skills/versions/latest/skills"); // this will provide you with all of the available skills
+            //var request = new RestRequest(Method.GET);
+            //request.AddHeader("Authorization", "Bearer <ACCESS_TOKEN>");
+            //IRestResponse response = client.Execute(request);
+            
+            //populateList();
         }
+        int counter = 0;
         private string skillWarning = "";
         private bool warning;
         private void addToSelectedInfo(SkillBank info)
         {
-            //if (!selectedSkillsList.Contains(info))
-            //{
-            //    selectedSkillsList.Add(info);
-            //}
-            //else
-            //{
-            //    // inform user that it existed already
-            //}
-
-            //  var test = selectedSkillsList2.FindAll(r => r.Description.Equals(info));
             warning = false;
             var validCheck = selectedSkillsList1.FindAll(r => r.Description.Equals(info.Description));
             if (validCheck.Count == 0)
@@ -96,11 +97,6 @@ namespace XebecPortal.UI.Pages.Applicant
                 warning = true;
                 skillWarning = "Skill has already been added!";
             }
-
-            
-
-            
-
         }
         private void removeFromSelectedInfo(SkillsInformation info)
         {

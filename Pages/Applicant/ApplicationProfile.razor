@@ -1011,13 +1011,19 @@
                                                 <div class="skill-table-size">
                                                     <div class="skills-heading">Select Skills</div>
                                                     <div class="content-size-left">
+
                                                         @foreach (var item in apiSkills)
                                                         {
                                                             <div class="card-class-for-skills" @onclick="() => addToSelectedInfo(item)">
 
                                                                 <div>@item.Description</div>
                                                             </div>
+                                                            counter++;
 
+                                                            if (counter == 100)
+                                                            {
+                                                                break;
+                                                            }
                                                         }
                                                     </div>
                                                 </div>
