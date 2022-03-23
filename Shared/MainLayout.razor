@@ -438,6 +438,7 @@
         position: absolute;
         top: 0;
         left: 0;
+        z-index: -2;
     }
 </style>
 
@@ -615,8 +616,12 @@
             <div class="mainlayout-profile">
                 <div class="profile-div">
                     <div class="profile-image-div-cover">
-                        <!--Profile images for HR -->
-                        <div class="user-initial">@state.Avator</div>
+                        <div class="upload-profile-btn">
+                            <label class="to-top">
+                                <InputFile OnChange="@UploadingProfilePic" class="drag-drop-input" id="fileInput" />
+                            </label>
+                        </div>
+
                     </div>
                     <div class="profile-name-div">
                         <h2 class="profile-name">@state.Name &nbsp @state.Surname</h2>
