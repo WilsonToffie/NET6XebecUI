@@ -20,6 +20,15 @@ namespace XebecPortal.UI.Pages.Applicant
         public string phase { get; set; }
     }
 
+    public class ApplicationPhase
+    {
+        public int id { get; set; }
+
+        public string description { get; set; }
+
+        public string EmailTemplate { get; set; }
+    }
+
     public class ApplicationModel
     {
         [JsonProperty("id")] public int Id { get; set; }

@@ -22,6 +22,7 @@ namespace XebecPortal.UI.Shared
     public partial class MainLayout
     {
         PersonalInformation personalInfo = new PersonalInformation();
+        List<PersonalInformation> personalInfoList = new List<PersonalInformation>();
         private IList<Job> jobs = new List<Job>();
         private IList<JobType> jobTypes = new List<JobType>();
 
@@ -139,8 +140,7 @@ namespace XebecPortal.UI.Shared
             
             if (res.GetRawResponse().Status <= 205)
             {
-                 // remember to fix / change later
-                personalInfo.Id = state.AppUserId; // 1st person in DB
+                personalInfo.Id = 1;
                 personalInfo.ImageUrl = blobUri.ToString();
                 Console.WriteLine("Result is true whooooo");
                 var content = new FormUrlEncodedContent(new[]
