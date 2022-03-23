@@ -301,6 +301,11 @@ namespace XebecPortal.UI.Pages.Applicant
         public int AppUserId { get; set; }
     }
    
+    public class SkillBank
+    {
+        public int Id { get; set; }
+        public string Description { get; set; }
+    }
     public class Status
     {
         public string name { get; set; }
