@@ -1,34 +1,27 @@
 ﻿@page "/myjobs"
-@using XebecPortal.UI.Interfaces
-@using XebecPortal.UI.Services.MockServices
 @using XebecPortal.UI.Services.Models
-@using JetBrains.Annotations
-@using System.Globalization
-@using XebecPortal.UI.Service_Interfaces
-@inject IJobDataService _jobDataService
-@inject IApplicationDataService _applicationDataService
-@inject IApplicationPhaseHelperDataService _applicationPhaseHelperDataService
-@inject IMyJobListDataService _myJobListDataService
+@inject HttpClient httpClient
+@inject HrJobState hrJobState
 <style>
-    .main{
-        overflow:hidden;
-        
+    .main {
+        overflow: hidden;
+        font-family: opensans-condensed-bold;
     }
-   
+
     .main-wrapper {
         background: transparent;
         width: 100%;
         min-height: 100%;
-        padding:0 5%;
+        padding: 0 5%;
         /*display: grid;
         grid-template-columns: 1fr 1fr 1.2fr 1.5fr;
         grid-template-rows: 10% auto;
         grid-gap: 10px;
         max-height: 100%;
         padding: 20px 10% 0 10%;*/
-        display:flex;
-        justify-content:center;
-        gap:10px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
         margin-top: 30px;
     }
 
@@ -49,20 +42,19 @@
     }
 
     .job-cards {
-       /* display: grid;
+        /* display: grid;
         grid-template-columns: repeat(2, fr);
         align-content: start;*/
         /*grid-template-columns: repeat(@@maxJobs, 1fr);*/
         background: rgba(0, 188, 174,0.1);
-        height:75vh;
-        gap:10px;
+        height: 75vh;
+        gap: 10px;
         padding: 5px;
-        display:flex;
-        flex-direction:column;
-        overflow-y:auto;
-        width:100%;
-        scrollbar-track-color:white;
-        
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        width: 100%;
+        scrollbar-track-color: white;
     }
 
         .job-cards::-webkit-scrollbar-track {
@@ -74,13 +66,12 @@
         .job-cards::-webkit-scrollbar {
             width: 10px;
             background-color: rgba(0, 188, 174,0.6);
-            
         }
 
         .job-cards::-webkit-scrollbar-thumb {
-            background:linear-gradient(transparent 30%, #fff 30%);
-            width:10px;
-            height:10px;
+            background: linear-gradient(transparent 30%, #fff 30%);
+            width: 10px;
+            height: 10px;
         }
 
         .job-cards div {
@@ -137,11 +128,10 @@
         grid-template-columns: repeat(2, 1fr);
         grid-template-rows: repeat(4, fit-content());
         grid-row-gap: 0;*/
-        display:flex;
-        flex-direction:column;
+        display: flex;
+        flex-direction: column;
         height: fit-content;
         box-shadow: rgba(0, 188, 174,0.3) 0px 2px 2px, rgba(0, 188, 174,0.22) 0px 15px 12px;
-        
     }
 
     .position, .company {
@@ -175,8 +165,8 @@
         text-align: center;
         color: white;
         margin-bottom: 3vh;
-        width:100%;
-        height:35px;
+        width: 100%;
+        height: 35px;
     }
 
     .job-card {
@@ -265,6 +255,7 @@
         border: white solid 0.1em;
         border-radius: 1em;
     }
+
     .search-bar {
         width: 50%;
         height: 5vh;
@@ -273,39 +264,36 @@
         margin-right: 30%;
         border: none;
     }
-    
 </style>
-@if (_allJobs != null)
+@if (jobs != null)
 
 {
     <div class="row d-flex justify-content-center" style="height:5vh; margin-bottom:20px; width:100%;">
         <div class="search-bar">
             <div class="input-group d-flex justify-content-center form-group">
-                @*<span class="input-group-text">
-                        <i class="fa fa-search"></i>
-                    </span>*@
+
                 <input class="job-search-bar-input" style="max-width: 50%" type="text" placeholder="Search" value="@_keyword" @oninput="@OnKeywordChanged" />
             </div>
         </div>
         <span></span>
     </div>
-    <div class="main-wrapper" >
+    <div class="main-wrapper">
         <!--Search-Box-->
-
+        
         <div class="main-wrapper-child job-cards">
             <div class="card-header d-flex align-content-center justify-content-center ">
                 <span>Application</span>
             </div>
-            @foreach (var application in _applications)
+            @foreach (var job in jobs)
             {
                 <div class="job-card">
-                    <span class="position">@application.Position</span>
-                    <span class="company">@application.Company</span>
-                    <small class="addition-details text-muted">@application.Location</small>
+                    <span class="position">@job.Title</span>
+                    <span class="company">@job.Company</span>
+                    <small class="addition-details text-muted">@job.Location</small>
                     <small class="phase left-text">
-                        <span class="phase-pill" style="@(GetColor(application.Phase))">@application.Phase</span>
+                        @*<span class="phase-pill" style="@(GetColor(job.Phase))">@application.Phase</span>*@
                     </small>
-                    <small class="addition-details text-muted">Date Advertised: @application.LastMoved</small>
+                    <small class="addition-details text-muted">Date Advertised: @job.CreationDate</small>
                     @*<small class="addition-details left-text text-muted">ApplicationModel Date : @application.ApplicationDate</small>*@
                 </div>
             }
@@ -330,7 +318,7 @@
         </div>
         <div class="main-wrapper-child job-cards">
             <div class="card-header  d-flex align-content-center justify-content-center accepted-heading">
-                <span class="count">@_offers.Count </span><span style="margin-left:5px;">Successful</span><p style="margin-left:5px;">Application</p>
+                <span class="count"> </span><span style="margin-left:5px;">Successful</span><p style="margin-left:5px;">Application</p>
             </div>
             @foreach (var application in _offers)
             {
@@ -373,137 +361,87 @@ else
 }
 
 @code {
-    List<MyJob> _allJobs;
-    List<MyJob> _applications;
-    List<MyJob> _rejections;
-    List<MyJob> _inProgress;
-    List<MyJob> _offers;
 
-    private string _keyword = string.Empty;
-    private List<MyJob> _initJobs;
+    private IList<AppUser> users = new List<AppUser>();
+    private IList<ApplicationPhaseHelper> phasesHelpers = new List<ApplicationPhaseHelper>();
+    private IList<ApplicationModel> applications = new List<ApplicationModel>();
+    private IList<ApplicationPhase> phases = new List<ApplicationPhase>();
+    private IList<Job> jobs = new List<Job>();
 
-    [Parameter]
-    [CanBeNull]
-    public string Keyword { get; set; }
-
-    [Parameter]
-    [CanBeNull]
-    public EventCallback<string> KeywordChanged { get; set; }
-
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        _allJobs = _myJobListDataService.GetAllJobs();
-        //_allJobs = (await _myJobListDataService.GetAllJobsByAppUserId(3)).ToList();
+        jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
 
-        _initJobs = _allJobs;
-        _applications = _allJobs.FindAll(
-            match: a => a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
-        _inProgress = _allJobs.FindAll(
-            match: a => !(a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) || a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
-        _offers = _allJobs.FindAll(
-            match: a => (a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
-        _rejections = _allJobs.FindAll(
-            match: a => a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.Rejected)));
+        users = await httpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
+        phasesHelpers = await httpClient.GetFromJsonAsync<List<ApplicationPhaseHelper>>("https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper");
+        applications = await httpClient.GetFromJsonAsync<List<ApplicationModel>>("https://xebecapi.azurewebsites.net/api/Application");
+        phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/ApplicationPhase");
+
+    }
+    private string FindCurrentPhase(int candidateId, int jobId)
+    {
+        int applicationId = applications.Where(x => x.JobId == jobId && x.AppUserId == candidateId).FirstOrDefault().Id;
+
+        List<ApplicationPhaseHelper> phases_ = phasesHelpers.Where(x => x.ApplicationId == applicationId).ToList();
+        phases_ = phases_.OrderByDescending(x => x.TimeMoved).ToList();
+
+        ApplicationPhaseHelper currentPhase = phases_.FirstOrDefault();
+
+        string phaseDescription = phases.Where(x => x.id == currentPhase.ApplicationPhaseId).FirstOrDefault().description;
+
+        return phaseDescription;
     }
 
-    private Task OnKeywordChanged(ChangeEventArgs e)
-    {
-        _keyword = e?.Value?.ToString();
 
-        if (string.IsNullOrWhiteSpace(_keyword))
-        {
-            _allJobs = _initJobs;
-            _applications = _allJobs.FindAll(
-                match: a => a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
-            _inProgress = _allJobs.FindAll(
-                match: a => !(a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) || a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
-            _offers = _allJobs.FindAll(
-                match: a => (a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
-            _rejections = _allJobs.FindAll(
-                match: a => a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.Rejected)));
-            return Task.CompletedTask;
-        }
 
-        _allJobs = _initJobs.FindAll(a => a.Position.ToLower().Contains(_keyword.ToLower()) || a.Company.ToLower().Contains(_keyword.ToLower()) ||
-                                          a.Location.ToLower().Contains(_keyword.ToLower()) || a.Phase.ToLower().Contains(_keyword.ToLower()) ||
-                                          a.Status.ToLower().Contains(_keyword.ToLower()) ||
-                                          a.LastMoved.ToString(CultureInfo.CurrentCulture).ToLower().Contains(_keyword.ToLower()) ||
-                                          a.ApplicationDate.ToString(CultureInfo.CurrentCulture).ToLower().Contains(_keyword.ToLower()));
 
-        _applications = _allJobs.FindAll(
-            match: a => a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
-        _inProgress = _allJobs.FindAll(
-            match: a => !(a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Application)) || a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
-        _offers = _allJobs.FindAll(
-            match: a => (a.Phase.Equals(Enum.GetName(MockMyJobListDataService.Phases.Offer))) && a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.InProgress)));
-        _rejections = _allJobs.FindAll(
-            match: a => a.Status.Equals(Enum.GetName(MockMyJobListDataService.Statuses.Rejected)));
-        return KeywordChanged.InvokeAsync(_keyword);
-    }
+    //private string GetColor(string applicationPhase)
+    //{
+    //    string bg_colour;
+    //    string text_colour;
 
-    public enum ApplicationPhase
-    {
-        //get desciption
-        Application,
-        Testing,
-        InterviewStaff,
-        InterviewCEO,
-        InterviewHR,
-        Offer,
-        Screening
-    }
-    public enum Statuses
-    {
-        InProgress, Rejected
-    }
-
-    private string GetColor(string applicationPhase)
-    {
-        string bg_colour;
-        string text_colour;
-
-        if (Enum.GetName(ApplicationPhase.Application).Equals(applicationPhase))
-        {
-            bg_colour = "rgba(9, 71, 111, 0.22)";
-            text_colour = "rgba(9, 71, 111, 1)";
-        }
-        else if (Enum.GetName(ApplicationPhase.Testing).Equals(applicationPhase))
-        {
-            bg_colour = "rgba(11, 28, 72, 0.22)";
-            text_colour = "rgba(11, 28, 72, 1)";
-        }
-        else if (Enum.GetName(ApplicationPhase.InterviewStaff).Equals(applicationPhase, StringComparison.OrdinalIgnoreCase))
-        {
-            bg_colour = "rgba(0, 155, 174, 0.22)";
-            text_colour = "rgba(0, 155, 174, 1)";
-        }
-        // ReSharper disable once PossibleNullReferenceException
-        else if (Enum.GetName(ApplicationPhase.InterviewHR).Equals(applicationPhase))
-        {
-            bg_colour = "rgba(131, 97, 67, 0.22)";
-            text_colour = "rgba(131, 97, 67, 1)";
-        }
-        else if (Enum.GetName(ApplicationPhase.InterviewCEO).Equals(applicationPhase))
-        {
-            bg_colour = "rgba(224, 213, 204, 0.22)";
-            text_colour = "rgba(131, 97, 67, 1)";
-        }
-        else if (Enum.GetName(ApplicationPhase.Offer).Equals(applicationPhase))
-        {
-            bg_colour = "rgba(0, 188, 80, 0.22)";
-            text_colour = "rgba(0, 188, 80, 1)";
-        }
-        else if (Enum.GetName(ApplicationPhase.Screening).Equals(applicationPhase))
-        {
-            bg_colour = "rgba(0, 108, 188, 0.22)";
-            text_colour = "rgba(0, 108, 188, 1)";
-        }
-        else
-        {
-            bg_colour = "rgba(94,93,240,0.22)";
-            text_colour = "rgba(94,93,240,1)";
-        }
-        return $"background: {bg_colour}; color: {text_colour}; box-shadow: {text_colour} 0 10px 20px -10px;";
-    }
+    //if (Enum.GetName(ApplicationPhase.Application).Equals(applicationPhase))
+    //{
+    //    bg_colour = "rgba(9, 71, 111, 0.22)";
+    //    text_colour = "rgba(9, 71, 111, 1)";
+    //}
+    //else if (Enum.GetName(ApplicationPhase.Testing).Equals(applicationPhase))
+    //{
+    //    bg_colour = "rgba(11, 28, 72, 0.22)";
+    //    text_colour = "rgba(11, 28, 72, 1)";
+    //}
+    //else if (Enum.GetName(ApplicationPhase.InterviewStaff).Equals(applicationPhase, StringComparison.OrdinalIgnoreCase))
+    //{
+    //    bg_colour = "rgba(0, 155, 174, 0.22)";
+    //    text_colour = "rgba(0, 155, 174, 1)";
+    //}
+    //// ReSharper disable once PossibleNullReferenceException
+    //else if (Enum.GetName(ApplicationPhase.InterviewHR).Equals(applicationPhase))
+    //{
+    //    bg_colour = "rgba(131, 97, 67, 0.22)";
+    //    text_colour = "rgba(131, 97, 67, 1)";
+    //}
+    //else if (Enum.GetName(ApplicationPhase.InterviewCEO).Equals(applicationPhase))
+    //{
+    //    bg_colour = "rgba(224, 213, 204, 0.22)";
+    //    text_colour = "rgba(131, 97, 67, 1)";
+    //}
+    //else if (Enum.GetName(ApplicationPhase.Offer).Equals(applicationPhase))
+    //{
+    //    bg_colour = "rgba(0, 188, 80, 0.22)";
+    //    text_colour = "rgba(0, 188, 80, 1)";
+    //}
+    //else if (Enum.GetName(ApplicationPhase.Screening).Equals(applicationPhase))
+    //{
+    //    bg_colour = "rgba(0, 108, 188, 0.22)";
+    //    text_colour = "rgba(0, 108, 188, 1)";
+    //}
+    //else
+    //{
+    //    bg_colour = "rgba(94,93,240,0.22)";
+    //    text_colour = "rgba(94,93,240,1)";
+    //}
+    //return $"background: {bg_colour}; color: {text_colour}; box-shadow: {text_colour} 0 10px 20px -10px;";
+}
 
 }
