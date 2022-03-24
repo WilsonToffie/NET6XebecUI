@@ -40,7 +40,7 @@
         margin-top: 2.5vh;
         margin-left: 30%;
         margin-right: 30%;
-        border: none;    
+        border: none;
     }
 
     .hr-job-filters {
@@ -283,11 +283,68 @@
             border-radius: 1em;
             border: 0.1em solid black;
         }
+
+
+    .applicant-application-form {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .applicant-application-form-button {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 50%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+
+    .applicant-application-form-questions {
+        display: flex;
+        justify-content: center;
+        height: 60vh;
+        overflow-y: auto;
+    }
+
+        .applicant-application-form-questions td {
+            width: 300px;
+        }
+
+    .applicant-application-form-container {
+        background: #fff;
+        width: 30%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        border-radius: 10px;
+        border: 1px solid rgba(0,0,0,0.5);
+    }
+
+    .applicant-appform-button {
+        width: 90px;
+        border-radius: 10px;
+        background: #00BCAE;
+        color: #fff;
+    }
+
+    .appform-submit-modal {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        top: 0;
+        left: 0;
+    }
 </style>
 
 <div class="container" style="height: 55vh;" hidden="@jobPortalIsHidden">
     <!--Search-Box-->
-    <div style="height: 15vh">        
+    <div style="height: 15vh">
         <div class="hr-job-search-bar">
             <input class="search-image hr-job-search-bar-input rounded-pill" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs" @oninput="SearchListJob" />
         </div>
@@ -401,7 +458,7 @@
 
                                         @if (displayJobDetail.JobTypes?.Any() == true)
                                         {
-                                        <h5>@GetJobType(displayJobDetail.Id)</h5>
+                                            <h5>@GetJobType(displayJobDetail.Id)</h5>
                                         }
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
@@ -516,7 +573,6 @@
         <MudProgressCircular Class="loading-icon" Size="Size.Large" Indeterminate="true" />
     </div>
 }
-
 
 @{
     isFilterContainAnyVal = !string.IsNullOrEmpty(searchJob) || mudSelectLocation?.Any() == true || mudSelectCompany?.Any() == true || mudSelectDepartment?.Any() == true || mudSelectJobType?.Any() == true;
