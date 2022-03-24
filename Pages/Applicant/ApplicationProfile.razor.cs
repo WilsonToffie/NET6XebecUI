@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using XebecPortal.UI.Pages.Model;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Components;
+using System.Net.Http.Headers;
 
 namespace XebecPortal.UI.Pages.Applicant
 {
@@ -31,9 +31,6 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool editMode;
         private bool workEditMode;
         private bool eduEditMode;
-
-        private string storageAcc = "storageaccountxebecac6b";
-        private string imgContainer = "images";
 
         private List<WorkHistory> workHistoryList = new();
         private WorkHistory workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
@@ -61,79 +58,49 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool workProgressVal = false;
         private bool referenceProgressVal = false;
 
-        ElementReference dropzone;
-        InputFile file;
-        private string thisFile;
-        IJSObjectReference module, dropZone;
+        private APIRoot apiroot = new APIRoot();
 
-
-        //Create a skills list , with mock data just for now
-        //Create a selected skill list
-        //Then wriite that selected skill to the DB
         protected override async Task OnInitializedAsync()
         {
-            apiSkills = await httpClient.GetFromJsonAsync<IList<SkillBank>>("https://xebecapi.azurewebsites.net/api/SkillsBank");
+            //apiSkills = await httpClient.GetFromJsonAsync<IList<SkillBank>>("https://xebecapi.azurewebsites.net/api/SkillsBank?limit=100");
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/ApplicationProfile.js");
-            populateSkillLists();
 
-            try
-            {
-                module = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./DragAndDrop.js");
+            // var token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNDNjZCRjIzMjBGNkY4RDQ2QzJERDhCMjI0MEVGMTFENTZEQkY3MUYiLCJ0eXAiOiJKV1QiLCJ4NXQiOiJQR2FfSXlEMi1OUnNMZGl5SkE3eEhWYmI5eDgifQ.eyJuYmYiOjE2NDgxMDMxNzksImV4cCI6MTY0ODEwNjc3OSwiaXNzIjoiaHR0cHM6Ly9hdXRoLmVtc2ljbG91ZC5jb20iLCJhdWQiOlsiZW1zaV9vcGVuIiwiaHR0cHM6Ly9hdXRoLmVtc2ljbG91ZC5jb20vcmVzb3VyY2VzIl0sImNsaWVudF9pZCI6InF0dGF5Y2Y4cDdodWEwamIiLCJlbWFpbCI6ImFuZHJldy50cmF1dG1hbm5AMW5lYnVsYS5jb20iLCJjb21wYW55IjoiTmVidWxhIiwibmFtZSI6IkFuZHJldyBUcmF1dG1hbm4iLCJpYXQiOjE2NDgxMDMxNzksInNjb3BlIjpbImVtc2lfb3BlbiJdfQ.UaGiM8wC7TBB4sDeF8PjzGWYb8Scu4BFy8IrjXTuv4nOMDuhdsIpYMesLneYSDeA0vyuBcVEtmast-J7c5GO15SMF-KE4347pyEauKATaxYAAxSTyzYKcI_eouvh1ZLLoFPyLnO5OL72ivu2eRcTFhnmWWhPZpdt4Hg3NjIUzTM3A6NbTnA3WAKZ7u6O8_KVMiQFg4fPCqEMQXnLS_MwQFWLLA2fblrqRMb82k6XabDUg1WKU3u5sFls9DDi-FZtBqpOxKR4bOMslgCVWxsG6LCrzagv2L0-nz-pOjdfHYwQsl3i2u7Zzl6fVowhlgMHZImMvUglFmYzj_OGTgNVNA";
+            // httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            // apiroot = await httpClient.GetFromJsonAsync<APIRoot>("https://emsiservices.com/skills/versions/latest/skills?limit=100");
+            //var client = new RestClient("https://emsiservices.com/skills/versions/latest/skills"); // this will provide you with all of the available skills
+            //var request = new RestRequest(Method.GET);
+            //request.AddHeader("Authorization", "Bearer <ACCESS_TOKEN>");
+            //IRestResponse response = client.Execute(request);
 
-                dropZone = await module.InvokeAsync<IJSObjectReference>("InitializeFileDropZone", dropzone, file);
-            }
-            catch
-            {
-
-            }
+            populateList();
+            Console.WriteLine("apiskills count: " + apiSkills.Count());
         }
 
-        public class FileModel
+        private string skillWarning = "";
+        private bool warning;
+
+
+        private void populateList()
         {
-            public string FileName { get; set; }
-        }
-
-        FileModel newFile = new FileModel();
-
-        [Parameter]
-        public EventCallback<string> FileChanged { get; set; }
-
-
-        public Task OnFileChange(InputFileChangeEventArgs e)
-        {
-            thisFile = e.File.Name.ToString();
-            Console.WriteLine(thisFile+" in OnFileChange");
-            return FileChanged.InvokeAsync(newFile.FileName);
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            if (dropZone != null)
+            apiSkills.Add(new()
             {
-                await dropZone.InvokeVoidAsync("Dispose");
-
-                await dropZone.DisposeAsync();
-            }
-
-            if (module != null)
+                Description = "Java",
+            });
+            apiSkills.Add(new()
             {
-                await module.DisposeAsync();
-            }
+                Description = "CSS",
+            });
+            apiSkills.Add(new()
+            {
+                Description = "C#",
+            });
+            apiSkills.Add(new()
+            {
+                Description = "Azure",
+            });
         }
-
-        public void populateSkillLists()
-        {
-            skills.Add("Java");
-            skills.Add("Python");
-            skills.Add("C#");
-            skills.Add("C");
-            skills.Add("C++");
-            skills.Add("mySQL");
-            skills.Add("Blazor Framework");
-            skills.Add("Azure services");
-        }
-
-        private void addToSelectedInfo(string info)
+        private void addToSelectedInfo(SkillBank info)
         {
             warning = false;
             var validCheck = selectedSkillsList1.FindAll(r => r.Description.Equals(info.Description));
@@ -182,9 +149,9 @@ namespace XebecPortal.UI.Pages.Applicant
                 Surname = references.Surname,
                 Email = references.Email,
                 ContactNum = references.ContactNum,
-            });           
+            });
             references = new();
-        } 
+        }
 
         private References tempRef;
 
@@ -199,7 +166,7 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private void Cancel(References referenceValues)
         {
-            int index = referencesList.FindIndex(x => x.Equals(referenceValues));            
+            int index = referencesList.FindIndex(x => x.Equals(referenceValues));
             referencesList[index] = tempRef;
             references = new();
             editMode = false;
@@ -207,7 +174,7 @@ namespace XebecPortal.UI.Pages.Applicant
         }
 
         private void DeleteReference(int refID)
-        {            
+        {
             if (referencesList.Count == 1)
             {
                 referenceProgressVal = true;
@@ -223,7 +190,7 @@ namespace XebecPortal.UI.Pages.Applicant
             references = referencesList[index];
             tempRef = (References)references.Clone();
         }
-      
+
         private WorkHistory tempWorkHistory;
 
         private void addWorkHistoryTest()
@@ -245,18 +212,18 @@ namespace XebecPortal.UI.Pages.Applicant
             if (workHistoryList.Count == 1)
             {
                 workProgressVal = true;
-            }            
+            }
             workHistoryList.RemoveAll(x => x == (workHistoryValues));
             workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             workHistUpdate = false;
         }
 
         private void SelectWorkHistory(WorkHistory workHistoryValues)
-        {            
+        {
             workEditMode = true;
-            int index = workHistoryList.FindIndex(x => x == (workHistoryValues)); 
+            int index = workHistoryList.FindIndex(x => x == (workHistoryValues));
             workHistory = workHistoryList[index];
-            tempWorkHistory = (WorkHistory)workHistory.Clone();           
+            tempWorkHistory = (WorkHistory)workHistory.Clone();
         }
 
         // This is to display the selectedHistory tab
@@ -322,7 +289,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 Qualification = education.Qualification,
                 StartDate = education.StartDate,
                 EndDate = education.EndDate,
-            });         
+            });
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         }
 
@@ -332,7 +299,7 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 educationProgressVal = true;
             }
-            
+
             educationList.RemoveAll(x => x.Equals(educationValues));
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             eduUpdate = false;
@@ -392,34 +359,34 @@ namespace XebecPortal.UI.Pages.Applicant
         }
 
         private async Task Submit()
-        {            
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/PersonalInformation", personalInformation);
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/AdditionalInformation", additionalInformation);
+        {
+            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/PersonalInformation", personalInformation);
+            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/AdditionalInformation", additionalInformation);
 
-                foreach (var item in workHistoryList)
-                {
-                    await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/WorkHistory", item);
-                }
-                foreach (var item in educationList)
-                {
-                    await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Education", item);
-                }
-                foreach (var item in referencesList)
-                {
+            foreach (var item in workHistoryList)
+            {
+                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/WorkHistory", item);
+            }
+            foreach (var item in educationList)
+            {
+                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Education", item);
+            }
+            foreach (var item in referencesList)
+            {
                 await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Reference", item);
-                }
+            }
 
-                foreach (var item in selectedSkillsList1)
-                {
-                    await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Skill", item);
-                }
-             
-                
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink", profilePortfolio);
+            foreach (var item in selectedSkillsList1)
+            {
+                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Skill", item);
+            }
+
+
+            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink", profilePortfolio);
 
             //if (await _jsModule.InvokeAsync<bool>("PersonalInformation"))
             //{
-                
+
             //}
         }
         // This is just used to indicate to the user that their info has been successfully added to the DB
@@ -435,22 +402,30 @@ namespace XebecPortal.UI.Pages.Applicant
         */
 
         private static int num = 1;
-        
-        private async Task Upload()
+        async Task OnInputFileChangedAsync(InputFileChangeEventArgs e)
         {
-            Console.WriteLine(thisFile + " in Upload");
+            fileNames = e.File;
             progressBar = 0.ToString("0");
+            status = new StringBuilder($"Uploading file {num++}");
+
+
+            //Upload to blob - start
+            status = new StringBuilder($"current file {fileNames.Name}");
+
+            status.AppendLine("\n");
 
             var blobUri = new Uri("https://"
-                + storageAcc
-                + ".blob.core.windows.net/"
-                + imgContainer
-                + "/"
-                + thisFile);
-            Console.WriteLine(blobUri);
-            AzureSasCredential credential = new AzureSasCredential("?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupix&se=2024-12-02T20:36:17Z&st=2022-03-16T12:36:17Z&sip=1.1.1.1-255.255.255.255&spr=https&sig=nSCARiXySz%2BXLmtXJfZw28RkqfYUe%2FvDi11V9Q5Tpyo%3D");
+                                  + "amafilewam" +
+                                  ".blob.core.windows.net/" +
+                                  "upload" + "/" + fileNames.Name);
+            AzureSasCredential credential = new AzureSasCredential(
+                "sp=racwdli&st=2022-02-28T08:30:27Z&se=2022-03-11T16:30:27Z&sv=2020-08-04&sr=c&sig=TE%2B2VCz%2B6KKFbYHIkQwxGPOYWVUtht3xBPYZ8bE3kH4%3D");
             BlobClient blobClient = new BlobClient(blobUri, credential, new BlobClientOptions());
-           
+            status.AppendLine("Created blob client");
+
+            status.AppendLine("\n");
+            status.AppendLine("Sending to blob");
+            //displayProgress = true;
             var res = await blobClient.UploadAsync(fileNames.OpenReadStream(maxAllowedSize), new BlobUploadOptions
             {
                 HttpHeaders = new BlobHttpHeaders { ContentType = fileNames.ContentType },
@@ -461,7 +436,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 },
                 ProgressHandler = new Progress<long>((progress) =>
                 {
-                    progressBar = (100.0 * progress / 1).ToString("0");
+                    progressBar = (100.0 * progress / fileNames.Size).ToString("0");
                 })
             });
 
@@ -479,7 +454,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 //var response = await httpClient.GetAsync("https://xebecapi.azurewebsites.net/api/ResumeParser");
 
 
-                var resp = await httpClient.PostAsync("http://localhost:44364/api/ResumeParser/", content);
+                var resp = await httpClient.PostAsync("http://localhost:5002/api/ResumeParser/", content);
                 //status = new StringBuilder(resp.StatusCode.ToString());
                 var respContent = await resp.Content.ReadAsStringAsync();
 
@@ -505,9 +480,18 @@ namespace XebecPortal.UI.Pages.Applicant
             }
 
         }
+
         private void ResetFileNames()
         {
-            thisFile = "";
+            fileNames = null;
         }
+
+        void Upload()
+        {
+            //Upload the files here
+            /*Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+            Snackbar.Add("TODO: Upload your files!", Severity.Normal);*/
+        }
+
     }
 }
