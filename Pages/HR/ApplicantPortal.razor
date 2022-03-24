@@ -255,6 +255,11 @@
         font-weight: bold;
         border-color: #2f2f2f;
     }
+
+    .loading-icon{
+        margin-top: 150px;
+    }
+
 </style>
 
 <div class="page-top">
@@ -321,7 +326,7 @@
                                 tempCandidate = candidates.Where(x => x.AppUserId == currentUser.id).FirstOrDefault();
 
                                 <td style="padding-left: 35px">
-                                <td class="total-match-pill" style="@(GetPillStyle(candidate))">@tempCandidate.TotalMatch %</td></td>
+                                <td class="total-match-pill" style="@(GetPillStyle(candidate))">@Math.Round(tempCandidate.TotalMatch) %</td></td>
                             }
 
 
@@ -348,8 +353,7 @@
     }
     else
     {
-        <p>No applicants for this job.</p>
-
+            <MudProgressCircular Class="loading-icon" Size="Size.Large" Indeterminate="true" />
     }
 
 </div>
@@ -877,10 +881,7 @@
 
     private void FilterCandidatesByJob()
     {
-        Console.WriteLine(JobId);
-
         GetCandidates();
-
 
         candidates = candidates.Where(o => o.jobId == JobId).ToList();
         candidates = candidates.OrderByDescending(o => o.TotalMatch).ToList();
@@ -964,6 +965,8 @@
 
     private string FindCurrentPhase(int candidateId, int jobId)
     {
+        string phaseDescription = "";
+
         int applicationId = applications.Where(x => x.JobId == jobId && x.AppUserId == candidateId).FirstOrDefault().Id;
 
         List<ApplicationPhaseHelper> phases_ = phasesHelpers.Where(x => x.ApplicationId == applicationId).ToList();
@@ -971,7 +974,7 @@
 
         ApplicationPhaseHelper currentPhase = phases_.FirstOrDefault();
 
-        string phaseDescription = phases.Where(x => x.id == currentPhase.ApplicationPhaseId).FirstOrDefault().description;
+        phaseDescription = phases.Where(x => x.id == currentPhase.ApplicationPhaseId).FirstOrDefault().description;
 
         return phaseDescription;
     }

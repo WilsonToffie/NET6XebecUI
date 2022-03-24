@@ -22,6 +22,7 @@ namespace XebecPortal.UI.Shared
     public partial class MainLayout
     {
         PersonalInformation personalInfo = new PersonalInformation();
+        List<PersonalInformation> personalInfoList = new List<PersonalInformation>();
         private IList<Job> jobs = new List<Job>();
         private IList<JobType> jobTypes = new List<JobType>();
 
@@ -31,13 +32,10 @@ namespace XebecPortal.UI.Shared
         private bool hrDataAnalyticsTool, hrJobPortal, hrCreateAJob = false;
 
         protected override async Task OnInitializedAsync()
-        {
-            //state.Role = "Candidate";
-            //state.isLoggedIn = true;
-            applicantJobPortal = hrJobPortal = true;
+        {           
             jobs = await HttpClient.GetFromJsonAsync<IList<Job>>("https://xebecapi.azurewebsites.net/api/Job");
             jobTypes = await HttpClient.GetFromJsonAsync<IList<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
-            personalInfo = await HttpClient.GetFromJsonAsync<PersonalInformation>("https://xebecapi.azurewebsites.net/api/personalinformation/1"); // !!!!!! Change later 
+            personalInfo = await HttpClient.GetFromJsonAsync<PersonalInformation>("https://xebecapi.azurewebsites.net/api/personalinformation/1"); // !!!!!! Change the ID to be the userID later 
         }
 
         private void showApplicantApplicationProfile()
@@ -111,11 +109,12 @@ namespace XebecPortal.UI.Shared
         
         private string storageAcc = "storageaccountxebecac6b";
         private string imgContainer = "images";
+        private string userPicInfo;
         private async Task UploadingProfilePic(InputFileChangeEventArgs e)
         {
             // Getting the file
             var fileArray = e.File.Name.Split('.');
-
+            userPicInfo = e.File.Name;
             var fileName = fileArray[0] + Guid.NewGuid().ToString().Substring(0, 5) + "." + fileArray[1];
             var fileInfo = e.File;
             // You require a azure account with a storage account. You use that link for below. The 'images' is the file that the file image is stored in in Azure.
@@ -141,16 +140,16 @@ namespace XebecPortal.UI.Shared
             
             if (res.GetRawResponse().Status <= 205)
             {
-                 // remember to fix / change later
-                personalInfo.Id = 1; // 1st person in DB
+                personalInfo.Id = 1;
                 personalInfo.ImageUrl = blobUri.ToString();
                 Console.WriteLine("Result is true whooooo");
                 var content = new FormUrlEncodedContent(new[]
                                 {
                                     new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
                                 });
-               //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
-               var resp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo);
+                //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
+                
+               var resp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/1", personalInfo); //{personalInfo.Id}
             }
             else
             {
