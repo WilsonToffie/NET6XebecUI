@@ -17,6 +17,7 @@ using Newtonsoft.Json.Linq;
 using XebecPortal.UI.Pages.Model;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Components;
 
 namespace XebecPortal.UI.Pages.Applicant
 {
@@ -45,7 +46,9 @@ namespace XebecPortal.UI.Pages.Applicant
 
 
         private List<SkillsInformation> selectedSkillsList1 = new();
+
         private IList<SkillBank> apiSkills = new List<SkillBank>();
+        private IList<SkillBank> skillListFilter = new List<SkillBank>();
 
         private IJSObjectReference _jsModule;
         string _dragEnterStyle;
@@ -62,9 +65,10 @@ namespace XebecPortal.UI.Pages.Applicant
 
         protected override async Task OnInitializedAsync()
         {
-            //apiSkills = await httpClient.GetFromJsonAsync<IList<SkillBank>>("https://xebecapi.azurewebsites.net/api/SkillsBank?limit=100");
+            //apiSkills = await httpClient.GetFromJsonAsync<IList<SkillBank>>("https://xebecapi.azurewebsites.net/api/SkillsBank");
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/ApplicationProfile.js");
-
+            populateList();
+            skillListFilter = apiSkills;
             // var token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNDNjZCRjIzMjBGNkY4RDQ2QzJERDhCMjI0MEVGMTFENTZEQkY3MUYiLCJ0eXAiOiJKV1QiLCJ4NXQiOiJQR2FfSXlEMi1OUnNMZGl5SkE3eEhWYmI5eDgifQ.eyJuYmYiOjE2NDgxMDMxNzksImV4cCI6MTY0ODEwNjc3OSwiaXNzIjoiaHR0cHM6Ly9hdXRoLmVtc2ljbG91ZC5jb20iLCJhdWQiOlsiZW1zaV9vcGVuIiwiaHR0cHM6Ly9hdXRoLmVtc2ljbG91ZC5jb20vcmVzb3VyY2VzIl0sImNsaWVudF9pZCI6InF0dGF5Y2Y4cDdodWEwamIiLCJlbWFpbCI6ImFuZHJldy50cmF1dG1hbm5AMW5lYnVsYS5jb20iLCJjb21wYW55IjoiTmVidWxhIiwibmFtZSI6IkFuZHJldyBUcmF1dG1hbm4iLCJpYXQiOjE2NDgxMDMxNzksInNjb3BlIjpbImVtc2lfb3BlbiJdfQ.UaGiM8wC7TBB4sDeF8PjzGWYb8Scu4BFy8IrjXTuv4nOMDuhdsIpYMesLneYSDeA0vyuBcVEtmast-J7c5GO15SMF-KE4347pyEauKATaxYAAxSTyzYKcI_eouvh1ZLLoFPyLnO5OL72ivu2eRcTFhnmWWhPZpdt4Hg3NjIUzTM3A6NbTnA3WAKZ7u6O8_KVMiQFg4fPCqEMQXnLS_MwQFWLLA2fblrqRMb82k6XabDUg1WKU3u5sFls9DDi-FZtBqpOxKR4bOMslgCVWxsG6LCrzagv2L0-nz-pOjdfHYwQsl3i2u7Zzl6fVowhlgMHZImMvUglFmYzj_OGTgNVNA";
             // httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             // apiroot = await httpClient.GetFromJsonAsync<APIRoot>("https://emsiservices.com/skills/versions/latest/skills?limit=100");
@@ -73,10 +77,10 @@ namespace XebecPortal.UI.Pages.Applicant
             //request.AddHeader("Authorization", "Bearer <ACCESS_TOKEN>");
             //IRestResponse response = client.Execute(request);
 
-            populateList();
+            
             Console.WriteLine("apiskills count: " + apiSkills.Count());
         }
-
+       
         private string skillWarning = "";
         private bool warning;
 
@@ -100,6 +104,26 @@ namespace XebecPortal.UI.Pages.Applicant
                 Description = "Azure",
             });
         }
+
+        string searchedSkill;
+
+        private async Task SearchSkillList(ChangeEventArgs e)
+        {
+            searchedSkill = e.Value.ToString();
+            Console.WriteLine("searchedSkill: " + searchedSkill);
+            skillListFilter = apiSkills; // joblist is the skills that you will get from the DB
+            //FilterDataDisplayHelper();
+            if (!string.IsNullOrEmpty(searchedSkill) && searchedSkill != " ")
+            {
+                skillListFilter = skillListFilter.Where(x => x.Description.Contains(searchedSkill, StringComparison.CurrentCultureIgnoreCase)).ToList();
+            }
+
+            if (searchedSkill?.Any() == true)
+            {
+                skillListFilter = skillListFilter.Where(x => x.Description.Contains(searchedSkill, StringComparison.CurrentCultureIgnoreCase)).ToList();
+            }
+        }
+
         private void addToSelectedInfo(SkillBank info)
         {
             warning = false;
@@ -400,6 +424,8 @@ namespace XebecPortal.UI.Pages.Applicant
                  }
              }
         */
+        private string storageAcc = "storageaccountxebecac6b";
+        private string imgContainer = "images";
 
         private static int num = 1;
         async Task OnInputFileChangedAsync(InputFileChangeEventArgs e)
@@ -414,10 +440,15 @@ namespace XebecPortal.UI.Pages.Applicant
 
             status.AppendLine("\n");
 
+            // Change the blobStorage location still
             var blobUri = new Uri("https://"
-                                  + "amafilewam" +
-                                  ".blob.core.windows.net/" +
-                                  "upload" + "/" + fileNames.Name);
+                                  + storageAcc
+                                  + ".blob.core.windows.net/" 
+                                  + imgContainer
+                                  + "/"
+                                  + fileNames.Name);
+            Console.WriteLine("fileName " + fileNames.Name);
+
             AzureSasCredential credential = new AzureSasCredential(
                 "sp=racwdli&st=2022-02-28T08:30:27Z&se=2022-03-11T16:30:27Z&sv=2020-08-04&sr=c&sig=TE%2B2VCz%2B6KKFbYHIkQwxGPOYWVUtht3xBPYZ8bE3kH4%3D");
             BlobClient blobClient = new BlobClient(blobUri, credential, new BlobClientOptions());
