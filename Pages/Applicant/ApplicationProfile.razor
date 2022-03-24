@@ -63,8 +63,11 @@
         height: 140px;
     }
 
-    .drag-drop-input {
+    .drag-drop-input {    
         position: absolute;
+        background-color: pink;
+        left: 23%;
+        top: 30%;
         width: 690px;
         height: 140px;
         opacity: 0;
@@ -670,6 +673,41 @@
             border: 1px solid rgba(255, 255, 255, 0.04);            
         }
 
+
+        /*Search bar CSS*/
+    .hr-job-search-bar {
+        width: 40%;
+        height: 5vh;
+        margin-bottom: 2.5vh;
+        margin-top: 2.5vh;
+        margin-left: 30%;
+        margin-right: 30%;
+        border: none;
+    }
+    .search-image {
+        background: url(/Img/search.svg) no-repeat left;
+        background-size: 30px;
+    }
+
+    .search-bar-input {
+        border-radius: 1em;
+        padding-left: 3em;
+        background-color: white;
+        height: 6vh;
+        width: 100%;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
+        border: white solid 0.1em;
+    }
+        .search-bar-input::placeholder {
+            color: #666666;
+            font-family: opensans-condensed-bold;
+        }
+        .search-bar-input:hover {
+            border-radius: 1em;
+            border: 0.1em solid black;
+        }
+
+
 </style>
 <div class="h-95 container-fluid d-flex justify-content-center align-items-center overflow-hidden">
     <div class="col-1"></div>
@@ -794,6 +832,7 @@
                                                 <option value="" disabled selected>Select Gender</option>
                                                 <option value="Male">Male</option>
                                                 <option value="Female">Female</option>
+                                                <option value="PreferNotToAnswer">Prefer not to answer</option>
                                             </select>
                                         </div>
                                     </div>
@@ -1007,23 +1046,19 @@
                                     <div class="col-9 p-5">
                                         <div class="row shadow-sm bg-body rounded-edges white-back position-white">
                                             <div class="education-header">Skill information</div>
+                                            <div class="hr-job-search-bar">
+                                                <input class="search-image search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs" @oninput="SearchSkillList" /> <!-- @oninput="SearchListJob"-->
+                                            </div>
                                             <div class="col-12 d-flex justify-content-center" style="height: 45vh">
                                                 <div class="skill-table-size">
                                                     <div class="skills-heading">Select Skills</div>
                                                     <div class="content-size-left">
-
-                                                        @foreach (var item in apiSkills)
+                                                        @foreach (var item in skillListFilter)
                                                         {
                                                             <div class="card-class-for-skills" @onclick="() => addToSelectedInfo(item)">
 
                                                                 <div>@item.Description</div>
                                                             </div>
-                                                            counter++;
-
-                                                            if (counter == 100)
-                                                            {
-                                                                break;
-                                                            }
                                                         }
                                                     </div>
                                                 </div>
