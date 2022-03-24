@@ -612,6 +612,7 @@
         else
         {
             invalidPassword = false;
+            Password = Password1;
             return true;
         }
 
@@ -658,8 +659,7 @@
             user.Surname = Surname;
             user.Email = Email;
             user.Password = Password;
-            user.Link = "https://localhost:44364/confirmation";
-
+            user.Link = "https://www.google.co.za/";
             //Post model to dB
             using (var msg = await HttpClient.PostAsJsonAsync<UserModel>("https://xebecapi.azurewebsites.net/api/auth/registernew", user))
             {
@@ -682,6 +682,7 @@
                     }
                     else
                     {
+                        Console.WriteLine(message);
                         invalidRegistration = true;
                         validRegistration = false;
                         SubmitPressed = false;
