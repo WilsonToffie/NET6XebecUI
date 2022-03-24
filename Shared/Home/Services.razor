@@ -1,6 +1,5 @@
 ﻿@page "/services"
 @inject NavigationManager navmanager
-@layout EmptyLayout
 @inject HttpClient HttpClient
 @using System.Linq
 @using XebecPortal.UI.Shared.Home.Models
@@ -11,16 +10,18 @@
 
     .services-bottom-applicants {
         height: 10vh;
-        width: 80%;
+        width: 98%;
         margin: auto;
-        background-color: #00bcae;
+        background-color: white;
+        color: #00bcae;
+        border: solid white 0.1em;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
         border-radius: 1em;
         line-height: 10vh;
-        color: white;
         font-size: 1.3em;
         font-family: opensans-condensed-light;
+        font-weight: 900;
         text-align: center;
-        font-weight: 700;
     }
 
     ul li {
@@ -29,17 +30,19 @@
 
     .services-bottom-hr {
         height: 20vh;
-        width: 80%;
+        width: 98%;
         margin: auto;
-        background-color: #00bcae;
+        background-color: white;
+        border: solid white 0.1em;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
+        color: #00bcae;
         border-radius: 1em;
         line-height: 2.5vh;
         padding-left: 1em;
-        color: white;
         font-size: 1.3em;
         font-family: opensans-condensed-light;
+        font-weight: 900;
         text-align: center;
-        font-weight: 700;
     }
 
     .applicant-bottom-text {
@@ -52,30 +55,31 @@
         FROM HERE 
     */
     .overlay-services {
-        margin-top: 10vh;
-        height: 85vh;
+        margin-top: 0;
+        padding-top: 0;
+        height: 90vh;
         width: 100%;
         display: flex;
-        margin: 0vh;
-        padding: 0vh;
-        position: absolute;
     }
-    .services-left-navigation{
-        height: 10vh;
-        margin-top: 35vh;
+    .services-navigation{
+        height: 90vh;
         width: 5vw;
         text-align: center;
     }
     .services-icons {
-        color: #d35bc9;
-        font-size: 30px;
+        color: rgba(0,0,0,0.2);
+        font-size: 4vw;
+        margin-top: 30vh;
     }
+        .services-icons:hover {
+            color: #00bcae;
+        }
     .services-icon-hover {
         color: #00bcae;
         font-size: 50px;
     }
     .services-middle-navigation {
-        height: 90vh;
+        height: 87vh;
         width: 90vw;
     }  
     .services-main-div {
@@ -84,45 +88,43 @@
         margin-bottom: 0;
     }
     .services-middle-circles{
-        margin-top: -5vh;
         display: flex;
         justify-content: center;
         align-items: center;
         height: 5vh;
-        width: 100%;
+        margin-top: -3vh;
+        width: 90vw;
     }
     .services-circle {
         height: 2vh;
         width: 20px;
         margin-right: 10px;
         background-color: transparent;
-        border-radius: 50%;
-        border: #d35bc9 solid 0.15em;
+        border-bottom: rgba(0,0,0,0.2) solid 0.2em;
     }
     .services-circle-selected {
         height: 2vh;
         width: 20px;
         margin-right: 10px;
-        background-color: #d35bc9;
-        border-radius: 50%;
-        border: #d35bc9 solid 0.15em;
+        background-color: transparent;
+        border-bottom: black solid 0.2em;
     }
     .services-applicant {
-        height: 75vh;
+        height: 85vh;
         width: 90vw;
     }
     .services-applicant-top{
         height: 10vh;
         width: 90vw;
-        margin-top: 10vh;
         text-align: center;
     }
     .services-applicant-label{
         font-family: opensans-condensed-bold;
-        font-size: 16px;
+        font-size: 25px;
         height: 10vh;
         line-height: 10vh;
         color: #00bcae;
+        text-transform: uppercase;
     }
     .services-applicant-bottom{
         height: 65vh;
@@ -149,9 +151,11 @@
     .services-bottom-label-words {
         height: 5vh;
         line-height: 5vh;
-        font-family: opensans-condensed-bold;
-        font-size: 1em;
-        color: #00bcae;
+        font-family: opensans-condensed-light;
+        font-size: 1.25em;
+        font-weight: 900;
+        color: black;
+        text-transform: uppercase;
     }
     .services-bottom-words {
         height: 25vh;
@@ -204,7 +208,8 @@
         background-position: center;
     }
     .services-job-portal{
-        margin-top: 10vh;
+        height: 87vh;
+        width: 100%;
     }
     .overlay-services .hr-job-search-bar input[type="text"] {
         background-color: white;
@@ -216,11 +221,8 @@
     }
 </style>
 <div class="overlay-services" id="services">
-    <div class="services-navigation-div">
-        <div class="services-left-navigation">
-            <i class="fas fa-angle-left services-icons" @onclick="GoLeft" @onmouseover="LeftServiceIconHover" hidden="@(!LeftServiceIconChange)"></i>
-            <i class="fas fa-angle-left services-icon-hover" @onclick="GoLeft" @onmouseover="LeftServiceIconHover" hidden="@LeftServiceIconChange"></i>
-        </div>
+    <div class="services-navigation">
+        <i class="fas fa-angle-left services-icons" @onclick="GoLeft"></i>
     </div>
     <div class="services-middle-navigation">
         <div class="services-main-div">
@@ -337,26 +339,17 @@
             }
             @if (jobPortal)
             {
-        <div class="services-job-portal">
-            <XebecPortal.UI.Pages.Applicant.JobPortal />
-        </div>
-                
+                <div class="services-job-portal">
+                    <XebecPortal.UI.Pages.Applicant.JobPortal />
+                </div>              
             }
 
         </div>
-        <div class="services-middle-circles">
-            <div class="services-circle" hidden="@(applicant)"></div>
-            <div class="services-circle-selected" hidden="@(!applicant)"></div>
-            <div class="services-circle" hidden="@(hrServices)"></div>
-            <div class="services-circle-selected" hidden="@(!hrServices)"></div>
-            <div class="services-circle" hidden="@(jobPortal)"></div>
-            <div class="services-circle-selected" hidden="@(!jobPortal)"></div>
-        </div>
+        
     </div>
     
-    <div class="services-left-navigation">
-        <i class="fas fa-angle-right services-icons" @onclick="GoRight" @onmouseover="RightServiceIconHover" hidden="@(!RightServiceIconChange)"></i>
-        <i class="fas fa-angle-right services-icon-hover" @onclick="GoRight" @onmouseover="RightServiceIconHover" hidden="@RightServiceIconChange"></i>
+    <div class="services-navigation">
+        <i class="fas fa-angle-right services-icons" @onclick="GoRight" ></i>
     </div>
 
 </div>
@@ -371,7 +364,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        ToApplicant();
+        ToJobPortal();
         await Task.Delay(0);
     }
 

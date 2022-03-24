@@ -1,0 +1,327 @@
+﻿@page "/confirmation"
+@inject NavigationManager navmanager
+@inject HttpClient HttpClient
+@using System.Linq;
+@using XebecPortal.UI.Shared.Home.Models;
+
+<style>
+
+    .overlay-register {
+        height: 90vh;
+        width: 100%;
+    }
+
+    .register-page {
+        height: 90vh;
+        width: 60%;
+        display: flex;
+        margin-left: 20%;
+        margin-right: 20%;
+    }
+
+    .register-right {
+        height: 70vh;
+        width: 40%;
+        margin-top: 10vh;
+        background-color: white;
+    }
+
+    .register-left {
+        background-image: linear-gradient(rgba(0, 188, 174,0.2),rgba(0, 188, 174,0.2)),url(/Img/pexels3.jpg);
+        height: 70vh;
+        width: 60%;
+        margin-top: 10vh;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .index-form-heading {
+        width: 100%;
+        font-family: opensans-condensed-bold;
+        text-align: center;
+        opacity: 1;
+        background-color: transparent;
+        height: 10vh;
+    }
+
+    .index-form-login {
+        width: 90%;
+        margin-left: 5%;
+        margin-right: 5%;
+        margin-top: 10vh;
+        height: auto;
+    }
+
+    .index-form-heading-1 {
+        font-size: 3em;
+        font-weight: 800;
+        height: 10vh;
+        line-height: 10vh;
+        color: black;
+        font-family: opensans-condensed-bold;
+    }
+
+    .index-form-group {
+        width: 100%;
+        display: flex;
+        height: 7vh;
+    }
+
+
+    .index-group {
+        border: solid #00bcae 0.2em;
+        background-color: transparent;
+        height: 7vh;
+        width: 100%;
+        border-radius: 1em;
+    }
+
+    .index-form-icon {
+        width: 10%;
+        padding-left: 5%;
+        text-align: left;
+        background-color: transparent;
+        color: #00bcae;
+        font-size: 1.5em;
+        height: 7vh;
+        line-height: 7vh;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"], select {
+        background-color: transparent;
+        width: 90%;
+        height: 7vh;
+        line-height: 7vh;
+        font-size: 1em;
+        border: none;
+        font-weight: 800;
+        color: black;
+        font-family: opensans-condensed-light;
+        padding: 1em 1em 1em 1em;
+    }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+        }
+
+    ::placeholder {
+        color: black;
+        font-family: opensans-condensed-light;
+        font-size: 1em;
+        width: 100%;
+        font-weight: 900;
+    }
+
+    .index-form-register {
+        width: 90%;
+        margin-left: 5%;
+        margin-right: 5%;
+        height: auto;
+    }
+
+    .index-form-heading-2 {
+        font-size: 1.5em;
+        font-weight: 700;
+        color: #666666;
+        height: 3vh;
+    }
+
+    .index-form-heading-3 {
+        font-size: 0.8em;
+        font-weight: 600;
+        color: black;
+        font-family: opensans-condensed-bold;
+        height: 3vh;
+    }
+
+    .forgotpassword {
+        color: rgba(0, 188, 174,1);
+        width: 100%;
+        text-align: right;
+        height: 3vh;
+        line-height: 3vh;
+        font-size: 1em;
+        margin-bottom: 0;
+        padding-bottom: 0;
+        cursor: pointer;
+        font-family: 700;
+        font-family: opensans-condensed-bold;
+    }
+
+        .forgotpassword:hover {
+            color: #d35bc9;
+            width: 100%;
+            text-align: right;
+            height: 3vh;
+            font-size: 1em;
+            font-weight: 800;
+            margin-bottom: 0;
+            padding-bottom: 0;
+            cursor: pointer;
+            font-family: opensans-condensed-light;
+        }
+
+    .login-button-div {
+        height: 5vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    .index-form-button {
+        background-color: rgba(0, 188, 174,1);
+        color: white;
+        width: 100px;
+        height: 5vh;
+        border: none;
+        text-align: center;
+        font-size: 1em;
+        font-weight: 700;
+        font-family: opensans-condensed-bold;
+        font-weight: 600;
+        border: none;
+        border-radius: 1em;
+    }
+
+        .index-form-button:hover {
+            background-color: #d35bc9;
+        }
+
+    .index-form-or {
+        text-align: center;
+        height: 3vh;
+    }
+
+    .index-form-socials {
+        width: 100%;
+        display: flex;
+        height: 5vh;
+    }
+
+    .index-socialmedia-div {
+        color: #00bcae;
+        font-size: 2em;
+        width: 20%;
+        height: 5vh;
+        margin-left: 13%;
+    }
+
+        .index-socialmedia-div:hover {
+            color: #d35bc9;
+            font-size: 2em;
+            width: 20%;
+            height: 5vh;
+            margin-top: 0vh;
+            margin-left: 13%;
+        }
+
+</style>
+<div class="overlay-register">
+    <div class="register-page">
+        <div class="register-left"></div>
+        <div class="register-right">
+            <form class="index-form-login">
+                <div class="form-group index-form-heading">
+                    <h1 class="index-form-heading-1">CONFIRMATION</h1>
+                </div>
+                <div class="form-group index-form-group index-group">
+                    <div class="index-form-icon">
+                        <i class="fa fa-at "></i>
+                    </div>
+                    <input type="email" placeholder="Email address" @bind="@user.Email" @ref="KeyElementInFocus">
+                </div>
+                <div class="form-group index-form-group index-group">
+                    <div class="index-form-icon">
+                        <i class="fa fa-key "></i>
+                    </div>
+                    <input type="text" placeholder="Key" @bind="@user.UserKey">
+                </div>
+                <div class="form-group index-form-or">
+                    @if (invalidKey)
+                    {
+                    <h1 class="index-form-heading-3">Invalid Key</h1>
+                    }
+                    @if (validKey)
+                    {
+                    <h1 class="index-form-heading-3">Valid Key. You can sign in.</h1>
+                    }
+                    @if (SubmitPressed)
+                    {
+                    <h1 class="index-form-heading-3">Submit pressed.</h1>
+                    }
+                </div>
+                <div class="form-group login-button-div">
+                    <input type="button" class="index-form-button" @onclick="ConfirmAccount" value="Submit" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@code{
+
+    // Validation booleans
+    private bool invalidEmail;
+    private bool validKey;
+    private bool invalidKey;
+
+    // Responses
+    private bool SubmitPressed;
+    private string message;
+
+    // Element References
+    private ElementReference KeyElementInFocus;
+
+    // Parameters
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    // Models
+    private UserModel user = new UserModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await showConfirmationForm();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await KeyElementInFocus.FocusAsync();
+        }
+    }
+
+    private async Task showConfirmationForm()
+    {
+        await OnAfterRenderAsync(true);
+    }
+
+    private async Task ConfirmAccount()
+    {
+        SubmitPressed = true;
+        using (var msg = await HttpClient.PostAsJsonAsync<UserModel>("https://xebecapi.azurewebsites.net/keyConfirm", user))
+        {
+            string keyresult = await msg.Content.ReadAsStringAsync();
+            if (msg.IsSuccessStatusCode)
+            {
+                if (keyresult.Contains("true"))
+                {
+                    validKey = true;
+                    invalidKey = false;
+                    SubmitPressed = false;
+                }
+                else
+                {
+                    validKey = false;
+                    invalidKey = true;
+                    SubmitPressed = false;
+                }
+
+            }
+
+        }
+    }
+
+}
