@@ -173,9 +173,9 @@ namespace XebecPortal.UI.Pages.Applicant
                 Surname = references.Surname,
                 Email = references.Email,
                 ContactNum = references.ContactNum,
-            });           
+            });
             references = new();
-        } 
+        }
 
         private References tempRef;
 
@@ -190,7 +190,7 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private void Cancel(References referenceValues)
         {
-            int index = referencesList.FindIndex(x => x.Equals(referenceValues));            
+            int index = referencesList.FindIndex(x => x.Equals(referenceValues));
             referencesList[index] = tempRef;
             references = new();
             editMode = false;
@@ -198,7 +198,7 @@ namespace XebecPortal.UI.Pages.Applicant
         }
 
         private void DeleteReference(int refID)
-        {            
+        {
             if (referencesList.Count == 1)
             {
                 referenceProgressVal = true;
@@ -214,7 +214,7 @@ namespace XebecPortal.UI.Pages.Applicant
             references = referencesList[index];
             tempRef = (References)references.Clone();
         }
-      
+
         private WorkHistory tempWorkHistory;
 
         private void addWorkHistoryTest()
@@ -236,18 +236,18 @@ namespace XebecPortal.UI.Pages.Applicant
             if (workHistoryList.Count == 1)
             {
                 workProgressVal = true;
-            }            
+            }
             workHistoryList.RemoveAll(x => x == (workHistoryValues));
             workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             workHistUpdate = false;
         }
 
         private void SelectWorkHistory(WorkHistory workHistoryValues)
-        {            
+        {
             workEditMode = true;
-            int index = workHistoryList.FindIndex(x => x == (workHistoryValues)); 
+            int index = workHistoryList.FindIndex(x => x == (workHistoryValues));
             workHistory = workHistoryList[index];
-            tempWorkHistory = (WorkHistory)workHistory.Clone();           
+            tempWorkHistory = (WorkHistory)workHistory.Clone();
         }
 
         // This is to display the selectedHistory tab
@@ -313,7 +313,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 Qualification = education.Qualification,
                 StartDate = education.StartDate,
                 EndDate = education.EndDate,
-            });         
+            });
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         }
 
@@ -323,7 +323,7 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 educationProgressVal = true;
             }
-            
+
             educationList.RemoveAll(x => x.Equals(educationValues));
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             eduUpdate = false;
@@ -383,34 +383,34 @@ namespace XebecPortal.UI.Pages.Applicant
         }
 
         private async Task Submit()
-        {            
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/PersonalInformation", personalInformation);
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/AdditionalInformation", additionalInformation);
+        {
+            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/PersonalInformation", personalInformation);
+            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/AdditionalInformation", additionalInformation);
 
-                foreach (var item in workHistoryList)
-                {
-                    await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/WorkHistory", item);
-                }
-                foreach (var item in educationList)
-                {
-                    await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Education", item);
-                }
-                foreach (var item in referencesList)
-                {
+            foreach (var item in workHistoryList)
+            {
+                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/WorkHistory", item);
+            }
+            foreach (var item in educationList)
+            {
+                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Education", item);
+            }
+            foreach (var item in referencesList)
+            {
                 await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Reference", item);
-                }
+            }
 
-                foreach (var item in selectedSkillsList1)
-                {
-                    await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Skill", item);
-                }
-             
-                
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink", profilePortfolio);
+            foreach (var item in selectedSkillsList1)
+            {
+                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Skill", item);
+            }
+
+
+            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink", profilePortfolio);
 
             //if (await _jsModule.InvokeAsync<bool>("PersonalInformation"))
             //{
-                
+
             //}
         }
         // This is just used to indicate to the user that their info has been successfully added to the DB
@@ -520,8 +520,8 @@ namespace XebecPortal.UI.Pages.Applicant
         void Upload()
         {
             //Upload the files here
-            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-            Snackbar.Add("TODO: Upload your files!", Severity.Normal);
+            /*Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
+            Snackbar.Add("TODO: Upload your files!", Severity.Normal);*/
         }
 
     }
