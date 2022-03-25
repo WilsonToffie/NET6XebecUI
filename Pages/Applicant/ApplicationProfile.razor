@@ -63,8 +63,11 @@
         height: 140px;
     }
 
-    .drag-drop-input {
+    .drag-drop-input {    
         position: absolute;
+        background-color: pink;
+        left: 23%;
+        top: 30%;
         width: 690px;
         height: 140px;
         opacity: 0;
@@ -682,12 +685,12 @@
         border: none;
     }
     .search-image {
-        padding-left: 1em;
         background: url(/Img/search.svg) no-repeat left;
         background-size: 30px;
     }
 
     .search-bar-input {
+        border-radius: 1em;
         padding-left: 3em;
         background-color: white;
         height: 6vh;
@@ -829,6 +832,7 @@
                                                 <option value="" disabled selected>Select Gender</option>
                                                 <option value="Male">Male</option>
                                                 <option value="Female">Female</option>
+                                                <option value="PreferNotToAnswer">Prefer not to answer</option>
                                             </select>
                                         </div>
                                     </div>
@@ -1043,14 +1047,13 @@
                                         <div class="row shadow-sm bg-body rounded-edges white-back position-white">
                                             <div class="education-header">Skill information</div>
                                             <div class="hr-job-search-bar">
-                                                <input class="search-image search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs" /> <!-- @oninput="SearchListJob"-->
+                                                <input class="search-image search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs" @oninput="SearchSkillList" /> <!-- @oninput="SearchListJob"-->
                                             </div>
                                             <div class="col-12 d-flex justify-content-center" style="height: 45vh">
                                                 <div class="skill-table-size">
                                                     <div class="skills-heading">Select Skills</div>
                                                     <div class="content-size-left">
-
-                                                        @foreach (var item in apiSkills)
+                                                        @foreach (var item in skillListFilter)
                                                         {
                                                             <div class="card-class-for-skills" @onclick="() => addToSelectedInfo(item)">
 
