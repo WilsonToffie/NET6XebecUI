@@ -616,16 +616,18 @@
     }
     private bool RegisterEmailCheck()
     {
-        if (Email1 != Email2)
+        if (Email1.Contains(Email2))
         {
-            invalidEmail = true;
-            return false;
-        }
-        else
-        {
+
+
             invalidEmail = false;
             Email = Email1;
             return true;
+        }
+        else
+        {
+            invalidEmail = true;
+            return false;
         }
     }
 
