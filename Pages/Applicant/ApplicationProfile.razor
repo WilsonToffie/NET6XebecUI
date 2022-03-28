@@ -152,6 +152,7 @@
 
     .white-back {
         background: white !important;
+        height: 100% !important;
         box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px !important;
     }
 
@@ -448,9 +449,9 @@
 
     .education-header {
         text-align: center;
-        margin-top: 2vh;
+        margin-top: 5vh;
         font-family: opensans-condensed-bold;
-        font-size: 2em;
+        font-size: 3em;
         font-weight: 900;
     }
 
@@ -461,8 +462,9 @@
     }
 
     .position-white {
+        display: inline-block;
         position: relative;
-        height: 60vh;
+        /*height: 60vh;*/
         width: 84%;
         left: 28%;
         top: 5%;
@@ -666,8 +668,8 @@
             color: black;
             font-size: 1.8vh;
             margin-bottom: 2px;
-            box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;
-            background: rgba(255, 255, 255,0);
+            /*box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;
+            */ background: #49E5EF;
             /*backdrop-filter: blur(5.6px);
             -webkit-backdrop-filter: blur(5.6px);*/
             border: 1px solid rgba(255, 255, 255, 0.04);
@@ -1045,13 +1047,12 @@
                                 <div class="row">
                                     <div class="col-9 p-5">
                                         <div class="row shadow-sm bg-body rounded-edges white-back position-white">
-                                            <div class="education-header">Skill information</div>
+                                            <div class="education-header">Skill</div>
                                             <div class="hr-job-search-bar">
                                                 <input class="search-image search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs" @oninput="SearchSkillList" /> <!-- @oninput="SearchListJob"-->
                                             </div>
                                             <div class="col-12 d-flex justify-content-center" style="height: 45vh">
                                                 <div class="skill-table-size">
-                                                    <div class="skills-heading">Select Skills</div>
                                                     <div class="content-size-left">
                                                         @foreach (var item in skillListFilter)
                                                         {
@@ -1082,8 +1083,7 @@
                                                 {
                                                     foreach (var item in selectedSkillsList1)
                                                     {
-                                                        <div class="text-card">
-                                                            <!--@onclick="() => SelectEducation(item)" style="@GetEduStyling(item)-->
+                                                        <div class="text-card" >                                                            
                                                             <div class="work-history-icon">
                                                                 <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => removeFromSelectedInfo(item)"></i> <!---->
                                                                 <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
