@@ -368,7 +368,7 @@
                         <div class="index-form-icon">
                             <i class="fas fa-user"></i>
                         </div>
-                        <input type="text" placeholder="Name" @bind="@Name" @ref="SignInElementInFocus">
+                        <input type="text" placeholder="Name" @bind="@Name" @ref="SignUpElementInFocus">
                     </div>
                     <div class="index-group-register">
                         <div class="index-form-icon">
@@ -475,7 +475,7 @@
     private string message;
 
     // Element References
-    private ElementReference SignInElementInFocus;
+    private ElementReference SignUpElementInFocus;
 
     //Models
     private UserModel user = new UserModel();
@@ -488,10 +488,7 @@
 
     protected override void OnAfterRender(bool firstRender)
     {
-        if (firstRender)
-        {
-            SignInElementInFocus.FocusAsync();
-        }
+        SignUpElementInFocus.FocusAsync();
     }
 
     private bool RegisterPasswordCheck()
@@ -546,19 +543,17 @@
                     if (result.Success)
                     {
                         validRegistration = true;
-                        invalidRegistration = false;
-                        SubmitPressed = false;
+                        SubmitPressed = registeredEmail = invalidRegistration = false;
                     }
                     else if (message.Equals("User already exists."))
                     {
                         registeredEmail = true;
-                        SubmitPressed = false;
+                        SubmitPressed = validRegistration = invalidRegistration = false;
                     }
                     else
                     {
-                        validRegistration = false;
                         invalidRegistration = true;
-                        SubmitPressed = false;
+                        SubmitPressed = validRegistration = registeredEmail = false;
                     }
                 }
             }

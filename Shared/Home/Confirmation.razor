@@ -287,15 +287,12 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            await KeyElementInFocus.FocusAsync();
-        }
+        await KeyElementInFocus.FocusAsync();
     }
 
     private async Task showConfirmationForm()
     {
-        await OnAfterRenderAsync(true);
+        await Task.Delay(0);
     }
 
     private async Task ConfirmAccount()
@@ -309,14 +306,12 @@
                 if (keyresult.Contains("true"))
                 {
                     validKey = true;
-                    invalidKey = false;
-                    SubmitPressed = false;
+                    invalidKey = SubmitPressed = false;
                 }
                 else
                 {
-                    validKey = false;
                     invalidKey = true;
-                    SubmitPressed = false;
+                    SubmitPressed = validKey = false;
                 }
 
             }

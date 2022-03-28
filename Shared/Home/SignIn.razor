@@ -135,34 +135,7 @@
         height: 3vh;
     }
 
-    .forgotpassword {
-        color: rgba(0, 188, 174,1);
-        background-color: red;
-        width: auto;
-        text-align: right;
-        height: 3vh;
-        line-height: 3vh;
-        font-size: 1em;
-        margin-bottom: 0;
-        padding-bottom: 0;
-        cursor: pointer;
-        font-family: 700;
-        font-family: opensans-condensed-bold;
-    }
-
-        .forgotpassword:hover {
-            color: #d35bc9;
-            width: auto;
-            text-align: right;
-            height: 3vh;
-            font-size: 1em;
-            font-weight: 800;
-            margin-bottom: 0;
-            padding-bottom: 0;
-            cursor: pointer;
-            font-family: opensans-condensed-light;
-        }
-
+    
     .login-button-div {
         height: 5vh;
         display: flex;
@@ -232,7 +205,29 @@
         font-weight: 900;
         font-family: opensans-bold;
     }
-   
+    .forgot-password{
+        display: flex;
+        justify-content: flex-end;
+    }
+    .forgotpassword {
+        color: rgba(0, 188, 174,1);
+        width: auto;
+        text-align: right;
+        height: 3vh;
+        line-height: 3vh;
+        font-size: 1em;
+        margin-bottom: 0;
+        padding-bottom: 0;
+        cursor: pointer;
+        font-family: 700;
+        font-family: opensans-condensed-bold;
+    }
+
+        .forgotpassword:hover {
+            color: #d35bc9;
+            cursor: pointer;
+        }
+
 </style>
 
 <div class="overlay-login" id="login">
@@ -256,21 +251,21 @@
                         </div>
                         <input type="password" placeholder="Password" @bind="@Password">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group forgot-password">
                         <h1 class="forgotpassword" @onclick="GoToEmail">Forgot Password?</h1>
                     </div>
                     <div class="form-group index-form-or">
                         @if (invalidCredentials)
                         {
-                            <h1 class="index-form-heading-3">invalid credentials</h1>
+                            <h1 class="index-form-heading-3">Invalid credentials</h1>
                         }
                         @if (successfullLogin)
                         {
-                            <h1 class="index-form-heading-3">successful login</h1>
+                            <h1 class="index-form-heading-3">Successful login</h1>
                         }
                         @if (SubmitPressed)
                         {
-                            <h1 class="index-form-heading-3">Submit Pressed</h1>
+                            <h1 class="index-form-heading-3">Submit pressed</h1>
                         }
                     </div>
                     <div class="form-group login-button-div">
@@ -289,7 +284,7 @@
                         </div>
                         <input type="email" required placeholder="Email address" @bind="@Email" @ref="EmailElementInFocus">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group forgot-password">
                         <h1 class="forgotpassword" @onclick="GoToLogin">Back</h1>
                     </div>
                     <div class="form-group index-form-or">
@@ -344,7 +339,8 @@
     private string message = "";
 
     // Element References
-    private ElementReference SignInElementInFocus, EmailElementInFocus, KeyElementInFocus, ResetElementInFocus;
+    private ElementReference SignInElementInFocus;
+    private ElementReference EmailElementInFocus;
 
     // Models
     private SignInModel signIn = new SignInModel();
@@ -358,78 +354,73 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender && LoginForm)
+        if (LoginForm)
         {
             await SignInElementInFocus.FocusAsync();
         }
-        else if (firstRender && EmailForgotPasswordForm)
+        else if (EmailForgotPasswordForm)
         {
             await EmailElementInFocus.FocusAsync();
         }
     }
 
-    
+
     private async Task Login()
     {
         SubmitPressed = true;
         signIn.Email = Email;
         signIn.Password = Password;
 
-        try
+
+        using (var msg = await HttpClient.PostAsJsonAsync<SignInModel>("https://xebecapi.azurewebsites.net/api/auth/loginnew", signIn))
         {
-            using (var msg = await HttpClient.PostAsJsonAsync<SignInModel>("https://xebecapi.azurewebsites.net/api/auth/loginnew", signIn))
+            if (msg.IsSuccessStatusCode)
             {
-                if (msg.IsSuccessStatusCode)
+                SignInResult result = await msg.Content.ReadFromJsonAsync<SignInResult>();
+
+                state.AppUserId = result.AppUserId;
+                state.Email = result.Email;
+                state.Name = result.Name;
+                state.Surname = result.Surname;
+                state.Role = result.Role;
+                state.Avator = result.Avator;
+                state.Title = result.Title;
+
+                message = result.Message;
+
+                if (result.Success)
                 {
-                    SignInResult result = await msg.Content.ReadFromJsonAsync<SignInResult>();
+                    successfullLogin = true;
+                    state.isLoggedIn = true;
+                    SubmitPressed = false;
+                    navmanager.NavigateTo("/main");
 
-                    state.AppUserId = result.AppUserId;
-                    state.Email = result.Email;
-                    state.Name = result.Name;
-                    state.Surname = result.Surname;
-                    state.Role = result.Role;
-                    state.Avator = result.Avator;
-                    state.Title = result.Title;
-
-                    message = result.Message;
-
-                    if (result.Success)
-                    {
-                        successfullLogin = true;
-                        state.isLoggedIn = true;
-                        navmanager.NavigateTo("/main");
-
-                    }
-                    else if (message.Equals("User/password not found."))
-                    {
-                        invalidCredentials = true;
-                    }
+                }
+                else if (message.Equals("User/password not found."))
+                {
+                    invalidCredentials = true;
+                    SubmitPressed = false;
+                    successfullLogin = false;
                 }
             }
-        }
-        catch
-        {
-            invalidCredentials = true;
         }
     }
 
     private async Task GoToLogin()
     {
-        SubmitPressed = false;
+        SubmitPressed = invalidCredentials = successfullLogin = false;
         LoginForm = true;
-        EmailForgotPasswordForm = KeyForgotPasswordForm = ForgotPasswordForm = false;
-
-        invalidCredentials = successfullLogin = false;
-        await OnAfterRenderAsync(true);
+        EmailForgotPasswordForm =  false;
+        await Task.Delay(0);
     }
 
     private async Task GoToEmail()
     {
-        SubmitPressed = false;
+        SubmitPressed = invalidEmail = validEmail = false;
         EmailForgotPasswordForm = true;
-        LoginForm = KeyForgotPasswordForm = ForgotPasswordForm = false;
-        await OnAfterRenderAsync(true);
-    }   
+        LoginForm = false;
+        await Task.Delay(0);
+    }
 
     private async Task SubmitEmail()
     {
@@ -437,34 +428,27 @@
         SubmitPressed = true;
         forgot.Email = Email;
         forgot.Link = "https://localhost:44364/forgotpassword";
-        try
-        {
-            using (var msg = await HttpClient.PostAsJsonAsync<ForgotPasswordModel>("https://xebecapi.azurewebsites.net/keyForgot", forgot))
-            {
-                string res = await msg.Content.ReadAsStringAsync();
-                if (msg.IsSuccessStatusCode)
-                {
-                    if (res.Contains("true"))
-                    {
-                        validEmail = true;
-                        invalidEmail = false;
-                    }
 
-                    else
-                    {
-                        invalidEmail = true;
-                        validEmail = false;
-                    }
+        using (var msg = await HttpClient.PostAsJsonAsync<ForgotPasswordModel>("https://xebecapi.azurewebsites.net/keyForgot", forgot))
+        {
+            string res = await msg.Content.ReadAsStringAsync();
+            if (msg.IsSuccessStatusCode)
+            {
+                if (res.Contains("true"))
+                {
+                    validEmail = true;
+                    invalidEmail = SubmitPressed = false;
+                }
+
+                else
+                {
+                    invalidEmail = true;
+                    validEmail = SubmitPressed = false;
                 }
             }
         }
-        catch
-        {
-            invalidEmail = true;
-            validEmail = false;
-        }
 
     }
-    
+
 }
  

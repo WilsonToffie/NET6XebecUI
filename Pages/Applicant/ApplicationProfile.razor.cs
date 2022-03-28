@@ -17,6 +17,7 @@ using Newtonsoft.Json.Linq;
 using XebecPortal.UI.Pages.Model;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Components;
 
 namespace XebecPortal.UI.Pages.Applicant
 {
@@ -45,7 +46,9 @@ namespace XebecPortal.UI.Pages.Applicant
 
 
         private List<SkillsInformation> selectedSkillsList1 = new();
+
         private IList<SkillBank> apiSkills = new List<SkillBank>();
+        private IList<SkillBank> skillListFilter = new List<SkillBank>();
 
         private IJSObjectReference _jsModule;
         string _dragEnterStyle;
@@ -62,21 +65,22 @@ namespace XebecPortal.UI.Pages.Applicant
 
         protected override async Task OnInitializedAsync()
         {
-            //apiSkills = await httpClient.GetFromJsonAsync<IList<SkillBank>>("https://xebecapi.azurewebsites.net/api/SkillsBank?limit=100");
+            //apiSkills = await httpClient.GetFromJsonAsync<IList<SkillBank>>("https://xebecapi.azurewebsites.net/api/SkillsBank");
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/ApplicationProfile.js");
-
-            // var token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNDNjZCRjIzMjBGNkY4RDQ2QzJERDhCMjI0MEVGMTFENTZEQkY3MUYiLCJ0eXAiOiJKV1QiLCJ4NXQiOiJQR2FfSXlEMi1OUnNMZGl5SkE3eEhWYmI5eDgifQ.eyJuYmYiOjE2NDgxMDMxNzksImV4cCI6MTY0ODEwNjc3OSwiaXNzIjoiaHR0cHM6Ly9hdXRoLmVtc2ljbG91ZC5jb20iLCJhdWQiOlsiZW1zaV9vcGVuIiwiaHR0cHM6Ly9hdXRoLmVtc2ljbG91ZC5jb20vcmVzb3VyY2VzIl0sImNsaWVudF9pZCI6InF0dGF5Y2Y4cDdodWEwamIiLCJlbWFpbCI6ImFuZHJldy50cmF1dG1hbm5AMW5lYnVsYS5jb20iLCJjb21wYW55IjoiTmVidWxhIiwibmFtZSI6IkFuZHJldyBUcmF1dG1hbm4iLCJpYXQiOjE2NDgxMDMxNzksInNjb3BlIjpbImVtc2lfb3BlbiJdfQ.UaGiM8wC7TBB4sDeF8PjzGWYb8Scu4BFy8IrjXTuv4nOMDuhdsIpYMesLneYSDeA0vyuBcVEtmast-J7c5GO15SMF-KE4347pyEauKATaxYAAxSTyzYKcI_eouvh1ZLLoFPyLnO5OL72ivu2eRcTFhnmWWhPZpdt4Hg3NjIUzTM3A6NbTnA3WAKZ7u6O8_KVMiQFg4fPCqEMQXnLS_MwQFWLLA2fblrqRMb82k6XabDUg1WKU3u5sFls9DDi-FZtBqpOxKR4bOMslgCVWxsG6LCrzagv2L0-nz-pOjdfHYwQsl3i2u7Zzl6fVowhlgMHZImMvUglFmYzj_OGTgNVNA";
-            // httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            // apiroot = await httpClient.GetFromJsonAsync<APIRoot>("https://emsiservices.com/skills/versions/latest/skills?limit=100");
+            populateList();
+            skillListFilter = apiSkills;
+            //var token = "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNDNjZCRjIzMjBGNkY4RDQ2QzJERDhCMjI0MEVGMTFENTZEQkY3MUYiLCJ0eXAiOiJKV1QiLCJ4NXQiOiJQR2FfSXlEMi1OUnNMZGl5SkE3eEhWYmI5eDgifQ.eyJuYmYiOjE2NDgyMTM1NTksImV4cCI6MTY0ODIxNzE1OSwiaXNzIjoiaHR0cHM6Ly9hdXRoLmVtc2ljbG91ZC5jb20iLCJhdWQiOlsiZW1zaV9vcGVuIiwiaHR0cHM6Ly9hdXRoLmVtc2ljbG91ZC5jb20vcmVzb3VyY2VzIl0sImNsaWVudF9pZCI6InF0dGF5Y2Y4cDdodWEwamIiLCJlbWFpbCI6ImFuZHJldy50cmF1dG1hbm5AMW5lYnVsYS5jb20iLCJjb21wYW55IjoiTmVidWxhIiwibmFtZSI6IkFuZHJldyBUcmF1dG1hbm4iLCJpYXQiOjE2NDgyMTM1NTksInNjb3BlIjpbImVtc2lfb3BlbiJdfQ.YYYk9_Jqlx6iCpySnxRTlSLSHKXg5MGB6qg5zTsO0Acc3SXdUcbJ3tBPCJHWLcVUQfWB3RusP6mpWavDBijOZyAoEZ8CVV9h7EfiToB4u1bd3CcnSOIU4-2vSsNOBCVp2HSzCP_SQwQYmBJkHVAerJqMnUSEpN_EOGcIdwDaVdM2ET5hXnm9wtUQzcnZ23x2cYeBFidOp2k5i6unMwuM6c5vcILQCTlYi2eXkZiDNwKNaamCxtHI4-NyJmGPL42D-efdMuw7b4tXnlkUn87sEWat0zpjcBK_ToUAwecD4ZuloBlDSToGnxo87MAh8hsN3wIxlKogCshF6NJaQb_sxw";
+           // httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            //apiroot = await httpClient.GetFromJsonAsync<APIRoot>("https://emsiservices.com/skills/versions/latest/skills?limit=50");
             //var client = new RestClient("https://emsiservices.com/skills/versions/latest/skills"); // this will provide you with all of the available skills
             //var request = new RestRequest(Method.GET);
             //request.AddHeader("Authorization", "Bearer <ACCESS_TOKEN>");
             //IRestResponse response = client.Execute(request);
 
-            populateList();
+            
             Console.WriteLine("apiskills count: " + apiSkills.Count());
         }
-
+       
         private string skillWarning = "";
         private bool warning;
 
@@ -100,6 +104,28 @@ namespace XebecPortal.UI.Pages.Applicant
                 Description = "Azure",
             });
         }
+
+        string searchedSkill;
+
+        private async Task SearchSkillList(ChangeEventArgs e)
+        {
+            searchedSkill = e.Value.ToString(); // this value will be passed to the API to return the results
+            Console.WriteLine("searchedSkill: " + searchedSkill);
+            await Task.Delay(1500);
+            Console.WriteLine("text after delay: " + searchedSkill);
+            skillListFilter = apiSkills; // apiSkill will be replaced with the new API link that will be called.
+            //FilterDataDisplayHelper();
+            if (!string.IsNullOrEmpty(searchedSkill) && searchedSkill != " ")
+            {
+                skillListFilter = skillListFilter.Where(x => x.Description.Contains(searchedSkill, StringComparison.CurrentCultureIgnoreCase)).ToList();
+            }
+
+            if (searchedSkill?.Any() == true)
+            {
+                skillListFilter = skillListFilter.Where(x => x.Description.Contains(searchedSkill, StringComparison.CurrentCultureIgnoreCase)).ToList();
+            }
+        }
+
         private void addToSelectedInfo(SkillBank info)
         {
             warning = false;
@@ -230,22 +256,30 @@ namespace XebecPortal.UI.Pages.Applicant
         private object GetStyling(WorkHistory item)
         {
             if ((workHistory.CompanyName == item.CompanyName) && (workHistory.JobTitle == item.JobTitle) && (workHistory.Description == item.Description))
-                return "box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;background: rgba(255, 255, 255, 0);backdrop - filter: blur(5.6px);-webkit-backdrop-filter: blur(5.6px); border: 1px solid rgba(255, 255, 255, 0.04); min-height:15vh; overflow-y: auto; ";
+                return "background: #49E5EF;backdrop - filter: blur(5.6px);-webkit-backdrop-filter: blur(5.6px); border: 1px solid rgba(255, 255, 255, 0.04); min-height:15vh; overflow-y: auto;";
+                //return "box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;background: rgba(255, 255, 255, 0);backdrop - filter: blur(5.6px);-webkit-backdrop-filter: blur(5.6px); border: 1px solid rgba(255, 255, 255, 0.04); min-height:15vh; overflow-y: auto; ";
             return "";
         }
-
+        //#49E5EF
         private object GetEduStyling(Education item)
         {
             if ((education.Insitution == item.Insitution) && (education.Qualification == item.Qualification))
-                return "box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;backdrop - filter: blur(5.6px);-webkit - backdrop - filter: blur(5.6px);border: 1px solid rgba(255, 255, 255, 0.04);max - height: 60vh;overflow - y: auto; ";
+                return "background: #49E5EF;backdrop - filter: blur(5.6px);-webkit-backdrop-filter: blur(5.6px); border: 1px solid rgba(255, 255, 255, 0.04); min-height:15vh; overflow-y: auto;";
             return "";
         }
         private object GetRefStyling(References item)
         {
             if ((references.Email == item.Email) && (references.Name == item.Name) && (references.ContactNum == item.ContactNum) && (references.Email == item.Email))
-                return "box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;backdrop - filter: blur(5.6px);-webkit - backdrop - filter: blur(5.6px);border: 1px solid rgba(255, 255, 255, 0.04);max - height: 60vh;overflow - y: auto; ";
+                return "background: #49E5EF;backdrop - filter: blur(5.6px);-webkit-backdrop-filter: blur(5.6px); border: 1px solid rgba(255, 255, 255, 0.04); min-height:15vh; overflow-y: auto;";
             return "";
         }
+        
+        //private object GetSkillStyling(SkillsInformation item)
+        //{
+        //    if (( == item.Description) && (references.Name == item.Name) && (references.ContactNum == item.ContactNum) && (references.Email == item.Email))
+        //        return "background: #49E5EF;backdrop - filter: blur(5.6px);-webkit-backdrop-filter: blur(5.6px); border: 1px solid rgba(255, 255, 255, 0.04); min-height:15vh; overflow-y: auto;";
+        //    return "";
+        //}
         private void SaveWorkHistory(WorkHistory workHistoryValues)
         {
             workEditMode = false;
@@ -400,6 +434,8 @@ namespace XebecPortal.UI.Pages.Applicant
                  }
              }
         */
+        private string storageAcc = "storageaccountxebecac6b";
+        private string imgContainer = "images";
 
         private static int num = 1;
         async Task OnInputFileChangedAsync(InputFileChangeEventArgs e)
@@ -414,12 +450,17 @@ namespace XebecPortal.UI.Pages.Applicant
 
             status.AppendLine("\n");
 
+            // Change the blobStorage location still
             var blobUri = new Uri("https://"
-                                  + "amafilewam" +
-                                  ".blob.core.windows.net/" +
-                                  "upload" + "/" + fileNames.Name);
-            AzureSasCredential credential = new AzureSasCredential(
-                "sp=racwdli&st=2022-02-28T08:30:27Z&se=2022-03-11T16:30:27Z&sv=2020-08-04&sr=c&sig=TE%2B2VCz%2B6KKFbYHIkQwxGPOYWVUtht3xBPYZ8bE3kH4%3D");
+                                  + storageAcc
+                                  + ".blob.core.windows.net/" 
+                                  + imgContainer
+                                  + "/"
+                                  + fileNames.Name);
+            Console.WriteLine("fileName " + fileNames.Name);
+
+            AzureSasCredential credential = new AzureSasCredential("?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupix&se=2024-12-02T20:36:17Z&st=2022-03-16T12:36:17Z&sip=1.1.1.1-255.255.255.255&spr=https&sig=nSCARiXySz%2BXLmtXJfZw28RkqfYUe%2FvDi11V9Q5Tpyo%3D");
+
             BlobClient blobClient = new BlobClient(blobUri, credential, new BlobClientOptions());
             status.AppendLine("Created blob client");
 
