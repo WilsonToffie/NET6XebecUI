@@ -427,7 +427,7 @@
 
         SubmitPressed = true;
         forgot.Email = Email;
-        forgot.Link = "https://localhost:44364/forgotpassword";
+        forgot.Link = "https://xebechumancapital.azurewebsites.net/forgotpassword";
 
         using (var msg = await HttpClient.PostAsJsonAsync<ForgotPasswordModel>("https://xebecapi.azurewebsites.net/keyForgot", forgot))
         {
