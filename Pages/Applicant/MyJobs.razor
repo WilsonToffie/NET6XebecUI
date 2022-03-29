@@ -273,7 +273,7 @@
 {
     FindApplications();
     <div class="myjob-search-bar">
-        <input class="search-image hr-job-search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs" />
+        <input class="search-image hr-job-search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs"@bind-value="searchTerm" @bind-value:event="oninput"  />
     </div>
     <div class="main-wrapper">
 
@@ -352,7 +352,9 @@
 
         <div class="main-wrapper-child job-cards">
             <div class="card-header  d-flex align-content-center justify-content-center accepted-heading">
-                <span class="count">@countSuccesfull.Count</span><span style="margin-left:5px;">Successful</span><p style="margin-left:5px;">Application</p>
+                <span class="count">@countSuccesfull.Count</span><span style="margin-left:5px;">Successful</span><p style="margin-left:5px;">Application @if (@countSuccesfull.Count > 1)
+                { <span>s</span> }
+                else {<span></span> } </p>
             </div>
 
             @foreach (var application in applications)
@@ -392,7 +394,9 @@
 
         <div class="main-wrapper-child job-cards rejection-card">
             <div class="card-header  d-flex align-content-center justify-content-center rejection-heading">
-                <span class="count">@countUnsuccessfull.Count</span><span style="margin-left:5px;">Unsuccessful</span><br><span style="margin-left:5px;">Application</span>
+                <span class="count">@countUnsuccessfull.Count</span><span style="margin-left:5px;">Unsuccessful</span><br><span style="margin-left:5px;">Application @if (@countUnsuccessfull.Count > 1)
+                { <span>s</span> }
+                else {<span></span> } </span>
             </div>
 
             @foreach (var application in applications)
@@ -432,6 +436,10 @@ else
     private IList<RejectedCandidate> rejectedCandidates = new List<RejectedCandidate>();
     private List<ApplicationModel> countSuccesfull = new List<ApplicationModel>();
     private List<ApplicationModel> countUnsuccessfull = new List<ApplicationModel>();
+    private string searchCandidate;
+    private IList<Job> jobsFiltered = new List<Job>();
+    private string searchTerm = "";
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -456,8 +464,18 @@ else
 
         return $"background: {bg_colour}; color: {text_colour}; box-shadow: {text_colour} 0 10px 20px -10px;";
     }
+    private void SearchCandidate(ChangeEventArgs e)
+    {
+        searchTerm = e.Value.ToString();
 
-   
+        jobsFiltered = jobs.Where(x => x.Title.ToLower().Contains(searchCandidate.ToLower()) || x.Location.ToLower().Contains(searchCandidate.ToLower())).ToList();
+
+
+        //searchCandidate = e.Value.ToString();
+
+        //usersFiltered = users.Where(x => x.name.ToLower().Contains(searchCandidate.ToLower()) || x.surname.ToLower().Contains(searchCandidate.ToLower())).ToList();
+    }
+
 
 
 
