@@ -658,7 +658,7 @@
             user.Surname = Surname;
             user.Email = Email;
             user.Password = Password;
-            user.Link = "https://localhost:44364/confirmation";
+            user.Link = "https://xebechumancapital.azurewebsites.net/confirmation";
             //Post model to dB
             using (var msg = await HttpClient.PostAsJsonAsync<UserModel>("https://xebecapi.azurewebsites.net/api/auth/registernew", user))
             {
