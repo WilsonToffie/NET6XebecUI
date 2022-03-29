@@ -585,10 +585,7 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
-        {
-            await SignUpElementInFocus.FocusAsync();
-        }
+        await SignUpElementInFocus.FocusAsync();
     }
 
     private Task OnRoleChanged(ChangeEventArgs e)
@@ -599,7 +596,7 @@
 
     private async Task showRegistrationForm()
     {
-        await OnAfterRenderAsync(true);
+        await Task.Delay(0);
     }
 
     private bool RegisterPasswordCheck()
@@ -619,16 +616,18 @@
     }
     private bool RegisterEmailCheck()
     {
-        if (Email1 != Email2)
+        if (Email1.Contains(Email2))
         {
-            invalidEmail = true;
-            return false;
-        }
-        else
-        {
+
+
             invalidEmail = false;
             Email = Email1;
             return true;
+        }
+        else
+        {
+            invalidEmail = true;
+            return false;
         }
     }
 
@@ -659,7 +658,7 @@
             user.Surname = Surname;
             user.Email = Email;
             user.Password = Password;
-            user.Link = "https://www.google.co.za/";
+            user.Link = "https://xebechumancapital.azurewebsites.net/confirmation";
             //Post model to dB
             using (var msg = await HttpClient.PostAsJsonAsync<UserModel>("https://xebecapi.azurewebsites.net/api/auth/registernew", user))
             {
@@ -671,21 +670,18 @@
                     if (result.Success)
                     {
                         validRegistration = true;
-                        invalidRegistration = false;
-                        SubmitPressed = false;
+                        SubmitPressed = registeredEmail = invalidRegistration = false;
 
                     }
                     else if (message.Equals("User already exists."))
                     {
                         registeredEmail = true;
-                        SubmitPressed = false;
+                        SubmitPressed = invalidRegistration = validRegistration = false;
                     }
                     else
                     {
-                        Console.WriteLine(message);
                         invalidRegistration = true;
-                        validRegistration = false;
-                        SubmitPressed = false;
+                        SubmitPressed = registeredEmail = invalidRegistration = validRegistration = false;
                     }
                 }
             }
@@ -693,9 +689,8 @@
         }
         else
         {
-            validRegistration = false;
             invalidRegistration = true;
-            SubmitPressed = false;
+            SubmitPressed = registeredEmail = validRegistration = false;
         }
     }
 }
