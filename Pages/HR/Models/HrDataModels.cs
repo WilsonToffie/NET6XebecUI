@@ -331,12 +331,11 @@ namespace XebecPortal.UI.Pages.HR
 
     public class EmailModel
     {
-        public int Id { get; set; }
-        public string Subject { get; set; }
-        public string ToEmail { get; set; }
-        public string ToName { get; set; }
-        public string PlainText { get; set; }
-        public string Htmlcontent { get; set; }
+        public string CandidateFirstName { get; set; }
+        public string CandidateLastName { get; set; }
+        public string CandidateEmail { get; set; }
+        public string JobName { get; set; }
+        public string Body { get; set; }
     }
 
 }

@@ -1678,15 +1678,21 @@
 
             EmailModel CurrentEmail = new EmailModel();
 
-            CurrentEmail.Subject = "Nebula Application";
-            CurrentEmail.ToEmail = CurrentEmailRecipient;
-            CurrentEmail.ToName = CurrentItem.Name;
-            CurrentEmail.PlainText = CurrentEmailTemplate;
-            CurrentEmail.Htmlcontent = "";
+            //CurrentEmail.Subject = "Nebula Application";
+            //CurrentEmail.ToEmail = CurrentEmailRecipient;
+            //CurrentEmail.ToName = CurrentItem.Name;
+            //CurrentEmail.PlainText = CurrentEmailTemplate;
+            //CurrentEmail.Htmlcontent = "";
+
+            CurrentEmail.CandidateFirstName = CurrentItem.Name;
+            CurrentEmail.CandidateLastName = CurrentItem.Surname;
+            CurrentEmail.CandidateEmail = CurrentEmailRecipient;
+            CurrentEmail.JobName = CurrentJobTitle;
+            CurrentEmail.Body = CurrentEmailTemplate;
 
             EmailSending = true;
 
-            await httpClient.PostAsJsonAsync<EmailModel>("https://mailingservice2022.azurewebsites.net/api/email/sendgrid", CurrentEmail);
+            await httpClient.PostAsJsonAsync<EmailModel>("https://prod-228.westeurope.logic.azure.com:443/workflows/420f0efb54134f0492fee22869c92bc6/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=GOWFYTIEtt84SYP1ZNP8ZIhoXJeq7S13FjBoYlAGVzE", CurrentEmail);
 
             EmailSending = false;
             EmailSent = true;
