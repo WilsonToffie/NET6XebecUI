@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'xebechumancapital'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BD036659A2B34ABFA8A98DAE00F00EE7 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BC2632F3F1204817BDF87704D366FB4D }}
           package: .
