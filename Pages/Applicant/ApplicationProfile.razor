@@ -4,6 +4,7 @@
 @inject ISnackbar Snackbara
 @using Microsoft.Extensions.Logging
 @inject ILogger<ApplicationProfile>  Logger
+@inject UserState state
 <style>
     .nav1 {
 
@@ -63,7 +64,7 @@
         height: 140px;
     }
 
-    .drag-drop-input {    
+    .drag-drop-input {
         position: absolute;
         background-color: pink;
         left: 23%;
@@ -454,7 +455,12 @@
         font-size: 3em;
         font-weight: 900;
     }
-
+    .personalInfo-header {
+        text-align: center;
+        font-family: opensans-condensed-bold;
+        font-size: 3em;
+        font-weight: 900;
+    }
     .validation-message {
         position: relative;
         left: 10%;
@@ -678,7 +684,7 @@
 
         /*Search bar CSS*/
     .hr-job-search-bar {
-        width: 40%;
+        width: 43%;
         height: 5vh;
         margin-bottom: 2.5vh;
         margin-top: 2.5vh;
@@ -693,7 +699,7 @@
 
     .search-bar-input {
         border-radius: 1em;
-        padding-left: 3em;
+        padding-left: 2.5em;
         background-color: white;
         height: 6vh;
         width: 100%;
@@ -709,7 +715,32 @@
             border: 0.1em solid black;
         }
 
+    .skill-input {
+        margin-top: 1em;
+        width: 40%;
+        margin-left: 1em;
+    }
 
+    .skill-button {
+        background-color: #00BCAE;
+        color: white;
+        font-weight: 600;
+        margin-top: 6vh;
+        height: 10vh;
+        width: 90%;
+        margin-bottom: 1vh;
+        left: 8%;
+    }
+    .appform-submit-modal {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        top: 0;
+        left: 0;
+    }
 </style>
 <div class="h-95 container-fluid d-flex justify-content-center align-items-center overflow-hidden">
     <div class="col-1"></div>
@@ -751,10 +782,11 @@
                 <!--Personal Information-->
                 <div id="personal-information" class="container tab-pane active">
                     <div class="d-flex justify-content-center">
-                        <EditForm Model="@personalInformation" OnValidSubmit="addWorkHistoryTest" style="width: 60%;">
+                        <EditForm Model="@personalInformation" OnValidSubmit="@AddPersonalInformation" style="width: 60%;">
+                            <DataAnnotationsValidator />
                             <div class="row" style="margin-top: 50px;">
                                 <div class="col-12 shadow-sm bg-body rounded-edges white-back">
-                                    <div class="education-header">Personal Information</div>
+                                    <div class="personalInfo-header">Personal Information</div>
                                     <div class="row p-3">
                                         <div class="col-12">
                                             <div class="rounded-edges">
@@ -817,25 +849,59 @@
                                         </div>
                                         <div class="col-4">
                                             <label class="form-label" for="ethnicity">Ethnicity</label>
-                                            <select id="ethnicity" class="form-select shadow bg-body rounded" @bind="additionalInformation.Ethnicity" @onfocusout="completion">
+                                            <InputSelect id="ethnicity" class="form-select shadow bg-body rounded" @bind-Value="additionalInformation.Ethnicity" @onfocusout="completion">
                                                 <!--@onfocusout="completion" -->
-                                                <option value="" disabled selected>Ethnicity</option>
-                                                <option value="African">African</option>
-                                                <option value="Asain">Asain</option>
-                                                <option value="Coloured">Coloured</option>
-                                                <option value="Indian">Indian</option>
-                                                <option value="White">White</option>
-                                            </select>
+
+                                                @if (newAdditionalInfo)
+                                                {
+                                                    <option value="" disabled selected>Ethnicity</option>
+                                                    <option value="African">African</option>
+                                                    <option value="Asain">Asain</option>
+                                                    <option value="Coloured">Coloured</option>
+                                                    <option value="Indian">Indian</option>
+                                                    <option value="White">White</option>
+                                                }
+                                                else
+                                                {
+                                                    @foreach (var item in additionalInfoList)
+                                                    {
+                                                        <option value="@item.Ethnicity" selected>@item.Ethnicity</option>
+                                                        <option value="African">African</option>
+                                                        <option value="Asain">Asain</option>
+                                                        <option value="Coloured">Coloured</option>
+                                                        <option value="Indian">Indian</option>
+                                                        <option value="White">White</option>
+                                                    }
+
+                                                }                                                
+                                            </InputSelect>
                                         </div>
                                         <div class="col-4">
                                             <label class="form-label" for="gender">Gender</label>
-                                            <select id="gender" class="form-select shadow bg-body rounded" @bind="additionalInformation.Gender" @onfocusout="completion">
+                                            <InputSelect id="gender" class="form-select shadow bg-body rounded" @bind-Value="additionalInformation.Gender" @onfocusout="completion">
                                                 <!--@onfocusout="completion" -->
-                                                <option value="" disabled selected>Select Gender</option>
-                                                <option value="Male">Male</option>
-                                                <option value="Female">Female</option>
-                                                <option value="PreferNotToAnswer">Prefer not to answer</option>
-                                            </select>
+                                                @if (newAdditionalInfo)
+                                                {
+                                                    <option value="" disabled selected>Select Gender</option>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                    <option value="Prefer Not To Answer">Prefer not to answer</option>
+                                                }
+                                                else
+                                                {
+                                                    @foreach (var item in additionalInfoList)
+                                                    {
+                                                        <option value="@item.Gender" selected>@item.Gender</option>
+                                                        <option value="Male">Male</option>
+                                                        <option value="Female">Female</option>
+                                                        <option value="Prefer Not To Answer">Prefer not to answer</option>
+                                                    }
+
+                                                }
+
+
+
+                                            </InputSelect>
                                         </div>
                                     </div>
                                     <div class="row p-3">
@@ -848,6 +914,8 @@
                                             <InputTextArea id="address" class="form-control shadow bg-body rounded" @bind-Value="personalInformation.Address" placeholder="Address" rows="1" @onfocusout="completion"></InputTextArea>
                                         </div>
                                     </div>
+                                    <div class="validation-message"><ValidationSummary /></div>
+                                    <button class="btn formButton" style="margin-left: 45%;" type="submit" value="Save">Save</button>
                                 </div>
                             </div>
                         </EditForm>
@@ -900,10 +968,8 @@
                                                         }
                                                         else
                                                         {
-                                                            <button class="btn formButton" type="submit" value="Add">Add</button>
+                                                            <button class="btn formButton" style="height: 10vh; width: 90%;" type="submit" value="Add">Add</button>
                                                         }
-
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -991,7 +1057,7 @@
                                                         }
                                                         else
                                                         {
-                                                            <button class="btn formButton" type="submit" value="Add">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
+                                                            <button class="btn formButton" style="height: 10vh; width: 90%; " type="submit" value="Add">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
                                                         }
 
 
@@ -1039,7 +1105,8 @@
                 <!--Skills tab-->
 
                 <div id="skills" class="container tab-pane">
-                    <form>
+                    <EditForm Model="@skillInfo" OnValidSubmit="@addToSelectedInfo">
+                        <DataAnnotationsValidator />
                         <!--Remember to test add the model-->
                         <!--<DataAnnotationsValidator />  -->
                         <div class="row">
@@ -1047,27 +1114,43 @@
                                 <div class="row">
                                     <div class="col-9 p-5">
                                         <div class="row shadow-sm bg-body rounded-edges white-back position-white">
-                                            <div class="education-header">Skill</div>
-                                            <div class="hr-job-search-bar">
-                                                <input class="search-image search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs" @oninput="SearchSkillList" /> <!-- @oninput="SearchListJob"-->
-                                            </div>
-                                            <div class="col-12 d-flex justify-content-center" style="height: 45vh">
-                                                <div class="skill-table-size">
-                                                    <div class="content-size-left">
-                                                        @foreach (var item in skillListFilter)
-                                                        {
-                                                            <div class="card-class-for-skills" @onclick="() => addToSelectedInfo(item)">
+                                            <div class="education-header">Skills</div>
+                                            <InputText id="skill" class="skill-input form-control shadow bg-body rounded" @bind-Value="skillInfo.Description" placeholder="Enter your skills" @onfocusout="completion" />
+                                            <div class="row p-3">
+                                                <div class="validation-message"><ValidationSummary /></div>
 
-                                                                <div>@item.Description</div>
-                                                            </div>
-                                                        }
+                                                @if (skillEditMode)
+                                                {
+                                                    <input class="btn formButton" style=" margin-left: 20%;" type="button" value="Save" @onclick="() => SaveSkill(skillInfo)" />
+                                                    <input class="btn formButton" style=" margin-left: 40%;" type="button" value="Cancel" @onclick="() => CancelSkill(skillInfo)" />
+                                                }
+                                                else
+                                                {
+                                                    <button class="skill-button btn" type="submit" value="Add">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
+                                                }
+
+                                            </div>
+
+                                            <!--<div class="hr-job-search-bar">
+                                            <input class="search-image search-bar-input" type="text" placeholder="Search For Jobs" @oninput="SearchSkillList" />-->
+                                            <!-- @oninput="SearchListJob"-->
+                                            <!--</div>-->
+                                            @*<div class="col-12 d-flex justify-content-center">
+                                                    <div class="skill-table-size">
+                                                        <div class="content-size-left">
+                                                            @foreach (var item in skillListFilter)
+                                                            {
+                                                                <div class="card-class-for-skills" @onclick="() => addToSelectedInfo(item)">
+                                                                    <div>@item.Description</div>
+                                                                </div>
+                                                            }
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            @if (warning)
-                                            {
-                                                <div class="d-flex justify-content-center align-bottom align-content-end">  @skillWarning</div>
-                                            }
+                                                @if (warning)
+                                                {
+                                                    <div class="d-flex justify-content-center align-bottom align-content-end">  @skillWarning</div>
+                                                }*@
                                         </div>
                                     </div>
                                     <div class="col-3">
@@ -1083,7 +1166,7 @@
                                                 {
                                                     foreach (var item in selectedSkillsList1)
                                                     {
-                                                        <div class="text-card" >                                                            
+                                                        <div class="text-card" @onclick="() => SelectSkill(item)">
                                                             <div class="work-history-icon">
                                                                 <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => removeFromSelectedInfo(item)"></i> <!---->
                                                                 <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
@@ -1100,7 +1183,7 @@
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </EditForm>
                 </div>
 
                 <!--References tab-->
@@ -1119,22 +1202,22 @@
                                                 <div class="row p-3">
                                                     <div class="col-6">
                                                         <!--<label class="form-label" for="referenceName">Name</label>-->
-                                                        <InputText id="referenceName" class="form-control shadow bg-body rounded" placeholder="Name" @bind-Value="references.Name" @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                                        <InputText id="referenceName" class="form-control shadow bg-body rounded" placeholder="Name" @bind-Value="references.RefFirstName" @onfocusout="completion" /> <!--@onfocusout="completion" -->
                                                     </div>
                                                     <div class="col-6">
                                                         <!--<label class="form-label" for="referenceSurname">Surname</label>-->
-                                                        <InputText id="referenceSurname" class="form-control shadow bg-body rounded" placeholder="Surname" @bind-Value="references.Surname" @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                                        <InputText id="referenceSurname" class="form-control shadow bg-body rounded" placeholder="Surname" @bind-Value="references.RefLastName" @onfocusout="completion" /> <!--@onfocusout="completion" -->
                                                     </div>
                                                 </div>
 
                                                 <div class="row p-3">
                                                     <div class="col-6">
                                                         <!--<label class="form-label" for="referenceEmail">Email</label>-->
-                                                        <InputText id="referenceEmail" class="form-control shadow bg-body rounded" placeholder="Email" @bind-Value="references.Email" @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                                        <InputText id="referenceEmail" class="form-control shadow bg-body rounded" placeholder="Email" @bind-Value="references.RefEmail" @onfocusout="completion" /> <!--@onfocusout="completion" -->
                                                     </div>
                                                     <div class="col-6">
                                                         <!--<label class="form-label" for="referenceContactNum">Phone Number</label>-->
-                                                        <InputText id="referenceContactNum" class="form-control shadow bg-body rounded" placeholder="Phone Number" @bind-Value="references.ContactNum" @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                                        <InputText id="referenceContactNum" class="form-control shadow bg-body rounded" placeholder="Phone Number" @bind-Value="references.RefPhone" @onfocusout="completion" /> <!--@onfocusout="completion" -->
                                                     </div>
                                                 </div>
                                                 <div class="row p-3">
@@ -1148,7 +1231,7 @@
                                                         }
                                                         else
                                                         {
-                                                            <button class="btn formButton" type="submit" value="Add">Add</button> <!--@onclick="() => AddReferences()"-->
+                                                            <button class="btn formButton" style="height: 10vh; width: 90%;" type="submit" value="Add">Add</button> <!--@onclick="() => AddReferences()"-->
                                                         }
 
                                                     </div>
@@ -1171,15 +1254,16 @@
 
                                                         <div class="text-card" @onclick="() => SelectReference(items)" style="@GetRefStyling(items)">
                                                             <div class="work-history-icon">
-                                                                <span @onclick="() => DeleteReference(items.Id)">
-                                                                    <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteReference(items.Id)"></i>
+                                                                <span>
+                                                                    <!--@onclick="() => DeleteReference(items)"-->
+                                                                    <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteReference(items)"></i>
                                                                     <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
                                                                 </span>
                                                             </div>
-                                                            <div class="work-history-comp-name">@items.Name</div>
-                                                            <div class="work-history-comp-name">@items.Surname</div>
-                                                            <div class="work-history-comp-name">@items.Email</div>
-                                                            <div class="ref-contact-Num">@items.ContactNum</div>
+                                                            <div class="work-history-comp-name">@items.RefFirstName</div>
+                                                            <div class="work-history-comp-name">@items.RefLastName</div>
+                                                            <div class="work-history-comp-name">@items.RefEmail</div>
+                                                            <div class="ref-contact-Num">@items.RefPhone</div>
                                                         </div>
 
                                                     }
@@ -1236,14 +1320,14 @@
                                     </div>
                                 </div>
                                 <!--Validation to ensure that the page is 100% completed-->
-                                @if (calc == 100)
-                                {
-                                    <div class="row p-3">
-                                        <div class="col-12 d-flex justify-content-center">
-                                            <input class="btn formButton" type="button" value="Done" @onclick="Submit" />
-                                        </div>
+                                @*@if (calc == 100)
+                                    {*@
+                                <div class="row p-3">
+                                    <div class="col-12 d-flex justify-content-center">
+                                        <input class="btn formButton" type="button" value="Done" @onclick="Submit" />
                                     </div>
-                                }
+                                </div>
+                                @*}*@
                             </div>
                         </div>
                     </form>
@@ -1278,26 +1362,14 @@
         }
     </div>
 </div>
-
+@if (loadInfo)
+{
+    <div class="appform-submit-modal" >
+        <MudProgressCircular Color="Color.Info" Style="height:140px; width:140px;" Indeterminate="true" />
+    </div>
+    
+}
 @code {
-    private bool presentWork = false;
-    private bool presentSchool = false;
-    private int id = 1;
-
-    private void AddWorkHistoryNew(WorkHistory workHistory1)
-    {
-        workHistory.Id = id++;
-        if (!workHistoryList.Contains(workHistory) || !FindWork(workHistory1))
-            workHistoryList.Add(workHistory);
-        else
-            jsRuntime.InvokeVoidAsync("alert", "Job Added");
-    }
-
-    private bool FindWork(WorkHistory workHistory1)
-    {
-        var temp = workHistoryList.FirstOrDefault(w => w.Id == workHistory1.Id || w.CompanyName.ToLower().Equals(workHistory1.CompanyName.ToLower()));
-        return temp == null;
-    }
 
     // The following is required for the progress visualization feature
     // First page testing if input is empty/null;
@@ -1327,46 +1399,108 @@
     private int refContactNum = 0;
 
 
+    // Skill list input empty / null
+
+    private int skillsInput = 0;
 
     private int count = 0;
-    private double totalInputs = 17.0;
+    private double totalInputs = 18.0;
     private string completionVar = "0%";
     private double calc = 0.00;
 
+    private int workCount = 0;
+    private int eduCount = 0;
+    private int refCount = 0;
+    private int skillCount = 0;
 
     private void progressCheck()
     {
 
+        if (workHistoryList.Count >= 1 && workCount == 0)
+        {
+            count = count + 3;
+            workCount = 1;
+        }else if (workHistoryList.Count == 0 && workCount == 1)
+        {
+            workCount = 0;
+        }
+
+        if (educationList.Count >= 1 && eduCount == 0)
+        {
+            count = count + 2;
+            eduCount = 1;
+        }
+        else if (educationList.Count == 0 && eduCount == 1)
+        {
+            eduCount = 0;
+        }
+
+        if (referencesList.Count >= 1 && refCount == 0)
+        {
+            count = count + 4;
+            refCount = 1;
+        }
+        else if (referencesList.Count == 0 && refCount == 1)
+        {
+            refCount = 0;
+        }
+
+        if (selectedSkillsList1.Count >= 1 && skillCount == 0)
+        {
+            count++;
+            skillCount = 1;
+        }
+        else if (selectedSkillsList1.Count == 0 && skillCount == 1)
+        {
+            skillCount = 0;
+        }
+
         if (workProgressVal == true)
         {
-
-            count = count - 3;
-            compName = 0;
-            jobTitle = 0;
-            desc = 0;
-            workProgressVal = false;
+            if (count >= 3)
+            {
+                count = count - 3;
+                compName = 0;
+                jobTitle = 0;
+                desc = 0;
+                workProgressVal = false;
+            }
         }
 
         if (educationProgressVal == true)
         {
-            count = count - 2;
-            institution = 0;
-            qualification = 0;
-            educationProgressVal = false;
+            if (count >= 2)
+            {
+                count = count - 2;
+                institution = 0;
+                qualification = 0;
+                educationProgressVal = false;
+            }
         }
 
         if (referenceProgressVal == true)
         {
-            count = count - 4;
-            refName = 0;
-            refSurname = 0;
-            refEmail = 0;
-            refContactNum = 0;
-            referenceProgressVal = false;
+            if (count >= 4)
+            {
+                count = count - 4;
+                refName = 0;
+                refSurname = 0;
+                refEmail = 0;
+                refContactNum = 0;
+                referenceProgressVal = false;
+            }
         }
-        {
 
+        if (skillProgressVal == true)
+        {
+            if (count >= 1)
+            {
+                count--;
+                skillProgressVal = false;
+            }
         }
+
+
         //This is the check that is used on the "Personal Information" page
 
         calc = Math.Round(((count / totalInputs) * 100));
@@ -1474,128 +1608,5 @@
             count--;
             address = 0;
         }
-
-        // This is the checks for the "Work history" page
-
-        if (workHistoryList.Count == 0)
-        {
-            if (workProgressVal == false)
-            {
-                if (!string.IsNullOrEmpty(workHistory.CompanyName) && compName != 1)
-                {
-                    count++;
-                    compName = 1;
-                }
-                else if (string.IsNullOrEmpty(workHistory.CompanyName) && compName == 1)
-                {
-                    count--;
-                    compName = 0;
-                }
-
-                else if (!string.IsNullOrEmpty(workHistory.JobTitle) && jobTitle != 1)
-                {
-                    count++;
-                    jobTitle = 1;
-                }
-                else if (string.IsNullOrEmpty(workHistory.JobTitle) && jobTitle == 1)
-                {
-                    count--;
-                    jobTitle = 0;
-                }
-                else if (!string.IsNullOrEmpty(workHistory.Description) && desc != 1)
-                {
-                    count++;
-                    desc = 1;
-                }
-                else if (string.IsNullOrEmpty(workHistory.Description) && desc == 1)
-                {
-                    count--;
-                    desc = 0;
-                }
-            }
-        }
-
-
-        //Start of Education validation for progression
-
-        if (educationList.Count == 0)
-        {
-            if (educationProgressVal == false)
-            {
-                if (!string.IsNullOrEmpty(education.Insitution) && institution != 1)
-                {
-                    count++;
-                    institution = 1;
-                }
-                else if (string.IsNullOrEmpty(education.Insitution) && institution == 1)
-                {
-                    count--;
-                    institution = 0;
-                }
-
-                else if (!string.IsNullOrEmpty(education.Qualification) && qualification != 1)
-                {
-                    count++;
-                    qualification = 1;
-                }
-                else if (string.IsNullOrEmpty(education.Qualification) && qualification == 1)
-                {
-                    count--;
-                    qualification = 0;
-                }
-            }
-        }
-
-        if (referencesList.Count == 0)
-        {
-            if (referenceProgressVal == false)
-            {
-                if (!string.IsNullOrEmpty(references.Name) && refName != 1)
-                {
-                    count++;
-                    refName = 1;
-                }
-                else if (string.IsNullOrEmpty(references.Name) && refName == 1)
-                {
-                    count--;
-                    refName = 0;
-                }
-
-                else if (!string.IsNullOrEmpty(references.Surname) && refSurname != 1)
-                {
-                    count++;
-                    refSurname = 1;
-                }
-                else if (string.IsNullOrEmpty(references.Surname) && refSurname == 1)
-                {
-                    count--;
-                    refSurname = 0;
-                }
-
-                else if (!string.IsNullOrEmpty(references.Email) && refEmail != 1)
-                {
-                    count++;
-                    refEmail = 1;
-                }
-                else if (string.IsNullOrEmpty(references.Email) && refEmail == 1)
-                {
-                    count--;
-                    refEmail = 0;
-
-                }
-                else if (!string.IsNullOrEmpty(references.ContactNum) && refContactNum != 1)
-                {
-                    count++;
-                    refContactNum = 1;
-                }
-                else if (!string.IsNullOrEmpty(references.ContactNum) && refContactNum == 1)
-                {
-                    count--;
-                    refContactNum = 0;
-                }
-            }
-
-        }
-
     }
 }

@@ -35,6 +35,8 @@
         margin-top: 1vh;
         text-align: center;
     }
+        
+        
         .da-nav-option:hover {
             width: 100%;
             height: 8vh;
@@ -43,6 +45,12 @@
             color: white;
             margin-top: 1vh;
             text-align: center;
+            visibility: visible;
+            border-radius:10%;
+        }
+        .da-nav-option:focus {
+            background-color: #00bcae;
+            color: white;
         }
     .da-nav-icon {
         width: 100%;
@@ -85,52 +93,66 @@
         border-top-right-radius: 30px;
         border-bottom-right-radius: 30px;
     }
+    .tooltip-c .tooltip-text {
+        visibility: hidden;
+        width: 120px;
+        background-color: black;
+        color: #fff;
+        text-align: center;
+        padding: 5px 0;
+        border-radius: 6px;
+        position: absolute;
+        z-index: 1;
+    }
+    .tooltip-c:hover .tooltip-text {
+        visibility: visible;
+    }
 </style>
 
 <div class="da-container">
     <div class="da-nav">
-        <div class="da-nav-option" @onclick="showConversionRates">
-            <i class="fas fa-exchange-alt da-nav-icon"></i>
+        <div class="da-nav-option tooltip-c color-change" @onclick="showConversionRates">
+            <i class="fas fa-exchange-alt da-nav-icon"></i><span class="tooltip-text"> Conversion Rate</span>
         </div>
-        <div class="da-nav-option" @onclick="showGenderRatios">
-            <i class="fas fa-venus-mars da-nav-icon"></i>
+        <div class="da-nav-option tooltip-c nav-icon" @onclick="showGenderRatios">
+            <i class="fas fa-venus-mars da-nav-icon"></i><span class="tooltip-text"> Gender Statistics</span>
         </div>
-        <div class="da-nav-option" @onclick="showJobPortalStats">
-            <i class="fas fa-briefcase da-nav-icon"></i>
+        <div class="da-nav-option tooltip-c" @onclick="showJobPortalStats">
+            <i class="fas fa-briefcase da-nav-icon"></i><span class="tooltip-text"> Job Portal Statistics</span>
         </div>
-        <div class="da-nav-option" @onclick="showJobTypeStats">
-            <i class="fas fa-file-signature da-nav-icon"></i>
+        <div class="da-nav-option tooltip-c" @onclick="showJobTypeStats">
+            <i class="fas fa-file-signature da-nav-icon"></i><span class="tooltip-text"> Employment Type Statistics</span>
         </div>
-        <div class="da-nav-option" @onclick="showRecruitingFunnelStats">
-            <i class="fas fa-filter da-nav-icon"></i>
+        <div class="da-nav-option tooltip-c" @onclick="showRecruitingFunnelStats">
+            <i class="fas fa-filter da-nav-icon"></i><span class="tooltip-text"> Recruiting Funnel</span>
         </div>
-        <div class="da-nav-option" @onclick="showTrafficStats">
-            <i class="fas fa-traffic-light da-nav-icon"></i>
+        <div class="da-nav-option tooltip-c" @onclick="showTrafficStats">
+            <i class="fas fa-traffic-light da-nav-icon"></i><span class="tooltip-text"> Site Activity</span>
         </div>
-        <div class="da-nav-option" @onclick="showTalentRating">
-            <i class="fas fa-percent da-nav-icon"></i>
+        <div class="da-nav-option tooltip-c" @onclick="showTalentRating">
+            <i class="fas fa-percent da-nav-icon"></i><span class="tooltip-text"> Talent Pool</span>
         </div>
     </div>
     <div class="da-main" hidden="@conversionRateIsHidden">
-        <iframe src="https://app.powerbi.com/reportEmbed?reportId=4581a5c1-56a3-4ee3-aee3-c3b0a7b788df&groupId=e7de2534-90ca-418d-8fec-ce9ef17c3cb6&autoAuth=true&ctid=8f4b998c-dd4c-4bb0-b3cf-62b23831b6e6&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldC8ifQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>
+        <iframe src="https://app.powerbi.com/reportEmbed?reportId=5d9084fa-5e30-4818-867a-5b84e9f0d525&autoAuth=true&ctid=8f4b998c-dd4c-4bb0-b3cf-62b23831b6e6&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldC8ifQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>
     </div>
     <div class="da-main" hidden="@genderRatioIsHidden">
-        <iframe src="https://app.powerbi.com/reportEmbed?reportId=0b5e6910-67af-41db-8b60-afbcb18851b5&groupId=e7de2534-90ca-418d-8fec-ce9ef17c3cb6&autoAuth=true&ctid=8f4b998c-dd4c-4bb0-b3cf-62b23831b6e6&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldC8ifQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>
+        <iframe src="https://app.powerbi.com/reportEmbed?reportId=b1431b8d-dc89-403e-ab5c-1b9562d55697&autoAuth=true&ctid=8f4b998c-dd4c-4bb0-b3cf-62b23831b6e6&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldC8ifQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>
     </div>
     <div class="da-main" hidden="@jobPortalIsHidden">
-        <iframe src="https://app.powerbi.com/reportEmbed?reportId=25032d59-63ec-4b5c-8438-e3411aa5dd46&groupId=e7de2534-90ca-418d-8fec-ce9ef17c3cb6&autoAuth=true&ctid=8f4b998c-dd4c-4bb0-b3cf-62b23831b6e6&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldC8ifQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>
+        <iframe src="https://app.powerbi.com/reportEmbed?reportId=38feff49-b32b-46d0-bf96-f1d61106c1f1&autoAuth=true&ctid=8f4b998c-dd4c-4bb0-b3cf-62b23831b6e6&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldC8ifQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>
     </div>
     <div class="da-main" hidden="@jobTypeIsHidden">
-        <iframe src="https://app.powerbi.com/reportEmbed?reportId=808d4da8-cf6e-433e-9a81-1bf053b494d7&groupId=e7de2534-90ca-418d-8fec-ce9ef17c3cb6&autoAuth=true&ctid=8f4b998c-dd4c-4bb0-b3cf-62b23831b6e6&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldC8ifQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>
+        <iframe src="https://app.powerbi.com/reportEmbed?reportId=af14ac85-83cb-4fbc-876b-9ee7732a54dd&autoAuth=true&ctid=8f4b998c-dd4c-4bb0-b3cf-62b23831b6e6&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldC8ifQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>
     </div>
     <div class="da-main" hidden="@recruitingFunnelIsHidden">
-        <iframe src="https://app.powerbi.com/reportEmbed?reportId=8e75b67a-45df-4c1e-ac0e-826eb5a01ed1&groupId=e7de2534-90ca-418d-8fec-ce9ef17c3cb6&autoAuth=true&ctid=8f4b998c-dd4c-4bb0-b3cf-62b23831b6e6&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldC8ifQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>
+        <iframe src="https://app.powerbi.com/reportEmbed?reportId=fd1976e5-a142-4a27-b061-c3bcc3924ae1&autoAuth=true&ctid=8f4b998c-dd4c-4bb0-b3cf-62b23831b6e6&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldC8ifQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe>
     </div>
     <div class="da-main" hidden="@trafficIsHidden">
-        <iframe src="https://app.powerbi.com/reportEmbed?reportId=b3530bb4-06af-44bf-b116-1bfb5046d003&groupId=e7de2534-90ca-418d-8fec-ce9ef17c3cb6&autoAuth=true&ctid=8f4b998c-dd4c-4bb0-b3cf-62b23831b6e6&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldC8ifQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe> 
+        <iframe src="https://app.powerbi.com/reportEmbed?reportId=8a1f938a-6b35-4526-8809-344fadefd663&autoAuth=true&ctid=8f4b998c-dd4c-4bb0-b3cf-62b23831b6e6&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldC8ifQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe> 
     </div>
     <div class="da-main" hidden="@talentRatingIsHidden">
-         <iframe src="https://app.powerbi.com/reportEmbed?reportId=1a8d7120-26b3-41c1-81b7-d1f0a04db450&groupId=e7de2534-90ca-418d-8fec-ce9ef17c3cb6&autoAuth=true&ctid=8f4b998c-dd4c-4bb0-b3cf-62b23831b6e6&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldC8ifQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe> 
+         <iframe src="https://app.powerbi.com/reportEmbed?reportId=1cedc258-2883-407e-ae0b-2ab3c6e6a7ac&autoAuth=true&ctid=8f4b998c-dd4c-4bb0-b3cf-62b23831b6e6&config=eyJjbHVzdGVyVXJsIjoiaHR0cHM6Ly93YWJpLW5vcnRoLWV1cm9wZS1yZWRpcmVjdC5hbmFseXNpcy53aW5kb3dzLm5ldC8ifQ%3D%3D" frameborder="0" allowFullScreen="true"></iframe> 
     </div>
     <div class="bottom-cover"></div>
 </div>
