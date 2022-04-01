@@ -276,9 +276,11 @@ namespace XebecPortal.UI.Pages.Applicant
                             tempMatches++;
                         }
                     }
-                    else if (QuestionList[i].answer == AnswerList[i].applicantAnswer)
+                    else if (QuestionList[i].answer.ToLower() == AnswerList[i].applicantAnswer.ToLower())
                     {
-                        tempMatches++;
+                    Console.WriteLine("HR: " + QuestionList[i].answer.ToLower());
+                    Console.WriteLine("Applicant: " + AnswerList[i].applicantAnswer.ToLower());
+                    tempMatches++;
                     }
                 }
 

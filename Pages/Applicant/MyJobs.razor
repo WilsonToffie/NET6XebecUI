@@ -272,9 +272,10 @@
 @if (jobs != null)
 {
     FindApplications();
-    <div class="myjob-search-bar">
-        <input class="search-image hr-job-search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs" />
-    </div>
+<div class="myjob-search-bar">
+    <input class="search-image hr-job-search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs" @oninput="SearchApplications" />
+
+</div>
     <div class="main-wrapper">
 
 
@@ -508,6 +509,15 @@ else
         text_colour = "rgba(0, 155, 174, 1)";
 
         return $"background: {bg_colour}; color: {text_colour}; box-shadow: {text_colour} 0 10px 20px -10px;";
+    }
+
+    private void SearchApplications(ChangeEventArgs e)
+    {
+        searchCandidate = e.Value.ToString();
+        countSuccesfull.Clear();
+        countUnsuccessfull.Clear();
+
+        jobsFiltered = jobs.Where(x => x.Title.ToLower().Contains(searchCandidate.ToLower())).ToList();
     }
 
 }
