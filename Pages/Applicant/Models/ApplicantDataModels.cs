@@ -294,6 +294,7 @@ namespace XebecPortal.UI.Pages.Applicant
         public string Gender { get; set; }
         [Required]
         public string Ethnicity { get; set; }
+        [Required]
         public int AppUserId { get; set; }
         public IList<AppUser> AppUser { get; set; }
     }

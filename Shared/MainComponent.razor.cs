@@ -166,6 +166,7 @@ namespace XebecPortal.UI.Shared
                 //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
 
                 var resp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo); //{personalInfo.Id}
+               // var newresp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo); //{personalInfo.Id}
             }
             else
             {
