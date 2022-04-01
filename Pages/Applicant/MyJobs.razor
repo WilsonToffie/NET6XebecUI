@@ -275,9 +275,10 @@
 @if (jobs != null)
 {
     FindApplications();
-    <div class="myjob-search-bar">
-        <input class="search-image hr-job-search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs" @oninput="SearchApplications"  />
-    </div>
+<div class="myjob-search-bar">
+    <input class="search-image hr-job-search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs" @oninput="SearchApplications" />
+
+</div>
     <div class="main-wrapper">
 
 
@@ -515,6 +516,4 @@ else
         jobsFiltered = jobs.Where(x => x.Title.ToLower().Contains(searchCandidate.ToLower())).ToList();
 
 
-        //searchCandidate = e.Value.ToString();
-    }
 }

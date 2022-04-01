@@ -86,6 +86,7 @@
         border-radius: 15px;
         background: white;
         position: relative;
+        /*overflow-y: auto;*/
     }
 
         .modal-frame thead, tbody tr {
@@ -149,6 +150,7 @@
         overflow-y: auto;
         overflow-x: hidden;
         padding-right: 10px;
+        padding-bottom: 5px;
     }
 
     .show-more-td {
@@ -256,10 +258,9 @@
         border-color: #2f2f2f;
     }
 
-    .loading-icon{
+    .loading-icon {
         margin-top: 150px;
     }
-
 </style>
 
 <div class="page-top">
@@ -353,7 +354,7 @@
     }
     else
     {
-            <MudProgressCircular Class="loading-icon" Size="Size.Large" Indeterminate="true" />
+        <MudProgressCircular Class="loading-icon" Size="Size.Large" Indeterminate="true" />
     }
 
 </div>
@@ -508,14 +509,18 @@
                             </tr>
                             <tr></tr>
                         </thead>
-                        <tbody class="work-history-card" style="padding-left: 10px">
+                        <tbody>
                             @foreach (var item in workHistory)
                             {
+                                <tr class="work-history-card" style="padding-left: 10px">
+
                                 <tr class="grid-container">
                                     <td class="work-history-company-name">@item.CompanyName</td>
                                     <td class="work-history-job-title">@item.JobTitle</td>
                                     <td class="work-history-description">@item.Description</td>
                                     <td class="work-history-date">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</td>
+                                </tr>
+
                                 </tr>
                             }
                         </tbody>
@@ -571,14 +576,18 @@
                             </tr>
                             <tr></tr>
                         </thead>
-                        <tbody class="work-history-card" style="padding-left: 10px">
+                        <tbody>
                             @foreach (var item in education)
                             {
+                                <tr class="work-history-card" style="padding-left: 10px">
+
                                 <tr class="grid-container">
                                     <td class="work-history-company-name">@item.Qualification</td>
                                     <td class="work-history-job-title"></td>
                                     <td class="work-history-description">@item.Insitution</td>
                                     <td class="work-history-date">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</td>
+                                </tr>
+
                                 </tr>
                             }
                         </tbody>
