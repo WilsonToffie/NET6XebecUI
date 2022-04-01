@@ -94,18 +94,16 @@ namespace XebecPortal.UI.Pages.Applicant
         /* 
          Changes that need to be made:
 
-         Make changes so that when the user update, it immediately updates
-         When items are added, they are immediately sent..
-         When items are deleted, they are deleted from the list / DB as well
+         When adding new info, there is a problem with deleting it immediately... ()
         */
 
         protected override async Task OnInitializedAsync()
         {
             loadInfo = true;
-
+            _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/ApplicationProfile.js");
             try
             {               
-                _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/ApplicationProfile.js");
+               
 
                 //The following code allows the Lists to be populated with existing information
 
@@ -129,19 +127,19 @@ namespace XebecPortal.UI.Pages.Applicant
                 additionalInfoList = additionalInfoHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
                 Console.WriteLine("additionalInfoList.Count " + additionalInfoHistory.Count);
                 Console.WriteLine("additionalInfoList.Count " + additionalInfoList.Count);
-               // if (additionalInfoList.Count == 0)
-                //{
-                //    newAdditionalInfo = true;
-                //}
-                //else
-                //{
+                if (additionalInfoList.Count == 0)
+                {
+                    newAdditionalInfo = true;
+                }
+                else
+                {
                     foreach (var item in additionalInfoList)
                     {
                         Console.WriteLine("Addintional info count: " + additionalInfoList.Count);
                         Console.WriteLine("Additional ID " + item.Id);
                         additionalInformation = item;
                     }
-                //}
+                }
                 
 
                 workHistories = await httpClient.GetFromJsonAsync<List<WorkHistory>>($"https://xebecapi.azurewebsites.net/api/WorkHistory");
@@ -198,6 +196,12 @@ namespace XebecPortal.UI.Pages.Applicant
             loadInfo = false;
         }
        
+
+        private void loadUserInformation()
+        {
+
+        }
+
         private string skillWarning = "";
         private bool warning;
 
@@ -282,7 +286,7 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/Skill", item);                
             }
-
+            await OnInitializedAsync();
             addselectedSkillsList.Clear(); // it immediately gets cleared after the POST.
             skillInfo = new();
         }
@@ -291,7 +295,9 @@ namespace XebecPortal.UI.Pages.Applicant
         private async Task removeFromSelectedInfo(SkillsInformation info)
         {
             selectedSkillsList1.RemoveAll(x => x.Description.Equals(info.Description));
+            Console.WriteLine("SKill ID " + info.Id);
             await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/Skill/{info.Id}");
+            await OnInitializedAsync();
             skillInfo = new();
             skillEditMode = false;
             if (selectedSkillsList1.Count == 0)
@@ -317,6 +323,7 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/Skill/{skillValue.Id}", item);                
             }
+            await OnInitializedAsync();
             skillInfo = new();
         }
 
@@ -403,7 +410,7 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/Reference", item);
             }
-
+            await OnInitializedAsync();
             addReferencesList.Clear();
             references = new();
         }
@@ -419,6 +426,7 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/Reference/{referenceValues.Id}", item);                
             }
+            await OnInitializedAsync();
             references = new();
         }
 
@@ -434,6 +442,7 @@ namespace XebecPortal.UI.Pages.Applicant
         {
             referencesList.RemoveAll(x => x.Equals(referenceValues));
             await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/Reference/{referenceValues.Id}");
+            await OnInitializedAsync();
             references = new();
             editMode = false;
             if (referencesList.Count == 0)
@@ -479,6 +488,7 @@ namespace XebecPortal.UI.Pages.Applicant
             {                
                 await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/WorkHistory", item);
             }
+            await OnInitializedAsync();
             addworkHistoryList.Clear();
             workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         }
@@ -487,6 +497,7 @@ namespace XebecPortal.UI.Pages.Applicant
         {            
             workHistoryList.RemoveAll(x => x == (workHistoryValues));
             await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/WorkHistory/{workHistoryValues.Id}");
+            await OnInitializedAsync();
             workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             workHistUpdate = false;
             workEditMode = false;
@@ -541,7 +552,7 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/WorkHistory/{workHistoryValues.Id}", item);
             }
-
+            await OnInitializedAsync();
             workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         }
 
@@ -577,8 +588,8 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/Education", item);
             }
-
             addEducationList.Clear();
+            await OnInitializedAsync();
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         }
 
@@ -586,7 +597,7 @@ namespace XebecPortal.UI.Pages.Applicant
         {
             educationList.RemoveAll(x => x.Equals(educationValues));
             await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/Education/{educationValues.Id}");
-            
+            await OnInitializedAsync();
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             eduUpdate = false;
             eduEditMode = false;
@@ -614,6 +625,7 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/Education/{educationValues.Id}", item);
             }
+            await OnInitializedAsync();
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         }
 
@@ -625,23 +637,7 @@ namespace XebecPortal.UI.Pages.Applicant
             eduEditMode = false;
         }
 
-        private async Task UpdateEducation(Education educationValues)
-        {
-            if (await _jsModule.InvokeAsync<bool>("Education"))
-            {
-                int index = educationList.FindIndex(x => x.Id == educationValues.Id);
-                educationList[index] = educationValues;
-                education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
-                eduUpdate = false;
-            }
-        }
-
-        private void PopulateEducation(int id)
-        {
-            education = educationList.FirstOrDefault(x => x.Id == id);
-            eduUpdate = true;
-        }
-
+        
         private void StartDateCheck()
         {
             workHistory.StartDate = workHistory.StartDate > workHistory.EndDate ? workHistory.EndDate : workHistory.StartDate;
