@@ -286,16 +286,18 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/Skill", item);                
             }
-            await OnInitializedAsync();
-            addselectedSkillsList.Clear(); // it immediately gets cleared after the POST.
+            addselectedSkillsList.Clear();// it immediately gets cleared after the POST.
+            await OnInitializedAsync();            
             skillInfo = new();
         }
 
 
         private async Task removeFromSelectedInfo(SkillsInformation info)
         {
-            selectedSkillsList1.RemoveAll(x => x.Description.Equals(info.Description));
             Console.WriteLine("SKill ID " + info.Id);
+            Console.WriteLine("SKill Description " + info.Description);
+            selectedSkillsList1.Remove(info);
+
             await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/Skill/{info.Id}");
             await OnInitializedAsync();
             skillInfo = new();
@@ -817,7 +819,6 @@ namespace XebecPortal.UI.Pages.Applicant
 
                 workHistory.CompanyName = resumeResultModel.CompaniesWorkedAt;
                 workHistory.JobTitle = resumeResultModel.Designation;
-
 
 
                 //status = new StringBuilder(await resp.Content.ReadAsStringAsync());
