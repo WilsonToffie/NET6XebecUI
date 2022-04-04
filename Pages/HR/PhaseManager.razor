@@ -1367,7 +1367,7 @@
             test.AuthorizerEmail = userstate.Email;
             test.Phase = AppPhases.FirstOrDefault(x => x.id == CurrentItem.ApplicationPhaseId).description;
             test.Job = CurrentJobTitle;
-            test.DateTime = DateTime.Now.ToString();
+            test.DateTime = DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss");
 
             await httpClient.PostAsJsonAsync<HrEmailModel>("https://prod-68.westeurope.logic.azure.com:443/workflows/26a113fe926648e795fa4feda3fa611f/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=F5kfz52-z0loxc0VL-CQ8Tdg6DRfMo0xkKACdb22GJA", test);
         }
@@ -1624,7 +1624,7 @@
         test.AuthorizerEmail = userstate.Email;
         test.Phase = AppPhases.FirstOrDefault(x => x.id == CurrentItem.ApplicationPhaseId).description;
         test.Job = CurrentJobTitle;
-        test.DateTime = DateTime.Now.ToString();
+        test.DateTime = DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss");
 
         await httpClient.PostAsJsonAsync<HrEmailModel>("https://prod-68.westeurope.logic.azure.com:443/workflows/26a113fe926648e795fa4feda3fa611f/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=F5kfz52-z0loxc0VL-CQ8Tdg6DRfMo0xkKACdb22GJA", test);
 

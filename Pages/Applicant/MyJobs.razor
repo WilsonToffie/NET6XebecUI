@@ -44,10 +44,11 @@
         flex-direction: column;
         overflow-y: scroll;
         width: 100%;
-        scrollbar-track-color: white;
+        
+        
     }
         .job-cards::-webkit-scrollbar-thumb{
-            width:80%;
+            width:20px;
         }
         .job-cards::-webkit-scrollbar-track {
             background: linear-gradient(#a7a9ab 0%, rgba(0,51,64,0.09) 30%);
@@ -245,6 +246,7 @@
         width: 100%;
         box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
         border: white solid 0.1em;
+        border-radius:1.5em;
     }
 
 
@@ -267,7 +269,9 @@
         margin-top: 2.5vh;
         margin-left: 30%;
         margin-right: 30%;
-        border: none
+        
+       
+
     }
 </style>
 
@@ -276,7 +280,7 @@
 {
     FindApplications();
     <div class="myjob-search-bar">
-        <input class="search-image hr-job-search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs"@bind-value="searchTerm" @bind-value:event="oninput"  />
+        <input class="search-image hr-job-search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs" @oninput="SearchApplications"  />
     </div>
     <div class="main-wrapper">
 
@@ -515,4 +519,6 @@ else
         jobsFiltered = jobs.Where(x => x.Title.ToLower().Contains(searchCandidate.ToLower())).ToList();
 
 
+        //searchCandidate = e.Value.ToString();
+    }
 }
