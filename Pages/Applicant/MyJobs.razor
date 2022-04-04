@@ -273,7 +273,7 @@
 {
     FindApplications();
     <div class="myjob-search-bar">
-        <input class="search-image hr-job-search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs"@bind-value="searchTerm" @bind-value:event="oninput"  />
+        <input class="search-image hr-job-search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs"@bind-value="searchCandidate" @bind-value:event="oninput"  />
     </div>
     <div class="main-wrapper">
 
@@ -503,11 +503,11 @@ else
     }
     private void SearchCandidate(ChangeEventArgs e)
     {
-        searchTerm = e.Value.ToString();
+        searchCandidate = e.Value.ToString();
 
         jobsFiltered = jobs.Where(x => x.Title.ToLower().Contains(searchCandidate.ToLower()) || x.Location.ToLower().Contains(searchCandidate.ToLower())).ToList();
 
 
         //searchCandidate = e.Value.ToString();
-
+    }
 }
