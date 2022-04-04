@@ -37,23 +37,26 @@
 
     .job-cards {
         background: rgba(0, 188, 174,0.1);
-        height: 75vh;
+        height: 70vh;
         gap: 10px;
         padding: 5px;
         display: flex;
         flex-direction: column;
-        overflow-y: auto;
+        overflow-y: scroll;
         width: 100%;
         scrollbar-track-color: white;
     }
-
+        .job-cards::-webkit-scrollbar-thumb{
+            width:80%;
+        }
         .job-cards::-webkit-scrollbar-track {
             background: linear-gradient(#a7a9ab 0%, rgba(0,51,64,0.09) 30%);
             border-radius: 10px;
             transform: translateX(10vw);
+            width:80%;
         }
 
-        .job-cards::-webkit-scrollbar {
+        /*.job-cards::-webkit-scrollbar {
             width: 10px;
             background-color: rgba(0, 188, 174,0.6);
         }
@@ -63,7 +66,7 @@
             width: 10px;
             height: 10px;
         }
-
+*/
         .job-cards div {
             border: none;
             border-left: rgba(0, 188, 174,0.7) 10px solid;
@@ -273,7 +276,7 @@
 {
     FindApplications();
     <div class="myjob-search-bar">
-        <input class="search-image hr-job-search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs"@bind-value="searchCandidate" @bind-value:event="oninput"  />
+        <input class="search-image hr-job-search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs"@bind-value="searchTerm" @bind-value:event="oninput"  />
     </div>
     <div class="main-wrapper">
 
@@ -374,10 +377,10 @@
 
 
         <div class="main-wrapper-child job-cards">
-            <div class="card-header  d-flex align-content-center justify-content-center accepted-heading">
-                <span class="count">@countSuccesfull.Count</span><span style="margin-left:5px;">Successful</span><p style="margin-left:5px;">Application @if (@countSuccesfull.Count > 1)
-                { <span>s</span> }
-                else {<span></span> } </p>
+            <div class="card-header d-flex align-content-center justify-content-center accepted-heading">
+                <span class="count">@countSuccesfull.Count</span><span style="margin-left:5px;">Successful</span><span style="margin-left:5px;">Application</span>@if (@countSuccesfull.Count > 1)
+                {<span>s</span>}
+                else{<span></span> }  
             </div>
 
             @foreach (var application in applications)
@@ -435,7 +438,9 @@
 
     <div class="main-wrapper-child job-cards rejection-card">
         <div class="card-header  d-flex align-content-center justify-content-center rejection-heading">
-            <span class="count">@countUnsuccessfull.Count</span><span style="margin-left:5px;">Unsuccessful</span><br><span style="margin-left:5px;">Application</span>
+            <span class="count">@countUnsuccessfull.Count</span><span style="margin-left:5px;">Unsuccessful</span><br><span style="margin-left:5px;">Application</span>@if(countUnsuccessfull.Count > 1) {
+            <span>s</span>}
+                else { <span></span>}
         </div>
 
             @foreach (var application in applications)
@@ -501,13 +506,13 @@ else
 
         return $"background: {bg_colour}; color: {text_colour}; box-shadow: {text_colour} 0 10px 20px -10px;";
     }
-    private void SearchCandidate(ChangeEventArgs e)
+    private void SearchApplications(ChangeEventArgs e)
     {
         searchCandidate = e.Value.ToString();
+        countSuccesfull.Clear();
+        countUnsuccessfull.Clear();
 
-        jobsFiltered = jobs.Where(x => x.Title.ToLower().Contains(searchCandidate.ToLower()) || x.Location.ToLower().Contains(searchCandidate.ToLower())).ToList();
+        jobsFiltered = jobs.Where(x => x.Title.ToLower().Contains(searchCandidate.ToLower())).ToList();
 
 
-        //searchCandidate = e.Value.ToString();
-    }
 }

@@ -245,16 +245,15 @@ namespace XebecPortal.UI.Pages.Applicant
     {
         public int Id { get; set; }
         [Required]
-        public string Name { get; set; }
+        public string RefFirstName { get; set; }
         [Required]
-        public string Surname { get; set; }
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
+        public string RefLastName { get; set; }
         [Required]
         [Phone]
-        public string ContactNum { get; set; }
-
+        public string RefPhone { get; set; }
+        [Required]
+        [EmailAddress]
+        public string RefEmail { get; set; }
         public int AppUserId { get; set; }
         public IList<AppUser> AppUser { get; set; }
 
@@ -266,7 +265,7 @@ namespace XebecPortal.UI.Pages.Applicant
         public override bool Equals(object obj)
         {
             References test = (References)obj;
-            return string.Equals(this.ContactNum, test.ContactNum, StringComparison.OrdinalIgnoreCase) && string.Equals(this.Email, test.Email, StringComparison.OrdinalIgnoreCase) && string.Equals(this.Name, test.Name, StringComparison.OrdinalIgnoreCase) && string.Equals(this.Surname, test.Surname, StringComparison.OrdinalIgnoreCase);
+            return string.Equals(this.RefFirstName, test.RefFirstName, StringComparison.OrdinalIgnoreCase) && string.Equals(this.RefLastName, test.RefLastName, StringComparison.OrdinalIgnoreCase) && string.Equals(this.RefPhone, test.RefPhone, StringComparison.OrdinalIgnoreCase) && string.Equals(this.RefEmail, test.RefEmail, StringComparison.OrdinalIgnoreCase);
         }
 
         public override string ToString()
@@ -295,6 +294,7 @@ namespace XebecPortal.UI.Pages.Applicant
         public string Gender { get; set; }
         [Required]
         public string Ethnicity { get; set; }
+        [Required]
         public int AppUserId { get; set; }
         public IList<AppUser> AppUser { get; set; }
     }
@@ -322,11 +322,22 @@ namespace XebecPortal.UI.Pages.Applicant
         public IList<AppUser> AppUser { get; set; }
     }
 
-    public class SkillsInformation
+    public class SkillsInformation : ICloneable
     {
         public int Id { get; set; }
         public string Description { get; set; }
         public int AppUserId { get; set; }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
+
+        public override bool Equals(object obj)
+        {
+            SkillsInformation test = (SkillsInformation)obj;
+            return string.Equals(this.Description, test.Description, StringComparison.OrdinalIgnoreCase);
+        }
     }
 
     public class SkillBank
