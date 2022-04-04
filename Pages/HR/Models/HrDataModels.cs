@@ -338,4 +338,19 @@ namespace XebecPortal.UI.Pages.HR
         public string Body { get; set; }
     }
 
+    public class HrEmailModel
+    {
+        public string CandidateName { get; set; }
+
+        public string CandidateSurname { get; set; }
+
+        public string AuthorizerEmail { get; set; }
+
+        public string Phase { get; set; }
+
+        public string Job { get; set; }
+
+        public string DateTime { get; set; }
+    }
+
 }
