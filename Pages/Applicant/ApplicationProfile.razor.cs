@@ -36,8 +36,10 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool loadInfo;
 
         private List<WorkHistory> workHistoryList = new();
+        private List<WorkHistory> addworkHistoryList = new();
         private WorkHistory workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         private List<Education> educationList = new();
+        private List<Education> addEducationList = new();
         private Education education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         private ProfilePortfolioLink profilePortfolio = new();
         private List<ProfilePortfolioLink> profilePortfolioList = new();
@@ -48,8 +50,10 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private References references = new();
         private List<References> referencesList = new();
+        private List<References> addReferencesList = new();
 
         private List<SkillsInformation> selectedSkillsList1 = new();
+        private List<SkillsInformation> addselectedSkillsList = new();
         SkillsInformation skillInfo = new SkillsInformation();
 
         private IList<SkillBank> apiSkills = new List<SkillBank>();
@@ -71,36 +75,105 @@ namespace XebecPortal.UI.Pages.Applicant
 
         // This is used to place the information into the lists, if the user still exists
         private IList<WorkHistory> workHistories { get; set; }
+        private IList<PersonalInformation> personalInfoHistory { get; set; }
+        private IList<AdditionalInformation> additionalInfoHistory { get; set; }        
         private IList<Education> educationHistory { get; set; }
         private IList<ProfilePortfolioLink> profilePortfolioInfo { get; set; }
         private IList<References> referencesHistory{ get; set; }
         private IList<SkillsInformation> skillHistory { get; set; }
+
+        private bool newPersonalInfo = false;
+        private bool newAdditionalInfo = false;
+        private bool newWorkHistoryInfo = false;
+        private bool newEduInfo = false;
+        private bool newSkillInfo = false;
+        private bool newRefInfo = false;
+        private bool newPortFolioInfo = false;
+
+
+        /* 
+         Changes that need to be made:
+
+         When adding new info, there is a problem with deleting it immediately... ()
+        */
+
         protected override async Task OnInitializedAsync()
         {
             loadInfo = true;
-            
-            var test = personalInformation.Id;
-            Console.WriteLine("personalInfo.ID " + test );
-            Console.WriteLine("Appuser ID" + state.AppUserId );
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/ApplicationProfile.js");
-            personalInformation = await httpClient.GetFromJsonAsync<PersonalInformation>($"https://xebecapi.azurewebsites.net/api/PersonalInformation/{state.AppUserId}");
-            //additionalInformation = await httpClient.GetFromJsonAsync<AdditionalInformation>($"https://xebecapi.azurewebsites.net/api/AdditionalInformation/{state.AppUserId}"); This will work once everything has been sorted in the DB side HOPEFULLY
-             
-            //Need to find a way to add these info into the list
-            workHistories = await httpClient.GetFromJsonAsync<List<WorkHistory>>($"https://xebecapi.azurewebsites.net/api/WorkHistory/");
-            workHistoryList = workHistories.Where(x => x.AppUserId == state.AppUserId).ToList();
+            try
+            {               
+               
 
-            educationHistory = await httpClient.GetFromJsonAsync<List<Education>>("https://xebecapi.azurewebsites.net/api/Education");
-            educationList = educationHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
+                //The following code allows the Lists to be populated with existing information
 
-            skillHistory = await httpClient.GetFromJsonAsync<List<SkillsInformation>>("https://xebecapi.azurewebsites.net/api/Skill");
-            selectedSkillsList1 = skillHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
+                personalInfoHistory = await httpClient.GetFromJsonAsync<List<PersonalInformation>>($"https://xebecapi.azurewebsites.net/api/PersonalInformation");
+                personalInformationList = personalInfoHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
 
-            referencesHistory = await httpClient.GetFromJsonAsync<List<References>>("https://xebecapi.azurewebsites.net/api/Reference");
-            referencesList = referencesHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
+                if (personalInformationList.Count == 0)
+                {
+                    newPersonalInfo = true;
+                }
+                else
+                {
+                    foreach (var item in personalInformationList)
+                    {
+                        personalInformation = item;
+                    }
+                }
+                
 
-            profilePortfolioInfo = await httpClient.GetFromJsonAsync<List<ProfilePortfolioLink>>("https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink");
-            profilePortfolioList = profilePortfolioInfo.Where(x => x.AppUserId == state.AppUserId).ToList();
+                additionalInfoHistory = await httpClient.GetFromJsonAsync<List<AdditionalInformation>>($"https://xebecapi.azurewebsites.net/api/AdditionalInformation");
+                additionalInfoList = additionalInfoHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
+                Console.WriteLine("additionalInfoList.Count " + additionalInfoHistory.Count);
+                Console.WriteLine("additionalInfoList.Count " + additionalInfoList.Count);
+                if (additionalInfoList.Count == 0)
+                {
+                    newAdditionalInfo = true;
+                }
+                else
+                {
+                    foreach (var item in additionalInfoList)
+                    {
+                        Console.WriteLine("Addintional info count: " + additionalInfoList.Count);
+                        Console.WriteLine("Additional ID " + item.Id);
+                        additionalInformation = item;
+                    }
+                }
+                
+
+                workHistories = await httpClient.GetFromJsonAsync<List<WorkHistory>>($"https://xebecapi.azurewebsites.net/api/WorkHistory");
+                workHistoryList = workHistories.Where(x => x.AppUserId == state.AppUserId).ToList();
+
+                educationHistory = await httpClient.GetFromJsonAsync<List<Education>>($"https://xebecapi.azurewebsites.net/api/Education");
+                educationList = educationHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
+
+                skillHistory = await httpClient.GetFromJsonAsync<List<SkillsInformation>>($"https://xebecapi.azurewebsites.net/api/Skill");
+                selectedSkillsList1 = skillHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
+
+                referencesHistory = await httpClient.GetFromJsonAsync<List<References>>($"https://xebecapi.azurewebsites.net/api/Reference");
+                referencesList = referencesHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
+
+                profilePortfolioInfo = await httpClient.GetFromJsonAsync<List<ProfilePortfolioLink>>($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink");
+                profilePortfolioList = profilePortfolioInfo.Where(x => x.AppUserId == state.AppUserId).ToList();
+
+                if (profilePortfolioList.Count == 0)
+                {
+                    newPortFolioInfo = true;
+                }
+                else
+                {
+                    foreach (var item in profilePortfolioList)
+                    {
+                        profilePortfolio = item;
+                    }
+                }
+                
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error at pulling information from API " + e);
+            }
 
             //selectedSkillsList1 = await httpClient.GetFromJsonAsync<List<SkillsInformation>>($"https://xebecapi.azurewebsites.net/api/WorkHistory/{state.AppUserId}");
 
@@ -118,14 +191,17 @@ namespace XebecPortal.UI.Pages.Applicant
             //request.AddHeader("Authorization", "Bearer <ACCESS_TOKEN>");
             //IRestResponse response = client.Execute(request);
 
-
-            //Console.WriteLine("apiskills count: " + apiSkills.Count());
-            //Console.WriteLine("test array count: " + test.Count());           
             progressCheck();
             completion();
             loadInfo = false;
         }
        
+
+        private void loadUserInformation()
+        {
+
+        }
+
         private string skillWarning = "";
         private bool warning;
 
@@ -192,20 +268,36 @@ namespace XebecPortal.UI.Pages.Applicant
         //    }
         //}
 
-        private void addToSelectedInfo()
+        private async Task addToSelectedInfo()
         {
             selectedSkillsList1.Add(new()
             {
                 Description = skillInfo.Description,
                 AppUserId = state.AppUserId,
             });
+            // This list is mainly used for POST requests as soon as the info is added
+            addselectedSkillsList.Add(new()
+            {
+                Description = skillInfo.Description,
+                AppUserId = state.AppUserId,
+            });
+
+            foreach (var item in addselectedSkillsList)
+            {
+                await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/Skill", item);                
+            }
+            await OnInitializedAsync();
+            addselectedSkillsList.Clear(); // it immediately gets cleared after the POST.
             skillInfo = new();
         }
 
 
-        private void removeFromSelectedInfo(SkillsInformation info)
+        private async Task removeFromSelectedInfo(SkillsInformation info)
         {
             selectedSkillsList1.RemoveAll(x => x.Description.Equals(info.Description));
+            Console.WriteLine("SKill ID " + info.Id);
+            await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/Skill/{info.Id}");
+            await OnInitializedAsync();
             skillInfo = new();
             skillEditMode = false;
             if (selectedSkillsList1.Count == 0)
@@ -222,11 +314,16 @@ namespace XebecPortal.UI.Pages.Applicant
             skillTemp = (SkillsInformation)skillInfo.Clone();
         }
 
-        private void SaveSkill(SkillsInformation skillValue)
+        private async Task SaveSkill(SkillsInformation skillValue)
         {
             skillEditMode = false;
             int index = selectedSkillsList1.FindIndex(x => x.Equals(skillValue));
             selectedSkillsList1[index] = skillInfo;
+            foreach (var item in selectedSkillsList1)
+            {
+                await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/Skill/{skillValue.Id}", item);                
+            }
+            await OnInitializedAsync();
             skillInfo = new();
         }
 
@@ -241,34 +338,56 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private void AddPersonalInformation()
         {
-            personalInformationList.Add(new()
+            if (newPersonalInfo && newAdditionalInfo)
             {
+                personalInformationList.Add(new()
+                {
+                    FirstName = personalInformation.FirstName,
+                    LastName = personalInformation.LastName,
+                    PhoneNumber = personalInformation.PhoneNumber,
+                    IdNumber = personalInformation.IdNumber,
+                    Email = personalInformation.Email,
+                    Address = personalInformation.Address,
+                    AppUserId = state.AppUserId,
+                });
 
-                FirstName = personalInformation.FirstName,
-                LastName = personalInformation.LastName,
-                PhoneNumber = personalInformation.PhoneNumber,
-                IdNumber = personalInformation.IdNumber,
-                Email = personalInformation.Email,
-                Address = personalInformation.Address,
-                AppUserId = state.AppUserId,
-            });
+                additionalInfoList.Add(new()
+                {
 
-            additionalInfoList.Add(new()
+                    Disability = "No",
+                    Gender = additionalInformation.Gender,
+                    Ethnicity = additionalInformation.Ethnicity,
+                    AppUserId = state.AppUserId,
+                });
+            }
+            else
             {
+                personalInformationList.Add(new()
+                {
+                    Id = personalInformation.Id,
+                    FirstName = personalInformation.FirstName,
+                    LastName = personalInformation.LastName,
+                    PhoneNumber = personalInformation.PhoneNumber,
+                    IdNumber = personalInformation.IdNumber,
+                    Email = personalInformation.Email,
+                    Address = personalInformation.Address,
+                    AppUserId = state.AppUserId,
+                });
 
-                Disability = "No",
-                Gender = additionalInformation.Gender,
-                Ethnicity = additionalInformation.Ethnicity,
-                AppUserId = state.AppUserId,
-            });
+                additionalInfoList.Add(new()
+                {
+                    Id = additionalInformation.Id,
+                    Disability = "No",
+                    Gender = additionalInformation.Gender,
+                    Ethnicity = additionalInformation.Ethnicity,
+                    AppUserId = state.AppUserId,
+                });
+            }
+            
         }
 
-        private void AddReferences()
+        private async Task AddReferences()
         {
-           // var validCheck = referencesList.FindAll(r => r.Name.Equals(references.Name) && string.Equals(r.Surname, references.Surname, StringComparison.OrdinalIgnoreCase) && string.Equals(r.Email, references.Email, StringComparison.OrdinalIgnoreCase) && string.Equals(r.ContactNum, references.ContactNum, StringComparison.OrdinalIgnoreCase));
-
-            //var emptyCheck = referencesList.FindAll(r => string.IsNullOrEmpty(r.Name) || string.IsNullOrEmpty(r.Surname) || string.IsNullOrEmpty(r.Email) || string.IsNullOrEmpty(r.ContactNum));
-
             referencesList.Add(new()
             {                
                 RefFirstName = references.RefFirstName,
@@ -277,17 +396,37 @@ namespace XebecPortal.UI.Pages.Applicant
                 RefEmail = references.RefEmail,                
                 AppUserId = state.AppUserId,
             });
+
+            addReferencesList.Add(new()
+            {
+                RefFirstName = references.RefFirstName,
+                RefLastName = references.RefLastName,
+                RefPhone = references.RefPhone,
+                RefEmail = references.RefEmail,
+                AppUserId = state.AppUserId,
+            });
+
+            foreach (var item in addReferencesList)
+            {
+                await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/Reference", item);
+            }
+            await OnInitializedAsync();
+            addReferencesList.Clear();
             references = new();
         }
 
         private References tempRef;
 
-        private void Save(References referenceValues)
+        private async Task Save(References referenceValues)
         {
             editMode = false;
-            Logger.LogInformation("Valid submit called");
             int index = referencesList.FindIndex(x => x.Equals(referenceValues));
             referencesList[index] = references;
+            foreach (var item in referencesList)
+            {
+                await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/Reference/{referenceValues.Id}", item);                
+            }
+            await OnInitializedAsync();
             references = new();
         }
 
@@ -297,18 +436,14 @@ namespace XebecPortal.UI.Pages.Applicant
             referencesList[index] = tempRef;
             references = new();
             editMode = false;
-
         }
 
-        private void DeleteReference(References referenceValues)
+        private async Task DeleteReference(References referenceValues)
         {
-            Console.WriteLine("Name " + referenceValues.RefFirstName);
-            Console.WriteLine("Last Name " + referenceValues.RefLastName);
-            Console.WriteLine("Phone " + referenceValues.RefPhone);
-            Console.WriteLine("Email " + referenceValues.RefEmail);
-
             referencesList.RemoveAll(x => x.Equals(referenceValues));
-            referencesList = new();
+            await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/Reference/{referenceValues.Id}");
+            await OnInitializedAsync();
+            references = new();
             editMode = false;
             if (referencesList.Count == 0)
             {
@@ -323,16 +458,11 @@ namespace XebecPortal.UI.Pages.Applicant
             int index = referencesList.FindIndex(x => x.Equals(referenceValues));
             references = referencesList[index];
             tempRef = (References)references.Clone();
-
-            Console.WriteLine("Name " + referenceValues.RefFirstName);
-            Console.WriteLine("Last Name " + referenceValues.RefLastName);
-            Console.WriteLine("Phone " + referenceValues.RefPhone);
-            Console.WriteLine("Email " + referenceValues.RefEmail);
         }
 
         private WorkHistory tempWorkHistory;
 
-        private void addWorkHistoryTest()
+        private async Task addWorkHistoryTest()
         {
             workHistoryList.Add(new()
             {
@@ -343,12 +473,31 @@ namespace XebecPortal.UI.Pages.Applicant
                 EndDate = workHistory.EndDate,
                 Description = workHistory.Description
             });
+
+            addworkHistoryList.Add(new()
+            {
+                AppUserId = state.AppUserId,
+                CompanyName = workHistory.CompanyName,
+                JobTitle = workHistory.JobTitle,
+                StartDate = workHistory.StartDate,
+                EndDate = workHistory.EndDate,
+                Description = workHistory.Description
+            });
+
+            foreach (var item in addworkHistoryList)
+            {                
+                await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/WorkHistory", item);
+            }
+            await OnInitializedAsync();
+            addworkHistoryList.Clear();
             workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         }
 
-        private void DeleteWorkHistory(WorkHistory workHistoryValues)
+        private async Task DeleteWorkHistory(WorkHistory workHistoryValues)
         {            
             workHistoryList.RemoveAll(x => x == (workHistoryValues));
+            await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/WorkHistory/{workHistoryValues.Id}");
+            await OnInitializedAsync();
             workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             workHistUpdate = false;
             workEditMode = false;
@@ -356,7 +505,6 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 workProgressVal = true;
             }
-
         }
 
         private void SelectWorkHistory(WorkHistory workHistoryValues)
@@ -395,11 +543,16 @@ namespace XebecPortal.UI.Pages.Applicant
         //        return "background: #49E5EF;backdrop - filter: blur(5.6px);-webkit-backdrop-filter: blur(5.6px); border: 1px solid rgba(255, 255, 255, 0.04); min-height:15vh; overflow-y: auto;";
         //    return "";
         //}
-        private void SaveWorkHistory(WorkHistory workHistoryValues)
+        private async Task SaveWorkHistory(WorkHistory workHistoryValues)
         {
             workEditMode = false;
             int index = workHistoryList.FindIndex(x => x.Equals(workHistoryValues));
             workHistoryList[index] = workHistory;
+            foreach (var item in workHistoryList)
+            {
+                await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/WorkHistory/{workHistoryValues.Id}", item);
+            }
+            await OnInitializedAsync();
             workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         }
 
@@ -411,25 +564,8 @@ namespace XebecPortal.UI.Pages.Applicant
             workEditMode = false;
         }
 
-        private async Task UpdateWorkHistory(WorkHistory workHistoryValues)
-        {
-            if (await _jsModule.InvokeAsync<bool>("WorkHistory"))
-            {
-                int index = workHistoryList.FindIndex(x => x.Id == workHistoryValues.Id);
-                workHistoryList[index] = workHistoryValues;
-                workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
-                workHistUpdate = false;
-            }
-        }
-
-        private void PopulateWorkHistory(int id)
-        {
-            workHistory = workHistoryList.FirstOrDefault(x => x.Id == id);
-            workHistUpdate = true;
-        }
-
         private Education tempEducation;
-        private void AddEducationTakeTwo()
+        private async Task AddEducationTakeTwo()
         {
             educationList.Add(new()
             {
@@ -439,12 +575,29 @@ namespace XebecPortal.UI.Pages.Applicant
                 StartDate = education.StartDate,
                 EndDate = education.EndDate,
             });
+            addEducationList.Add(new()
+            {
+                AppUserId = state.AppUserId,
+                Insitution = education.Insitution,
+                Qualification = education.Qualification,
+                StartDate = education.StartDate,
+                EndDate = education.EndDate,
+            });
+
+            foreach (var item in addEducationList)
+            {
+                await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/Education", item);
+            }
+            addEducationList.Clear();
+            await OnInitializedAsync();
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         }
 
-        private void DeleteEducation(Education educationValues)
+        private async Task DeleteEducation(Education educationValues)
         {
             educationList.RemoveAll(x => x.Equals(educationValues));
+            await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/Education/{educationValues.Id}");
+            await OnInitializedAsync();
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             eduUpdate = false;
             eduEditMode = false;
@@ -463,11 +616,16 @@ namespace XebecPortal.UI.Pages.Applicant
             tempEducation = (Education)education.Clone();
         }
 
-        private void SaveEducation(Education educationValues)
+        private async Task SaveEducation(Education educationValues)
         {
             eduEditMode = false;
             int index = educationList.FindIndex(x => x.Equals(educationValues));
             educationList[index] = education;
+            foreach (var item in educationList)
+            {
+                await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/Education/{educationValues.Id}", item);
+            }
+            await OnInitializedAsync();
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         }
 
@@ -479,23 +637,7 @@ namespace XebecPortal.UI.Pages.Applicant
             eduEditMode = false;
         }
 
-        private async Task UpdateEducation(Education educationValues)
-        {
-            if (await _jsModule.InvokeAsync<bool>("Education"))
-            {
-                int index = educationList.FindIndex(x => x.Id == educationValues.Id);
-                educationList[index] = educationValues;
-                education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
-                eduUpdate = false;
-            }
-        }
-
-        private void PopulateEducation(int id)
-        {
-            education = educationList.FirstOrDefault(x => x.Id == id);
-            eduUpdate = true;
-        }
-
+        
         private void StartDateCheck()
         {
             workHistory.StartDate = workHistory.StartDate > workHistory.EndDate ? workHistory.EndDate : workHistory.StartDate;
@@ -510,14 +652,29 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private void AddProfilePortfolio()
         {
-            profilePortfolioList.Add(new()
+            if (newPortFolioInfo)
             {
-                GitHubLink = profilePortfolio.GitHubLink,
-                LinkedInLink = profilePortfolio.LinkedInLink,
-                TwitterLink = profilePortfolio.TwitterLink,
-                PersonalWebsiteUrl = profilePortfolio.PersonalWebsiteUrl,
-                AppUserId = state.AppUserId,
-            });
+                profilePortfolioList.Add(new()
+                {
+                    GitHubLink = profilePortfolio.GitHubLink,
+                    LinkedInLink = profilePortfolio.LinkedInLink,
+                    TwitterLink = profilePortfolio.TwitterLink,
+                    PersonalWebsiteUrl = profilePortfolio.PersonalWebsiteUrl,
+                    AppUserId = state.AppUserId,
+                });
+            }
+            else
+            {
+                profilePortfolioList.Add(new()
+                {
+                    Id = profilePortfolio.Id,
+                    GitHubLink = profilePortfolio.GitHubLink,
+                    LinkedInLink = profilePortfolio.LinkedInLink,
+                    TwitterLink = profilePortfolio.TwitterLink,
+                    PersonalWebsiteUrl = profilePortfolio.PersonalWebsiteUrl,
+                    AppUserId = state.AppUserId,
+                });
+            }            
         }
 
         private async Task Submit()
@@ -527,34 +684,41 @@ namespace XebecPortal.UI.Pages.Applicant
             // test if this will work, otherwise a for each is required
             foreach (var item in personalInformationList)
             {
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/PersonalInformation", item);
+                if (newPersonalInfo)
+                {
+                    await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/PersonalInformation", item);
+                }
+                else
+                {
+                    await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/PersonalInformation/{item.Id}", item);
+                }
+                
             }
             foreach (var item in additionalInfoList)
             {
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/AdditionalInformation", item);
-            }            
+                Console.WriteLine("Additional Info List count " + additionalInfoList.Count);
+                Console.WriteLine("Additional Info List ID's " + item.Id);
+                if (newAdditionalInfo)
+                {
+                    await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/AdditionalInformation", item);
+                }
+                else
+                {
+                    await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/AdditionalInformation/{item.Id}", item);
+                }
 
-            foreach (var item in workHistoryList)
-            {
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/WorkHistory", item);
-            }
-            foreach (var item in educationList)
-            {
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Education", item);
-            }
-            foreach (var item in referencesList)
-            {
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Reference", item);
-            }
-
-            foreach (var item in selectedSkillsList1)
-            {
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Skill", item);
             }
 
             foreach (var item in profilePortfolioList)
-            {
-                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink", item);
+            {                
+                if (newPortFolioInfo)
+                {
+                    await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink", item);
+                }
+                else
+                {
+                    await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink/{item.Id}", item);
+                }
             }
 
             //if (await _jsModule.InvokeAsync<bool>("PersonalInformation"))

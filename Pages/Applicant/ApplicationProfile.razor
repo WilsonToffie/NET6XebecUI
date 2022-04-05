@@ -849,25 +849,59 @@
                                         </div>
                                         <div class="col-4">
                                             <label class="form-label" for="ethnicity">Ethnicity</label>
-                                            <select id="ethnicity" class="form-select shadow bg-body rounded" @bind="additionalInformation.Ethnicity" @onfocusout="completion">
+                                            <InputSelect id="ethnicity" class="form-select shadow bg-body rounded" @bind-Value="additionalInformation.Ethnicity" @onfocusout="completion">
                                                 <!--@onfocusout="completion" -->
-                                                <option value="" disabled selected>Ethnicity</option>
-                                                <option value="African">African</option>
-                                                <option value="Asain">Asain</option>
-                                                <option value="Coloured">Coloured</option>
-                                                <option value="Indian">Indian</option>
-                                                <option value="White">White</option>
-                                            </select>
+
+                                                @if (newAdditionalInfo)
+                                                {
+                                                    <option value="" disabled selected>Ethnicity</option>
+                                                    <option value="African">African</option>
+                                                    <option value="Asain">Asain</option>
+                                                    <option value="Coloured">Coloured</option>
+                                                    <option value="Indian">Indian</option>
+                                                    <option value="White">White</option>
+                                                }
+                                                else
+                                                {
+                                                    @foreach (var item in additionalInfoList)
+                                                    {
+                                                        <option value="@item.Ethnicity" selected>@item.Ethnicity</option>
+                                                        <option value="African">African</option>
+                                                        <option value="Asain">Asain</option>
+                                                        <option value="Coloured">Coloured</option>
+                                                        <option value="Indian">Indian</option>
+                                                        <option value="White">White</option>
+                                                    }
+
+                                                }                                                
+                                            </InputSelect>
                                         </div>
                                         <div class="col-4">
                                             <label class="form-label" for="gender">Gender</label>
-                                            <select id="gender" class="form-select shadow bg-body rounded" @bind="additionalInformation.Gender" @onfocusout="completion">
+                                            <InputSelect id="gender" class="form-select shadow bg-body rounded" @bind-Value="additionalInformation.Gender" @onfocusout="completion">
                                                 <!--@onfocusout="completion" -->
-                                                <option value="" disabled selected>Select Gender</option>
-                                                <option value="Male">Male</option>
-                                                <option value="Female">Female</option>
-                                                <option value="PreferNotToAnswer">Prefer not to answer</option>
-                                            </select>
+                                                @if (newAdditionalInfo)
+                                                {
+                                                    <option value="" disabled selected>Select Gender</option>
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                    <option value="Prefer Not To Answer">Prefer not to answer</option>
+                                                }
+                                                else
+                                                {
+                                                    @foreach (var item in additionalInfoList)
+                                                    {
+                                                        <option value="@item.Gender" selected>@item.Gender</option>
+                                                        <option value="Male">Male</option>
+                                                        <option value="Female">Female</option>
+                                                        <option value="Prefer Not To Answer">Prefer not to answer</option>
+                                                    }
+
+                                                }
+
+
+
+                                            </InputSelect>
                                         </div>
                                     </div>
                                     <div class="row p-3">
@@ -936,8 +970,6 @@
                                                         {
                                                             <button class="btn formButton" style="height: 10vh; width: 90%;" type="submit" value="Add">Add</button>
                                                         }
-
-
                                                     </div>
                                                 </div>
                                             </div>
@@ -971,7 +1003,6 @@
                                                     }
                                                 }
                                                 <!--To display to the user which card has been chosen-->
-
                                             </div>
                                         </div>
                                     </div>
@@ -1332,9 +1363,10 @@
 </div>
 @if (loadInfo)
 {
-    <div class="appform-submit-modal">
-        <MudProgressCircular Class="loading-icon" Size="Size.Large" Indeterminate="true" />
+    <div class="appform-submit-modal" >
+        <MudProgressCircular Color="Color.Info" Style="height:140px; width:140px;" Indeterminate="true" />
     </div>
+    
 }
 @code {
 
