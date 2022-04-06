@@ -1,0 +1,427 @@
+﻿@page "/services"
+@inject NavigationManager navmanager
+@inject HttpClient HttpClient
+@using System.Linq
+@using XebecPortal.UI.Shared.Home.Models
+@using Microsoft.AspNetCore.Components;
+@inject IJSRuntime JsRuntime
+
+<style>
+
+    .services-bottom-applicants {
+        height: 10vh;
+        width: 98%;
+        margin: auto;
+        background-color: white;
+        color: #00bcae;
+        border: solid white 0.1em;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
+        border-radius: 1em;
+        line-height: 10vh;
+        font-size: 1.3em;
+        font-family: opensans-condensed-light;
+        font-weight: 900;
+        text-align: center;
+    }
+
+    ul li {
+        padding-top: 1em;
+    }
+
+    .services-bottom-hr {
+        height: 20vh;
+        width: 98%;
+        margin: auto;
+        background-color: white;
+        border: solid white 0.1em;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
+        color: #00bcae;
+        border-radius: 1em;
+        line-height: 2.5vh;
+        padding-left: 1em;
+        font-size: 1.3em;
+        font-family: opensans-condensed-light;
+        font-weight: 900;
+        text-align: center;
+    }
+
+    .applicant-bottom-text {
+        height: 35vh;
+        background-color: white;
+        font-family: opensans-condensed-light;
+    }
+   
+    /*
+        FROM HERE 
+    */
+    .overlay-services {
+        margin-top: 0;
+        padding-top: 0;
+        height: 90vh;
+        width: 100%;
+        display: flex;
+    }
+    .services-navigation{
+        height: 90vh;
+        width: 5vw;
+        text-align: center;
+    }
+    .services-icons {
+        color: rgba(0,0,0,0.2);
+        font-size: 4vw;
+        margin-top: 30vh;
+    }
+        .services-icons:hover {
+            color: #00bcae;
+        }
+    .services-icon-hover {
+        color: #00bcae;
+        font-size: 50px;
+    }
+    .services-middle-navigation {
+        height: 87vh;
+        width: 90vw;
+    }  
+    .services-main-div {
+        height: 85vh;
+        width: 100%;
+        margin-bottom: 0;
+    }
+    .services-middle-circles{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 5vh;
+        margin-top: -3vh;
+        width: 90vw;
+    }
+    .services-circle {
+        height: 2vh;
+        width: 20px;
+        margin-right: 10px;
+        background-color: transparent;
+        border-bottom: rgba(0,0,0,0.2) solid 0.2em;
+    }
+    .services-circle-selected {
+        height: 2vh;
+        width: 20px;
+        margin-right: 10px;
+        background-color: transparent;
+        border-bottom: black solid 0.2em;
+    }
+    .services-applicant {
+        height: 85vh;
+        width: 90vw;
+    }
+    .services-applicant-top{
+        height: 10vh;
+        width: 90vw;
+        text-align: center;
+    }
+    .services-applicant-label{
+        font-family: opensans-condensed-bold;
+        font-size: 25px;
+        height: 10vh;
+        line-height: 10vh;
+        color: #00bcae;
+        text-transform: uppercase;
+    }
+    .services-applicant-bottom{
+        height: 65vh;
+        display: flex;
+        width: 90vw;
+    }
+    .services-applicant-bottom-div {
+        height: 65vh;
+        width: calc(90vw / 3);
+    }
+    .services-bottom-icon {
+        height: 20vh;
+        margin: auto;
+        width: 10vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .services-bottom-label {
+        height: 10vh;
+        width: 100%;
+        text-align: center;
+    }
+    .services-bottom-label-words {
+        height: 5vh;
+        line-height: 5vh;
+        font-family: opensans-condensed-light;
+        font-size: 1.25em;
+        font-weight: 900;
+        color: black;
+        text-transform: uppercase;
+    }
+    .services-bottom-words {
+        height: 25vh;
+        width: calc(90vw / 3);
+    }
+    .applicant-applicant-profile {
+        height: 10vh;
+        min-width: 5em;
+        background-image: url(/Img/upload.svg);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .applicant-job-portal {
+        height: 10vh;
+        min-width: 5em;
+        background-image: url(/Img/search.svg);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .applicant-my-jobs {
+        height: 10vh;
+        min-width: 5em;
+        background-image: url(/Img/saved.svg);
+        background-size: cover;
+        background-position: center;
+    }
+    .hr-job-portal {
+        height: 10vh;
+        min-width: 5em;
+        background-image: url(/Img/send.svg);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .hr-data-analytics {
+        height: 10vh;
+        min-width: 5em;
+        background-image: url(/Img/chart.svg);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .hr-create-a-job {
+        height: 10vh;
+        min-width: 5em;
+        background-image: url(/Img/paper.svg);
+        background-size: cover;
+        background-position: center;
+    }
+    .services-job-portal{
+        height: 87vh;
+        width: 100%;
+    }
+    .overlay-services .hr-job-search-bar input[type="text"] {
+        background-color: white;
+        height: 5vh;
+        width: 100%;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
+        border: white solid 0.1em;
+        border-radius: 1em;
+    }
+</style>
+<div class="overlay-services" id="services">
+    <div class="services-navigation">
+        <i class="fas fa-angle-left services-icons" @onclick="GoLeft"></i>
+    </div>
+    <div class="services-middle-navigation">
+        <div class="services-main-div">
+            @if (applicant)
+            {
+                <div class="services-applicant">
+                    <div class="services-applicant-top">
+                        <h2 class="services-applicant-label">Applicant Services</h2>
+                    </div>
+                    <div class="services-applicant-bottom">
+                        <div class="services-applicant-bottom-div">
+                            <div class="services-bottom-icon">
+                                <div class="applicant-applicant-profile"></div>
+                            </div>
+                            <div class="services-bottom-label">
+                                <h4 class="services-bottom-label-words">Applicant Profile</h4>
+                            </div>
+                            <div class="services-bottom-words">
+                                <div class="services-bottom-applicants">
+                                    <p>Upload your CV to our AI built form processor</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="services-applicant-bottom-div">
+                            <div class="services-bottom-icon">
+                                <div class="applicant-job-portal"></div>
+                            </div>
+                            <div class="services-bottom-label">
+                                <h4 class="services-bottom-label-words">Job Portal</h4>
+                            </div>
+                            <div class="services-bottom-words">
+                                <div class="services-bottom-applicants">
+                                    <p>Search and apply for jobs </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="services-applicant-bottom-div">
+                            <div class="services-bottom-icon">
+                                <div class="applicant-my-jobs"></div>
+                            </div>
+                            <div class="services-bottom-label">
+                                <h4 class="services-bottom-label-words">My Jobs</h4>
+                            </div>
+                            <div class="services-bottom-words">
+                                <div class="services-bottom-applicants">
+                                    <p>Track the status of your applications</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (hrServices)
+            {
+                <div class="services-applicant">
+                    <div class="services-applicant-top">
+                        <h2 class="services-applicant-label">HR Services</h2>
+                    </div>
+                    <div class="services-applicant-bottom">
+                        <div class="services-applicant-bottom-div">
+                            <div class="services-bottom-icon">
+                                <div class="hr-job-portal"></div>
+                            </div>
+                            <div class="services-bottom-label">
+                                <h4 class="services-bottom-label-words">Job Portal</h4>
+                            </div>
+                            <div class="services-bottom-words">
+                                <div class="services-bottom-hr">
+                                    <ul>
+                                        <li>A display of all jobs created and advertised</li>
+                                        <li>Hosts a dedicated applicant control system</li>
+                                        <li>Hosts a dedicated applicant status control system</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="services-applicant-bottom-div">
+                            <div class="services-bottom-icon">
+                                <div class="hr-create-a-job"></div>
+                            </div>
+                            <div class="services-bottom-label">
+                                <h4 class="services-bottom-label-words">Job Creator</h4>
+                            </div>
+                            <div class="services-bottom-words">
+                                <div class="services-bottom-hr">
+                                    <ul>
+                                        <li>Data-driven insights for candidate selection</li>
+                                        <li>Charts based on KPI recruitment metrics</li>
+                                        <li>A summary of platform-based data</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="services-applicant-bottom-div">
+                            <div class="services-bottom-icon">
+                                <div class="hr-data-analytics"></div>
+                            </div>
+                            <div class="services-bottom-label">
+                                <h4 class="services-bottom-label-words">Data Analytics Dashboard</h4>
+                            </div>
+                            <div class="services-bottom-words">
+                                <div class="services-bottom-hr">
+                                    <ul>
+                                        <li>Create/Post a new job advert </li>
+                                        <li>Create a specialized application form</li>
+                                        <li>Select Collaborators and Phases for job advert</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (jobPortal)
+            {
+                <div class="services-job-portal">
+                    <XebecPortal.UI.Pages.Applicant.JobPortal />
+                </div>              
+            }
+
+        </div>
+        
+    </div>
+    
+    <div class="services-navigation">
+        <i class="fas fa-angle-right services-icons" @onclick="GoRight" ></i>
+    </div>
+
+</div>
+    
+@code {
+
+    private bool applicant = true;
+    private bool jobPortal = false;
+    private bool hrServices = false;
+    private bool LeftServiceIconChange = true;
+    private bool RightServiceIconChange = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ToJobPortal();
+        await Task.Delay(0);
+    }
+
+    private void ToApplicant()
+    {
+        applicant = true;
+        jobPortal = false;
+        hrServices = false;
+    }
+    private void ToJobPortal()
+    {
+        applicant = false;
+        jobPortal = true;
+        hrServices = false;
+    }
+    private void ToHR()
+    {
+        applicant = false;
+        jobPortal = false;
+        hrServices = true;
+    }
+    private void GoLeft()
+    {
+        if (applicant && !hrServices && !jobPortal)
+        {
+            ToJobPortal();
+        }
+        else if (hrServices && !applicant && !jobPortal)
+        {
+            ToApplicant();
+        }
+        else
+        {
+            ToHR();
+        }
+    }
+    private void GoRight()
+    {
+        if (applicant && !hrServices && !jobPortal)
+        {
+            ToHR();
+        }
+        else if (hrServices && !applicant && !jobPortal)
+        {
+            ToJobPortal();
+        }
+        else
+        {
+            ToApplicant();
+        }
+    }
+    private void LeftServiceIconHover()
+    {
+        LeftServiceIconChange = !LeftServiceIconChange;
+    }
+    private void RightServiceIconHover()
+    {
+        RightServiceIconChange = !RightServiceIconChange;
+    }
+}
