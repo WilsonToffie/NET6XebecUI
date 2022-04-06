@@ -17,6 +17,9 @@
 
     ::-webkit-scrollbar {
         width: 10px !important;
+        background-color: #004393 !important;
+        border-radius:20px !important;
+
     }
 
     ::-webkit-scrollbar-track {
@@ -25,12 +28,12 @@
     }
 
     ::-webkit-scrollbar-thumb {
-        background: #fff !important;
+        background: #f7f7f7 !important;
         border-radius: 5px !important;
     }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #00BCAE !important;
+            background: #f7f7f7 !important;
         }
 
     .hr-job-search-bar {
@@ -342,14 +345,15 @@
         top: 0;
         left: 0;
     }
+
 </style>
 
 <div class="container" style="height: 55vh; width: 100%;" hidden="@jobPortalIsHidden">
     <!--Search-Box-->
     <div style="height: 15vh">
-        <div class="hr-job-search-bar">
-            <input class="search-image hr-job-search-bar-input rounded-pill" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs" @oninput="SearchListJob" />
-        </div>
+        <div class="hr-job-search-bar"> 
+                <input class="search-image hr-job-search-bar-input rounded-pill" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs" @oninput="SearchListJob"/>
+            </div>
         <div class="row hr-job-filters">
             <div class="col-3">
                 <!--Location-->
@@ -546,7 +550,6 @@
                                                 break;
                                             case 5:
                                                 <select @bind="customquestion.Applicantanswer">
-                                                    <option value="" disabled selected>-</option>
                                                     <option value="yes">Yes</option>
                                                     <option value="no">No</option>
                                                 </select>

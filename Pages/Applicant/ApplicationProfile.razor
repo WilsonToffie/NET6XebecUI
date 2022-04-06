@@ -5,6 +5,7 @@
 @using Microsoft.Extensions.Logging
 @inject ILogger<ApplicationProfile>  Logger
 @inject UserState state
+@*@inject Blazored.LocalStorage.ILocalStorageService localStorage*@
 <style>
     .nav1 {
 
@@ -873,7 +874,7 @@
                                                         <option value="White">White</option>
                                                     }
 
-                                                }                                                
+                                                }
                                             </InputSelect>
                                         </div>
                                         <div class="col-4">
@@ -1363,10 +1364,10 @@
 </div>
 @if (loadInfo)
 {
-    <div class="appform-submit-modal" >
+    <div class="appform-submit-modal">
         <MudProgressCircular Color="Color.Info" Style="height:140px; width:140px;" Indeterminate="true" />
     </div>
-    
+
 }
 @code {
 
@@ -1419,7 +1420,8 @@
         {
             count = count + 3;
             workCount = 1;
-        }else if (workHistoryList.Count == 0 && workCount == 1)
+        }
+        else if (workHistoryList.Count == 0 && workCount == 1)
         {
             workCount = 0;
         }
