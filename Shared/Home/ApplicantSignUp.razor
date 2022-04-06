@@ -10,13 +10,14 @@
         width: 100%;
     }
 
-    .register-page{
+    .register-page {
         height: 90vh;
         width: 80%;
         margin-left: 10%;
         margin-right: 10%;
         display: flex;
     }
+
     .register-right {
         height: 70vh;
         background-color: white;
@@ -166,6 +167,8 @@
         opacity: 1;
         background-color: transparent;
         height: 10vh;
+        padding: 0;
+        margin: 0;
     }
 
     .index-form-login {
@@ -179,7 +182,7 @@
     .index-form-heading-1 {
         font-size: 3em;
         font-weight: 800;
-        height: 10vh;
+        height: 7vh;
         line-height: 10vh;
         color: black;
         font-family: opensans-condensed-bold;
@@ -260,8 +263,8 @@
 
     .forgotpassword {
         color: rgba(0, 188, 174,1);
-        width: 100%;
-        text-align: right;
+        width: auto;
+        text-align: center;
         height: 3vh;
         line-height: 3vh;
         font-size: 1em;
@@ -274,16 +277,9 @@
 
         .forgotpassword:hover {
             color: #d35bc9;
-            width: 100%;
-            text-align: right;
-            height: 3vh;
-            font-size: 1em;
-            font-weight: 800;
-            margin-bottom: 0;
-            padding-bottom: 0;
             cursor: pointer;
-            font-family: opensans-condensed-light;
         }
+
 
     .login-button-div {
         height: 5vh;
@@ -353,7 +349,19 @@
         font-weight: 900;
         font-family: opensans-bold;
     }
-   
+
+    .forgot-password {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .register-link {
+        height: 5vh;
+        display: flex;
+        justify-content: center;
+        padding-bottom: 2.5vh;
+        align-items: center;
+    }
 </style>
 <div class="overlay-register">
     <div class="register-page">
@@ -362,6 +370,10 @@
             <form class="index-form-register" style="margin-top: 10vh;">
                 <div class="form-group index-form-heading">
                     <h1 class="index-form-heading-1">REGISTER</h1>
+                    <h1 class="forgotpassword" @onclick="GoToHrSignup">Sign up as HR</h1>
+                </div>
+                <div class="register-link">
+
                 </div>
                 <div class="form-group index-form-group">
                     <div class="index-group-register">
@@ -442,6 +454,7 @@
                         <h1 class="index-form-heading-3">Submit pressed.</h1>
                     </div>
                 }
+
                 <div class="form-group login-button-div">
                     <input type="button" class="index-form-button" @onclick="Register" value="Submit" />
                 </div>
@@ -559,5 +572,10 @@
             }
         }
 
+    }
+
+    private async Task GoToHrSignup()
+    {
+        navmanager.NavigateTo("hrsignup");
     }
 }
