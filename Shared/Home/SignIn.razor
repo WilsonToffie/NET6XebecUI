@@ -3,9 +3,9 @@
 @inject HttpClient HttpClient
 @using System.Linq;
 @using XebecPortal.UI.Shared.Home.Models
-@inject UserState state 
+@inject UserState state
 @inject IJSRuntime JSRuntime
- 
+
 <style>
     .overlay-login {
         height: 90vh;
@@ -43,6 +43,8 @@
         opacity: 1;
         background-color: transparent;
         height: 10vh;
+        padding: 0;
+        margin: 0;
     }
 
     .index-form-login {
@@ -56,7 +58,7 @@
     .index-form-heading-1 {
         font-size: 3em;
         font-weight: 800;
-        height: 10vh;
+        height: 7vh;
         line-height: 10vh;
         color: black;
         font-family: opensans-condensed-bold;
@@ -135,7 +137,7 @@
         height: 3vh;
     }
 
-    
+
     .login-button-div {
         height: 5vh;
         display: flex;
@@ -192,7 +194,6 @@
         }
 
     .key-input-group input[type="text"] {
-        
         height: 15vh;
         width: 100%;
         margin-left: 3%;
@@ -205,10 +206,20 @@
         font-weight: 900;
         font-family: opensans-bold;
     }
-    .forgot-password{
+
+    .forgot-password {
         display: flex;
         justify-content: flex-end;
     }
+
+    .register-link {
+        height: 5vh;
+        display: flex;
+        justify-content: center;
+        padding-bottom: 2.5vh;
+        align-items: center;
+    }
+
     .forgotpassword {
         color: rgba(0, 188, 174,1);
         width: auto;
@@ -227,7 +238,6 @@
             color: #d35bc9;
             cursor: pointer;
         }
-
 </style>
 
 <div class="overlay-login" id="login">
@@ -238,7 +248,12 @@
                 {
                     <div class="form-group index-form-heading">
                         <h1 class="index-form-heading-1">SIGN IN</h1>
+                        <h1 class="forgotpassword" style="text-align: center;" @onclick="GoToSignup">Don't have an account? Sign Up</h1>
                     </div>
+                    <div class="register-link">
+
+                    </div>
+
                     <div class="form-group index-form-group index-group">
                         <div class="index-form-icon">
                             <i class="fa fa-user"></i>
@@ -252,7 +267,7 @@
                         <input type="password" placeholder="Password" @bind="@Password">
                     </div>
                     <div class="form-group forgot-password">
-                        <h1 class="forgotpassword" @onclick="GoToEmail">Forgot Password?</h1>
+                        <h1 class="forgotpassword" @onclick="GoToEmail" style="margin-left: 45px;">Forgot Password?</h1>
                     </div>
                     <div class="form-group index-form-or">
                         @if (invalidCredentials)
@@ -309,7 +324,7 @@
                 }
 
             </form>
-            </div>
+        </div>
         <div class="login-right"></div>
     </div>
 </div>
@@ -410,7 +425,7 @@
     {
         SubmitPressed = invalidCredentials = successfullLogin = false;
         LoginForm = true;
-        EmailForgotPasswordForm =  false;
+        EmailForgotPasswordForm = false;
         await Task.Delay(0);
     }
 
@@ -450,5 +465,9 @@
 
     }
 
+    private async Task GoToSignup()
+    {
+        navmanager.NavigateTo("applicantsignup");
+    }
+
 }
- 
