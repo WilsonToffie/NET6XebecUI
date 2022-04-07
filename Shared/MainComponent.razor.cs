@@ -90,9 +90,10 @@ namespace XebecPortal.UI.Shared
             hrCreateAJob = true;
         }
 
-        private void Logout()
+        private async Task Logout()
         {
             state.isLoggedIn = false;
+            await localStorage.RemoveItemAsync("jwt_token"); // This deletes the jwt token from the local storage on the browser
         }
 
         private static string GetMultiSelectionTextLocation(List<string> selectedValues)

@@ -233,13 +233,14 @@
         }
 
     .hr-job-search-bar-input {
-        padding-left: 3em !important;
-        background-color: white !important;
-        height: 6vh !important;
-        width: 100% !important;
-        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2) !important;
-        border: white solid 0.1em !important;
-        /*border-radius: 1em;*/
+        padding-left: 3em;
+        background-color: white;
+        height: 6vh;
+        width: 40%;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
+        border: white solid 0.1em;
+        margin-left:30%;
+        border-radius: 1em;
     }
 
         .hr-job-search-bar-input::placeholder {
@@ -263,33 +264,6 @@
         color: #00BCAE !important;
         text-align: center !important;
     }
-
-    .search-image {
-        padding-left: 20em;
-        background: url(/Img/search.svg) no-repeat left;
-        background-size: 30px;
-    }
-
-    .hr-job-search-bar-input {
-        z-index: -1;
-        border-radius: 1em;
-        padding-left: 3em;
-        background-color: white;
-        height: 6vh;
-        width: 100%;
-        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
-        border: white solid 0.1em;
-    }
-
-        .hr-job-search-bar-input::placeholder {
-            color: #666666;
-        }
-
-        .hr-job-search-bar-input:hover {
-            border-radius: 1em;
-            border: 0.1em solid black;
-        }
-
 
     .applicant-application-form {
         width: 100%;
@@ -347,14 +321,43 @@
         left: 0;
     }
 
+    .search-wrapper {
+        position: relative;
+        margin-top: 25px;
+        margin-bottom: 5px;
+    }
+
+    .search-wrapper img {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        margin-left: 30%
+    }
+    .search-pic{
+        width: 30px;
+        height: 30px;
+    }
+    .hr-job-search-bar-input {
+        padding-left: 3em;
+        background-color: white;
+        height: 6vh;
+        width: 40%;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
+        border: white solid 0.1em;
+        margin-left: 30%;
+        border-radius: 1em;
+    }
 </style>
 
 <div class="container" style="height: 55vh; width: 100%;" hidden="@jobPortalIsHidden">
     <!--Search-Box-->
     <div style="height: 15vh">
-        <div class="hr-job-search-bar"> 
-                <input class="search-image hr-job-search-bar-input rounded-pill" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs" @oninput="SearchListJob"/>
-            </div>
+        
+        <div class="search-wrapper">
+            <input class="hr-job-search-bar-input" placeholder="Search For Jobs" type="text" @oninput="SearchListJob" />
+             <img class="search-pic" src="/Img/search.svg"/>
+        </div>        
+
         <div class="row hr-job-filters">
             <div class="col-3">
                 <!--Location-->

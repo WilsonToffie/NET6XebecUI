@@ -18,6 +18,7 @@ using XebecPortal.UI.Pages.Model;
 using Microsoft.Extensions.Logging;
 using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Components;
+using XebecPortal.UI.Utils.Handlers;
 
 namespace XebecPortal.UI.Pages.Applicant
 {
@@ -90,7 +91,7 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool newRefInfo = false;
         private bool newPortFolioInfo = false;
 
-
+        private CustomHandler cust = new CustomHandler(new HttpClient());
         /* 
          Changes that need to be made:
 
@@ -99,38 +100,29 @@ namespace XebecPortal.UI.Pages.Applicant
         
         protected override async Task OnInitializedAsync()
         {
-            //var token = await localStorage.GetItemAsStringAsync("jwt_token");
-
-            //Console.WriteLine("The Token: " + token);
-            ////using (var HttpClient = new HttpClient())
-            ////{
-            //    var url = "https://xebecapi.azurewebsites.net/api/user/AllAuth";
-            //    httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-            //    // HttpClient.DefaultRequestHeaders.Add("Authorize", "Bearer", token);
-            //    //httpClient.DefaultRequestHeaders.Add("Authorize", token);
-            //    //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            //    var response = await httpClient.GetStringAsync(url);
-
-            //    Console.WriteLine(response);
-            ////}
-
-            //using (var request = new HttpRequestMessage(HttpMethod.Get, "https://xebecapi.azurewebsites.net/api/user/AllAuth"))
+            // var token = await localStorage.GetItemAsStringAsync("jwt_token");
+            
+            // Console.WriteLine(response);
+            //using (var HttpClient = new HttpClient())
             //{
-            //    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            //    var response = await httpClient.SendAsync(request);
-
-            //    Console.WriteLine(response);
-            //    //response.EnsureSuccessStatusCode();
-
-            //    // return await response.Content.ReadAsStringAsync();
-            //}
-
+            //    HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                
+             //httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer "+ token);
+             //httpClient.DefaultRequestHeaders.Add("Authorize", token);
+            // httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            //var response = await httpClient.GetStringAsync($"https://xebecapi.azurewebsites.net/api/user/AllAuth");
+            
+           // }
             loadInfo = true;
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/ApplicationProfile.js");
             try
-            {               
-               
-
+            {
+                //var testToken = await localStorage.GetItemAsStringAsync("jwt_token");
+                var token = await localStorage.GetItemAsync<string>("jwt_token");                
+                Console.WriteLine("The working Token: " + token);
+                //var response = await testJTW("https://xebecapi.azurewebsites.net/api/user/AllAuth",token);
+                var response = await cust.newwwwtestJTW("https://xebecapi.azurewebsites.net/api/user/AllAuth",token);
+                Console.WriteLine(response);
                 //The following code allows the Lists to be populated with existing information
 
                 personalInfoHistory = await httpClient.GetFromJsonAsync<List<PersonalInformation>>($"https://xebecapi.azurewebsites.net/api/PersonalInformation");
@@ -165,8 +157,7 @@ namespace XebecPortal.UI.Pages.Applicant
                         Console.WriteLine("Additional ID " + item.Id);
                         additionalInformation = item;
                     }
-                }
-                
+                }                
 
                 workHistories = await httpClient.GetFromJsonAsync<List<WorkHistory>>($"https://xebecapi.azurewebsites.net/api/WorkHistory");
                 workHistoryList = workHistories.Where(x => x.AppUserId == state.AppUserId).ToList();
@@ -221,8 +212,25 @@ namespace XebecPortal.UI.Pages.Applicant
             completion();
             loadInfo = false;
         }
-       
 
+        public async Task<string> testJTW(string apiEndpoint ,string Token)
+        {
+            // Can get token here to prevent devs from getting the token on their page
+
+            using (var request = new HttpRequestMessage(HttpMethod.Get, apiEndpoint))
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+                var response = await httpClient.SendAsync(request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("It was successfull");
+                }
+               // response.EnsureSuccessStatusCode();
+
+                return await response.Content.ReadAsStringAsync();
+            }
+        }
         private void loadUserInformation()
         {
 
