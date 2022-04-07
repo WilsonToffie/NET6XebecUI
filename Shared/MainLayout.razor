@@ -6,7 +6,6 @@
 @using XebecPortal.UI.Shared.Home.Models;
 
 <style>
-    /* index */
     .underlay {
         background-image: linear-gradient(rgba(0, 188, 174,0.05),rgba(0, 188, 174,0.05)),url(/Img/background.svg);
         height: 100vh;
@@ -14,132 +13,124 @@
         background-size: cover;
         background-attachment: fixed;
         background-position: center;
+        scroll-margin: 1vw;
+        overflow-y: auto;
+        position: absolute;
+        z-index: 0;
     }
 
     .overlay {
+        top: 10vh;
         height: 90vh;
-        width: 100%;
+        width: 100vw;
+        position: relative;
+        z-index: 0;
     }
 
-    .overlay-nav {
+    .underlay::-webkit-scrollbar {
+        width: 1vw;
         background-color: white;
-        height: 10vh;
-        padding-top: 4vh;
-        width: 100%;
-        text-align: center;
+        z-index: 0;
     }
 
-    /*nav*/
+    .underlay::-webkit-scrollbar-thumb {
+        width: 1vw;
+        background-color: #808080;
+        z-index: 0;
+    }
+    .underlay::-webkit-scrollbar-track {
+        width: 1vw;
+        background-color: white;
+        z-index: 0;
+    }
+    .nav {
+        background-color: white;
+        top: 0vh;
+        height: 10vh;
+        width: 100vw;
+        position: fixed;
+        z-index: 1;
+    }
+
+    .mainlayout-xebec-heading {
+        height: 10vh;
+        width: 90px;
+        margin-left: 15px;
+    }
+
+    .mainlayout-xebec-logo {
+        height: 10vh;
+        min-width: 100%;
+        background-image: url(/Img/xebeclogoblack.png);
+        background-size: cover;
+        background-position: center;
+    }
+
     .nav-buttons {
-        width: 100%;
-        height: inherit;
+        margin-top: 2.5vh;
+        height: 5vh;
+        font-size: 1em;
+        font-family: opensans-condensed-bold;
+        color: #004393;
         background-color: transparent;
         border: none;
         border-radius: 1em;
-        color: #00bcae;
-        font-size: 1em;
-        font-family: opensans-condensed-bold;
+        width: 70%;
+        margin-left: 15%;
+        margin-right: 15%;
     }
 
     .nav-buttons-pressed {
-        width: 100%;
-        height: inherit;
-        background-color: #d35bc9;
-        border: none;
-        border-radius: 1em;
-        color: white;
-        font-family: opensans-condensed-light;
-        font-size: 1em;
-    }
-
-    .underlay-nav {
-        position: absolute;
-        top: 10vh;
-        z-index: 2;
+        margin-left: 15%;
+        margin-right: 15%;
+        width: 70%;
+        margin-top: 2.5vh;
         height: 5vh;
-        width: 101vw;
-    }
-
-    .sign-up-modal-div {
-        height: 5vh;
-        width: 35%;
-        margin-left: 7.5%;
-        margin-right: 7.5%;
-    }
-
-    .sign-up-modal {
-        margin-top: 2vh;
-        height: 5vh;
-        border-radius: 1em;
-        z-index: 2;
-        display: flex;
-    }
-
-    .modal-nav-buttons {
-        width: 100%;
-        height: 5vh;
-        text-align: center;
-        line-height: 5vh;
         background-color: #00bcae;
         border: none;
         border-radius: 1em;
         color: white;
-        font-size: 1em;
         font-family: opensans-condensed-bold;
+        font-size: 1em;
     }
-
-        .modal-nav-buttons:hover {
-            background-color: #d35bc9;
-            border: none;
-            border-radius: 1em;
-            color: white;
-        }
-
-    
+    .first{
+        width: 20vw;
+        height: 10vh;
+    }
+    .second {
+        width: 40vw;
+        height: 10vh;
+    }
+    .third {
+        width: 10vw;
+        height: 10vh;
+    }
 </style>
-
 <div class="underlay">
-    <div class="row overlay-nav">
-        <div class="col-6"></div>
-        <div class="col-1">
+    <div class="nav">
+        <div class="first">
+            <div class="mainlayout-xebec-heading">
+                <div class="mainlayout-xebec-logo"></div>
+            </div>
+        </div>
+        <div class="second"></div>
+        <div class="third">
             <input type="button" class="nav-buttons" @onmouseover="HomeHover" value="HOME" @onclick="ToHome" hidden="@Home" />
             <input type="button" class="nav-buttons-pressed" value="HOME" @onclick="ToHome" hidden="@(!Home)" />
         </div>
-        <div class="col-1">
-            <input type="button" class="nav-buttons" @onmouseover="ServicesHover" value="SERVICES" @onclick="ToServices" hidden="@Services" />
-            <input type="button" class="nav-buttons-pressed" value="SERVICES" @onclick="ToServices" hidden="@(!Services)" />
+        <div class="third">
+            <input type="button" class="nav-buttons" @onmouseover="JobPortalHover" value="JOB PORTAL" @onclick="ToJobPortal" hidden="@JobPortal" />
+            <input type="button" class="nav-buttons-pressed" value="JOB PORTAL" @onclick="ToJobPortal" hidden="@(!JobPortal)" />
         </div>
-        <div class="col-1">
+        <div class="third">
             <input type="button" class="nav-buttons" @onmouseover="SignInHover" value="SIGN IN" @onclick="ToSignIn" hidden="@SignIn" />
             <input type="button" class="nav-buttons-pressed" value="SIGN IN" @onclick="ToSignIn" hidden="@(!SignIn)" />
         </div>
-        <div class="col-1">
-            <input type="button" class="nav-buttons" @onmouseover="SignUpHover" value="SIGN UP" @onclick="ToSignUp" hidden="@SignUp" />
-            <input type="button" class="nav-buttons-pressed" value="SIGN UP" @onclick="ToSignUp" hidden="@(!SignUp)" />
-        </div>
-        <div class="col-1">
+        <div class="third">
             <input type="button" class="nav-buttons" @onmouseover="ContactHover" value="CONTACT" @onclick="ToContact" hidden="@Contact" />
             <input type="button" class="nav-buttons-pressed" value="CONTACT" @onclick="ToContact" hidden="@(!Contact)" />
         </div>
-        <div class="col-1"></div>
-    </div>
-        <div class="row underlay-nav">
-            @if (SignUp)
-            {
-                <div class="col-8"></div>
-                <div class="col-3 sign-up-modal">
-                    <div class="sign-up-modal-div">
-                        <input type="button" class="modal-nav-buttons" value="Applicant" @onclick="ToApplicantSignUp" />
-                    </div>
-                    <div class="sign-up-modal-div">
-                        <input type="button" class="modal-nav-buttons" value="HR" @onclick="ToHRSignUp" />
-                    </div>
-                </div>
-                <div class="col-1"></div>
-            }
-        </div>
-
-
+    </div>    
     <div class="overlay">
         @Body
     </div>
@@ -149,32 +140,25 @@
 @code {
 
     private bool Home;
-    private bool Services;
     private bool SignIn;
-    private bool SignUp;
+    private bool JobPortal;
     private bool Contact;
-    private bool ApplicantSignUp;
-    private bool HRSignUp;
 
     private bool ShowHome;
-    private bool ShowServices;
-    private bool ShowHRSignUp;
-    private bool ShowApplicantSignUp;
     private bool ShowSignIn;
     private bool ShowContact;
+    private bool ShowJobPortal;
 
-
+    protected async override Task OnInitializedAsync()
+    {
+        ToHome();
+        await Task.Delay(0);
+    }
 
     private void ToHome()
     {
-        HomeHover();
         navmanager.NavigateTo("/");
-    }
-
-    private void ToServices()
-    {
-        ServicesHover();
-        navmanager.NavigateTo("services");
+        HomeHover();
     }
 
     private void ToSignIn()
@@ -183,59 +167,38 @@
         navmanager.NavigateTo("signin");
     }
 
-    private void ToSignUp()
+    private void ToJobPortal()
     {
-        SignUpHover();
+        JobPortalHover();
+        navmanager.NavigateTo("jobportal");
     }
 
-    private void ToApplicantSignUp()
-    {
-        SignUp = true;
-        Services = HRSignUp = SignIn = Home = Contact = false;
-        navmanager.NavigateTo("applicantsignup");
-    }
-    private void ToHRSignUp()
-    {
-        SignUp = true;
-        Services = SignUp = ApplicantSignUp = SignIn = Home = Contact = false;
-        navmanager.NavigateTo("hrsignup");
-    }
     private void ToContact()
     {
         ContactHover();
         navmanager.NavigateTo("contact");
     }
 
-    private void ShowSignUpModal()
-    {
-        SignUp = true;
-        Services = SignIn = Home = ApplicantSignUp = HRSignUp = Contact = false;
-    }
-
-
     private void HomeHover()
     {
         Home = true;
-        Services = SignIn = SignUp = Contact = false;
+        SignIn = JobPortal = Contact = false;
     }
-    private void ServicesHover()
-    {
-        Services = true;
-        Home = SignIn = SignUp = Contact = false;
-    }
+
     private void SignInHover()
     {
         SignIn = true;
-        Services = Home = SignUp = Contact = false;
+        Home = JobPortal = Contact = false;
     }
-    private void SignUpHover()
-    {
-        SignUp = true;
-        Services = SignIn = Home = Contact = false;
+    private void JobPortalHover() {
+
+        JobPortal = true;
+        Home = SignIn = Contact = false;
     }
+
     private void ContactHover()
     {
         Contact = true;
-        Services = SignIn = SignUp = Home = false;
+        SignIn = JobPortal = Home = false;
     }
 }

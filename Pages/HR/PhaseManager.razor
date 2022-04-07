@@ -1360,6 +1360,16 @@
             tempHelper.TimeMoved = DateTime.Now;
 
             await httpClient.PostAsJsonAsync<ApplicationPhasesHelper>("https://xebecapi.azurewebsites.net/api/applicationphasehelper", tempHelper);
+
+            HrEmailModel test = new HrEmailModel();
+            test.CandidateName = CurrentItem.Name;
+            test.CandidateSurname = CurrentItem.Surname;
+            test.AuthorizerEmail = userstate.Email;
+            test.Phase = AppPhases.FirstOrDefault(x => x.id == CurrentItem.ApplicationPhaseId).description;
+            test.Job = CurrentJobTitle;
+            test.DateTime = DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss");
+
+            await httpClient.PostAsJsonAsync<HrEmailModel>("https://prod-68.westeurope.logic.azure.com:443/workflows/26a113fe926648e795fa4feda3fa611f/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=F5kfz52-z0loxc0VL-CQ8Tdg6DRfMo0xkKACdb22GJA", test);
         }
     }
 
@@ -1515,6 +1525,7 @@
         Hired = "";
         NotHired = "";
 
+
         if (i == 3)
         {
             ScreeningOne = "currentphase";
@@ -1607,6 +1618,17 @@
         await httpClient.PostAsJsonAsync<ApplicationPhasesHelper>("https://xebecapi.azurewebsites.net/api/applicationphasehelper", tempHelper);
 
 
+        HrEmailModel test = new HrEmailModel();
+        test.CandidateName = CurrentItem.Name;
+        test.CandidateSurname = CurrentItem.Surname;
+        test.AuthorizerEmail = userstate.Email;
+        test.Phase = AppPhases.FirstOrDefault(x => x.id == CurrentItem.ApplicationPhaseId).description;
+        test.Job = CurrentJobTitle;
+        test.DateTime = DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss");
+
+        await httpClient.PostAsJsonAsync<HrEmailModel>("https://prod-68.westeurope.logic.azure.com:443/workflows/26a113fe926648e795fa4feda3fa611f/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=F5kfz52-z0loxc0VL-CQ8Tdg6DRfMo0xkKACdb22GJA", test);
+
+
 
     }
 
@@ -1678,11 +1700,6 @@
 
             EmailModel CurrentEmail = new EmailModel();
 
-            //CurrentEmail.Subject = "Nebula Application";
-            //CurrentEmail.ToEmail = CurrentEmailRecipient;
-            //CurrentEmail.ToName = CurrentItem.Name;
-            //CurrentEmail.PlainText = CurrentEmailTemplate;
-            //CurrentEmail.Htmlcontent = "";
 
             CurrentEmail.CandidateFirstName = CurrentItem.Name;
             CurrentEmail.CandidateLastName = CurrentItem.Surname;
@@ -1693,6 +1710,7 @@
             EmailSending = true;
 
             await httpClient.PostAsJsonAsync<EmailModel>("https://prod-228.westeurope.logic.azure.com:443/workflows/420f0efb54134f0492fee22869c92bc6/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=GOWFYTIEtt84SYP1ZNP8ZIhoXJeq7S13FjBoYlAGVzE", CurrentEmail);
+
 
             EmailSending = false;
             EmailSent = true;

@@ -17,20 +17,24 @@
 
     ::-webkit-scrollbar {
         width: 10px !important;
+        background-color: transparent !important;
+        cursor:pointer !important;
+      
     }
 
     ::-webkit-scrollbar-track {
         background: transparent !important;
-        border-radius: 10px !important;
+       
     }
 
     ::-webkit-scrollbar-thumb {
-        background: #fff !important;
-        border-radius: 5px !important;
+        /* background: #f7f7f7 !important;*/
+        background-color: #bbbbbb !important;
     }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #00BCAE !important;
+            background-color: #bbbbbb !important;
+            cursor:pointer !important;
         }
 
     .hr-job-search-bar {
@@ -550,7 +554,6 @@
                                                 break;
                                             case 5:
                                                 <select @bind="customquestion.Applicantanswer">
-                                                    <option value="" disabled selected>-</option>
                                                     <option value="yes">Yes</option>
                                                     <option value="no">No</option>
                                                 </select>

@@ -5,17 +5,30 @@
 
 <style>
 /*Scrollbar track*/
-*::-webkit-scrollbar {
+
+
+    ::-webkit-scrollbar {
+        width: 10px !important;
         background-color: transparent !important;
-        border-radius: 1em !important;
-        width: 1em ;
-    }
-*::-webkit-scrollbar-thumb {
-        background-color: white !important;
-        border-radius: 1em !important;
+        cursor:pointer !important;
+        
     }
 
+    ::-webkit-scrollbar-track {
+        background: transparent !important;
+       
+    }
 
+    ::-webkit-scrollbar-thumb {
+        /* background: #f7f7f7 !important;*/
+        background: #bbbbbb !important;
+       
+    }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #bbbbbb !important;
+            cursor:pointer !important;
+        }
       .container-createjob {
             width: 100%;
             height: 90vh;

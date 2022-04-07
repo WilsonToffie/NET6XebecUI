@@ -15,6 +15,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Shared\Empty.razor" />
+    <None Include="Shared\EmptyLayout.razor" />
+    <None Include="Shared\Home\ApplicantSignUp.razor" />
+    <None Include="Shared\Home\Confirmation.razor" />
+    <None Include="Shared\Home\Contact.razor" />
+    <None Include="Shared\Home\ForgotPassword.razor" />
+    <None Include="Shared\Home\Home.razor" />
+    <None Include="Shared\Home\HRSignUp.razor" />
+    <None Include="Shared\Home\JobPortal.razor" />
+    <None Include="Shared\Home\SignIn.razor" />
+    <None Include="Shared\MainComponent.razor" />
+    <None Include="Shared\MainLayout.razor" />
     <None Include="wwwroot\jsPages\Applicant\JobPortal.razor.js" />
     <None Include="wwwroot\jsPages\HR\JobPortal.razor.js" />
   </ItemGroup>
