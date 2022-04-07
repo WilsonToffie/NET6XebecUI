@@ -3,9 +3,10 @@
 @inject HttpClient HttpClient
 @using System.Linq;
 @using XebecPortal.UI.Shared.Home.Models
-@inject UserState state 
+@inject UserState state
 @inject IJSRuntime JSRuntime
- 
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
 <style>
     .overlay-login {
         height: 90vh;
@@ -135,7 +136,7 @@
         height: 3vh;
     }
 
-    
+
     .login-button-div {
         height: 5vh;
         display: flex;
@@ -192,7 +193,6 @@
         }
 
     .key-input-group input[type="text"] {
-        
         height: 15vh;
         width: 100%;
         margin-left: 3%;
@@ -205,10 +205,12 @@
         font-weight: 900;
         font-family: opensans-bold;
     }
-    .forgot-password{
+
+    .forgot-password {
         display: flex;
         justify-content: flex-end;
     }
+
     .forgotpassword {
         color: rgba(0, 188, 174,1);
         width: auto;
@@ -227,7 +229,6 @@
             color: #d35bc9;
             cursor: pointer;
         }
-
 </style>
 
 <div class="overlay-login" id="login">
@@ -269,7 +270,7 @@
                         }
                     </div>
                     <div class="form-group login-button-div">
-                        <input type="button" class="index-form-button" @onclick="Login" value="Submit" />
+                        <input type="button" class="index-form-button" @onclick="JWTLogin" value="Submit" />
                     </div>
                 }
 
@@ -309,7 +310,7 @@
                 }
 
             </form>
-            </div>
+        </div>
         <div class="login-right"></div>
     </div>
 </div>
@@ -364,15 +365,16 @@
         }
     }
 
-
+    string test;
     private async Task Login()
     {
         SubmitPressed = true;
         signIn.Email = Email;
         signIn.Password = Password;
 
-
-        using (var msg = await HttpClient.PostAsJsonAsync<SignInModel>("https://xebecapi.azurewebsites.net/api/auth/loginnew", signIn))
+        Console.WriteLine("Sign in email " + signIn.Email);
+        Console.WriteLine("Sign In password " + signIn.Password);
+        using (var msg = await HttpClient.PostAsJsonAsync<SignInModel>("https://xebecapi.azurewebsites.net/api/auth/loginnew", signIn)) // Checking to see if the user exists in our system
         {
             if (msg.IsSuccessStatusCode)
             {
@@ -384,7 +386,19 @@
                 state.Surname = result.Surname;
                 state.Role = result.Role;
                 state.Avator = result.Avator;
-                state.Title = result.Title;
+                // state.Title = result.Title;
+
+                test = result.jwtBearer;
+
+                if (test != string.Empty)
+                {
+                    Console.WriteLine("Token has a value");
+                    Console.WriteLine("Token value: " + test);
+                }
+                else
+                {
+                    Console.WriteLine("Token Value is empty");
+                }
 
                 message = result.Message;
 
@@ -410,7 +424,7 @@
     {
         SubmitPressed = invalidCredentials = successfullLogin = false;
         LoginForm = true;
-        EmailForgotPasswordForm =  false;
+        EmailForgotPasswordForm = false;
         await Task.Delay(0);
     }
 
@@ -450,5 +464,84 @@
 
     }
 
+    // Local storage is not the route to go, since it can be intercepted by attackers.
+    // Session storage would be the best cause, however I do not think it allows a browser to be refreshed and stay logged in.
+    /*
+    How to prevent it from happening:
+        Store the token using the browser sessionStorage container.
+        Add it as a Bearer HTTP Authentication header with C# when calling services.
+        Add fingerprint information to the token.
+    */
+    // SignInModel contains Email,Password = AuthenticationRequest in vid
+    // AuthenticationResponse only contains the Token, but it is equal to SignInResult.Key
+
+    public async Task<SignInResult> AuthenticateJWT()
+    {
+        // Creating the authentication request
+        //SignInModel signInModel = new SignInModel();
+        signIn.Email = this.Email;
+        signIn.Password = this.Password;
+
+        // authenticating the request
+        var httpMessageResponse = await HttpClient.PostAsJsonAsync<SignInModel>($"https://xebecapi.azurewebsites.net/api/auth/loginnew", signIn); // The api will need to be different since it needs to actually validate the Token on the back-end site. This is where Tshego's API endpoint will be entered
+
+        // sending the token to the client to Store
+        return await httpMessageResponse.Content.ReadFromJsonAsync<SignInResult>();
+    }
+
+    //https://xebecapi.azurewebsites.net/api/user // gets all of the Appusers
+    //https://xebecapi.azurewebsites.net/api/user/AllAuth // Give you a list of your details , can use console.writeLine
+    //https://xebecapi.azurewebsites.net/api/user/Admins (Only super admin can log in)
+
+
+    //Get the token from the Website
+    // Add the token to the header
+    // Make an api request...
+    string token = "";
+    private async Task JWTLogin()
+    {
+        //SignInResult signInResult = await AuthenticateJWT();
+        thisUser = await AuthenticateJWT();
+
+        if (thisUser.jwtBearer != string.Empty)
+        {
+            // storing the token to localstorage on the Browser
+            await localStorage.SetItemAsync("jwt_token", thisUser.jwtBearer); // The value in " " is just the name that you will give it when it is displayed in the browser under application
+
+            state.AppUserId = thisUser.AppUserId;
+            state.Email = thisUser.Email;
+            state.Name = thisUser.Name;
+            state.Surname = thisUser.Surname;
+            state.Role = thisUser.Role;
+            state.Avator = thisUser.Avator;
+
+            message = thisUser.Message;
+
+            if (thisUser.Success)
+            {
+                
+
+                successfullLogin = true;
+                state.isLoggedIn = true;
+                SubmitPressed = false;
+                navmanager.NavigateTo("/main");
+
+            }
+            else if (message.Equals("User/password not found."))
+            {
+                invalidCredentials = true;
+                SubmitPressed = false;
+                successfullLogin = false;
+            }
+            //navmanager.NavigateTo("/main");// this is where you will start to transfer pages.
+        }
+        else
+        {
+            // error message
+            Console.WriteLine("Key is empty");
+            //await localStorage.ClearAsync(); // Use this at log out
+        }
+    }
+    // SignInResults is where you will store the JWT Token
+
 }
- 
