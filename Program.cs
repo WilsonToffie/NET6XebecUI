@@ -18,6 +18,8 @@ using XebecPortal.UI.Service_Interfaces;
 using MudBlazor.Services;
 using XebecPortal.UI.Pages.HR;
 using XebecPortal.UI.Shared;
+using Blazored.LocalStorage;
+using XebecPortal.UI.Utils.Handlers;
 
 namespace XebecPortal.UI
 {
@@ -44,8 +46,7 @@ namespace XebecPortal.UI
             builder.Services.AddScoped<IEducationDataService, EducationDataService>();
             builder.Services.AddScoped<IAdditionalInformationDataService, AdditionalInformationDataService>();
             builder.Services.AddScoped<IStatusDataService, StatusDataService>();
-            builder.Services.AddScoped<IPhaseDataService, PhaseDataService>();
-            
+            builder.Services.AddScoped<IPhaseDataService, PhaseDataService>();            
             //Testing
             builder.Services.AddScoped<IMyJobListDataService, MyJobListDataService>();
 
@@ -54,12 +55,19 @@ namespace XebecPortal.UI
 
             builder.Services.AddMudServices();
 
-            await builder.Build().RunAsync();
+            builder.Services.AddBlazoredLocalStorage();
+
+            builder.Services.AddTransient<CustomHandler>();
+
+
+            await builder.Build().RunAsync();            
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddBlazoredLocalisation(); // This adds the IBrowserDateTimeProvider to the DI container
+            services.AddBlazoredLocalStorage(); // This adds the ability to store the JWT key locally in the browsers storage, it is used on the sign in page.            
+            
         }
     }
 }
