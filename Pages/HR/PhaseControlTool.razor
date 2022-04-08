@@ -3,9 +3,9 @@
 @inject IJSRuntime jsr
 @inject NavigationManager NavigationManager
 @inject UserState _state;
-
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 <style>
- 
+
     .select-phase {
         text-align: center;
         height: 100%;
@@ -137,7 +137,8 @@
         width: 100%;
         text-transform: uppercase;
     }
-.appform-container {
+
+    .appform-container {
         height: 55vh;
         width: 70%;
         margin-left: 15%;
@@ -147,11 +148,13 @@
         box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
         display: flex;
     }
-    .appform-left-buttons{
+
+    .appform-left-buttons {
         margin-top: 5vh;
         height: 5vh;
-        width:100%;
+        width: 100%;
     }
+
     .appform-left-main {
         height: 35vh;
         overflow-y: auto;
@@ -159,7 +162,7 @@
         width: 100%;
         padding: 5px;
     }
-    
+
     .appform-left-row {
         box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px, rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
         border-radius: 20px !important;
@@ -173,30 +176,34 @@
         background-color: rgba(255,255,255,1);
         padding-right: 5px !important;
     }
-    .appform-left-row-selected{
-                border-radius: 20px !important;
-                min-height: 7vh;
-                color:#00bcae; !important;
-                font-family: opensans-condensed-bold,serif;
-                font-weight: 900;
-                font-size: 1em;
-                margin-bottom: 5px;
-                background-color: rgb(243,242,242);
-                min-width: 100%;
-                transition: 0.1s;
+
+    .appform-left-row-selected {
+        border-radius: 20px !important;
+        min-height: 7vh;
+        color: #00bcae;
+        !important;
+        font-family: opensans-condensed-bold,serif;
+        font-weight: 900;
+        font-size: 1em;
+        margin-bottom: 5px;
+        background-color: rgb(243,242,242);
+        min-width: 100%;
+        transition: 0.1s;
     }
-        .appform-left-row:hover {
-            box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-            min-height: 9vh;
-            color: white;
-            font-family: opensans-condensed-bold;
-            font-weight: 900;
-            font-size: 1em;
-            margin-bottom: 5px;
-            background-color: rgb(243,242,242);
-            min-width: 100%;
-            transition: 0.1s;
-        }
+
+    .appform-left-row:hover {
+        box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+        min-height: 9vh;
+        color: white;
+        font-family: opensans-condensed-bold;
+        font-weight: 900;
+        font-size: 1em;
+        margin-bottom: 5px;
+        background-color: rgb(243,242,242);
+        min-width: 100%;
+        transition: 0.1s;
+    }
+
     .appform-right-row {
         box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px, rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
         border-radius: 10px !important;
@@ -211,10 +218,11 @@
         font-family: opensans-condensed-bold;
         font-weight: 900;
         font-size: 1em;
-        margin:0;
+        margin: 0;
         padding: 0;
         width: 90%;
     }
+
     .question-select {
         width: 500px;
         height: 500px;
@@ -321,21 +329,25 @@
         word-wrap: break-word;
         width: 450px;
     }
-    .appform-close-button{
+
+    .appform-close-button {
         width: 10%;
         text-align: end;
     }
+
     .form-preview-question {
         width: 100%;
         display: flex;
         height: 50%;
     }
+
     .form-preview-input {
         width: calc(100% - 10px);
         margin: 0;
         padding: 0;
         height: 50%;
     }
+
     @@keyframes fade-in {
         from {
             opacity: 0;
@@ -347,6 +359,7 @@
             top: 18%
         }
     }
+
     .appform-main-button {
         height: 5vh;
         background-color: #00bcae;
@@ -358,26 +371,29 @@
         font-weight: 700;
     }
 
-    .appform-main-button:hover {
-        height: 5vh;
-        background-color: #d35bc9;
-        border: none;
-        border-radius: 100px;
-        color: white;
-        text-align: center;
-        font-family: opensans-bold;
-        font-weight: 700;
+        .appform-main-button:hover {
+            height: 5vh;
+            background-color: #d35bc9;
+            border: none;
+            border-radius: 100px;
+            color: white;
+            text-align: center;
+            font-family: opensans-bold;
+            font-weight: 700;
+        }
+
+    .collaborators-left-main {
+        padding: 10px;
     }
-.collaborators-left-main{
-    padding: 10px;
-}
-.phase-div{
-    display:flex;
-    align-items: center;
-}
-.phase-div > .phase-name{
-    font-size: 1.5rem;
-}
+
+    .phase-div {
+        display: flex;
+        align-items: center;
+    }
+
+        .phase-div > .phase-name {
+            font-size: 1.5rem;
+        }
 </style>
 
 
@@ -416,7 +432,7 @@
                 </div>
             </div>
         }
-        
+
     </div>
     <div class="collaborators-right">
         <div class="collaborators-heading">
@@ -466,7 +482,7 @@
         <div class="modal-content">
             <span class="close" @onclick="ToggleModalSubmitPhase">&times;</span>
             <p>Phase:</p>
-            <input type="text" @bind="@phaseValue.description"/>
+            <input type="text" @bind="@phaseValue.description" />
             <div class="button">
                 <button type="submit" @onclick="AddPhase" class="button-content">Submit Phase</button>
             </div>
@@ -477,7 +493,7 @@
 @if (showModalDeletePhase)
 {
     <div class="modalbox p-1">
-       
+
         <div class="card" style="height: 50vh; width: 40vw;">
 
             <div class="card-header">
@@ -502,10 +518,14 @@
         </div>
     </div>
 }
-<input type="button" value="Submit" class="createjob-bottom-main-button" @onclick="Submit"/>
+<input type="button" value="Submit" class="createjob-bottom-main-button" @onclick="Submit" />
 
 @code
 {
+
+    @using System.Net.Http.Headers;
+    @using XebecPortal.UI.Utils.Handlers;
+
     [Parameter]
     public CreateJobPost TempJob { get; set; }
 
@@ -522,11 +542,15 @@
     private bool showModalSubmitPhase = false;
     private bool showModalDeletePhase = false;
 
+    string token;
+
     protected override async Task OnInitializedAsync()
     {
-        phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
+        token = await localStorage.GetItemAsync<string>("jwt_token");
 
-        jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
+        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
+
+        jobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job", new AuthenticationHeaderValue("Bearer", token));
         //Todo get developer
     }
 
@@ -542,17 +566,17 @@
 
     private async Task DeletePhase(ApplicationPhase phase)
     {
-        await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/applicationphase/{phase.id}");
-        phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
+        await httpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/applicationphase/{phase.id}", new AuthenticationHeaderValue("Bearer", token));
+        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
 
         await jsr.InvokeVoidAsync("alert", "Deleted!");
     }
 
     private async Task AddPhase()
     {
-        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/applicationphase", phaseValue);
+        await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/applicationphase", phaseValue, new AuthenticationHeaderValue("Bearer", token));
 
-        phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
+        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
 
         showModalSubmitPhase = !showModalSubmitPhase;
     }
@@ -561,7 +585,7 @@
     {
         foreach (var phase in phasesAdded)
         {
-            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobapplicationphase", phaseValue);
+            await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/jobapplicationphase", phaseValue, new AuthenticationHeaderValue("Bearer", token));
         }
     }
 
@@ -583,7 +607,7 @@
         TempJob.JobPhases = phasesAdded;
         await TempJobChanged.InvokeAsync(TempJob);
 
-    //Job page post
+        //Job page post
         Job job = new Job();
         job.MinimumExperience = null;
 
@@ -603,7 +627,7 @@
         Console.WriteLine(job.DueDate);
         Console.WriteLine(job.CreationDate);
 
-        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/job", job);
+        await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/job", job, new AuthenticationHeaderValue("Bearer", token));
         job = null;
 
 
@@ -614,13 +638,13 @@
 
     private async Task<Job> GetJob()
     {
-        List<Job> ListOfJobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
+        List<Job> ListOfJobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job", new AuthenticationHeaderValue("Bearer", token));
         return ListOfJobs.LastOrDefault(x => x.Title == TempJob.Title);
     }
 
     private async Task SubmitRest(Job job)
     {
-    //Add Job type to JobTypeHelpers
+        //Add Job type to JobTypeHelpers
         JobTypeHelper jobTypeHelper = new JobTypeHelper();
         jobTypeHelper.JobId = job.Id;
         jobTypeHelper.JobTypeId = TempJob.JobType.Id;
@@ -629,21 +653,21 @@
         Console.WriteLine("JobTypeHelper ID: " + job.Id);
         Console.WriteLine("JobTypeHelper JobTypeId: " + TempJob.JobType.Id);
 
-        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobtypehelper", jobTypeHelper);
+        await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/jobtypehelper", jobTypeHelper, new AuthenticationHeaderValue("Bearer", token));
 
 
-    //Add selected platforms to JobPlatformHelpers
+        //Add selected platforms to JobPlatformHelpers
         foreach (var platform in TempJob.JobPlatforms)
         {
             JobPlatformHelper jobPlatformHelper = new JobPlatformHelper();
             jobPlatformHelper.JobId = job.Id;
             jobPlatformHelper.JobPlatformId = platform.id;
 
-            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobplatformhelper", jobPlatformHelper);
+            await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/jobplatformhelper", jobPlatformHelper, new AuthenticationHeaderValue("Bearer", token));
         }
 
 
-    //Add collaborators to CollaboratorsAssigned
+        //Add collaborators to CollaboratorsAssigned
         foreach (var Collaborator in TempJob.Collaborators)
         {
             Collaborator collaborator = new Collaborator();
@@ -651,19 +675,19 @@
             collaborator.JobId = job.Id;
             collaborator.AppUserId = Collaborator.id;
 
-            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", collaborator);
+            await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", collaborator, new AuthenticationHeaderValue("Bearer", token));
         }
 
 
-    //Add form questions
+        //Add form questions
         foreach (var formQuestion in TempJob.formQuestions)
         {
             formQuestion.jobId = job.Id;
         }
-        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Questionnaire/lst", TempJob.formQuestions);
+        await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/Questionnaire/lst", TempJob.formQuestions, new AuthenticationHeaderValue("Bearer", token));
 
 
-    //Add Application Phases
+        //Add Application Phases
         foreach (var phase in phasesAdded)
         {
             Console.WriteLine("Phases that should post.");
@@ -674,7 +698,7 @@
             Console.WriteLine(JobApplicationPhase_.Id);
             Console.WriteLine(JobApplicationPhase_.JobId);
             Console.WriteLine(JobApplicationPhase_.ApplicationPhaseId);
-            await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/jobapplicationphase/{job.Id}", JobApplicationPhase_);
+            await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/jobapplicationphase/{job.Id}", JobApplicationPhase_, new AuthenticationHeaderValue("Bearer", token));
         }
 
         await TempJobChanged.InvokeAsync(TempJob);

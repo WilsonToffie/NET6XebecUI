@@ -1,6 +1,7 @@
 ﻿@inject HrJobState hrJobState
 @inject HttpClient httpClient
 @inject UserState userstate
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <style>
     .phase-manager-container {
@@ -90,7 +91,6 @@
 
     .draggable-content {
         width: 50%;
-
         height: 100%;
         border-radius: 8px;
         font-family: opensans-light;
@@ -101,7 +101,6 @@
 
     .draggable-picture {
         width: 35%;
-
         height: 100%;
         border-radius: 8px;
         display: flex;
@@ -181,6 +180,7 @@
         align-items: center;
         width: 80%;
     }
+
     .mydialog-title-close {
         display: flex;
         justify-content: center;
@@ -219,6 +219,7 @@
         align-items: center;
         width: 80%;
     }
+
     .dialog-email-send-button {
         display: flex;
         justify-content: center;
@@ -226,7 +227,7 @@
         width: 10%;
     }
 
-    .email-button{
+    .email-button {
         position: absolute;
         top: 90%;
         left: 65%;
@@ -300,7 +301,7 @@
         border: 1px solid #00BCAE;
     }
 
-    .invalid-email{
+    .invalid-email {
         border: 1px solid red;
     }
 
@@ -336,13 +337,12 @@
             border-radius: 1em;
             border: 0.1em solid black;
         }
-
 </style>
 
 
 <div class="page-top-select-job">
     <div class="hr-job-search-bar">
-        <input class="hr-job-search-bar-input" type="text" placeholder="Search Applicants" @bind-value="searchTerm" @bind-value:event="oninput"/>
+        <input class="hr-job-search-bar-input" type="text" placeholder="Search Applicants" @bind-value="searchTerm" @bind-value:event="oninput" />
     </div>
 </div>
 <div class="phase-manager-container">
@@ -1055,6 +1055,9 @@
 
 @code {
 
+    @using System.Net.Http.Headers;
+    @using XebecPortal.UI.Utils.Handlers;
+
     [Parameter] public int CurrentJobId { get; set; }
 
 
@@ -1138,18 +1141,18 @@
 
 
 
-
+    string token;
     protected override async Task OnParametersSetAsync()
     {
-        CurrentJob = await httpClient.GetFromJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/job/{CurrentJobId}");
+        CurrentJob = await httpClient.GetListJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/job/{CurrentJobId}", new AuthenticationHeaderValue("Bearer", token));
 
-        CurrentApplications = await httpClient.GetFromJsonAsync<List<Application>>($"https://xebecapi.azurewebsites.net/api/application/job/{CurrentJobId}");
-        JobPhases = await httpClient.GetFromJsonAsync<List<JobApplicationPhase>>($"https://xebecapi.azurewebsites.net/api/jobapplicationphase/job/{CurrentJobId}");
+        CurrentApplications = await httpClient.GetListJsonAsync<List<Application>>($"https://xebecapi.azurewebsites.net/api/application/job/{CurrentJobId}", new AuthenticationHeaderValue("Bearer", token));
+        JobPhases = await httpClient.GetListJsonAsync<List<JobApplicationPhase>>($"https://xebecapi.azurewebsites.net/api/jobapplicationphase/job/{CurrentJobId}", new AuthenticationHeaderValue("Bearer", token));
 
         CurrentJobTitle = CurrentJob.Title;
 
 
-        if (CurrentJobId!=0)
+        if (CurrentJobId != 0)
         {
             TotalPhases.Clear();
             TotalPhases.Add(1);
@@ -1210,10 +1213,12 @@
     {
         try
         {
-            tempAppUsers = await httpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
-            AppPhases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
-            Unsuccessful = await httpClient.GetFromJsonAsync<List<UnsuccessfulReason>>("https://xebecapi.azurewebsites.net/api/unsuccessfulreason");
-            RejectedUsers = await httpClient.GetFromJsonAsync<List<RejectedCandidate>>("https://xebecapi.azurewebsites.net/api/rejectedcandidate");
+            token = await localStorage.GetItemAsync<string>("jwt_token");
+
+            tempAppUsers = await httpClient.GetListJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user", new AuthenticationHeaderValue("Bearer", token));
+            AppPhases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
+            Unsuccessful = await httpClient.GetListJsonAsync<List<UnsuccessfulReason>>("https://xebecapi.azurewebsites.net/api/unsuccessfulreason", new AuthenticationHeaderValue("Bearer", token));
+            RejectedUsers = await httpClient.GetListJsonAsync<List<RejectedCandidate>>("https://xebecapi.azurewebsites.net/api/rejectedcandidate", new AuthenticationHeaderValue("Bearer", token));
         }
         catch
         {
@@ -1226,7 +1231,7 @@
 
     private void HandleDragEnter(int applicationPhase)
     {
-        if(applicationPhase==1)
+        if (applicationPhase == 1)
         {
             AppliedDrop = "can-drop";
         }
@@ -1352,14 +1357,14 @@
             temp = CurrentApplications.Single(i => i.Id == CurrentItem.ApplicationId);
             temp.ApplicationPhaseId = phase;
 
-            await httpClient.PutAsJsonAsync<Application>($"https://xebecapi.azurewebsites.net/api/application/{CurrentItem.ApplicationId}", temp);
+            await httpClient.PutJsonAsync<Application>($"https://xebecapi.azurewebsites.net/api/application/{CurrentItem.ApplicationId}", temp, new AuthenticationHeaderValue("Bearer", token));
 
             ApplicationPhasesHelper tempHelper = new ApplicationPhasesHelper();
             tempHelper.ApplicationId = CurrentItem.ApplicationId;
             tempHelper.ApplicationPhaseId = phase;
             tempHelper.TimeMoved = DateTime.Now;
 
-            await httpClient.PostAsJsonAsync<ApplicationPhasesHelper>("https://xebecapi.azurewebsites.net/api/applicationphasehelper", tempHelper);
+            await httpClient.PostJsonAsync<ApplicationPhasesHelper>("https://xebecapi.azurewebsites.net/api/applicationphasehelper", tempHelper, new AuthenticationHeaderValue("Bearer", token));
 
             HrEmailModel test = new HrEmailModel();
             test.CandidateName = CurrentItem.Name;
@@ -1369,6 +1374,7 @@
             test.Job = CurrentJobTitle;
             test.DateTime = DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss");
 
+            //Not sure if this needs to be done
             await httpClient.PostAsJsonAsync<HrEmailModel>("https://prod-68.westeurope.logic.azure.com:443/workflows/26a113fe926648e795fa4feda3fa611f/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=F5kfz52-z0loxc0VL-CQ8Tdg6DRfMo0xkKACdb22GJA", test);
         }
     }
@@ -1638,7 +1644,7 @@
 
         tempReasonId = -1;
 
-        if(Hired)
+        if (Hired)
         {
             SuccessfulDialog = true;
         }
@@ -1671,7 +1677,7 @@
 
     public string ConvertEmail(string email)
     {
-        if(email!="" && email!= null)
+        if (email != "" && email != null)
         {
             email = email.Replace("{firstname}", CurrentItem.Name);
             email = email.Replace("{surname}", CurrentItem.Surname);
@@ -1693,7 +1699,7 @@
     public async Task SendEmail()
     {
 
-        if(IsValidEmail(CurrentEmailRecipient))
+        if (IsValidEmail(CurrentEmailRecipient))
         {
             EmailInvalidAlert = "";
             EmailInvalid = true;

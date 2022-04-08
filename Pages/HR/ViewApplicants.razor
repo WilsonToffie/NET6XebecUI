@@ -11,6 +11,7 @@
 @inject IPhaseDataService _phaseDataService
 @inject IStatusDataService _statusDataService
 @inject HttpClient _httpClient
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 
 <style>
@@ -128,6 +129,8 @@
 
 
 @code {
+    @using System.Net.Http.Headers;
+    @using XebecPortal.UI.Utils.Handlers;
 
     Dictionary<Applicant, List<ApplicationPhaseHelper>> _map = new();
     List<Applicant> _applicants;

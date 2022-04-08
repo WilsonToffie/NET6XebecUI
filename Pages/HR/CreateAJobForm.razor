@@ -1,7 +1,7 @@
 ﻿@inject HttpClient HttpClient
 @inject IJSRuntime jsRuntime
 @inject NavigationManager nav
-
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 <style>
     .createjob-form-container {
         height: 55vh;
@@ -11,13 +11,14 @@
         background-color: rgba(255,255,255,1);
         border: solid white 0.1em;
         box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
-        
     }
-    .createjob-form{
+
+    .createjob-form {
         height: auto;
         width: 100%;
     }
-    .createjob-form-group{
+
+    .createjob-form-group {
         width: 90%;
         margin-left: 5%;
         margin-right: 5%;
@@ -26,18 +27,21 @@
         margin-bottom: 2vh;
         display: flex;
     }
-    .createjob-form-individual{
-        width: 45%; 
+
+    .createjob-form-individual {
+        width: 45%;
         margin-left: 2.5%;
         margin-right: 2.5%;
         height: 5vh;
     }
+
     .createjob-form-single {
         width: 50%;
         margin-left: 25%;
         margin-right: 25%;
         height: 5vh;
     }
+
     .createjob-form-date {
         width: 50%;
         height: 5vh;
@@ -45,6 +49,7 @@
         align-content: start;
         align-items: flex-start;
     }
+
     .createjob-form input[type="text"], input[type="email"], input[type="password"], input[type="date"] {
         background-color: transparent;
         width: 100%;
@@ -58,6 +63,7 @@
         padding-left: 1em;
         padding-bottom: 0.1em;
     }
+
     .createjob-form input[type="date"] {
         background-color: transparent;
         width: 100%;
@@ -71,7 +77,8 @@
         padding-top: 0.5em;
         padding-left: 1em;
     }
-    .createjob-form select{
+
+    .createjob-form select {
         background-color: transparent;
         width: 100%;
         height: 5vh;
@@ -84,12 +91,14 @@
         padding-left: 1em;
         padding-bottom: 0.1em;
     }
+
     .createjob-form option {
         font-size: 1em;
         font-weight: 500;
         color: black;
         font-family: opensans-condensed-bold;
     }
+
     .createjob-form input::placeholder {
         color: black;
         font-family: opensans-condensed-bold;
@@ -107,7 +116,6 @@
         margin-right: 7.5%;
         font-size: 1.15em;
         border: solid 0.15em rgba(0,0,0, 0.2);
-       
         font-weight: 800;
         color: black;
         padding-top: 2vh;
@@ -115,7 +123,7 @@
         font-family: opensans-condensed-light;
         overflow-y: auto;
     }
-   
+
     .createjob-form-date-label {
         font-family: opensans-condensed-bold;
         height: 5vh;
@@ -123,16 +131,17 @@
         color: black;
         font-size: 1em;
         text-align: right;
-        margin-top:1.5vh;
-        padding-top:0;
+        margin-top: 1.5vh;
+        padding-top: 0;
     }
-    .createjob-select{
-    
+
+    .createjob-select {
     }
-    
-    *:focus{
+
+    *:focus {
         border: solid #00B2E5 1px !important;
     }
+
     .createjob-select {
         -moz-appearance: none;
         -webkit-appearance: none;
@@ -142,12 +151,13 @@
         background-position: right .7em top 50%, 0 0;
         background-size: .65em auto, 100%;
     }
-    textarea, .createjob-form-container{
+
+    textarea, .createjob-form-container {
         border-radius: 10px;
     }
     /* For IE */
     .createjob-select::-ms-expand {
-      display: none;
+        display: none;
     }
 </style>
 
@@ -155,7 +165,7 @@
     <form class="createjob-form">
         <div class="form-group createjob-form-group" style="margin-top:5vh;">
             <div class="createjob-form-individual">
-                <input type="text" placeholder="Job Name"  @bind="TempJob.Title" />
+                <input type="text" placeholder="Job Name" @bind="TempJob.Title" />
             </div>
         </div>
         <div class="form-group createjob-form-group">
@@ -181,7 +191,7 @@
                         <option value="@item.Type">@item.Type</option>
                     }
                 </select>
-                
+
             </div>
             <div class="createjob-form-individual">
                 <select class="createjob-select" @onchange="OnDepartmentChanged">
@@ -201,12 +211,12 @@
                 <h2 class="createjob-form-date-label">Due Date: </h2>
             </div>
             <div class="createjob-form-individual">
-               <input type="date" class="createjob-form-date"  @bind="TempJob.DueDate" style="padding-right: 5px;" />
+                <input type="date" class="createjob-form-date" @bind="TempJob.DueDate" style="padding-right: 5px;" />
             </div>
         </div>
     </form>
 </div>
-<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save"/>
+<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save" />
 
 
 @code {
@@ -220,7 +230,7 @@
         set;
     }
 
-    
+
     private Task OnLocationChanged(ChangeEventArgs e)
     {
         TempJob.Location = e.Value.ToString();

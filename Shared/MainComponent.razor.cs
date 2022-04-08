@@ -16,6 +16,7 @@ using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Azure.Storage;
+using XebecPortal.UI.Utils.Handlers;
 
 namespace XebecPortal.UI.Shared
 {
@@ -32,16 +33,17 @@ namespace XebecPortal.UI.Shared
         private bool applicantApplicationProfile, applicantJobPortal, applicantMyJobs;
 
         private bool hrDataAnalyticsTool, hrJobPortal, hrCreateAJob;
-
+        string token;
         protected override async Task OnInitializedAsync()
         {
-            jobs = await HttpClient.GetFromJsonAsync<IList<Job>>("https://xebecapi.azurewebsites.net/api/Job");
+            token = await localStorage.GetItemAsync<string>("jwt_token");
 
-            jobTypes = await HttpClient.GetFromJsonAsync<IList<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
+            jobs = await HttpClient.GetListJsonAsync<IList<Job>>("https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
+
+            jobTypes = await HttpClient.GetListJsonAsync<IList<JobType>>("https://xebecapi.azurewebsites.net/api/JobType", new AuthenticationHeaderValue("Bearer", token));
             
-            personalInfo = await HttpClient.GetFromJsonAsync<PersonalInformation>($"https://xebecapi.azurewebsites.net/api/personalinformation/{state.AppUserId}"); // !!!!!! Change the ID to be the userID later 
-            Console.WriteLine("personalInfo: " + personalInfo.Id);
-            Console.WriteLine("appUserID: " + state.AppUserId);
+            personalInfo = await HttpClient.GetListJsonAsync<PersonalInformation>($"https://xebecapi.azurewebsites.net/api/personalinformation/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token)); // !!!!!! Change the ID to be the userID later 
+            
             if (state.Role.Equals("Candidate"))
             {
                 showApplicantJobPortal();
@@ -166,7 +168,7 @@ namespace XebecPortal.UI.Shared
                                 });
                 //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
 
-                var resp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo); //{personalInfo.Id}
+                var resp = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
                // var newresp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo); //{personalInfo.Id}
             }
             else
