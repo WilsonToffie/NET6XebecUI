@@ -57,7 +57,7 @@ namespace XebecPortal.UI
 
             builder.Services.AddBlazoredLocalStorage();
 
-            builder.Services.AddTransient<CustomHandler>();
+            //builder.Services.AddTransient<CustomHandler>();
 
 
             await builder.Build().RunAsync();            
