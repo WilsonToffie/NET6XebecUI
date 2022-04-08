@@ -1,4 +1,5 @@
-﻿@inject HttpClient httpClient;
+﻿@inject HttpClient httpClient
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 <style>
 
     .layout {
@@ -19,7 +20,7 @@
         border: 5px double darkgrey;
         margin-left: 10px;
         margin-right: 10px;
-        background-color: #FFFFFF;/*rgba(255, 255, 255, 0.5);*/
+        background-color: #FFFFFF; /*rgba(255, 255, 255, 0.5);*/
         text-align: center;
         padding-top: 0.2em;
     }
@@ -43,9 +44,10 @@
         background-color: #FFFFFF;
         text-align: center;
     }
-    .cardStyle-selected:hover{
-        cursor: pointer;
-    }
+
+        .cardStyle-selected:hover {
+            cursor: pointer;
+        }
 
     .cardLayout {
         left: 10%;
@@ -143,10 +145,13 @@
 </div>
 
 <div class="row content-bottom">
-    <input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save"/>
+    <input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save" />
 </div>
 
 @code {
+
+    @using System.Net.Http.Headers;
+    @using XebecPortal.UI.Utils.Handlers;
 
     [Parameter]
     public CreateJobPost TempJob { get; set; }
@@ -157,9 +162,12 @@
     private List<JobPlatform> profiles;
     private List<JobPlatform> selectedProfile = new List<JobPlatform>();
 
+    string token;
+
     protected override async Task OnInitializedAsync()
     {
-        profiles = await httpClient.GetFromJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform");
+        token = await localStorage.GetItemAsync<string>("jwt_token");
+        profiles = await httpClient.GetListJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform", new AuthenticationHeaderValue("Bearer", token));
     }
 
     protected void AddSelectProfile(JobPlatform profile)

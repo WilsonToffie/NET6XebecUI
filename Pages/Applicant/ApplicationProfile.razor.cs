@@ -107,7 +107,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 //Console.WriteLine(response);
                 //The following code allows the Lists to be populated with existing information
                 token = await localStorage.GetItemAsync<string>("jwt_token");
-                Console.WriteLine("Token for personal info " + token);
+                //Console.WriteLine("Token for personal info " + token);
                // var response = await httpClient.GetJsonAsync<string>("https://xebecapi.azurewebsites.net/api/user/AllAuth", new AuthenticationHeaderValue("Bearer", token));
                 //Console.WriteLine("Does it work? " + response);
 
@@ -130,8 +130,7 @@ namespace XebecPortal.UI.Pages.Applicant
 
                 additionalInfoHistory = await httpClient.GetListJsonAsync<List<AdditionalInformation>>($"https://xebecapi.azurewebsites.net/api/AdditionalInformation", new AuthenticationHeaderValue("Bearer", token));
                 additionalInfoList = additionalInfoHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
-                Console.WriteLine("additionalInfoList.Count " + additionalInfoHistory.Count);
-                Console.WriteLine("additionalInfoList.Count " + additionalInfoList.Count);
+                
                 if (additionalInfoList.Count == 0)
                 {
                     newAdditionalInfo = true;
@@ -139,9 +138,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 else
                 {
                     foreach (var item in additionalInfoList)
-                    {
-                        Console.WriteLine("Addintional info count: " + additionalInfoList.Count);
-                        Console.WriteLine("Additional ID " + item.Id);
+                    {                        
                         additionalInformation = item;
                     }
                 }                
@@ -297,7 +294,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 Description = skillInfo.Description,
                 AppUserId = state.AppUserId,
             });
-            // This list is mainly used for POST requests as soon as the info is added
+            // This list is mainly used for POST requests as soon as the info is added, to ensure that there isn't duplicate info
             addselectedSkillsList.Add(new()
             {
                 Description = skillInfo.Description,
@@ -305,26 +302,22 @@ namespace XebecPortal.UI.Pages.Applicant
             });
 
             foreach (var item in addselectedSkillsList)
-            {
-                Console.WriteLine("Token for posting skills info " + token);
+            {                
                 await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Skill", item, new AuthenticationHeaderValue("Bearer", token));
                 
             }
             addselectedSkillsList.Clear();// it immediately gets cleared after the POST.
-            await OnInitializedAsync();            
             skillInfo = new();
+            await OnInitializedAsync();         
         }
 
 
         private async Task removeFromSelectedInfo(SkillsInformation info)
-        {
-            Console.WriteLine("SKill ID " + info.Id);
-            Console.WriteLine("SKill Description " + info.Description);
+        {            
             selectedSkillsList1.Remove(info);
-
             await httpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/Skill/{info.Id}", new AuthenticationHeaderValue("Bearer", token));
-            await OnInitializedAsync();
             skillInfo = new();
+            await OnInitializedAsync();            
             skillEditMode = false;
             if (selectedSkillsList1.Count == 0)
             {
@@ -349,8 +342,9 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Skill/{skillValue.Id}", item, new AuthenticationHeaderValue("Bearer", token));                
             }
-            await OnInitializedAsync();
             skillInfo = new();
+            await OnInitializedAsync();
+            
         }
 
         private void CancelSkill(SkillsInformation skillValue)
@@ -359,12 +353,11 @@ namespace XebecPortal.UI.Pages.Applicant
             selectedSkillsList1[index] = skillTemp;
             skillInfo = new();
             skillEditMode = false;
-
         }
 
         private void AddPersonalInformation()
         {
-            if (newPersonalInfo && newAdditionalInfo)
+            if (newPersonalInfo && newAdditionalInfo) // This is a check to see if the user is a "new" user to the system or an old user
             {
                 personalInformationList.Add(new()
                 {
@@ -386,7 +379,7 @@ namespace XebecPortal.UI.Pages.Applicant
                     AppUserId = state.AppUserId,
                 });
             }
-            else
+            else // If they are an already existing user, the information gets updated
             {
                 personalInformationList.Add(new()
                 {
@@ -436,8 +429,9 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Reference", item, new AuthenticationHeaderValue("Bearer", token));
             }
-            await OnInitializedAsync();
             addReferencesList.Clear();
+            await OnInitializedAsync();
+            
             references = new();
         }
 
@@ -452,8 +446,9 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Reference/{referenceValues.Id}", item, new AuthenticationHeaderValue("Bearer", token));                
             }
-            await OnInitializedAsync();
             references = new();
+            await OnInitializedAsync();
+            
         }
 
         private void Cancel(References referenceValues)
@@ -512,7 +507,6 @@ namespace XebecPortal.UI.Pages.Applicant
 
             foreach (var item in addworkHistoryList)
             {
-                Console.WriteLine("Token for work history " + token);
                 await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/WorkHistory", item, new AuthenticationHeaderValue("Bearer", token));
             }
             await OnInitializedAsync();
@@ -579,8 +573,8 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/WorkHistory/{workHistoryValues.Id}", item, new AuthenticationHeaderValue("Bearer", token));
             }
-            await OnInitializedAsync();
             workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
+            await OnInitializedAsync();            
         }
 
         private void CancelWorkHistory(WorkHistory workHistoryValues)
@@ -616,8 +610,8 @@ namespace XebecPortal.UI.Pages.Applicant
                 await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Education", item, new AuthenticationHeaderValue("Bearer", token));
             }
             addEducationList.Clear();
-            await OnInitializedAsync();
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
+            await OnInitializedAsync();            
         }
 
         private async Task DeleteEducation(Education educationValues)
@@ -652,8 +646,8 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Education/{educationValues.Id}", item, new AuthenticationHeaderValue("Bearer", token));
             }
-            await OnInitializedAsync();
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
+            await OnInitializedAsync();            
         }
 
         private void CancelEducation(Education educationValues)
@@ -825,7 +819,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 //var response = await httpClient.GetAsync("https://xebecapi.azurewebsites.net/api/ResumeParser");
 
 
-                var resp = await httpClient.PostAsync("http://localhost:5002/api/ResumeParser/", content);
+                var resp = await httpClient.PostJsonAsync("http://localhost:5002/api/ResumeParser/", content, new AuthenticationHeaderValue("Bearer", token));
                 //status = new StringBuilder(resp.StatusCode.ToString());
                 var respContent = await resp.Content.ReadAsStringAsync();
 

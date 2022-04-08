@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using X.PagedList;
 using System.Text.Json;
 using Microsoft.AspNetCore.Components;
+using System.Net.Http.Headers;
+using XebecPortal.UI.Utils.Handlers;
 
 namespace XebecPortal.UI.Pages.HR
 {
@@ -25,11 +27,15 @@ namespace XebecPortal.UI.Pages.HR
         private JobType tempJobType = new JobType();
         private List<JobPlatform> ListOfPlatforms = new List<JobPlatform>();
 
+
+        string token;
         protected override async Task OnInitializedAsync()
         {
-            jobPlatforms = await HttpClient.GetFromJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform");
-            jobTypes = await HttpClient.GetFromJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/jobtype");
-            collaborators = await HttpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
+            token = await localStorage.GetItemAsync<string>("jwt_token");
+
+            jobPlatforms = await HttpClient.GetListJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform", new AuthenticationHeaderValue("Bearer", token));
+            jobTypes = await HttpClient.GetListJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/jobtype", new AuthenticationHeaderValue("Bearer", token));
+            collaborators = await HttpClient.GetListJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user", new AuthenticationHeaderValue("Bearer", token));
             TempJob.DueDate = TempJob.CreationDate = DateTime.Today;
         }
 

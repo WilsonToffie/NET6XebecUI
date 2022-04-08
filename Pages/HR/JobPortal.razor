@@ -4,7 +4,7 @@
 @inject NavigationManager nav
 @inject HrJobState hrJobState
 @inject IDialogService DialogService
-
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 <style>
 
     .handPointer {
@@ -16,16 +16,15 @@
         height: 15px;
         margin: 2px;
     }
+
     ::-webkit-scrollbar {
         width: 10px !important;
         background-color: white !important;
-        
     }
 
     ::-webkit-scrollbar-track {
         background: white !important;
-        cursor:pointer !important;
-        
+        cursor: pointer !important;
     }
 
     ::-webkit-scrollbar-thumb {
@@ -38,7 +37,7 @@
             background-color: #666666 !important;
         }
 
-    
+
     .hr-job-search-bar {
         width: 40%;
         height: 5vh;
@@ -316,7 +315,7 @@
         <div style="height: 15vh">
             <div class="hr-job-search-bar">
                 <input class="search-image hr-job-search-bar-input rounded-pill" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs" @oninput="SearchListJob" />
-            </div>            
+            </div>
             <div class="row" style="height:5vh">
                 <div class="col-3">
                     <!--Location-->

@@ -2,7 +2,7 @@
 @using XebecPortal.UI.Services.Models
 @inject HttpClient httpClient
 @inject UserState state
-
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 <style>
 
     .main {
@@ -44,28 +44,27 @@
         flex-direction: column;
         overflow-y: scroll;
         width: 100%;
-        
-        
     }
+
         .job-cards::-webkit-scrollbar {
             width: 10px !important;
-            cursor:pointer !important;
-            background:white !important;
-            border-radius:10px;
-            
+            cursor: pointer !important;
+            background: white !important;
+            border-radius: 10px;
         }
 
         .job-cards::-webkit-scrollbar-thumb {
             background-color: #666666 !important;
-            border-radius:10px;
+            border-radius: 10px;
         }
+
             .job-cards::-webkit-scrollbar-thumb:hover {
                 background-color: #666666 !important;
                 cursor: pointer !important;
-                border-radius:10px;
+                border-radius: 10px;
             }
 
-        
+
 
         .job-cards div {
             border: none;
@@ -245,7 +244,7 @@
         width: 100%;
         box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
         border: white solid 0.1em;
-        border-radius:1.5em;
+        border-radius: 1.5em;
     }
 
 
@@ -261,6 +260,7 @@
             border-radius: 1em;
             border: 0.1em solid black;
         }
+
     .myjob-search-bar {
         width: 40%;
         height: 5vh;
@@ -268,9 +268,6 @@
         margin-top: 2.5vh;
         margin-left: 30%;
         margin-right: 30%;
-        
-       
-
     }
 </style>
 
@@ -279,7 +276,7 @@
 {
     FindApplications();
     <div class="myjob-search-bar">
-        <input class="search-image hr-job-search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs" @oninput="SearchApplications"  />
+        <input class="search-image hr-job-search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Jobs" @oninput="SearchApplications" />
     </div>
     <div class="main-wrapper">
 
@@ -383,7 +380,8 @@
             <div class="card-header d-flex align-content-center justify-content-center accepted-heading">
                 <span class="count">@countSuccesfull.Count</span><span style="margin-left:5px;">Successful</span><span style="margin-left:5px;">Application</span>@if (@countSuccesfull.Count > 1)
                 {<span>s</span>}
-                else{<span></span> }  
+                else
+                {<span></span>}
             </div>
 
             @foreach (var application in applications)
@@ -439,12 +437,14 @@
             }
         }
 
-    <div class="main-wrapper-child job-cards rejection-card">
-        <div class="card-header  d-flex align-content-center justify-content-center rejection-heading">
-            <span class="count">@countUnsuccessfull.Count</span><span style="margin-left:5px;">Unsuccessful</span><br><span style="margin-left:5px;">Application</span>@if(countUnsuccessfull.Count > 1) {
-            <span>s</span>}
-                else { <span></span>}
-        </div>
+        <div class="main-wrapper-child job-cards rejection-card">
+            <div class="card-header  d-flex align-content-center justify-content-center rejection-heading">
+                <span class="count">@countUnsuccessfull.Count</span><span style="margin-left:5px;">Unsuccessful</span><br><span style="margin-left:5px;">Application</span>@if (countUnsuccessfull.Count > 1)
+                {
+                    <span>s</span>}
+                else
+                { <span></span>}
+            </div>
 
             @foreach (var application in applications)
             {
@@ -476,6 +476,8 @@ else
 }
 
 @code {
+    @using XebecPortal.UI.Utils.Handlers;
+    @using System.Net.Http.Headers;
 
     private IList<Job> jobs = new List<Job>();
     private IList<ApplicationModel> applications = new List<ApplicationModel>();
@@ -486,12 +488,16 @@ else
     private IList<Job> jobsFiltered = null;
     string searchCandidate = "";
 
+    string token;
+
     protected override async Task OnInitializedAsync()
     {
-        jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
-        applications = await httpClient.GetFromJsonAsync<List<ApplicationModel>>("https://xebecapi.azurewebsites.net/api/application");
-        phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/ApplicationPhase");
-        rejectedCandidates = await httpClient.GetFromJsonAsync<List<RejectedCandidate>>("https://xebecapi.azurewebsites.net/api/RejectedCandidate");
+        token = await localStorage.GetItemAsync<string>("jwt_token");
+
+        jobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
+        applications = await httpClient.GetListJsonAsync<List<ApplicationModel>>("https://xebecapi.azurewebsites.net/api/application", new AuthenticationHeaderValue("Bearer", token));
+        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/ApplicationPhase", new AuthenticationHeaderValue("Bearer", token));
+        rejectedCandidates = await httpClient.GetListJsonAsync<List<RejectedCandidate>>("https://xebecapi.azurewebsites.net/api/RejectedCandidate", new AuthenticationHeaderValue("Bearer", token));
     }
 
     private void FindApplications()
@@ -518,6 +524,6 @@ else
         jobsFiltered = jobs.Where(x => x.Title.ToLower().Contains(searchCandidate.ToLower())).ToList();
     }
 
-        //searchCandidate = e.Value.ToString();
-    }
+    //searchCandidate = e.Value.ToString();
+}
 }
