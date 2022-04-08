@@ -91,41 +91,28 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool newRefInfo = false;
         private bool newPortFolioInfo = false;
 
-        private CustomHandler cust = new CustomHandler(new HttpClient());
-        /* 
-         Changes that need to be made:
-
-         When adding new info, there is a problem with deleting it immediately... ()
-        */
-        
+        // private CustomHandler cust = new CustomHandler();
+        string token;
         protected override async Task OnInitializedAsync()
         {
-            // var token = await localStorage.GetItemAsStringAsync("jwt_token");
-            
-            // Console.WriteLine(response);
-            //using (var HttpClient = new HttpClient())
-            //{
-            //    HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                
-             //httpClient.DefaultRequestHeaders.Add("Authorization", "Bearer "+ token);
-             //httpClient.DefaultRequestHeaders.Add("Authorize", token);
-            // httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            //var response = await httpClient.GetStringAsync($"https://xebecapi.azurewebsites.net/api/user/AllAuth");
-            
-           // }
             loadInfo = true;
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/ApplicationProfile.js");
             try
             {
                 //var testToken = await localStorage.GetItemAsStringAsync("jwt_token");
-                var token = await localStorage.GetItemAsync<string>("jwt_token");                
-                Console.WriteLine("The working Token: " + token);
+                //var token = await localStorage.GetItemAsync<string>("jwt_token");                
+                //Console.WriteLine("The working Token: " + token);
                 //var response = await testJTW("https://xebecapi.azurewebsites.net/api/user/AllAuth",token);
-                var response = await cust.newwwwtestJTW("https://xebecapi.azurewebsites.net/api/user/AllAuth",token);
-                Console.WriteLine(response);
+                //var response = await cust.newwwwtestJTW("https://xebecapi.azurewebsites.net/api/user/AllAuth",token);
+                //Console.WriteLine(response);
                 //The following code allows the Lists to be populated with existing information
+                token = await localStorage.GetItemAsync<string>("jwt_token");
+                Console.WriteLine("Token for personal info " + token);
+               // var response = await httpClient.GetJsonAsync<string>("https://xebecapi.azurewebsites.net/api/user/AllAuth", new AuthenticationHeaderValue("Bearer", token));
+                //Console.WriteLine("Does it work? " + response);
 
-                personalInfoHistory = await httpClient.GetFromJsonAsync<List<PersonalInformation>>($"https://xebecapi.azurewebsites.net/api/PersonalInformation");
+
+                personalInfoHistory = await httpClient.GetListJsonAsync<List<PersonalInformation>>($"https://xebecapi.azurewebsites.net/api/PersonalInformation", new AuthenticationHeaderValue("Bearer", token));//await httpClient.GetFromJsonAsync<List<PersonalInformation>>($"https://xebecapi.azurewebsites.net/api/PersonalInformation");
                 personalInformationList = personalInfoHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
 
                 if (personalInformationList.Count == 0)
@@ -141,7 +128,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 }
                 
 
-                additionalInfoHistory = await httpClient.GetFromJsonAsync<List<AdditionalInformation>>($"https://xebecapi.azurewebsites.net/api/AdditionalInformation");
+                additionalInfoHistory = await httpClient.GetListJsonAsync<List<AdditionalInformation>>($"https://xebecapi.azurewebsites.net/api/AdditionalInformation", new AuthenticationHeaderValue("Bearer", token));
                 additionalInfoList = additionalInfoHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
                 Console.WriteLine("additionalInfoList.Count " + additionalInfoHistory.Count);
                 Console.WriteLine("additionalInfoList.Count " + additionalInfoList.Count);
@@ -159,19 +146,19 @@ namespace XebecPortal.UI.Pages.Applicant
                     }
                 }                
 
-                workHistories = await httpClient.GetFromJsonAsync<List<WorkHistory>>($"https://xebecapi.azurewebsites.net/api/WorkHistory");
+                workHistories = await httpClient.GetListJsonAsync<List<WorkHistory>>($"https://xebecapi.azurewebsites.net/api/WorkHistory", new AuthenticationHeaderValue("Bearer", token));
                 workHistoryList = workHistories.Where(x => x.AppUserId == state.AppUserId).ToList();
 
-                educationHistory = await httpClient.GetFromJsonAsync<List<Education>>($"https://xebecapi.azurewebsites.net/api/Education");
+                educationHistory = await httpClient.GetListJsonAsync<List<Education>>($"https://xebecapi.azurewebsites.net/api/Education", new AuthenticationHeaderValue("Bearer", token));
                 educationList = educationHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
 
-                skillHistory = await httpClient.GetFromJsonAsync<List<SkillsInformation>>($"https://xebecapi.azurewebsites.net/api/Skill");
+                skillHistory = await httpClient.GetListJsonAsync<List<SkillsInformation>>($"https://xebecapi.azurewebsites.net/api/Skill", new AuthenticationHeaderValue("Bearer", token));
                 selectedSkillsList1 = skillHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
 
-                referencesHistory = await httpClient.GetFromJsonAsync<List<References>>($"https://xebecapi.azurewebsites.net/api/Reference");
+                referencesHistory = await httpClient.GetListJsonAsync<List<References>>($"https://xebecapi.azurewebsites.net/api/Reference", new AuthenticationHeaderValue("Bearer", token));
                 referencesList = referencesHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
 
-                profilePortfolioInfo = await httpClient.GetFromJsonAsync<List<ProfilePortfolioLink>>($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink");
+                profilePortfolioInfo = await httpClient.GetListJsonAsync<List<ProfilePortfolioLink>>($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink", new AuthenticationHeaderValue("Bearer", token));
                 profilePortfolioList = profilePortfolioInfo.Where(x => x.AppUserId == state.AppUserId).ToList();
 
                 if (profilePortfolioList.Count == 0)
@@ -213,52 +200,53 @@ namespace XebecPortal.UI.Pages.Applicant
             loadInfo = false;
         }
 
-        public async Task<string> testJTW(string apiEndpoint ,string Token)
-        {
-            // Can get token here to prevent devs from getting the token on their page
+        //public async Task<string> testJTW(string apiEndpoint ,string Token)
+        //{
+        //    // Can get token here to prevent devs from getting the token on their page
 
-            using (var request = new HttpRequestMessage(HttpMethod.Get, apiEndpoint))
-            {
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
-                var response = await httpClient.SendAsync(request);
+        //    using (var request = new HttpRequestMessage(HttpMethod.Get, apiEndpoint))
+        //    {
+        //        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
+        //        var response = await httpClient.SendAsync(request);
 
-                if (response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine("It was successfull");
-                }
-               // response.EnsureSuccessStatusCode();
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            Console.WriteLine("It was successfull");
+        //        }
+        //       // response.EnsureSuccessStatusCode();
 
-                return await response.Content.ReadAsStringAsync();
-            }
-        }
-        private void loadUserInformation()
-        {
+        //        return await response.Content.ReadAsStringAsync();
+        //    }
+        //}
 
-        }
+        //private void loadUserInformation()
+        //{
+
+        //}
 
         private string skillWarning = "";
         private bool warning;
 
 
-        private void populateList()
-        {
-            apiSkills.Add(new()
-            {
-                Description = "Java",
-            });
-            apiSkills.Add(new()
-            {
-                Description = "CSS",
-            });
-            apiSkills.Add(new()
-            {
-                Description = "C#",
-            });
-            apiSkills.Add(new()
-            {
-                Description = "Azure",
-            });
-        }
+        //private void populateList()
+        //{
+        //    apiSkills.Add(new()
+        //    {
+        //        Description = "Java",
+        //    });
+        //    apiSkills.Add(new()
+        //    {
+        //        Description = "CSS",
+        //    });
+        //    apiSkills.Add(new()
+        //    {
+        //        Description = "C#",
+        //    });
+        //    apiSkills.Add(new()
+        //    {
+        //        Description = "Azure",
+        //    });
+        //}
 
         string searchedSkill;
 
@@ -318,7 +306,9 @@ namespace XebecPortal.UI.Pages.Applicant
 
             foreach (var item in addselectedSkillsList)
             {
-                await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/Skill", item);                
+                Console.WriteLine("Token for posting skills info " + token);
+                await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Skill", item, new AuthenticationHeaderValue("Bearer", token));
+                
             }
             addselectedSkillsList.Clear();// it immediately gets cleared after the POST.
             await OnInitializedAsync();            
@@ -332,7 +322,7 @@ namespace XebecPortal.UI.Pages.Applicant
             Console.WriteLine("SKill Description " + info.Description);
             selectedSkillsList1.Remove(info);
 
-            await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/Skill/{info.Id}");
+            await httpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/Skill/{info.Id}", new AuthenticationHeaderValue("Bearer", token));
             await OnInitializedAsync();
             skillInfo = new();
             skillEditMode = false;
@@ -357,7 +347,7 @@ namespace XebecPortal.UI.Pages.Applicant
             selectedSkillsList1[index] = skillInfo;
             foreach (var item in selectedSkillsList1)
             {
-                await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/Skill/{skillValue.Id}", item);                
+                await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Skill/{skillValue.Id}", item, new AuthenticationHeaderValue("Bearer", token));                
             }
             await OnInitializedAsync();
             skillInfo = new();
@@ -444,7 +434,7 @@ namespace XebecPortal.UI.Pages.Applicant
 
             foreach (var item in addReferencesList)
             {
-                await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/Reference", item);
+                await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Reference", item, new AuthenticationHeaderValue("Bearer", token));
             }
             await OnInitializedAsync();
             addReferencesList.Clear();
@@ -460,7 +450,7 @@ namespace XebecPortal.UI.Pages.Applicant
             referencesList[index] = references;
             foreach (var item in referencesList)
             {
-                await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/Reference/{referenceValues.Id}", item);                
+                await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Reference/{referenceValues.Id}", item, new AuthenticationHeaderValue("Bearer", token));                
             }
             await OnInitializedAsync();
             references = new();
@@ -477,7 +467,7 @@ namespace XebecPortal.UI.Pages.Applicant
         private async Task DeleteReference(References referenceValues)
         {
             referencesList.RemoveAll(x => x.Equals(referenceValues));
-            await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/Reference/{referenceValues.Id}");
+            await httpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/Reference/{referenceValues.Id}", new AuthenticationHeaderValue("Bearer", token));
             await OnInitializedAsync();
             references = new();
             editMode = false;
@@ -521,8 +511,9 @@ namespace XebecPortal.UI.Pages.Applicant
             });
 
             foreach (var item in addworkHistoryList)
-            {                
-                await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/WorkHistory", item);
+            {
+                Console.WriteLine("Token for work history " + token);
+                await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/WorkHistory", item, new AuthenticationHeaderValue("Bearer", token));
             }
             await OnInitializedAsync();
             addworkHistoryList.Clear();
@@ -532,7 +523,7 @@ namespace XebecPortal.UI.Pages.Applicant
         private async Task DeleteWorkHistory(WorkHistory workHistoryValues)
         {            
             workHistoryList.RemoveAll(x => x == (workHistoryValues));
-            await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/WorkHistory/{workHistoryValues.Id}");
+            await httpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/WorkHistory/{workHistoryValues.Id}", new AuthenticationHeaderValue("Bearer", token));
             await OnInitializedAsync();
             workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             workHistUpdate = false;
@@ -586,7 +577,7 @@ namespace XebecPortal.UI.Pages.Applicant
             workHistoryList[index] = workHistory;
             foreach (var item in workHistoryList)
             {
-                await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/WorkHistory/{workHistoryValues.Id}", item);
+                await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/WorkHistory/{workHistoryValues.Id}", item, new AuthenticationHeaderValue("Bearer", token));
             }
             await OnInitializedAsync();
             workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
@@ -622,7 +613,7 @@ namespace XebecPortal.UI.Pages.Applicant
 
             foreach (var item in addEducationList)
             {
-                await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/Education", item);
+                await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Education", item, new AuthenticationHeaderValue("Bearer", token));
             }
             addEducationList.Clear();
             await OnInitializedAsync();
@@ -632,7 +623,7 @@ namespace XebecPortal.UI.Pages.Applicant
         private async Task DeleteEducation(Education educationValues)
         {
             educationList.RemoveAll(x => x.Equals(educationValues));
-            await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/Education/{educationValues.Id}");
+            await httpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/Education/{educationValues.Id}", new AuthenticationHeaderValue("Bearer", token));
             await OnInitializedAsync();
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             eduUpdate = false;
@@ -659,7 +650,7 @@ namespace XebecPortal.UI.Pages.Applicant
             educationList[index] = education;
             foreach (var item in educationList)
             {
-                await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/Education/{educationValues.Id}", item);
+                await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Education/{educationValues.Id}", item, new AuthenticationHeaderValue("Bearer", token));
             }
             await OnInitializedAsync();
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
@@ -722,11 +713,11 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 if (newPersonalInfo)
                 {
-                    await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/PersonalInformation", item);
+                    await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/PersonalInformation", item, new AuthenticationHeaderValue("Bearer", token));
                 }
                 else
                 {
-                    await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/PersonalInformation/{item.Id}", item);
+                    await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/PersonalInformation/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
                 }
                 
             }
@@ -736,11 +727,11 @@ namespace XebecPortal.UI.Pages.Applicant
                 Console.WriteLine("Additional Info List ID's " + item.Id);
                 if (newAdditionalInfo)
                 {
-                    await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/AdditionalInformation", item);
+                    await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/AdditionalInformation", item, new AuthenticationHeaderValue("Bearer", token));
                 }
                 else
                 {
-                    await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/AdditionalInformation/{item.Id}", item);
+                    await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/AdditionalInformation/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
                 }
 
             }
@@ -749,11 +740,11 @@ namespace XebecPortal.UI.Pages.Applicant
             {                
                 if (newPortFolioInfo)
                 {
-                    await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink", item);
+                    await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink", item, new AuthenticationHeaderValue("Bearer", token));
                 }
                 else
                 {
-                    await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink/{item.Id}", item);
+                    await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
                 }
             }
 
