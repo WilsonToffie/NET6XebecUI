@@ -1,0 +1,298 @@
+﻿@page "/applicantservices"
+@inject NavigationManager navmanager
+@inject HttpClient HttpClient
+@using System.Linq;
+@using XebecPortal.UI.Shared.Home.Models
+
+<style>
+    .overlay-services {
+        height: auto;
+        width: 100vw;
+    }
+
+    .top {
+        height: 10vh;
+        width: 100vw;
+        display: flex;
+        justify-content: center;
+    }
+
+    .bottom {
+        height: 80vh;
+        width: 100vw;
+        display: flex;
+    }
+
+    .top-heading {
+        height: 10vh;
+        color: #004393;
+        font-size: 2em;
+        font-family: opensans-condensed-bold;
+    }
+
+    .three {
+        height: 80vh;
+        width: 33.3vw;
+    }
+
+    .three-high1 {
+        height: 50vh;
+        margin-top: 10vh;
+        width: 40vw;
+        z-index: 2;
+        position: absolute;
+        margin-left: 0;
+        background-color: white;
+    }
+
+    .three-high2 {
+        height: 50vh;
+        margin-top: 10vh;
+        width: calc(40vw);
+        z-index: 2;
+        position: absolute;
+        margin-left: calc(100vw/3);
+        background-color: white;
+    }
+
+    .three-high3 {
+        height: 50vh;
+        margin-top: 10vh;
+        width: calc(40vw);
+        z-index: 2;
+        position: absolute;
+        margin-left: calc(2*100vw/3);
+        background-color: white;
+    }
+
+    .three-container {
+        height: 65vh;
+        width: 95%;
+        margin: auto;
+    }
+
+    .services-label {
+        height: 10vh;
+        border-top-left-radius: 7em;
+        border-top-right-radius: 7em;
+        color: white;
+        text-align: center;
+        background-color: #00bcae;
+        font-weight: 700;
+        font-size: 1em;
+        line-height: 10vh;
+        font-family: opensans-bold;
+        width: 90%;
+        margin: auto;
+    }
+
+    .services-image {
+        height: 30vh;
+        width: 90%;
+        margin: auto;
+        background-color: white;
+    }
+
+    .services-bottom {
+        height: 20vh;
+        width: 90%;
+        margin: auto;
+        background-color: white;
+        border-bottom-left-radius: 7em;
+        border-bottom-right-radius: 7em;
+    }
+
+    .applicant-applicant-profile {
+        height: 30vh;
+        background-image: url(/Img/applicantprofile.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .applicant-job-portal {
+        height: 30vh;
+        background-image: url(/Img/applicantjobportal.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .applicant-my-jobs {
+        height: 30vh;
+        background-image: url(/Img/myjobs.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .hr-job-portal {
+        height: 30vh;
+        background-image: url(/Img/applicantcontrol.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .hr-data-analytics {
+        height: 30vh;
+        background-image: url(/Img/dat.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .hr-create-a-job {
+        height: 30vh;
+        background-image: url(/Img/createjob.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    p {
+        color: #004393;
+        padding: 2em 1em 1em 1em;
+        font-family: opensans-condensed-bold;
+        font-size: 1em;
+        text-align: center;
+    }
+
+    .applicant-applicant-profile1 {
+        height: 100%;
+        background-image: url(/Img/applicantprofile.png);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .applicant-job-portal1 {
+        height: 100%;
+        background-image: url(/Img/applicantjobportal.png);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .applicant-my-jobs1 {
+        height: 100%;
+        background-image: url(/Img/myjobs.png);
+        background-size: cover;
+        background-position: center;
+    }
+
+    .hr-job-portal1 {
+        height: 50vh;
+        margin-top: 10vh;
+        background-image: url(/Img/applicantcontrol.png);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .hr-data-analytics1 {
+        height: 50vh;
+        margin-top: 10vh;
+        background-image: url(/Img/dat.png);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    .hr-create-a-job1 {
+        height: 50vh;
+        margin-top: 10vh;
+        background-image: url(/Img/createjob.png);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+</style>
+
+<div class="overlay-services">
+    <div class="top">
+        <h2 class="top-heading">APPLICANT SERVICES</h2>
+    </div>
+    <div class="bottom">
+        <div class="three">
+            <div class="services-label">APPLICANT PROFILE</div>
+            <div class="services-image">
+                <div class="applicant-applicant-profile" @onmouseover="ShowApplicantProfile"></div>
+            </div>
+            <div class="services-bottom">
+                <p>
+                    Upload your CV to our specialized AI form processor.
+                    Navigate through personal information, work history, education,
+                    skills, references and online profile sections of the applicant profile process.
+                    These details wll be used when you apply for jobs.
+                </p>
+            </div>
+        </div>
+        @if (ApplicantProfile)
+        {
+            <div class="three-high1" @onmouseout="ShowApplicantProfile">
+                <div class="applicant-applicant-profile1"></div>
+            </div>
+        }
+
+        <div class="three">
+            <div class="services-label">JOB PORTAL</div>
+            <div class="services-image">
+                <div class="applicant-job-portal" @onmouseover="ShowApplicantJobPortal"></div>
+            </div>
+            <div class="services-bottom">
+                <p>
+                    Scan through all the jobs available on the platform.
+                    Make use of the various filters and job search features to find your ideal job.
+                    Click the apply button to fill out an application form.
+                </p>
+            </div>
+        </div>
+        @if (ApplicantJobPortal)
+        {
+            <div class="three-high2" @onmouseout="ShowApplicantJobPortal">
+                <div class="applicant-job-portal1"></div>
+            </div>
+        }
+
+        <div class="three">
+            <div class="services-label">MY JOBS</div>
+            <div class="services-image">
+                <div class="applicant-my-jobs" @onmouseover="ShowApplicantMyJobs"></div>
+            </div>
+            <div class="services-bottom">
+                <p>
+                    Track the status of your applications using the 'My Jobs' page.
+                    View which jobs you have applied for,
+                    the application stage of the jobs you have applied for
+                    and what jobs you've received offers for.
+                </p>
+            </div>
+        </div>
+        @if (ApplicantMyJobs)
+        {
+            <div class="three-high3" @onmouseout="ShowApplicantMyJobs">
+                <div class="applicant-my-jobs1"></div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private bool ApplicantMyJobs, ApplicantJobPortal, ApplicantProfile;
+
+    private void ShowApplicantMyJobs()
+    {
+        ApplicantMyJobs = !ApplicantMyJobs;
+    }
+
+    private void ShowApplicantJobPortal()
+    {
+        ApplicantJobPortal = !ApplicantJobPortal;
+    }
+
+    private void ShowApplicantProfile()
+    {
+        ApplicantProfile = !ApplicantProfile;
+    }
+
+    
+}

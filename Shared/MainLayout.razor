@@ -98,12 +98,25 @@
         height: 10vh;
     }
     .second {
-        width: 40vw;
+        width: 30vw;
         height: 10vh;
     }
     .third {
         width: 10vw;
         height: 10vh;
+    }
+    .mythird{
+        width: 15vw;
+        height: 10vh;
+    }
+    .services-dropdown{
+        top: 10vh;
+        left: 50vw;
+        background-color: white;
+        height: 10vh;
+        position: absolute;
+        width: 30vw;
+        display: flex;
     }
 </style>
 <div class="underlay">
@@ -117,6 +130,10 @@
         <div class="third">
             <input type="button" class="nav-buttons" @onmouseover="HomeHover" value="HOME" @onclick="ToHome" hidden="@Home" />
             <input type="button" class="nav-buttons-pressed" value="HOME" @onclick="ToHome" hidden="@(!Home)" />
+        </div>
+        <div class="third">
+            <input type="button" class="nav-buttons" @onmouseover="ToServices" value="SERVICES" @onclick="ToServices" hidden="@Services" />
+            <input type="button" class="nav-buttons-pressed" value="SERVICES" @onclick="ToServices" hidden="@(!Services)" />
         </div>
         <div class="third">
             <input type="button" class="nav-buttons" @onmouseover="JobPortalHover" value="JOB PORTAL" @onclick="ToJobPortal" hidden="@JobPortal" />
@@ -134,7 +151,21 @@
     <div class="overlay">
         @Body
     </div>
+    @if (Services)
+    {
+        <div class="services-dropdown">
+            <div class="mythird">
+                <input type="button" class="nav-buttons" @onmouseover="ApplicantServicesHover" value="APPLICANT SERVICES" @onclick="ToApplicantServices" hidden="@ApplicantServices" />
+                <input type="button" class="nav-buttons-pressed" value="APPLICANT SERVICES" @onclick="ToApplicantServices" hidden="@(!ApplicantServices)" />
 
+            </div>
+            <div class="mythird">
+                <input type="button" class="nav-buttons" @onmouseover="HRServicesHover" value="HR SERVICES" @onclick="ToHRServices" hidden="@HRServices" />
+                <input type="button" class="nav-buttons-pressed" value="HR SERVICES" @onclick="ToHRServices" hidden="@(!HRServices)" />
+
+            </div>
+        </div>
+    }
 </div>
 
 @code {
@@ -143,11 +174,17 @@
     private bool SignIn;
     private bool JobPortal;
     private bool Contact;
+    private bool Services;
+
+    private bool ApplicantServices, HRServices;
 
     private bool ShowHome;
     private bool ShowSignIn;
     private bool ShowContact;
     private bool ShowJobPortal;
+    private bool ShowServices;
+
+    private bool ShowApplicantServices, ShowHRServices;
 
     protected async override Task OnInitializedAsync()
     {
@@ -173,6 +210,24 @@
         navmanager.NavigateTo("jobportal");
     }
 
+    private void ToServices()
+    {
+        Services = true;
+    }
+
+    private void ToApplicantServices()
+    {
+        ApplicantServicesHover();
+        navmanager.NavigateTo("applicantservices");
+    }
+    private void ToHRServices()
+    {
+        HRServicesHover();
+        navmanager.NavigateTo("hrservices");
+    }
+
+
+
     private void ToContact()
     {
         ContactHover();
@@ -182,23 +237,36 @@
     private void HomeHover()
     {
         Home = true;
-        SignIn = JobPortal = Contact = false;
+        SignIn = JobPortal = Contact = Services = HRServices = ApplicantServices = false;
     }
 
     private void SignInHover()
     {
         SignIn = true;
-        Home = JobPortal = Contact = false;
+        Home = JobPortal = Contact = Services = HRServices = ApplicantServices = false;
     }
+
     private void JobPortalHover() {
 
         JobPortal = true;
-        Home = SignIn = Contact = false;
+        Home = SignIn = Contact = Services = HRServices = ApplicantServices = false;
     }
 
     private void ContactHover()
     {
         Contact = true;
-        SignIn = JobPortal = Home = false;
+        SignIn = JobPortal = Home = Services = HRServices = ApplicantServices = false;
+    }
+    private void ApplicantServicesHover()
+    {
+        Services = false;
+        ApplicantServices = true;
+        HRServices = SignIn = JobPortal = Contact = Home = false;
+    }
+    private void HRServicesHover()
+    {
+        Services = false;
+        HRServices = true;
+        ApplicantServices = SignIn = JobPortal = Contact = Home = false;
     }
 }
