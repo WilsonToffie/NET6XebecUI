@@ -18,20 +18,22 @@
     }
 
     .bottom {
-        height: 80vh;
+        padding-top: 5vh;
+        height: auto;
         width: 100vw;
         display: flex;
     }
 
     .top-heading {
         height: 10vh;
+        line-height: 10vh;
         color: #004393;
         font-size: 2em;
         font-family: opensans-condensed-bold;
     }
 
     .three {
-        height: 80vh;
+        height: auto;
         width: 33.3vw;
     }
 
@@ -56,13 +58,13 @@
     }
 
     .three-high3 {
-        height: 50vh;
-        margin-top: 10vh;
-        width: calc(40vw);
+        height: 65vh;
+        width: 25vw;
         z-index: 2;
         position: absolute;
         margin-left: calc(2*100vw/3);
         background-color: white;
+        border-radius: 7em;
     }
 
     .three-container {
@@ -205,6 +207,29 @@
         background-repeat: no-repeat;
         background-position: center;
     }
+
+    .magnify-div{
+        position: absolute;
+        height: 5vh;
+        margin-top: 2vh;
+        width: 30vw;
+        display: flex;
+        text-align: end;
+        justify-content: end;
+    }
+    .magnify-div-high {
+        position: absolute;
+        height: 5vh;
+        margin-top: 2vh;
+        width: 35vw;
+        display: flex;
+        text-align: end;
+        justify-content: end;
+    }
+    i {
+        color: #D35BCD;
+        font-size: 1.5em;
+    }
 </style>
 
 <div class="overlay-services">
@@ -215,7 +240,10 @@
         <div class="three">
             <div class="services-label">APPLICANT PROFILE</div>
             <div class="services-image">
-                <div class="applicant-applicant-profile" @onmouseover="ShowApplicantProfile"></div>
+                <div class="magnify-div">
+                    <i class="fas fa fa-search-plus" @onclick="ShowApplicantProfile"></i>
+                </div>
+                <div class="applicant-applicant-profile"></div>
             </div>
             <div class="services-bottom">
                 <p>
@@ -228,7 +256,10 @@
         </div>
         @if (ApplicantProfile)
         {
-            <div class="three-high1" @onmouseout="ShowApplicantProfile">
+            <div class="three-high1">
+                <div class="magnify-div-high" >
+                    <i class="fas fa fa-search-minus" @onclick="ShowApplicantProfile"></i>
+                </div>
                 <div class="applicant-applicant-profile1"></div>
             </div>
         }
@@ -236,7 +267,10 @@
         <div class="three">
             <div class="services-label">JOB PORTAL</div>
             <div class="services-image">
-                <div class="applicant-job-portal" @onmouseover="ShowApplicantJobPortal"></div>
+                <div class="magnify-div" >
+                    <i class="fas fa fa-search-plus" @onclick="ShowApplicantJobPortal"></i>
+                </div>
+                <div class="applicant-job-portal"></div>
             </div>
             <div class="services-bottom">
                 <p>
@@ -248,7 +282,10 @@
         </div>
         @if (ApplicantJobPortal)
         {
-            <div class="three-high2" @onmouseout="ShowApplicantJobPortal">
+            <div class="three-high2">
+                <div class="magnify-div-high" >
+                    <i class="fas fa fa-search-minus" @onclick="ShowApplicantJobPortal"></i>
+                </div>
                 <div class="applicant-job-portal1"></div>
             </div>
         }
@@ -256,7 +293,10 @@
         <div class="three">
             <div class="services-label">MY JOBS</div>
             <div class="services-image">
-                <div class="applicant-my-jobs" @onmouseover="ShowApplicantMyJobs"></div>
+                <div class="magnify-div">
+                    <i class="fas fa fa-search-plus" @onclick="ShowApplicantMyJobs"></i>
+                </div>
+                <div class="applicant-my-jobs"></div>
             </div>
             <div class="services-bottom">
                 <p>
@@ -269,7 +309,10 @@
         </div>
         @if (ApplicantMyJobs)
         {
-            <div class="three-high3" @onmouseout="ShowApplicantMyJobs">
+            <div class="three-high3">
+                <div class="magnify-div-high" >
+                    <i class="fas fa fa-search-minus" @onclick="ShowApplicantMyJobs"></i>
+                </div>
                 <div class="applicant-my-jobs1"></div>
             </div>
         }
