@@ -128,24 +128,24 @@
         </div>
         <div class="second"></div>
         <div class="third">
-            <input type="button" class="nav-buttons" @onmouseover="HomeHover" value="HOME" @onclick="ToHome" hidden="@Home" />
-            <input type="button" class="nav-buttons-pressed" value="HOME" @onclick="ToHome" hidden="@(!Home)" />
+            <input type="button" class="nav-buttons" @onmouseover="Homehover" value="HOME" @onclick="ToHome" hidden="@HomeHover" />
+            <input type="button" class="nav-buttons-pressed" value="HOME" @onclick="ToHome" hidden="@(!HomeHover)" />
         </div>
         <div class="third">
-            <input type="button" class="nav-buttons" @onmouseover="ToServices" value="SERVICES" @onclick="ToServices" hidden="@Services" />
-            <input type="button" class="nav-buttons-pressed" value="SERVICES" @onclick="ToServices" hidden="@(!Services)" />
+            <input type="button" class="nav-buttons" @onmouseover="Serviceshover" value="SERVICES" @onclick="ToServices" hidden="@ServicesHover" />
+            <input type="button" class="nav-buttons-pressed" value="SERVICES" @onclick="ToServices" hidden="@(!ServicesHover)" />
         </div>
         <div class="third">
-            <input type="button" class="nav-buttons" @onmouseover="JobPortalHover" value="JOB PORTAL" @onclick="ToJobPortal" hidden="@JobPortal" />
-            <input type="button" class="nav-buttons-pressed" value="JOB PORTAL" @onclick="ToJobPortal" hidden="@(!JobPortal)" />
+            <input type="button" class="nav-buttons" @onmouseover="JobPortalhover" value="JOB PORTAL" @onclick="ToJobPortal" hidden="@JobPortalHover" />
+            <input type="button" class="nav-buttons-pressed" value="JOB PORTAL" @onclick="ToJobPortal" hidden="@(!JobPortalHover)" />
         </div>
         <div class="third">
-            <input type="button" class="nav-buttons" @onmouseover="SignInHover" value="SIGN IN" @onclick="ToSignIn" hidden="@SignIn" />
-            <input type="button" class="nav-buttons-pressed" value="SIGN IN" @onclick="ToSignIn" hidden="@(!SignIn)" />
+            <input type="button" class="nav-buttons" @onmouseover="SignInhover" value="SIGN IN" @onclick="ToSignIn" hidden="@SignInHover" />
+            <input type="button" class="nav-buttons-pressed" value="SIGN IN" @onclick="ToSignIn" hidden="@(!SignInHover)" />
         </div>
         <div class="third">
-            <input type="button" class="nav-buttons" @onmouseover="ContactHover" value="CONTACT" @onclick="ToContact" hidden="@Contact" />
-            <input type="button" class="nav-buttons-pressed" value="CONTACT" @onclick="ToContact" hidden="@(!Contact)" />
+            <input type="button" class="nav-buttons" @onmouseover="Contacthover" value="CONTACT" @onclick="ToContact" hidden="@ContactHover" />
+            <input type="button" class="nav-buttons-pressed" value="CONTACT" @onclick="ToContact" hidden="@(!ContactHover)" />
         </div>
     </div>    
     <div class="overlay">
@@ -175,6 +175,12 @@
     private bool JobPortal;
     private bool Contact;
     private bool Services;
+
+    private bool ServicesHover;
+    private bool HomeHover;
+    private bool SignInHover;
+    private bool JobPortalHover;
+    private bool ContactHover;
 
     private bool ApplicantServices, HRServices;
 
@@ -226,37 +232,42 @@
         navmanager.NavigateTo("hrservices");
     }
 
-
-
     private void ToContact()
     {
         ContactHover();
         navmanager.NavigateTo("contact");
     }
 
-    private void HomeHover()
+    private void Homehover()
     {
-        Home = true;
-        SignIn = JobPortal = Contact = Services = HRServices = ApplicantServices = false;
+        HomeHover = true;
+        SignInHover = JobPortalHover = ContactHover = ServicesHover = false;
     }
 
-    private void SignInHover()
+    private void SignInhover()
     {
-        SignIn = true;
-        Home = JobPortal = Contact = Services = HRServices = ApplicantServices = false;
+        SignInHover = true;
+        HomeHover = JobPortalHover = ContactHover = ServicesHover = false;
     }
 
-    private void JobPortalHover() {
+    private void JobPortalhover() {
 
-        JobPortal = true;
-        Home = SignIn = Contact = Services = HRServices = ApplicantServices = false;
+        JobPortalHover = true;
+        HomeHover = SignInHover = ContactHover = ServicesHover = false;
     }
 
-    private void ContactHover()
+    private void Contacthover()
     {
-        Contact = true;
-        SignIn = JobPortal = Home = Services = HRServices = ApplicantServices = false;
+        ContactHover = true;
+        SignInHover = JobPortalHover = HomeHover = ServicesHover = false;
     }
+
+    private void Serviceshover()
+    {
+        ServicesHover = true;
+        ContactHover = SignInHover = JobPortalHover = HomeHover = false;
+    }
+
     private void ApplicantServicesHover()
     {
         Services = false;
