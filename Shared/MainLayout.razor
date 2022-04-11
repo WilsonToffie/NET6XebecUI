@@ -155,13 +155,13 @@
     {
         <div class="services-dropdown">
             <div class="mythird">
-                <input type="button" class="nav-buttons" @onmouseover="ApplicantServicesHover" value="APPLICANT SERVICES" @onclick="ToApplicantServices" hidden="@ApplicantServices" />
-                <input type="button" class="nav-buttons-pressed" value="APPLICANT SERVICES" @onclick="ToApplicantServices" hidden="@(!ApplicantServices)" />
+                <input type="button" class="nav-buttons" @onmouseover="ApplicantServiceshover" value="APPLICANT SERVICES" @onclick="ToApplicantServices" hidden="@ApplicantServicesHover" />
+                <input type="button" class="nav-buttons-pressed" value="APPLICANT SERVICES" @onclick="ToApplicantServices" hidden="@(!ApplicantServicesHover)" />
 
             </div>
             <div class="mythird">
-                <input type="button" class="nav-buttons" @onmouseover="HRServicesHover" value="HR SERVICES" @onclick="ToHRServices" hidden="@HRServices" />
-                <input type="button" class="nav-buttons-pressed" value="HR SERVICES" @onclick="ToHRServices" hidden="@(!HRServices)" />
+                <input type="button" class="nav-buttons" @onmouseover="HRServiceshover" value="HR SERVICES" @onclick="ToHRServices" hidden="@HRServicesHover" />
+                <input type="button" class="nav-buttons-pressed" value="HR SERVICES" @onclick="ToHRServices" hidden="@(!HRServicesHover)" />
 
             </div>
         </div>
@@ -182,15 +182,9 @@
     private bool JobPortalHover;
     private bool ContactHover;
 
+    private bool ApplicantServicesHover, HRServicesHover;
     private bool ApplicantServices, HRServices;
 
-    private bool ShowHome;
-    private bool ShowSignIn;
-    private bool ShowContact;
-    private bool ShowJobPortal;
-    private bool ShowServices;
-
-    private bool ShowApplicantServices, ShowHRServices;
 
     protected async override Task OnInitializedAsync()
     {
@@ -218,18 +212,22 @@
 
     private void ToServices()
     {
-        Services = true;
+        Serviceshover();
+        Services= true;
     }
 
     private void ToApplicantServices()
     {
-        ApplicantServicesHover();
+        ApplicantServiceshover();
         navmanager.NavigateTo("applicantservices");
+        Services = false;
     }
+
     private void ToHRServices()
     {
-        HRServicesHover();
+        HRServiceshover();
         navmanager.NavigateTo("hrservices");
+        Services = false;
     }
 
     private void ToContact()
@@ -268,16 +266,15 @@
         ContactHover = SignInHover = JobPortalHover = HomeHover = false;
     }
 
-    private void ApplicantServicesHover()
+    private void ApplicantServiceshover()
     {
-        Services = false;
-        ApplicantServices = true;
-        HRServices = SignIn = JobPortal = Contact = Home = false;
+        ApplicantServicesHover = true;
+        HRServicesHover = false;
     }
-    private void HRServicesHover()
+
+    private void HRServiceshover()
     {
-        Services = false;
-        HRServices = true;
-        ApplicantServices = SignIn = JobPortal = Contact = Home = false;
+        ApplicantServicesHover = false;
+        HRServicesHover = true;
     }
 }
