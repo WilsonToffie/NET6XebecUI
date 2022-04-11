@@ -1,8 +1,9 @@
 ﻿@page "/applicationformcontroltool"
 @inject HttpClient httpClient
 @inject IJSRuntime JSRuntime
-@inject NavigationManager NavigationManager;
-@inject UserState _state;
+@inject NavigationManager NavigationManager
+@inject UserState _state
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 <style>
 
     .appform-container {
@@ -16,29 +17,25 @@
         display: flex;
         font-family: opensans-condensed-bold,serif;
     }
+
     .collaborators-left-main::-webkit-scrollbar {
         width: 12px !important;
         background-color: white !important;
-        
-       
-       
     }
 
     .collaborators-left-main::-webkit-scrollbar-track {
         background: white !important;
-       
-        
     }
 
     .collaborators-left-main::-webkit-scrollbar-thumb {
         /* background: #f7f7f7 !important;*/
         background-color: #666666 !important;
-        border-radius:10px;
+        border-radius: 10px;
     }
 
         .collaborators-left-main::-webkit-scrollbar-thumb:hover {
             background-color: #666666 !important;
-            cursor:pointer !important;
+            cursor: pointer !important;
         }
 
     ::-webkit-scrollbar-button:single-button:vertical:decrement {
@@ -50,7 +47,7 @@
             border-color: transparent transparent #777777 transparent;
         }
 
-   /* ::-webkit-scrollbar-button:single-button {
+    /* ::-webkit-scrollbar-button:single-button {
         background-color: #bbbbbb;
         display: block;
         border-style: solid;
@@ -58,10 +55,10 @@
         width: 12px;
     }*/
 
-        ::-webkit-scrollbar-button:single-button:vertical:increment {
-            border-width: 8px 8px 0 8px;
-            border-color: #555555 transparent transparent transparent;
-        }
+    ::-webkit-scrollbar-button:single-button:vertical:increment {
+        border-width: 8px 8px 0 8px;
+        border-color: #555555 transparent transparent transparent;
+    }
 
     ::-webkit-scrollbar-button:vertical:single-button:increment:hover {
         border-color: #777777 transparent transparent transparent;
@@ -97,7 +94,6 @@
         }
 
     .appform-left-row {
-       
         border-radius: 20px !important;
         height: 6vh;
         color: black;
@@ -124,7 +120,7 @@
         padding: 3px 5px;
     }
 
-    
+
 
     .appform-right-row {
         box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px, rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
@@ -307,69 +303,76 @@
     .collaborators-left-main {
         padding: 10px;
     }
-    .question-div{
+
+    .question-div {
         display: flex;
         align-items: center;
     }
-    .question-div:hover{
+
+        .question-div:hover {
             color: black !important;
             height: 6vh !important;
         }
-    .seven{
-       flex-direction: column;
-       
+
+    .seven {
+        flex-direction: column;
     }
-    
-   .right-list-item-preview {
-       box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px, rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
-       border-radius: 5px !important;
-       min-height: 10vh;
-       color: black;
-       font-size: 1em;
-       min-width: 100%;
-       margin-bottom: 5px;
-       background-color: rgba(255, 255, 255, 1);
-       position: relative;
-   }
-   .right-list-item-preview > div{
-        
-   }
-   .close-item-panel{
-    position: absolute;
-    right: 0;
-    background: rgba(249,249,251,0.51);
-    border-bottom: #888888;
-    display: flex;
-    justify-content: end;
-    font-size: 2.5vh;
-   }
-   .close-item-panel > span{
-       
-       border-left: #888888;
-       padding: 1px 1vw;
-       border-radius: 0 5px 0 0;
-      -moz-border-radius-topright: 5px;
-   }
-   .close-item-panel > span:hover{
-          background: red;
-          color: white;
-          cursor: pointer;
-      }
-   .preview-item-body{
-       padding: 2px 5px;
-   }
-   .preview-item-description{
-      font-size: 2vh;
-   }
-   .preview-item-control{
+
+    .right-list-item-preview {
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px, rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+        border-radius: 5px !important;
+        min-height: 10vh;
+        color: black;
+        font-size: 1em;
+        min-width: 100%;
+        margin-bottom: 5px;
+        background-color: rgba(255, 255, 255, 1);
+        position: relative;
+    }
+
+        .right-list-item-preview > div {
+        }
+
+    .close-item-panel {
+        position: absolute;
+        right: 0;
+        background: rgba(249,249,251,0.51);
+        border-bottom: #888888;
+        display: flex;
+        justify-content: end;
+        font-size: 2.5vh;
+    }
+
+        .close-item-panel > span {
+            border-left: #888888;
+            padding: 1px 1vw;
+            border-radius: 0 5px 0 0;
+            -moz-border-radius-topright: 5px;
+        }
+
+            .close-item-panel > span:hover {
+                background: red;
+                color: white;
+                cursor: pointer;
+            }
+
+    .preview-item-body {
+        padding: 2px 5px;
+    }
+
+    .preview-item-description {
+        font-size: 2vh;
+    }
+
+    .preview-item-control {
         display: flex;
         justify-content: space-between;
-   }
-   .delete-btn:hover{
-       background: red;
-       color: white!important;
-   }
-   
+    }
+
+    .delete-btn:hover {
+        background: red;
+        color: white !important;
+    }
 </style>
 
 <div class="appform-container">
@@ -434,7 +437,7 @@
                                 </span>
                             </div>
                             <div class="preview-item-body" style="padding:10px 10px;">
-                                <div class="preview-item-description" >
+                                <div class="preview-item-description">
                                     <p>@formQuestion.question</p>
                                 </div>
                                 <div class="preview-item-control">
@@ -461,7 +464,7 @@
                                                 <option value="no">No</option>
                                             </select>
                                             break;
-                                            <small class="text-muted text-small">(Select expected answer)</small>
+                                        <small class="text-muted text-small">(Select expected answer)</small>
                                         case 6:
                                             <input type="file" class="form-control" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
                                             break;
@@ -513,31 +516,34 @@
             <div class="delete-popup-body">
                 <table class="collaborators-left-table">
                     <tbody>
-                    @if (Questions != null)
-                    {
-                        foreach (var question in Questions)
+                        @if (Questions != null)
                         {
-                            <tr >
-                                <td class="delete-popup-question" style="font-size: 15px;">@question.questionDescription</td>
-                            </tr>
-                            <tr class="pr-2 pl-2 pt-1 border rounded-1" style="overflow: hidden;">
-                                <td class="collaborators-left-td appform-text pl-2" style="word-wrap: break-word">@question.questionDescription</td>
+                            foreach (var question in Questions)
+                            {
+                                <tr>
+                                    <td class="delete-popup-question" style="font-size: 15px;">@question.questionDescription</td>
+                                </tr>
+                                <tr class="pr-2 pl-2 pt-1 border rounded-1" style="overflow: hidden;">
+                                    <td class="collaborators-left-td appform-text pl-2" style="word-wrap: break-word">@question.questionDescription</td>
 
-                                <td style="max-width: 10%;">
-                                    <button class="btn-close delete-btn" @onclick="() => DeleteQuestion(question)"></button>
-                                </td>
-                            </tr>
+                                    <td style="max-width: 10%;">
+                                        <button class="btn-close delete-btn" @onclick="() => DeleteQuestion(question)"></button>
+                                    </td>
+                                </tr>
+                            }
                         }
-                    }
                     </tbody>
                 </table>
             </div>
         </div>
     }
 </div>
-<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save"/>
+<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save" />
 
 @code {
+
+    @using XebecPortal.UI.Utils.Handlers;
+    @using System.Net.Http.Headers;
 
     [Parameter]
     public EventCallback<List<FormQuestion>> FormQuestionsChanged { get; set; }
@@ -566,14 +572,17 @@
     bool ShowDeletePopup = false;
     public CustomQuestion tempQuestion = new CustomQuestion();
 
+    string token;
+
     protected override async Task OnInitializedAsync()
     {
+        token = await localStorage.GetItemAsync<string>("jwt_token");
         if (FormQuestions == null)
             FormQuestions = new();
 
-        Questions = await httpClient.GetFromJsonAsync<List<CustomQuestion>>("https://xebecapi.azurewebsites.net/api/question");
-        Jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
-        Types = await httpClient.GetFromJsonAsync<List<QuestionType>>("https://xebecapi.azurewebsites.net/api/answertype");
+        Questions = await httpClient.GetListJsonAsync<List<CustomQuestion>>("https://xebecapi.azurewebsites.net/api/question", new AuthenticationHeaderValue("Bearer", token));
+        Jobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job", new AuthenticationHeaderValue("Bearer", token));
+        Types = await httpClient.GetListJsonAsync<List<QuestionType>>("https://xebecapi.azurewebsites.net/api/answertype", new AuthenticationHeaderValue("Bearer", token));
     }
 
     public async Task AddToForm(CustomQuestion question)
@@ -592,7 +601,7 @@
 
     public async Task DeleteQuestion(CustomQuestion q)
     {
-        await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/question/{q.Id}");
+        await httpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/question/{q.Id}", new AuthenticationHeaderValue("Bearer", token));
         await OnInitializedAsync();
     }
 
@@ -614,7 +623,7 @@
         {
             ShowAddPopup = !ShowAddPopup;
             tempQuestion.answerTypeId = Types.FirstOrDefault(q => q.Type == tempType).Id;
-            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/question", tempQuestion);
+            await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/question", tempQuestion, new AuthenticationHeaderValue("Bearer", token));
             await OnInitializedAsync();
         }
     }

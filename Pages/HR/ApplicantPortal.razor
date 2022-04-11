@@ -2,7 +2,7 @@
 @using XebecPortal.UI.Services.Models
 @inject HttpClient httpClient
 @inject HrJobState hrJobState
-
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <style>
 
@@ -821,6 +821,9 @@
 }
 
 @code {
+    @using XebecPortal.UI.Utils.Handlers;
+    @using System.Net.Http.Headers;
+
     string empty = "  ";
     bool showPersonalInformation = false;
     bool showWorkHistory = false;
@@ -858,25 +861,27 @@
     private currentPhase phase { get; set; }
     [Parameter] public int JobId { get; set; }
 
-
+    string token;
     protected override async Task OnInitializedAsync()
     {
-        jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
-        candidates = await httpClient.GetFromJsonAsync<List<CandidateRecommender>>("https://xebecapi.azurewebsites.net/api/candidaterecommender");
-        personalInformations = await httpClient.GetFromJsonAsync<List<PersonalInformation>>("https://xebecapi.azurewebsites.net/api/PersonalInformation");
-        additionalInformations = await httpClient.GetFromJsonAsync<List<AdditionalInformation>>("https://xebecapi.azurewebsites.net/api/AdditionalInformation");
-        workHistories = await httpClient.GetFromJsonAsync<List<WorkHistory>>("https://xebecapi.azurewebsites.net/api/WorkHistory");
-        educations = await httpClient.GetFromJsonAsync<List<Education>>("https://xebecapi.azurewebsites.net/api/Education");
-        applications = await httpClient.GetFromJsonAsync<List<ApplicationModel>>("https://xebecapi.azurewebsites.net/api/application");
-        AnswerList = await httpClient.GetFromJsonAsync<List<ApplicantAnswer>>("https://xebecapi.azurewebsites.net/api/ApplicantQuestionnaire");
-        QuestionList = await httpClient.GetFromJsonAsync<List<FormQuestion>>("https://xebecapi.azurewebsites.net/api/Questionnaire");
+        token = await localStorage.GetItemAsync<string>("jwt_token");
 
-        users = await httpClient.GetFromJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user");
-        phasesHelpers = await httpClient.GetFromJsonAsync<List<ApplicationPhaseHelper>>("https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper");
-        applications = await httpClient.GetFromJsonAsync<List<ApplicationModel>>("https://xebecapi.azurewebsites.net/api/Application");
-        phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/ApplicationPhase");
-        profilePortfolio = await httpClient.GetFromJsonAsync<List<ProfilePortfolioLink>>("https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink");
-        references = await httpClient.GetFromJsonAsync<List<References>>("https://xebecapi.azurewebsites.net/api/Reference");
+        jobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
+        candidates = await httpClient.GetListJsonAsync<List<CandidateRecommender>>("https://xebecapi.azurewebsites.net/api/candidaterecommender", new AuthenticationHeaderValue("Bearer", token));
+        personalInformations = await httpClient.GetListJsonAsync<List<PersonalInformation>>("https://xebecapi.azurewebsites.net/api/PersonalInformation", new AuthenticationHeaderValue("Bearer", token));
+        additionalInformations = await httpClient.GetListJsonAsync<List<AdditionalInformation>>("https://xebecapi.azurewebsites.net/api/AdditionalInformation", new AuthenticationHeaderValue("Bearer", token));
+        workHistories = await httpClient.GetListJsonAsync<List<WorkHistory>>("https://xebecapi.azurewebsites.net/api/WorkHistory", new AuthenticationHeaderValue("Bearer", token));
+        educations = await httpClient.GetListJsonAsync<List<Education>>("https://xebecapi.azurewebsites.net/api/Education", new AuthenticationHeaderValue("Bearer", token));
+        applications = await httpClient.GetListJsonAsync<List<ApplicationModel>>("https://xebecapi.azurewebsites.net/api/application", new AuthenticationHeaderValue("Bearer", token));
+        AnswerList = await httpClient.GetListJsonAsync<List<ApplicantAnswer>>("https://xebecapi.azurewebsites.net/api/ApplicantQuestionnaire", new AuthenticationHeaderValue("Bearer", token));
+        QuestionList = await httpClient.GetListJsonAsync<List<FormQuestion>>("https://xebecapi.azurewebsites.net/api/Questionnaire", new AuthenticationHeaderValue("Bearer", token));
+
+        users = await httpClient.GetListJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user", new AuthenticationHeaderValue("Bearer", token));
+        phasesHelpers = await httpClient.GetListJsonAsync<List<ApplicationPhaseHelper>>("https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper", new AuthenticationHeaderValue("Bearer", token));
+        applications = await httpClient.GetListJsonAsync<List<ApplicationModel>>("https://xebecapi.azurewebsites.net/api/Application", new AuthenticationHeaderValue("Bearer", token));
+        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/ApplicationPhase", new AuthenticationHeaderValue("Bearer", token));
+        profilePortfolio = await httpClient.GetListJsonAsync<List<ProfilePortfolioLink>>("https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink", new AuthenticationHeaderValue("Bearer", token));
+        references = await httpClient.GetListJsonAsync<List<References>>("https://xebecapi.azurewebsites.net/api/Reference", new AuthenticationHeaderValue("Bearer", token));
 
         SetSelectedCandidate(candidates.FirstOrDefault());
     }
@@ -898,7 +903,7 @@
 
     private async Task GetCandidates()
     {
-        candidates = await httpClient.GetFromJsonAsync<List<CandidateRecommender>>("https://xebecapi.azurewebsites.net/api/candidaterecommender");
+        candidates = await httpClient.GetListJsonAsync<List<CandidateRecommender>>("https://xebecapi.azurewebsites.net/api/candidaterecommender", new AuthenticationHeaderValue("Bearer", token));
     }
 
     private void togglePersonalInformations(CandidateRecommender candidate)

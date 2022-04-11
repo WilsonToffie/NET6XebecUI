@@ -3,6 +3,7 @@
 @inject HttpClient httpClient
 @inject UserState state
 @inject IJSRuntime jsRuntime
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <style>
     .handPointer {
@@ -18,26 +19,24 @@
     ::-webkit-scrollbar {
         width: 10px !important;
         background-color: white !important;
-        cursor:pointer !important;
-        border-radius:10px;
-      
+        cursor: pointer !important;
+        border-radius: 10px;
     }
 
     ::-webkit-scrollbar-track {
         background: white !important;
-       
     }
 
     ::-webkit-scrollbar-thumb {
         /* background: #f7f7f7 !important;*/
         background-color: #666666 !important;
-        border-radius:10px !important;
+        border-radius: 10px !important;
     }
 
         ::-webkit-scrollbar-thumb:hover {
             background-color: #666666 !important;
             cursor: pointer !important;
-            border-radius:10px !important;
+            border-radius: 10px !important;
         }
 
     .hr-job-search-bar {
@@ -242,7 +241,7 @@
         width: 40%;
         box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
         border: white solid 0.1em;
-        margin-left:30%;
+        margin-left: 30%;
         border-radius: 1em;
     }
 
@@ -326,16 +325,18 @@
         margin-bottom: 5px;
     }
 
-    .search-wrapper img {
-        position: absolute;
-        top: 5px;
-        left: 5px;
-        margin-left: 30%
-    }
-    .search-pic{
+        .search-wrapper img {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            margin-left: 30%
+        }
+
+    .search-pic {
         width: 30px;
         height: 30px;
     }
+
     .hr-job-search-bar-input {
         padding-left: 3em;
         background-color: white;
@@ -351,11 +352,11 @@
 <div class="container" style="height: 55vh; width: 100%;" hidden="@jobPortalIsHidden">
     <!--Search-Box-->
     <div style="height: 15vh">
-        
+
         <div class="search-wrapper">
             <input class="hr-job-search-bar-input" placeholder="Search For Jobs" type="text" @oninput="SearchListJob" />
-             <img class="search-pic" src="/Img/search.svg"/>
-        </div>        
+            <img class="search-pic" src="/Img/search.svg" />
+        </div>
 
         <div class="row hr-job-filters">
             <div class="col-3">
