@@ -20,8 +20,9 @@ namespace XebecPortal.UI.Pages.HR
         public EventCallback<CreateJobPost> TempJobChanged { get; set; }
         private List<AppUser> collaborators = new List<AppUser>();
         private List<AppUser> collaboratorsAdded = new List<AppUser>();
-        private List<string> Departments = new List<string>() { "Accounting & Finance", "HR", "Sales & Marketing", "Legal", "Research & Development", "IT", "Admin", "Customer Support"};
-        private List<string> Locations = new List<string>() { "Eastern Cape","Free State"," Gauteng","KwaZulu-Natal","Limpopo","Mpumalanga","Northen Cape","North West","Western Cape"} ;
+        private List<string> Departments = new List<string>() { "Accounting & Finance", "HR", "Sales & Marketing", "Legal", "Research & Development", "IT", "Admin", "SSS"};
+        private List<string> Locations = new List<string>() { "Remote", "Eastern Cape","Free State"," Gauteng","KwaZulu-Natal","Limpopo","Mpumalanga","Northen Cape","North West","Western Cape"} ;
+        private List<string> Statuses = new List<string>() { "Open", "Draft", "Filled", "Closed"};
         private IList<JobType> jobTypes = new List<JobType>();
         private IList<JobPlatform> jobPlatforms = new List<JobPlatform>();
         private JobType tempJobType = new JobType();

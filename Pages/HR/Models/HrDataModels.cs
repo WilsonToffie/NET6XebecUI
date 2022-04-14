@@ -85,6 +85,8 @@ namespace XebecPortal.UI.Pages.HR
         public int? MinimumExperience { get; set; }
         public string Location { get; set; }
         public string Department { get; set; }
+
+        public string Status { get; set; }
         public DateTime DueDate { get; set; }
         public DateTime CreationDate { get; set; }
         public JobType JobType { get; set; }

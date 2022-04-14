@@ -507,7 +507,7 @@
 
     </div>
 </div>
-<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save" />
+@*<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save" />*@
 
 @code {
 
@@ -569,12 +569,12 @@
         collaboratorsAdded.Remove(collaborator);
     }
 
-    private async Task Save()
-    {
-        TempJob.Collaborators = collaboratorsAdded;
-        Console.WriteLine("Saving Collaborator");
-        await TempJobChanged.InvokeAsync(TempJob);
-    }
+    //private async Task Save()
+    //{
+    //    TempJob.Collaborators = collaboratorsAdded;
+    //    Console.WriteLine("Saving Collaborator");
+    //    await TempJobChanged.InvokeAsync(TempJob);
+    //}
 
     private object DeveloperCardClass(AppUser developer)
     {

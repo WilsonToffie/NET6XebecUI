@@ -397,7 +397,7 @@
 </style>
 
 
-<div class="collaborators-container">
+<div class="appform-container">
     <div class="collaborators-left">
         <div class="collaborators-heading">
             <h2 class="collaborators-heading-text">Select Phases</h2>
@@ -518,7 +518,19 @@
         </div>
     </div>
 }
-<input type="button" value="Submit" class="createjob-bottom-main-button" @onclick="Submit" />
+
+@if (isSubmitted)
+{
+    <button class="createjob-bottom-main-button"><i class="fas fa-check email-sent-icon" style="font-size: 20px;"></i></button>
+}
+else if (isSubmitting)
+{
+    <button class="createjob-bottom-main-button"><MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" /></button>
+}
+else
+{
+    <input type="button" value="Submit" class="createjob-bottom-main-button" @onclick="Submit" />
+}
 
 @code
 {
@@ -541,6 +553,9 @@
 
     private bool showModalSubmitPhase = false;
     private bool showModalDeletePhase = false;
+
+    private bool isSubmitting = false;
+    private bool isSubmitted = false;
 
     string token;
 
@@ -604,6 +619,8 @@
 
     private async Task Submit()
     {
+        isSubmitting = true;
+
         TempJob.JobPhases = phasesAdded;
         await TempJobChanged.InvokeAsync(TempJob);
 
@@ -618,14 +635,8 @@
         job.Department = TempJob.Department;
         job.DueDate = TempJob.DueDate;
         job.CreationDate = TempJob.CreationDate;
+        job.Status = TempJob.Status;
 
-        Console.WriteLine(job.Title);
-        Console.WriteLine(job.Description);
-        Console.WriteLine(job.Company);
-        Console.WriteLine(job.Location);
-        Console.WriteLine(job.Department);
-        Console.WriteLine(job.DueDate);
-        Console.WriteLine(job.CreationDate);
 
         await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/job", job, new AuthenticationHeaderValue("Bearer", token));
         job = null;
@@ -644,14 +655,17 @@
 
     private async Task SubmitRest(Job job)
     {
+        isSubmitting = false;
+        isSubmitted = true;
+
         //Add Job type to JobTypeHelpers
         JobTypeHelper jobTypeHelper = new JobTypeHelper();
         jobTypeHelper.JobId = job.Id;
         jobTypeHelper.JobTypeId = TempJob.JobType.Id;
 
-        Console.WriteLine("JobType that should post.");
-        Console.WriteLine("JobTypeHelper ID: " + job.Id);
-        Console.WriteLine("JobTypeHelper JobTypeId: " + TempJob.JobType.Id);
+        //Console.WriteLine("JobType that should post.");
+        //Console.WriteLine("JobTypeHelper ID: " + job.Id);
+        //Console.WriteLine("JobTypeHelper JobTypeId: " + TempJob.JobType.Id);
 
         await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/jobtypehelper", jobTypeHelper, new AuthenticationHeaderValue("Bearer", token));
 
@@ -702,6 +716,8 @@
         }
 
         await TempJobChanged.InvokeAsync(TempJob);
+
+
     }
 
     private string PhaseCardClass(ApplicationPhase phase)
@@ -711,26 +727,26 @@
         return "appform-left-row";
     }
 
-    private string GetPillStyle(ApplicationPhase phase)
-    {
-        var thisPhase = phase.description.ToLower();
-        if (thisPhase.Contains("application") || thisPhase.Contains("applied"))
-            return "background: #ff5201; color: rgba(0, 0, 0, 0.35)";
-        else if (thisPhase.Contains("screen"))
-            return "background: #ff9d01 ; color: rgba(0, 0, 0, 0.35)";
-        else if (thisPhase.Contains("screen"))
-            return "background: #ffbc01; color: rgba(0, 0, 0, 0.35)";
-        else if (thisPhase.Contains("screen"))
-            return "background: #ffbc01; color: rgba(0, 0, 0, 0.35)";
-        else if (thisPhase.Contains("screen"))
-            return "background: #ffd401; color: rgba(0, 0, 0, 0.35)";
-        else if (thisPhase.Contains("screen"))
-            return "background: #ebff01; color: rgba(0, 0, 0, 0.35);";
-        else if (thisPhase.Contains("screen"))
-            return "background: #baff01; color: rgba(0, 0, 0, 0.35)";
-        else if (thisPhase.Contains("screen"))
-            return "background: #05ff01; color: rgba(0, 0, 0, 0.35)";
+    //private string GetPillStyle(ApplicationPhase phase)
+    //{
+    //    var thisPhase = phase.description.ToLower();
+    //    if (thisPhase.Contains("application") || thisPhase.Contains("applied"))
+    //        return "background: #ff5201; color: rgba(0, 0, 0, 0.35)";
+    //    else if (thisPhase.Contains("screen"))
+    //        return "background: #ff9d01 ; color: rgba(0, 0, 0, 0.35)";
+    //    else if (thisPhase.Contains("screen"))
+    //        return "background: #ffbc01; color: rgba(0, 0, 0, 0.35)";
+    //    else if (thisPhase.Contains("screen"))
+    //        return "background: #ffbc01; color: rgba(0, 0, 0, 0.35)";
+    //    else if (thisPhase.Contains("screen"))
+    //        return "background: #ffd401; color: rgba(0, 0, 0, 0.35)";
+    //    else if (thisPhase.Contains("screen"))
+    //        return "background: #ebff01; color: rgba(0, 0, 0, 0.35);";
+    //    else if (thisPhase.Contains("screen"))
+    //        return "background: #baff01; color: rgba(0, 0, 0, 0.35)";
+    //    else if (thisPhase.Contains("screen"))
+    //        return "background: #05ff01; color: rgba(0, 0, 0, 0.35)";
 
-        return "";
-    }
+    //    return "";
+    //}
 }

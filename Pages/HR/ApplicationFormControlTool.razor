@@ -538,7 +538,7 @@
         </div>
     }
 </div>
-<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save" />
+@*<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save" />*@
 
 @code {
 
@@ -644,12 +644,12 @@
         await FormQuestionsChanged.InvokeAsync(FormQuestions);
     }
 
-    private async Task Save()
-    {
-        TempJob.formQuestions = FormQuestions;
-        Console.WriteLine("Questions Added");
-        await TempJobChanged.InvokeAsync(TempJob);
-    }
+    //private async Task Save()
+    //{
+    //    TempJob.formQuestions = FormQuestions;
+    //    Console.WriteLine("Questions Added");
+    //    await TempJobChanged.InvokeAsync(TempJob);
+    //}
 
     private string QuestionCardClass(CustomQuestion question)
     {

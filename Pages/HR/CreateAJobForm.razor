@@ -167,6 +167,15 @@
             <div class="createjob-form-individual">
                 <input type="text" placeholder="Job Name" @bind="TempJob.Title" />
             </div>
+            <div class="createjob-form-individual">
+                <select class="createjob-select" @onchange="OnStatusChanged">
+                    <option selected disabled>Job Status</option>
+                    @foreach (var status in Statuses)
+                    {
+                        <option>@status</option>
+                    }
+                </select>
+            </div>
         </div>
         <div class="form-group createjob-form-group">
             <div class="createjob-form-individual">
@@ -174,7 +183,7 @@
             </div>
             <div class="createjob-form-individual">
                 <select class="createjob-select" @onchange="OnLocationChanged">
-                    <option selected>Select Location</option>
+                    <option selected disabled>Select Location</option>
                     @foreach (var location in Locations)
                     {
                         <option>@location</option>
@@ -185,7 +194,7 @@
         <div class="form-group createjob-form-group">
             <div class="createjob-form-individual">
                 <select class="createjob-select" @bind="@Type">
-                    <option selected>Select Job Type</option>
+                    <option selected disabled>Select Job Type</option>
                     @foreach (var item in jobTypes)
                     {
                         <option value="@item.Type">@item.Type</option>
@@ -195,7 +204,7 @@
             </div>
             <div class="createjob-form-individual">
                 <select class="createjob-select" @onchange="OnDepartmentChanged">
-                    <option selected>Select Department</option>
+                    <option selected disabled>Select Department</option>
                     @foreach (var department in Departments)
                     {
                         <option>@department</option>
@@ -216,7 +225,7 @@
         </div>
     </form>
 </div>
-<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save" />
+@*<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save" />*@
 
 
 @code {
@@ -243,21 +252,27 @@
         return ValueChanged.InvokeAsync(TempJob.Department);
     }
 
-    private async Task Save()
+    private Task OnStatusChanged(ChangeEventArgs e)
     {
-        JobType jobType = new JobType();
-        jobType.Type = Type;
-        foreach (var type in jobTypes)
-        {
-            if (type.Type == Type)
-            {
-                jobType.Id = type.Id;
-            }
-        }
-
-        TempJob.JobType = jobType;
-        TempJob.JobPlatforms = ListOfPlatforms;
-        await TempJobChanged.InvokeAsync(TempJob);
+        TempJob.Status = e.Value.ToString();
+        return ValueChanged.InvokeAsync(TempJob.Status);
     }
+
+    //private async Task Save()
+    //{
+    //    JobType jobType = new JobType();
+    //    jobType.Type = Type;
+    //    foreach (var type in jobTypes)
+    //    {
+    //        if (type.Type == Type)
+    //        {
+    //            jobType.Id = type.Id;
+    //        }
+    //    }
+
+    //    TempJob.JobType = jobType;
+    //    TempJob.JobPlatforms = ListOfPlatforms;
+    //    await TempJobChanged.InvokeAsync(TempJob);
+    //}
 
 }
