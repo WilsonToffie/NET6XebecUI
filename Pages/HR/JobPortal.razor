@@ -405,7 +405,7 @@
                                     {
                                         @foreach (var item in jobList.Select(x => x.DepartmentId).OrderBy(x => x).Distinct())
                                         {
-                                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                            <MudSelectItem T="int" Value="item">@item</MudSelectItem>
                                         }
 
                                     }
