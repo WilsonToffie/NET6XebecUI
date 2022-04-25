@@ -167,15 +167,6 @@
             <div class="createjob-form-individual">
                 <input type="text" placeholder="Job Name" @bind="TempJob.Title" />
             </div>
-            <div class="createjob-form-individual">
-                <select class="createjob-select" @onchange="OnStatusChanged">
-                    <option selected disabled>Job Status</option>
-                    @foreach (var status in Statuses)
-                    {
-                        <option>@status</option>
-                    }
-                </select>
-            </div>
         </div>
         <div class="form-group createjob-form-group">
             <div class="createjob-form-individual">
@@ -193,7 +184,7 @@
         </div>
         <div class="form-group createjob-form-group">
             <div class="createjob-form-individual">
-                <select class="createjob-select" @bind="@Type">
+                <select class="createjob-select" >
                     <option selected disabled>Select Job Type</option>
                     @foreach (var item in jobTypes)
                     {
@@ -252,11 +243,16 @@
         return ValueChanged.InvokeAsync(TempJob.Department);
     }
 
-    private Task OnStatusChanged(ChangeEventArgs e)
-    {
-        TempJob.Status = e.Value.ToString();
-        return ValueChanged.InvokeAsync(TempJob.Status);
-    }
+    //private Task OnTypeChanged(ChangeEventArgs e)
+    //{
+    //    //TempJob.JobTypeId = e.Value.ToString();
+
+    //    //TempJob.JobTypeId = jobTypes.FirstOrDefault(q => q.Type == e);
+
+
+    //    //return ValueChanged.InvokeAsync(TempJob.JobTypeId);
+    //}
+
 
     //private async Task Save()
     //{

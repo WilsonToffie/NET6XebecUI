@@ -3,14 +3,12 @@ using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using X.PagedList;
 using XebecPortal.UI.Pages.Applicant.Models;
 using XebecPortal.UI.Pages.HR;
 using XebecPortal.UI.Shared;
-using XebecPortal.UI.Utils.Handlers;
 
 namespace XebecPortal.UI.Pages.Applicant
 {
@@ -47,26 +45,31 @@ namespace XebecPortal.UI.Pages.Applicant
         private IEnumerable<string> mudSelectJobType;
 
         private IJSObjectReference _jsModule;
-        string token;
+
         protected override async Task OnInitializedAsync()
         {
-            token = await localStorage.GetItemAsync<string>("jwt_token");
-
-            JobTypes = await httpClient.GetListJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/JobType", new AuthenticationHeaderValue("Bearer", token));
-            jobList = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
-            applicationList = await httpClient.GetListJsonAsync<List<Application>>("https://xebecapi.azurewebsites.net/api/Application", new AuthenticationHeaderValue("Bearer", token));
-            status = await httpClient.GetListJsonAsync<List<Status>>("/mockData/Status.json", new AuthenticationHeaderValue("Bearer", token));
-            jobTypeHelper = await httpClient.GetListJsonAsync<List<JobTypeHelper>>("https://xebecapi.azurewebsites.net/api/JobTypeHelper", new AuthenticationHeaderValue("Bearer", token));
-            candidates = await httpClient.GetListJsonAsync<List<CandidateRecommender>>("https://xebecapi.azurewebsites.net/api/CandidateRecommender", new AuthenticationHeaderValue("Bearer", token));
+            JobTypes = await httpClient.GetFromJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
+            jobList = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
+            applicationList = await httpClient.GetFromJsonAsync<List<Application>>("https://xebecapi.azurewebsites.net/api/Application");
+            status = await httpClient.GetFromJsonAsync<List<Status>>("/mockData/Status.json");
+            jobTypeHelper = await httpClient.GetFromJsonAsync<List<JobTypeHelper>>("https://xebecapi.azurewebsites.net/api/JobTypeHelper");
+            candidates = await httpClient.GetFromJsonAsync<List<CandidateRecommender>>("https://xebecapi.azurewebsites.net/api/CandidateRecommender");
+            jobList = jobList.Where(x => x.Status == "Open").ToList();
             jobListFilter = jobList;
             jobPagedList = jobListFilter.ToPagedList(1, 17);
             displayJobDetail = jobListFilter.FirstOrDefault();
             DisplayJobDetail(displayJobDetail.Id);
             jobPortalIsHidden = false;
             applicationFormIsHidden = true;
-            JobTypes = await httpClient.GetListJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/JobType", new AuthenticationHeaderValue("Bearer", token));
+            JobTypes = await httpClient.GetFromJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
 
-            _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/JobPortal.js");
+            _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/JobPortals.js");
+        }
+
+        protected override Task OnAfterRenderAsync(bool firstRender)
+        {
+            _jsModule.InvokeVoidAsync("ResizeTextArea");
+            return base.OnAfterRenderAsync(firstRender);
         }
 
         private async Task Apply(int id)
@@ -78,14 +81,15 @@ namespace XebecPortal.UI.Pages.Applicant
             application.AppUserId = state.AppUserId;
             application.ApplicationPhaseId = 1;
 
-            jobList = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
-            applicationList = await httpClient.GetListJsonAsync<List<Application>>("https://xebecapi.azurewebsites.net/api/Application", new AuthenticationHeaderValue("Bearer", token));
+            jobList = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
+            jobList = jobList.Where(x => x.Status == "Open").ToList();
+            applicationList = await httpClient.GetFromJsonAsync<List<Application>>("https://xebecapi.azurewebsites.net/api/Application");
 
             jobPortalIsHidden = true;
             applicationFormIsHidden = false;
 
-            Types = await httpClient.GetListJsonAsync<List<QuestionType>>("https://xebecapi.azurewebsites.net/api/answertype", new AuthenticationHeaderValue("Bearer", token));
-            QuestionList = await httpClient.GetListJsonAsync<List<FormQuestion>>($"https://xebecapi.azurewebsites.net/api/questionnaire/job/{id}", new AuthenticationHeaderValue("Bearer", token));
+            Types = await httpClient.GetFromJsonAsync<List<QuestionType>>("https://xebecapi.azurewebsites.net/api/answertype");
+            QuestionList = await httpClient.GetFromJsonAsync<List<FormQuestion>>($"https://xebecapi.azurewebsites.net/api/questionnaire/job/{id}");
 
             foreach (var q in QuestionList)
             {
@@ -179,8 +183,8 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private string GetJobType(int id)
         {
-            int jobTypeId = jobTypeHelper.FirstOrDefault(x => x.JobId == id).JobTypeId;
-            return JobTypes.FirstOrDefault(x => x.Id == jobTypeId).Type;
+            int jobTypeId = jobTypeHelper.Find(x => x.JobId == id).JobTypeId;
+            return JobTypes.Find(x => x.Id == jobTypeId).Type;
         }
 
         private static string GetMultiSelectionTextLocation(List<string> selectedValues)
@@ -232,7 +236,8 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 var listjobTypeIds = JobTypes.Where(x => mudSelectJobType.Contains(x.Type)).Select(x => x.Id);
                 var listJobIds = jobTypeHelper.Where(x => listjobTypeIds.Contains(x.JobTypeId)).Select(x => x.JobId);
-                jobListFilter = jobListFilter.Where(x => listJobIds.Contains(x.Id)).ToList();
+                var exceptJobIds = jobListFilter.Select(x => x.Id).Except(listJobIds);
+                jobListFilter = jobListFilter.Where(x => !exceptJobIds.Contains(x.Id)).ToList();
             }
         }
 
@@ -261,7 +266,7 @@ namespace XebecPortal.UI.Pages.Applicant
                     AnswerList.Add(tempAnswer);
                 }
 
-                await httpClient.PostJsonAsync<List<ApplicantAnswer>>("https://xebecapi.azurewebsites.net/api/applicantquestionnaire/list", AnswerList, new AuthenticationHeaderValue("Bearer", token));
+                await httpClient.PostAsJsonAsync<List<ApplicantAnswer>>("https://xebecapi.azurewebsites.net/api/applicantquestionnaire/list", AnswerList);
 
                 for (int i = 0; i < QuestionList.Count; i++)
                 {
@@ -280,7 +285,7 @@ namespace XebecPortal.UI.Pages.Applicant
                             tempMatches++;
                         }
                     }
-                    else if (QuestionList[i].answer.ToLower() == AnswerList[i].applicantAnswer.ToLower())
+                    else if (string.Equals(QuestionList[i].answer, AnswerList[i].applicantAnswer, StringComparison.OrdinalIgnoreCase))
                     {
                     Console.WriteLine("HR: " + QuestionList[i].answer.ToLower());
                     Console.WriteLine("Applicant: " + AnswerList[i].applicantAnswer.ToLower());
@@ -296,10 +301,10 @@ namespace XebecPortal.UI.Pages.Applicant
                 candidateScore.TotalMatch = tempScore;
                 candidates.Add(candidateScore);
 
-                await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/CandidateRecommender", candidateScore, new AuthenticationHeaderValue("Bearer", token));
+                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/CandidateRecommender", candidateScore);
                 application.BeginApplication = DateTime.Now;
 
-                await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/Application", application, new AuthenticationHeaderValue("Bearer", token));
+                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Application", application);
 
                 List<ApplicationModel> applications = await httpClient.GetFromJsonAsync<List<ApplicationModel>>("https://xebecapi.azurewebsites.net/api/Application");
 
@@ -314,10 +319,11 @@ namespace XebecPortal.UI.Pages.Applicant
                 phaseHelper.ApplicationPhaseId = 1;
 
 
-                await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper", phaseHelper, new AuthenticationHeaderValue("Bearer", token));
+                await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper", phaseHelper);
 
             ToJobPortal();
             submitModal = false;
+
         }
     }
 }

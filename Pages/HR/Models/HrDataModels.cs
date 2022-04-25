@@ -66,13 +66,22 @@ namespace XebecPortal.UI.Pages.HR
         public decimal? Compensation { get; set; }
         public int? MinimumExperience { get; set; }
         public string Location { get; set; }
-        public string Department { get; set; }
+        public string DepartmentId { get; set; }
+
+        public Department Department { get; set; }
         public string Status { get; set; }
         public DateTime DueDate { get; set; }
         public DateTime CreationDate { get; set; }
         public List<JobTypeHelper> JobTypes { get; set; }
         public List<JobPlatformHelper> JobPlatforms { get; set; }
         public List<JobApplicationPhase> JobPhases { get; set; }
+    }
+
+    public class Department
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
     }
 
     public class CreateJobPost
@@ -85,6 +94,8 @@ namespace XebecPortal.UI.Pages.HR
         public int? MinimumExperience { get; set; }
         public string Location { get; set; }
         public string Department { get; set; }
+
+        public int JobTypeId { get; set; }
 
         public string Status { get; set; }
         public DateTime DueDate { get; set; }

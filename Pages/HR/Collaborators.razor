@@ -1,6 +1,8 @@
 ﻿@using Bogus
 @using XebecPortal.UI.Services.Models
 @using System.Text
+@using XebecPortal.UI.Utils.Handlers;
+@using System.Net.Http.Headers;
 @inject HttpClient HttpClient
 @inject IJSRuntime jsRuntime
 @inject NavigationManager nav
@@ -16,6 +18,7 @@
         border: solid white 0.1em;
         box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
         display: flex;
+        justify-content: center;
     }
 
     .collaborators-left::-webkit-scrollbar {
@@ -400,119 +403,312 @@
     .info-email {
         color: #d35bc9;
     }
+
+    /*new styles*/
+    .collaborators-form {
+        width: 100%;
+        height: 100%;
+    }
+
+    .collaborators-title {
+        height: 8%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .collaborators-title-text {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: opensans-condensed-bold;
+        color: #004393;
+        background-color: transparent;
+        font-size: 1.8em;
+    }
+
+    .collaborators-dropdown {
+        width: 100%;
+        height: 12%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .collaborators-tooltip {
+        width: 100%;
+        height: 8%;
+        margin-top: 2%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .collaborators-tooltip-text {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: opensans-condensed-bold;
+        color: black;
+        background-color: transparent;
+        font-size: 1em;
+    }
+
+    .collaborators-listed {
+        width: 100%;
+        height: 23%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: 5px;
+    }
+
+    .collaborators-listed-list {
+        columns: 8;
+        max-width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+    }
+
+    .collaborators-questions-area {
+        width: 100%;
+        height: 40%;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+
+    .collaborators-question-card {
+        width: 160px;
+        height: 150px;
+        border-radius: 8px;
+        background-color: #00BCAE;
+    }
+
+    .collaborators-question-card-title {
+        height: 20%;
+        width: 100%;
+        color: white;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: 2px;
+    }
+
+    .collaborators-question-card-body {
+        height: 80%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .collaborators-question-card-list {
+        columns: 1;
+    }
+
+    .collaborators-appuser-item {
+        color: #00BCAE;
+        padding: 4px;
+    }
+
+    .collaborators-chosen-list {
+        overflow-y: auto;
+        max-height: 100%;
+    }
+
+    .question-appuser-item {
+        color: #d35bc9;
+    }
+
 </style>
 <!--Tables of developers/HR-->
 <div class="appform-container">
-    <div class="collaborators-left">
-        <div class="collaborators-heading">
-            <h2 class="collaborators-heading-text">Select Collaborators</h2>
+    <div class="collaborators-form">
+        <div class="collaborators-title">
+            <h2 class="collaborators-title-text">SELECT COLLABORATORS</h2>
         </div>
-        <div class="appform-left-main">
-            <div class="collaborators-left-table">
-                @if (collaborators == null)
+        <div class="collaborators-dropdown">
+            <select @onchange="SelectCollaborator">
+                <option selected disabled>
+                    Select Collaborators
+                </option>
+                @foreach (var collaborator in collaborators)
                 {
-                    <div>Loading...</div>
+                    <option>@collaborator.name @collaborator.surname</option>
                 }
-                else
+            </select>
+        </div>
+        <div class="collaborators-tooltip">
+            <h3 class="collaborators-tooltip-text">
+                Drag Collaborators to allow them to view application form answers.
+            </h3>
+        </div>
+        <div class="collaborators-listed">
+            <ul class="collaborators-listed-list" ondragover="event.preventDefault();" ondragstart="event.dataTransfer.setData('', event.target.id);">
+                @foreach (var collaborator in SelectedUsers)
                 {
-                    if (collaborators != null)
-                    {
-                        for (var index = 0; index < collaborators.Count; index++)
-                        {
-                            var collaborator = collaborators[index];
-                            var avatar = avatars.FirstOrDefault(i => i.Id == index)?.Avatar;
-
-                            <div class="@DeveloperCardClass(collaborator) pl-2 collaborator-div" @onclick="() => AddCollaborator(collaborator)" style="height: 8vh;">
-
-                                <div class="developer-profile-picture col-2 ml-2">
-                                    <img src="@avatar" alt="Avatar">
-                                </div>
-                                <span class="collaborator-name">@collaborator.name @collaborator.surname</span>
-                            </div>
-                        }
-                    }
+                    <li class="collaborators-appuser-item" draggable="true" @ondragstart="@(() => DragCollaborator(collaborator))">
+                        @collaborator
+                    </li>
                 }
-            </div>
-
+            </ul>
+        </div>
+        <div class="collaborators-questions-area">
+            @foreach (var q in QuestionsDictionary)
+            {
+                <div class="collaborators-question-card" @ondrop="() => AddToList(q.Value)" ondragover="event.preventDefault();">
+                    <div class="collaborators-question-card-title">
+                        @q.Key.question
+                    </div>
+                    <br />
+                    <div class="collaborators-question-card-body">
+                        <ul class="collaborators-chosen-list">
+                            @foreach (var user in q.Value)
+                            {
+                                <li class="question-appuser-item" draggable="true" @ondragend="RemoveItem">
+                                    @user
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            }
 
         </div>
     </div>
-    <div class="collaborators-right">
-        <div class="collaborators-heading">
-            <h2 class="collaborators-heading-text">Chosen Collaborators</h2>
-            @if (collaboratorsAdded != null && collaboratorsAdded.Count > 0)
-            {
-                <a href="mailto:@collaboratorsAdded[0].email?subject=Recruit Team Assignment&cc=@GetCC(collaboratorsAdded)&body=@GetBody(collaboratorsAdded)!"
-                   class="btn btn-info-email mb-3"
-                   data-toggle="tooltip" data-placement="top" title="Send an email to all team members">
-                    Email Team<span style="margin-left: 1vw"></span><i class="fas fa-paper-plane"></i>
-                </a>
-            }
-        </div>
-        <div class="collaborators-left-main">
 
-            <div class="collaborators-left-table">
-
-                @if (collaboratorsAdded != null)
-                {
-                    foreach (var developer in collaboratorsAdded)
+    @*<div class="collaborators-left">
+            <div class="collaborators-heading">
+                <h2 class="collaborators-heading-text">Select Collaborators</h2>
+            </div>
+            <div class="appform-left-main">
+                <div class="collaborators-left-table">
+                    @if (collaborators == null)
                     {
-                        <div class="right-list-item-preview">
-                            <div class="close-item-panel">
-                                <span @onclick="() => RemoveCollaborator(developer)">
-                                    <i class="fas fa-times"></i>
-                                </span>
-                            </div>
-                            <div class="preview-item-body">
-                                <div class="preview-item-description">
-                                    <p class="">
-                                        @developer.name @developer.surname
-                                        <a class="info-email" href="mailto:@(developer.email)?subject=Recruit Team Assignment&body=@GetBody(developer)!" data-toggle="tooltip" data-placement="top" title="Send an email to @developer.email">
-                                            <i class="fa fa-envelope" aria-hidden="true"></i>
-                                        </a>
-                                    </p>
-                                </div>
-                                <div class="preview-item-control">
-                                    <div class="form-control" style="width: 100%;">
-                                        @if (ChosenQuestions is { Count: > 0 })
-                                        {
-                                            <details style="max-height: 20vh; overflow-y: auto; width: 100%">
-                                                <summary style="width: 100%">Question & Answer access <small style="" class="text-right font-italic">Click here!</small></summary><br />
-                                                <small class="text-muted">Choose which candidate questions & answers the <u>@developer.name</u> has access to.</small><br />
-                                                @for (var index = 0; index < ChosenQuestions.Count; index++)
-                                                {
-                                                    List<FormQuestion> questions = new();
+                        <div>Loading...</div>
+                    }
+                    else
+                    {
+                        if (collaborators != null)
+                        {
+                            for (var index = 0; index < collaborators.Count; index++)
+                            {
+                                var collaborator = collaborators[index];
+                                var avatar = avatars.FirstOrDefault(i => i.Id == index)?.Avatar;
 
-                                                    var question = ChosenQuestions[index];
-                                                    <label class="access-question @GetHighlighting(question, developer)">
-                                                        @(index + 1). @question.question <input style="display: block" type="checkbox" @onchange="() => AddOrRemoveQuestion(question, developer)" />
-                                                    </label>
-                                                }
-                                            </details>
-                                        }
-                                        else
-                                        {
-                                            <p>No custom questions selected</p>
-                                        }
+                                <div class="@DeveloperCardClass(collaborator) pl-2 collaborator-div" @onclick="() => AddCollaborator(collaborator)" style="height: 8vh;">
+
+                                    <div class="developer-profile-picture col-2 ml-2">
+                                        <img src="@avatar" alt="Avatar">
+                                    </div>
+                                    <span class="collaborator-name">@collaborator.name @collaborator.surname</span>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+
+
+            </div>
+        </div>
+        <div class="collaborators-right">
+            <div class="collaborators-heading">
+                <h2 class="collaborators-heading-text">Chosen Collaborators</h2>
+                @if (collaboratorsAdded != null && collaboratorsAdded.Count > 0)
+                {
+                    <a href="mailto:@collaboratorsAdded[0].email?subject=Recruit Team Assignment&cc=@GetCC(collaboratorsAdded)&body=@GetBody(collaboratorsAdded)!"
+                       class="btn btn-info-email mb-3"
+                       data-toggle="tooltip" data-placement="top" title="Send an email to all team members">
+                        Email Team<span style="margin-left: 1vw"></span><i class="fas fa-paper-plane"></i>
+                    </a>
+                }
+            </div>
+            <div class="collaborators-left-main">
+
+                <div class="collaborators-left-table">
+
+                    @if (collaboratorsAdded != null)
+                    {
+                        foreach (var developer in collaboratorsAdded)
+                        {
+                            <div class="right-list-item-preview">
+                                <div class="close-item-panel">
+                                    <span @onclick="() => RemoveCollaborator(developer)">
+                                        <i class="fas fa-times"></i>
+                                    </span>
+                                </div>
+                                <div class="preview-item-body">
+                                    <div class="preview-item-description">
+                                        <p class="">
+                                            @developer.name @developer.surname
+                                            <a class="info-email" href="mailto:@(developer.email)?subject=Recruit Team Assignment&body=@GetBody(developer)!" data-toggle="tooltip" data-placement="top" title="Send an email to @developer.email">
+                                                <i class="fa fa-envelope" aria-hidden="true"></i>
+                                            </a>
+                                        </p>
+                                    </div>
+                                    <div class="preview-item-control">
+                                        <div class="form-control" style="width: 100%;">
+                                            @if (ChosenQuestions is { Count: > 0 })
+                                            {
+                                                <details style="max-height: 20vh; overflow-y: auto; width: 100%">
+                                                    <summary style="width: 100%">Question & Answer access <small style="" class="text-right font-italic">Click here!</small></summary><br />
+                                                    <small class="text-muted">Choose which candidate questions & answers the <u>@developer.name</u> has access to.</small><br />
+                                                    @for (var index = 0; index < ChosenQuestions.Count; index++)
+                                                    {
+                                                        List<FormQuestion> questions = new();
+
+                                                        var question = ChosenQuestions[index];
+                                                        <label class="access-question @GetHighlighting(question, developer)">
+                                                            @(index + 1). @question.question <input style="display: block" type="checkbox" @onchange="() => AddOrRemoveQuestion(question, developer)" />
+                                                        </label>
+                                                    }
+                                                </details>
+                                            }
+                                            else
+                                            {
+                                                <p>No custom questions selected</p>
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        }
                     }
-                }
+
+                </div>
 
             </div>
 
-        </div>
-
-    </div>
+        </div>*@
 </div>
-@*<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save" />*@
+
+<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save" />
+
+@*<input type="button" value="Prev" class="createjob-bottom-main-button" @onclick="Save" />
+<input type="button" value="Prev" class="createjob-bottom-main-button" @onclick="Save" />
+<input type="button" value="Prev" class="createjob-bottom-main-button" @onclick="Save" />*@
+
+
+
+
+
 
 @code {
 
-    @using XebecPortal.UI.Utils.Handlers;
-    @using System.Net.Http.Headers;
+    //stuff im using
+    private string CurrentItem;
+    private List<AppUser> collaborators = new List<AppUser>();
+    private List<string> SelectedUsers = new List<string>();
+    public Dictionary<FormQuestion, List<string>> QuestionsDictionary = new Dictionary<FormQuestion, List<string>>();
+
+
+    List<AppUser> ListOne = new List<AppUser>();
+
+
+    //[Parameter]
+    //jobid?
 
     [Parameter]
     public List<FormQuestion> ChosenQuestions { get; set; }
@@ -528,13 +724,13 @@
     public Dictionary<AppUser, List<FormQuestion>> Map { get; set; }
 
 
-    private List<AppUser> collaborators = new List<AppUser>();
     private List<AppUser> collaboratorsAdded = new List<AppUser>();
     private List<Applicant> avatars = new();
 
     string token;
     protected override async Task OnInitializedAsync()
     {
+
         token = await localStorage.GetItemAsync<string>("jwt_token");
 
         collaborators = await HttpClient.GetListJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user", new AuthenticationHeaderValue("Bearer", token));
@@ -553,6 +749,16 @@
         foreach (var collaborator in collaborators)
         {
             Map.Add(collaborator, new());
+        }
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        QuestionsDictionary.Clear();
+
+        foreach (var q in ChosenQuestions)
+        {
+            QuestionsDictionary.Add(q, new List<string>());
         }
     }
 
@@ -656,6 +862,61 @@
         }
         Map[collaborator] = formQuestions;
     }
+
+
+    //attempt 2
+
+    private void DragCollaborator(string item)
+    {
+        CurrentItem = item;
+    }
+
+    private void AddToList(List<string> list)
+    {
+        if(!list.Exists(x => x == CurrentItem))
+        {
+            list.Add(CurrentItem);
+        }
+    }
+
+    private void SelectCollaborator(ChangeEventArgs e)
+    {
+        if(SelectedUsers.Count == 0)
+        {
+            SelectedUsers.Add(e.Value.ToString());
+
+        }
+        else if(!SelectedUsers.Exists(q => q == e.Value.ToString()))
+        {
+            SelectedUsers.Add(e.Value.ToString());
+        }
+    }
+
+    private void RemoveItem(DragEventArgs e)
+    {
+        Console.WriteLine(e.DataTransfer.Items[0]);
+    }
+
+    private void Save()
+    {
+        //get collaborators from strings
+
+
+        //foreach(var collab in SelectedUsers)
+        //{
+        //    Collaborator collaborator = new Collaborator();
+        //    collaborator.AppUserId = collab.id;
+        //    collaborator.Name = collab.name;
+        //    collaborator.JobId = 1;
+
+        //    //httpPOST
+        //}
+    }
+
+    private void Next()
+        {
+            //navigate to x, parameter: jobId
+        }
 
 }
 
