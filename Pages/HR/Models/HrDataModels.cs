@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using System.ComponentModel.DataAnnotations;
 namespace XebecPortal.UI.Pages.HR
 {
     internal class ApplicantData
@@ -87,17 +87,28 @@ namespace XebecPortal.UI.Pages.HR
     public class CreateJobPost
     {
         public int Id { get; set; }
+        [Required]
         public string Title { get; set; }
+        [Required]
         public string Description { get; set; }
+        [Required]
         public string Company { get; set; }
         public decimal? Compensation { get; set; }
         public int? MinimumExperience { get; set; }
+        [Required]
         public string Location { get; set; }
+        [Required]
         public string Department { get; set; }
+
+        [Required]
+        public string Policy { get; set; } // Not sure what data type it should be, but policy is a required field   
+
 
         public int JobTypeId { get; set; }
 
+
         public string Status { get; set; }
+        [Required]
         public DateTime DueDate { get; set; }
         public DateTime CreationDate { get; set; }
         public JobType JobType { get; set; }

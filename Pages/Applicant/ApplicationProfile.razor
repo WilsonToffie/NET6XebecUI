@@ -318,10 +318,10 @@
     /*new designs from promise*/
 
     .history {
-        border-left: 1px solid rgba(255, 255, 255, 0.3);
+        /*border-left: 1px solid rgba(255, 255, 255, 0.3);
         border-top: 1px solid rgba(255, 255, 255, 0.3);
         backdrop-filter: blur(10px);
-        box-shadow: 20px 20px 40px -6px rgba(0, 0, 0, 0.2);
+        box-shadow: 20px 20px 40px -6px rgba(0, 0, 0, 0.2);*/
         text-align: center;
         overflow: hidden;
     }
@@ -680,29 +680,47 @@
     }
 
     .text-card {
+        background-color: rgba(255,255,255,1);
+        border: solid white 0.25em;
+        box-shadow: rgb(9 30 66 / 25%) 0px 1px 1px, rgb(9 30 66 / 13%) 0px 0px 1px 1px;
         border-radius: 20px;
         min-height: 10vh;
         font-family: opensans-condensed-bold;
         font-weight: 700;
         color: black;
         font-size: 1.8vh;
-        background-color: #FFFFFF;
-        margin-bottom: 2px;
+        margin-bottom: 7px !important;
+        cursor: pointer;
+        width: 90%;
+        margin-left: 1.75vh;
     }
 
         .text-card:hover {
+            background-color: rgba(255,255,255,1);
+            border: solid white 0.25em;
+            box-shadow: rgb(9 30 66 / 25%) 0px 1px 1px, rgb(9 30 66 / 13%) 0px 0px 1px 1px;
             border-radius: 20px;
             min-height: 10vh;
             font-family: opensans-condensed-bold;
             font-weight: 700;
             color: black;
             font-size: 1.8vh;
-            margin-bottom: 2px;
+            margin-bottom: 7px;
+            cursor: pointer;
+            width: 90%;
+            margin-left: 1.75vh;
+            /*border-radius: 20px;
+            min-height: 10vh;
+            font-family: opensans-condensed-bold;
+            font-weight: 700;
+            color: black;
+            font-size: 1.8vh;
+            margin-bottom: 2px;*/
             /*box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;
-            */ background: #49E5EF;
+             background: #49E5EF;*/
             /*backdrop-filter: blur(5.6px);
             -webkit-backdrop-filter: blur(5.6px);*/
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            /*border: 1px solid rgba(255, 255, 255, 0.04);*/
         }
 
 
@@ -800,6 +818,8 @@
             /*Grey #666666*/
             /*Combo light blue, dark blue, pink, green-ish*/
             background-image: linear-gradient(to right, #49E5EF 0%, #2294E3 20%, #d35bc9 45%, #00bcae 100%); /* your gradient here */
+            margin-top: 1px;
+            margin-bottom: 1px;
         }
 
 </style>
@@ -895,22 +915,22 @@
                                     </div>
                                     <div class="row p-3">
                                         <div class="col-4">
-                                            <label class="form-label" for="first-name">First Name</label>
-                                            <InputText id="first-name" class="form-control shadow bg-body rounded" @bind-Value="personalInformation.FirstName" placeholder="John" @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                            @*<label class="form-label" for="first-name">First Name</label>*@
+                                            <InputText id="first-name" class="form-control shadow bg-body rounded" @bind-Value="personalInformation.FirstName" placeholder="First Name" @onfocusout="completion" /> <!--@onfocusout="completion" -->
                                         </div>
                                         <div class="col-4">
-                                            <label class="form-label" for="last-name">Last Name</label>
-                                            <InputText id="last-name" class="form-control shadow bg-body rounded" @bind-Value="personalInformation.LastName" placeholder="Smith" @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                            @*<label class="form-label" for="last-name">Last Name</label>*@
+                                            <InputText id="last-name" class="form-control shadow bg-body rounded" @bind-Value="personalInformation.LastName" placeholder="Last Name" @onfocusout="completion" /> <!--@onfocusout="completion" -->
                                         </div>
                                         <div class="col-4">
-                                            <label class="form-label" for="email-address">Email Address</label>
-                                            <InputText id="email-address" class="form-control shadow bg-body rounded" type="email" @bind-Value="personalInformation.Email" placeholder="John@gmail.com" @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                            @*<label class="form-label" for="email-address">Email Address</label>*@
+                                            <InputText id="email-address" class="form-control shadow bg-body rounded" type="email" @bind-Value="personalInformation.Email" placeholder="Email Address" @onfocusout="completion" /> <!--@onfocusout="completion" -->
                                         </div>
                                     </div>
                                     <div class="row p-3">
                                         <div class="col-4">
-                                            <label class="form-label" for="phone-number">Phone Number</label>
-                                            <InputText id="phone-number" class="form-control shadow bg-body rounded" @bind-Value="personalInformation.PhoneNumber" placeholder="0713369875" @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                            @*<label class="form-label" for="phone-number">Phone Number</label>*@
+                                            <InputText id="phone-number" class="form-control shadow bg-body rounded" style="margin-top: 3.7vh;" @bind-Value="personalInformation.PhoneNumber" placeholder="Contact Number" @onfocusout="completion" /> <!--@onfocusout="completion" -->
                                         </div>
                                         <div class="col-4">
                                             <label class="form-label" for="ethnicity">Ethnicity</label>
@@ -971,11 +991,11 @@
                                     </div>
                                     <div class="row p-3">
                                         <div class="col-4">
-                                            <label class="form-label" for="id-number">ID Number</label>
-                                            <InputText id="id-number" class="form-control shadow bg-body rounded" min="13" max="13" @bind-Value="personalInformation.IdNumber" placeholder="010205365987" @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                            @*<label class="form-label" for="id-number">ID Number</label>*@
+                                            <InputText id="id-number" class="form-control shadow bg-body rounded" min="13" max="13" @bind-Value="personalInformation.IdNumber" placeholder="ID Number" @onfocusout="completion" /> <!--@onfocusout="completion" -->
                                         </div>
                                         <div class="col-8">
-                                            <label class="form-label" for="address">Address</label>
+                                            @*<label class="form-label" for="address">Address</label>*@
                                             <InputTextArea id="address" class="form-control shadow bg-body rounded" @bind-Value="personalInformation.Address" placeholder="Address" rows="1" @onfocusout="completion"></InputTextArea>
                                         </div>
                                     </div>
@@ -1193,28 +1213,7 @@
                                                     <button class="skill-button btn" type="submit" value="Add">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
                                                 }
 
-                                            </div>
-
-                                            <!--<div class="hr-job-search-bar">
-                                            <input class="search-image search-bar-input" type="text" placeholder="Search For Jobs" @oninput="SearchSkillList" />-->
-                                            <!-- @oninput="SearchListJob"-->
-                                            <!--</div>-->
-                                            @*<div class="col-12 d-flex justify-content-center">
-                                                    <div class="skill-table-size">
-                                                        <div class="content-size-left">
-                                                            @foreach (var item in skillListFilter)
-                                                            {
-                                                                <div class="card-class-for-skills" @onclick="() => addToSelectedInfo(item)">
-                                                                    <div>@item.Description</div>
-                                                                </div>
-                                                            }
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                @if (warning)
-                                                {
-                                                    <div class="d-flex justify-content-center align-bottom align-content-end">  @skillWarning</div>
-                                                }*@
+                                            </div>                                            
                                         </div>
                                     </div>
                                     <div class="col-3">
@@ -1230,7 +1229,7 @@
                                                 {
                                                     foreach (var item in selectedSkillsList1)
                                                     {
-                                                        <div class="text-card" @onclick="() => SelectSkill(item)">
+                                                        <div class="text-card" @onclick="() => SelectSkill(item)" style="@GetSkillStyling(item)">
                                                             <div class="work-history-icon">
                                                                 <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => removeFromSelectedInfo(item)"></i> <!---->
                                                                 <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
@@ -1479,7 +1478,7 @@
 
     private void progressCheck()
     {
-
+        completion();
         if (workHistoryList.Count >= 1 && workCount == 0)
         {
             count = count + 3;

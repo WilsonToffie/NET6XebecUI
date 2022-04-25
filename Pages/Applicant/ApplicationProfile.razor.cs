@@ -108,7 +108,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 //The following code allows the Lists to be populated with existing information
                 token = await localStorage.GetItemAsync<string>("jwt_token");
                 //Console.WriteLine("Token for personal info " + token);
-               // var response = await httpClient.GetJsonAsync<string>("https://xebecapi.azurewebsites.net/api/user/AllAuth", new AuthenticationHeaderValue("Bearer", token));
+                // var response = await httpClient.GetJsonAsync<string>("https://xebecapi.azurewebsites.net/api/user/AllAuth", new AuthenticationHeaderValue("Bearer", token));
                 //Console.WriteLine("Does it work? " + response);
 
 
@@ -214,11 +214,6 @@ namespace XebecPortal.UI.Pages.Applicant
 
         //        return await response.Content.ReadAsStringAsync();
         //    }
-        //}
-
-        //private void loadUserInformation()
-        //{
-
         //}
 
         private string skillWarning = "";
@@ -540,7 +535,8 @@ namespace XebecPortal.UI.Pages.Applicant
         private object GetStyling(WorkHistory item)
         {
             if ((workHistory.CompanyName == item.CompanyName) && (workHistory.JobTitle == item.JobTitle) && (workHistory.Description == item.Description))
-                return "background: #49E5EF;backdrop - filter: blur(5.6px);-webkit-backdrop-filter: blur(5.6px); border: 1px solid rgba(255, 255, 255, 0.04); min-height:15vh; overflow-y: auto;";
+                return "box-shadow: rgb(0 51 64 / 86%) 0px 0px 0px 2px, rgb(6 24 44 / 65%) 0px 4px 6px -1px, rgb(255 255 255 / 8%) 0px 1px 0px inset;";
+                //return "background: #49E5EF;backdrop - filter: blur(5.6px);-webkit-backdrop-filter: blur(5.6px); border: 1px solid rgba(255, 255, 255, 0.04); min-height:15vh; overflow-y: auto;";
                 //return "box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;background: rgba(255, 255, 255, 0);backdrop - filter: blur(5.6px);-webkit-backdrop-filter: blur(5.6px); border: 1px solid rgba(255, 255, 255, 0.04); min-height:15vh; overflow-y: auto; ";
             return "";
         }
@@ -548,22 +544,25 @@ namespace XebecPortal.UI.Pages.Applicant
         private object GetEduStyling(Education item)
         {
             if ((education.Insitution == item.Insitution) && (education.Qualification == item.Qualification))
-                return "background: #49E5EF;backdrop - filter: blur(5.6px);-webkit-backdrop-filter: blur(5.6px); border: 1px solid rgba(255, 255, 255, 0.04); min-height:15vh; overflow-y: auto;";
+                return "box-shadow: rgb(0 51 64 / 86%) 0px 0px 0px 2px, rgb(6 24 44 / 65%) 0px 4px 6px -1px, rgb(255 255 255 / 8%) 0px 1px 0px inset;";
+            //return "background: #49E5EF;backdrop - filter: blur(5.6px);-webkit-backdrop-filter: blur(5.6px); border: 1px solid rgba(255, 255, 255, 0.04); min-height:15vh; overflow-y: auto;";
             return "";
         }
         private object GetRefStyling(References item)
         {
             if ((references.RefFirstName == item.RefFirstName) && (references.RefLastName == item.RefLastName) && (references.RefPhone == item.RefPhone) && (references.RefEmail == item.RefEmail))
-                return "background: #49E5EF;backdrop - filter: blur(5.6px);-webkit-backdrop-filter: blur(5.6px); border: 1px solid rgba(255, 255, 255, 0.04); min-height:15vh; overflow-y: auto;";
+                return "box-shadow: rgb(0 51 64 / 86%) 0px 0px 0px 2px, rgb(6 24 44 / 65%) 0px 4px 6px -1px, rgb(255 255 255 / 8%) 0px 1px 0px inset;";
+
+            //return "background: #49E5EF;backdrop - filter: blur(5.6px);-webkit-backdrop-filter: blur(5.6px); border: 1px solid rgba(255, 255, 255, 0.04); min-height:15vh; overflow-y: auto;";
             return "";
         }
-        
-        //private object GetSkillStyling(SkillsInformation item)
-        //{
-        //    if (( == item.Description) && (references.Name == item.Name) && (references.ContactNum == item.ContactNum) && (references.Email == item.Email))
-        //        return "background: #49E5EF;backdrop - filter: blur(5.6px);-webkit-backdrop-filter: blur(5.6px); border: 1px solid rgba(255, 255, 255, 0.04); min-height:15vh; overflow-y: auto;";
-        //    return "";
-        //}
+
+        private object GetSkillStyling(SkillsInformation item)
+        {
+            if ((skillInfo.Description == item.Description))
+                return "box-shadow: rgb(0 51 64 / 86%) 0px 0px 0px 2px, rgb(6 24 44 / 65%) 0px 4px 6px -1px, rgb(255 255 255 / 8%) 0px 1px 0px inset;";
+            return "";
+        }
         private async Task SaveWorkHistory(WorkHistory workHistoryValues)
         {
             workEditMode = false;
