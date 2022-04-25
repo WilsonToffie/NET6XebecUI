@@ -389,6 +389,7 @@
 </div>
 
 <div class="createjob-form-container">
+
     <EditForm Model="@TempJob" class="createjob-form" OnValidSubmit="@saveJobState">
         <DataAnnotationsValidator />
         @if (manageDep)
@@ -579,6 +580,17 @@
                         <input type="button" value="Delete Departement" class="form-buttons" />
                     </div>*@
                 </div>
+
+    <form class="createjob-form">
+        <div class="form-group createjob-form-group" style="margin-top:5vh;">
+            <div class="createjob-form-individual">
+                <input type="text" placeholder="Job Name" @bind="TempJob.Title" />
+            </div>
+        </div>
+        <div class="form-group createjob-form-group">
+            <div class="createjob-form-individual">
+                <input type="text" placeholder="Company Name" @bind="TempJob.Company" />
+
             </div>
 
 
@@ -605,6 +617,18 @@
                     </div>*@
                 </div>
             </div>
+
+        </div>
+        <div class="form-group createjob-form-group">
+            <div class="createjob-form-individual">
+                <select class="createjob-select" >
+                    <option selected disabled>Select Job Type</option>
+                    @foreach (var item in jobTypes)
+                    {
+                        <option value="@item.Type">@item.Type</option>
+                    }
+                </select>
+
 
             <div class="spacing-for-stuff">
                 <div class="form-group createjob-form-group">
@@ -760,6 +784,7 @@
         TempJob.Department = e.Value.ToString();
         return ValueChanged.InvokeAsync(TempJob.Department);
     }
+
     private Task OnCompanyChanged(ChangeEventArgs e)
     {
         TempJob.Company = e.Value.ToString();
@@ -775,6 +800,19 @@
         TempJob.Status = e.Value.ToString();
         return ValueChanged.InvokeAsync(TempJob.Status);
     }
+
+
+    //private Task OnTypeChanged(ChangeEventArgs e)
+    //{
+    //    //TempJob.JobTypeId = e.Value.ToString();
+
+    //    //TempJob.JobTypeId = jobTypes.FirstOrDefault(q => q.Type == e);
+
+
+    //    //return ValueChanged.InvokeAsync(TempJob.JobTypeId);
+    //}
+
+
 
     //private async Task Save()
     //{
