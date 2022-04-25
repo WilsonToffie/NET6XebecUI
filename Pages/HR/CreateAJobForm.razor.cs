@@ -14,22 +14,26 @@ namespace XebecPortal.UI.Pages.HR
 {
     public partial class CreateAJobForm
     {
+        public Job job = new();
         [Parameter]
         public CreateJobPost TempJob { get; set; }        
+                
         [Parameter]
         public EventCallback<CreateJobPost> TempJobChanged { get; set; }
         private List<AppUser> collaborators = new List<AppUser>();
         private List<AppUser> collaboratorsAdded = new List<AppUser>();
-        private List<string> Departments = new List<string>() { "Accounting & Finance", "HR", "Sales & Marketing", "Legal", "Research & Development", "IT", "Admin", "SSS"};
         private List<string> Company = new List<string>() { "Nebula", "Deloitte"};
         private List<string> Locations = new List<string>() { "Remote", "Eastern Cape","Free State"," Gauteng","KwaZulu-Natal","Limpopo","Mpumalanga","Northen Cape","North West","Western Cape"} ;
         private List<string> Statuses = new List<string>() { "Open", "Draft", "Filled", "Closed"};
         private List<string> Policies = new List<string>() { "Remote", "Hybrid", "Onsite" };
         private IList<JobType> jobTypes = new List<JobType>();
         private IList<JobPlatform> jobPlatforms = new List<JobPlatform>();
+        private IList<Department> Departments = new List<Department>();
         private JobType tempJobType = new JobType();
+        private Department department = new Department();
         private List<JobPlatform> ListOfPlatforms = new List<JobPlatform>();
-        private List<CreateJobPost> jobList = new List<CreateJobPost>();
+        private List<CreateJobPost> jobList = new List<CreateJobPost>();        
+
 
         string token;
         private bool manageDep;
@@ -38,16 +42,18 @@ namespace XebecPortal.UI.Pages.HR
         private bool deleteDep;
         private bool createNewComp;
         private bool deleteComp;
-        private string departmentToAdd;
         private string companyToAdd;
+        private string depToDelete;
 
         protected override async Task OnInitializedAsync()
-        {
+        {            
             token = await localStorage.GetItemAsync<string>("jwt_token");
 
             jobPlatforms = await HttpClient.GetListJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform", new AuthenticationHeaderValue("Bearer", token));
             jobTypes = await HttpClient.GetListJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/jobtype", new AuthenticationHeaderValue("Bearer", token));
             collaborators = await HttpClient.GetListJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user", new AuthenticationHeaderValue("Bearer", token));
+            Departments = await HttpClient.GetListJsonAsync<List<Department>>("https://xebecapi.azurewebsites.net/api/Department", new AuthenticationHeaderValue("Bearer", token));
+
             TempJob.DueDate = TempJob.CreationDate = DateTime.Today;
         }
 
@@ -90,18 +96,24 @@ namespace XebecPortal.UI.Pages.HR
         {
             deleteComp = value;
         }
-        private void addDepartment(string value)
+        private void addDepartment(Department value)
         {
             if (!value.Equals(string.Empty))
             {
-                Departments.Add(value);
-                departmentToAdd = string.Empty;
+                //Departments.Add(value);
+                // department.name = string.Empty;
+                Departments.Add(new()
+                {
+                    Name = value.Name
+                });
+                department.Name = string.Empty;
             }            
         }
 
         private void removeDepartment(string value)
         {
-            Departments.Remove(value);
+            Console.WriteLine("Value received: " + value);
+           // Departments.RemoveAll(x => x.name.Equals(value));
         }
 
         private void addCompany(string value)

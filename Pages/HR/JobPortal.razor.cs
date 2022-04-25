@@ -234,11 +234,11 @@ namespace XebecPortal.UI.Pages.HR
                 jobListFilter = jobListFilter.Where(x => !listCompany.Contains(x.Company)).ToList();
             }
 
-            if (mudSelectDepartment?.Any() == true)
-            {
-                var listDepartments = jobListFilter.Select(x => x.DepartmentId).Except(mudSelectDepartment).ToList();
-                jobListFilter = jobListFilter.Where(x => !listDepartments.Contains(x.DepartmentId)).ToList();
-            }
+            //if (mudSelectDepartment?.Any() == true)
+            //{
+            //    var listDepartments = jobListFilter.Select(x => x.DepartmentId).Except(mudSelectDepartment).ToList();
+            //    jobListFilter = jobListFilter.Where(x => !listDepartments.Contains(x.DepartmentId)).ToList();
+            //}
 
             if (mudSelectStatus?.Any() == true)
             {
