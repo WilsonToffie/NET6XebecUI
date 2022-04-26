@@ -348,10 +348,10 @@
                     <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
                         @if (jobListFilter?.Any() == true)
                         {
-                            @foreach (var item in jobList.Select(x => x.Department).OrderBy(x => x).Distinct())
+                            @*@foreach (var item in jobList.Select(x => x.Department).OrderBy(x => x).Distinct())
                             {
                                 <MudSelectItem T="string" Value="item">@item</MudSelectItem>
-                            }
+                            }*@
 
                         }
                     </MudSelect>

@@ -60,19 +60,29 @@ namespace XebecPortal.UI.Pages.HR
     public class Job
     {
         public int Id { get; set; }
+        [Required]
         public string Title { get; set; }
+        [Required]
         public string Description { get; set; }
+        [Required]
         public string Company { get; set; }
         public decimal? Compensation { get; set; }
         public int? MinimumExperience { get; set; }
+        [Required]
         public string Location { get; set; }
-        public string Department { get; set; }
+        public int DepartmentId { get; set; }
+        public Department Department { get; set; } // Dont have to fill in this info when sending it to the DB
         public string Status { get; set; }
+        [Required]
         public DateTime DueDate { get; set; }
         public DateTime CreationDate { get; set; }
+        [Required]
         public List<JobTypeHelper> JobTypes { get; set; }
         public List<JobPlatformHelper> JobPlatforms { get; set; }
         public List<JobApplicationPhase> JobPhases { get; set; }
+
+        [Required]
+        public string Policy { get; set; }
     }
 
     public class CreateJobPost
@@ -88,8 +98,8 @@ namespace XebecPortal.UI.Pages.HR
         public int? MinimumExperience { get; set; }
         [Required]
         public string Location { get; set; }
-        [Required]
-        public string Department { get; set; }
+        //[Required]
+        //public string Department { get; set; }
         [Required]
         public string Policy { get; set; } // Not sure what data type it should be, but policy is a required field   
         public string Status { get; set; }
@@ -101,6 +111,13 @@ namespace XebecPortal.UI.Pages.HR
         public List<ApplicationPhase> JobPhases { get; set; }
         public List<FormQuestion> formQuestions { get; set; }
         public List<AppUser> Collaborators { get; set; }
+        public Department Department { get; set; }
+    }
+
+    public class Department
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 
     public partial class CandidateRecommender

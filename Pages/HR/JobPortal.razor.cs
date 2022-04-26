@@ -237,8 +237,8 @@ namespace XebecPortal.UI.Pages.HR
 
             if (mudSelectDepartment?.Any() == true)
             {
-                var listDepartments = jobListFilter.Select(x => x.Department).Except(mudSelectDepartment).ToList();
-                jobListFilter = jobListFilter.Where(x => !listDepartments.Contains(x.Department)).ToList();
+                //var listDepartments = jobListFilter.Select(x => x.Department).Except(mudSelectDepartment).ToList();
+                //jobListFilter = jobListFilter.Where(x => !listDepartments.Contains(x.Department)).ToList();
             }
 
             if (mudSelectStatus?.Any() == true)

@@ -224,10 +224,11 @@
         .form-buttons:hover {
             background-color: #d35bc9;
         }
-    .index-form-button {
+
+/*    .index-form-button {
         background-color: rgba(0, 188, 174,1);
         color: white;
-        width: 100px;
+        width: 50%;
         height: 5vh;
         border: none;
         text-align: center;
@@ -238,6 +239,9 @@
         border: none;
         border-radius: 1em;
     }
+        .index-form-button:hover {
+            background-color: #d35bc9;
+        }*/
 
     .createNew-buttton-function {
         text-align: center;
@@ -263,9 +267,7 @@
         }
         
 
-        .index-form-button:hover {
-            background-color: #d35bc9;
-        }
+        
 
     .created-items-container {
         height: 20vh;
@@ -340,6 +342,13 @@
         bottom: 10vh;
         margin-left: 30vh;
     }
+
+    .successMessage {
+        text-align: center;
+        margin-top: 10vh;
+    }
+    
+
 </style>
 
 <div class="create-job-summary">
@@ -348,70 +357,73 @@
     <div class="summary-container">
         <div class="summary-individual">
             <div class="text-font-styling"> Job Name</div>
-            <div class="summary-text-style">@TempJob.Title</div>
+            <div class="summary-text-style">@job.Title</div>
         </div>
 
         <div class="summary-individual">
             <div class="text-font-styling"> Department</div>
-            <div class="summary-text-style">@TempJob.Department</div>
+            <div class="summary-text-style">@job.DepartmentId</div> 
         </div>
 
         <div class="summary-individual">
             <div class="text-font-styling"> Company</div>
-            <div class="summary-text-style">@TempJob.Company</div>
+            <div class="summary-text-style">@job.Company</div>
         </div>
 
         <div class="summary-individual">
             <div class="text-font-styling"> WFH Policy</div>
-            <div class="summary-text-style">@TempJob.Policy</div>
+            <div class="summary-text-style">@job.Policy</div>
         </div>
 
         <div class="summary-individual">
             <div class="text-font-styling"> Location</div>
-            <div class="summary-text-style">@TempJob.Location</div>
+            <div class="summary-text-style">@job.Location</div>
         </div>
 
         <div class="summary-individual">
             <div class="text-font-styling"> Job Type</div>
-            <div class="summary-text-style">@TempJob.JobType.Type</div>
+            <div class="summary-text-style">@job.JobTypes</div>
         </div>
 
         <div class="summary-individual">
             <div class="text-font-styling"> Application Due Date</div>
-            <div class="summary-text-style">@TempJob.DueDate</div>
+            <div class="summary-text-style">@job.DueDate</div>
         </div>
 
         <div class="summary-individual">
             <div class="text-font-styling"> Job Description</div>
-            <div class="summary-text-style">@TempJob.Description</div>
+            <div class="summary-text-style">@job.Description</div>
         </div>
     </div>
 </div>
 
 <div class="createjob-form-container">
-    <EditForm Model="@TempJob" class="createjob-form" OnValidSubmit="@saveJobState">
+    <EditForm Model="@job" class="createjob-form" OnValidSubmit="@saveJobState">
         <DataAnnotationsValidator />
         @if (manageDep)
         {
             @if (createNewDep)
             {
+                <EditForm Model="@department" OnValidSubmit="@saveJobState" Context="Departments">
                 <div class="page-title">Create Department</div>
 
                 <div class="form-group createjob-form-group">
                     <div class="createjob-form-individual" style="width: 200%;">
                         <div class="createjob-form-individual">
                             <div class="text-font-styling"> Department Name</div>
-                            <InputText placeholder="" class="create-form-text" @bind-Value="departmentToAdd" />
+                            <InputText placeholder="" class="create-form-text" @bind-Value="department.Name" />
                         </div>
                     </div>
                     <div class="createjob-form-individual">
-                        <input type="button" value="Add Department" class="form-buttons" @onclick="() => addDepartment(departmentToAdd)" />
+                        <input type="button" value="Add Department" class="form-buttons" @onclick="() => addDepartment(department)" />
                     </div>
                 </div>
+                    <div class="successMessage"> @successMessage</div>
                 <div class="createNew-buttton-function">
-                    <input type="button" value="Cancel" class="button-functions" @onclick="() => createDep(false)" />
-                    <input type="button" value="Save" class="button-functions" />
+                    <input type="button" value="Done" class="button-functions" @onclick="() => createDep(false)" />
+                    @*<input type="button" value="Save" class="button-functions" @onclick="saveDep" />*@
                 </div>
+                </EditForm>
             }
             else if (deleteDep)
             {
@@ -420,18 +432,18 @@
                 <div class="form-group createjob-form-group">
                     <div class="createjob-form-individual" style="width: 200%;">
                         <div class="createjob-form-individual">
-                            <select class="createjob-select" style="margin-top: 3vh;" @onchange="OnDepartmentChanged">
+                            <InputSelect class="createjob-select" style="margin-top: 3vh;" @bind-Value="department.Id" @onchange="OnDepartmentChanged"> <!-- -->
                                 <!--Change the onchange event, to a different variable, since it changes the value that you chose-->
-                                <option selected disabled>Select Department</option>
+                                <option value="0" selected disabled>Select Department</option>
                                 @foreach (var department in Departments)
                                 {
-                                    <option>@department</option>
+                                    <option value="@department.Id">@department.Name</option>
                                 }
-                            </select>
+                            </InputSelect>
                         </div>
                     </div>
                     <div class="createjob-form-individual">
-                        <input type="button" value="Delete Department" class="form-buttons" @onclick="() => removeDepartment(TempJob.Department)" />
+                        <input type="button" value="Delete Department" class="form-buttons" @onclick="() => removeDepartment(department)" />
                     </div>
                 </div>
                 <div class="createNew-buttton-function">
@@ -458,7 +470,7 @@
                         <div class="created-items-container">
                             @foreach (var item in Departments)
                             {
-                                <div class="text-font-for-created-items-styling">@item</div>
+                                <div class="text-font-for-created-items-styling">@item.Name</div>
                             }
                         </div>
                     </div>
@@ -503,15 +515,15 @@
                             <select class="createjob-select" style="margin-top: 3vh;" @onchange="OnCompanyChanged">
                                 <!--Change the onchange event, to a different variable, since it changes the value that you chose-->
                                 <option selected disabled>Select Company</option>
-                                @foreach (var department in Company)
+                                @foreach (var company in Company)
                                 {
-                                    <option>@department</option>
+                                    <option>@company</option>
                                 }
                             </select>
                         </div>
                     </div>
                     <div class="createjob-form-individual">
-                        <input type="button" value="Delete Department" class="form-buttons" @onclick="() => removeCompany(TempJob.Company)" />
+                        <input type="button" value="Delete Company" class="form-buttons" @onclick="() => removeCompany(job.Company)" />
                     </div>
                 </div>
                 <div class="createNew-buttton-function">
@@ -555,7 +567,7 @@
 
             <div class="createjob-form-individual">
                 <div class="text-font-styling"> Job Name</div>
-                <InputText class="create-form-text" id="job-name" placeholder="" @bind-Value="TempJob.Title" />
+                <InputText class="create-form-text" id="job-name" placeholder="" @bind-Value="job.Title" />
             </div>
 
             <div class="spacing-for-stuff">
@@ -563,13 +575,14 @@
                     <div class="createjob-form-individual">
                         <!--style="width: 200%;"-->
                         <div class="text-font-styling">Department Information</div>
-                        <InputSelect class="createjob-select" @bind-Value="TempJob.Department" @onchange="OnDepartmentChanged">
+                        <InputSelect class="createjob-select" @bind-Value="job.DepartmentId" @onchange="OnDepartmentChanged">
+                            <!-- -->
                             <!--style="width: 107%;"-->
                             <option selected disabled>Select Department</option>
-                            @foreach (var department in Departments)
-                            {
-                                <option>@department</option>
-                            }
+                            @foreach (var item in Departments)
+                                {
+                                <option value="@item.Id">@item.Name</option>
+                                }
                         </InputSelect>
                     </div>
                     <div class="createjob-form-individual">
@@ -588,12 +601,12 @@
                     <div class="createjob-form-individual">
                         <!--style="width: 200%;"-->
                         <div class="text-font-styling">Company Information</div>
-                        <InputSelect class="createjob-select" @bind-Value="TempJob.Company" @onchange="OnCompanyChanged">
+                        <InputSelect class="createjob-select" @bind-Value="job.Company" @onchange="OnCompanyChanged">
                             <!--style="width: 107%;"-->
                             <option selected disabled>Select Company</option>
-                            @foreach (var department in Company)
+                            @foreach (var company in Company)
                             {
-                                <option>@department</option>
+                                <option>@company</option>
                             }
                         </InputSelect>
                     </div>
@@ -610,7 +623,7 @@
                 <div class="form-group createjob-form-group">
                     <div class="createjob-form-individual">
                         <div class="text-font-styling">Location Information</div>
-                        <InputSelect class="createjob-select" @bind-Value="TempJob.Policy" @onchange="OnPolicyChanged">
+                        <InputSelect class="createjob-select" @bind-Value="job.Policy" @onchange="OnPolicyChanged">
                             <option selected disabled>Select WFH Policy</option>
                             @foreach (var location in Policies)
                             {
@@ -619,7 +632,7 @@
                         </InputSelect>
                     </div>
                     <div class="createjob-form-individual">
-                        <InputSelect class="createjob-select" style="margin-top: 2.8vh;" @bind-Value="TempJob.Location" @onchange="OnLocationChanged">
+                        <InputSelect class="createjob-select" style="margin-top: 2.8vh;" @bind-Value="job.Location" @onchange="OnLocationChanged">
                             <option selected disabled>Select Office Location</option>
                             @foreach (var location in Locations)
                             {
@@ -633,27 +646,28 @@
             <div class="spacing-for-stuff">
                 <div class="createjob-form-individual">
                     <div class="text-font-styling">Job Type Information</div>
-                    <InputSelect class="createjob-select" @bind-Value="@TempJob.JobType.Type">
+                    <InputSelect class="createjob-select" @bind-Value="@job.JobTypes">
                         <option selected disabled>Select Job Type</option>
                         @foreach (var item in jobTypes)
-                        {
-                            <option value="@item.Type">@item.Type</option>
-                        }
+                            {
+                            <option value="@item.Id">@item.Type</option>
+                            }
                     </InputSelect>
+                    
                 </div>
             </div>
 
             <div class="spacing-for-stuff">
                 <div class="createjob-form-individual">
                     <div class="text-font-styling">Application Due Date:</div>
-                    <InputDate type="date" class="createjob-form-date" @bind-Value="TempJob.DueDate" style="padding-right: 5px;" />
+                    <InputDate type="date" class="createjob-form-date" @bind-Value="job.DueDate" style="padding-right: 5px;" />
                 </div>
             </div>
 
             <div class="spacing-for-stuff">
                 <div class="createjob-form-individual">
                     <div class="text-font-styling">Job Advert Description:</div>
-                    <InputTextArea rows="3" style="padding-right: 5px;" @bind-Value="TempJob.Description" />
+                    <InputTextArea rows="3" style="padding-right: 5px;" @bind-Value="job.Description" />
                 </div>
             </div>
         }
@@ -755,11 +769,8 @@
         return ValueChanged.InvokeAsync(TempJob.Location);
     }
 
-    private Task OnDepartmentChanged(ChangeEventArgs e)
-    {
-        TempJob.Department = e.Value.ToString();
-        return ValueChanged.InvokeAsync(TempJob.Department);
-    }
+
+
     private Task OnCompanyChanged(ChangeEventArgs e)
     {
         TempJob.Company = e.Value.ToString();
