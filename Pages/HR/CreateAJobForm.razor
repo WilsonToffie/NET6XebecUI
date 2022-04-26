@@ -342,6 +342,13 @@
         bottom: 10vh;
         margin-left: 30vh;
     }
+
+    .successMessage {
+        text-align: center;
+        margin-top: 10vh;
+    }
+    
+
 </style>
 
 <div class="create-job-summary">
@@ -355,7 +362,7 @@
 
         <div class="summary-individual">
             <div class="text-font-styling"> Department</div>
-            <!--<div class="summary-text-style">@job.Department.Name</div>--> <!---->
+            <div class="summary-text-style">@job.DepartmentId</div> 
         </div>
 
         <div class="summary-individual">
@@ -411,9 +418,10 @@
                         <input type="button" value="Add Department" class="form-buttons" @onclick="() => addDepartment(department)" />
                     </div>
                 </div>
+                    <div class="successMessage"> @successMessage</div>
                 <div class="createNew-buttton-function">
-                    <input type="button" value="Cancel" class="button-functions" @onclick="() => createDep(false)" />
-                    <input type="button" value="Save" class="button-functions" />
+                    <input type="button" value="Done" class="button-functions" @onclick="() => createDep(false)" />
+                    @*<input type="button" value="Save" class="button-functions" @onclick="saveDep" />*@
                 </div>
                 </EditForm>
             }
@@ -424,18 +432,18 @@
                 <div class="form-group createjob-form-group">
                     <div class="createjob-form-individual" style="width: 200%;">
                         <div class="createjob-form-individual">
-                            <select class="createjob-select" style="margin-top: 3vh;" @bind="depToDelete"> <!-- @onchange="OnDepartmentChanged"-->
+                            <InputSelect class="createjob-select" style="margin-top: 3vh;" @bind-Value="department.Id" @onchange="OnDepartmentChanged"> <!-- -->
                                 <!--Change the onchange event, to a different variable, since it changes the value that you chose-->
-                                <option selected disabled>Select Department</option>
+                                <option value="0" selected disabled>Select Department</option>
                                 @foreach (var department in Departments)
                                 {
-                                    <option>@department.Name</option>
+                                    <option value="@department.Id">@department.Name</option>
                                 }
-                            </select>
+                            </InputSelect>
                         </div>
                     </div>
                     <div class="createjob-form-individual">
-                        <input type="button" value="Delete Department" class="form-buttons" @onclick="() => removeDepartment(depToDelete)" />
+                        <input type="button" value="Delete Department" class="form-buttons" @onclick="() => removeDepartment(department)" />
                     </div>
                 </div>
                 <div class="createNew-buttton-function">
@@ -567,13 +575,13 @@
                     <div class="createjob-form-individual">
                         <!--style="width: 200%;"-->
                         <div class="text-font-styling">Department Information</div>
-                        <InputSelect class="createjob-select" @bind-Value="job.Department">
+                        <InputSelect class="createjob-select" @bind-Value="job.DepartmentId" @onchange="OnDepartmentChanged">
                             <!-- -->
                             <!--style="width: 107%;"-->
                             <option selected disabled>Select Department</option>
                             @foreach (var item in Departments)
                                 {
-                                <option value="@item.Name">@item.Name</option>
+                                <option value="@item.Id">@item.Name</option>
                                 }
                         </InputSelect>
                     </div>
@@ -761,12 +769,7 @@
         return ValueChanged.InvokeAsync(TempJob.Location);
     }
 
-    private void OnDepartmentChanged(ChangeEventArgs e)
-    {
-        //TempJob.Department = e.Value;
-        //return ValueChanged.InvokeAsync(TempJob.Department);
-        Console.WriteLine("Departments value: " + TempJob.Department);
-    }
+
 
     private Task OnCompanyChanged(ChangeEventArgs e)
     {
