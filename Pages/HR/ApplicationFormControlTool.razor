@@ -1,42 +1,24 @@
 ﻿@page "/applicationformcontroltool"
 @inject HttpClient httpClient
 @inject IJSRuntime JSRuntime
-@inject NavigationManager NavigationManager
-@inject UserState _state
-@inject Blazored.LocalStorage.ILocalStorageService localStorage
-<style>
+@inject NavigationManager NavigationManager;
+@inject UserState _state;
+<head>
 
+</head>
+<style>
+   
     .appform-container {
-        height: 55vh;
-        width: 70%;
+        height: 100%;
+        width: 100%;
         margin-left: 15%;
         margin-right: 15%;
         background-color: rgba(255,255,255,1);
         border: solid white 0.1em;
         box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
-        display: flex;
+       
         font-family: opensans-condensed-bold,serif;
     }
-
-    .collaborators-left-main::-webkit-scrollbar {
-        width: 12px !important;
-        background-color: white !important;
-    }
-
-    .collaborators-left-main::-webkit-scrollbar-track {
-        background: white !important;
-    }
-
-    .collaborators-left-main::-webkit-scrollbar-thumb {
-        /* background: #f7f7f7 !important;*/
-        background-color: #666666 !important;
-        border-radius: 10px;
-    }
-
-        .collaborators-left-main::-webkit-scrollbar-thumb:hover {
-            background-color: #666666 !important;
-            cursor: pointer !important;
-        }
 
     ::-webkit-scrollbar-button:single-button:vertical:decrement {
         border-width: 0 8px 8px 8px;
@@ -76,22 +58,15 @@
 
     .appform-left-main {
         height: 35vh;
-        overflow-y: auto;
+        overflow-y: hidden;
         overflow-x: hidden;
         width: 100%;
         padding: 55px;
     }
 
-        .appform-left-main::-webkit-scrollbar {
-            background-color: transparent;
-            border-radius: 1em;
-            width: 1vw;
-        }
+       
 
-        .appform-left-main::-webkit-scrollbar-thumb {
-            background-color: white;
-            border-radius: 1em;
-        }
+       
 
     .appform-left-row {
         border-radius: 20px !important;
@@ -170,84 +145,9 @@
         align-items: center;
     }
 
-    .add-popup {
-        position: absolute;
-        margin: 0 auto;
-        top: 18%;
-        width: 500px;
-        height: 350px;
-        background-color: #f2f2f2;
-        border: 2px solid black;
-        border-radius: 5px;
-        animation-name: fade-in;
-        animation-duration: 0.3s;
-    }
-
-    .delete-popup {
-        position: absolute;
-        margin: 0 auto;
-        top: 18%;
-        width: 500px;
-        height: 450px;
-        background-color: #f2f2f2;
-        border: 2px solid black;
-        border-radius: 5px;
-        animation-name: fade-in;
-        animation-duration: 0.3s;
-    }
-
-    .add-popup-header {
-        width: 100%;
-        height: 15%;
-        display: flex;
-        align-items: center;
-    }
-
-    .add-popup-body {
-        width: 100%;
-        height: 60%;
-        display: flex;
-        justify-content: center;
-    }
-
-    .add-popup-type {
-        width: 100%;
-        height: 10%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .add-popup-button {
-        width: 100%;
-        height: 15%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .delete-popup-header {
-        width: 100%;
-        height: 10%;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-    }
-
-    .delete-popup-body {
-        width: 100%;
-        height: 90%;
-        display: flex;
-        justify-content: center;
-        overflow-y: scroll;
-        background-color: white;
-    }
-
-    .delete-popup-question {
-        word-wrap: break-word;
-        width: 450px;
-    }
-
+    
+   
+    
     .appform-close-button {
         width: 10%;
         text-align: end;
@@ -319,28 +219,26 @@
     }
 
     .right-list-item-preview {
-        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px, rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+       
         border-radius: 5px !important;
-        min-height: 10vh;
+        min-height: 5rem;
         color: black;
         font-size: 1em;
         min-width: 100%;
         margin-bottom: 5px;
         background-color: rgba(255, 255, 255, 1);
-        position: relative;
+       
     }
 
-        .right-list-item-preview > div {
-        }
+       
 
     .close-item-panel {
-        position: absolute;
-        right: 0;
+        
         background: rgba(249,249,251,0.51);
         border-bottom: #888888;
         display: flex;
         justify-content: end;
-        font-size: 2.5vh;
+        font-size: 1.5vh;
     }
 
         .close-item-panel > span {
@@ -362,6 +260,9 @@
 
     .preview-item-description {
         font-size: 2vh;
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
     }
 
     .preview-item-control {
@@ -373,177 +274,373 @@
         background: red;
         color: white !important;
     }
+    /*New Css*/
+    .form-container {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        
+    }
+    .inner-form-container{
+        width:75%;
+        height:100%;
+        background-color:white;
+        margin-right:15px;
+        
+    }
+    .form-heading {
+        text-align: center;
+        
+    }
+    .form-subheading {
+        color: #004392;
+        
+        font-weight: bold;
+    }
+    .form-main{
+        display:flex;
+        padding:20px;
+        justify-content:space-evenly;
+    }
+    .summary-section {
+        background-color: #00968B;
+        width:25%;
+        height:100%;
+        margin-left:20px;
+        font-weight:bold;
+        
+
+    }
+    .left-inner{
+        display:flex;
+        justify-content:space-around;
+    }
+    .select-heading{
+        font-weight:600;
+    }
+    .select-form {
+        padding: 2px 0px 5px 5px;
+        border: solid #00968B;
+        border-radius: 5px;
+    }
+    .answer-heading{
+        font-weight:600;
+       margin-top:10px;
+    }
+    .answer-options {
+        width: 100%;
+        border: solid #00968B;
+        border-width: 0.5px;
+        border-radius: 5px;
+    }
+    .answers-left-table{
+        height:100%;
+        overflow-y:scroll;
+    }
+    .answers-left-main{
+        height:100%;
+        width:100%;
+    }
+    .nav-btns {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 70%;
+        margin-top:20px;
+
+    }
+    .down-button {
+        
+        height: 5vh;
+        background-color: #00bcae;
+        border: none;
+        border-radius: 100px;
+        color: white;
+        text-align: center;
+        font-family: opensans-bold;
+        font-weight: 700;
+        margin-left:20px;
+        width:22%;
+        
+    }
+        .down-button:hover {
+            height: 5vh;
+            background-color: #d35bc9;
+            border: none;
+            border-radius: 100px;
+            color: white;
+            text-align: center;
+            font-family: opensans-bold;
+            font-weight: 700;
+        }
+    .summary-heading {
+        color: #004392;
+        font-weight:700;
+        text-align:center;
+        width:100%;
+    }
 </style>
 
-<div class="appform-container">
-    <div class="collaborators-left">
-        <div class="collaborators-heading">
-            <h2 class="collaborators-heading-text">Select Questions</h2>
+<div class="form-container">
+    <div class="inner-form-container">
+        <div class="form-heading">
+            <h4 class="form-subheading">APPLICATION FORM</h4>
         </div>
-        <div class="appform-left-main" style="padding-top: 5px;">
-            <div class="collaborators-left-table">
-                @if (Questions == null)
-                {
-                    <div>Loading...</div>
-                }
-                else
-                {
-                    if (Questions != null)
-                    {
-                        foreach (var question in Questions)
+        <div class="form-main">
+            <div class="form-right">
+
+                <div class="options">
+                    <div class="question-select-div">
+                        <p class="select-heading">Question Selection</p>
+                    </div>
+                    <select @onchange="AddToForm" class="select-form">
+                        <option>Select Question</option>
+                        @foreach (var question in Questions)
                         {
-                            if (question.answerTypeId == 7)
-                            {
-                                <div class="@QuestionCardClass(question) question-div seven" @onclick="() => AddToForm(question)">
-                                    @question.questionDescription
-                                    <input type="text" @bind="tempString">
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="@QuestionCardClass(question) question-div" @onclick="() => AddToForm(question)">
-                                    <span style="padding:0 15px;">@question.questionDescription</span>
-                                </div>
-                            }
+                            <option> @question.questionDescription</option>
+
                         }
-                    }
-                }
-            </div>
-        </div>
-        @if (string.Equals("super admin", _state.Role, StringComparison.OrdinalIgnoreCase))
-        {
-            <div class="appform-left-buttons">
-                <div class="question-button">
-                    <button class="btn appform-main-button" @onclick="OpenAddPopup">Add question</button>
-                    <button class="btn appform-main-button" @onclick="OpenDeletePopup">Delete questions</button>
+
+                    </select>
+
                 </div>
-            </div>
-        }
-    </div>
-    <div class="collaborators-right">
-        <div class="collaborators-heading">
-            <h2 class="collaborators-heading-text">Chosen Questions</h2>
-        </div>
-        <div class="collaborators-left-main">
-            <div class="collaborators-left-table">
-                @if (Questions != null)
-                {
-                    foreach (var formQuestion in FormQuestions)
-                    {
-                        <div class="right-list-item-preview">
-                            <div class="close-item-panel">
-                                <span @onclick="() => DeleteFormQuestion(formQuestion)">
-                                    <i class="fas fa-times"></i>
-                                </span>
-                            </div>
-                            <div class="preview-item-body" style="padding:10px 10px;">
-                                <div class="preview-item-description">
-                                    <p>@formQuestion.question</p>
-                                </div>
-                                <div class="preview-item-control">
-                                    @{
-                                        var placeholder = "Expected answer";
-                                    }
-                                    @switch (formQuestion.answerTypeId)
-                                    {
-                                        case 1:
-                                            <input type="number" class="form-control" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
-                                            break;
-                                        case 2:
-                                            <textarea type="text" class="form-control" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer"></textarea>
-                                            break;
-                                        case 3:
-                                            <input type="text" class="form-control" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
-                                            break;
-                                        case 4:
-                                            <input type="date" id="test" class="form-control" placeholder="@placeholder" style="width: 100%" @onchange="(e) => { formQuestion.answer = e.Value.ToString(); }">
-                                            break;
-                                        case 5:
-                                            <select @bind="formQuestion.answer">
-                                                <option value="yes" selected>Yes</option>
-                                                <option value="no">No</option>
-                                            </select>
-                                            break;
-                                        <small class="text-muted text-small">(Select expected answer)</small>
-                                        case 6:
-                                            <input type="file" class="form-control" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
-                                            break;
 
-                                        case 7:
-                                            <input type="text" class="form-control" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
-                                            break;
-                                    }
+                <div class="answers-left-main">
+                    <div class="model-answers-div">
+                        <p class="answer-heading">Model Answers</p>
+                    </div>
+                    <div class="answers-left-table">
 
-                                </div>
-                            </div>
-                        </div>
-                    }
-                }
-
-            </div>
-        </div>
-    </div>
-    @if (ShowAddPopup)
-    {
-        <div class="add-popup">
-            <div class="add-popup-header">
-                <h4 class="collaborators-heading-text" style="margin-left: 20px;">Add Question:</h4>
-                <button class="btn-close" style="margin-left: 68%" @onclick="CloseAddPopup"></button>
-            </div>
-            <div class="add-popup-body">
-                <textarea style="width: 80%; border: 2px solid grey; height: 180px; background-color: white; border-radius: 5px;" @bind="tempQuestion.questionDescription"></textarea>
-            </div>
-            <div class="add-popup-type">
-                <select @bind="tempType">
-                    @foreach (var option in Types)
-                    {
-                        <option selected value="@option.Type">@option.Type</option>
-                    }
-                </select>
-            </div>
-            <div class="add-popup-button">
-                <button class="btn appform-main-button" @onclick="AddQuestion">Submit question</button>
-            </div>
-        </div>
-    }
-    @if (ShowDeletePopup)
-    {
-        <div class="delete-popup">
-            <div class="delete-popup-header">
-                <h4 class="collaborators-heading-text">Delete Questions:</h4>
-                <button class="btn-close" style="margin-left: 57%" @onclick="CloseDeletePopup"></button>
-            </div>
-            <div class="delete-popup-body">
-                <table class="collaborators-left-table">
-                    <tbody>
                         @if (Questions != null)
                         {
-                            foreach (var question in Questions)
+                            foreach (var formQuestion in FormQuestions)
                             {
-                                <tr>
-                                    <td class="delete-popup-question" style="font-size: 15px;">@question.questionDescription</td>
-                                </tr>
-                                <tr class="pr-2 pl-2 pt-1 border rounded-1" style="overflow: hidden;">
-                                    <td class="collaborators-left-td appform-text pl-2" style="word-wrap: break-word">@question.questionDescription</td>
+                                <div class="right-list-item-preview">
 
-                                    <td style="max-width: 10%;">
-                                        <button class="btn-close delete-btn" @onclick="() => DeleteQuestion(question)"></button>
-                                    </td>
-                                </tr>
+                                    <div class="preview-item-body">
+                                        <div class="preview-item-description">
+                                            <p class="-form-preview-question">
+                                                @formQuestion.question
+
+                                            </p>
+                                            <span @onclick="() => DeleteFormQuestion(formQuestion)">
+                                                <i class="fas fa-times"></i>
+                                            </span>
+                                        </div>
+                                        <div class="preview-item-control">
+                                            @{
+                                                var placeholder = "Expected answer";
+                                            }
+                                            @switch (formQuestion.answerTypeId)
+                                            {
+                                                case 1:
+                                                    <input type="number" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
+                                                    break;
+                                                case 2:
+                                                    <textarea type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer"></textarea>
+                                                    break;
+                                                case 3:
+                                                    <input type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
+                                                    break;
+                                                case 4:
+                                                    <input type="date" id="test" class="form-input" placeholder="@placeholder" style="width: 100%" @onchange="(e) => { formQuestion.answer = e.Value.ToString(); }">
+                                                    break;
+                                                case 5:
+                                                    <select class="answer-options" @bind="formQuestion.answer">
+                                                        <option value="yes" selected>Yes</option>
+                                                        <option value="no">No</option>
+                                                    </select>
+                                                    break;
+                                                <small class="text-muted text-small">(Select expected answer)</small>
+                                                case 6:
+                                                    <input type="file" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
+                                                    break;
+
+                                                case 7:
+                                                    <input type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
+                                                    break;
+                                            }
+
+                                        </div>
+                                    </div>
+                                </div>
                             }
                         }
-                    </tbody>
-                </table>
+
+                    </div>
+                </div>
+
             </div>
+            <div class="form-left">
+                @if (string.Equals("super admin", _state.Role, StringComparison.OrdinalIgnoreCase))
+                {
+
+
+                    @if (ShowManage)
+                    {
+                        <div>
+                            <button class="btn appform-main-button" @onclick="OpenButtons">Manage Questions</button>
+                        </div>
+                    }
+                    
+                    @if (ShowAddDeleteButtons)
+                    {
+
+                        <div class="left-inner">
+                            <div class="add-btn">
+                                <button class="btn appform-main-button" @onclick="OpenAddPopup">Add question</button>
+                            </div>
+                            <div class="delete-button">
+                                <button class="btn appform-main-button" @onclick="OpenDeletePopup">Delete questions</button>
+                            </div>
+                           
+                            <div class="delete-button">
+                                <button class="btn-close" @onclick="ShowmanageButton"></button>
+                            </div>
+
+                        </div>
+
+                    }
+
+                }
+
+            </div>
+            @if (ShowAddPopup)
+            {
+                <div class="add-question">
+                    <div class="add-question-header">
+                        <h4 class="collaborators-heading-text" style="margin-left: 20px;">Add Question:</h4>
+                        <button class="btn-close" style="margin-left: 68%" @onclick="CloseAddPopup"></button>
+                    </div>
+                    <div class="add-question-body">
+                        <textarea style="width: 80%; border: 2px solid grey; height: 180px; background-color: white; border-radius: 5px;"></textarea>
+                    </div>
+                    <div class="add-question-type">
+                        <select @bind="tempType">
+                            @foreach (var option in Types)
+                            {
+                                <option selected value="@option.Type">@option.Type</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="add-question-button">
+                        <button class="btn appform-main-button" @onclick="AddQuestion">Submit question</button>
+                    </div>
+                </div>
+            }
+            @if (ShowDeletePopup)
+            {
+                <div class="delete-question">
+                    <div class="delete-question-header">
+                        <h4 class="collaborators-heading-text">Delete Questions:</h4>
+                        <button class="btn-close" style="margin-left: 57%" @onclick="CloseDeletePopup"></button>
+                    </div>
+                    <div class="delete-question-body">
+                        <table class="collaborators-left-table">
+                            <tbody>
+                                @if (Questions != null)
+                                {
+                                    foreach (var question in Questions)
+                                    {
+                                        <tr>
+                                            <td class="delete-question-question" style="font-size: 15px;">@question.questionDescription</td>
+                                        </tr>
+                                        <tr class="pr-2 pl-2 pt-1 border rounded-1" style="overflow: hidden;">
+                                            <td class="collaborators-left-td appform-text pl-2" style="word-wrap: break-word">@question.questionDescription</td>
+
+                                            <td style="max-width: 10%;">
+                                                <button class="btn-close delete-btn" @onclick="() => DeleteQuestion(question)"></button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+
+
         </div>
-    }
+        
+
+    </div>
+    <div class="summary-section">
+        <div class="summary-heading">
+            <h5>SUMMARY</h5>
+        </div>
+        
+        <div class="collaborators-left-table">
+            @if (Questions != null)
+            {
+                foreach (var formQuestion in FormQuestions)
+                {
+                    <div class="right-list-item-preview">
+                        <div class="close-item-panel">
+                            <span @onclick="() => DeleteFormQuestion(formQuestion)">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                        <div class="preview-item-body" style="padding:10px 10px;">
+                            <div class="preview-item-description">
+                                <p>@formQuestion.question</p>
+                            </div>
+                            <div class="preview-item-control">
+                                @{
+                                    var placeholder = "Expected answer";
+                                }
+                                @switch (formQuestion.answerTypeId)
+                                {
+                                    case 1:
+                                        <input type="number" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
+                                        break;
+                                    case 2:
+                                        <textarea type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer"></textarea>
+                                        break;
+                                    case 3:
+                                        <input type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
+                                        break;
+                                    case 4:
+                                        <input type="date" id="test" class="form-input" placeholder="@placeholder" style="width: 100%" @onchange="(e) => { formQuestion.answer = e.Value.ToString(); }">
+                                        break;
+                                    case 5:
+                                        <select @bind="formQuestion.answer">
+                                            <option value="yes" selected>Yes</option>
+                                            <option value="no">No</option>
+                                        </select>
+                                        break;
+                                    <small class="text-muted text-small">(Select expected answer)</small>
+                                    case 6:
+                                        <input type="file" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
+                                        break;
+
+                                    case 7:
+                                        <input type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
+                                        break;
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+
+        </div>
+
+
+    </div>
+    
+    
 </div>
-@*<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save" />*@
+<div class="nav-btns">
+    <button class="down-button">Prev: Create a Job</button>
+    <button class="down-button">Save</button>
+    <button class="down-button">Next: Select Collaborators</button>
+</div>
 
 @code {
-
-    @using XebecPortal.UI.Utils.Handlers;
-    @using System.Net.Http.Headers;
 
     [Parameter]
     public EventCallback<List<FormQuestion>> FormQuestionsChanged { get; set; }
@@ -562,6 +659,8 @@
     List<CustomQuestion> Questions = new List<CustomQuestion>();
 
 
+
+
     List<QuestionType> Types = new List<QuestionType>();
     string tempType = null;
     //temporary
@@ -569,30 +668,35 @@
     int CurrentJobId = 0;
     string CurrentJobDescription = null;
     bool ShowAddPopup = false;
+    bool ShowAddDeleteButtons = false;
     bool ShowDeletePopup = false;
+    bool ShowManage= true;
     public CustomQuestion tempQuestion = new CustomQuestion();
-
-    string token;
 
     protected override async Task OnInitializedAsync()
     {
-        token = await localStorage.GetItemAsync<string>("jwt_token");
         if (FormQuestions == null)
             FormQuestions = new();
 
-        Questions = await httpClient.GetListJsonAsync<List<CustomQuestion>>("https://xebecapi.azurewebsites.net/api/question", new AuthenticationHeaderValue("Bearer", token));
-        Jobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job", new AuthenticationHeaderValue("Bearer", token));
-        Types = await httpClient.GetListJsonAsync<List<QuestionType>>("https://xebecapi.azurewebsites.net/api/answertype", new AuthenticationHeaderValue("Bearer", token));
+        Questions = await httpClient.GetFromJsonAsync<List<CustomQuestion>>("https://xebecapi.azurewebsites.net/api/question");
+        Jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
+        Types = await httpClient.GetFromJsonAsync<List<QuestionType>>("https://xebecapi.azurewebsites.net/api/answertype");
     }
 
-    public async Task AddToForm(CustomQuestion question)
+
+
+    public async Task AddToForm(ChangeEventArgs e)
     {
+        CustomQuestion question = new CustomQuestion();
+        question = Questions.FirstOrDefault(x => e.Value.ToString() == x.questionDescription);
+
+
         FormQuestion temp = new FormQuestion();
         temp.id = question.Id;
         temp.question = question.questionDescription + " " + tempString;
         temp.answerTypeId = question.answerTypeId;
         temp.jobId = TempJob.Id;
-        if (!FormQuestions.FindAll(q => q.id == question.Id).Any())
+        if (!FormQuestions.FindAll(z => z.id == question.Id).Any())
         {
             FormQuestions.Add(temp);
             await FormQuestionsChanged.InvokeAsync(FormQuestions);
@@ -601,20 +705,33 @@
 
     public async Task DeleteQuestion(CustomQuestion q)
     {
-        await httpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/question/{q.Id}", new AuthenticationHeaderValue("Bearer", token));
+        await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/question/{q.Id}");
         await OnInitializedAsync();
     }
+    public void OpenButtons()
+    {
+        ShowAddDeleteButtons = !ShowAddDeleteButtons;
+        ShowManage = !ShowManage;
 
+    }
     public void OpenAddPopup()
     {
         ShowAddPopup = !ShowAddPopup;
         ShowDeletePopup = false;
+        ShowAddDeleteButtons = false;
     }
 
     public void OpenDeletePopup()
     {
         ShowDeletePopup = !ShowDeletePopup;
         ShowAddPopup = false;
+        ShowAddDeleteButtons = false;
+    }
+
+    private void ShowmanageButton()
+    {
+        ShowAddDeleteButtons = !ShowAddDeleteButtons;
+        ShowManage = true;
     }
 
     public async Task AddQuestion()
@@ -623,7 +740,7 @@
         {
             ShowAddPopup = !ShowAddPopup;
             tempQuestion.answerTypeId = Types.FirstOrDefault(q => q.Type == tempType).Id;
-            await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/question", tempQuestion, new AuthenticationHeaderValue("Bearer", token));
+            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/question", tempQuestion);
             await OnInitializedAsync();
         }
     }
@@ -631,11 +748,13 @@
     public void CloseAddPopup()
     {
         ShowAddPopup = !ShowAddPopup;
+        ShowAddDeleteButtons = true;
     }
 
     public void CloseDeletePopup()
     {
         ShowDeletePopup = !ShowDeletePopup;
+        ShowAddDeleteButtons = true;
     }
 
     public async Task DeleteFormQuestion(FormQuestion question)
@@ -644,12 +763,12 @@
         await FormQuestionsChanged.InvokeAsync(FormQuestions);
     }
 
-    //private async Task Save()
-    //{
-    //    TempJob.formQuestions = FormQuestions;
-    //    Console.WriteLine("Questions Added");
-    //    await TempJobChanged.InvokeAsync(TempJob);
-    //}
+    private async Task Save()
+    {
+        TempJob.formQuestions = FormQuestions;
+        Console.WriteLine("Questions Added");
+        await TempJobChanged.InvokeAsync(TempJob);
+    }
 
     private string QuestionCardClass(CustomQuestion question)
     {
@@ -659,3 +778,5 @@
     }
 
 }
+
+

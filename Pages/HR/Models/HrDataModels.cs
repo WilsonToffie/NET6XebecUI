@@ -85,6 +85,13 @@ namespace XebecPortal.UI.Pages.HR
         public string Policy { get; set; }
     }
 
+    public class Department
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+    }
+
     public class CreateJobPost
     {
         public int Id { get; set; }
@@ -102,6 +109,11 @@ namespace XebecPortal.UI.Pages.HR
         //public string Department { get; set; }
         [Required]
         public string Policy { get; set; } // Not sure what data type it should be, but policy is a required field   
+
+
+        public int JobTypeId { get; set; }
+
+
         public string Status { get; set; }
         [Required]
         public DateTime DueDate { get; set; }

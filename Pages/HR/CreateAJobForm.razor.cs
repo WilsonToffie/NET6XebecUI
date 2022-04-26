@@ -33,7 +33,7 @@ namespace XebecPortal.UI.Pages.HR
         private JobType tempJobType = new JobType();
         private Department department = new Department();
         private List<JobPlatform> ListOfPlatforms = new List<JobPlatform>();
-        private List<CreateJobPost> jobList = new List<CreateJobPost>();
+        private List<CreateJobPost> jobList = new List<CreateJobPost>();        
 
 
         string token;
@@ -49,7 +49,7 @@ namespace XebecPortal.UI.Pages.HR
 
         private string departmentName;
         protected override async Task OnInitializedAsync()
-        {
+        {            
             token = await localStorage.GetItemAsync<string>("jwt_token");
 
             jobPlatforms = await HttpClient.GetListJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform", new AuthenticationHeaderValue("Bearer", token));
