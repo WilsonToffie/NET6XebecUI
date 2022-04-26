@@ -126,11 +126,6 @@ namespace XebecPortal.UI.Pages.HR
         public Department Department { get; set; }
     }
 
-    public class Department
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
 
     public partial class CandidateRecommender
     {
