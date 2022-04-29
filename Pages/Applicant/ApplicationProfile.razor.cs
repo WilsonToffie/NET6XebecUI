@@ -36,10 +36,10 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool skillEditMode;
         private bool loadInfo;
 
-        private List<WorkHistory> workHistoryList = new();
+        private List<WorkHistory> workHistoryList = new List<WorkHistory>();
         private List<WorkHistory> addworkHistoryList = new();
         private WorkHistory workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
-        private List<Education> educationList = new();
+        private List<Education> educationList = new List<Education>();
         private List<Education> addEducationList = new();
         private Education education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
         private ProfilePortfolioLink profilePortfolio = new();
@@ -50,10 +50,10 @@ namespace XebecPortal.UI.Pages.Applicant
         private List<AdditionalInformation> additionalInfoList = new();
 
         private References references = new();
-        private List<References> referencesList = new();
-        private List<References> addReferencesList = new();
+        private List<References> referencesList = new List<References>();
+        private List<References> addReferencesList = new List<References>();
 
-        private List<SkillsInformation> selectedSkillsList1 = new();
+        private List<SkillsInformation> selectedSkillsList1 = new List<SkillsInformation>();
         private List<SkillsInformation> addselectedSkillsList = new();
         SkillsInformation skillInfo = new SkillsInformation();
 
@@ -98,22 +98,11 @@ namespace XebecPortal.UI.Pages.Applicant
             loadInfo = true;
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/ApplicationProfile.js");
             try
-            {
-                //var testToken = await localStorage.GetItemAsStringAsync("jwt_token");
-                //var token = await localStorage.GetItemAsync<string>("jwt_token");                
-                //Console.WriteLine("The working Token: " + token);
-                //var response = await testJTW("https://xebecapi.azurewebsites.net/api/user/AllAuth",token);
-                //var response = await cust.newwwwtestJTW("https://xebecapi.azurewebsites.net/api/user/AllAuth",token);
-                //Console.WriteLine(response);
-                //The following code allows the Lists to be populated with existing information
-                token = await localStorage.GetItemAsync<string>("jwt_token");
-                //Console.WriteLine("Token for personal info " + token);
-                // var response = await httpClient.GetJsonAsync<string>("https://xebecapi.azurewebsites.net/api/user/AllAuth", new AuthenticationHeaderValue("Bearer", token));
-                //Console.WriteLine("Does it work? " + response);
-
-
-                personalInfoHistory = await httpClient.GetListJsonAsync<List<PersonalInformation>>($"https://xebecapi.azurewebsites.net/api/PersonalInformation", new AuthenticationHeaderValue("Bearer", token));//await httpClient.GetFromJsonAsync<List<PersonalInformation>>($"https://xebecapi.azurewebsites.net/api/PersonalInformation");
-                personalInformationList = personalInfoHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
+            {                
+                token = await localStorage.GetItemAsync<string>("jwt_token");           
+                Console.WriteLine("AppuserID: " + state.AppUserId);
+                personalInfoHistory = await httpClient.GetListJsonAsync<List<PersonalInformation>>($"https://xebecapi.azurewebsites.net/api/PersonalInformation/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));//await httpClient.GetFromJsonAsync<List<PersonalInformation>>($"https://xebecapi.azurewebsites.net/api/PersonalInformation");
+                personalInformationList = personalInfoHistory.ToList();                                                                                                                                                                                                        //personalInfoHistory = await httpClient.GetListJsonAsync<List<PersonalInformation>>($"https://xebecapi.azurewebsites.net/api/PersonalInformation", new AuthenticationHeaderValue("Bearer", token));//await httpClient.GetFromJsonAsync<List<PersonalInformation>>($"https://xebecapi.azurewebsites.net/api/PersonalInformation");
 
                 if (personalInformationList.Count == 0)
                 {
@@ -126,11 +115,14 @@ namespace XebecPortal.UI.Pages.Applicant
                         personalInformation = item;
                     }
                 }
-                
 
-                additionalInfoHistory = await httpClient.GetListJsonAsync<List<AdditionalInformation>>($"https://xebecapi.azurewebsites.net/api/AdditionalInformation", new AuthenticationHeaderValue("Bearer", token));
-                additionalInfoList = additionalInfoHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
-                
+
+                //additionalInformation = await httpClient.GetListJsonAsync<AdditionalInformation>($"https://xebecapi.azurewebsites.net/api/AdditionalInformation/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+               
+                additionalInfoHistory = await httpClient.GetListJsonAsync<List<AdditionalInformation>>($"https://xebecapi.azurewebsites.net/api/AdditionalInformation/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+                additionalInfoList = additionalInfoHistory.ToList();
+
+                // https://xebecapi.azurewebsites.net/api/AdditionalInformation/{state.AppUserId}
                 if (additionalInfoList.Count == 0)
                 {
                     newAdditionalInfo = true;
@@ -138,38 +130,38 @@ namespace XebecPortal.UI.Pages.Applicant
                 else
                 {
                     foreach (var item in additionalInfoList)
-                    {                        
+                    {
                         additionalInformation = item;
                     }
-                }                
-
-                workHistories = await httpClient.GetListJsonAsync<List<WorkHistory>>($"https://xebecapi.azurewebsites.net/api/WorkHistory", new AuthenticationHeaderValue("Bearer", token));
-                workHistoryList = workHistories.Where(x => x.AppUserId == state.AppUserId).ToList();
-
-                educationHistory = await httpClient.GetListJsonAsync<List<Education>>($"https://xebecapi.azurewebsites.net/api/Education", new AuthenticationHeaderValue("Bearer", token));
-                educationList = educationHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
-
-                skillHistory = await httpClient.GetListJsonAsync<List<SkillsInformation>>($"https://xebecapi.azurewebsites.net/api/Skill", new AuthenticationHeaderValue("Bearer", token));
-                selectedSkillsList1 = skillHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
-
-                referencesHistory = await httpClient.GetListJsonAsync<List<References>>($"https://xebecapi.azurewebsites.net/api/Reference", new AuthenticationHeaderValue("Bearer", token));
-                referencesList = referencesHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
-
-                profilePortfolioInfo = await httpClient.GetListJsonAsync<List<ProfilePortfolioLink>>($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink", new AuthenticationHeaderValue("Bearer", token));
-                profilePortfolioList = profilePortfolioInfo.Where(x => x.AppUserId == state.AppUserId).ToList();
-
-                if (profilePortfolioList.Count == 0)
-                {
-                    newPortFolioInfo = true;
                 }
-                else
-                {
-                    foreach (var item in profilePortfolioList)
-                    {
-                        profilePortfolio = item;
-                    }
-                }
-                
+
+                //workHistoryList = await httpClient.GetListJsonAsync<List<WorkHistory>>($"https://xebecapi.azurewebsites.net/api/WorkHistory/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+                //workHistoryList = workHistories.Where(x => x.AppUserId == state.AppUserId).ToList();
+
+                educationList = await httpClient.GetListJsonAsync<List<Education>>($"https://xebecapi.azurewebsites.net/api/Education/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+                //educationList = educationHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
+
+                selectedSkillsList1 = await httpClient.GetListJsonAsync<List<SkillsInformation>>($"https://xebecapi.azurewebsites.net/api/Skill/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+               // selectedSkillsList1 = skillHistory.ToList();
+
+                referencesList = await httpClient.GetListJsonAsync<List<References>>($"https://xebecapi.azurewebsites.net/api/Reference/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+                //referencesList = referencesHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
+
+                //profilePortfolio = await httpClient.GetListJsonAsync<ProfilePortfolioLink>($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+                //profilePortfolioList = profilePortfolioInfo.Where(x => x.AppUserId == state.AppUserId).ToList();
+
+                //if (profilePortfolioList.Count == 0)
+                //{
+                //    newPortFolioInfo = true;
+                //}
+                //else
+                //{
+                //    foreach (var item in profilePortfolioList)
+                //    {
+                //        profilePortfolio = item;
+                //    }
+                //}
+
             }
             catch (Exception e)
             {
@@ -350,7 +342,7 @@ namespace XebecPortal.UI.Pages.Applicant
             skillEditMode = false;
         }
 
-        private void AddPersonalInformation()
+        private async Task AddPersonalInformation()
         {
             if (newPersonalInfo && newAdditionalInfo) // This is a check to see if the user is a "new" user to the system or an old user
             {
@@ -397,7 +389,34 @@ namespace XebecPortal.UI.Pages.Applicant
                     AppUserId = state.AppUserId,
                 });
             }
-            
+
+            foreach (var item in personalInformationList)
+            {
+                if (newPersonalInfo)
+                {
+                    await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/PersonalInformation", item, new AuthenticationHeaderValue("Bearer", token));
+                }
+                else
+                {
+                    await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/PersonalInformation/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
+                }
+
+            }
+            foreach (var item in additionalInfoList)
+            {
+                Console.WriteLine("Additional Info List count " + additionalInfoList.Count);
+                Console.WriteLine("Additional Info List ID's " + item.Id);
+                if (newAdditionalInfo)
+                {
+                    await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/AdditionalInformation", item, new AuthenticationHeaderValue("Bearer", token));
+                }
+                else
+                {
+                    await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/AdditionalInformation/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
+                }
+
+            }
+
         }
 
         private async Task AddReferences()
@@ -535,34 +554,41 @@ namespace XebecPortal.UI.Pages.Applicant
         private object GetStyling(WorkHistory item)
         {
             if ((workHistory.CompanyName == item.CompanyName) && (workHistory.JobTitle == item.JobTitle) && (workHistory.Description == item.Description))
-                return "box-shadow: rgb(0 51 64 / 86%) 0px 0px 0px 2px, rgb(6 24 44 / 65%) 0px 4px 6px -1px, rgb(255 255 255 / 8%) 0px 1px 0px inset;";
-                //return "background: #49E5EF;backdrop - filter: blur(5.6px);-webkit-backdrop-filter: blur(5.6px); border: 1px solid rgba(255, 255, 255, 0.04); min-height:15vh; overflow-y: auto;";
-                //return "box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;background: rgba(255, 255, 255, 0);backdrop - filter: blur(5.6px);-webkit-backdrop-filter: blur(5.6px); border: 1px solid rgba(255, 255, 255, 0.04); min-height:15vh; overflow-y: auto; ";
+                return "background-color: #004393; color: white;";
             return "";
         }
         //#49E5EF
         private object GetEduStyling(Education item)
         {
-            if ((education.Insitution == item.Insitution) && (education.Qualification == item.Qualification))
-                return "box-shadow: rgb(0 51 64 / 86%) 0px 0px 0px 2px, rgb(6 24 44 / 65%) 0px 4px 6px -1px, rgb(255 255 255 / 8%) 0px 1px 0px inset;";
-            //return "background: #49E5EF;backdrop - filter: blur(5.6px);-webkit-backdrop-filter: blur(5.6px); border: 1px solid rgba(255, 255, 255, 0.04); min-height:15vh; overflow-y: auto;";
+            if ((education.Insitution == item.Insitution) && (education.Qualification == item.Qualification))                
+                return "background-color: #004393; color: white;";
             return "";
         }
         private object GetRefStyling(References item)
         {
             if ((references.RefFirstName == item.RefFirstName) && (references.RefLastName == item.RefLastName) && (references.RefPhone == item.RefPhone) && (references.RefEmail == item.RefEmail))
-                return "box-shadow: rgb(0 51 64 / 86%) 0px 0px 0px 2px, rgb(6 24 44 / 65%) 0px 4px 6px -1px, rgb(255 255 255 / 8%) 0px 1px 0px inset;";
-
-            //return "background: #49E5EF;backdrop - filter: blur(5.6px);-webkit-backdrop-filter: blur(5.6px); border: 1px solid rgba(255, 255, 255, 0.04); min-height:15vh; overflow-y: auto;";
+                return "background-color: #004393; color: white;";
             return "";
         }
 
         private object GetSkillStyling(SkillsInformation item)
         {
             if ((skillInfo.Description == item.Description))
-                return "box-shadow: rgb(0 51 64 / 86%) 0px 0px 0px 2px, rgb(6 24 44 / 65%) 0px 4px 6px -1px, rgb(255 255 255 / 8%) 0px 1px 0px inset;";
+                return "background-color: #004393; color: white;";
             return "";
         }
+
+        private string SmallCardFontColour()
+        {
+            return "";
+        }
+
+        private string SmallCardDate()
+        {
+            return "#d35bc9;";
+        }
+
+
         private async Task SaveWorkHistory(WorkHistory workHistoryValues)
         {
             workEditMode = false;
@@ -698,36 +724,9 @@ namespace XebecPortal.UI.Pages.Applicant
         }
 
         private async Task Submit()
-        {
-            AddProfilePortfolio();
+        {           
 
-            // test if this will work, otherwise a for each is required
-            foreach (var item in personalInformationList)
-            {
-                if (newPersonalInfo)
-                {
-                    await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/PersonalInformation", item, new AuthenticationHeaderValue("Bearer", token));
-                }
-                else
-                {
-                    await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/PersonalInformation/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
-                }
-                
-            }
-            foreach (var item in additionalInfoList)
-            {
-                Console.WriteLine("Additional Info List count " + additionalInfoList.Count);
-                Console.WriteLine("Additional Info List ID's " + item.Id);
-                if (newAdditionalInfo)
-                {
-                    await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/AdditionalInformation", item, new AuthenticationHeaderValue("Bearer", token));
-                }
-                else
-                {
-                    await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/AdditionalInformation/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
-                }
-
-            }
+            // test if this will work, otherwise a for each is required            
 
             foreach (var item in profilePortfolioList)
             {                
