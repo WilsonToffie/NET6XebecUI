@@ -225,7 +225,7 @@
             background-color: #d35bc9;
         }
 
-/*    .index-form-button {
+    /*    .index-form-button {
         background-color: rgba(0, 188, 174,1);
         color: white;
         width: 50%;
@@ -265,9 +265,9 @@
         .button-functions:hover {
             background-color: #d35bc9;
         }
-        
 
-        
+
+
 
     .created-items-container {
         height: 20vh;
@@ -291,12 +291,13 @@
         width: 45vh;
         position: absolute;
         left: 70%;
+        border-radius: 10px;
         /* overflow-y: auto;*/
     }
 
     .summary-text-style {
-        font-size: 1em;      
-        font-weight: 600;        
+        font-size: 1em;
+        font-weight: 600;
         color: white;
         font-family: opensans-condensed-light;
     }
@@ -308,13 +309,14 @@
         padding-left: 1em;
         padding-right: 1em;
     }
+
     summary-container::-webkit-scrollbar-track {
         background: #00bcae;
         color: #00bcae;
         background-color: #00bcae;
-        
         /* background:;*/
     }
+
     .summary-individual {
         width: 45%;
         margin-left: 2.5%;
@@ -347,8 +349,6 @@
         text-align: center;
         margin-top: 10vh;
     }
-    
-
 </style>
 
 <div class="create-job-summary">
@@ -357,329 +357,337 @@
     <div class="summary-container">
         <div class="summary-individual">
             <div class="text-font-styling"> Job Name</div>
-            <div class="summary-text-style">@job.Title</div>
+            <div class="summary-text-style">@TempJob.Title</div>
         </div>
 
         <div class="summary-individual">
             <div class="text-font-styling"> Department</div>
-            <div class="summary-text-style">@job.DepartmentId</div> 
+            <div class="summary-text-style">@departments.Name</div>
         </div>
 
         <div class="summary-individual">
             <div class="text-font-styling"> Company</div>
-            <div class="summary-text-style">@job.Company</div>
+            <div class="summary-text-style">@TempJob.Company</div>
         </div>
 
         <div class="summary-individual">
             <div class="text-font-styling"> WFH Policy</div>
-            <div class="summary-text-style">@job.Policy</div>
+            <div class="summary-text-style">@TempJob.Policy</div>
         </div>
 
         <div class="summary-individual">
             <div class="text-font-styling"> Location</div>
-            <div class="summary-text-style">@job.Location</div>
+            <div class="summary-text-style">@TempJob.Location</div>
         </div>
 
         <div class="summary-individual">
             <div class="text-font-styling"> Job Type</div>
-            <div class="summary-text-style">@job.JobTypes</div>
+            <div class="summary-text-style">@TempJob.JobType.Type</div>
         </div>
 
         <div class="summary-individual">
             <div class="text-font-styling"> Application Due Date</div>
-            <div class="summary-text-style">@job.DueDate</div>
+            <div class="summary-text-style">@TempJob.DueDate</div>
         </div>
 
         <div class="summary-individual">
             <div class="text-font-styling"> Job Description</div>
-            <div class="summary-text-style">@job.Description</div>
+            <div class="summary-text-style">@TempJob.Description</div>
         </div>
     </div>
 </div>
-
-<div class="createjob-form-container">
-    <EditForm Model="@job" class="createjob-form" OnValidSubmit="@saveJobState">
-        <DataAnnotationsValidator />
-        @if (manageDep)
-        {
-            @if (createNewDep)
+@if (redirectpage)
+{
+<XebecPortal.UI.Pages.HR.ApplicationFormControlTool @bind-jobId="departments.Id" @bind-TempJob="TempJob" />
+}
+else
+{
+    <div class="createjob-form-container">
+        <EditForm Model="@TempJob" class="createjob-form" OnValidSubmit="@saveJobState">
+            <DataAnnotationsValidator />
+            @if (manageDep)
             {
-                <EditForm Model="@department" OnValidSubmit="@saveJobState" Context="Departments">
-                <div class="page-title">Create Department</div>
+                @if (createNewDep)
+                {
+                    <EditForm Model="@department" OnValidSubmit="@saveJobState" Context="Departments">
+                        <div class="page-title">Create Department</div>
 
-                <div class="form-group createjob-form-group">
-                    <div class="createjob-form-individual" style="width: 200%;">
+                        <div class="form-group createjob-form-group">
+                            <div class="createjob-form-individual" style="width: 200%;">
+                                <div class="createjob-form-individual">
+                                    <div class="text-font-styling"> Department Name</div>
+                                    <InputText placeholder="" class="create-form-text" @bind-Value="department.Name" />
+                                </div>
+                            </div>
+                            <div class="createjob-form-individual">
+                                <input type="button" value="Add Department" class="form-buttons" @onclick="() => addDepartment(department)" />
+                            </div>
+                        </div>
+                        <div class="successMessage"> @successMessage</div>
+                        <div class="createNew-buttton-function">
+                            <input type="button" value="Done" class="button-functions" @onclick="saveDep" />
+                            @*<input type="button" value="Save" class="button-functions" @onclick="saveDep" />*@
+                        </div>
+                    </EditForm>
+                }
+                else if (deleteDep)
+                {
+                    <div class="page-title">Delete Department</div>
+
+                    <div class="form-group createjob-form-group">
+                        <div class="createjob-form-individual" style="width: 200%;">
+                            <div class="createjob-form-individual">
+                                <InputSelect class="createjob-select" style="margin-top: 3vh;" @bind-Value="department.Id">
+                                    <!-- -->
+                                    <!--Change the onchange event, to a different variable, since it changes the value that you chose-->
+                                    <option value="0" selected disabled>Select Department</option>
+                                    @foreach (var department in Departments)
+                                                {
+                                        <option value="@department.Id">@department.Name</option>
+                                                }
+                                </InputSelect>
+                            </div>
+                        </div>
                         <div class="createjob-form-individual">
-                            <div class="text-font-styling"> Department Name</div>
-                            <InputText placeholder="" class="create-form-text" @bind-Value="department.Name" />
+                            <input type="button" value="Delete Department" class="form-buttons" @onclick="() => removeDepartment(department)" />
                         </div>
                     </div>
-                    <div class="createjob-form-individual">
-                        <input type="button" value="Add Department" class="form-buttons" @onclick="() => addDepartment(department)" />
+                    <div class="createNew-buttton-function">
+                        <input type="button" value="Done" class="button-functions" @onclick="() => deleteDepartment(false)" />                        
+                    </div>
+
+                }
+                else
+                {
+                    <div class="page-title">Manage Department</div>
+                    <div class="form-group createjob-form-group">
+                        <div class="createjob-form-individual">
+                            <input type="button" value="Add Department" class="form-buttons" @onclick="() => createDep(true)" />
+                        </div>
+                        <div class="createjob-form-individual">
+                            <input type="button" value="Delete Department" class="form-buttons" @onclick="() => deleteDepartment(true)" />
+                        </div>
+                    </div>
+
+                    <div class="spacing-for-creating-stuff">
+                        <div class="createjob-form-individual">
+                            <div class="text-font-styling"> Departments Created</div>
+                            <div class="created-items-container">
+                                @foreach (var item in Departments)
+                                {
+                                    <div class="text-font-for-created-items-styling">@item.Name</div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="createNew-buttton-function">
+                        <input type="button" value="Save" class="button-functions" @onclick="() => manageDepartment(false)" />
+                    </div>
+                }
+
+            }
+            else if (manageComp)
+            {
+
+                @if (createNewComp)
+                {
+                    <div class="page-title">Create Company</div>
+
+                    <div class="form-group createjob-form-group">
+                        <div class="createjob-form-individual" style="width: 200%;">
+                            <div class="createjob-form-individual">
+                                <div class="text-font-styling"> Company Name</div>
+                                <InputText class="create-form-text" placeholder="" @bind-Value="companyToAdd" />
+                            </div>
+                        </div>
+                        <div class="createjob-form-individual">
+                            <input type="button" value="Add Company" class="form-buttons" @onclick="() => addCompany(companyToAdd)" />
+                        </div>
+                    </div>
+
+                    <div class="createNew-buttton-function">
+                        <input type="button" value="Cancel" class="button-functions" @onclick="() => createComp(false)" />
+                        <input type="button" value="Save" class="button-functions" />
+                    </div>
+                }
+                else if (deleteComp)
+                {
+                    <div class="page-title">Delete Company</div>
+
+                    <div class="form-group createjob-form-group">
+                        <div class="createjob-form-individual" style="width: 200%;">
+                            <div class="createjob-form-individual">
+                                <select class="createjob-select" style="margin-top: 3vh;" @onchange="OnCompanyChanged">
+                                    <!--@bind-Value="Company.Id"-->
+                                    <!--Change the onchange event, to a different variable, since it changes the value that you chose-->
+                                    <option selected disabled>Select Company</option>
+                                    @foreach (var company in Company)
+                                    {
+                                        <option>@company</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="createjob-form-individual">
+                            <input type="button" value="Delete Company" class="form-buttons" @onclick="() => removeCompany(TempJob.Company)" />
+                        </div>
+                    </div>
+                    <div class="createNew-buttton-function">
+                        <input type="button" value="Cancel" class="button-functions" @onclick="() => deleteCompany(false)" />
+                        <input type="button" value="Save" class="button-functions" @onclick="() => deleteCompany(false)" />
+                    </div>
+                }
+                else
+                {
+                    <div class="page-title">Manage Company</div>
+
+                    <div class="form-group createjob-form-group">
+                        <div class="createjob-form-individual">
+                            <input type="button" value="Add Company" class="form-buttons" @onclick="() => createComp(true)" />
+                        </div>
+                        <div class="createjob-form-individual">
+                            <input type="button" value="Delete Company" class="form-buttons" @onclick="() => deleteCompany(true)" />
+                        </div>
+                    </div>
+
+                    <div class="spacing-for-creating-stuff">
+                        <div class="createjob-form-individual">
+                            <div class="text-font-styling"> Companies Created</div>
+                            <div class="created-items-container">
+                                @foreach (var item in Company)
+                                {
+                                    <div class="text-font-for-created-items-styling">@item</div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="createNew-buttton-function">
+                        <input type="button" value="Save" class="button-functions" @onclick="() => manageCompany(false)" />
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="page-title">Create a job form</div>
+
+                <div class="createjob-form-individual">
+                    <div class="text-font-styling"> Job Name</div>
+                    <InputText class="create-form-text" id="job-name" placeholder="" @bind-Value="TempJob.Title" />
+                </div>
+
+                <div class="spacing-for-stuff">
+                    <div class="form-group createjob-form-group">
+                        <!--Find out how departments is null and jobtypes isn't-->
+                        <div class="createjob-form-individual">
+                            <!--style="width: 200%;"-->
+                            <div class="text-font-styling">Department Information</div>
+                            <InputSelect class="createjob-select" @bind-Value="departments.Id" @onfocusout="() => displayDepName(departments.Id)">
+                                <!--@bind-Value=" @TempJob.Department.Name"-->
+                                <option selected disabled value="0">Select Department</option>
+                                @foreach (var item in Departments)
+                                        {
+                                    <option value="@item.Id">@item.Name</option>
+                                        }
+                            </InputSelect>
+                        </div>
+                        <div class="createjob-form-individual">
+                            <input type="button" value="Manage Department" class="form-buttons" @onclick="() => manageDepartment(true)" />
+                        </div>
+                        @*<div class="createjob-form-individual">
+                                <input type="button" value="Delete Departement" class="form-buttons" />
+                            </div>*@
                     </div>
                 </div>
-                    <div class="successMessage"> @successMessage</div>
-                <div class="createNew-buttton-function">
-                    <input type="button" value="Done" class="button-functions" @onclick="() => createDep(false)" />
-                    @*<input type="button" value="Save" class="button-functions" @onclick="saveDep" />*@
-                </div>
-                </EditForm>
-            }
-            else if (deleteDep)
-            {
-                <div class="page-title">Delete Department</div>
 
-                <div class="form-group createjob-form-group">
-                    <div class="createjob-form-individual" style="width: 200%;">
+
+                @*Need to get the company information*@
+                <div class="spacing-for-stuff">
+                    <div class="form-group createjob-form-group">
                         <div class="createjob-form-individual">
-                            <InputSelect class="createjob-select" style="margin-top: 3vh;" @bind-Value="department.Id" @onchange="OnDepartmentChanged"> <!-- -->
-                                <!--Change the onchange event, to a different variable, since it changes the value that you chose-->
-                                <option value="0" selected disabled>Select Department</option>
-                                @foreach (var department in Departments)
-                                {
-                                    <option value="@department.Id">@department.Name</option>
-                                }
+                            <!--style="width: 200%;"-->
+                            <div class="text-font-styling">Company Information</div>
+                            <InputSelect class="createjob-select" @bind-Value="TempJob.Company" @onchange="OnCompanyChanged">
+                                <!--style="width: 107%;"-->
+                                <option selected disabled>Select Company</option>
+                                @foreach (var company in Company)
+                                        {
+                                    <option>@company</option>
+                                        }
+                            </InputSelect>
+                        </div>
+                        <div class="createjob-form-individual">
+                            <input type="button" value="Manage Company" class="form-buttons" @onclick="() => manageCompany(true)" />
+                        </div>
+                        @*<div class="createjob-form-individual">
+                                <input type="button" value="   Delete Company  " class="form-buttons" />
+                            </div>*@
+                    </div>
+                </div>
+
+                <div class="spacing-for-stuff">
+                    <div class="form-group createjob-form-group">
+                        <div class="createjob-form-individual">
+                            <div class="text-font-styling">Location Information</div>
+                            <InputSelect class="createjob-select" @bind-Value="TempJob.Policy" @onchange="OnPolicyChanged">
+                                <option selected disabled>Select WFH Policy</option>
+                                @foreach (var location in Policies)
+                                        {
+                                    <option>@location</option>
+                                        }
+                            </InputSelect>
+                        </div>
+                        <div class="createjob-form-individual">
+                            <InputSelect class="createjob-select" style="margin-top: 2.8vh;" @bind-Value="TempJob.Location" @onchange="OnLocationChanged">
+                                <option selected disabled>Select Office Location</option>
+                                @foreach (var location in Locations)
+                                        {
+                                    <option>@location</option>
+                                        }
                             </InputSelect>
                         </div>
                     </div>
+                </div>
+
+                <div class="spacing-for-stuff">
                     <div class="createjob-form-individual">
-                        <input type="button" value="Delete Department" class="form-buttons" @onclick="() => removeDepartment(department)" />
-                    </div>
-                </div>
-                <div class="createNew-buttton-function">
-                    <input type="button" value="Cancel" class="button-functions" @onclick="() => deleteDepartment(false)" />
-                    <input type="button" value="Save" class="button-functions" @onclick="() => deleteDepartment(false)" />
-                </div>
-
-            }
-            else
-            {
-                <div class="page-title">Manage Department</div>
-                <div class="form-group createjob-form-group">
-                    <div class="createjob-form-individual">
-                        <input type="button" value="Add Department" class="form-buttons" @onclick="() => createDep(true)" />
-                    </div>
-                    <div class="createjob-form-individual">
-                        <input type="button" value="Delete Department" class="form-buttons" @onclick="() => deleteDepartment(true)" />
-                    </div>
-                </div>
-
-                <div class="spacing-for-creating-stuff">
-                    <div class="createjob-form-individual">
-                        <div class="text-font-styling"> Departments Created</div>
-                        <div class="created-items-container">
-                            @foreach (var item in Departments)
-                            {
-                                <div class="text-font-for-created-items-styling">@item.Name</div>
-                            }
-                        </div>
-                    </div>
-                </div>
-                <div class="createNew-buttton-function">
-                    <input type="button" value="Save" class="button-functions" @onclick="() => manageDepartment(false)" />
-                </div>
-            }
-
-        }
-        else if (manageComp)
-        {
-
-            @if (createNewComp)
-            {
-                <div class="page-title">Create Company</div>
-
-                <div class="form-group createjob-form-group">
-                    <div class="createjob-form-individual" style="width: 200%;">
-                        <div class="createjob-form-individual">
-                            <div class="text-font-styling"> Company Name</div>
-                            <InputText class="create-form-text" placeholder="" @bind-Value="companyToAdd" />
-                        </div>
-                    </div>
-                    <div class="createjob-form-individual">
-                        <input type="button" value="Add Company" class="form-buttons" @onclick="() => addCompany(companyToAdd)" />
-                    </div>
-                </div>
-
-                <div class="createNew-buttton-function">
-                    <input type="button" value="Cancel" class="button-functions" @onclick="() => createComp(false)" />
-                    <input type="button" value="Save" class="button-functions" />
-                </div>
-            }
-            else if (deleteComp)
-            {
-                <div class="page-title">Delete Company</div>
-
-                <div class="form-group createjob-form-group">
-                    <div class="createjob-form-individual" style="width: 200%;">
-                        <div class="createjob-form-individual">
-                            <select class="createjob-select" style="margin-top: 3vh;" @onchange="OnCompanyChanged">
-                                <!--Change the onchange event, to a different variable, since it changes the value that you chose-->
-                                <option selected disabled>Select Company</option>
-                                @foreach (var company in Company)
-                                {
-                                    <option>@company</option>
-                                }
-                            </select>
-                        </div>
-                    </div>
-                    <div class="createjob-form-individual">
-                        <input type="button" value="Delete Company" class="form-buttons" @onclick="() => removeCompany(job.Company)" />
-                    </div>
-                </div>
-                <div class="createNew-buttton-function">
-                    <input type="button" value="Cancel" class="button-functions" @onclick="() => deleteCompany(false)" />
-                    <input type="button" value="Save" class="button-functions" @onclick="() => deleteCompany(false)" />
-                </div>
-            }
-            else
-            {
-                <div class="page-title">Manage Company</div>
-
-                <div class="form-group createjob-form-group">
-                    <div class="createjob-form-individual">
-                        <input type="button" value="Add Company" class="form-buttons" @onclick="() => createComp(true)" />
-                    </div>
-                    <div class="createjob-form-individual">
-                        <input type="button" value="Delete Company" class="form-buttons" @onclick="() => deleteCompany(true)" />
-                    </div>
-                </div>
-
-                <div class="spacing-for-creating-stuff">
-                    <div class="createjob-form-individual">
-                        <div class="text-font-styling"> Companies Created</div>
-                        <div class="created-items-container">
-                            @foreach (var item in Company)
-                            {
-                                <div class="text-font-for-created-items-styling">@item</div>
-                            }
-                        </div>
-                    </div>
-                </div>
-
-                <div class="createNew-buttton-function">
-                    <input type="button" value="Save" class="button-functions" @onclick="() => manageCompany(false)" />
-                </div>
-            }
-        }
-        else
-        {
-            <div class="page-title">Create a job form</div>
-
-            <div class="createjob-form-individual">
-                <div class="text-font-styling"> Job Name</div>
-                <InputText class="create-form-text" id="job-name" placeholder="" @bind-Value="job.Title" />
-            </div>
-
-            <div class="spacing-for-stuff">
-                <div class="form-group createjob-form-group">
-                    <div class="createjob-form-individual">
-                        <!--style="width: 200%;"-->
-                        <div class="text-font-styling">Department Information</div>
-                        <InputSelect class="createjob-select" @bind-Value="job.DepartmentId" @onchange="OnDepartmentChanged">
-                            <!-- -->
-                            <!--style="width: 107%;"-->
-                            <option selected disabled>Select Department</option>
-                            @foreach (var item in Departments)
-                                {
-                                <option value="@item.Id">@item.Name</option>
-                                }
+                        <div class="text-font-styling">Job Type Information</div>
+                        <InputSelect class="createjob-select" @bind-Value="@jobtype.JobTypeId" @onblur="() => displayTypeName(jobtype.JobTypeId)" >
+                            <option selected disabled value="0">Select Job Type</option>
+                            @foreach (var item in jobTypes)
+                                    {
+                                <option value="@item.Id">@item.Type</option>
+                                    }
                         </InputSelect>
+
                     </div>
+                </div>
+
+                <div class="spacing-for-stuff">
                     <div class="createjob-form-individual">
-                        <input type="button" value="Manage Department" class="form-buttons" @onclick="() => manageDepartment(true)" />
+                        <div class="text-font-styling">Application Due Date:</div>
+                        <InputDate type="date" class="createjob-form-date" @bind-Value="TempJob.DueDate" style="padding-right: 5px;" />
                     </div>
-                    @*<div class="createjob-form-individual">
-                        <input type="button" value="Delete Departement" class="form-buttons" />
-                    </div>*@
                 </div>
-            </div>
 
-
-            @*Need to get the company information*@
-            <div class="spacing-for-stuff">
-                <div class="form-group createjob-form-group">
+                <div class="spacing-for-stuff">
                     <div class="createjob-form-individual">
-                        <!--style="width: 200%;"-->
-                        <div class="text-font-styling">Company Information</div>
-                        <InputSelect class="createjob-select" @bind-Value="job.Company" @onchange="OnCompanyChanged">
-                            <!--style="width: 107%;"-->
-                            <option selected disabled>Select Company</option>
-                            @foreach (var company in Company)
-                            {
-                                <option>@company</option>
-                            }
-                        </InputSelect>
-                    </div>
-                    <div class="createjob-form-individual">
-                        <input type="button" value="Manage Company" class="form-buttons" @onclick="() => manageCompany(true)" />
-                    </div>
-                    @*<div class="createjob-form-individual">
-                        <input type="button" value="   Delete Company  " class="form-buttons" />
-                    </div>*@
-                </div>
-            </div>
-
-            <div class="spacing-for-stuff">
-                <div class="form-group createjob-form-group">
-                    <div class="createjob-form-individual">
-                        <div class="text-font-styling">Location Information</div>
-                        <InputSelect class="createjob-select" @bind-Value="job.Policy" @onchange="OnPolicyChanged">
-                            <option selected disabled>Select WFH Policy</option>
-                            @foreach (var location in Policies)
-                            {
-                                <option>@location</option>
-                            }
-                        </InputSelect>
-                    </div>
-                    <div class="createjob-form-individual">
-                        <InputSelect class="createjob-select" style="margin-top: 2.8vh;" @bind-Value="job.Location" @onchange="OnLocationChanged">
-                            <option selected disabled>Select Office Location</option>
-                            @foreach (var location in Locations)
-                            {
-                                <option>@location</option>
-                            }
-                        </InputSelect>
+                        <div class="text-font-styling">Job Advert Description:</div>
+                        <InputTextArea rows="3" style="padding-right: 5px;" @bind-Value="TempJob.Description" />
                     </div>
                 </div>
+            }
+            <div class="validation-message"><ValidationSummary /></div>
+            <div class="bottom-buttons">
+                <input type="button" value="Prev" class="button-functions" />
+                <input type="submit" value="Save" class="button-functions" />
+                <input type="button" value="Next" class="button-functions" @onclick="() => RedirectToNextPage(true)" />
             </div>
 
-            <div class="spacing-for-stuff">
-                <div class="createjob-form-individual">
-                    <div class="text-font-styling">Job Type Information</div>
-                    <InputSelect class="createjob-select" @bind-Value="@job.JobTypes">
-                        <option selected disabled>Select Job Type</option>
-                        @foreach (var item in jobTypes)
-                            {
-                            <option value="@item.Id">@item.Type</option>
-                            }
-                    </InputSelect>
-                    
-                </div>
-            </div>
 
-            <div class="spacing-for-stuff">
-                <div class="createjob-form-individual">
-                    <div class="text-font-styling">Application Due Date:</div>
-                    <InputDate type="date" class="createjob-form-date" @bind-Value="job.DueDate" style="padding-right: 5px;" />
-                </div>
-            </div>
-
-            <div class="spacing-for-stuff">
-                <div class="createjob-form-individual">
-                    <div class="text-font-styling">Job Advert Description:</div>
-                    <InputTextArea rows="3" style="padding-right: 5px;" @bind-Value="job.Description" />
-                </div>
-            </div>
-        }
-        <div class="validation-message"><ValidationSummary /></div>
-        <div class="bottom-buttons">
-            <input type="button" value="Prev" class="button-functions" />
-            <input type="submit" value="Save" class="button-functions" />
-            <input type="button" value="Next" class="button-functions" @onclick="RedirectToNextPage" />
-        </div>
-    </EditForm>
-</div>
-
+        </EditForm>
+    </div>
+}
 
 @*<div class="form-group createjob-form-group" style="margin-top:5vh;">
         <div class="createjob-form-individual">
@@ -746,10 +754,10 @@
 
 @*<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save" />*@
 @*<div class="bottom-buttons">
-    <input type="button" value="Prev" class="button-functions" />
-    <input type="button" value="Save" class="button-functions" @onclick="saveJobState"/>
-    <input type="button" value="Next" class="button-functions" />
-</div>*@
+        <input type="button" value="Prev" class="button-functions" />
+        <input type="button" value="Save" class="button-functions" @onclick="saveJobState"/>
+        <input type="button" value="Next" class="button-functions" />
+    </div>*@
 
 @code {
 

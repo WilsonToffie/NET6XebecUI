@@ -4,7 +4,7 @@
 @inject NavigationManager nav
 @inject HrJobState hrJobState
 @inject IDialogService DialogService
-
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 <style>
 
     .handPointer {
@@ -345,7 +345,6 @@
         .filter-button-trans:hover {
             transform: rotate(0deg);
         }
-
 </style>
 
 @if (ShowingJobPortal)
