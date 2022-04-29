@@ -3,11 +3,14 @@
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager;
 @inject UserState _state;
+@inject Blazored.LocalStorage.ILocalStorageService localStorage;
+@using XebecPortal.UI.Utils.Handlers;
+@using System.Net.Http.Headers;
 <head>
 
 </head>
 <style>
-   
+
     .appform-container {
         height: 100%;
         width: 100%;
@@ -16,7 +19,6 @@
         background-color: rgba(255,255,255,1);
         border: solid white 0.1em;
         box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
-       
         font-family: opensans-condensed-bold,serif;
     }
 
@@ -46,9 +48,7 @@
         border-color: #777777 transparent transparent transparent;
     }
 
-    .collaborators-heading-text {
-        color: #004393;
-    }
+    
 
     .appform-left-buttons {
         margin-top: 5vh;
@@ -64,9 +64,9 @@
         padding: 55px;
     }
 
-       
 
-       
+
+
 
     .appform-left-row {
         border-radius: 20px !important;
@@ -145,9 +145,9 @@
         align-items: center;
     }
 
-    
-   
-    
+
+
+
     .appform-close-button {
         width: 10%;
         text-align: end;
@@ -219,7 +219,6 @@
     }
 
     .right-list-item-preview {
-       
         border-radius: 5px !important;
         min-height: 5rem;
         color: black;
@@ -227,13 +226,11 @@
         min-width: 100%;
         margin-bottom: 5px;
         background-color: rgba(255, 255, 255, 1);
-       
     }
 
-       
+
 
     .close-item-panel {
-        
         background: rgba(249,249,251,0.51);
         border-bottom: #888888;
         display: flex;
@@ -281,78 +278,94 @@
         justify-content: center;
         align-items: center;
         width: 100%;
-        
     }
-    .inner-form-container{
-        width:75%;
-        height:100%;
-        background-color:white;
-        margin-right:15px;
-        
+
+    .inner-form-container {
+        width: 75%;
+        height: 100%;
+        background-color: white;
+        margin-right: 15px;
     }
+
     .form-heading {
         text-align: center;
-        
     }
+
     .form-subheading {
         color: #004392;
-        
         font-weight: bold;
     }
-    .form-main{
-        display:flex;
-        padding:20px;
-        justify-content:space-evenly;
+
+    .form-main {
+        display: flex;
+        padding: 10px 20px;
+        justify-content: space-between;
+        height: 90%;
     }
+
+    .form-right {
+        width: 50%;
+        height: 95%;
+    }
+
+    .form-left {
+        width: 45%;
+    }
+
     .summary-section {
         background-color: #00968B;
-        width:25%;
-        height:100%;
-        margin-left:20px;
-        font-weight:bold;
-        
+        width: 25%;
+        height: 100%;
+        margin-left: 20px;
+        font-weight: bold;
+    }
 
+    .left-inner {
+        display: flex;
+        justify-content: space-around;
     }
-    .left-inner{
-        display:flex;
-        justify-content:space-around;
+
+    .select-heading {
+        font-weight: 600;
     }
-    .select-heading{
-        font-weight:600;
-    }
+
     .select-form {
         padding: 2px 0px 5px 5px;
         border: solid #00968B;
         border-radius: 5px;
     }
-    .answer-heading{
-        font-weight:600;
-       margin-top:10px;
+
+    .answer-heading {
+        font-weight: 600;
+        margin-top: 10px;
     }
+
     .answer-options {
         width: 100%;
         border: solid #00968B;
         border-width: 0.5px;
         border-radius: 5px;
     }
-    .answers-left-table{
-        height:100%;
-        overflow-y:scroll;
+
+    .answers-left-table {
+        height: 84%;
+        overflow-y: scroll;
     }
-    .answers-left-main{
-        height:100%;
-        width:100%;
+
+    .answers-left-main {
+        height: 79%;
+        width: 90%;
     }
+
     .nav-btns {
         display: flex;
         justify-content: center;
         align-items: center;
         width: 70%;
-        margin-top:20px;
-
+        margin-top: 20px;
     }
+
     .down-button {
-        
         height: 5vh;
         background-color: #00bcae;
         border: none;
@@ -361,10 +374,10 @@
         text-align: center;
         font-family: opensans-bold;
         font-weight: 700;
-        margin-left:20px;
-        width:22%;
-        
+        margin-left: 20px;
+        width: 22%;
     }
+
         .down-button:hover {
             height: 5vh;
             background-color: #d35bc9;
@@ -375,12 +388,37 @@
             font-family: opensans-bold;
             font-weight: 700;
         }
+
     .summary-heading {
         color: #004392;
-        font-weight:700;
-        text-align:center;
-        width:100%;
+        font-weight: 700;
+        text-align: center;
+        width: 100%;
     }
+    .add-question{
+        text-align:center;
+    }
+    .add-question-header {
+        display: flex;
+        justify-content: space-around;
+        
+        align-content: center;
+        align-items: center;
+    }
+    .add-question-heading-text {
+        font-family: opensans-condensed-bold;
+        font-weight: 800;
+        font-size: 1.5em;
+        color: #00bcae ;
+    }
+    .add-question-type{
+        display:flex;
+        justify-content:center;
+    }
+    .collaborators-left-table{
+        overflow-y:scroll;
+    }
+    
 </style>
 
 <div class="form-container">
@@ -400,6 +438,7 @@
                         @foreach (var question in Questions)
                         {
                             <option> @question.questionDescription</option>
+                            
 
                         }
 
@@ -484,7 +523,7 @@
                             <button class="btn appform-main-button" @onclick="OpenButtons">Manage Questions</button>
                         </div>
                     }
-                    
+
                     @if (ShowAddDeleteButtons)
                     {
 
@@ -495,7 +534,7 @@
                             <div class="delete-button">
                                 <button class="btn appform-main-button" @onclick="OpenDeletePopup">Delete questions</button>
                             </div>
-                           
+
                             <div class="delete-button">
                                 <button class="btn-close" @onclick="ShowmanageButton"></button>
                             </div>
@@ -504,74 +543,79 @@
 
                     }
 
+                    @if (ShowAddPopup)
+                    {
+                        <div class="add-question">
+                            <div class="add-question-header">
+                                <h4 class="add-question-heading-text">Add Question</h4>
+                                <button class="btn-close"  @onclick="CloseAddPopup"></button>
+
+                            </div>
+                            <div class="add-question-body">
+                                <textarea style="width: 80%; border: 2px solid grey; height: 180px; background-color: white; border-radius: 5px;"></textarea>
+                            </div>
+                            <div class="add-question-type">
+                                <p>select type:</p>
+                                <select style="height:20px;" @bind="tempType">
+                                    
+                                    @foreach (var option in Types)
+                                    {
+                                        <option selected value="@option.Type">@option.Type</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="add-question-button">
+                                <button class="btn appform-main-button" @onclick="AddQuestion">Submit question</button>
+                            </div>
+                        </div>
+                    }
+                    @if (ShowDeletePopup)
+                    {
+                        <div class="delete-question">
+                            <div class="delete-question-header">
+                                <h4 class="collaborators-heading-text">Delete Questions:</h4>
+                                <button class="btn-close"  @onclick="CloseDeletePopup"></button>
+                            </div>
+                            <div class="delete-question-body">
+                                <table class="collaborators-left-table">
+                                    <tbody>
+                                        @if (Questions != null)
+                                        {
+                                            foreach (var question in Questions)
+                                            {
+
+                                                <tr class="pr-2 pl-2 pt-1 border rounded-1" style="overflow: hidden;">
+                                                    <td class="collaborators-left-td appform-text pl-2" style="word-wrap: break-word">@question.questionDescription</td>
+
+                                                    <td style="max-width: 10%;">
+                                                        <button class="btn-close delete-btn" @onclick="() => DeleteQuestion(question)"></button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
+
+
+
+
                 }
 
             </div>
-            @if (ShowAddPopup)
-            {
-                <div class="add-question">
-                    <div class="add-question-header">
-                        <h4 class="collaborators-heading-text" style="margin-left: 20px;">Add Question:</h4>
-                        <button class="btn-close" style="margin-left: 68%" @onclick="CloseAddPopup"></button>
-                    </div>
-                    <div class="add-question-body">
-                        <textarea style="width: 80%; border: 2px solid grey; height: 180px; background-color: white; border-radius: 5px;"></textarea>
-                    </div>
-                    <div class="add-question-type">
-                        <select @bind="tempType">
-                            @foreach (var option in Types)
-                            {
-                                <option selected value="@option.Type">@option.Type</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="add-question-button">
-                        <button class="btn appform-main-button" @onclick="AddQuestion">Submit question</button>
-                    </div>
-                </div>
-            }
-            @if (ShowDeletePopup)
-            {
-                <div class="delete-question">
-                    <div class="delete-question-header">
-                        <h4 class="collaborators-heading-text">Delete Questions:</h4>
-                        <button class="btn-close" style="margin-left: 57%" @onclick="CloseDeletePopup"></button>
-                    </div>
-                    <div class="delete-question-body">
-                        <table class="collaborators-left-table">
-                            <tbody>
-                                @if (Questions != null)
-                                {
-                                    foreach (var question in Questions)
-                                    {
-                                        <tr>
-                                            <td class="delete-question-question" style="font-size: 15px;">@question.questionDescription</td>
-                                        </tr>
-                                        <tr class="pr-2 pl-2 pt-1 border rounded-1" style="overflow: hidden;">
-                                            <td class="collaborators-left-td appform-text pl-2" style="word-wrap: break-word">@question.questionDescription</td>
-
-                                            <td style="max-width: 10%;">
-                                                <button class="btn-close delete-btn" @onclick="() => DeleteQuestion(question)"></button>
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            }
-
+            
 
         </div>
-        
+
 
     </div>
     <div class="summary-section">
         <div class="summary-heading">
             <h5>SUMMARY</h5>
         </div>
-        
+
         <div class="collaborators-left-table">
             @if (Questions != null)
             {
@@ -631,8 +675,8 @@
 
 
     </div>
-    
-    
+
+
 </div>
 <div class="nav-btns">
     <button class="down-button">Prev: Create a Job</button>
@@ -641,6 +685,7 @@
 </div>
 
 @code {
+    string token;
 
     [Parameter]
     public EventCallback<List<FormQuestion>> FormQuestionsChanged { get; set; }
@@ -670,17 +715,18 @@
     bool ShowAddPopup = false;
     bool ShowAddDeleteButtons = false;
     bool ShowDeletePopup = false;
-    bool ShowManage= true;
+    bool ShowManage = true;
     public CustomQuestion tempQuestion = new CustomQuestion();
 
     protected override async Task OnInitializedAsync()
     {
+        token = await localStorage.GetItemAsync<string>("jwt_token");
         if (FormQuestions == null)
             FormQuestions = new();
 
-        Questions = await httpClient.GetFromJsonAsync<List<CustomQuestion>>("https://xebecapi.azurewebsites.net/api/question");
-        Jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
-        Types = await httpClient.GetFromJsonAsync<List<QuestionType>>("https://xebecapi.azurewebsites.net/api/answertype");
+        Questions = await httpClient.GetListJsonAsync<List<CustomQuestion>>("https://xebecapi.azurewebsites.net/api/question", new AuthenticationHeaderValue("Bearer", token));
+        Jobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job", new AuthenticationHeaderValue("Bearer", token));
+        Types = await httpClient.GetListJsonAsync<List<QuestionType>>("https://xebecapi.azurewebsites.net/api/answertype", new AuthenticationHeaderValue("Bearer", token));
     }
 
 
@@ -705,7 +751,8 @@
 
     public async Task DeleteQuestion(CustomQuestion q)
     {
-        await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/question/{q.Id}");
+
+        await httpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/question/{q.Id}", new AuthenticationHeaderValue("Bearer", token));
         await OnInitializedAsync();
     }
     public void OpenButtons()
@@ -738,9 +785,9 @@
     {
         if (tempQuestion.questionDescription != "")
         {
-            ShowAddPopup = !ShowAddPopup;
+           
             tempQuestion.answerTypeId = Types.FirstOrDefault(q => q.Type == tempType).Id;
-            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/question", tempQuestion);
+            await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/question", tempQuestion, new AuthenticationHeaderValue("Bearer", token));
             await OnInitializedAsync();
         }
     }
