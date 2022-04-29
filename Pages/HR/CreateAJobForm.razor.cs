@@ -20,21 +20,25 @@ namespace XebecPortal.UI.Pages.HR
 
         [Parameter]
         public EventCallback<CreateJobPost> TempJobChanged { get; set; }
-        private List<AppUser> collaborators = new List<AppUser>();
-        private List<AppUser> collaboratorsAdded = new List<AppUser>();
         private List<string> Company = new List<string>() { "Nebula", "Deloitte" };
         private List<string> Locations = new List<string>() { "Remote", "Eastern Cape", "Free State", " Gauteng", "KwaZulu-Natal", "Limpopo", "Mpumalanga", "Northen Cape", "North West", "Western Cape" };
-        private List<string> Statuses = new List<string>() { "Open", "Draft", "Filled", "Closed" };
+        //private List<string> Statuses = new List<string>() { "Open", "Draft", "Filled", "Closed" };
         private List<string> Policies = new List<string>() { "Remote", "Hybrid", "Onsite" };
         private IList<JobType> jobTypes = new List<JobType>();
-        private IList<JobPlatform> jobPlatforms = new List<JobPlatform>();
         private IList<Department> Departments = new List<Department>();
         private IList<Department> NewDepartments = new List<Department>();
-        private JobType tempJobType = new JobType();
+        //private JobType tempJobType = new JobType();
+        //private Department tempDepartment = new Department();
         private Department department = new Department();
+        private Department departments = new Department(); // this is mainly used for the department display 
         private List<JobPlatform> ListOfPlatforms = new List<JobPlatform>();
-        private List<CreateJobPost> jobList = new List<CreateJobPost>();        
-
+        private IList<Job> jobList = new List<Job>();
+        private List<JobTypeHelper> jobType = new List<JobTypeHelper>();
+        private JobTypeHelper jobtype = new JobTypeHelper();
+        private Department displayDepartment = new Department();
+        private JobType displayJobType = new JobType();
+        private Job checkJob = new Job();
+        private IList<Job> checkJobList { get; set; }
 
         string token;
         private bool manageDep;
@@ -43,21 +47,21 @@ namespace XebecPortal.UI.Pages.HR
         private bool deleteDep;
         private bool createNewComp;
         private bool deleteComp;
+        private bool createJobExists;
         private string companyToAdd;
         private string depToDelete;
         private string successMessage;
-
         private string departmentName;
+        private int savedJobId;
+        private int existJobId;
+
         protected override async Task OnInitializedAsync()
         {            
             token = await localStorage.GetItemAsync<string>("jwt_token");
 
-            jobPlatforms = await HttpClient.GetListJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform", new AuthenticationHeaderValue("Bearer", token));
-            jobTypes = await HttpClient.GetListJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/jobtype", new AuthenticationHeaderValue("Bearer", token));
-            collaborators = await HttpClient.GetListJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user", new AuthenticationHeaderValue("Bearer", token));
-            Departments = await HttpClient.GetListJsonAsync<List<Department>>("https://xebecapi.azurewebsites.net/api/Department", new AuthenticationHeaderValue("Bearer", token));
-
-            job.DueDate = TempJob.CreationDate = DateTime.Today;
+            jobTypes = await HttpClient.GetListJsonAsync<List<JobType>>($"https://xebecapi.azurewebsites.net/api/jobtype", new AuthenticationHeaderValue("Bearer", token));
+            Departments = await HttpClient.GetListJsonAsync<List<Department>>($"https://xebecapi.azurewebsites.net/api/Department", new AuthenticationHeaderValue("Bearer", token));
+            TempJob.DueDate = TempJob.CreationDate = DateTime.Today;
         }
 
 
@@ -105,12 +109,6 @@ namespace XebecPortal.UI.Pages.HR
         {
             if (!value.Equals(string.Empty))
             {
-                //Departments.Add(value);
-                // department.name = string.Empty;
-                //Departments.Add(new()
-                //{
-                //    Name = value.Name
-                //});
                 // The reason for the new Departments is to make posting easier, by adding new departments to a new list and just posting that list
                 NewDepartments.Add(new()
                 {
@@ -134,6 +132,7 @@ namespace XebecPortal.UI.Pages.HR
             {
                 await HttpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Department", item, new AuthenticationHeaderValue("Bearer", token));
             }
+            NewDepartments.Clear();
             await createDep(false);
         }
         private void addCompany(string value)
@@ -163,8 +162,14 @@ namespace XebecPortal.UI.Pages.HR
 
         }
 
-        private void saveJobState()
+        private async Task saveJobState()
         {
+
+            jobType.Add(new()
+            {
+                JobTypeId = jobtype.JobTypeId,
+            });
+            Console.WriteLine("Joblist count: " + jobList.Count);
             jobList.Add(new()
             {
                 Title = TempJob.Title,
@@ -173,51 +178,91 @@ namespace XebecPortal.UI.Pages.HR
                 Compensation = TempJob.Compensation,
                 MinimumExperience = TempJob.MinimumExperience,
                 Location = TempJob.Location,
-                Department = TempJob.Department,
+                DepartmentId = departments.Id,
+                //Department = departments,
                 Policy = TempJob.Policy,
                 Status = "Draft",
                 DueDate = TempJob.DueDate,
-                CreationDate = DateTime.Today,
-                JobType = TempJob.JobType,
+                CreationDate = DateTime.Today,                
+                JobTypes = jobType,
             });
-            // When the user click save, the status of the Job should be "draft", that will be change when they submit the final job
-            // The endpoint need to accept Policy attributes, it's already changed on the client side, just back end
 
-            //https://xebecapi.azurewebsites.net/api/Job the endpoint to save the info
-
-            // This will be a post, buuut if the info already exists it needs to be a PUT request
-            // Creation date =  DateTime.Today
-            // if you save it should conert the info to a list and the write that list to the DB
-
-
+            checkJobList = await HttpClient.GetListJsonAsync<List<Job>>($"https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
+            //checkJob = checkJobList.Where(x => x.Title == TempJob.Title).ToList();
+            // Please find a better way....
+            foreach (var item in checkJobList)
+            {
+                if (item.Title.Equals(TempJob.Title) && item.Description.Equals(TempJob.Description) && item.Company.Equals(TempJob.Company) && item.Location.Equals(TempJob.Location) && item.DepartmentId.Equals(departments.Id) && item.Policy.Equals(TempJob.Policy) && item.Status.Equals("Draft")) // && item.DueDate.Equals(TempJob.DueDate) && item.JobTypes.Equals(jobType)
+                {                    
+                    existJobId = item.Id;
+                    createJobExists = true;
+                }
+                else
+                {
+                    createJobExists = false;
+                }
+            }
             foreach (var item in jobList)
             {
-                //    if (newPersonalInfo)
-                //    {
+                Console.WriteLine("Title: " + item.Title);
+                Console.WriteLine("Description: " + item.Description);
+                Console.WriteLine("Company: " + item.Company);
+                Console.WriteLine("Location: " + item.Location);
+                Console.WriteLine("DepartmentId: " + item.DepartmentId);
+                // Console.WriteLine("Department: " + item.Department);
+                Console.WriteLine("Policy: " + item.Policy);
+                Console.WriteLine("Status: " + item.Status);
+                Console.WriteLine("Due Date: " + item.DueDate);
+                Console.WriteLine("Creation Date: " + item.CreationDate);
+                Console.WriteLine("JobTypes: " + item.JobTypes);
+
+                
+                if (createJobExists)
+                {
+                    Console.WriteLine("Job exists already with ID of: " + existJobId);
+                    await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Job/{existJobId}", item, new AuthenticationHeaderValue("Bearer", token));
+                    await OnInitializedAsync();
+                }
+                else
+                {
+                    Console.WriteLine("Job Doesnt exist yet");
+                    await HttpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Job", item, new AuthenticationHeaderValue("Bearer", token));
+                    await OnInitializedAsync();
+                }
+
+                // create a check statement here
                 //await HttpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Job", item, new AuthenticationHeaderValue("Bearer", token));
-                //    }
-                //    else
-                //    {
-                //        await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/PersonalInformation/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
-                //    }
 
+                //await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/PersonalInformation/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
             }
+            jobList.Clear();
+            jobType.Clear();
+            checkJobList.Clear();
+        }
+
+        private bool redirectpage;
+        private void RedirectToNextPage(bool value)
+        {
+            redirectpage = value;
+            // Everything needs to be entered (already checked cause it's using the same validation as save).
+            // You need to send job ID to the next page to ensure that it is saved correctly
+            // One way of doing is, will be through a constructor.. Not sure if it will work the same way as what Java does, but you can just call the class and pass the variable through
 
         }
 
-        private void RedirectToNextPage()
-        {
-
+        
+        private async Task displayDepName(int depNameID)
+        {            
+            displayDepartment = await HttpClient.GetListJsonAsync<Department>($"https://xebecapi.azurewebsites.net/api/Department/single/{depNameID}", new AuthenticationHeaderValue("Bearer", token));
+            departments.Id = displayDepartment.Id;
+            departments.Name = displayDepartment.Name;
         }
 
-        private IList<Department> displayDepartment = new List<Department>();
-        private async Task OnDepartmentChanged(ChangeEventArgs e)
-        {
-            Console.WriteLine("Value: " + e.Value.ToString());
-            displayDepartment = await HttpClient.GetListJsonAsync<List<Department>>("https://xebecapi.azurewebsites.net/api/Department/single/", new AuthenticationHeaderValue("Bearer", token));
-            
-        //return ValueChanged.InvokeAsync();
-        //Console.WriteLine("Departments value: " + TempJob.Department);
+        private async Task displayTypeName(int jobTypeId)
+        {            
+            displayJobType = await HttpClient.GetListJsonAsync<JobType>($"https://xebecapi.azurewebsites.net/api/JobType/{jobTypeId}", new AuthenticationHeaderValue("Bearer", token));
+            TempJob.JobType.Id = displayJobType.Id;
+            TempJob.JobType.Type = displayJobType.Type;
         }
     }
 }

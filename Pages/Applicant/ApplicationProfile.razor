@@ -637,7 +637,6 @@
     .work-history-comp-name {
         text-align: left;
         padding-left: 1em;
-        color: black;
         font-weight: bold;
         font-size: 1em;
         font-family: opensans-condensed-bold;
@@ -645,8 +644,7 @@
 
     .work-history-job-title {
         text-align: left;
-        padding-left: 1em;
-        color: rgba(0,0,0,0.5);
+        padding-left: 1em;        
         font-weight: bold;
         font-size: 1em;
     }
@@ -681,7 +679,7 @@
 
     .text-card {
         background-color: rgba(255,255,255,1);
-        border: solid white 0.25em;
+        /*border: solid white 0.25em;*/
         box-shadow: rgb(9 30 66 / 25%) 0px 1px 1px, rgb(9 30 66 / 13%) 0px 0px 1px 1px;
         border-radius: 20px;
         min-height: 10vh;
@@ -696,34 +694,20 @@
     }
 
         .text-card:hover {
-            background-color: rgba(255,255,255,1);
-            border: solid white 0.25em;
+            background-color: rgba(102,102,102,0.5);
             box-shadow: rgb(9 30 66 / 25%) 0px 1px 1px, rgb(9 30 66 / 13%) 0px 0px 1px 1px;
             border-radius: 20px;
             min-height: 10vh;
             font-family: opensans-condensed-bold;
             font-weight: 700;
-            color: black;
+            color: white;
             font-size: 1.8vh;
             margin-bottom: 7px;
             cursor: pointer;
-            width: 90%;
             margin-left: 1.75vh;
-            /*border-radius: 20px;
-            min-height: 10vh;
-            font-family: opensans-condensed-bold;
-            font-weight: 700;
-            color: black;
-            font-size: 1.8vh;
-            margin-bottom: 2px;*/
-            /*box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;
-             background: #49E5EF;*/
-            /*backdrop-filter: blur(5.6px);
-            -webkit-backdrop-filter: blur(5.6px);*/
-            /*border: 1px solid rgba(255, 255, 255, 0.04);*/
         }
 
-
+        
         /*Search bar CSS*/
     .hr-job-search-bar {
         width: 43%;
@@ -822,6 +806,11 @@
             margin-bottom: 1px;
         }
 
+        @*@media only screen and (max-width: 600px) { Mobile View Presentation
+        body {
+             background-color: lightblue;
+        }*@
+}
 </style>
 <div class="h-95 container-fluid d-flex justify-content-center align-items-center overflow-hidden">
     <div class="col-1"></div>
@@ -952,12 +941,11 @@
                                                     {
                                                         <option value="@item.Ethnicity" selected>@item.Ethnicity</option>
                                                         <option value="African">African</option>
-                                                        <option value="Asain">Asain</option>
+                                                        <option value="Asian">Asian</option>
                                                         <option value="Coloured">Coloured</option>
                                                         <option value="Indian">Indian</option>
                                                         <option value="White">White</option>
                                                     }
-
                                                 }
                                             </InputSelect>
                                         </div>
@@ -981,11 +969,7 @@
                                                         <option value="Female">Female</option>
                                                         <option value="Prefer Not To Answer">Prefer not to answer</option>
                                                     }
-
                                                 }
-
-
-
                                             </InputSelect>
                                         </div>
                                     </div>
@@ -1081,7 +1065,7 @@
                                                             <div class="work-history-comp-name">@item.CompanyName</div>
                                                             <div class="work-history-job-title">@item.JobTitle</div>
                                                             <div class="work-history-desc">@item.Description</div>
-                                                            <div class="work-history-date">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</div>
+                                                            <div class="work-history-date" style="color: @SmallCardDate()">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</div>
                                                         </div>
 
 
@@ -1171,7 +1155,7 @@
                                                             </div>
                                                             <div class="work-history-comp-name">@item.Qualification</div>
                                                             <div class="work-history-job-title">@item.Insitution</div>
-                                                            <div class="work-history-date">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</div>
+                                                            <div class="work-history-date" style="color: @SmallCardDate()" >@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</div>
                                                         </div>
                                                     }
                                                 }
