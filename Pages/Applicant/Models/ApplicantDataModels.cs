@@ -82,7 +82,11 @@ namespace XebecPortal.UI.Pages.Applicant
         public decimal? Compensation { get; set; }
         public int? MinimumExperience { get; set; }
         public string Location { get; set; }
-        public string Department { get; set; }
+        public int DepartmentId { get; set; }
+
+        public Department Department { get; set; }
+
+        public string Policy { get; set; }
         public string Status { get; set; }
         public DateTime DueDate { get; set; }
         public DateTime CreationDate { get; set; }
@@ -90,6 +94,14 @@ namespace XebecPortal.UI.Pages.Applicant
         public IList<JobPlatformHelper> JobPlatforms { get; set; }
         public IList<JobApplicationPhase> JobPhases { get; set; }
         public IList<Application> Applications { get; set; }
+
+    }
+
+    public class Department
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
     }
 
     public class FormQuestion
@@ -176,6 +188,10 @@ namespace XebecPortal.UI.Pages.Applicant
         public IList<Job> Job { get; set; }
         public int AppUserId { get; set; }
         public IList<AppUser> AppUser { get; set; }
+
+        public int ApplicationPhaseId { get; set; }
+
+        public ApplicationPhase ApplicationPhase { get; set; }
         public IList<JobPhaseHelpers> PhaseHelpers { get; set; }
     }
 
