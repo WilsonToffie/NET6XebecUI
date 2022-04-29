@@ -38,7 +38,7 @@ namespace XebecPortal.UI.Shared
         {
             token = await localStorage.GetItemAsync<string>("jwt_token");
 
-            jobs = await HttpClient.GetListJsonAsync<IList<Job>>("https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
+            jobs = await HttpClient.GetListJsonAsync<IList<Job>>($"https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
 
             jobTypes = await HttpClient.GetListJsonAsync<IList<JobType>>("https://xebecapi.azurewebsites.net/api/JobType", new AuthenticationHeaderValue("Bearer", token));
             

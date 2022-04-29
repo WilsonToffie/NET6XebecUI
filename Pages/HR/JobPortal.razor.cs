@@ -48,8 +48,9 @@ namespace XebecPortal.UI.Pages.HR
         string token;
         protected override async Task OnInitializedAsync()
         {
-            ShowJobPortal();
             token = await localStorage.GetItemAsync<string>("jwt_token");
+
+            ShowJobPortal();
 
             JobTypes = await httpClient.GetListJsonAsync<List<JobType>>($"https://xebecapi.azurewebsites.net/api/JobType", new AuthenticationHeaderValue("Bearer", token));
             jobList = await httpClient.GetListJsonAsync<List<Job>>($"https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
@@ -112,8 +113,8 @@ namespace XebecPortal.UI.Pages.HR
         {
             if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Delete This Item?"))
             {
-                await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/Job/{id}");
-                jobList = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
+                await httpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/Job/{id}", new AuthenticationHeaderValue("Bearer", token));
+                jobList = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
                 jobListFilter = jobList;
                 pageNum.Clear();
                 jobPagedList = jobListFilter.ToPagedList(1, 17);
@@ -129,8 +130,8 @@ namespace XebecPortal.UI.Pages.HR
                 await _jsModule.InvokeVoidAsync("CursorWait");
                 var newJobTypeHelper = jobTypeHelper.Find(x => x.JobId == jobValue.Id);
                 newJobTypeHelper.JobTypeId = JobTypes.Find(x => x.Type == jobTypeHelperValue).Id;
-                await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/Job/{jobValue.Id}", jobValue);
-                await httpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/JobTypeHelper/{newJobTypeHelper.Id}", newJobTypeHelper);
+                await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Job/{jobValue.Id}", jobValue, new AuthenticationHeaderValue("Bearer", token));
+                await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/JobTypeHelper/{newJobTypeHelper.Id}", newJobTypeHelper, new AuthenticationHeaderValue("Bearer", token));
                 changeForm = boolValue;
                 await _jsModule.InvokeVoidAsync("CursorDefault");
             }
