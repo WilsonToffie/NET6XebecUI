@@ -135,7 +135,7 @@ namespace XebecPortal.UI.Pages.Applicant
                     }
                 }
 
-                //workHistoryList = await httpClient.GetListJsonAsync<List<WorkHistory>>($"https://xebecapi.azurewebsites.net/api/WorkHistory/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+                workHistoryList = await httpClient.GetListJsonAsync<List<WorkHistory>>($"https://xebecapi.azurewebsites.net/api/WorkHistory/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
                 //workHistoryList = workHistories.Where(x => x.AppUserId == state.AppUserId).ToList();
 
                 educationList = await httpClient.GetListJsonAsync<List<Education>>($"https://xebecapi.azurewebsites.net/api/Education/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
@@ -147,20 +147,20 @@ namespace XebecPortal.UI.Pages.Applicant
                 referencesList = await httpClient.GetListJsonAsync<List<References>>($"https://xebecapi.azurewebsites.net/api/Reference/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
                 //referencesList = referencesHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
 
-                //profilePortfolio = await httpClient.GetListJsonAsync<ProfilePortfolioLink>($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
-                //profilePortfolioList = profilePortfolioInfo.Where(x => x.AppUserId == state.AppUserId).ToList();
+                profilePortfolioList = await httpClient.GetListJsonAsync<List<ProfilePortfolioLink>>($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+                //profilePortfolioList = profilePortfolioInfo.ToList();
 
-                //if (profilePortfolioList.Count == 0)
-                //{
-                //    newPortFolioInfo = true;
-                //}
-                //else
-                //{
-                //    foreach (var item in profilePortfolioList)
-                //    {
-                //        profilePortfolio = item;
-                //    }
-                //}
+                if (profilePortfolioList.Count == 0)
+                {
+                    newPortFolioInfo = true;
+                }
+                else
+                {
+                    foreach (var item in profilePortfolioList)
+                    {
+                        profilePortfolio = item;
+                    }
+                }
 
             }
             catch (Exception e)
