@@ -15,6 +15,7 @@ namespace XebecPortal.UI.Pages.HR
         private bool changeForm;
         private bool isDialogVisible;
         private string searchJob;
+        private string token;
         private bool nextButton, preButton = true;
         private bool isFilterContainAnyVal;
         private List<int> pageNum = new List<int>();
@@ -31,13 +32,13 @@ namespace XebecPortal.UI.Pages.HR
         private List<AppUser> appUser;
         private List<AppUser> appUserFilter;
         private List<CollaboratorsAssigned> collaboratorsAssigned;
-        private List<string> Departments = new List<string>() { "Accounting & Finance", "HR", "Sales & Marketing", "Legal", "Research & Development", "IT", "Admin", "Customer Support" };
-        private List<string> Locations = new List<string>() { "Eastern Cape", "Free State", " Gauteng", "KwaZulu-Natal", "Limpopo", "Mpumalanga", "Northen Cape", "North West", "Western Cape" };
+        private List<Department> departments;
+        private List<string> locations = new() { "Eastern Cape", "Free State", " Gauteng", "KwaZulu-Natal", "Limpopo", "Mpumalanga", "Northen Cape", "North West", "Western Cape" };
         private MudBlazor.DialogOptions options = new() { CloseButton = true, FullWidth = true };
 
         private IEnumerable<string> mudSelectLocation;
         private IEnumerable<string> mudSelectCompany;
-        private IEnumerable<string> mudSelectDepartment;
+        private IEnumerable<int> mudSelectDepartment;
         private IEnumerable<string> mudSelectStatus;
 
         private bool ShowingJobPortal = true;
@@ -45,7 +46,7 @@ namespace XebecPortal.UI.Pages.HR
         private bool ShowingPhaseManager;
 
         private IJSObjectReference _jsModule;
-        string token;
+
         protected override async Task OnInitializedAsync()
         {
             token = await localStorage.GetItemAsync<string>("jwt_token");
@@ -60,7 +61,7 @@ namespace XebecPortal.UI.Pages.HR
             appUser = await httpClient.GetListJsonAsync<List<AppUser>>($"https://xebecapi.azurewebsites.net/api/User", new AuthenticationHeaderValue("Bearer", token));
             collaboratorsAssigned = await httpClient.GetListJsonAsync<List<CollaboratorsAssigned>>($"https://xebecapi.azurewebsites.net/api/CollaboratorsAssigned", new AuthenticationHeaderValue("Bearer", token));
             status = await httpClient.GetFromJsonAsync<List<Status>>("/mockData/Status.json");
-
+            departments = await httpClient.GetFromJsonAsync<List<Department>>("/mockData/departmentMockDatav1.json");
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/HR/JobPortals.js");
 
             jobListFilter = jobList;
@@ -173,7 +174,7 @@ namespace XebecPortal.UI.Pages.HR
             await _jsModule.InvokeVoidAsync("Scroll");
         }
 
-        private async Task SearchListDepartment(IEnumerable<string> value)
+        private async Task SearchListDepartment(IEnumerable<int> value)
         {
             mudSelectDepartment = value;
             jobListFilter = jobList;
@@ -208,9 +209,9 @@ namespace XebecPortal.UI.Pages.HR
             return $"Selected Compan{(selectedValues.Count > 1 ? "ies" : "y")}: {string.Join(", ", selectedValues.Select(x => x))}";
         }
 
-        private static string GetMultiSelectionTextDepartment(List<string> selectedValues)
+        private string GetMultiSelectionTextDepartment(List<string> selectedValues)
         {
-            return $"Selected Department{(selectedValues.Count > 1 ? "s" : " ")}: {string.Join(", ", selectedValues.Select(x => x))}";
+            return $"Selected Department{(selectedValues.Count > 1 ? "s" : " ")}: {string.Join(", ", selectedValues.Select(x => departments.Find(y => y.Id == Convert.ToInt32(x)).Name))}";
         }
 
         private static string GetMultiSelectionTextStatus(List<string> selectedValues)
@@ -237,11 +238,11 @@ namespace XebecPortal.UI.Pages.HR
                 jobListFilter = jobListFilter.Where(x => !listCompany.Contains(x.Company)).ToList();
             }
 
-            //if (mudSelectDepartment?.Any() == true)
-            //{
-            //    var listDepartments = jobListFilter.Select(x => x.DepartmentId).Except(mudSelectDepartment).ToList();
-            //    jobListFilter = jobListFilter.Where(x => !listDepartments.Contains(x.DepartmentId)).ToList();
-            //}
+            if (mudSelectDepartment?.Any() == true)
+            {
+                var listDepartments = jobListFilter.Select(x => x.DepartmentId).Except(mudSelectDepartment).ToList();
+                jobListFilter = jobListFilter.Where(x => !listDepartments.Contains(x.DepartmentId)).ToList();
+            }
 
             if (mudSelectStatus?.Any() == true)
             {

@@ -67,8 +67,8 @@ namespace XebecPortal.UI.Pages.Applicant
             DisplayJobDetail(displayJobDetail.Id);
             jobPortalIsHidden = false;
             applicationFormIsHidden = true;
-            JobTypes = await httpClient.GetListJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/JobType", new AuthenticationHeaderValue("Bearer", token));
-            departments = await httpClient.GetFromJsonAsync<List<Department>>("/mockData/departmentMockData.json");
+            //JobTypes = await httpClient.GetListJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/JobType", new AuthenticationHeaderValue("Bearer", token));
+            departments = await httpClient.GetFromJsonAsync<List<Department>>("/mockData/departmentMockDatav1.json");
 
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/JobPortals.js");
         }
@@ -233,11 +233,11 @@ namespace XebecPortal.UI.Pages.Applicant
                 jobListFilter = jobListFilter.Where(x => !listCompany.Contains(x.Company)).ToList();
             }
 
-            //if (mudSelectDepartment?.Any() == true)
-            //{
-            //    var listDepartments = jobListFilter.Select(x => x.DepartmentId).Except(mudSelectDepartment).ToList();
-            //    jobListFilter = jobListFilter.Where(x => !listDepartments.Contains(x.DepartmentId)).ToList();
-            //}
+            if (mudSelectDepartment?.Any() == true)
+            {
+                var listDepartments = jobListFilter.Select(x => x.DepartmentId).Except(mudSelectDepartment).ToList();
+                jobListFilter = jobListFilter.Where(x => !listDepartments.Contains(x.DepartmentId)).ToList();
+            }
 
             if (mudSelectJobType?.Any() == true)
             {

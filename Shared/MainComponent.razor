@@ -10,7 +10,6 @@
 @using Microsoft.Extensions.Logging
 @inject ILogger<MainLayout> Logger
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
-
 <style>
 
     .page {
@@ -515,12 +514,12 @@
 
                     <div class="col-12 d-grid gap-4">
                         <div class="col-12">
-                            <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" Label="Filter by Department" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)">
+                            <MudSelect T="int" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" Label="Filter by Department" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)">
                                 @if (jobs?.Any() == true)
                                 {
-                                    @foreach (var item in jobs.Select(x => x.DepartmentId).Distinct())
+                                    @foreach (var item in departments)
                                     {
-                                        <MudSelectItem T="int" Value="item">@item</MudSelectItem>
+                                        <MudSelectItem T="int" Value="item.Id">@item.Name</MudSelectItem>
                                     }
                                 }
                             </MudSelect>
