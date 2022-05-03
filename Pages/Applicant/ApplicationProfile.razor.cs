@@ -559,7 +559,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 JobTitle = workHistory.JobTitle,
                 StartDate = workHistory.StartDate,
                 EndDate = workHistory.EndDate,
-                Description = workHistory.Description
+                Description = workHistory.Description                
             });
 
             foreach (var item in addworkHistoryList)

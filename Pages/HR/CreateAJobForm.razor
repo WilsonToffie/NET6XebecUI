@@ -409,7 +409,7 @@
 </div>
 @if (redirectpage)
 {
-<XebecPortal.UI.Pages.HR.ApplicationFormControlTool @bind-jobId="departments.Id" @bind-TempJob="TempJob" />
+<XebecPortal.UI.Pages.HR.ApplicationFormControlTool @bind-jobId="existJobId"  @bind-FormQuestions="ChosenQuestions" @bind-TempJob="TempJob" /> <!--departments.Id-->
 }
 else
 {
@@ -435,16 +435,16 @@ else
                             </div>
                         </div>
                         <div class="spacing-for-creating-stuff">
-                        <div class="createjob-form-individual">
-                            <div class="text-font-styling"> Departments Recently Added</div>
-                            <div class="created-items-container">
-                                @foreach (var item in NewDepartments)
-                                {
-                                    <div class="text-font-for-created-items-styling">@item.Name</div>
-                                }
+                            <div class="createjob-form-individual">
+                                <div class="text-font-styling"> Departments Recently Added</div>
+                                <div class="created-items-container">
+                                    @foreach (var item in NewDepartments)
+                                    {
+                                        <div class="text-font-for-created-items-styling">@item.Name</div>
+                                    }
+                                </div>
                             </div>
                         </div>
-                    </div>                        
                         <div class="createNew-buttton-function">
                             <input type="button" value="Done" class="button-functions" @onclick="saveDep" />
                             @*<input type="button" value="Save" class="button-functions" @onclick="saveDep" />*@
@@ -502,7 +502,7 @@ else
                         </div>
                     </div>
                     <div class="createNew-buttton-function">
-                        <input type="button" value="Save" class="button-functions" @onclick="() => manageDepartment(false)" />
+                        <input type="button" value="Done" class="button-functions" @onclick="() => manageDepartment(false)" />
                     </div>
                 }
 
@@ -714,8 +714,9 @@ else
                     <input type="button" value="Prev" class="button-functions" />
                     <input type="submit" value="Save" class="button-functions" />
                     <input type="button" value="Next" disabled class="button-functions-not-redirectable" />
-                </div>                
+                </div>
             }
+            
         </EditForm>
     </div>
 }
