@@ -549,6 +549,11 @@
         color: #d35bc9;
     }
 
+    .collaborator-item-pill{
+        border-radius: 10px;
+        background-color: lightpink;
+    }
+
 </style>
 <!--Tables of developers/HR-->
 <div class="appform-container">
@@ -572,7 +577,16 @@
         </div>
 
         <div class="hiring-lead-selected">
-            @HiringLead
+            @if (HiringLead!="")
+            {
+                <div class="collaborator-item-pill">
+                    @HiringLead
+                    <span @onclick="RemoveHiringLead">
+                        <i class="fa fa-question-circle edit-icon"></i>
+                    </span>
+                </div>
+            }
+
         </div>
         <div class="dropdown-container">
             <div class="collaborators-dropdown">
@@ -598,9 +612,14 @@
             <ul class="collaborators-listed-list" ondragover="event.preventDefault();" ondragstart="event.dataTransfer.setData('', event.target.id);">
                 @foreach (var collaborator in SelectedUsers)
                 {
-                    <li class="collaborators-appuser-item" draggable="true" @ondragstart="@(() => DragCollaborator(collaborator))">
-                        @collaborator
-                    </li>
+                    <div class="collaborator-item-pill">
+                        <li class="collaborators-appuser-item" draggable="true" @ondragstart="@(() => DragCollaborator(collaborator))">
+                            @collaborator
+                        </li>
+                        <span @onclick="() => RemoveFromCollabs(collaborator)">
+                            <i class="fa fa-question-circle edit-icon"></i>
+                        </span>
+                    </div>
                 }
             </ul>
         </div>
@@ -616,9 +635,15 @@
                         <ul class="collaborators-chosen-list">
                             @foreach (var user in q.Value)
                             {
-                                <li class="question-appuser-item" draggable="true" @ondragend="RemoveItem">
-                                    @user
-                                </li>
+                                <div>
+                                    <li class="question-appuser-item" draggable="true" @ondragend="RemoveItem">
+                                        @user
+                                    </li>
+                                    <span @onclick="() => RemoveFromQuestion(user, q.Value)">
+                                        <i class="fa fa-question-circle edit-icon"></i>
+                                    </span>
+                                </div>
+
                             }
                         </ul>
                     </div>
@@ -992,6 +1017,21 @@
     {
         Console.WriteLine(e.DataTransfer.Items[0]);
     }
+
+    private void RemoveHiringLead()
+    {
+        HiringLead = "";
+    }
+
+    private void RemoveFromCollabs(string user)
+    {
+        SelectedUsers.Remove(user);
+    }
+
+    private void RemoveFromQuestion(string user, List<string> list)
+        {
+        list.Remove(user);
+        }
 
     private async Task Save()
     {
