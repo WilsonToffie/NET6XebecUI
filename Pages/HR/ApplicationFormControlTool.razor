@@ -686,7 +686,8 @@
 
 @code {
     string token;
-
+    [Parameter]
+    public List<FormQuestion> FormQuestions { get; set; }
     [Parameter]
     public EventCallback<List<FormQuestion>> FormQuestionsChanged { get; set; }
 
@@ -697,14 +698,14 @@
     public EventCallback<CreateJobPost> TempJobChanged { get; set; }
 
     [Parameter]
-    public List<FormQuestion> FormQuestions { get; set; }
+    public int jobId { get; set; }
+
+    [Parameter]
+    public EventCallback<int> jobIdChanged { get; set; }
 
     string tempString = "";
 
     List<CustomQuestion> Questions = new List<CustomQuestion>();
-
-
-
 
     List<QuestionType> Types = new List<QuestionType>();
     string tempType = null;
@@ -720,6 +721,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        Console.WriteLine("JobID passed: " + jobId);
         token = await localStorage.GetItemAsync<string>("jwt_token");
         if (FormQuestions == null)
             FormQuestions = new();
@@ -785,7 +787,7 @@
     {
         if (tempQuestion.questionDescription != "")
         {
-           
+
             tempQuestion.answerTypeId = Types.FirstOrDefault(q => q.Type == tempType).Id;
             await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/question", tempQuestion, new AuthenticationHeaderValue("Bearer", token));
             await OnInitializedAsync();

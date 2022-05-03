@@ -55,6 +55,12 @@ namespace XebecPortal.UI.Pages.HR
         private int savedJobId;
         private int existJobId;
 
+        private bool addedNewDep;
+        private bool validUpload;
+        private bool allowedToRedirect = false;
+
+        public List<FormQuestion> ChosenQuestions { get; set; }
+
         protected override async Task OnInitializedAsync()
         {            
             token = await localStorage.GetItemAsync<string>("jwt_token");
@@ -112,17 +118,25 @@ namespace XebecPortal.UI.Pages.HR
                 // The reason for the new Departments is to make posting easier, by adding new departments to a new list and just posting that list
                 NewDepartments.Add(new()
                 {
-                    Name = value.Name
-                });
+                    Name = value.Name,
+                });                
                 department.Name = string.Empty;
-                successMessage = "Department has successfully been added!";
             }
         }
 
         private async Task removeDepartment(Department value)
         {
             Console.WriteLine("Value received: " + value.Id);
-            await HttpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/Department/{value.Id}", new AuthenticationHeaderValue("Bearer", token));
+            Departments.Remove(value);
+            if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Remove This Department?"))
+            {
+                var removeDep = await HttpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/Department/{value.Id}", new AuthenticationHeaderValue("Bearer", token));
+                if (removeDep.IsSuccessStatusCode)
+                {
+                    await jsRuntime.InvokeAsync<object>("alert", "Department has successfully been removed!");                   
+                }
+            }
+            
             await OnInitializedAsync();
         }
 
@@ -130,9 +144,24 @@ namespace XebecPortal.UI.Pages.HR
         {
             foreach (var item in NewDepartments)
             {
-                await HttpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Department", item, new AuthenticationHeaderValue("Bearer", token));
+                var newDepAdded = await HttpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Department", item, new AuthenticationHeaderValue("Bearer", token));
+                if (newDepAdded.IsSuccessStatusCode)
+                {
+                    addedNewDep = true;
+                }
+                else
+                {
+                    addedNewDep = false;
+                }
+               
+            }
+
+            if (addedNewDep)
+            {
+                await jsRuntime.InvokeAsync<object>("alert", "Newly added departments has been saved!");
             }
             NewDepartments.Clear();
+            
             await createDep(false);
         }
         private void addCompany(string value)
@@ -194,7 +223,7 @@ namespace XebecPortal.UI.Pages.HR
             {
                 if (item.Title.Equals(TempJob.Title) && item.Description.Equals(TempJob.Description) && item.Company.Equals(TempJob.Company) && item.Location.Equals(TempJob.Location) && item.DepartmentId.Equals(departments.Id) && item.Policy.Equals(TempJob.Policy) && item.Status.Equals("Draft")) // && item.DueDate.Equals(TempJob.DueDate) && item.JobTypes.Equals(jobType)
                 {                    
-                    existJobId = item.Id;
+                    existJobId = item.Id; 
                     createJobExists = true;
                 }
                 else
@@ -220,34 +249,49 @@ namespace XebecPortal.UI.Pages.HR
                 if (createJobExists)
                 {
                     Console.WriteLine("Job exists already with ID of: " + existJobId);
-                    await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Job/{existJobId}", item, new AuthenticationHeaderValue("Bearer", token));
+                    var validNewUpload = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Job/{existJobId}", item, new AuthenticationHeaderValue("Bearer", token));
+                    if (validNewUpload.IsSuccessStatusCode)
+                    {
+                        validUpload = true;
+                    }
+                    else
+                    {
+                        validUpload = false;
+                    }
                     await OnInitializedAsync();
                 }
                 else
                 {
                     Console.WriteLine("Job Doesnt exist yet");
-                    await HttpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Job", item, new AuthenticationHeaderValue("Bearer", token));
+                    var validExistingUpload = await HttpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Job", item, new AuthenticationHeaderValue("Bearer", token));
+                    if (validExistingUpload.IsSuccessStatusCode)
+                    {
+                        validUpload = true;
+                    }
+                    else
+                    {
+                        validUpload = false;
+                    }
                     await OnInitializedAsync();
                 }
 
-                // create a check statement here
-                //await HttpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Job", item, new AuthenticationHeaderValue("Bearer", token));
-
-                //await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/PersonalInformation/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
             }
+
+            if (validUpload)
+            {
+                await jsRuntime.InvokeAsync<object>("alert", "The current state of the job creation process has been saved!");
+            }
+            allowedToRedirect = true;
             jobList.Clear();
             jobType.Clear();
             checkJobList.Clear();
         }
 
         private bool redirectpage;
-        private void RedirectToNextPage(bool value)
+        private async Task RedirectToNextPage(bool value)
         {
+            await saveJobState();
             redirectpage = value;
-            // Everything needs to be entered (already checked cause it's using the same validation as save).
-            // You need to send job ID to the next page to ensure that it is saved correctly
-            // One way of doing is, will be through a constructor.. Not sure if it will work the same way as what Java does, but you can just call the class and pass the variable through
-
         }
 
         
