@@ -33,17 +33,21 @@ namespace XebecPortal.UI.Shared
         private bool applicantApplicationProfile, applicantJobPortal, applicantMyJobs;
 
         private bool hrDataAnalyticsTool, hrJobPortal, hrCreateAJob;
-        string token;
+        private string token;
+        private List<Department> departments;
+
         protected override async Task OnInitializedAsync()
         {
             token = await localStorage.GetItemAsync<string>("jwt_token");
 
-            jobs = await HttpClient.GetListJsonAsync<IList<Job>>("https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
+            jobs = await HttpClient.GetListJsonAsync<IList<Job>>($"https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
 
             jobTypes = await HttpClient.GetListJsonAsync<IList<JobType>>("https://xebecapi.azurewebsites.net/api/JobType", new AuthenticationHeaderValue("Bearer", token));
             
             personalInfo = await HttpClient.GetListJsonAsync<PersonalInformation>($"https://xebecapi.azurewebsites.net/api/personalinformation/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token)); // !!!!!! Change the ID to be the userID later 
-            
+
+            departments = await HttpClient.GetFromJsonAsync<List<Department>>("/mockData/departmentMockDatav1.json");
+
             if (state.Role.Equals("Candidate"))
             {
                 showApplicantJobPortal();
@@ -108,9 +112,9 @@ namespace XebecPortal.UI.Shared
             return $"Selected Compan{(selectedValues.Count > 1 ? "ies" : "y")}: {string.Join(", ", selectedValues.Select(x => x))}";
         }
 
-        private static string GetMultiSelectionTextDepartment(List<string> selectedValues)
+        private string GetMultiSelectionTextDepartment(List<string> selectedValues)
         {
-            return $"Selected Department{(selectedValues.Count > 1 ? "s" : " ")}: {string.Join(", ", selectedValues.Select(x => x))}";
+            return $"Selected Department{(selectedValues.Count > 1 ? "s" : " ")}: {string.Join(", ", selectedValues.Select(x => departments.Find(y => y.Id == Convert.ToInt32(x)).Name))}";
         }
 
         private static string GetMultiSelectionTextJob(List<string> selectedValues)

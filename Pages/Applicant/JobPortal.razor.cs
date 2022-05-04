@@ -3,17 +3,21 @@ using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using X.PagedList;
 using XebecPortal.UI.Pages.Applicant.Models;
 using XebecPortal.UI.Pages.HR;
 using XebecPortal.UI.Shared;
+using XebecPortal.UI.Utils.Handlers;
+
 
 namespace XebecPortal.UI.Pages.Applicant
 {
     public partial class JobPortal
     {
+        private string token;
         private string searchJob;
         private bool submitModal = false;
         private bool IsApplyHidden;
@@ -32,28 +36,30 @@ namespace XebecPortal.UI.Pages.Applicant
         private List<JobType> JobTypes;
         private List<JobTypeHelper> jobTypeHelper;
         private List<Status> status;
-        List<FormQuestion> QuestionList = new List<FormQuestion>();
-        List<QuestionType> Types = new List<QuestionType>();
-        List<ApplicantQuestion> ApplicantAnswers = new List<ApplicantQuestion>();
-        List<ApplicantAnswer> AnswerList = new List<ApplicantAnswer>();
-        List<CandidateRecommender> candidates = new List<CandidateRecommender>();
+        private List<Department> departments;
+        private List<FormQuestion> QuestionList = new List<FormQuestion>();
+        private List<QuestionType> Types = new List<QuestionType>();
+        private List<ApplicantQuestion> ApplicantAnswers = new List<ApplicantQuestion>();
+        private List<ApplicantAnswer> AnswerList = new List<ApplicantAnswer>();
+        private List<CandidateRecommender> candidates = new List<CandidateRecommender>();
         private ApplicationModel application = new ApplicationModel();
 
         private IEnumerable<string> mudSelectLocation;
         private IEnumerable<string> mudSelectCompany;
-        private IEnumerable<string> mudSelectDepartment;
+        private IEnumerable<int> mudSelectDepartment;
         private IEnumerable<string> mudSelectJobType;
 
         private IJSObjectReference _jsModule;
 
         protected override async Task OnInitializedAsync()
         {
-            JobTypes = await httpClient.GetFromJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
-            jobList = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
-            applicationList = await httpClient.GetFromJsonAsync<List<Application>>("https://xebecapi.azurewebsites.net/api/Application");
-            status = await httpClient.GetFromJsonAsync<List<Status>>("/mockData/Status.json");
-            jobTypeHelper = await httpClient.GetFromJsonAsync<List<JobTypeHelper>>("https://xebecapi.azurewebsites.net/api/JobTypeHelper");
-            candidates = await httpClient.GetFromJsonAsync<List<CandidateRecommender>>("https://xebecapi.azurewebsites.net/api/CandidateRecommender");
+            token = await localStorage.GetItemAsync<string>("jwt_token");
+            JobTypes = await httpClient.GetListJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/JobType", new AuthenticationHeaderValue("Bearer", token));
+            jobList = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
+            applicationList = await httpClient.GetListJsonAsync<List<Application>>($"https://xebecapi.azurewebsites.net/api/Application/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+            status = await httpClient.GetListJsonAsync<List<Status>>("/mockData/Status.json", new AuthenticationHeaderValue("Bearer", token));
+            jobTypeHelper = await httpClient.GetListJsonAsync<List<JobTypeHelper>>("https://xebecapi.azurewebsites.net/api/JobTypeHelper", new AuthenticationHeaderValue("Bearer", token));
+            candidates = await httpClient.GetListJsonAsync<List<CandidateRecommender>>("https://xebecapi.azurewebsites.net/api/CandidateRecommender", new AuthenticationHeaderValue("Bearer", token));
             jobList = jobList.Where(x => x.Status == "Open").ToList();
             jobListFilter = jobList;
             jobPagedList = jobListFilter.ToPagedList(1, 17);
@@ -61,7 +67,8 @@ namespace XebecPortal.UI.Pages.Applicant
             DisplayJobDetail(displayJobDetail.Id);
             jobPortalIsHidden = false;
             applicationFormIsHidden = true;
-            JobTypes = await httpClient.GetFromJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/JobType");
+            //JobTypes = await httpClient.GetListJsonAsync<List<JobType>>("https://xebecapi.azurewebsites.net/api/JobType", new AuthenticationHeaderValue("Bearer", token));
+            departments = await httpClient.GetFromJsonAsync<List<Department>>("/mockData/departmentMockDatav1.json");
 
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/JobPortals.js");
         }
@@ -83,7 +90,7 @@ namespace XebecPortal.UI.Pages.Applicant
 
             jobList = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job");
             jobList = jobList.Where(x => x.Status == "Open").ToList();
-            applicationList = await httpClient.GetFromJsonAsync<List<Application>>("https://xebecapi.azurewebsites.net/api/Application");
+            applicationList = await httpClient.GetFromJsonAsync<List<Application>>($"https://xebecapi.azurewebsites.net/api/Application/user/{state.AppUserId}");
 
             jobPortalIsHidden = true;
             applicationFormIsHidden = false;
@@ -138,7 +145,7 @@ namespace XebecPortal.UI.Pages.Applicant
             await _jsModule.InvokeVoidAsync("Scroll");
         }
 
-        private async Task SearchListDepartment(IEnumerable<string> value)
+        private async Task SearchListDepartment(IEnumerable<int> value)
         {
             mudSelectDepartment = value;
             jobListFilter = jobList;
@@ -197,9 +204,9 @@ namespace XebecPortal.UI.Pages.Applicant
             return $"Selected Compan{(selectedValues.Count > 1 ? "ies" : "y")}: {string.Join(", ", selectedValues.Select(x => x))}";
         }
 
-        private static string GetMultiSelectionTextDepartment(List<string> selectedValues)
+        private string GetMultiSelectionTextDepartment(List<string> selectedValues)
         {
-            return $"Selected Department{(selectedValues.Count > 1 ? "s" : " ")}: {string.Join(", ", selectedValues.Select(x => x))}";
+            return $"Selected Department{(selectedValues.Count > 1 ? "s" : " ")}: {string.Join(", ", selectedValues.Select(x => departments.Find(y => y.Id == Convert.ToInt32(x)).Name))}";
         }
 
         private static string GetMultiSelectionTextJobType(List<string> selectedValues)
@@ -228,8 +235,8 @@ namespace XebecPortal.UI.Pages.Applicant
 
             if (mudSelectDepartment?.Any() == true)
             {
-                var listDepartments = jobListFilter.Select(x => x.Department).Except(mudSelectDepartment).ToList();
-                jobListFilter = jobListFilter.Where(x => !listDepartments.Contains(x.Department)).ToList();
+                var listDepartments = jobListFilter.Select(x => x.DepartmentId).Except(mudSelectDepartment).ToList();
+                jobListFilter = jobListFilter.Where(x => !listDepartments.Contains(x.DepartmentId)).ToList();
             }
 
             if (mudSelectJobType?.Any() == true)

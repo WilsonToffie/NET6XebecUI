@@ -81,6 +81,8 @@ namespace XebecPortal.UI.Pages.HR
         public List<JobPlatformHelper> JobPlatforms { get; set; }
         public List<JobApplicationPhase> JobPhases { get; set; }
 
+        public List<Application> Applications { get; set; }
+
         [Required]
         public string Policy { get; set; }
     }
@@ -382,5 +384,18 @@ namespace XebecPortal.UI.Pages.HR
 
         public string DateTime { get; set; }
     }
+
+    public class CollaboratorQuestion
+    {
+        public int Id { get; set; }
+
+        public int AppUserId { get; set; }
+
+        public AppUser AppUser { get; set; }
+
+        public int FormQuestionId { get; set; }
+
+        public FormQuestion FormQuestion { get; set; }
+    }   
 
 }

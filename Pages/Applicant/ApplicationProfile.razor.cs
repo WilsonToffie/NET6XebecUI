@@ -36,6 +36,11 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool skillEditMode;
         private bool loadInfo;
 
+        private bool addPersInfo;
+        private bool updatedPersInfo;
+        private bool addAdditionalInfo;
+        private bool updateAdditionalInfo;
+
         private List<WorkHistory> workHistoryList = new List<WorkHistory>();
         private List<WorkHistory> addworkHistoryList = new();
         private WorkHistory workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
@@ -93,6 +98,8 @@ namespace XebecPortal.UI.Pages.Applicant
 
         // private CustomHandler cust = new CustomHandler();
         string token;
+
+        
         protected override async Task OnInitializedAsync()
         {
             loadInfo = true;
@@ -135,7 +142,7 @@ namespace XebecPortal.UI.Pages.Applicant
                     }
                 }
 
-                //workHistoryList = await httpClient.GetListJsonAsync<List<WorkHistory>>($"https://xebecapi.azurewebsites.net/api/WorkHistory/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+                workHistoryList = await httpClient.GetListJsonAsync<List<WorkHistory>>($"https://xebecapi.azurewebsites.net/api/WorkHistory/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
                 //workHistoryList = workHistories.Where(x => x.AppUserId == state.AppUserId).ToList();
 
                 educationList = await httpClient.GetListJsonAsync<List<Education>>($"https://xebecapi.azurewebsites.net/api/Education/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
@@ -147,20 +154,20 @@ namespace XebecPortal.UI.Pages.Applicant
                 referencesList = await httpClient.GetListJsonAsync<List<References>>($"https://xebecapi.azurewebsites.net/api/Reference/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
                 //referencesList = referencesHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
 
-                //profilePortfolio = await httpClient.GetListJsonAsync<ProfilePortfolioLink>($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
-                //profilePortfolioList = profilePortfolioInfo.Where(x => x.AppUserId == state.AppUserId).ToList();
+                profilePortfolioList = await httpClient.GetListJsonAsync<List<ProfilePortfolioLink>>($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+                //profilePortfolioList = profilePortfolioInfo.ToList();
 
-                //if (profilePortfolioList.Count == 0)
-                //{
-                //    newPortFolioInfo = true;
-                //}
-                //else
-                //{
-                //    foreach (var item in profilePortfolioList)
-                //    {
-                //        profilePortfolio = item;
-                //    }
-                //}
+                if (profilePortfolioList.Count == 0)
+                {
+                    newPortFolioInfo = true;
+                }
+                else
+                {
+                    foreach (var item in profilePortfolioList)
+                    {
+                        profilePortfolio = item;
+                    }
+                }
 
             }
             catch (Exception e)
@@ -210,27 +217,6 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private string skillWarning = "";
         private bool warning;
-
-
-        //private void populateList()
-        //{
-        //    apiSkills.Add(new()
-        //    {
-        //        Description = "Java",
-        //    });
-        //    apiSkills.Add(new()
-        //    {
-        //        Description = "CSS",
-        //    });
-        //    apiSkills.Add(new()
-        //    {
-        //        Description = "C#",
-        //    });
-        //    apiSkills.Add(new()
-        //    {
-        //        Description = "Azure",
-        //    });
-        //}
 
         string searchedSkill;
 
@@ -325,9 +311,16 @@ namespace XebecPortal.UI.Pages.Applicant
             skillEditMode = false;
             int index = selectedSkillsList1.FindIndex(x => x.Equals(skillValue));
             selectedSkillsList1[index] = skillInfo;
-            foreach (var item in selectedSkillsList1)
+            if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Override This Item?"))
             {
-                await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Skill/{skillValue.Id}", item, new AuthenticationHeaderValue("Bearer", token));                
+                foreach (var item in selectedSkillsList1)
+                {
+                    var updateSkill =  await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Skill/{skillValue.Id}", item, new AuthenticationHeaderValue("Bearer", token));
+                    if (updateSkill.IsSuccessStatusCode)
+                    {
+                        await jsRuntime.InvokeAsync<object>("alert", "Skill information has successfully been changed!");
+                    } 
+                }
             }
             skillInfo = new();
             await OnInitializedAsync();
@@ -394,11 +387,30 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 if (newPersonalInfo)
                 {
-                    await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/PersonalInformation", item, new AuthenticationHeaderValue("Bearer", token));
+                   var addedPersonalInfo = await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/PersonalInformation", item, new AuthenticationHeaderValue("Bearer", token));
+                    if (addedPersonalInfo.IsSuccessStatusCode)
+                    {
+                        addPersInfo = true;
+                    }
+                    else
+                    {
+                        addPersInfo = false;
+                    }
                 }
                 else
                 {
-                    await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/PersonalInformation/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
+                    if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Override your Personal Informatio?"))
+                    {
+                        var updatedPersonalInfo = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/PersonalInformation/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
+                        if (updatedPersonalInfo.IsSuccessStatusCode)
+                        {
+                            updatedPersInfo = true;
+                        }
+                        else
+                        {
+                            updatedPersInfo = false;
+                        }
+                    }                    
                 }
 
             }
@@ -408,13 +420,37 @@ namespace XebecPortal.UI.Pages.Applicant
                 Console.WriteLine("Additional Info List ID's " + item.Id);
                 if (newAdditionalInfo)
                 {
-                    await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/AdditionalInformation", item, new AuthenticationHeaderValue("Bearer", token));
+                    var addedAdditionalInfo= await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/AdditionalInformation", item, new AuthenticationHeaderValue("Bearer", token));
+                    if (addedAdditionalInfo.IsSuccessStatusCode)
+                    {
+                        addAdditionalInfo = true;
+                    }
+                    else
+                    {
+                        addAdditionalInfo = false;
+                    }
                 }
                 else
                 {
-                    await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/AdditionalInformation/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
+                    if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Override This Item?"))
+                    {
+                        var updatedAdditionalInfo = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/AdditionalInformation/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
+                        if (updatedAdditionalInfo.IsSuccessStatusCode)
+                        {
+                            updateAdditionalInfo = true;
+                        }
+                        else
+                        {
+                            updateAdditionalInfo = false;
+                        }
+                    }
                 }
 
+            }
+
+            if ((addPersInfo || updatedPersInfo) && (addAdditionalInfo || updateAdditionalInfo))
+            {
+                await jsRuntime.InvokeAsync<object>("alert", "Your information has been saved!");
             }
 
         }
@@ -453,12 +489,19 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private async Task Save(References referenceValues)
         {
-            editMode = false;
-            int index = referencesList.FindIndex(x => x.Equals(referenceValues));
-            referencesList[index] = references;
-            foreach (var item in referencesList)
+            if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Override This Item?"))
             {
-                await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Reference/{referenceValues.Id}", item, new AuthenticationHeaderValue("Bearer", token));                
+                editMode = false;
+                int index = referencesList.FindIndex(x => x.Equals(referenceValues));
+                referencesList[index] = references;
+                foreach (var item in referencesList)
+                {
+                    var success =  await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Reference/{referenceValues.Id}", item, new AuthenticationHeaderValue("Bearer", token));
+                    if (success.IsSuccessStatusCode)
+                    {
+                        await jsRuntime.InvokeAsync<object>("alert", "Reference information has successfully been changed!");
+                    }
+                }
             }
             references = new();
             await OnInitializedAsync();
@@ -516,7 +559,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 JobTitle = workHistory.JobTitle,
                 StartDate = workHistory.StartDate,
                 EndDate = workHistory.EndDate,
-                Description = workHistory.Description
+                Description = workHistory.Description                
             });
 
             foreach (var item in addworkHistoryList)
@@ -591,12 +634,19 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private async Task SaveWorkHistory(WorkHistory workHistoryValues)
         {
-            workEditMode = false;
-            int index = workHistoryList.FindIndex(x => x.Equals(workHistoryValues));
-            workHistoryList[index] = workHistory;
-            foreach (var item in workHistoryList)
+            if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Override This Item?"))
             {
-                await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/WorkHistory/{workHistoryValues.Id}", item, new AuthenticationHeaderValue("Bearer", token));
+                workEditMode = false;
+                int index = workHistoryList.FindIndex(x => x.Equals(workHistoryValues));
+                workHistoryList[index] = workHistory;
+                foreach (var item in workHistoryList)
+                {
+                    var workHistoryState =  await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/WorkHistory/{workHistoryValues.Id}", item, new AuthenticationHeaderValue("Bearer", token));
+                    if (workHistoryState.IsSuccessStatusCode)
+                    {
+                        await jsRuntime.InvokeAsync<object>("alert", "Work History information has successfully been changed!");
+                    }
+                }
             }
             workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             await OnInitializedAsync();            
@@ -664,12 +714,19 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private async Task SaveEducation(Education educationValues)
         {
-            eduEditMode = false;
-            int index = educationList.FindIndex(x => x.Equals(educationValues));
-            educationList[index] = education;
-            foreach (var item in educationList)
+            if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Override This Item?"))
             {
-                await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Education/{educationValues.Id}", item, new AuthenticationHeaderValue("Bearer", token));
+                eduEditMode = false;
+                int index = educationList.FindIndex(x => x.Equals(educationValues));
+                educationList[index] = education;
+                foreach (var item in educationList)
+                {
+                   var educationState = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Education/{educationValues.Id}", item, new AuthenticationHeaderValue("Bearer", token));
+                    if (educationState.IsSuccessStatusCode)
+                    {
+                        await jsRuntime.InvokeAsync<object>("alert", "Education information has successfully been changed!");
+                    }
+                }
             }
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             await OnInitializedAsync();            
@@ -732,30 +789,24 @@ namespace XebecPortal.UI.Pages.Applicant
             {                
                 if (newPortFolioInfo)
                 {
-                    await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink", item, new AuthenticationHeaderValue("Bearer", token));
+                    var validPost = await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink", item, new AuthenticationHeaderValue("Bearer", token));
+                    if (validPost.IsSuccessStatusCode)
+                    {
+                        await jsRuntime.InvokeAsync<object>("alert", "Portfolio information has been saved!");
+                    }
                 }
                 else
                 {
-                    await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
+                    var validPost = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
+                    if (validPost.IsSuccessStatusCode)
+                    {
+                        await jsRuntime.InvokeAsync<object>("alert", "Portfolio information has been saved!");
+                    }
                 }
             }
 
-            //if (await _jsModule.InvokeAsync<bool>("PersonalInformation"))
-            //{
-
-            //}
         }
-        // This is just used to indicate to the user that their info has been successfully added to the DB
-        /* using 
-         (var msg = await httpClient.PostAsJsonAsync<LoginModel>("/api/auth/login", user,
-         System.Threading.CancellationToken.None))
-         {
-            if (msg.IsSuccessStatusCode)
-                 {
-                    await jsRuntime.InvokeVoidAsync("alert", "You Data Has Been Captured");
-                 }
-             }
-        */
+
         private string storageAcc = "storageaccountxebecac6b";
         private string imgContainer = "images";
 

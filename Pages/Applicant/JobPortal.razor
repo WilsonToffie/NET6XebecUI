@@ -3,6 +3,8 @@
 @inject HttpClient httpClient
 @inject UserState state
 @inject IJSRuntime jsRuntime
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
 
 <style>
     .handPointer {
@@ -440,19 +442,19 @@
                         </div>
                         <div class="col-12">
                             <!--Department-->
-                            <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
+                            <MudSelect T="int" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
                                 @if (jobListFilter?.Any() == true)
                                 {
-                                    @foreach (var item in jobList.Select(x => x.Department).OrderBy(x => x).Distinct())
+                                    @foreach (var item in departments)
                                     {
-                                        <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                                        <MudSelectItem T="int" Value="item.Id">@item.Name</MudSelectItem>
                                     }
 
                                 }
                             </MudSelect>
                         </div>
                         <div class="col-12">
-                            <!--Status-->
+                            <!--Job Type-->
                             <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Job Types" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextJobType)" Label="Job Type" SelectedValuesChanged="SearchListJobType">
                                 @if (jobListFilter?.Any() == true)
                                 {
