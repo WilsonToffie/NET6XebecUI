@@ -4,6 +4,7 @@
 @inject NavigationManager nav
 @inject HrJobState hrJobState
 @inject IDialogService DialogService
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <style>
 
@@ -345,7 +346,6 @@
         .filter-button-trans:hover {
             transform: rotate(0deg);
         }
-
 </style>
 
 @if (ShowingJobPortal)
@@ -400,12 +400,12 @@
                             </div>
                             <div class="col-12">
                                 <!--Department-->
-                                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
+                                <MudSelect T="int" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
                                     @if (jobListFilter?.Any() == true)
                                     {
-                                        @foreach (var item in jobList.Select(x => x.DepartmentId).OrderBy(x => x).Distinct())
+                                        @foreach (var item in departments)
                                         {
-                                            <MudSelectItem T="int" Value="item">@item</MudSelectItem>
+                                            <MudSelectItem T="int" Value="item.Id">@item.Name</MudSelectItem>
                                         }
 
                                     }
@@ -572,7 +572,7 @@
                                             <div class="col-12">
                                                 <label for="location">Location</label>
                                                 <select id="location" class="form-select inputDefaults" @bind="displayJobDetail.Location">
-                                                    @foreach (var item in Locations)
+                                                    @foreach (var item in locations)
                                                     {
                                                         <option>@item</option>
                                                     }
@@ -612,10 +612,10 @@
                                         {
                                             <div class="col-12">
                                                 <label for="department">Department</label>
-                                                <select id="department" class="form-select inputDefaults" @bind="displayJobDetail.Department">
-                                                    @foreach (var item in Departments)
+                                                <select id="department" class="form-select inputDefaults" @bind="displayJobDetail.Department.Id">
+                                                    @foreach (var item in departments)
                                                     {
-                                                        <option>@item</option>
+                                                        <option value="@item.Id">@item.Name</option>
                                                     }
                                                 </select>
                                             </div>
@@ -623,7 +623,7 @@
                                         else
                                         {
                                             <h5 class="card-text small-card-location">Department:</h5> <span>&nbsp;</span>
-                                            <h5 class="text-muted small-card-company">@displayJobDetail.Department</h5>
+                                            <h5 class="text-muted small-card-company">@displayJobDetail.Department.Name</h5>
                                         }
                                     </div>
                                     <div class="col-12 p-2">

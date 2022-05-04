@@ -76,10 +76,12 @@ namespace XebecPortal.UI.Pages.HR
         [Required]
         public DateTime DueDate { get; set; }
         public DateTime CreationDate { get; set; }
-        [Required]
+        //[Required]
         public List<JobTypeHelper> JobTypes { get; set; }
         public List<JobPlatformHelper> JobPlatforms { get; set; }
         public List<JobApplicationPhase> JobPhases { get; set; }
+
+        public List<Application> Applications { get; set; }
 
         [Required]
         public string Policy { get; set; }
@@ -87,8 +89,7 @@ namespace XebecPortal.UI.Pages.HR
 
     public class Department
     {
-        public int Id { get; set; }
-
+        public int Id { get; set; } 
         public string Name { get; set; }
     }
 
@@ -109,21 +110,19 @@ namespace XebecPortal.UI.Pages.HR
         //public string Department { get; set; }
         [Required]
         public string Policy { get; set; } // Not sure what data type it should be, but policy is a required field   
-
-
         public int JobTypeId { get; set; }
-
-
+        public int DepartmentId { get; set; } // testing problem
         public string Status { get; set; }
         [Required]
         public DateTime DueDate { get; set; }
         public DateTime CreationDate { get; set; }
         public JobType JobType { get; set; }
+        public Department Department { get; set; }
         public List<JobPlatform> JobPlatforms { get; set; }
         public List<ApplicationPhase> JobPhases { get; set; }
         public List<FormQuestion> formQuestions { get; set; }
         public List<AppUser> Collaborators { get; set; }
-        public Department Department { get; set; }
+        
     }
 
 
@@ -385,5 +384,18 @@ namespace XebecPortal.UI.Pages.HR
 
         public string DateTime { get; set; }
     }
+
+    public class CollaboratorQuestion
+    {
+        public int Id { get; set; }
+
+        public int AppUserId { get; set; }
+
+        public AppUser AppUser { get; set; }
+
+        public int FormQuestionId { get; set; }
+
+        public FormQuestion FormQuestion { get; set; }
+    }   
 
 }
