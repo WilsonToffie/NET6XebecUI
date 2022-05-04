@@ -698,9 +698,10 @@
 
 @code {
     string token;
-    [Parameter]
-    public List<FormQuestion> FormQuestions { get; set; }
-    [Parameter]
+
+    public List<FormQuestion> FormQuestions = new() ;
+
+   
     public EventCallback<List<FormQuestion>> FormQuestionsChanged { get; set; }
 
     [Parameter]
@@ -755,7 +756,7 @@
         temp.id = question.Id;
         temp.question = question.questionDescription + " " + tempString;
         temp.answerTypeId = question.answerTypeId;
-        temp.jobId = TempJob.Id;
+        temp.jobId = jobId;
         if (!FormQuestions.FindAll(z => z.id == question.Id).Any())
         {
             FormQuestions.Add(temp);
