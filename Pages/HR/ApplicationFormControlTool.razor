@@ -219,20 +219,17 @@
     }
 
     .right-list-item-preview {
-        border-radius: 5px !important;
         min-height: 5rem;
         color: black;
         font-size: 1em;
         min-width: 100%;
         margin-bottom: 5px;
-        background-color: rgba(255, 255, 255, 1);
     }
 
 
 
     .close-item-panel {
-        background: rgba(249,249,251,0.51);
-        border-bottom: #888888;
+       
         display: flex;
         justify-content: end;
         font-size: 1.5vh;
@@ -400,7 +397,7 @@
     }
     .add-question-header {
         display: flex;
-        justify-content: space-around;
+        justify-content: space-between;
         
         align-content: center;
         align-items: center;
@@ -417,6 +414,17 @@
     }
     .collaborators-left-table{
         overflow-y:scroll;
+    }
+    .delete-question-header{
+        display:flex;
+        justify-content:space-around;
+        align-items:center;
+    }
+    .delete-questions-left-table{
+        
+    }
+    table {
+        border-spacing: 30px;
     }
     
 </style>
@@ -552,7 +560,7 @@
 
                             </div>
                             <div class="add-question-body">
-                                <textarea style="width: 80%; border: 2px solid grey; height: 180px; background-color: white; border-radius: 5px;"></textarea>
+                                <textarea @bind="tempQuestion.questionDescription" style="width: 80%; border: 2px solid grey; height: 180px; background-color: white; border-radius: 5px;"></textarea>
                             </div>
                             <div class="add-question-type">
                                 <p>select type:</p>
@@ -577,24 +585,28 @@
                                 <button class="btn-close"  @onclick="CloseDeletePopup"></button>
                             </div>
                             <div class="delete-question-body">
-                                <table class="collaborators-left-table">
-                                    <tbody>
+                                <div class="delete-questions-left-table">
+                                    <table class="questions">
                                         @if (Questions != null)
                                         {
                                             foreach (var question in Questions)
                                             {
 
-                                                <tr class="pr-2 pl-2 pt-1 border rounded-1" style="overflow: hidden;">
-                                                    <td class="collaborators-left-td appform-text pl-2" style="word-wrap: break-word">@question.questionDescription</td>
+                                                <tr>
+                                                    <td class="collaborators-left-td appform-text pl-2">@question.questionDescription</td>
 
-                                                    <td style="max-width: 10%;">
-                                                        <button class="btn-close delete-btn" @onclick="() => DeleteQuestion(question)"></button>
-                                                    </td>
+
+                                                    <td class="btn-close delete-btn" @onclick="() => DeleteQuestion(question)"></td>
+
                                                 </tr>
+                                                
+
+                                                
+                                                 
                                             }
                                         }
-                                    </tbody>
-                                </table>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     }
@@ -783,9 +795,10 @@
 
     public async Task AddQuestion()
     {
+
         if (tempQuestion.questionDescription != "")
         {
-           
+
             tempQuestion.answerTypeId = Types.FirstOrDefault(q => q.Type == tempType).Id;
             await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/question", tempQuestion, new AuthenticationHeaderValue("Bearer", token));
             await OnInitializedAsync();
@@ -822,6 +835,10 @@
         if (FormQuestions.FindAll(q => q.id == question.Id).Any())
             return "appform-left-row-selected";
         return "appform-left-row";
+    }
+    private void Prev()
+    {
+        NavigationManager.NavigateTo("");
     }
 
 }
