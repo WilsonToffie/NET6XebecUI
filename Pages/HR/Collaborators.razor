@@ -808,15 +808,16 @@
     [Parameter]
     public List<FormQuestion> ChosenQuestions { get; set; }
 
-
     [Parameter]
-    public CreateJobPost TempJob { get; set; }
+    public EventCallback<List<FormQuestion>> ChosenQuestionsChanged { get; set; }
+    //[Parameter]
+    //public CreateJobPost TempJob { get; set; }
 
-    [Parameter]
-    public EventCallback<CreateJobPost> TempJobChanged { get; set; }
+    //[Parameter]
+    //public EventCallback<CreateJobPost> TempJobChanged { get; set; }
 
-    [Parameter]
-    public Dictionary<AppUser, List<FormQuestion>> Map { get; set; }
+    //[Parameter]
+    //public Dictionary<AppUser, List<FormQuestion>> Map { get; set; }
 
 
     //private List<AppUser> collaboratorsAdded = new List<AppUser>();
@@ -1029,9 +1030,9 @@
     }
 
     private void RemoveFromQuestion(string user, List<string> list)
-        {
+    {
         list.Remove(user);
-        }
+    }
 
     private async Task Save()
     {

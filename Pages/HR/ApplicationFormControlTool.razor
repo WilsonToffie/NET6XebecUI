@@ -48,7 +48,7 @@
         border-color: #777777 transparent transparent transparent;
     }
 
-    
+
 
     .appform-left-buttons {
         margin-top: 5vh;
@@ -229,7 +229,6 @@
 
 
     .close-item-panel {
-       
         display: flex;
         justify-content: end;
         font-size: 1.5vh;
@@ -392,316 +391,335 @@
         text-align: center;
         width: 100%;
     }
-    .add-question{
-        text-align:center;
+
+    .add-question {
+        text-align: center;
     }
+
     .add-question-header {
         display: flex;
         justify-content: space-between;
-        
         align-content: center;
         align-items: center;
     }
+
     .add-question-heading-text {
         font-family: opensans-condensed-bold;
         font-weight: 800;
         font-size: 1.5em;
-        color: #00bcae ;
+        color: #00bcae;
     }
-    .add-question-type{
-        display:flex;
-        justify-content:center;
+
+    .add-question-type {
+        display: flex;
+        justify-content: center;
     }
-    .collaborators-left-table{
-        overflow-y:scroll;
+
+    .collaborators-left-table {
+        overflow-y: scroll;
     }
-    .delete-question-header{
-        display:flex;
-        justify-content:space-around;
-        align-items:center;
+
+    .delete-question-header {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
     }
-    .delete-questions-left-table{
-        
+
+    .delete-questions-left-table {
     }
+
     table {
         border-spacing: 30px;
     }
-    
 </style>
+@if (prevPage == false && nextPage == false)
+{
 
-<div class="form-container">
-    <div class="inner-form-container">
-        <div class="form-heading">
-            <h4 class="form-subheading">APPLICATION FORM</h4>
-        </div>
-        <div class="form-main">
-            <div class="form-right">
+    <div class="form-container">
+        <div class="inner-form-container">
+            <div class="form-heading">
+                <h4 class="form-subheading">APPLICATION FORM</h4>
+            </div>
+            <div class="form-main">
+                <div class="form-right">
 
-                <div class="options">
-                    <div class="question-select-div">
-                        <p class="select-heading">Question Selection</p>
-                    </div>
-                    <select @onchange="AddToForm" class="select-form">
-                        <option>Select Question</option>
-                        @foreach (var question in Questions)
-                        {
-                            <option> @question.questionDescription</option>
-                            
-
-                        }
-
-                    </select>
-
-                </div>
-
-                <div class="answers-left-main">
-                    <div class="model-answers-div">
-                        <p class="answer-heading">Model Answers</p>
-                    </div>
-                    <div class="answers-left-table">
-
-                        @if (Questions != null)
-                        {
-                            foreach (var formQuestion in FormQuestions)
+                    <div class="options">
+                        <div class="question-select-div">
+                            <p class="select-heading">Question Selection</p>
+                        </div>
+                        <select @onchange="AddToForm" class="select-form">
+                            <option>Select Question</option>
+                            @foreach (var question in Questions)
                             {
-                                <div class="right-list-item-preview">
+                                <option> @question.questionDescription</option>
 
-                                    <div class="preview-item-body">
-                                        <div class="preview-item-description">
-                                            <p class="-form-preview-question">
-                                                @formQuestion.question
 
-                                            </p>
-                                            <span @onclick="() => DeleteFormQuestion(formQuestion)">
-                                                <i class="fas fa-times"></i>
-                                            </span>
-                                        </div>
-                                        <div class="preview-item-control">
-                                            @{
-                                                var placeholder = "Expected answer";
-                                            }
-                                            @switch (formQuestion.answerTypeId)
-                                            {
-                                                case 1:
-                                                    <input type="number" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
-                                                    break;
-                                                case 2:
-                                                    <textarea type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer"></textarea>
-                                                    break;
-                                                case 3:
-                                                    <input type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
-                                                    break;
-                                                case 4:
-                                                    <input type="date" id="test" class="form-input" placeholder="@placeholder" style="width: 100%" @onchange="(e) => { formQuestion.answer = e.Value.ToString(); }">
-                                                    break;
-                                                case 5:
-                                                    <select class="answer-options" @bind="formQuestion.answer">
-                                                        <option value="yes" selected>Yes</option>
-                                                        <option value="no">No</option>
-                                                    </select>
-                                                    break;
-                                                <small class="text-muted text-small">(Select expected answer)</small>
-                                                case 6:
-                                                    <input type="file" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
-                                                    break;
+                            }
 
-                                                case 7:
-                                                    <input type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
-                                                    break;
-                                            }
+                        </select>
 
+                    </div>
+
+                    <div class="answers-left-main">
+                        <div class="model-answers-div">
+                            <p class="answer-heading">Model Answers</p>
+                        </div>
+                        <div class="answers-left-table">
+
+                            @if (Questions != null)
+                            {
+                                foreach (var formQuestion in FormQuestions)
+                                {
+                                    <div class="right-list-item-preview">
+
+                                        <div class="preview-item-body">
+                                            <div class="preview-item-description">
+                                                <p class="-form-preview-question">
+                                                    @formQuestion.question
+
+                                                </p>
+                                                <span @onclick="() => DeleteFormQuestion(formQuestion)">
+                                                    <i class="fas fa-times"></i>
+                                                </span>
+                                            </div>
+                                            <div class="preview-item-control">
+                                                @{
+                                                    var placeholder = "Expected answer";
+                                                }
+                                                @switch (formQuestion.answerTypeId)
+                                                {
+                                                    case 1:
+                                                        <input type="number" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
+                                                        break;
+                                                    case 2:
+                                                        <textarea type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer"></textarea>
+                                                        break;
+                                                    case 3:
+                                                        <input type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
+                                                        break;
+                                                    case 4:
+                                                        <input type="date" id="test" class="form-input" placeholder="@placeholder" style="width: 100%" @onchange="(e) => { formQuestion.answer = e.Value.ToString(); }">
+                                                        break;
+                                                    case 5:
+                                                        <select class="answer-options" @bind="formQuestion.answer">
+                                                            <option value="yes" selected>Yes</option>
+                                                            <option value="no">No</option>
+                                                        </select>
+                                                        break;
+                                                    <small class="text-muted text-small">(Select expected answer)</small>
+                                                    case 6:
+                                                        <input type="file" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
+                                                        break;
+
+                                                    case 7:
+                                                        <input type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
+                                                        break;
+                                                }
+
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                }
                             }
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="form-left">
+                    @if (string.Equals("super admin", _state.Role, StringComparison.OrdinalIgnoreCase))
+                    {
+
+
+                        @if (ShowManage)
+                        {
+                            <div>
+                                <button class="btn appform-main-button" @onclick="OpenButtons">Manage Questions</button>
+                            </div>
                         }
 
-                    </div>
+                        @if (ShowAddDeleteButtons)
+                        {
+
+                            <div class="left-inner">
+                                <div class="add-btn">
+                                    <button class="btn appform-main-button" @onclick="OpenAddPopup">Add question</button>
+                                </div>
+                                <div class="delete-button">
+                                    <button class="btn appform-main-button" @onclick="OpenDeletePopup">Delete questions</button>
+                                </div>
+
+                                <div class="delete-button">
+                                    <button class="btn-close" @onclick="ShowmanageButton"></button>
+                                </div>
+
+                            </div>
+
+                        }
+
+                        @if (ShowAddPopup)
+                        {
+                            <div class="add-question">
+                                <div class="add-question-header">
+                                    <h4 class="add-question-heading-text">Add Question</h4>
+                                    <button class="btn-close" @onclick="CloseAddPopup"></button>
+
+                                </div>
+                                <div class="add-question-body">
+                                    <textarea @bind="tempQuestion.questionDescription" style="width: 80%; border: 2px solid grey; height: 180px; background-color: white; border-radius: 5px;"></textarea>
+                                </div>
+                                <div class="add-question-type">
+                                    <p>select type:</p>
+                                    <select style="height:20px;" @bind="tempType">
+
+                                        @foreach (var option in Types)
+                                        {
+                                            <option selected value="@option.Type">@option.Type</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="add-question-button">
+                                    <button class="btn appform-main-button" @onclick="AddQuestion">Submit question</button>
+                                </div>
+                            </div>
+                        }
+                        @if (ShowDeletePopup)
+                        {
+                            <div class="delete-question">
+                                <div class="delete-question-header">
+                                    <h4 class="collaborators-heading-text">Delete Questions:</h4>
+                                    <button class="btn-close" @onclick="CloseDeletePopup"></button>
+                                </div>
+                                <div class="delete-question-body">
+                                    <div class="delete-questions-left-table">
+                                        <table class="questions">
+                                            @if (Questions != null)
+                                            {
+                                                foreach (var question in Questions)
+                                                {
+
+                                                    <tr>
+                                                        <td class="collaborators-left-td appform-text pl-2">@question.questionDescription</td>
+
+
+                                                        <td class="btn-close delete-btn" @onclick="() => DeleteQuestion(question)"></td>
+
+                                                    </tr>
+
+
+
+
+                                                }
+                                            }
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+
+
+
+                    }
+
                 </div>
 
+
             </div>
-            <div class="form-left">
-                @if (string.Equals("super admin", _state.Role, StringComparison.OrdinalIgnoreCase))
+
+
+        </div>
+        <div class="summary-section">
+            <div class="summary-heading">
+                <h5>SUMMARY</h5>
+            </div>
+
+            <div class="collaborators-left-table">
+                @if (Questions != null)
                 {
-
-
-                    @if (ShowManage)
+                    foreach (var formQuestion in FormQuestions)
                     {
-                        <div>
-                            <button class="btn appform-main-button" @onclick="OpenButtons">Manage Questions</button>
-                        </div>
-                    }
-
-                    @if (ShowAddDeleteButtons)
-                    {
-
-                        <div class="left-inner">
-                            <div class="add-btn">
-                                <button class="btn appform-main-button" @onclick="OpenAddPopup">Add question</button>
+                        <div class="right-list-item-preview">
+                            <div class="close-item-panel">
+                                <span @onclick="() => DeleteFormQuestion(formQuestion)">
+                                    <i class="fas fa-times"></i>
+                                </span>
                             </div>
-                            <div class="delete-button">
-                                <button class="btn appform-main-button" @onclick="OpenDeletePopup">Delete questions</button>
-                            </div>
-
-                            <div class="delete-button">
-                                <button class="btn-close" @onclick="ShowmanageButton"></button>
-                            </div>
-
-                        </div>
-
-                    }
-
-                    @if (ShowAddPopup)
-                    {
-                        <div class="add-question">
-                            <div class="add-question-header">
-                                <h4 class="add-question-heading-text">Add Question</h4>
-                                <button class="btn-close"  @onclick="CloseAddPopup"></button>
-
-                            </div>
-                            <div class="add-question-body">
-                                <textarea @bind="tempQuestion.questionDescription" style="width: 80%; border: 2px solid grey; height: 180px; background-color: white; border-radius: 5px;"></textarea>
-                            </div>
-                            <div class="add-question-type">
-                                <p>select type:</p>
-                                <select style="height:20px;" @bind="tempType">
-                                    
-                                    @foreach (var option in Types)
-                                    {
-                                        <option selected value="@option.Type">@option.Type</option>
+                            <div class="preview-item-body" style="padding:10px 10px;">
+                                <div class="preview-item-description">
+                                    <p>@formQuestion.question</p>
+                                </div>
+                                <div class="preview-item-control">
+                                    @{
+                                        var placeholder = "Expected answer";
                                     }
-                                </select>
-                            </div>
-                            <div class="add-question-button">
-                                <button class="btn appform-main-button" @onclick="AddQuestion">Submit question</button>
-                            </div>
-                        </div>
-                    }
-                    @if (ShowDeletePopup)
-                    {
-                        <div class="delete-question">
-                            <div class="delete-question-header">
-                                <h4 class="collaborators-heading-text">Delete Questions:</h4>
-                                <button class="btn-close"  @onclick="CloseDeletePopup"></button>
-                            </div>
-                            <div class="delete-question-body">
-                                <div class="delete-questions-left-table">
-                                    <table class="questions">
-                                        @if (Questions != null)
-                                        {
-                                            foreach (var question in Questions)
-                                            {
+                                    @switch (formQuestion.answerTypeId)
+                                    {
+                                        case 1:
+                                            <input type="number" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
+                                            break;
+                                        case 2:
+                                            <textarea type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer"></textarea>
+                                            break;
+                                        case 3:
+                                            <input type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
+                                            break;
+                                        case 4:
+                                            <input type="date" id="test" class="form-input" placeholder="@placeholder" style="width: 100%" @onchange="(e) => { formQuestion.answer = e.Value.ToString(); }">
+                                            break;
+                                        case 5:
+                                            <select @bind="formQuestion.answer">
+                                                <option value="yes" selected>Yes</option>
+                                                <option value="no">No</option>
+                                            </select>
+                                            break;
+                                        <small class="text-muted text-small">(Select expected answer)</small>
+                                        case 6:
+                                            <input type="file" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
+                                            break;
 
-                                                <tr>
-                                                    <td class="collaborators-left-td appform-text pl-2">@question.questionDescription</td>
+                                        case 7:
+                                            <input type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
+                                            break;
+                                    }
 
-
-                                                    <td class="btn-close delete-btn" @onclick="() => DeleteQuestion(question)"></td>
-
-                                                </tr>
-                                                
-
-                                                
-                                                 
-                                            }
-                                        }
-                                    </table>
                                 </div>
                             </div>
                         </div>
                     }
-
-
-
-
                 }
 
             </div>
-            
+
 
         </div>
 
 
     </div>
-    <div class="summary-section">
-        <div class="summary-heading">
-            <h5>SUMMARY</h5>
-        </div>
-
-        <div class="collaborators-left-table">
-            @if (Questions != null)
-            {
-                foreach (var formQuestion in FormQuestions)
-                {
-                    <div class="right-list-item-preview">
-                        <div class="close-item-panel">
-                            <span @onclick="() => DeleteFormQuestion(formQuestion)">
-                                <i class="fas fa-times"></i>
-                            </span>
-                        </div>
-                        <div class="preview-item-body" style="padding:10px 10px;">
-                            <div class="preview-item-description">
-                                <p>@formQuestion.question</p>
-                            </div>
-                            <div class="preview-item-control">
-                                @{
-                                    var placeholder = "Expected answer";
-                                }
-                                @switch (formQuestion.answerTypeId)
-                                {
-                                    case 1:
-                                        <input type="number" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
-                                        break;
-                                    case 2:
-                                        <textarea type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer"></textarea>
-                                        break;
-                                    case 3:
-                                        <input type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
-                                        break;
-                                    case 4:
-                                        <input type="date" id="test" class="form-input" placeholder="@placeholder" style="width: 100%" @onchange="(e) => { formQuestion.answer = e.Value.ToString(); }">
-                                        break;
-                                    case 5:
-                                        <select @bind="formQuestion.answer">
-                                            <option value="yes" selected>Yes</option>
-                                            <option value="no">No</option>
-                                        </select>
-                                        break;
-                                    <small class="text-muted text-small">(Select expected answer)</small>
-                                    case 6:
-                                        <input type="file" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
-                                        break;
-
-                                    case 7:
-                                        <input type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
-                                        break;
-                                }
-
-                            </div>
-                        </div>
-                    </div>
-                }
-            }
-
-        </div>
-
-
+    <div class="nav-btns">
+        <button class="down-button" @onclick="Prev">Prev: Create a Job</button>
+        <button class="down-button">Save</button>
+        <button class="down-button" @onclick="Next">Next: Select Collaborators</button>
     </div>
+}
+else if (prevPage == true)
+{
+    <XebecPortal.UI.Pages.HR.CreateAJobForm @bind-TempJob="TempJob" />
+}
+else if(nextPage == true)
+{
+    <XebecPortal.UI.Pages.HR.Collaborators @bind-ChosenQuestions="FormQuestions" />
+}
 
 
-</div>
-<div class="nav-btns">
-    <button class="down-button">Prev: Create a Job</button>
-    <button class="down-button">Save</button>
-    <button class="down-button">Next: Select Collaborators</button>
-</div>
 
 @code {
+    bool prevPage;
+    bool nextPage;
     string token;
+    public List<FormQuestion> FormQuestions = new();
 
-    public List<FormQuestion> FormQuestions = new() ;
 
-   
     public EventCallback<List<FormQuestion>> FormQuestionsChanged { get; set; }
 
     [Parameter]
@@ -732,8 +750,13 @@
     bool ShowManage = true;
     public CustomQuestion tempQuestion = new CustomQuestion();
 
+
+    //public CreateJobPost newJobpost = new CreateJobPost();
+
     protected override async Task OnInitializedAsync()
     {
+        prevPage = false;
+        nextPage = false;
         Console.WriteLine("JobID passed: " + jobId);
         token = await localStorage.GetItemAsync<string>("jwt_token");
         if (FormQuestions == null)
@@ -841,7 +864,12 @@
     }
     private void Prev()
     {
-        NavigationManager.NavigateTo("");
+        prevPage = true;
+    }
+
+    private void Next()
+    {
+        nextPage = true;
     }
 
 }
