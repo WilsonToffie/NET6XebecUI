@@ -128,17 +128,19 @@ namespace XebecPortal.UI.Shared
         }
 
 
-        private string storageAcc = "storageaccountxebecac6b";
-        private string imgContainer = "images";
+        private string storageAcc = "xebecstorage";//"storageaccountxebecac6b";
+        private string imgContainer = "profile-images";//"images";
         private string userPicInfo;
         private async Task UploadingProfilePic(InputFileChangeEventArgs e)
         {
             // Getting the file
             var fileArray = e.File.Name.Split('.');
             userPicInfo = e.File.Name;
-            var fileName = fileArray[0] + Guid.NewGuid().ToString().Substring(0, 5) + "." + fileArray[1];
+            var fileName = state.AppUserId;//fileArray[0] + Guid.NewGuid().ToString().Substring(0, 5) + "." + fileArray[1]; // change file name to be their appUserID
             var fileInfo = e.File;
             // You require a azure account with a storage account. You use that link for below. The 'images' is the file that the file image is stored in in Azure.
+            // https://xebecstorage.blob.core.windows.net/profile-images
+
             var blobUri = new Uri("https://"
                 + storageAcc
                 + ".blob.core.windows.net/"
@@ -146,7 +148,7 @@ namespace XebecPortal.UI.Shared
                 + "/"
                 + fileName);
 
-            AzureSasCredential credential = new AzureSasCredential("?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupix&se=2024-12-02T20:36:17Z&st=2022-03-16T12:36:17Z&sip=1.1.1.1-255.255.255.255&spr=https&sig=nSCARiXySz%2BXLmtXJfZw28RkqfYUe%2FvDi11V9Q5Tpyo%3D");
+            AzureSasCredential credential = new AzureSasCredential("?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-05-04T17:43:51Z&st=2022-05-04T09:43:51Z&spr=https&sig=LmUPm%2BSGZPm%2Bi115YYmdV7hsdcaPaOurNP9WZ%2FeeVmI%3D");
             BlobClient blobClient = new BlobClient(blobUri, credential);
 
             var res = await blobClient.UploadAsync(fileInfo.OpenReadStream(1512000), new BlobUploadOptions
