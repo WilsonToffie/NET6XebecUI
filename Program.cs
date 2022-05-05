@@ -20,7 +20,7 @@ using XebecPortal.UI.Pages.HR;
 using XebecPortal.UI.Shared;
 using Blazored.LocalStorage;
 using XebecPortal.UI.Utils.Handlers;
-using BlazorDownloadFile;
+//using BlazorDownloadFile;
 
 namespace XebecPortal.UI
 {
