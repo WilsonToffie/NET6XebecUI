@@ -8,6 +8,8 @@
     .overlay-services {
         height: auto;
         width: 100vw;
+        overflow: hidden;
+        animation: ease-in 0.15s;
     }
 
     .top {
@@ -110,8 +112,13 @@
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
+        transition: 0.25s all ease-in-out;
     }
 
+    .applicant-my-jobs:hover {
+        margin-top: 2.5vh;
+        transform: scale(1.5);
+    }
     .applicant-job-portal {
         height: 30vh;
         background-image: url(/Img/applicantjobportal.png);
@@ -151,6 +158,89 @@
         background-repeat: no-repeat;
         background-position: center;
     }
+    .applicant-applicant-profile {
+        height: 30vh;
+        background-image: url(/Img/applicantprofile.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        transition: 0.25s all ease-in-out;
+    }
+
+        .applicant-applicant-profile:hover {
+            margin-top: 2.5vh;
+            transform: scale(1.5);
+        }
+
+    .applicant-job-portal {
+        height: 30vh;
+        background-image: url(/Img/applicantjobportal.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        transition: 0.25s all ease-in-out;
+    }
+
+        .applicant-job-portal:hover {
+            margin-top: 2.5vh;
+            transform: scale(1.5);
+        }
+
+    .applicant-my-jobs {
+        height: 30vh;
+        background-image: url(/Img/myjobs.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        transition: 0.25s all ease-in-out;
+    }
+
+        .applicant-my-jobs:hover {
+            margin-top: 2.5vh;
+            transform: scale(1.5);
+        }
+
+    .hr-job-portal {
+        height: 30vh;
+        background-image: url(/Img/applicantcontrol.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        transition: 0.25s all ease-in-out;
+    }
+
+        .hr-job-portal:hover {
+            margin-top: 2.5vh;
+            transform: scale(1.5);
+        }
+
+    .hr-data-analytics {
+        height: 30vh;
+        background-image: url(/Img/dat.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        transition: 0.25s all ease-in-out;
+    }
+
+    .hr-data-analytics:hover {
+        margin-top: 2.5vh;
+        transform: scale(1.5);
+    }
+
+    .hr-create-a-job {
+        height: 30vh;
+        background-image: url(/Img/createjob.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        transition: 0.25s all ease-in-out;
+    }
+
+        .hr-create-a-job:hover {
+            margin-top: 2.5vh;
+            transform: scale(1.5);
+        }
 
     p {
         color: #004393;
@@ -217,7 +307,7 @@
         <div class="three">
             <div class="services-label">APPLICANT CONTROL TOOL</div>
             <div class="services-image">
-                <div class="hr-job-portal" @onmouseover="ShowApplicantControl"></div>
+                <div class="hr-job-portal"></div>
             </div>
             <div class="services-bottom">
                 <p>
@@ -228,16 +318,11 @@
                 </p>
             </div>
         </div>
-        @if (ApplicantControl)
-        {
-            <div class="three-high1" @onmouseout="ShowApplicantControl">
-                <div class="hr-job-portal1"></div>
-            </div>
-        }
+     
         <div class="three">
             <div class="services-label">JOB CONTROL TOOL</div>
             <div class="services-image">
-                <div class="hr-create-a-job" @onmouseover="ShowJobControl"></div>
+                <div class="hr-create-a-job" ></div>
             </div>
             <div class="services-bottom">
                 <p>
@@ -248,16 +333,11 @@
                 </p>
             </div>
         </div>
-        @if (JobControl)
-        {
-            <div class="three-high2" @onmouseout="ShowJobControl">
-                <div class="hr-create-a-job1"></div>
-            </div>
-        }
+       
         <div class="three">
             <div class="services-label">DATA ANALYTICS TOOL</div>
             <div class="services-image">
-                <div class="hr-data-analytics" @onmouseover="ShowDat"></div>
+                <div class="hr-data-analytics" ></div>
             </div>
             <div class="services-bottom">
                 <p>
@@ -267,33 +347,11 @@
                 </p>
             </div>
         </div>
-        @if (Dat)
-        {
-            <div class="three-high3" @onmouseout="ShowDat">
-                <div class="hr-data-analytics1"></div>
-            </div>
-        }
+       
     </div>
 </div>
 
 @code {
    
-    private bool Dat, JobControl, ApplicantControl;
-
-   
-
-    private void ShowDat()
-    {
-        Dat = !Dat;
-    }
-
-    private void ShowApplicantControl()
-    {
-        ApplicantControl = !ApplicantControl;
-    }
-
-    private void ShowJobControl()
-    {
-        JobControl = !JobControl;
-    }
+    
 }

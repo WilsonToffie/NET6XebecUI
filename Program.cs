@@ -20,6 +20,7 @@ using XebecPortal.UI.Pages.HR;
 using XebecPortal.UI.Shared;
 using Blazored.LocalStorage;
 using XebecPortal.UI.Utils.Handlers;
+using BlazorDownloadFile;
 
 namespace XebecPortal.UI
 {
@@ -34,7 +35,6 @@ namespace XebecPortal.UI
             builder.Services.AddSingleton<UserState>();
             builder.Services.AddSingleton<JobState>();
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            
             builder.Services.AddScoped<IApplicantDataService, ApplicantDataService>();
             builder.Services.AddScoped<IApplicationDataService, ApplicationDataService>();
             builder.Services.AddScoped<IJobDataService, JobDataService>();
@@ -67,7 +67,6 @@ namespace XebecPortal.UI
         {
             services.AddBlazoredLocalisation(); // This adds the IBrowserDateTimeProvider to the DI container
             services.AddBlazoredLocalStorage(); // This adds the ability to store the JWT key locally in the browsers storage, it is used on the sign in page.            
-            
         }
     }
 }
