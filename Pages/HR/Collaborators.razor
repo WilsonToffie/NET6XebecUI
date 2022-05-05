@@ -556,7 +556,7 @@
 </style>
 <!--Tables of developers/HR-->
 
-@if (collaboratorspage)
+@if (!prevPage && !nextPage)
 {
     <div class="appform-container">
         <div class="collaborators-form">
@@ -662,9 +662,13 @@
     <input type="button" value="Next" class="createjob-bottom-main-button" @onclick="Next" />
 
 }
-else
+else if (nextPage)
 {
     <XebecPortal.UI.Pages.HR.PhaseControlTool />
+}
+else if (prevPage)
+{
+    <XebecPortal.UI.Pages.HR.ApplicationFormControlTool />
 }
 
 
@@ -684,7 +688,9 @@ else
     string HiringLead = "";
     private List<string> SelectedUsers = new List<string>();
     public Dictionary<FormQuestion, List<string>> QuestionsDictionary = new Dictionary<FormQuestion, List<string>>();
-    bool collaboratorspage = true;
+
+    bool nextPage;
+    bool prevPage;
 
     public List<CollaboratorQuestion> CollabQuestions = new List<CollaboratorQuestion>();
 
@@ -702,7 +708,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        collaboratorspage = true;
+        nextPage = false;
+        prevPage = false;
 
         token = await localStorage.GetItemAsync<string>("jwt_token");
 
@@ -824,9 +831,15 @@ else
 
     }
 
+
+    private void Prev()
+    {
+        prevPage = true;
+    }
+
     private void Next()
     {
-        collaboratorspage = false;
+        nextPage = true;
     }
 
 }
