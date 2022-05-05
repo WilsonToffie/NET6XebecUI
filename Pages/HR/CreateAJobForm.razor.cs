@@ -127,16 +127,24 @@ namespace XebecPortal.UI.Pages.HR
         private async Task removeDepartment(Department value)
         {
             Console.WriteLine("Value received: " + value.Id);
-            Departments.Remove(value);
-            if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Remove This Department?"))
+            if (value.Id > 0)
             {
-                var removeDep = await HttpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/Department/{value.Id}", new AuthenticationHeaderValue("Bearer", token));
-                if (removeDep.IsSuccessStatusCode)
+                if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Remove This Department?"))
                 {
-                    await jsRuntime.InvokeAsync<object>("alert", "Department has successfully been removed!");                   
+                
+                   // Departments.Remove(value);
+                    var removeDep = await HttpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/Department/{value.Id}", new AuthenticationHeaderValue("Bearer", token));
+                    if (removeDep.IsSuccessStatusCode)
+                    {
+                        await jsRuntime.InvokeAsync<object>("alert", "Department has successfully been removed!");
+                    }               
                 }
             }
-            
+            else
+            {
+                await jsRuntime.InvokeAsync<object>("alert", "Please select a valid Department!");
+            }
+
             await OnInitializedAsync();
         }
 
@@ -296,17 +304,23 @@ namespace XebecPortal.UI.Pages.HR
 
         
         private async Task displayDepName(int depNameID)
-        {            
-            displayDepartment = await HttpClient.GetListJsonAsync<Department>($"https://xebecapi.azurewebsites.net/api/Department/single/{depNameID}", new AuthenticationHeaderValue("Bearer", token));
-            departments.Id = displayDepartment.Id;
-            departments.Name = displayDepartment.Name;
+        {
+            if (depNameID > 0)
+            {
+                displayDepartment = await HttpClient.GetListJsonAsync<Department>($"https://xebecapi.azurewebsites.net/api/Department/single/{depNameID}", new AuthenticationHeaderValue("Bearer", token));
+                departments.Id = displayDepartment.Id;
+                departments.Name = displayDepartment.Name;
+            }            
         }
 
         private async Task displayTypeName(int jobTypeId)
-        {            
-            displayJobType = await HttpClient.GetListJsonAsync<JobType>($"https://xebecapi.azurewebsites.net/api/JobType/{jobTypeId}", new AuthenticationHeaderValue("Bearer", token));
-            TempJob.JobType.Id = displayJobType.Id;
-            TempJob.JobType.Type = displayJobType.Type;
+        {
+            if (jobTypeId > 0)
+            {
+                displayJobType = await HttpClient.GetListJsonAsync<JobType>($"https://xebecapi.azurewebsites.net/api/JobType/{jobTypeId}", new AuthenticationHeaderValue("Bearer", token));
+                TempJob.JobType.Id = displayJobType.Id;
+                TempJob.JobType.Type = displayJobType.Type;
+            }            
         }
     }
 }

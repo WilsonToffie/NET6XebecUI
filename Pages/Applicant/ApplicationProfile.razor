@@ -9,19 +9,17 @@
 
 <style>
     .nav1 {
-
         position: absolute;
-        right: 50%;
-        transform: translate(50%);
-
+        left: 23%;
+        text-align: center;
+        align-items: center;
         background-color: #FFFFFF !important;
-
         width: auto !important;
         height: auto !important;
         top: auto !important;
         justify-content: normal !important;
         justify-items: normal !important;
-        box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+        box-shadow: rgb(6 24 44 / 40%) 0px 0px 0px 2px, rgb(6 24 44 / 65%) 0px 4px 6px -1px, rgb(255 255 255 / 8%) 0px 1px 0px inset;
         border-radius: 5px;
     }
 
@@ -139,7 +137,9 @@
         color: white !important;
         font-family: opensans-condensed-bold;
         font-size: 1em;
-        font-weight: 600!important;
+        font-weight: 600 !important;
+        word-wrap: break-word !important;
+        max-width: 100px !important;
         /* background: #00bcae !important;
         color: white;
         font-weight: 800;
@@ -149,7 +149,9 @@
     .nav-item > .nav-link1 {
         font-size: 1em;
         font-weight: 600 !important;
-        color: #004393;
+        color: #004393;        
+        word-wrap: break-word;
+        max-width: 120px;
     }
 
     .work-card {
@@ -654,7 +656,7 @@
         padding-left: 1em;
         max-height: 5vh;
         overflow-y: auto;
-        color: rgba(0,0,0,0.5);
+        /*color: rgba(0,0,0,0.5);*/
         font-weight: lighter;
         font-size: 1em;
         font-family: opensans-condensed-bold;
@@ -810,6 +812,107 @@
         body {
              background-color: lightblue;
         }*@
+
+
+        /*Draggable items*/
+    .dragable-spot {
+        width: 10vh;
+        height: 2vh;
+        background-color: pink;
+    }
+
+    .createjob-form-group {
+        width: 100%;
+        /*margin-left: 5%;*/
+        margin-right: 5%;
+        height: 5vh;
+        margin-top: 2vh;
+        margin-bottom: 2vh;
+        display: flex;
+    }
+
+    .createjob-form-individual {
+        width: 45%;
+        margin-left: 2.5%;
+        margin-right: 2.5%;
+        height: 5vh;
+    }
+
+    .matric-drag-drop-input {
+        position: absolute;
+        background-color: pink;
+        left: 29%;
+        top: 34%;
+        width: 305px;
+        height: 144px;
+        opacity: 100;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 2;
+        border: unset;
+    }
+
+    .academic-drag-drop-input {
+        position: absolute;
+        background-color: pink;
+        left: 51%;
+        top: 34%;
+        width: 310px;
+        height: 144px;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 2;
+        border: unset;
+    }
+
+    .certificate-drag-drop-input {
+        position: absolute;
+        background-color: pink;
+        left: 29%;
+        top: 62%;
+        width: 190px;
+        height: 144px;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 2;
+        border: unset;
+    }
+    .certificate-two-drag-drop-input {
+        position: absolute;
+        background-color: pink;
+        left: 43.5%;
+        top: 62%;
+        width: 190px;
+        height: 144px;
+        opacity: 0; 
+        cursor: pointer;
+        z-index: 2;
+        border: unset;
+    }
+
+    .certificate-three-drag-drop-input {
+        position: absolute;
+        background-color: pink;
+        left: 58.5%;
+        top: 62%;
+        width: 190px;
+        height: 144px;
+         opacity: 0; 
+        cursor: pointer;
+        z-index: 2;
+        border: unset;
+    }
+
+    .spacing-between-dragable-items {
+        margin-top: 23vh;
+    }
+
+    .documents-white-back {
+        background: white !important;
+        height: 62vh !important;
+        /* box-shadow: rgb(38 57 77) 0px 20px 30px -10px !important; */
+        margin-top: 10vh;
+    }
 }
 </style>
 <div class="h-95 container-fluid d-flex justify-content-center align-items-center overflow-hidden">
@@ -821,7 +924,7 @@
 
             <ul class="nav nav1 nav-tabs" role="tablist">
                 @*<div class="child progress"></div>
-                <div class="child shrinker timelapse"></div>*@
+        <div class="child shrinker timelapse"></div>*@
                 <!--Container-->
                 <li class="nav-item p-1">
                     <a id="personal-tab" class="nav-link nav-link1 active" data-bs-toggle="tab" href="#personal-information" @onclick="progressCheck">Personal Information</a>
@@ -837,6 +940,9 @@
                 </li>
                 <li class="nav-item p-1">
                     <a class="nav-link nav-link1" data-bs-toggle="tab" href="#references" @onclick="progressCheck">References</a>
+                </li>
+                <li class="nav-item p-1">
+                    <a class="nav-link nav-link1" data-bs-toggle="tab" href="#additionalDocuments" @onclick="progressCheck">Additional Documents</a>
                 </li>
                 <li class="nav-item p-1">
                     <a id="online-tag" class="nav-link nav-link1" data-bs-toggle="tab" href="#online-profile" @onclick="progressCheck">Online Presence</a>
@@ -1155,7 +1261,7 @@
                                                             </div>
                                                             <div class="work-history-comp-name">@item.Qualification</div>
                                                             <div class="work-history-job-title">@item.Insitution</div>
-                                                            <div class="work-history-date" style="color: @SmallCardDate()" >@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</div>
+                                                            <div class="work-history-date" style="color: @SmallCardDate()">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</div>
                                                         </div>
                                                     }
                                                 }
@@ -1197,7 +1303,7 @@
                                                     <button class="skill-button btn" type="submit" value="Add">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
                                                 }
 
-                                            </div>                                            
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-3">
@@ -1231,6 +1337,217 @@
                             </div>
                         </div>
                     </EditForm>
+                </div>
+
+                <!--Additional Documents Tab-->
+
+                <div id="additionalDocuments" class="container tab-pane">
+                    <div class="d-flex justify-content-center">
+                        <EditForm Model="@personalInformation" OnValidSubmit="@AddPersonalInformation" style="width: 60%;">
+                            <DataAnnotationsValidator />
+
+                            <div class="rounded-edges documents-white-back">
+                                <div class="personalInfo-header">Additional Documents</div>
+
+                                <div class="form-group createjob-form-group">
+                                    <div class="createjob-form-individual">
+                                        <MudPaper @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
+                                                  @ondragleave="@(() => _dragEnterStyle = null)"
+                                                  @ondragend="@(() => _dragEnterStyle = null)"
+                                                  Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
+
+                                            <InputFile OnChange="OnInputMatricCertChangedAsync" multiple class="matric-drag-drop-input" />
+                                            @if (fileNames == null)
+                                            {
+                                                <MudText Typo="Typo.h3" Align="Align.Center">
+                                                    <i class="fa fa-upload"></i>
+                                                    <br />
+                                                    Drop Matric Certificate
+                                                </MudText>
+                                            }
+                                            else
+                                            {
+                                                <MudList Style="padding:2em;width:100%;" Dense="true">
+                                                    <MudListItem @key="@fileNames.Name">
+                                                        <MudChip Color="Color.Dark"
+                                                                 Style="width:60px; overflow:hidden;"
+                                                                 Text="@(fileNames.Name.Split(".").Last())" />
+                                                        @fileNames.Name
+                                                    </MudListItem>
+                                                </MudList>
+                                            }
+                                        </MudPaper>
+                                    </div>
+                                    <div class="createjob-form-individual">
+                                        <MudPaper @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
+                                                  @ondragleave="@(() => _dragEnterStyle = null)"
+                                                  @ondragend="@(() => _dragEnterStyle = null)"
+                                                  Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
+
+                                            <InputFile OnChange="OnInputTranscriptChangedAsync" multiple class="academic-drag-drop-input" />
+                                            @if (fileNames == null)
+                                            {
+                                                <MudText Typo="Typo.h3" Align="Align.Center">
+                                                    <i class="fa fa-upload"></i>
+                                                    <br />
+                                                    Drop Academic Transcript
+                                                </MudText>
+                                            }
+                                            else
+                                            {
+                                                <MudList Style="padding:2em;width:100%;" Dense="true">
+                                                    <MudListItem @key="@fileNames.Name">
+                                                        <MudChip Color="Color.Dark"
+                                                                 Style="width:60px; overflow:hidden;"
+                                                                 Text="@(fileNames.Name.Split(".").Last())" />
+                                                        @fileNames.Name
+                                                    </MudListItem>
+                                                </MudList>
+                                            }
+                                        </MudPaper>
+                                    </div>
+                                </div>
+                                <div class="spacing-between-dragable-items">
+                                    <div class="form-group createjob-form-group">
+                                        <div class="createjob-form-individual">
+                                            <MudPaper @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
+                                                      @ondragleave="@(() => _dragEnterStyle = null)"
+                                                      @ondragend="@(() => _dragEnterStyle = null)"
+                                                      Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
+
+                                                <InputFile OnChange="OnInputFirstDocumentChangedAsync" multiple class="certificate-drag-drop-input" />
+                                                @if (fileNames == null)
+                                                {
+                                                    <MudText Typo="Typo.h3" Align="Align.Center">
+                                                        <i class="fa fa-upload"></i>
+                                                        <br />
+                                                        Drop Certificate
+                                                    </MudText>
+                                                }
+                                                else
+                                                {
+                                                    <MudList Style="padding:2em;width:100%;" Dense="true">
+                                                        <MudListItem @key="@fileNames.Name">
+                                                            <MudChip Color="Color.Dark"
+                                                                     Style="width:60px; overflow:hidden;"
+                                                                     Text="@(fileNames.Name.Split(".").Last())" />
+                                                            @fileNames.Name
+                                                        </MudListItem>
+                                                    </MudList>
+                                                }
+                                            </MudPaper>
+                                        </div>
+                                        <div class="createjob-form-individual">
+                                            <MudPaper @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
+                                                      @ondragleave="@(() => _dragEnterStyle = null)"
+                                                      @ondragend="@(() => _dragEnterStyle = null)"
+                                                      Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
+
+                                                <InputFile OnChange="OnInputSecondDocumentChangedAsync" multiple class="certificate-two-drag-drop-input" />
+                                                @if (fileNames == null)
+                                                {
+                                            <MudText Typo="Typo.h3" Align="Align.Center">
+                                                <i class="fa fa-upload"></i>
+                                                <br />
+                                                Drop Certificate
+                                            </MudText>
+                                                }
+                                                else
+                                                {
+                                                    <MudList Style="padding:2em;width:100%;" Dense="true">
+                                                        <MudListItem @key="@fileNames.Name">
+                                                            <MudChip Color="Color.Dark"
+                                                                     Style="width:60px; overflow:hidden;"
+                                                                     Text="@(fileNames.Name.Split(".").Last())" />
+                                                            @fileNames.Name
+                                                        </MudListItem>
+                                                    </MudList>
+                                                }
+                                            </MudPaper>
+                                        </div>
+                                        <div class="createjob-form-individual">
+                                            <MudPaper @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
+                                                      @ondragleave="@(() => _dragEnterStyle = null)"
+                                                      @ondragend="@(() => _dragEnterStyle = null)"
+                                                      Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
+
+                                                <InputFile OnChange="OnInputThirdDocumentChangedAsync" multiple class="certificate-three-drag-drop-input" />
+                                                @if (fileNames == null)
+                                                {
+                                                    <MudText Typo="Typo.h3" Align="Align.Center">
+                                                        <i class="fa fa-upload"></i>
+                                                        <br />
+                                                        Drop Certificate
+                                                    </MudText>
+                                                }
+                                                else
+                                                {
+                                                    <MudList Style="padding:2em;width:100%;" Dense="true">
+                                                        <MudListItem @key="@fileNames.Name">
+                                                            <MudChip Color="Color.Dark"
+                                                                     Style="width:60px; overflow:hidden;"
+                                                                     Text="@(fileNames.Name.Split(".").Last())" />
+                                                            @fileNames.Name
+                                                        </MudListItem>
+                                                    </MudList>
+                                                }
+                                            </MudPaper>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @*<div class="row" style="margin-top: 50px;">
+            <div class="col-12 shadow-sm bg-body rounded-edges white-back">
+                <div class="personalInfo-header">Additional Documents</div>
+                <div class="row p-3">
+                    <div class="dragable-spot">
+                        <div class="rounded-edges">
+                            <MudPaper @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
+                                      @ondragleave="@(() => _dragEnterStyle = null)"
+                                      @ondragend="@(() => _dragEnterStyle = null)"
+                                      Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
+
+                                <InputFile OnChange="OnInputFileChangedAsync" multiple class="drag-drop-input" />
+                                @if (fileNames == null)
+                                {
+                                    <MudText Typo="Typo.h3" Align="Align.Center">
+                                        <i class="fa fa-upload"></i>
+                                        <br />
+                                        Upload File
+                                    </MudText>
+                                }
+                                else
+                                {
+                                    <MudList Style="padding:2em;width:100%;" Dense="true">
+                                        <MudListItem @key="@fileNames.Name">
+                                            <MudChip Color="Color.Dark"
+                                                     Style="width:60px; overflow:hidden;"
+                                                     Text="@(fileNames.Name.Split(".").Last())" />
+                                            @fileNames.Name
+                                        </MudListItem>
+                                    </MudList>
+                                }
+                            </MudPaper>
+                        </div>
+
+                        <div class="form-group createjob-form-group">
+                            <div class="createjob-form-individual" style="width: 200%;">
+                                <div class="createjob-form-individual">
+
+                                </div>
+                            </div>
+                            <div class="createjob-form-individual">
+                                <input type="button" value="Delete Department" class="form-buttons" @onclick="() => removeDepartment(department)" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <button class="btn formButton" style="margin-left: 45%;" type="submit" value="Save">Save</button>
+            </div>
+        </div>*@
+                        </EditForm>
+                    </div>
                 </div>
 
                 <!--References tab-->
@@ -1286,38 +1603,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <div class="history-container position-history-card rounded-edges">
-                                            <div class="history">
-                                                <div class="text-center history-status-intransit">
-                                                    <p class="history-status  text-tight">References</p>
-                                                </div>
-                                                <br />
-                                                @if (referencesList != null && referencesList.Count > 0)
-                                                {
-                                                    foreach (var items in referencesList)
-                                                    {
-
-                                                        <div class="text-card" @onclick="() => SelectReference(items)" style="@GetRefStyling(items)">
-                                                            <div class="work-history-icon">
-                                                                <span>
-                                                                    <!--@onclick="() => DeleteReference(items)"-->
-                                                                    <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteReference(items)"></i>
-                                                                    <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
-                                                                </span>
-                                                            </div>
-                                                            <div class="work-history-comp-name">@items.RefFirstName</div>
-                                                            <div class="work-history-comp-name">@items.RefLastName</div>
-                                                            <div class="work-history-comp-name">@items.RefEmail</div>
-                                                            <div class="ref-contact-Num">@items.RefPhone</div>
-                                                        </div>
-
-                                                    }
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
+                                    </div>                                    
                                 </div>
                             </div>
                         </div>
@@ -1368,7 +1654,7 @@
                                 </div>
                                 <!--Validation to ensure that the page is 100% completed-->
                                 @*@if (calc == 100)
-                                    {*@
+                        {*@
                                 <div class="row p-3">
                                     <div class="col-12 d-flex justify-content-center">
                                         <input class="btn formButton" type="button" value="Done" @onclick="Submit" />
