@@ -127,7 +127,7 @@
 
     .rounded-edges {
         border-radius: 20px;
-        box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgb(209, 213, 219) 0px 0px 0px 1px inset;
+        /*box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgb(209, 213, 219) 0px 0px 0px 1px inset;*/
     }
 
     .nav-item > .active {
@@ -488,7 +488,7 @@
         /*height: 60vh;*/
         width: 84%;
         left: 28%;
-        top: 5%;
+        top: 11%;
     }
 
     .position-history-card {
@@ -774,7 +774,7 @@
         height: 2vh;
         position: absolute;
         left: 30%;
-        top: 18.5%;
+        top: 22%;
         width: 38%;
     }
 
@@ -910,8 +910,7 @@
     .documents-white-back {
         background: white !important;
         height: 62vh !important;
-        /* box-shadow: rgb(38 57 77) 0px 20px 30px -10px !important; */
-        margin-top: 10vh;
+        margin-top: 11vh;
     }
 }
 </style>
@@ -965,7 +964,7 @@
                         <EditForm Model="@personalInformation" OnValidSubmit="@AddPersonalInformation" style="width: 60%;">
                             <DataAnnotationsValidator />
                             <div class="row" style="margin-top: 50px;">
-                                <div class="col-12 shadow-sm bg-body rounded-edges white-back">
+                                <div class="col-12 shadow-sm bg-body rounded-edges white-back" style=" margin-top: 4vh;">
                                     <div class="personalInfo-header">Personal Information</div>
                                     <div class="row p-3">
                                         <div class="col-12">
@@ -1559,9 +1558,9 @@
                             <div class="col-12">
                                 <div class="row">
                                     <div class="col-9 p-5">
-                                        <div class="row shadow-sm bg-body rounded-edges white-back position-white" style="height: auto;">
+                                        <div class="row shadow-sm bg-body rounded-edges white-back position-white">
                                             <div class="education-header">References</div>
-                                            <div class="col-12">
+                                            <div class="col-12" style="height: 35vh">
 
                                                 <div class="row p-3">
                                                     <div class="col-6">
@@ -1603,7 +1602,33 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>                                    
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="history-container position-history-card rounded-edges">
+                                            <div class="history">
+                                                <div class="text-center history-status-intransit">
+                                                    <p class="history-status  text-tight">References</p>
+                                                </div>
+                                                <br />                                                
+                                                @if (referencesList != null && referencesList.Count > 0)
+                                                {
+                                                    foreach (var items in referencesList)
+                                                    {
+
+                                                        <div class="text-card" @onclick="() => SelectReference(items)" style="@GetRefStyling(items)">
+                                                            <div class="work-history-icon">
+                                                                <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteReference(items)"></i> <!---->
+                                                                <div class="work-history-comp-name">@items.RefFirstName</div>
+                                                                <div class="work-history-job-title">@items.RefLastName</div>
+                                                                <div class="work-history-job-title">@items.RefEmail</div>
+                                                                <div class="work-history-job-title">@items.RefPhone</div>                                       
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1614,7 +1639,7 @@
                 <div id="online-profile" class="container tab-pane" style="height: 60vh; width: 120vh; margin-top: 50px;">
                     <form class="col-12 d-flex justify-content-center align-items-start">
                         <div class="row col-9">
-                            <div class="col-12 shadow-sm bg-body rounded-edges align-self-start white-back ">
+                            <div class="col-12 shadow-sm bg-body rounded-edges align-self-start white-back " style=" margin-top: 3vh;">
                                 <div class="education-header">Online Presence</div>
                                 <div class="row p-3">
                                     <div class="col-6">

@@ -222,6 +222,7 @@ namespace XebecPortal.UI.Pages.HR
                 DueDate = TempJob.DueDate,
                 CreationDate = DateTime.Today,                
                 JobTypes = jobType,
+                
             });
 
             checkJobList = await HttpClient.GetListJsonAsync<List<Job>>($"https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
@@ -239,6 +240,7 @@ namespace XebecPortal.UI.Pages.HR
                     createJobExists = false;
                 }
             }
+
             foreach (var item in jobList)
             {
                 Console.WriteLine("Title: " + item.Title);
@@ -251,13 +253,15 @@ namespace XebecPortal.UI.Pages.HR
                 Console.WriteLine("Status: " + item.Status);
                 Console.WriteLine("Due Date: " + item.DueDate);
                 Console.WriteLine("Creation Date: " + item.CreationDate);
-                Console.WriteLine("JobTypes: " + item.JobTypes);
+                //Console.WriteLine("JobTypes: " + item.JobTypes);
 
-                
+                Console.WriteLine(item);
                 if (createJobExists)
                 {
                     Console.WriteLine("Job exists already with ID of: " + existJobId);
+                    item.Id = existJobId;
                     var validNewUpload = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Job/{existJobId}", item, new AuthenticationHeaderValue("Bearer", token));
+                    //var validNewUpload = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Job/213", item, new AuthenticationHeaderValue("Bearer", token));
                     if (validNewUpload.IsSuccessStatusCode)
                     {
                         validUpload = true;
@@ -271,6 +275,7 @@ namespace XebecPortal.UI.Pages.HR
                 else
                 {
                     Console.WriteLine("Job Doesnt exist yet");
+                    //var validExistingUpload = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Job/213", item, new AuthenticationHeaderValue("Bearer", token));
                     var validExistingUpload = await HttpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Job", item, new AuthenticationHeaderValue("Bearer", token));
                     if (validExistingUpload.IsSuccessStatusCode)
                     {
@@ -290,8 +295,8 @@ namespace XebecPortal.UI.Pages.HR
                 await jsRuntime.InvokeAsync<object>("alert", "The current state of the job creation process has been saved!");
             }
             allowedToRedirect = true;
-            jobList.Clear();
             jobType.Clear();
+            jobList.Clear();            
             checkJobList.Clear();
         }
 
