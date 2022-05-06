@@ -484,18 +484,11 @@
 
     .collaborators-listed {
         width: 100%;
-        height: 23%;
+        max-height: 23%;
         display: flex;
-        justify-content: center;
+        justify-content: space-evenly;
         align-items: center;
         padding-top: 5px;
-    }
-
-    .collaborators-listed-list {
-        columns: 3;
-        max-width: 100%;
-        height: 100%;
-        overflow-x: hidden;
     }
 
     .collaborators-questions-area {
@@ -529,6 +522,7 @@
         width: 100%;
         display: flex;
         justify-content: center;
+        overflow-y: auto;
     }
 
     .collaborators-question-card-list {
@@ -553,114 +547,156 @@
         background-color: lightpink;
         color: #d35bc9;
     }
+    .collaborator-item-pill {
+        height: 40px;
+        width: 100px;
+        border-radius: 20px;
+        display: flex;
+        background-color: #00BCAE;
+        border: 1px solid blue;
+        font-weight: 500;
+        padding-left: 0.2em;
+        padding-right: 0.2em;
+    }
+
+    .collaborator-item-pill-content {
+        border-radius: 20px;
+        width: 80%;
+        word-wrap: break-word;
+        color: white;
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .collaborator-item-pill-close {
+        border-radius: 20px;
+        width: 20%;
+        display: flex;
+        align-items: center;
+    }
 </style>
 <!--Tables of developers/HR-->
 
 @if (!prevPage && !nextPage)
 {
-    <div class="appform-container">
-        <div class="collaborators-form">
-            <div class="collaborators-title">
-                <h2 class="collaborators-title-text">SELECT COLLABORATORS</h2>
+<div class="appform-container">
+    <div class="collaborators-form">
+        <div class="collaborators-title">
+            <h2 class="collaborators-title-text">SELECT COLLABORATORS</h2>
+        </div>
+        <div class="hiring-lead-container">
+            <div class="collaborators-hiring-lead">
+                Select the hiring lead for this job:
+                <select @onchange="SelectHiringLead">
+                    <option selected disabled>
+                        Select Hiring Lead
+                    </option>
+                    @foreach (var collaborator in AppUserList)
+                    {
+                        <option>@collaborator.name @collaborator.surname</option>
+                    }
+                </select>
             </div>
-            <div class="hiring-lead-container">
-                <div class="collaborators-hiring-lead">
-                    Select the hiring lead for this job:
-                    <select @onchange="SelectHiringLead">
-                        <option selected disabled>
-                            Select Collaborators
-                        </option>
-                        @foreach (var collaborator in AppUserList)
-                        {
-                            <option>@collaborator.name @collaborator.surname</option>
-                        }
-                    </select>
-                </div>
-            </div>
+        </div>
 
-            <div class="hiring-lead-selected">
-                @if (HiringLead != "")
-                {
-                    <div class="collaborator-item-pill">
+        <div class="hiring-lead-selected">
+            @if (HiringLead != "")
+            {
+                <div class="collaborator-item-pill">
+                    <div class="collaborator-item-pill-content">
                         @HiringLead
+                    </div>
+                    <div class="collaborator-item-pill-close">
                         <span @onclick="RemoveHiringLead">
-                            <i class="fa fa-question-circle edit-icon"></i>
+                            <i class="fa fa-times edit-icon"></i>
                         </span>
                     </div>
-                }
-
-            </div>
-            <div class="dropdown-container">
-                <div class="collaborators-dropdown">
-                    Select collaborators:
-                    <select @onchange="SelectCollaborator">
-                        <option selected disabled>
-                            Select Collaborators
-                        </option>
-                        @foreach (var collaborator in AppUserList)
-                        {
-                            <option>@collaborator.name @collaborator.surname</option>
-                        }
-                    </select>
                 </div>
-            </div>
+            }
 
-            <div class="collaborators-tooltip">
-                <h3 class="collaborators-tooltip-text">
-                    Drag Collaborators to allow them to view application form answers.
-                </h3>
-            </div>
-            <div class="collaborators-listed">
-                <ul class="collaborators-listed-list" ondragover="event.preventDefault();" ondragstart="event.dataTransfer.setData('', event.target.id);">
-                    @foreach (var collaborator in SelectedUsers)
+        </div>
+        <div class="dropdown-container">
+            <div class="collaborators-dropdown">
+                Select collaborators:
+                <select @onchange="SelectCollaborator">
+                    <option selected disabled>
+                        Select Collaborators
+                    </option>
+                    @foreach (var collaborator in AppUserList)
                     {
-                        <li class="collaborators-appuser-item" draggable="true" @ondragstart="@(() => DragCollaborator(collaborator))">
-                            @collaborator
-                            <span @onclick="() => RemoveFromCollabs(collaborator)">
-                                <i class="fa fa-question-circle edit-icon"></i>
-                            </span>
-                        </li>
+                        <option>@collaborator.name @collaborator.surname</option>
                     }
-                </ul>
+                </select>
             </div>
+        </div>
 
-
-
-
-
-            <div class="collaborators-questions-area">
-                @foreach (var q in QuestionsDictionary)
+        <div class="collaborators-tooltip">
+            <h3 class="collaborators-tooltip-text">
+                Drag Collaborators to allow them to view application form answers.
+            </h3>
+        </div>
+        <div class="collaborators-listed" ondragover="event.preventDefault();" ondragstart="event.dataTransfer.setData('', event.target.id);">
+                @foreach (var collaborator in SelectedUsers)
                 {
-                    <div class="collaborators-question-card" @ondrop="() => AddToList(q.Value)" ondragover="event.preventDefault();">
-                        <div class="collaborators-question-card-title">
-                            @q.Key.question
+                    <div class="collaborator-item-pill" draggable="true" @ondragstart="@(() => DragCollaborator(collaborator))" >
+                        <div class="collaborator-item-pill-content">
+                            @collaborator
                         </div>
-                        <br />
-                        <div class="collaborators-question-card-body">
-                            <ul class="collaborators-chosen-list">
-                                @foreach (var user in q.Value)
-                                {
-                                    <li class="question-appuser-item" draggable="true" @ondragend="RemoveItem">
-                                        <div>
-                                            @user
-                                        </div>
-                                        <span @onclick="() => RemoveFromQuestion(user, q.Value)">
-                                            <i class="fa fa-question-circle edit-icon"></i>
-                                        </span>
-                                    </li>
-                                }
-                            </ul>
+                        <div class="collaborator-item-pill-close">
+                            <span @onclick="() => RemoveFromCollabs(collaborator)">
+                                <i class="fa fa-times edit-icon"></i>
+                            </span>
                         </div>
                     </div>
                 }
+        </div>
 
-            </div>
+
+        <div class="collaborators-questions-area">
+            @foreach (var q in QuestionsDictionary)
+            {
+                <div class="collaborators-question-card" @ondrop="() => AddToList(q.Value)" ondragover="event.preventDefault();">
+                    <div class="collaborators-question-card-title">
+                        @q.Key.question
+                    </div>
+                    <br />
+                    <div class="collaborators-question-card-body" ondragover="event.preventDefault();" ondragstart="event.dataTransfer.setData('', event.target.id);">
+                        <ul>
+                            @foreach (var user in q.Value)
+                            {
+                            <li>
+                                <div class="collaborator-item-pill" draggable="true">
+                                    <div class="collaborator-item-pill-content">
+                                        @user
+                                    </div>
+                                    <div class="collaborator-item-pill-close">
+                                        <span @onclick="() => RemoveFromQuestion(user, q.Value)">
+                                            <i class="fa fa-times edit-icon"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            }
+
         </div>
     </div>
 
-    <input type="button" value="Prev" class="createjob-bottom-main-button" @onclick="Prev" />
-    <input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save" />
-    <input type="button" value="Next" class="createjob-bottom-main-button" @onclick="Next" />
+    <div class="bottom-buttons">
+        <input type="button" value="Prev" class="button-functions" @onclick="Prev" />
+        <input type="button" value="Save" class="button-functions" @onclick="Save" />
+        <input type="button" value="Next" class="button-functions" @onclick="Next" />
+    </div>
+</div>
+
+
+
+
 
 }
 else if (nextPage)
@@ -671,15 +707,6 @@ else if (prevPage)
 {
     <XebecPortal.UI.Pages.HR.ApplicationFormControlTool />
 }
-
-
-@*<input type="button" value="Prev" class="createjob-bottom-main-button" @onclick="Save" />
-    <input type="button" value="Prev" class="createjob-bottom-main-button" @onclick="Save" />
-    <input type="button" value="Prev" class="createjob-bottom-main-button" @onclick="Save" />*@
-
-
-
-
 
 
 @code {
@@ -724,21 +751,21 @@ else if (prevPage)
         CollabQuestions = await HttpClient.GetListJsonAsync<List<CollaboratorQuestion>>("https://xebecapi.azurewebsites.net/api/collaboratorquestion", new AuthenticationHeaderValue("Bearer", token));
 
 
-        if(collaborators.Exists(x => x.JobId == JobId && x.Name == "Hiring Lead"))
+        if (collaborators.Exists(x => x.JobId == JobId && x.Name == "Hiring Lead"))
         {
             HiringLead = AppUserList.Find(y => y.id == collaborators.Find(x => x.JobId == JobId && x.Name == "Hiring Lead").AppUserId).name;
         }
 
-        if(collaborators.Exists(x => x.JobId == JobId && x.Name == "Collaborator"))
+        if (collaborators.Exists(x => x.JobId == JobId && x.Name == "Collaborator"))
         {
-            foreach(var collab in collaborators.Where(x => x.JobId == JobId && x.Name == "Collaborator"))
+            foreach (var collab in collaborators.Where(x => x.JobId == JobId && x.Name == "Collaborator"))
             {
                 SelectedUsers.Add(AppUserList.Find(x => x.id == collab.AppUserId).name);
             }
         }
 
         //time to load collabquestions and assign to their questions
-        if(ChosenQuestions.Exists(x => CollabQuestions.Exists(y => y.FormQuestionId == x.id)))
+        if (ChosenQuestions.Exists(x => CollabQuestions.Exists(y => y.FormQuestionId == x.id)))
         {
             //this is getting really tedious and slow
 
