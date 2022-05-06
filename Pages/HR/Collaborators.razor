@@ -570,7 +570,7 @@
                         <option selected disabled>
                             Select Collaborators
                         </option>
-                        @foreach (var collaborator in collaborators)
+                        @foreach (var collaborator in AppUserList)
                         {
                             <option>@collaborator.name @collaborator.surname</option>
                         }
@@ -597,7 +597,7 @@
                         <option selected disabled>
                             Select Collaborators
                         </option>
-                        @foreach (var collaborator in collaborators)
+                        @foreach (var collaborator in AppUserList)
                         {
                             <option>@collaborator.name @collaborator.surname</option>
                         }
@@ -658,6 +658,7 @@
         </div>
     </div>
 
+    <input type="button" value="Prev" class="createjob-bottom-main-button" @onclick="Prev" />
     <input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save" />
     <input type="button" value="Next" class="createjob-bottom-main-button" @onclick="Next" />
 
@@ -684,7 +685,8 @@ else if (prevPage)
 @code {
 
     private string CurrentItem;
-    private List<AppUser> collaborators = new List<AppUser>();
+    private List<AppUser> AppUserList = new List<AppUser>();
+    private List<CollaboratorsAssigned> collaborators = new List<CollaboratorsAssigned>();
     string HiringLead = "";
     private List<string> SelectedUsers = new List<string>();
     public Dictionary<FormQuestion, List<string>> QuestionsDictionary = new Dictionary<FormQuestion, List<string>>();
@@ -704,6 +706,9 @@ else if (prevPage)
     [Parameter]
     public List<FormQuestion> ChosenQuestions { get; set; }
 
+    [Parameter]
+    public EventCallback<List<FormQuestion>> ChosenQuestionsChanged { get; set; }
+
     string token;
 
     protected override async Task OnInitializedAsync()
@@ -714,8 +719,33 @@ else if (prevPage)
         token = await localStorage.GetItemAsync<string>("jwt_token");
 
         //this could be limited to non candidate roles
-        collaborators = await HttpClient.GetListJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user", new AuthenticationHeaderValue("Bearer", token));
+        AppUserList = await HttpClient.GetListJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user", new AuthenticationHeaderValue("Bearer", token));
+        collaborators = await HttpClient.GetListJsonAsync<List<CollaboratorsAssigned>>("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", new AuthenticationHeaderValue("Bearer", token));
         CollabQuestions = await HttpClient.GetListJsonAsync<List<CollaboratorQuestion>>("https://xebecapi.azurewebsites.net/api/collaboratorquestion", new AuthenticationHeaderValue("Bearer", token));
+
+
+        if(collaborators.Exists(x => x.JobId == JobId && x.Name == "Hiring Lead"))
+        {
+            HiringLead = AppUserList.Find(y => y.id == collaborators.Find(x => x.JobId == JobId && x.Name == "Hiring Lead").AppUserId).name;
+        }
+
+        if(collaborators.Exists(x => x.JobId == JobId && x.Name == "Collaborator"))
+        {
+            foreach(var collab in collaborators.Where(x => x.JobId == JobId && x.Name == "Collaborator"))
+            {
+                SelectedUsers.Add(AppUserList.Find(x => x.id == collab.AppUserId).name);
+            }
+        }
+
+        //time to load collabquestions and assign to their questions
+        if(ChosenQuestions.Exists(x => CollabQuestions.Exists(y => y.FormQuestionId == x.id)))
+        {
+            //this is getting really tedious and slow
+
+            //this needs a jobid endpoint for sure
+            //foreach(var item in CollabQuestions)
+        }
+
 
 
         if (ChosenQuestions != null)
@@ -726,7 +756,7 @@ else if (prevPage)
 
                 foreach (var k in CollabQuestions.Where(x => x.FormQuestionId == q.id))
                 {
-                    QuestionsDictionary[q].Add(collaborators.FirstOrDefault(x => x.id == k.AppUserId).name);
+                    QuestionsDictionary[q].Add(AppUserList.FirstOrDefault(x => x.id == k.AppUserId).name);
                 }
             }
         }
@@ -791,11 +821,13 @@ else if (prevPage)
 
     private async Task Save()
     {
+        //needs to first check what exists, and update accordingly.. yikes
+
         if (HiringLead != "")
         {
             CollaboratorsAssigned lead = new CollaboratorsAssigned();
             lead.Name = "Hiring Manager";
-            lead.AppUserId = collaborators.FirstOrDefault(x => HiringLead.Contains(x.name) && HiringLead.Contains(x.surname)).id;
+            lead.AppUserId = AppUserList.FirstOrDefault(x => HiringLead.Contains(x.name) && HiringLead.Contains(x.surname)).id;
             lead.JobId = JobId;
 
             await HttpClient.PostJsonAsync<CollaboratorsAssigned>("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", lead, new AuthenticationHeaderValue("Bearer", token));
@@ -807,7 +839,7 @@ else if (prevPage)
             {
                 CollaboratorsAssigned collaborator = new CollaboratorsAssigned();
                 collaborator.Name = "Collaborator";
-                collaborator.AppUserId = collaborators.FirstOrDefault(x => collab.Contains(x.name) && HiringLead.Contains(x.surname)).id;
+                collaborator.AppUserId = AppUserList.FirstOrDefault(x => collab.Contains(x.name) && HiringLead.Contains(x.surname)).id;
                 collaborator.JobId = JobId;
 
                 await HttpClient.PostJsonAsync<CollaboratorsAssigned>("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", collaborator, new AuthenticationHeaderValue("Bearer", token));
@@ -822,7 +854,7 @@ else if (prevPage)
 
                 CollaboratorQuestion cq = new CollaboratorQuestion();
                 cq.FormQuestionId = collab.Key.id;
-                cq.AppUserId = collaborators.FirstOrDefault(x => collab.Value.Contains(x.name) && HiringLead.Contains(x.surname)).id;
+                cq.AppUserId = AppUserList.FirstOrDefault(x => collab.Value.Contains(x.name) && HiringLead.Contains(x.surname)).id;
 
                 await HttpClient.PostJsonAsync<CollaboratorQuestion>("https://xebecapi.azurewebsites.net/api/collaboratorquestion", cq, new AuthenticationHeaderValue("Bearer", token));
             }
@@ -839,6 +871,7 @@ else if (prevPage)
 
     private void Next()
     {
+        //this should probably also save, or alert the user that changes are not saved
         nextPage = true;
     }
 
