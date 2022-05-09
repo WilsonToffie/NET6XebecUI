@@ -3,7 +3,7 @@
 @inject IJSRuntime jsr
 @inject NavigationManager NavigationManager
 @inject UserState _state;
-@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
 <style>
 
     .select-phase {
@@ -394,138 +394,210 @@
         .phase-div > .phase-name {
             font-size: 1.5rem;
         }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: 60% 5% 35%;
+    }
+
+    .grid-container-content {
+        display: grid;
+        grid-template-columns: auto auto auto;
+    }
+
+    .grid-item-content {
+        height: stretch;
+    }
+
+    .grid-item {
+        text-align: center;
+        background-color: rgba(255,255,255,1);
+        box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
+        height: 37em;
+    }
+
+    .grid-item-summary {
+        text-align: center;
+        background-color: #00BCAE;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
+        height: 37em;
+    }
+
+    .grid-item-empty {
+        text-align: center;
+        height: 37em;
+    }
+
+    .headings {
+        color: navy
+    }
 </style>
 
-
-<div class="collaborators-container">
-    <div class="collaborators-left">
-        <div class="collaborators-heading">
-            <h2 class="collaborators-heading-text">Select Phases</h2>
+<div class="grid-container">
+    <div class="grid-item">
+        <div>
+            <h2 class="text-center headings">SELECT PHASES</h2>
         </div>
-        <div class="appform-left-main">
-            <div class="collaborators-left-table">
-                @if (phases == null)
-                {
-                    <div>Loading...</div>
-                }
-                else
-                {
-                    @if (phases != null)
+        <div class="grid-container-content p-3 pt-2 pb-2">
+            <div class="grid-item-content">
+                <label class="text-left" for="phaseSelect">Phase Selection</label>
+                <select id="phaseSelect" class="form-select rounded-pill">
+                    <option selected disabled="disabled">Select Phases</option>
+                    @if (phases?.Any() == true)
                     {
-                        foreach (var phase in phases)
+                        foreach (var item in phases)
                         {
-                            <div class="@PhaseCardClass(phase) pl-2 phase-div" @onclick="() => AddPhase(phase)">
-                                <p class="phase-name">@phase.description</p>
-                                @* <span class="phase-pill" @GetPillStyle(phase)></span> *@
-                            </div>
+                            <option value="@item.id">@item.description</option>
                         }
                     }
-                }
+                </select>
+            </div>
+            <div class="grid-item-content">
+                <button class="btn rounded-pill" style="background-color: #00bcae; color: white">Add Phases</button>
+            </div>
+            <div class="grid-item-content">
+                <button class="btn rounded-pill" style="background-color: #00bcae; color: white">Delete Phases</button>
             </div>
         </div>
-        @if (string.Equals("super admin", _state.Role, StringComparison.OrdinalIgnoreCase))
-        {
-            <div class="appform-left-buttons">
-                <div class="question-button">
-                    <button class="btn appform-main-button" @onclick="ToggleModalSubmitPhase">Add Phase</button>
-                    <button class="btn appform-main-button" @onclick="ToggleModalDeletePhase">Delete Phase</button>
-                </div>
-            </div>
-        }
-
     </div>
-    <div class="collaborators-right">
-        <div class="collaborators-heading">
-            <h2 class="collaborators-heading-text">Chosen Phases</h2>
-        </div>
-        <div class="appform-left-main">
-            <div class="collaborators-left-table">
-                @if (phases == null)
-                {
-                    <div>Loading...</div>
-                }
-                else
-                {
-                    @if (phasesAdded != null)
-                    {
-                        foreach (var phase in phasesAdded)
-                        {
-                            <div class="right-list-item-preview">
-                                <div class="close-item-panel">
-                                    <span @onclick="() => DeletePhaseOrderPhase(phase)">
-                                        <i class="fas fa-times"></i>
-                                    </span>
-                                </div>
-                                <div class="preview-item-body">
-                                    <div class="preview-item-description">
-                                        <p class="">@phase.description</p>
-                                    </div>
-                                    @if (phase.description.ToLower().Contains("interview"))
-                                    {
-                                        <div class="preview-item-control">
-                                            <p type="email" class="form-control" style="width: 100%">Interviewer : @developerAssigned</p>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        }
-                    }
-                }
-            </div>
+    <div class="grid-item-empty"></div>
+    <div class="grid-item-summary">
+        <div>
+            <h2 class="text-center headings">SUMMARY</h2>
+
         </div>
     </div>
 </div>
 
-@if (showModalSubmitPhase)
-{
-    <div class="modalbox">
-        <div class="modal-content">
-            <span class="close" @onclick="ToggleModalSubmitPhase">&times;</span>
-            <p>Phase:</p>
-            <input type="text" @bind="@phaseValue.description" />
-            <div class="button">
-                <button type="submit" @onclick="AddPhase" class="button-content">Submit Phase</button>
+@*
+    <div class="collaborators-container">
+        <div class="collaborators-left">
+            <div class="collaborators-heading">
+                <h2 class="collaborators-heading-text">Select Phases</h2>
             </div>
-        </div>
-    </div>
-}
-
-@if (showModalDeletePhase)
-{
-    <div class="modalbox p-1">
-
-        <div class="card" style="height: 50vh; width: 40vw;">
-
-            <div class="card-header">
-                <span class="text-dark">Delete a Phase</span>
-                <span class="close" @onclick="ToggleModalDeletePhase">
-                    <i class="fas fa-times"></i>
-                </span>
-            </div>
-            <div style="overflow: auto;" class="card-body">
-
-                @foreach (var phase in phases)
-                {
-                    <p type="email" class="form-control modal-delete-phase" style="width: 100%">
-                        <span class="lead"><strong>@phase.description</strong></span>
-                        <br>
-                        <a class="btn btn-danger" @onclick="() => DeletePhase(phase)">Delete Phase <i class="fa fa-trash" aria-hidden="true"></i></a>
-                        <br>
-                        <small class="text-muted">Please Note: this process cannot be undone</small>
-                    </p>
+            <div class="appform-left-main">
+                <div class="collaborators-left-table">
+                    @if (phases == null)
+                    {
+                        <div>Loading...</div>
+                    }
+                    else
+                    {
+                        @if (phases != null)
+                        {
+                            foreach (var phase in phases)
+                            {
+                                <div class="@PhaseCardClass(phase) pl-2 phase-div" @onclick="() => AddPhase(phase)">
+                                    <p class="phase-name">@phase.description</p>
+                                    @* <span class="phase-pill" @GetPillStyle(phase)></span>
+                            </div>
+                        }
+                    }
                 }
+*@
+@*
+        </div>
+    </div>
+*@
+@*
+            @if (string.Equals("super admin", _state.Role, StringComparison.OrdinalIgnoreCase))
+            {
+                <div class="appform-left-buttons">
+                    <div class="question-button">
+                        <button class="btn appform-main-button" @onclick="ToggleModalSubmitPhase">Add Phase</button>
+                        <button class="btn appform-main-button" @onclick="ToggleModalDeletePhase">Delete Phase</button>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="collaborators-right">
+            <div class="collaborators-heading">
+                <h2 class="collaborators-heading-text">Chosen Phases</h2>
+            </div>
+            <div class="appform-left-main">
+                <div class="collaborators-left-table">
+                    @if (phases == null)
+                    {
+                        <div>Loading...</div>
+                    }
+                    else
+                    {
+                        @if (phasesAdded != null)
+                        {
+                            foreach (var phase in phasesAdded)
+                            {
+                                <div class="right-list-item-preview">
+                                    <div class="close-item-panel">
+                                        <span @onclick="() => DeletePhaseOrderPhase(phase)">
+                                            <i class="fas fa-times"></i>
+                                        </span>
+                                    </div>
+                                    <div class="preview-item-body">
+                                        <div class="preview-item-description">
+                                            <p class="">@phase.description</p>
+                                        </div>
+                                        @if (phase.description.ToLower().Contains("interview"))
+                                        {
+                                            <div class="preview-item-control">
+                                                <p type="email" class="form-control" style="width: 100%">Interviewer : @developerAssigned</p>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
             </div>
         </div>
     </div>
-}
-<input type="button" value="Submit" class="createjob-bottom-main-button" @onclick="Submit" />
 
+    @if (showModalSubmitPhase)
+    {
+        <div class="modalbox">
+            <div class="modal-content">
+                <span class="close" @onclick="ToggleModalSubmitPhase">&times;</span>
+                <p>Phase:</p>
+                <input type="text" @bind="@phaseValue.description" />
+                <div class="button">
+                    <button type="submit" @onclick="AddPhase" class="button-content">Submit Phase</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (showModalDeletePhase)
+    {
+        <div class="modalbox p-1">
+
+            <div class="card" style="height: 50vh; width: 40vw;">
+
+                <div class="card-header">
+                    <span class="text-dark">Delete a Phase</span>
+                    <span class="close" @onclick="ToggleModalDeletePhase">
+                        <i class="fas fa-times"></i>
+                    </span>
+                </div>
+                <div style="overflow: auto;" class="card-body">
+
+                    @foreach (var phase in phases)
+                    {
+                        <p type="email" class="form-control modal-delete-phase" style="width: 100%">
+                            <span class="lead"><strong>@phase.description</strong></span>
+                            <br>
+                            <a class="btn btn-danger" @onclick="() => DeletePhase(phase)">Delete Phase <i class="fa fa-trash" aria-hidden="true"></i></a>
+                            <br>
+                            <small class="text-muted">Please Note: this process cannot be undone</small>
+                        </p>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+    <input type="button" value="Submit" class="createjob-bottom-main-button" @onclick="Submit" />
+*@
 @code
 {
-
-    @using System.Net.Http.Headers;
-    @using XebecPortal.UI.Utils.Handlers;
-
     [Parameter]
     public CreateJobPost TempJob { get; set; }
 
@@ -538,19 +610,14 @@
     ApplicationPhase phaseValue = new ApplicationPhase();
     private string developerAssigned = "";
 
-
     private bool showModalSubmitPhase = false;
     private bool showModalDeletePhase = false;
 
-    string token;
-
     protected override async Task OnInitializedAsync()
     {
-        token = await localStorage.GetItemAsync<string>("jwt_token");
+        phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
 
-        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
-
-        jobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job", new AuthenticationHeaderValue("Bearer", token));
+        jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
         //Todo get developer
     }
 
@@ -566,17 +633,17 @@
 
     private async Task DeletePhase(ApplicationPhase phase)
     {
-        await httpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/applicationphase/{phase.id}", new AuthenticationHeaderValue("Bearer", token));
-        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
+        await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/applicationphase/{phase.id}");
+        phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
 
         await jsr.InvokeVoidAsync("alert", "Deleted!");
     }
 
     private async Task AddPhase()
     {
-        await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/applicationphase", phaseValue, new AuthenticationHeaderValue("Bearer", token));
+        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/applicationphase", phaseValue);
 
-        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
+        phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
 
         showModalSubmitPhase = !showModalSubmitPhase;
     }
@@ -585,7 +652,7 @@
     {
         foreach (var phase in phasesAdded)
         {
-            await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/jobapplicationphase", phaseValue, new AuthenticationHeaderValue("Bearer", token));
+            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobapplicationphase", phaseValue);
         }
     }
 
@@ -615,7 +682,7 @@
         job.Description = TempJob.Description;
         job.Company = TempJob.Company;
         job.Location = TempJob.Location;
-        job.Department = TempJob.Department;
+        //job.Department = TempJob.Department;
         job.DueDate = TempJob.DueDate;
         job.CreationDate = TempJob.CreationDate;
 
@@ -623,13 +690,12 @@
         Console.WriteLine(job.Description);
         Console.WriteLine(job.Company);
         Console.WriteLine(job.Location);
-        Console.WriteLine(job.Department);
+        //Console.WriteLine(job.Department);
         Console.WriteLine(job.DueDate);
         Console.WriteLine(job.CreationDate);
 
-        await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/job", job, new AuthenticationHeaderValue("Bearer", token));
+        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/job", job);
         job = null;
-
 
         job = await GetJob();
 
@@ -638,7 +704,7 @@
 
     private async Task<Job> GetJob()
     {
-        List<Job> ListOfJobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job", new AuthenticationHeaderValue("Bearer", token));
+        List<Job> ListOfJobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
         return ListOfJobs.LastOrDefault(x => x.Title == TempJob.Title);
     }
 
@@ -653,8 +719,7 @@
         Console.WriteLine("JobTypeHelper ID: " + job.Id);
         Console.WriteLine("JobTypeHelper JobTypeId: " + TempJob.JobType.Id);
 
-        await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/jobtypehelper", jobTypeHelper, new AuthenticationHeaderValue("Bearer", token));
-
+        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobtypehelper", jobTypeHelper);
 
         //Add selected platforms to JobPlatformHelpers
         foreach (var platform in TempJob.JobPlatforms)
@@ -663,9 +728,8 @@
             jobPlatformHelper.JobId = job.Id;
             jobPlatformHelper.JobPlatformId = platform.id;
 
-            await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/jobplatformhelper", jobPlatformHelper, new AuthenticationHeaderValue("Bearer", token));
+            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobplatformhelper", jobPlatformHelper);
         }
-
 
         //Add collaborators to CollaboratorsAssigned
         foreach (var Collaborator in TempJob.Collaborators)
@@ -675,17 +739,15 @@
             collaborator.JobId = job.Id;
             collaborator.AppUserId = Collaborator.id;
 
-            await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", collaborator, new AuthenticationHeaderValue("Bearer", token));
+            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", collaborator);
         }
-
 
         //Add form questions
         foreach (var formQuestion in TempJob.formQuestions)
         {
             formQuestion.jobId = job.Id;
         }
-        await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/Questionnaire/lst", TempJob.formQuestions, new AuthenticationHeaderValue("Bearer", token));
-
+        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Questionnaire/lst", TempJob.formQuestions);
 
         //Add Application Phases
         foreach (var phase in phasesAdded)
@@ -698,7 +760,7 @@
             Console.WriteLine(JobApplicationPhase_.Id);
             Console.WriteLine(JobApplicationPhase_.JobId);
             Console.WriteLine(JobApplicationPhase_.ApplicationPhaseId);
-            await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/jobapplicationphase/{job.Id}", JobApplicationPhase_, new AuthenticationHeaderValue("Bearer", token));
+            await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/jobapplicationphase/{job.Id}", JobApplicationPhase_);
         }
 
         await TempJobChanged.InvokeAsync(TempJob);

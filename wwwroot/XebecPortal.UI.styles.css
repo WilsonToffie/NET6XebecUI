@@ -1,0 +1,97 @@
+.underlay {
+    height: 100vh;
+    width: 100vw;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    scroll-margin: 1vw;
+    overflow-y: auto;
+    position: absolute;
+    z-index: 0;
+}
+
+.overlay {
+    top: 10vh;
+    height: 90vh;
+    width: 100vw;
+    position: relative;
+    z-index: 0;
+}
+
+.nav {
+    background-color: white;
+    top: 0vh;
+    height: 10vh;
+    width: 100vw;
+    position: fixed;
+    z-index: 1;
+}
+
+.mainlayout-xebec-heading {
+    height: 10vh;
+    width: 90px;
+    margin-left: 15px;
+}
+
+.mainlayout-xebec-logo {
+    height: 10vh;
+    min-width: 100%;
+    background-image: url(/Img/xebeclogoblack.png);
+    background-size: cover;
+    background-position: center;
+}
+
+.nav-buttons {
+    margin-top: 2.5vh;
+    height: 5vh;
+    font-size: 1em;
+    font-family: opensans-condensed-bold;
+    color: #004393;
+    background-color: transparent;
+    border: none;
+    border-radius: 1em;
+    width: 70%;
+    margin-left: 15%;
+    margin-right: 15%;
+    transition: 0.25s all ease-out;
+}
+
+.nav-buttons-pressed {
+    margin-left: 15%;
+    margin-right: 15%;
+    width: 70%;
+    margin-top: 2.5vh;
+    height: 5vh;
+    background-color: #00bcae;
+    border: none;
+    border-radius: 1em;
+    color: white;
+    font-family: opensans-condensed-bold;
+    font-size: 1em;
+    transition: 0.25s all ease-out;
+}
+
+.first {
+    width: 20vw;
+    height: 10vh;
+}
+
+.second {
+    width: 30vw;
+    height: 10vh;
+}
+
+.third {
+    width: 10vw;
+    height: 10vh;
+}
+
+.services-dropdown {
+    top: 10vh;
+    left: 55vw;
+    background-color: #666666;
+    height: 10vh;
+    position: absolute;
+    width: 15vw;
+    display: flex;
+}

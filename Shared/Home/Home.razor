@@ -1,21 +1,31 @@
 @page "/"
 @inject NavigationManager navmanager
-@inject HttpClient HttpClient
+@inject HttpClient httpclient
+@using System.Media   
 @using System.Linq;
 @using XebecPortal.UI.Shared.Home.Models
+@using System;
+@using System.IO;
+@using System.Threading.Tasks
+@*@using Microsoft.Azure.Storage*@
+@using Azure
+@using Azure.Storage.Blobs
+@using Azure.Storage.Blobs.Models
+@inject IJSRuntime JS
 
 <style>
-    .home-container{
+    .home-container {
         height: 90vh;
         width: 100vw;
+        animation:ease-in 0.15s;
     }
 
     .overlay-home {
         height: 90vh;
         display: flex;
     }
-    
-    .left{
+
+    .left {
         height: 90vh;
         width: 40%;
     }
@@ -41,6 +51,7 @@
         margin-right: 10%;
         border-top-left-radius: 7em;
         border-top-right-radius: 7em;
+        transition: 0.2s all ease-in-out;
     }
 
     .home-left-heading {
@@ -53,7 +64,7 @@
     .home-left-body {
         height: 15vh;
         margin-top: 2.5vh;
-        width: 100%;        
+        width: 100%;
     }
 
         .home-left-body p {
@@ -64,13 +75,14 @@
             font-size: 1.3em;
             text-transform: uppercase;
         }
+
     .home-xebec-logo {
         height: 40vh;
         max-width: 100%;
         background-image: url(/Img/xebeclogoblack.png);
         background-size: cover;
         background-position: center;
-    }  
+    }
 
     .image1 {
         height: 50vh;
@@ -105,7 +117,6 @@
         line-height: 10vh;
         font-family: opensans-bold;
     }
-    
 </style>
 
 <div class="home-container">
@@ -132,9 +143,10 @@
         </div>
     </div>
 
-    
+
 </div>
 
 @code{
-   
+
+
 }
