@@ -1,8 +1,11 @@
 ﻿@page "/phasecontrol"
+@using XebecPortal.UI.Utils.Handlers
+@using System.Net.Http.Headers
 @inject HttpClient httpClient
 @inject IJSRuntime jsr
 @inject NavigationManager NavigationManager
-@inject UserState _state;
+@inject UserState _state
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <style>
 
@@ -433,40 +436,44 @@
     }
 </style>
 
-<div class="grid-container">
-    <div class="grid-item">
-        <div>
-            <h2 class="text-center headings">SELECT PHASES</h2>
+<div class="form-container">
+    <div class="inner-form-container">
+        <div class="form-heading">
+            <h4 class="form-subheading">PHASE FORM</h4>
         </div>
-        <div class="grid-container-content p-3 pt-2 pb-2">
-            <div class="grid-item-content">
-                <label class="text-left" for="phaseSelect">Phase Selection</label>
-                <select id="phaseSelect" class="form-select rounded-pill">
-                    <option selected disabled="disabled">Select Phases</option>
-                    @if (phases?.Any() == true)
-                    {
-                        foreach (var item in phases)
+        <div class="form-main">
+            <div class="row">
+                <div class="col-4">
+                    <p class="select-heading">Phase Selection</p>
+
+                    <select class="select-form">
+                        <option selected disabled="disabled">Select Phase</option>
+                        @foreach (var item in phases)
                         {
                             <option value="@item.id">@item.description</option>
                         }
-                    }
-                </select>
-            </div>
-            <div class="grid-item-content">
-                <button class="btn rounded-pill" style="background-color: #00bcae; color: white">Add Phases</button>
-            </div>
-            <div class="grid-item-content">
-                <button class="btn rounded-pill" style="background-color: #00bcae; color: white">Delete Phases</button>
+                    </select>
+                </div>
+                <div class="col-4">
+                    <button class="down-button">Add Phase</button>
+                </div>
+                <div class="col-4">
+                    <button class="down-button">Delete Phase</button>
+                </div>
             </div>
         </div>
     </div>
-    <div class="grid-item-empty"></div>
-    <div class="grid-item-summary">
-        <div>
-            <h2 class="text-center headings">SUMMARY</h2>
+    <div class="summary-section">
+        <div class="summary-heading">
+            <h5>SUMMARY</h5>
+        </div>
 
+        <div class="collaborators-left-table">
         </div>
     </div>
+</div>
+<div class="nav-btns">
+    <button class="down-button">Submit</button>
 </div>
 
 @*
@@ -609,15 +616,17 @@
     private IList<Job> jobs = new List<Job>();
     ApplicationPhase phaseValue = new ApplicationPhase();
     private string developerAssigned = "";
-
+    private string token;
     private bool showModalSubmitPhase = false;
     private bool showModalDeletePhase = false;
 
     protected override async Task OnInitializedAsync()
     {
-        phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
+        token = await localStorage.GetItemAsync<string>("jwt_token");
 
-        jobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
+        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
+
+        jobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job", new AuthenticationHeaderValue("Bearer", token));
         //Todo get developer
     }
 
@@ -634,7 +643,7 @@
     private async Task DeletePhase(ApplicationPhase phase)
     {
         await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/applicationphase/{phase.id}");
-        phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
+        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
 
         await jsr.InvokeVoidAsync("alert", "Deleted!");
     }
@@ -643,7 +652,7 @@
     {
         await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/applicationphase", phaseValue);
 
-        phases = await httpClient.GetFromJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase");
+        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
 
         showModalSubmitPhase = !showModalSubmitPhase;
     }
@@ -704,7 +713,7 @@
 
     private async Task<Job> GetJob()
     {
-        List<Job> ListOfJobs = await httpClient.GetFromJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job");
+        List<Job> ListOfJobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job", new AuthenticationHeaderValue("Bearer", token));
         return ListOfJobs.LastOrDefault(x => x.Title == TempJob.Title);
     }
 
