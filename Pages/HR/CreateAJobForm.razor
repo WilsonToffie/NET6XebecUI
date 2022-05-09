@@ -360,59 +360,79 @@
         text-align: center;
         margin-top: 10vh;
     }
+
+    /*::-webkit-scrollbar {
+        width: 10px !important;
+        background-color: #004393 !important;
+        border-radius: 20px !important;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent !important;
+        border-radius: 10px !important;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #f7f7f7 !important;
+        border-radius: 5px !important;
+    }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f7f7f7 !important;
+        }*/
 </style>
-
-<div class="create-job-summary">
-    <div class="page-title">Summary</div>
-
-    <div class="summary-container">
-        <div class="summary-individual">
-            <div class="text-font-styling"> Job Name</div>
-            <div class="summary-text-style">@TempJob.Title</div>
-        </div>
-
-        <div class="summary-individual">
-            <div class="text-font-styling"> Department</div>
-            <div class="summary-text-style">@departments.Name</div>
-        </div>
-
-        <div class="summary-individual">
-            <div class="text-font-styling"> Company</div>
-            <div class="summary-text-style">@TempJob.Company</div>
-        </div>
-
-        <div class="summary-individual">
-            <div class="text-font-styling"> WFH Policy</div>
-            <div class="summary-text-style">@TempJob.Policy</div>
-        </div>
-
-        <div class="summary-individual">
-            <div class="text-font-styling"> Location</div>
-            <div class="summary-text-style">@TempJob.Location</div>
-        </div>
-
-        <div class="summary-individual">
-            <div class="text-font-styling"> Job Type</div>
-            <div class="summary-text-style">@TempJob.JobType.Type</div>
-        </div>
-
-        <div class="summary-individual">
-            <div class="text-font-styling"> Application Due Date</div>
-            <div class="summary-text-style">@TempJob.DueDate</div>
-        </div>
-
-        <div class="summary-individual">
-            <div class="text-font-styling"> Job Description</div>
-            <div class="summary-text-style">@TempJob.Description</div>
-        </div>
-    </div>
-</div>
 @if (redirectpage)
 {
-<XebecPortal.UI.Pages.HR.ApplicationFormControlTool @bind-jobId="existJobId"  @bind-TempJob="TempJob" /> <!--departments.Id-->
+    <XebecPortal.UI.Pages.HR.ApplicationFormControlTool @bind-jobId="existJobId" @bind-TempJob="TempJob" />
 }
 else
 {
+    <div class="create-job-summary">
+        <div class="page-title">Summary</div>
+
+        <div class="summary-container">
+            <div class="summary-individual">
+                <div class="text-font-styling"> Job Name</div>
+                <div class="summary-text-style">@TempJob.Title</div>
+            </div>
+
+            <div class="summary-individual">
+                <div class="text-font-styling"> Department</div>
+                <div class="summary-text-style">@departments.Name</div>
+            </div>
+
+            <div class="summary-individual">
+                <div class="text-font-styling"> Company</div>
+                <div class="summary-text-style">@TempJob.Company</div>
+            </div>
+
+            <div class="summary-individual">
+                <div class="text-font-styling"> WFH Policy</div>
+                <div class="summary-text-style">@TempJob.Policy</div>
+            </div>
+
+            <div class="summary-individual">
+                <div class="text-font-styling"> Location</div>
+                <div class="summary-text-style">@TempJob.Location</div>
+            </div>
+
+            <div class="summary-individual">
+                <div class="text-font-styling"> Job Type</div>
+                <div class="summary-text-style">@TempJob.JobType.Type</div>
+            </div>
+
+            <div class="summary-individual">
+                <div class="text-font-styling"> Application Due Date</div>
+                <div class="summary-text-style">@TempJob.DueDate</div>
+            </div>
+
+            <div class="summary-individual">
+                <div class="text-font-styling"> Job Description</div>
+                <div class="summary-text-style">@TempJob.Description</div>
+            </div>
+        </div>
+    </div>
+
     <div class="createjob-form-container">
         <EditForm Model="@TempJob" class="createjob-form" OnValidSubmit="@saveJobState">
             <DataAnnotationsValidator />
@@ -616,13 +636,11 @@ else
                             <input type="button" value="Manage Department" class="form-buttons" @onclick="() => manageDepartment(true)" />
                         </div>
                         @*<div class="createjob-form-individual">
-                        <input type="button" value="Delete Departement" class="form-buttons" />
-                    </div>*@
+                                <input type="button" value="Delete Departement" class="form-buttons" />
+                            </div>*@
                     </div>
                 </div>
 
-
-                @*Need to get the company information*@
                 <div class="spacing-for-stuff">
                     <div class="form-group createjob-form-group">
                         <div class="createjob-form-individual">
@@ -641,8 +659,8 @@ else
                             <input type="button" value="Manage Company" class="form-buttons" @onclick="() => manageCompany(true)" />
                         </div>
                         @*<div class="createjob-form-individual">
-                        <input type="button" value="   Delete Company  " class="form-buttons" />
-                    </div>*@
+                                <input type="button" value="   Delete Company  " class="form-buttons" />
+                            </div>*@
                     </div>
                 </div>
 
@@ -716,7 +734,7 @@ else
                     <input type="button" value="Next" disabled class="button-functions-not-redirectable" />
                 </div>
             }
-            
+
         </EditForm>
     </div>
 }

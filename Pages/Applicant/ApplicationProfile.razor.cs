@@ -99,7 +99,7 @@ namespace XebecPortal.UI.Pages.Applicant
         // private CustomHandler cust = new CustomHandler();
         string token;
 
-        
+        private bool onlineProfileValidPost;
         protected override async Task OnInitializedAsync()
         {
             loadInfo = true;
@@ -382,25 +382,25 @@ namespace XebecPortal.UI.Pages.Applicant
                     AppUserId = state.AppUserId,
                 });
             }
-
-            foreach (var item in personalInformationList)
+            if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Override your Personal Information?"))
             {
-                if (newPersonalInfo)
+                foreach (var item in personalInformationList)
                 {
-                   var addedPersonalInfo = await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/PersonalInformation", item, new AuthenticationHeaderValue("Bearer", token));
-                    if (addedPersonalInfo.IsSuccessStatusCode)
+                    if (newPersonalInfo)
                     {
-                        addPersInfo = true;
+                        var addedPersonalInfo = await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/PersonalInformation", item, new AuthenticationHeaderValue("Bearer", token));
+                        if (addedPersonalInfo.IsSuccessStatusCode)
+                        {
+                            addPersInfo = true;
+                        }
+                        else
+                        {
+                            addPersInfo = false;
+                        }
                     }
                     else
                     {
-                        addPersInfo = false;
-                    }
-                }
-                else
-                {
-                    if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Override your Personal Informatio?"))
-                    {
+
                         var updatedPersonalInfo = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/PersonalInformation/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
                         if (updatedPersonalInfo.IsSuccessStatusCode)
                         {
@@ -410,30 +410,28 @@ namespace XebecPortal.UI.Pages.Applicant
                         {
                             updatedPersInfo = false;
                         }
-                    }                    
+                    }
                 }
 
-            }
-            foreach (var item in additionalInfoList)
-            {
-                Console.WriteLine("Additional Info List count " + additionalInfoList.Count);
-                Console.WriteLine("Additional Info List ID's " + item.Id);
-                if (newAdditionalInfo)
+                foreach (var item in additionalInfoList)
                 {
-                    var addedAdditionalInfo= await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/AdditionalInformation", item, new AuthenticationHeaderValue("Bearer", token));
-                    if (addedAdditionalInfo.IsSuccessStatusCode)
+                    Console.WriteLine("Additional Info List count " + additionalInfoList.Count);
+                    Console.WriteLine("Additional Info List ID's " + item.Id);
+                    if (newAdditionalInfo)
                     {
-                        addAdditionalInfo = true;
+                        var addedAdditionalInfo = await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/AdditionalInformation", item, new AuthenticationHeaderValue("Bearer", token));
+                        if (addedAdditionalInfo.IsSuccessStatusCode)
+                        {
+                            addAdditionalInfo = true;
+                        }
+                        else
+                        {
+                            addAdditionalInfo = false;
+                        }
                     }
                     else
                     {
-                        addAdditionalInfo = false;
-                    }
-                }
-                else
-                {
-                    if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Override This Item?"))
-                    {
+
                         var updatedAdditionalInfo = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/AdditionalInformation/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
                         if (updatedAdditionalInfo.IsSuccessStatusCode)
                         {
@@ -445,7 +443,6 @@ namespace XebecPortal.UI.Pages.Applicant
                         }
                     }
                 }
-
             }
 
             if ((addPersInfo || updatedPersInfo) && (addAdditionalInfo || updateAdditionalInfo))
@@ -483,6 +480,11 @@ namespace XebecPortal.UI.Pages.Applicant
             await OnInitializedAsync();
             
             references = new();
+        }
+
+        private void addDocuments()
+        {
+
         }
 
         private References tempRef;
@@ -792,7 +794,11 @@ namespace XebecPortal.UI.Pages.Applicant
                     var validPost = await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink", item, new AuthenticationHeaderValue("Bearer", token));
                     if (validPost.IsSuccessStatusCode)
                     {
-                        await jsRuntime.InvokeAsync<object>("alert", "Portfolio information has been saved!");
+                        onlineProfileValidPost = true;
+                    }
+                    else
+                    {
+                        onlineProfileValidPost = false;
                     }
                 }
                 else
@@ -800,19 +806,29 @@ namespace XebecPortal.UI.Pages.Applicant
                     var validPost = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
                     if (validPost.IsSuccessStatusCode)
                     {
-                        await jsRuntime.InvokeAsync<object>("alert", "Portfolio information has been saved!");
+                        onlineProfileValidPost = true;
+                    }
+                    else
+                    {
+                        onlineProfileValidPost = false;
                     }
                 }
             }
 
+            if (onlineProfileValidPost)
+            {
+                await jsRuntime.InvokeAsync<object>("alert", "Portfolio information has been saved!");
+            }
         }
 
-        private string storageAcc = "storageaccountxebecac6b";
-        private string imgContainer = "images";
+        private string storageAcc = "xebecstorage";
+        private string imgContainer = "linkedincv";
 
         private static int num = 1;
         async Task OnInputFileChangedAsync(InputFileChangeEventArgs e)
         {
+
+            //https://xebecstorage.blob.core.windows.net/linkedincv
             fileNames = e.File;
             progressBar = 0.ToString("0");
             status = new StringBuilder($"Uploading file {num++}");
@@ -891,7 +907,285 @@ namespace XebecPortal.UI.Pages.Applicant
 
                 //status = new StringBuilder(await resp.Content.ReadAsStringAsync());
             }
+        }        
 
+        // Uploading of the matric certificate
+        private string matricCertContainer = "matric-certificates";//"images";        
+        private async Task OnInputMatricCertChangedAsync(InputFileChangeEventArgs e)
+        {
+            //https://xebecstorage.blob.core.windows.net/matric-certificates
+            // Getting the file
+            var fileName = state.AppUserId;//fileArray[0] + Guid.NewGuid().ToString().Substring(0, 5) + "." + fileArray[1]; // change file name to be their appUserID
+            var fileInfo = e.File;
+            // You require a azure account with a storage account. You use that link for below. The 'images' is the file that the file image is stored in in Azure.
+            // https://xebecstorage.blob.core.windows.net/profile-images
+
+            var blobUri = new Uri("https://"
+                + storageAcc
+                + ".blob.core.windows.net/"
+                + matricCertContainer
+                + "/"
+                + fileName);
+
+            AzureSasCredential credential = new AzureSasCredential("?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-05-04T17:43:51Z&st=2022-05-04T09:43:51Z&spr=https&sig=LmUPm%2BSGZPm%2Bi115YYmdV7hsdcaPaOurNP9WZ%2FeeVmI%3D");
+            BlobClient blobClient = new BlobClient(blobUri, credential);
+
+            var res = await blobClient.UploadAsync(fileInfo.OpenReadStream(1512000), new BlobUploadOptions
+            {
+                HttpHeaders = new BlobHttpHeaders { ContentType = fileInfo.ContentType },
+                TransferOptions = new StorageTransferOptions
+                {
+                    InitialTransferSize = 1024 * 1024,
+                    MaximumConcurrency = 1
+                }
+            });
+
+            if (res.GetRawResponse().Status <= 205)
+            {
+
+                // This is needs to change to the Model for matric stuffs
+                //personalInfo.Id = state.AppUserId; 
+                //personalInfo.ImageUrl = blobUri.ToString(); // This will be where the link will be stored 
+                Console.WriteLine("Result is true whooooo");
+                var content = new FormUrlEncodedContent(new[]
+                                {
+                                    new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
+                                });
+                //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
+
+
+                // The endpoint would need to change
+
+                //var resp = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
+                                                                                                                                                                                                         // var newresp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo); //{personalInfo.Id}
+            }
+            else
+            {
+                Console.WriteLine("result is false :(");
+            }        
+    }
+        // Uploading of the Transcript
+        private string transcriptContainer = "transcripts";       
+        private async Task OnInputTranscriptChangedAsync(InputFileChangeEventArgs e)
+        {
+            //https://xebecstorage.blob.core.windows.net/transcripts
+            // Getting the file
+            var fileName = state.AppUserId;//fileArray[0] + Guid.NewGuid().ToString().Substring(0, 5) + "." + fileArray[1]; // change file name to be their appUserID
+            var fileInfo = e.File;
+            // You require a azure account with a storage account. You use that link for below. The 'images' is the file that the file image is stored in in Azure.
+            // https://xebecstorage.blob.core.windows.net/profile-images
+
+            var blobUri = new Uri("https://"
+                + storageAcc
+                + ".blob.core.windows.net/"
+                + transcriptContainer
+                + "/"
+                + fileName);
+
+            AzureSasCredential credential = new AzureSasCredential("?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-05-04T17:43:51Z&st=2022-05-04T09:43:51Z&spr=https&sig=LmUPm%2BSGZPm%2Bi115YYmdV7hsdcaPaOurNP9WZ%2FeeVmI%3D");
+            BlobClient blobClient = new BlobClient(blobUri, credential);
+
+            var res = await blobClient.UploadAsync(fileInfo.OpenReadStream(1512000), new BlobUploadOptions
+            {
+                HttpHeaders = new BlobHttpHeaders { ContentType = fileInfo.ContentType },
+                TransferOptions = new StorageTransferOptions
+                {
+                    InitialTransferSize = 1024 * 1024,
+                    MaximumConcurrency = 1
+                }
+            });
+
+            if (res.GetRawResponse().Status <= 205)
+            {
+
+                // This is needs to change to the Model for matric stuffs
+                //personalInfo.Id = state.AppUserId; 
+                //personalInfo.ImageUrl = blobUri.ToString(); // This will be where the link will be stored 
+                Console.WriteLine("Result is true whooooo");
+                var content = new FormUrlEncodedContent(new[]
+                                {
+                                    new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
+                                });
+                //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
+
+
+                // The endpoint would need to change
+
+                //var resp = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
+                // var newresp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo); //{personalInfo.Id}
+            }
+            else
+            {
+                Console.WriteLine("result is false :(");
+            }
+        }
+
+        // Uploading of the First Certificate
+        private string firstCertContainer = "additional-documents-1";
+        private async Task OnInputFirstDocumentChangedAsync(InputFileChangeEventArgs e)
+        {
+            //https://xebecstorage.blob.core.windows.net/additional-documents-1
+            // Getting the file
+            var fileName = state.AppUserId;//fileArray[0] + Guid.NewGuid().ToString().Substring(0, 5) + "." + fileArray[1]; // change file name to be their appUserID
+            var fileInfo = e.File;
+            // You require a azure account with a storage account. You use that link for below. The 'images' is the file that the file image is stored in in Azure.
+            // https://xebecstorage.blob.core.windows.net/profile-images
+
+            var blobUri = new Uri("https://"
+                + storageAcc
+                + ".blob.core.windows.net/"
+                + firstCertContainer
+                + "/"
+                + fileName);
+
+            AzureSasCredential credential = new AzureSasCredential("?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-05-04T17:43:51Z&st=2022-05-04T09:43:51Z&spr=https&sig=LmUPm%2BSGZPm%2Bi115YYmdV7hsdcaPaOurNP9WZ%2FeeVmI%3D");
+            BlobClient blobClient = new BlobClient(blobUri, credential);
+
+            var res = await blobClient.UploadAsync(fileInfo.OpenReadStream(1512000), new BlobUploadOptions
+            {
+                HttpHeaders = new BlobHttpHeaders { ContentType = fileInfo.ContentType },
+                TransferOptions = new StorageTransferOptions
+                {
+                    InitialTransferSize = 1024 * 1024,
+                    MaximumConcurrency = 1
+                }
+            });
+
+            if (res.GetRawResponse().Status <= 205)
+            {
+
+                // This is needs to change to the Model for matric stuffs
+                //personalInfo.Id = state.AppUserId; 
+                //personalInfo.ImageUrl = blobUri.ToString(); // This will be where the link will be stored 
+                Console.WriteLine("Result is true whooooo");
+                var content = new FormUrlEncodedContent(new[]
+                                {
+                                    new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
+                                });
+                //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
+
+
+                // The endpoint would need to change
+
+                //var resp = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
+                // var newresp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo); //{personalInfo.Id}
+            }
+            else
+            {
+                Console.WriteLine("result is false :(");
+            }
+        }
+
+        // Uploading of the Second Certificate
+        private string secondCertContainer = "additional-documents-2";
+        private async Task OnInputSecondDocumentChangedAsync(InputFileChangeEventArgs e)
+        {
+            //https://xebecstorage.blob.core.windows.net/additional-documents-2
+            // Getting the file
+            var fileName = state.AppUserId;//fileArray[0] + Guid.NewGuid().ToString().Substring(0, 5) + "." + fileArray[1]; // change file name to be their appUserID
+            var fileInfo = e.File;
+            // You require a azure account with a storage account. You use that link for below. The 'images' is the file that the file image is stored in in Azure.
+            // https://xebecstorage.blob.core.windows.net/profile-images
+
+            var blobUri = new Uri("https://"
+                + storageAcc
+                + ".blob.core.windows.net/"
+                + secondCertContainer
+                + "/"
+                + fileName);
+
+            AzureSasCredential credential = new AzureSasCredential("?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-05-04T17:43:51Z&st=2022-05-04T09:43:51Z&spr=https&sig=LmUPm%2BSGZPm%2Bi115YYmdV7hsdcaPaOurNP9WZ%2FeeVmI%3D");
+            BlobClient blobClient = new BlobClient(blobUri, credential);
+
+            var res = await blobClient.UploadAsync(fileInfo.OpenReadStream(1512000), new BlobUploadOptions
+            {
+                HttpHeaders = new BlobHttpHeaders { ContentType = fileInfo.ContentType },
+                TransferOptions = new StorageTransferOptions
+                {
+                    InitialTransferSize = 1024 * 1024,
+                    MaximumConcurrency = 1
+                }
+            });
+
+            if (res.GetRawResponse().Status <= 205)
+            {
+
+                // This is needs to change to the Model for matric stuffs
+                //personalInfo.Id = state.AppUserId; 
+                //personalInfo.ImageUrl = blobUri.ToString(); // This will be where the link will be stored 
+                Console.WriteLine("Result is true whooooo");
+                var content = new FormUrlEncodedContent(new[]
+                                {
+                                    new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
+                                });
+                //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
+
+
+                // The endpoint would need to change
+
+                //var resp = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
+                // var newresp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo); //{personalInfo.Id}
+            }
+            else
+            {
+                Console.WriteLine("result is false :(");
+            }
+        }
+
+        // Uploading of the Second Certificate
+        private string thirdCertContainer = "additional-documents-3";
+        private async Task OnInputThirdDocumentChangedAsync(InputFileChangeEventArgs e)
+        {
+            //https://xebecstorage.blob.core.windows.net/additional-documents-3
+            // Getting the file
+            var fileName = state.AppUserId;//fileArray[0] + Guid.NewGuid().ToString().Substring(0, 5) + "." + fileArray[1]; // change file name to be their appUserID
+            var fileInfo = e.File;
+            // You require a azure account with a storage account. You use that link for below. The 'images' is the file that the file image is stored in in Azure.
+            // https://xebecstorage.blob.core.windows.net/profile-images
+
+            var blobUri = new Uri("https://"
+                + storageAcc
+                + ".blob.core.windows.net/"
+                + thirdCertContainer
+                + "/"
+                + fileName);
+
+            AzureSasCredential credential = new AzureSasCredential("?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-05-04T17:43:51Z&st=2022-05-04T09:43:51Z&spr=https&sig=LmUPm%2BSGZPm%2Bi115YYmdV7hsdcaPaOurNP9WZ%2FeeVmI%3D");
+            BlobClient blobClient = new BlobClient(blobUri, credential);
+
+            var res = await blobClient.UploadAsync(fileInfo.OpenReadStream(1512000), new BlobUploadOptions
+            {
+                HttpHeaders = new BlobHttpHeaders { ContentType = fileInfo.ContentType },
+                TransferOptions = new StorageTransferOptions
+                {
+                    InitialTransferSize = 1024 * 1024,
+                    MaximumConcurrency = 1
+                }
+            });
+
+            if (res.GetRawResponse().Status <= 205)
+            {
+
+                // This is needs to change to the Model for matric stuffs
+                //personalInfo.Id = state.AppUserId; 
+                //personalInfo.ImageUrl = blobUri.ToString(); // This will be where the link will be stored 
+                Console.WriteLine("Result is true whooooo");
+                var content = new FormUrlEncodedContent(new[]
+                                {
+                                    new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
+                                });
+                //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
+
+
+                // The endpoint would need to change
+
+                //var resp = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
+                // var newresp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo); //{personalInfo.Id}
+            }
+            else
+            {
+                Console.WriteLine("result is false :(");
+            }
         }
 
         private void ResetFileNames()

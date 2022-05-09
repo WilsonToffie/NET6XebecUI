@@ -7,10 +7,10 @@
 
 <style>
     .underlay {
-        background-image: linear-gradient(rgba(0, 188, 174,0.05),rgba(0, 188, 174,0.05)),url(/Img/background.svg);
         height: 100vh;
         width: 100vw;
         background-size: cover;
+        background-image: url(/Img/background.svg);
         background-attachment: fixed;
         background-position: center;
         scroll-margin: 1vw;
@@ -27,22 +27,6 @@
         z-index: 0;
     }
 
-    .underlay::-webkit-scrollbar {
-        width: 1vw;
-        background-color: white;
-        z-index: 0;
-    }
-
-    .underlay::-webkit-scrollbar-thumb {
-        width: 1vw;
-        background-color: #808080;
-        z-index: 0;
-    }
-    .underlay::-webkit-scrollbar-track {
-        width: 1vw;
-        background-color: white;
-        z-index: 0;
-    }
     .nav {
         background-color: white;
         top: 0vh;
@@ -79,6 +63,19 @@
         margin-left: 15%;
         margin-right: 15%;
     }
+        .nav-buttons:hover {
+            transition: 0.1s all ease-out;
+            transform: scale(1.5);
+            color: white;
+            background-color: #00bcae;
+        }
+
+        .nav-buttons:focus {
+            transition: 0.1s all ease-in;
+            transform: scale(1.5);
+            color: white;
+            background-color: #00bcae;
+        }
 
     .nav-buttons-pressed {
         margin-left: 15%;
@@ -92,33 +89,89 @@
         color: white;
         font-family: opensans-condensed-bold;
         font-size: 1em;
+        transition: 0.1s all ease-out;
     }
-    .first{
+
+    .first {
         width: 20vw;
         height: 10vh;
     }
+
     .second {
         width: 30vw;
         height: 10vh;
     }
+
     .third {
         width: 10vw;
         height: 10vh;
     }
-    .mythird{
+
+    .fourth{
         width: 15vw;
         height: 10vh;
+        margin-bottom: 1vh;
     }
-    .services-dropdown{
+
+    .services-dropdown {
         top: 10vh;
-        left: 50vw;
-        background-color: white;
+        left: 57.5vw;
+        background-color: transparent;
         height: 10vh;
         position: absolute;
-        width: 30vw;
-        display: flex;
+        width: 15vw;
+        display:flex;
     }
+
+    .fourth-buttons {
+        height: 6vh;
+        font-size: 1em;
+        font-family: opensans-condensed-bold;
+        background-color: #00bcae;
+        color: white;
+        border: none;
+        border-radius: 1em;
+        width: 90%;
+        margin-top: 1vh;
+        margin-bottom: 1vh;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+        .fourth-buttons:hover {
+            transition: 0.1s all ease-out;
+            height: 6vh;
+            font-size: 1em;
+            font-family: opensans-condensed-bold;
+            border: none;
+            border-radius: 1em;
+            width: 90%;
+            margin-top: 1vh;
+            margin-bottom: 1vh;
+            margin-left: 5%;
+            margin-right: 5%;
+            background-color: #d35bc9;
+            color: white;
+        }
+
+        .fourth-buttons:focus {
+            height: 6vh;
+            font-size: 1em;
+            font-family: opensans-condensed-bold;
+            border: none;
+            border-radius: 1em;
+            width: 90%;
+            margin-top: 1vh;
+            margin-bottom: 1vh;
+            margin-left: 5%;
+            margin-right: 5%;
+            background-color: #d35bc9;
+            color: white;
+            transition: 0.1s all ease-out;
+        }
+
 </style>
+
 <div class="underlay">
     <div class="nav">
         <div class="first">
@@ -128,44 +181,33 @@
         </div>
         <div class="second"></div>
         <div class="third">
-            <input type="button" class="nav-buttons" @onmouseover="Homehover" value="HOME" @onclick="ToHome" hidden="@HomeHover" />
-            <input type="button" class="nav-buttons-pressed" value="HOME" @onclick="ToHome" hidden="@(!HomeHover)" />
+            <input type="button" class="nav-buttons" value="HOME" @onclick="ToHome" />
         </div>
         <div class="third">
-            <input type="button" class="nav-buttons" @onmouseover="Serviceshover" value="SERVICES" @onclick="ToServices" hidden="@ServicesHover" />
-            <input type="button" class="nav-buttons-pressed" value="SERVICES" @onclick="ToServices" hidden="@(!ServicesHover)" />
+            <input type="button" class="nav-buttons" value="SERVICES" @onclick="ToServices" data-toggle="dropdown" />
+            <ul class="dropdown-menu" style="margin-left: 60vw; border-radius: 20%; width: 10vw;">
+                <li >
+                    <input type="button" class="fourth-buttons" value="HR SERVICES" @onclick="ToHRServices" />
+                </li>
+                <li >
+                    <input type="button" class="fourth-buttons" value="APPLICANT SERVICES" @onclick="ToApplicantServices"/>
+                </li>
+            </ul>
+
         </div>
         <div class="third">
-            <input type="button" class="nav-buttons" @onmouseover="JobPortalhover" value="JOB PORTAL" @onclick="ToJobPortal" hidden="@JobPortalHover" />
-            <input type="button" class="nav-buttons-pressed" value="JOB PORTAL" @onclick="ToJobPortal" hidden="@(!JobPortalHover)" />
+            <input type="button" class="nav-buttons" value="JOB PORTAL" @onclick="ToJobPortal" />
         </div>
         <div class="third">
-            <input type="button" class="nav-buttons" @onmouseover="SignInhover" value="SIGN IN" @onclick="ToSignIn" hidden="@SignInHover" />
-            <input type="button" class="nav-buttons-pressed" value="SIGN IN" @onclick="ToSignIn" hidden="@(!SignInHover)" />
+            <input type="button" class="nav-buttons" value="SIGN IN" @onclick="ToSignIn" />
         </div>
         <div class="third">
-            <input type="button" class="nav-buttons" @onmouseover="Contacthover" value="CONTACT" @onclick="ToContact" hidden="@ContactHover" />
-            <input type="button" class="nav-buttons-pressed" value="CONTACT" @onclick="ToContact" hidden="@(!ContactHover)" />
+            <input type="button" class="nav-buttons" value="CONTACT" @onclick="ToContact" />
         </div>
-    </div>    
+    </div>
     <div class="overlay">
         @Body
     </div>
-    @if (Services)
-    {
-        <div class="services-dropdown">
-            <div class="mythird">
-                <input type="button" class="nav-buttons" @onmouseover="ApplicantServiceshover" value="APPLICANT SERVICES" @onclick="ToApplicantServices" hidden="@ApplicantServicesHover" />
-                <input type="button" class="nav-buttons-pressed" value="APPLICANT SERVICES" @onclick="ToApplicantServices" hidden="@(!ApplicantServicesHover)" />
-
-            </div>
-            <div class="mythird">
-                <input type="button" class="nav-buttons" @onmouseover="HRServiceshover" value="HR SERVICES" @onclick="ToHRServices" hidden="@HRServicesHover" />
-                <input type="button" class="nav-buttons-pressed" value="HR SERVICES" @onclick="ToHRServices" hidden="@(!HRServicesHover)" />
-
-            </div>
-        </div>
-    }
 </div>
 
 @code {
