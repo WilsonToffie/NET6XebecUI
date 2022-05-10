@@ -96,6 +96,7 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool newRefInfo = false;
         private bool newPortFolioInfo = false;
 
+
         // private CustomHandler cust = new CustomHandler();
         string token;
 
@@ -823,8 +824,10 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private string storageAcc = "xebecstorage";
         private string imgContainer = "linkedincv";
-
+        private string azureCredentials = "?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-05-07T15:09:45Z&st=2022-05-06T07:09:45Z&spr=https&sig=qxeI0Xt9nd9SkysOYEnMFKqbYiocU%2BcfRK%2FpxN8yN0E%3D";
         private static int num = 1;
+
+
         async Task OnInputFileChangedAsync(InputFileChangeEventArgs e)
         {
 
@@ -848,7 +851,7 @@ namespace XebecPortal.UI.Pages.Applicant
                                   + fileNames.Name);
             Console.WriteLine("fileName " + fileNames.Name);
 
-            AzureSasCredential credential = new AzureSasCredential("?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupix&se=2024-12-02T20:36:17Z&st=2022-03-16T12:36:17Z&sip=1.1.1.1-255.255.255.255&spr=https&sig=nSCARiXySz%2BXLmtXJfZw28RkqfYUe%2FvDi11V9Q5Tpyo%3D");
+            AzureSasCredential credential = new AzureSasCredential(azureCredentials);
 
             BlobClient blobClient = new BlobClient(blobUri, credential, new BlobClientOptions());
             status.AppendLine("Created blob client");
@@ -927,7 +930,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 + "/"
                 + fileName);
 
-            AzureSasCredential credential = new AzureSasCredential("?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-05-04T17:43:51Z&st=2022-05-04T09:43:51Z&spr=https&sig=LmUPm%2BSGZPm%2Bi115YYmdV7hsdcaPaOurNP9WZ%2FeeVmI%3D");
+            AzureSasCredential credential = new AzureSasCredential(azureCredentials);
             BlobClient blobClient = new BlobClient(blobUri, credential);
 
             var res = await blobClient.UploadAsync(fileInfo.OpenReadStream(1512000), new BlobUploadOptions
@@ -956,8 +959,7 @@ namespace XebecPortal.UI.Pages.Applicant
 
                 // The endpoint would need to change
 
-                //var resp = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
-                                                                                                                                                                                                         // var newresp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo); //{personalInfo.Id}
+                //var resp = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo, new AuthenticationHeaderValue("Bearer", token));
             }
             else
             {
@@ -982,7 +984,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 + "/"
                 + fileName);
 
-            AzureSasCredential credential = new AzureSasCredential("?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-05-04T17:43:51Z&st=2022-05-04T09:43:51Z&spr=https&sig=LmUPm%2BSGZPm%2Bi115YYmdV7hsdcaPaOurNP9WZ%2FeeVmI%3D");
+            AzureSasCredential credential = new AzureSasCredential(azureCredentials);
             BlobClient blobClient = new BlobClient(blobUri, credential);
 
             var res = await blobClient.UploadAsync(fileInfo.OpenReadStream(1512000), new BlobUploadOptions
@@ -1038,7 +1040,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 + "/"
                 + fileName);
 
-            AzureSasCredential credential = new AzureSasCredential("?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-05-04T17:43:51Z&st=2022-05-04T09:43:51Z&spr=https&sig=LmUPm%2BSGZPm%2Bi115YYmdV7hsdcaPaOurNP9WZ%2FeeVmI%3D");
+            AzureSasCredential credential = new AzureSasCredential(azureCredentials);
             BlobClient blobClient = new BlobClient(blobUri, credential);
 
             var res = await blobClient.UploadAsync(fileInfo.OpenReadStream(1512000), new BlobUploadOptions
@@ -1094,7 +1096,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 + "/"
                 + fileName);
 
-            AzureSasCredential credential = new AzureSasCredential("?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-05-04T17:43:51Z&st=2022-05-04T09:43:51Z&spr=https&sig=LmUPm%2BSGZPm%2Bi115YYmdV7hsdcaPaOurNP9WZ%2FeeVmI%3D");
+            AzureSasCredential credential = new AzureSasCredential(azureCredentials);
             BlobClient blobClient = new BlobClient(blobUri, credential);
 
             var res = await blobClient.UploadAsync(fileInfo.OpenReadStream(1512000), new BlobUploadOptions
@@ -1150,7 +1152,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 + "/"
                 + fileName);
 
-            AzureSasCredential credential = new AzureSasCredential("?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-05-04T17:43:51Z&st=2022-05-04T09:43:51Z&spr=https&sig=LmUPm%2BSGZPm%2Bi115YYmdV7hsdcaPaOurNP9WZ%2FeeVmI%3D");
+            AzureSasCredential credential = new AzureSasCredential(azureCredentials);
             BlobClient blobClient = new BlobClient(blobUri, credential);
 
             var res = await blobClient.UploadAsync(fileInfo.OpenReadStream(1512000), new BlobUploadOptions
