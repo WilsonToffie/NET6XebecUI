@@ -130,6 +130,7 @@ namespace XebecPortal.UI.Shared
 
         private string storageAcc = "xebecstorage";//"storageaccountxebecac6b";
         private string imgContainer = "profile-images";//"images";
+        private string azureCredentials = "?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-05-07T15:09:45Z&st=2022-05-06T07:09:45Z&spr=https&sig=qxeI0Xt9nd9SkysOYEnMFKqbYiocU%2BcfRK%2FpxN8yN0E%3D";
         private string userPicInfo;
         private async Task UploadingProfilePic(InputFileChangeEventArgs e)
         {
@@ -148,7 +149,7 @@ namespace XebecPortal.UI.Shared
                 + "/"
                 + fileName);
 
-            AzureSasCredential credential = new AzureSasCredential("?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-05-04T17:43:51Z&st=2022-05-04T09:43:51Z&spr=https&sig=LmUPm%2BSGZPm%2Bi115YYmdV7hsdcaPaOurNP9WZ%2FeeVmI%3D");
+            AzureSasCredential credential = new AzureSasCredential(azureCredentials);
             BlobClient blobClient = new BlobClient(blobUri, credential);
 
             var res = await blobClient.UploadAsync(fileInfo.OpenReadStream(1512000), new BlobUploadOptions
@@ -162,10 +163,8 @@ namespace XebecPortal.UI.Shared
             });
 
             if (res.GetRawResponse().Status <= 205)
-            {
-                
-                // remember to fix / change later
-                personalInfo.Id = state.AppUserId; // 1st person in DB THIS NEEDS TO CHANGE TO BE THEIR ID
+            {               
+                personalInfo.Id = state.AppUserId; 
                 personalInfo.ImageUrl = blobUri.ToString();
                 Console.WriteLine("Result is true whooooo");
                 var content = new FormUrlEncodedContent(new[]
