@@ -527,7 +527,7 @@
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
                                         <h5 class="card-text small-card-location">Department:</h5> &nbsp;
-                                        <h5 class="text-muted small-card-company">@displayJobDetail.Department</h5>
+                                        <h5 class="text-muted small-card-company">@displayJobDetail.Department.Name</h5>
                                     </div>
                                     <div class="col-12 p-2">
                                         <textarea readonly class="form-control p-2 description-text border border-2" @bind="displayJobDetail.Description"></textarea>
@@ -536,7 +536,7 @@
                                         @* <p>@displayJobDetail.JobPlatforms</p> *@
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
-                                        @if (candidates.Where(x => x.AppUserId == state.AppUserId && x.jobId == currentJob).FirstOrDefault() != null)
+                                        @if (applicationList != null && applicationList.Count(x => x.AppUserId == state.AppUserId && x.JobId == displayJobDetail.Id) > 0)
                                         {
                                             <p>You Have Applied For This Post</p>
                                         }
