@@ -672,7 +672,7 @@
                     }
                 </MudSelect>
 
-                <MudSelect T="AppUser" Class="collaborators-mudselect" DisableUnderLine="true" ToStringFunc="converter" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" MultiSelection="true" Label="Select Collaborators" SelectedValuesChanged="testfunc">
+                <MudSelect T="AppUser" Class="collaborators-mudselect" DisableUnderLine="true" ToStringFunc="converter" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" MultiSelection="true" Label="Select Collaborators" @bind-SelectedValues="ListOfCollaborators" @bind-SelectedValues:event="onchange">
                     @if (AppUserList.Any() == true)
                     {
                         @foreach (var user in AppUserList)
@@ -682,9 +682,6 @@
                     }
                 </MudSelect>
             </div>
-
-
-
 
 
 
@@ -740,10 +737,10 @@ else if (prevPage)
     private List<CollaboratorsAssigned> collaborators = new List<CollaboratorsAssigned>();
     AppUser HiringLead = new();
     Func<AppUser, string> converter = x => x?.name;
+    List<AppUser> ListOfCollaborators = new();
 
-    List<AppUser> ListOfCollaborators;
     private List<string> SelectedUsers = new List<string>();
-    public Dictionary<FormQuestion, List<string>> QuestionsDictionary = new Dictionary<FormQuestion, List<string>>();
+    public Dictionary<FormQuestion, List<AppUser>> QuestionsDictionary = new Dictionary<FormQuestion, List<AppUser>>();
 
     bool nextPage;
     bool prevPage;
@@ -751,10 +748,13 @@ else if (prevPage)
     public List<CollaboratorQuestion> CollabQuestions = new List<CollaboratorQuestion>();
 
 
-    int JobId = 1;
+    //int JobId = 1;
 
-    //[Parameter]
-    //public int JobId { get; set; }
+    [Parameter]
+    public int JobId { get; set; }
+
+    [Parameter]
+    public EventCallback<int> JobIdChanged { get; set; }
 
     //our questions
     [Parameter]
@@ -774,98 +774,59 @@ else if (prevPage)
 
         AppUserList = await HttpClient.GetListJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user", new AuthenticationHeaderValue("Bearer", token));
         AppUserList = AppUserList.Where(x => x.role != "Candidate").ToList();
+
         collaborators = await HttpClient.GetListJsonAsync<List<CollaboratorsAssigned>>("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", new AuthenticationHeaderValue("Bearer", token));
+
         CollabQuestions = await HttpClient.GetListJsonAsync<List<CollaboratorQuestion>>("https://xebecapi.azurewebsites.net/api/collaboratorquestion", new AuthenticationHeaderValue("Bearer", token));
 
 
-        if (collaborators.Exists(x => x.JobId == JobId && x.Name == "Hiring Lead"))
+        //check for hiring lead, if it exists, load it
+        try
         {
-            //HiringLead = AppUserList.Find(y => y.id == collaborators.Find(x => x.JobId == JobId && x.Name == "Hiring Lead").AppUserId).name;
+            HiringLead = AppUserList.Find(y => y.id == collaborators.Find(x => x.JobId == JobId && x.Name == "Hiring Manager").AppUserId);
+        }
+        catch
+        {
+            Console.WriteLine("No hiring lead for this job");
         }
 
-        if (collaborators.Exists(x => x.JobId == JobId && x.Name == "Collaborator"))
+
+        //same for collaborators
+        try
         {
             foreach (var collab in collaborators.Where(x => x.JobId == JobId && x.Name == "Collaborator"))
             {
-                SelectedUsers.Add(AppUserList.Find(x => x.id == collab.AppUserId).name);
+                ListOfCollaborators.Add(AppUserList.Find(x => x.id == collab.AppUserId));
             }
         }
-
-        //time to load collabquestions and assign to their questions
-        if (ChosenQuestions.Exists(x => CollabQuestions.Exists(y => y.FormQuestionId == x.id)))
+        catch
         {
-            //this is getting really tedious and slow
+            Console.WriteLine("No collaborators");
 
-            //this needs a jobid endpoint for sure
-            //foreach(var item in CollabQuestions)
         }
 
 
+        //questions and their collabs
 
-        if (ChosenQuestions != null)
+        try
         {
-            foreach (var q in ChosenQuestions)
+            foreach(var question in ChosenQuestions)
             {
-                QuestionsDictionary.Add(q, new List<string>());
+                QuestionsDictionary.Add(question, new List<AppUser>());
 
-                foreach (var k in CollabQuestions.Where(x => x.FormQuestionId == q.id))
+                foreach (var k in CollabQuestions.Where(x => x.FormQuestionId == question.id))
                 {
-                    QuestionsDictionary[q].Add(AppUserList.FirstOrDefault(x => x.id == k.AppUserId).name);
+                    QuestionsDictionary[question].Add(AppUserList.FirstOrDefault(x => x.id == k.AppUserId));
                 }
             }
         }
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
-
-    }
-
-
-    private void DragCollaborator(string item)
-    {
-        CurrentItem = item;
-    }
-
-    private void AddToList(List<string> list)
-    {
-        if (!list.Exists(x => x == CurrentItem))
+        catch
         {
-            list.Add(CurrentItem);
+            Console.WriteLine("Problem loading questions");
         }
+
     }
 
-    private void SelectCollaborator(ChangeEventArgs e)
-    {
-        if (SelectedUsers.Count == 0)
-        {
-            SelectedUsers.Add(e.Value.ToString());
-
-        }
-        else if (!SelectedUsers.Exists(q => q == e.Value.ToString()))
-        {
-            SelectedUsers.Add(e.Value.ToString());
-        }
-    }
-
-
-
-    private void RemoveItem(DragEventArgs e)
-    {
-        Console.WriteLine(e.DataTransfer.Items[0]);
-    }
-
-
-
-    private void RemoveFromCollabs(string user)
-    {
-        SelectedUsers.Remove(user);
-    }
-
-    private void RemoveFromQuestion(string user, List<string> list)
-    {
-        list.Remove(user);
-    }
 
     private async Task Save()
     {
@@ -913,26 +874,13 @@ else if (prevPage)
 
     private async Task testfunc(IEnumerable<AppUser> value)
     {
-        foreach(var x in value)
-        {
-            Console.WriteLine(x.name);
-
-        }
+        //SelectedUsers = value;
     }
 
 
     private void Prev()
     {
-        //prevPage = true;
-
-        Console.WriteLine(HiringLead.name);
-
-        foreach(var x in ListOfCollaborators)
-        {
-            Console.WriteLine(x.name);
-
-        }
-
+        prevPage = true;
     }
 
     private void Next()
