@@ -8,7 +8,6 @@
 @using XebecPortal.UI.Shared.Home.Models
 @inject UserState state
 @using Microsoft.Extensions.Logging
-@inject ILogger<MainLayout> Logger
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 <style>
 
@@ -26,6 +25,8 @@
         left: 0;
         height: 10vh;
         background-color: white;
+        width: 100vw;
+        display: flex;
     }
 
     .main {
@@ -56,7 +57,7 @@
     }
 
     .mainlayout-heading {
-        width: 70%;
+        width: 70vw;
         top: 0;
     }
 
@@ -89,12 +90,11 @@
         margin-top: 2vh;
     }
 
-    .nav {
-        width: 30%;
+    .main-nav {
+        width: 30vw;
         height: 10vh;
         top: 0;
-        justify-content: right;
-        justify-items: right;
+        text-align:end;
     }
 
     .nav-menu {
@@ -421,6 +421,7 @@
             border: none;
             margin-left: 25%;
         }
+
     .upload-image {
         color: transparent;
         width: 2em;
@@ -441,22 +442,26 @@
         left: 0;
         z-index: -2;
     }
+    .navmenu-icons{
+        color: #00bcae;
+        font-size: 40px;
+        line-height: 10vh;
+        margin-right: 1.8vw;
+    }
 </style>
 
 @if (state.Role.Equals("Candidate"))
 {
     <div class="page">
         <div class="header">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="mainlayout-heading">
-                    <div class="mainlayout-xebec-heading">
-                        <div class="mainlayout-xebec-logo"></div>
-                    </div>
+            <div class="mainlayout-heading">
+                <div class="mainlayout-xebec-heading">
+                    <div class="mainlayout-xebec-logo"></div>
                 </div>
-                <div class="nav">
-                    <img class="icon-menu" src="/Img/list.svg" data-bs-toggle="offcanvas" data-bs-target="#showApplicantNav" aria-controls="offcanvasRight" />
-                    <img class="icon-menu" src="/Img/settings.svg" data-bs-toggle="offcanvas" data-bs-target="#showApplicantNavAlert" aria-controls="offcanvasRight" />
-                </div>
+            </div>
+            <div class="main-nav">
+                <i class="fas fa-cog navmenu-icons" data-bs-toggle="offcanvas" data-bs-target="#showApplicantNavAlert" aria-controls="offcanvasRight"></i>
+                <i class="fas fa-bars navmenu-icons" data-bs-toggle="offcanvas" data-bs-target="#showApplicantNav" aria-controls="offcanvasRight"></i>
             </div>
         </div>
 
@@ -599,15 +604,13 @@
 {
     <div class="page">
         <div class="header">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="mainlayout-heading">
-                    <div class="mainlayout-xebec-heading">
-                        <div class="mainlayout-xebec-logo"></div>
-                    </div>
+            <div class="mainlayout-heading">
+                <div class="mainlayout-xebec-heading">
+                    <div class="mainlayout-xebec-logo"></div>
                 </div>
-                <div class="nav">
-                    <img class="icon-menu" src="/Img/list.svg" data-bs-toggle="offcanvas" data-bs-target="#showHRNav" aria-controls="offcanvasRight" />
-                </div>
+            </div>
+            <div class="main-nav">
+                <i class="fas fa-bars navmenu-icons"  data-bs-toggle="offcanvas" data-bs-target="#showHRNav" aria-controls="offcanvasRight"></i>
             </div>
         </div>
         <div class="offcanvas offcanvas-end nav-menu" tabindex="-1" id="showHRNav" aria-labelledby="offcanvasRightLabel">
@@ -640,7 +643,13 @@
                     <div class="icons"><i class="fa fa-briefcase" aria-hidden="true"></i></div><h2 class="nav-link-text">Job Portal</h2>
                 </div>
                 <div class="nav-link" @onclick="showHRCreateAJob">
-                    <div class="icons"><i class="fas fa-cubes"></i></div><h2 class="nav-link-text">Create A Job</h2>
+                    <div class="icons"><i class="fas fa-cubes" aria-hidden="true"></i></div><h2 class="nav-link-text">Create A Job</h2>
+                </div>
+                <div class="nav-link" @onclick="showHRApplicantPortal">
+                    <div class="icons"><i class="fas fa-address-card" aria-hidden="true"></i></div><h2 class="nav-link-text">Applicant Portal</h2>
+                </div>
+                <div class="nav-link" @onclick="showHRPhaseManager">
+                    <div class="icons"><i class="fas fa-exchange-alt" aria-hidden="true"></i></div><h2 class="nav-link-text">Phase Manager</h2>
                 </div>
             </div>
             <div class="infodiv">
@@ -661,6 +670,14 @@
                 @if (hrCreateAJob)
                 {
                     <XebecPortal.UI.Pages.HR.CreateJob />
+                }
+                @if (hrApplicantPortal)
+                {
+                    <XebecPortal.UI.Pages.HR.ApplicantPortal />
+                }
+                @if (hrPhaseManager)
+                {
+                    <XebecPortal.UI.Pages.HR.PhaseManager />
                 }
             </div>
         </div>

@@ -32,7 +32,7 @@ namespace XebecPortal.UI.Shared
         private string Initials = "";
         private bool applicantApplicationProfile, applicantJobPortal, applicantMyJobs;
 
-        private bool hrDataAnalyticsTool, hrJobPortal, hrCreateAJob;
+        private bool hrDataAnalyticsTool, hrJobPortal, hrCreateAJob,hrApplicantPortal, hrPhaseManager;
         private string token;
         private List<Department> departments;
 
@@ -94,6 +94,23 @@ namespace XebecPortal.UI.Shared
             hrDataAnalyticsTool = false;
             hrJobPortal = false;
             hrCreateAJob = true;
+        }
+
+        private void showHRApplicantPortal()
+        {
+            hrDataAnalyticsTool = false;
+            hrJobPortal = false;
+            hrCreateAJob = false;
+            hrApplicantPortal = true;
+            hrPhaseManager = false;
+        }
+        private void showHRPhaseManager()
+        {
+            hrDataAnalyticsTool = false;
+            hrJobPortal = false;
+            hrCreateAJob = false;
+            hrApplicantPortal = false;
+            hrPhaseManager = true;
         }
 
         private async Task Logout()

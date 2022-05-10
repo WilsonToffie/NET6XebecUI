@@ -1,14 +1,14 @@
 @page "/"
 @inject NavigationManager navmanager
 @inject HttpClient httpclient
-@using System.Media   
+@using System.Media
 @using System.Linq;
 @using XebecPortal.UI.Shared.Home.Models
 @using System;
 @using System.IO;
 @using System.Threading.Tasks
-@*@using Microsoft.Azure.Storage*@
 @using Azure
+@using System.Net.Http.Headers;
 @using Azure.Storage.Blobs
 @using Azure.Storage.Blobs.Models
 @inject IJSRuntime JS
@@ -17,7 +17,7 @@
     .home-container {
         height: 90vh;
         width: 100vw;
-        animation:ease-in 0.15s;
+        animation: ease-in 0.15s;
     }
 
     .overlay-home {
@@ -148,5 +148,5 @@
 
 @code{
 
-
+    
 }

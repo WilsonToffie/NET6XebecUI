@@ -104,16 +104,7 @@
             cursor: pointer;
         }
 
-    .appform-container {
-        height: 55vh;
-        width: 70%;
-        margin-left: 15%;
-        margin-right: 15%;
-        background-color: rgba(255,255,255,1);
-        border: solid white 0.1em;
-        box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
-        display: flex;
-    }
+
 
     .appform-left-buttons {
         margin-top: 5vh;
@@ -405,10 +396,7 @@
     }
 
     /*new styles*/
-    .collaborators-form {
-        width: 100%;
-        height: 100%;
-    }
+
 
     .collaborators-title {
         height: 8%;
@@ -428,7 +416,7 @@
         font-size: 1.8em;
     }
 
-    .collaborators-hiring-lead{
+    .collaborators-hiring-lead {
         width: 50%;
         display: flex;
         justify-content: space-between;
@@ -442,7 +430,7 @@
         justify-content: center;
     }
 
-    .dropdown-container{
+    .dropdown-container {
         width: 100%;
         height: 6%;
         display: flex;
@@ -484,18 +472,11 @@
 
     .collaborators-listed {
         width: 100%;
-        height: 23%;
+        max-height: 23%;
         display: flex;
-        justify-content: center;
+        justify-content: space-evenly;
         align-items: center;
         padding-top: 5px;
-    }
-
-    .collaborators-listed-list {
-        columns: 8;
-        max-width: 100%;
-        height: 100%;
-        overflow-x: hidden;
     }
 
     .collaborators-questions-area {
@@ -529,6 +510,7 @@
         width: 100%;
         display: flex;
         justify-content: center;
+        overflow-y: auto;
     }
 
     .collaborators-question-card-list {
@@ -546,538 +528,365 @@
     }
 
     .question-appuser-item {
-        color: #d35bc9;
-    }
-
-    .collaborator-item-pill{
+        width: 100px;
+        height: 30px;
+        word-break: break-word;
         border-radius: 10px;
         background-color: lightpink;
+        color: #d35bc9;
     }
+    .collaborator-item-pill {
+        height: 40px;
+        width: 100px;
+        border-radius: 20px;
+        display: flex;
+        background-color: #00BCAE;
+        border: 1px solid blue;
+        font-weight: 500;
+        padding-left: 0.2em;
+        padding-right: 0.2em;
+    }
+
+    .collaborator-item-pill-content {
+        border-radius: 20px;
+        width: 80%;
+        word-wrap: break-word;
+        color: white;
+        display: flex;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .collaborator-item-pill-close {
+        border-radius: 20px;
+        width: 20%;
+        display: flex;
+        align-items: center;
+    }
+
+/*    attempt 3*/
+
+    .collaborators-appform-container {
+        height: 55vh;
+        width: 70%;
+        margin-left: 15%;
+        margin-right: 15%;
+        background-color: rgba(255,255,255,1);
+        border: solid white 0.1em;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
+        display: flex;
+    }
+
+    .collaborators-form {
+        width: 100%;
+        height: 100%;
+    }
+
+    .collaborators-form-title {
+        height: 15%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-family: opensans-condensed-bold;
+        font-size: 2em;
+        font-weight: 900;
+        color: #004393;
+        margin-top: 0.5vh;
+        text-transform: uppercase;
+    }
+
+    .collaborators-form-body {
+        height: 85%;
+        width: 100%;
+        display: flex;
+    }
+
+    .collaborators-form-left {
+        height: 100%;
+        width: 50%;
+        border-right: 1px solid black;
+        background-color: lightgrey;
+    }
+
+    .collaborators-form-right {
+        height: 100%;
+        width: 50%;
+        overflow-y: auto;
+        background-color: lightgreen;
+    }
+
+    .collaborators-mudselect {
+        width: 80%;
+        cursor: pointer;
+        background-color: white;
+        height: 7vh;
+        font-size: 1.5em;
+        font-weight: bold;
+        color: black;
+        border-radius: 1em;
+        padding-bottom: 5vh;
+        padding-left: 4vh;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
+    }
+
+        .collaborators-mudselect:hover {
+            border-radius: 1em;
+            border: 0.1em solid black;
+        }
+
+    .collaborators-question-item {
+        width: 100%;
+        height: 35%;
+        text-align: center;
+        align-items: center;
+        word-wrap: break-word;
+        padding: 5px;
+        border: 1px solid grey;
+        background-color: lightsalmon;
+    }
+
 
 </style>
 <!--Tables of developers/HR-->
-<div class="appform-container">
+
+@if (!prevPage && !nextPage)
+{
+<div class="collaborators-appform-container">
     <div class="collaborators-form">
-        <div class="collaborators-title">
-            <h2 class="collaborators-title-text">SELECT COLLABORATORS</h2>
+
+        <div class="collaborators-form-title">
+            Select Collaborators
         </div>
-        <div class="hiring-lead-container">
-            <div class="collaborators-hiring-lead">
-                Select the hiring lead for this job:
-                <select @onchange="SelectHiringLead">
-                    <option selected disabled>
-                        Select Collaborators
-                    </option>
-                    @foreach (var collaborator in collaborators)
+        <div class="collaborators-form-body">
+            <div class="collaborators-form-left">
+                <MudSelect T="AppUser" Class="collaborators-mudselect" ToStringFunc="converter" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter"  @bind-Value="HiringLead" Placeholder="Select Hiring Lead">
+                    @if (AppUserList.Any() == true)
                     {
-                        <option>@collaborator.name @collaborator.surname</option>
-                    }
-                </select>
-            </div>
-        </div>
-
-        <div class="hiring-lead-selected">
-            @if (HiringLead!="")
-            {
-                <div class="collaborator-item-pill">
-                    @HiringLead
-                    <span @onclick="RemoveHiringLead">
-                        <i class="fa fa-question-circle edit-icon"></i>
-                    </span>
-                </div>
-            }
-
-        </div>
-        <div class="dropdown-container">
-            <div class="collaborators-dropdown">
-                    Select collaborators:
-                    <select @onchange="SelectCollaborator">
-                        <option selected disabled>
-                            Select Collaborators
-                        </option>
-                        @foreach (var collaborator in collaborators)
+                        @foreach (var user in AppUserList)
                         {
-                            <option>@collaborator.name @collaborator.surname</option>
+                            <MudSelectItem T="AppUser" Value="user"></MudSelectItem>
                         }
-                    </select>
+                    }
+                </MudSelect>
+
+                <MudSelect T="AppUser" Class="collaborators-mudselect" DisableUnderLine="true" ToStringFunc="converter" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" MultiSelection="true" Label="Select Collaborators" @bind-SelectedValues="ListOfCollaborators" @bind-SelectedValues:event="onchange">
+                    @if (AppUserList.Any() == true)
+                    {
+                        @foreach (var user in AppUserList)
+                        {
+                            <MudSelectItem T="AppUser" Value="user"></MudSelectItem>
+                        }
+                    }
+                </MudSelect>
             </div>
-        </div>
 
-        <div class="collaborators-tooltip">
-            <h3 class="collaborators-tooltip-text">
-                Drag Collaborators to allow them to view application form answers.
-            </h3>
-        </div>
-        <div class="collaborators-listed">
-            <ul class="collaborators-listed-list" ondragover="event.preventDefault();" ondragstart="event.dataTransfer.setData('', event.target.id);">
-                @foreach (var collaborator in SelectedUsers)
+
+
+            <div class="collaborators-form-right">
+                @foreach(var item in ChosenQuestions)
                 {
-                    <div class="collaborator-item-pill">
-                        <li class="collaborators-appuser-item" draggable="true" @ondragstart="@(() => DragCollaborator(collaborator))">
-                            @collaborator
-                        </li>
-                        <span @onclick="() => RemoveFromCollabs(collaborator)">
-                            <i class="fa fa-question-circle edit-icon"></i>
-                        </span>
-                    </div>
-                }
-            </ul>
-        </div>
-        <div class="collaborators-questions-area">
-            @foreach (var q in QuestionsDictionary)
-            {
-                <div class="collaborators-question-card" @ondrop="() => AddToList(q.Value)" ondragover="event.preventDefault();">
-                    <div class="collaborators-question-card-title">
-                        @q.Key.question
-                    </div>
-                    <br />
-                    <div class="collaborators-question-card-body">
-                        <ul class="collaborators-chosen-list">
-                            @foreach (var user in q.Value)
+                <div class="collaborators-question-item">
+                    @item.question
+
+                    <MudSelect T="string" Class="collaborators-mudselect" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" MultiSelection="true" Label="Select Collaborators">
+                        @if (SelectedUsers.Any() == true)
+                        {
+                            @foreach (var user in AppUserList)
                             {
-                                <div>
-                                    <li class="question-appuser-item" draggable="true" @ondragend="RemoveItem">
-                                        @user
-                                    </li>
-                                    <span @onclick="() => RemoveFromQuestion(user, q.Value)">
-                                        <i class="fa fa-question-circle edit-icon"></i>
-                                    </span>
-                                </div>
-
+                                <MudSelectItem T="string" Value="user.name">user</MudSelectItem>
                             }
-                        </ul>
-                    </div>
+                        }
+                    </MudSelect>
                 </div>
-            }
+                }
 
+
+            </div>
         </div>
     </div>
 
-    @*<div class="collaborators-left">
-            <div class="collaborators-heading">
-                <h2 class="collaborators-heading-text">Select Collaborators</h2>
-            </div>
-            <div class="appform-left-main">
-                <div class="collaborators-left-table">
-                    @if (collaborators == null)
-                    {
-                        <div>Loading...</div>
-                    }
-                    else
-                    {
-                        if (collaborators != null)
-                        {
-                            for (var index = 0; index < collaborators.Count; index++)
-                            {
-                                var collaborator = collaborators[index];
-                                var avatar = avatars.FirstOrDefault(i => i.Id == index)?.Avatar;
-
-                                <div class="@DeveloperCardClass(collaborator) pl-2 collaborator-div" @onclick="() => AddCollaborator(collaborator)" style="height: 8vh;">
-
-                                    <div class="developer-profile-picture col-2 ml-2">
-                                        <img src="@avatar" alt="Avatar">
-                                    </div>
-                                    <span class="collaborator-name">@collaborator.name @collaborator.surname</span>
-                                </div>
-                            }
-                        }
-                    }
-                </div>
-
-
-            </div>
-        </div>
-        <div class="collaborators-right">
-            <div class="collaborators-heading">
-                <h2 class="collaborators-heading-text">Chosen Collaborators</h2>
-                @if (collaboratorsAdded != null && collaboratorsAdded.Count > 0)
-                {
-                    <a href="mailto:@collaboratorsAdded[0].email?subject=Recruit Team Assignment&cc=@GetCC(collaboratorsAdded)&body=@GetBody(collaboratorsAdded)!"
-                       class="btn btn-info-email mb-3"
-                       data-toggle="tooltip" data-placement="top" title="Send an email to all team members">
-                        Email Team<span style="margin-left: 1vw"></span><i class="fas fa-paper-plane"></i>
-                    </a>
-                }
-            </div>
-            <div class="collaborators-left-main">
-
-                <div class="collaborators-left-table">
-
-                    @if (collaboratorsAdded != null)
-                    {
-                        foreach (var developer in collaboratorsAdded)
-                        {
-                            <div class="right-list-item-preview">
-                                <div class="close-item-panel">
-                                    <span @onclick="() => RemoveCollaborator(developer)">
-                                        <i class="fas fa-times"></i>
-                                    </span>
-                                </div>
-                                <div class="preview-item-body">
-                                    <div class="preview-item-description">
-                                        <p class="">
-                                            @developer.name @developer.surname
-                                            <a class="info-email" href="mailto:@(developer.email)?subject=Recruit Team Assignment&body=@GetBody(developer)!" data-toggle="tooltip" data-placement="top" title="Send an email to @developer.email">
-                                                <i class="fa fa-envelope" aria-hidden="true"></i>
-                                            </a>
-                                        </p>
-                                    </div>
-                                    <div class="preview-item-control">
-                                        <div class="form-control" style="width: 100%;">
-                                            @if (ChosenQuestions is { Count: > 0 })
-                                            {
-                                                <details style="max-height: 20vh; overflow-y: auto; width: 100%">
-                                                    <summary style="width: 100%">Question & Answer access <small style="" class="text-right font-italic">Click here!</small></summary><br />
-                                                    <small class="text-muted">Choose which candidate questions & answers the <u>@developer.name</u> has access to.</small><br />
-                                                    @for (var index = 0; index < ChosenQuestions.Count; index++)
-                                                    {
-                                                        List<FormQuestion> questions = new();
-
-                                                        var question = ChosenQuestions[index];
-                                                        <label class="access-question @GetHighlighting(question, developer)">
-                                                            @(index + 1). @question.question <input style="display: block" type="checkbox" @onchange="() => AddOrRemoveQuestion(question, developer)" />
-                                                        </label>
-                                                    }
-                                                </details>
-                                            }
-                                            else
-                                            {
-                                                <p>No custom questions selected</p>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    }
-
-                </div>
-
-            </div>
-
-        </div>*@
+    <div class="bottom-buttons">
+        <input type="button" value="Prev" class="button-functions" @onclick="Prev" />
+        <input type="button" value="Save" class="button-functions" @onclick="Save" />
+        <input type="button" value="Next" class="button-functions" @onclick="Next" />
+    </div>
 </div>
 
-<input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save" />
-
-@*<input type="button" value="Prev" class="createjob-bottom-main-button" @onclick="Save" />
-<input type="button" value="Prev" class="createjob-bottom-main-button" @onclick="Save" />
-<input type="button" value="Prev" class="createjob-bottom-main-button" @onclick="Save" />*@
 
 
 
 
+}
+else if (nextPage)
+{
+    <XebecPortal.UI.Pages.HR.PhaseControlTool />
+}
+else if (prevPage)
+{
+    <XebecPortal.UI.Pages.HR.ApplicationFormControlTool />
+}
 
 
 @code {
 
-    //stuff im using
-
-    //item that is being dragged
     private string CurrentItem;
+    private List<AppUser> AppUserList = new List<AppUser>();
+    private List<CollaboratorsAssigned> collaborators = new List<CollaboratorsAssigned>();
+    AppUser HiringLead = new();
+    Func<AppUser, string> converter = x => x?.name;
+    List<AppUser> ListOfCollaborators = new();
 
-    //appuser list
-    private List<AppUser> collaborators = new List<AppUser>();
-
-    //var to save hiring lead name
-    string HiringLead = "";
-
-    //This is the list of appusers selected as collaborators for this job
     private List<string> SelectedUsers = new List<string>();
+    public Dictionary<FormQuestion, List<AppUser>> QuestionsDictionary = new Dictionary<FormQuestion, List<AppUser>>();
 
-    //this is to list which users have access to which questions
-    public Dictionary<FormQuestion, List<string>> QuestionsDictionary = new Dictionary<FormQuestion, List<string>>();
+    bool nextPage;
+    bool prevPage;
 
-    //hrquestions based on jobId
-    //public List<FormQuestion> ChosenQuestions = new List<FormQuestion>();
-
-    //loads current data for draft jobs
     public List<CollaboratorQuestion> CollabQuestions = new List<CollaboratorQuestion>();
 
 
-    int JobId = 1;
+    //int JobId = 1;
 
-    //[Parameter]
-    //public int JobId { get; set; }
+    [Parameter]
+    public int JobId { get; set; }
 
+    [Parameter]
+    public EventCallback<int> JobIdChanged { get; set; }
 
-
-
-
-    //to delete
+    //our questions
     [Parameter]
     public List<FormQuestion> ChosenQuestions { get; set; }
 
-
     [Parameter]
-    public CreateJobPost TempJob { get; set; }
-
-    [Parameter]
-    public EventCallback<CreateJobPost> TempJobChanged { get; set; }
-
-    [Parameter]
-    public Dictionary<AppUser, List<FormQuestion>> Map { get; set; }
-
-
-    //private List<AppUser> collaboratorsAdded = new List<AppUser>();
-    //private List<Applicant> avatars = new();
+    public EventCallback<List<FormQuestion>> ChosenQuestionsChanged { get; set; }
 
     string token;
+
     protected override async Task OnInitializedAsync()
     {
+        nextPage = false;
+        prevPage = false;
+
         token = await localStorage.GetItemAsync<string>("jwt_token");
 
-        //this could be limited to non candidate roles
-        collaborators = await HttpClient.GetListJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user", new AuthenticationHeaderValue("Bearer", token));
-        //ChosenQuestions = await HttpClient.GetListJsonAsync<List<FormQuestion>>($"https://xebecapi.azurewebsites.net/api/questionnaire/job/{JobId}", new AuthenticationHeaderValue("Bearer", token));
+        AppUserList = await HttpClient.GetListJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user", new AuthenticationHeaderValue("Bearer", token));
+        AppUserList = AppUserList.Where(x => x.role != "Candidate").ToList();
+
+        collaborators = await HttpClient.GetListJsonAsync<List<CollaboratorsAssigned>>("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", new AuthenticationHeaderValue("Bearer", token));
+
         CollabQuestions = await HttpClient.GetListJsonAsync<List<CollaboratorQuestion>>("https://xebecapi.azurewebsites.net/api/collaboratorquestion", new AuthenticationHeaderValue("Bearer", token));
 
 
-        if(ChosenQuestions!=null)
+        //check for hiring lead, if it exists, load it
+        try
         {
-            foreach(var q in ChosenQuestions)
-            {
-                QuestionsDictionary.Add(q, new List<string>());
+            HiringLead = AppUserList.Find(y => y.id == collaborators.Find(x => x.JobId == JobId && x.Name == "Hiring Manager").AppUserId);
+        }
+        catch
+        {
+            Console.WriteLine("No hiring lead for this job");
+        }
 
-                foreach(var k in CollabQuestions.Where(x => x.FormQuestionId == q.id))
+
+        //same for collaborators
+        try
+        {
+            foreach (var collab in collaborators.Where(x => x.JobId == JobId && x.Name == "Collaborator"))
+            {
+                ListOfCollaborators.Add(AppUserList.Find(x => x.id == collab.AppUserId));
+            }
+        }
+        catch
+        {
+            Console.WriteLine("No collaborators");
+
+        }
+
+
+        //questions and their collabs
+
+        try
+        {
+            foreach(var question in ChosenQuestions)
+            {
+                QuestionsDictionary.Add(question, new List<AppUser>());
+
+                foreach (var k in CollabQuestions.Where(x => x.FormQuestionId == question.id))
                 {
-                    QuestionsDictionary[q].Add(collaborators.FirstOrDefault(x => x.id == k.AppUserId).name);
+                    QuestionsDictionary[question].Add(AppUserList.FirstOrDefault(x => x.id == k.AppUserId));
                 }
             }
         }
-
-
-        //if (collaborators != null)
-        //{
-        //    var f = new Faker<Applicant>()
-        //        .RuleFor(a => a.Id, faker => faker.IndexFaker)
-        //        .RuleFor(a => a.Avatar, faker => faker.Person.Avatar);
-        //    avatars = f.Generate(collaborators.Count);
-        //}
-        //if (Map == null)
-        //{
-        //    Map = new();
-        //}
-        //foreach (var collaborator in collaborators)
-        //{
-        //    Map.Add(collaborator, new());
-        //}
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
-        //QuestionsDictionary.Clear();
-
-        //foreach (var q in ChosenQuestions)
-        //{
-        //    QuestionsDictionary.Add(q, new List<string>());
-        //}
-    }
-
-    //private void AddCollaborator(AppUser collaborator)
-    //{
-    //    if (!collaboratorsAdded.Contains(collaborator))
-    //    {
-    //        collaboratorsAdded.Add(collaborator);
-    //    }
-    //}
-
-    //private void RemoveCollaborator(AppUser collaborator)
-    //{
-    //    collaboratorsAdded.Remove(collaborator);
-    //}
-
-    //private async Task Save()
-    //{
-    //    TempJob.Collaborators = collaboratorsAdded;
-    //    Console.WriteLine("Saving Collaborator");
-    //    await TempJobChanged.InvokeAsync(TempJob);
-    //}
-
-    //private object DeveloperCardClass(AppUser developer)
-    //{
-    //    if (collaboratorsAdded.FindAll(d => d.id == developer.id).Count() > 0)
-    //        return "appform-left-row-selected";
-    //    return "appform-left-row";
-    //}
-
-    //private string GetBody(AppUser developer)
-    //{
-    //    return $"Good Day {developer.name} {developer.surname},%0D%0A%0D%0AThis%20is%20to%20inform%20you%20that%20you%20are%20now%20part%20of%20the%20recruitment%20team.%0D%0A%0D%0AWe're%20excited%20to%20have%20you!";
-    //}
-
-    //private void EmailTeam()
-    //{
-    //}
-
-    //private object GetBody(List<AppUser> collaborators)
-    //{
-    //    return "Good Day Team,%0D%0A%0D%0AThis%20is%20to%20welcome%20you%20all%20to%20the%20recruitment%20team.%0D%0A%0D%0AWe're%20excited%20to%20have%20you!";
-    //}
-
-    //private object GetCC(List<AppUser> team)
-    //{
-    //    if (team.Count == 1)
-    //    {
-    //        return team[0].email;
-    //    }
-    //    StringBuilder cc = new StringBuilder();
-    //    for (int i = 1; i < team.Count; i++)
-    //    {
-    //        var email = team[i].email;
-    //        cc.Append($"{email},");
-    //    }
-    //    return cc.ToString();
-    //}
-
-    //private string GetHighlighting(FormQuestion question, AppUser collaborator)
-    //{
-    //    if (!Map.ContainsKey(collaborator))
-    //    {
-    //        Map.Add(collaborator, new());
-    //    }
-
-    //    List<FormQuestion> formQuestions = Map[collaborator];
-    //    if (formQuestions == null)
-    //        formQuestions = new();
-
-    //    if (formQuestions.FindAll(q => q.id == question.id).Any())
-    //    {
-    //        Console.WriteLine($"Styling {question.question} - {collaborator.name}");
-    //        return "bg-info text-white font-weight-bold col-12";
-    //    }
-    //    Console.WriteLine($"no style for {question.question} - {collaborator.name}");
-    //    return "";
-    //}
-
-    //private void AddOrRemoveQuestion(FormQuestion question, AppUser collaborator)
-    //{
-    //    //Check if collaborator exists
-    //    if (!Map.ContainsKey(collaborator))
-    //    {
-    //        Map.Add(collaborator, new());
-    //    }
-
-    //    List<FormQuestion> formQuestions = Map[collaborator];
-    //    if (formQuestions == null)
-    //        formQuestions = new();
-
-    //    if (formQuestions.FindAll(q => q.id == question.id).Any())
-    //    {
-    //        Console.WriteLine($"Removing {question.question} - {collaborator.name}");
-    //        formQuestions.RemoveAll(q => q.id == question.id);
-    //    }
-    //    else
-    //    {
-    //        Console.WriteLine($"Add {question.question} - {collaborator.name}");
-    //        formQuestions.Add(question);
-    //    }
-    //    Map[collaborator] = formQuestions;
-    //}
-
-
-
-
-
-
-    //attempt 2
-
-    private void DragCollaborator(string item)
-    {
-        CurrentItem = item;
-    }
-
-    private void AddToList(List<string> list)
-    {
-        if(!list.Exists(x => x == CurrentItem))
+        catch
         {
-            list.Add(CurrentItem);
+            Console.WriteLine("Problem loading questions");
         }
+
     }
 
-    private void SelectCollaborator(ChangeEventArgs e)
-    {
-        if(SelectedUsers.Count == 0)
-        {
-            SelectedUsers.Add(e.Value.ToString());
-
-        }
-        else if(!SelectedUsers.Exists(q => q == e.Value.ToString()))
-        {
-            SelectedUsers.Add(e.Value.ToString());
-        }
-    }
-
-    private void SelectHiringLead(ChangeEventArgs e)
-    {
-        HiringLead = e.Value.ToString();
-    }
-
-    private void RemoveItem(DragEventArgs e)
-    {
-        Console.WriteLine(e.DataTransfer.Items[0]);
-    }
-
-    private void RemoveHiringLead()
-    {
-        HiringLead = "";
-    }
-
-    private void RemoveFromCollabs(string user)
-    {
-        SelectedUsers.Remove(user);
-    }
-
-    private void RemoveFromQuestion(string user, List<string> list)
-        {
-        list.Remove(user);
-        }
 
     private async Task Save()
     {
-        if (HiringLead != "")
-        {
-            CollaboratorsAssigned lead = new CollaboratorsAssigned();
-            lead.Name = "Hiring Manager";
-            lead.AppUserId = collaborators.FirstOrDefault(x => HiringLead.Contains(x.name) && HiringLead.Contains(x.surname)).id;
-            lead.JobId = JobId;
+        //needs to first check what exists, and update accordingly.. yikes
 
-            await HttpClient.PostJsonAsync<CollaboratorsAssigned>("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", lead, new AuthenticationHeaderValue("Bearer", token));
-        }
+        //if (HiringLead != "")
+        //{
+        //    CollaboratorsAssigned lead = new CollaboratorsAssigned();
+        //    lead.Name = "Hiring Manager";
+        //    lead.AppUserId = AppUserList.FirstOrDefault(x => HiringLead.Contains(x.name) && HiringLead.Contains(x.surname)).id;
+        //    lead.JobId = JobId;
 
-        if(SelectedUsers.Count!=0)
-        {
-            foreach(var collab in SelectedUsers)
-            {
-                CollaboratorsAssigned collaborator = new CollaboratorsAssigned();
-                collaborator.Name = "Collaborator";
-                collaborator.AppUserId = collaborators.FirstOrDefault(x => collab.Contains(x.name) && HiringLead.Contains(x.surname)).id;
-                collaborator.JobId = JobId;
+        //    await HttpClient.PostJsonAsync<CollaboratorsAssigned>("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", lead, new AuthenticationHeaderValue("Bearer", token));
+        //}
 
-                await HttpClient.PostJsonAsync<CollaboratorsAssigned>("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", collaborator, new AuthenticationHeaderValue("Bearer", token));
-            }
-        }
+        //if (SelectedUsers.Count != 0)
+        //{
+        //    foreach (var collab in SelectedUsers)
+        //    {
+        //        CollaboratorsAssigned collaborator = new CollaboratorsAssigned();
+        //        collaborator.Name = "Collaborator";
+        //        collaborator.AppUserId = AppUserList.FirstOrDefault(x => collab.Contains(x.name) && HiringLead.Contains(x.surname)).id;
+        //        collaborator.JobId = JobId;
 
-        if(QuestionsDictionary.Count!=0)
-        {
-            foreach(var collab in QuestionsDictionary)
-            {
-                //<formquestion, appuser>
+        //        await HttpClient.PostJsonAsync<CollaboratorsAssigned>("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", collaborator, new AuthenticationHeaderValue("Bearer", token));
+        //    }
+        //}
 
-                CollaboratorQuestion cq = new CollaboratorQuestion();
-                cq.FormQuestionId = collab.Key.id;
-                cq.AppUserId = collaborators.FirstOrDefault(x => collab.Value.Contains(x.name) && HiringLead.Contains(x.surname)).id;
+        //if (QuestionsDictionary.Count != 0)
+        //{
+        //    foreach (var collab in QuestionsDictionary)
+        //    {
+        //        //<formquestion, appuser>
 
-                await HttpClient.PostJsonAsync<CollaboratorQuestion>("https://xebecapi.azurewebsites.net/api/collaboratorquestion", cq, new AuthenticationHeaderValue("Bearer", token));
-            }
-        }
+        //        CollaboratorQuestion cq = new CollaboratorQuestion();
+        //        cq.FormQuestionId = collab.Key.id;
+        //        cq.AppUserId = AppUserList.FirstOrDefault(x => collab.Value.Contains(x.name) && HiringLead.Contains(x.surname)).id;
+
+        //        await HttpClient.PostJsonAsync<CollaboratorQuestion>("https://xebecapi.azurewebsites.net/api/collaboratorquestion", cq, new AuthenticationHeaderValue("Bearer", token));
+        //    }
+        //}
 
 
+    }
+
+    private async Task testfunc(IEnumerable<AppUser> value)
+    {
+        //SelectedUsers = value;
+    }
+
+
+    private void Prev()
+    {
+        prevPage = true;
     }
 
     private void Next()
     {
-        //navigate to x, parameter: jobId
+        //this should probably also save, or alert the user that changes are not saved
+        nextPage = true;
     }
 
 }
