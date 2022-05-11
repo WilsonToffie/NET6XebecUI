@@ -171,7 +171,7 @@
         font-size: 2em;
         font-weight: 900;
         color: #004393;
-        margin-top: 0.5vh;
+        margin-top: 1vh;
         text-transform: uppercase;
     }
 
@@ -224,24 +224,6 @@
         .form-buttons:hover {
             background-color: #d35bc9;
         }
-
-    /*    .index-form-button {
-        background-color: rgba(0, 188, 174,1);
-        color: white;
-        width: 50%;
-        height: 5vh;
-        border: none;
-        text-align: center;
-        font-size: 1em;
-        font-weight: 700;
-        font-family: opensans-condensed-bold;
-        font-weight: 600;
-        border: none;
-        border-radius: 1em;
-    }
-        .index-form-button:hover {
-            background-color: #d35bc9;
-        }*/
 
     .createNew-buttton-function {
         text-align: center;
@@ -297,7 +279,7 @@
     }
 
     .create-job-summary {
-        background-color: #00bcae;
+        background-color: rgba(255,255,255,1);
         height: 55vh;
         width: 45vh;
         position: absolute;
@@ -361,25 +343,41 @@
         margin-top: 10vh;
     }
 
-    /*::-webkit-scrollbar {
-        width: 10px !important;
-        background-color: #004393 !important;
-        border-radius: 20px !important;
+    .top-Image-thing {
+        position: absolute;
+        height: 10vh;
+        width: 100%;
+        color: pink;
+        top: 15%;
+        left: 0%;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
     }
 
-    ::-webkit-scrollbar-track {
-        background: transparent !important;
-        border-radius: 10px !important;
+    .circle {
+        height: 70px;
+        width: 70px;
+        background-color: #bbb;
+        border-radius: 50%;
     }
 
-    ::-webkit-scrollbar-thumb {
-        background: #f7f7f7 !important;
-        border-radius: 5px !important;
+    .progressed-circle {
+        height: 70px;
+        width: 70px;
+        background-color: #00BCAE;
+        border-radius: 50%;
     }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: #f7f7f7 !important;
-        }*/
+    .progress-rod {
+        width: 83%;
+        position: absolute;
+        height: 2vh;
+        bottom: 79%;
+        left: 8%;
+        background-color: #bbb;
+        z-index: -1;
+    }
 </style>
 @if (redirectpage)
 {
@@ -387,6 +385,18 @@
 }
 else
 {
+    <!--<div class="top-Image-thing">
+        <div class="progressed-circle"></div>-->
+        @*<div class="progress-rod"></div>*@
+        <!--<div class="circle"></div>-->
+        @*<div class="progress-rod"></div>*@
+        <!--<div class="circle"></div>-->
+        @*<div class="progress-rod"></div>*@
+        <!--<div class="circle"></div>-->
+        @*<div class="progress-rod"></div>*@
+        <!--<div class="circle"></div>
+    </div>
+    <div class="progress-rod"></div>-->
     <div class="create-job-summary">
         <div class="page-title">Summary</div>
 
@@ -721,7 +731,7 @@ else
             @if (allowedToRedirect)
             {
                 <div class="bottom-buttons">
-                    <input type="button" value="Prev" class="button-functions" />
+                    @*<input type="button" value="Prev" class="button-functions" />*@
                     <input type="submit" value="Save" class="button-functions" />
                     <input type="button" value="Next" class="button-functions" @onclick="() => RedirectToNextPage(true)" />
                 </div>
@@ -729,7 +739,7 @@ else
             else
             {
                 <div class="bottom-buttons">
-                    <input type="button" value="Prev" class="button-functions" />
+                    @*<input type="button" value="Prev" class="button-functions" />*@
                     <input type="submit" value="Save" class="button-functions" />
                     <input type="button" value="Next" disabled class="button-functions-not-redirectable" />
                 </div>

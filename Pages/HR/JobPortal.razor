@@ -3,6 +3,7 @@
 @inject IJSRuntime jsRuntime
 @inject NavigationManager nav
 @inject HrJobState hrJobState
+@inject UserState state
 @inject IDialogService DialogService
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
@@ -529,12 +530,17 @@
                                                 <div class="col mt-5">
                                                     <button class="btn detail-button-colour rounded-pill" type="button" @onclick="() => OpenJobCollabDialog(displayJobDetail.Id)">Collaborators</button>
                                                 </div>
-                                                <div class="col mt-5">
-                                                    <button class="btn detail-button-colour rounded-pill" type="button" @onclick="() => ShowApplicantPortal(displayJobDetail.Id)">Applicant Portal</button>
-                                                </div>
-                                                <div class="col mt-5">
-                                                    <button class="btn detail-button-colour rounded-pill" type="button" style="width: 8em" @onclick="() => FormType(true)">Edit</button>
-                                                </div>
+                                                @*
+                                                    <div class="col mt-5">
+                                                        <button class="btn detail-button-colour rounded-pill" type="button" @onclick="() => ShowApplicantPortal(displayJobDetail.Id)">Applicant Portal</button>
+                                                    </div>
+                                                *@
+                                                @if (state.Role == "Super Admin")
+                                                {
+                                                    <div class="col mt-5">
+                                                        <button class="btn detail-button-colour rounded-pill" type="button" style="width: 8em" @onclick="() => FormType(true)">Edit</button>
+                                                    </div>
+                                                }
                                             }
                                         </div>
                                     </div>

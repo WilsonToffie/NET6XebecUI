@@ -194,11 +194,6 @@ namespace XebecPortal.UI.Pages.HR
             manageDep = value;
         }
 
-        private void addJobBeforePost()
-        {
-
-        }
-
         private async Task saveJobState()
         {
 
@@ -221,8 +216,7 @@ namespace XebecPortal.UI.Pages.HR
                 Status = "Draft",
                 DueDate = TempJob.DueDate,
                 CreationDate = DateTime.Today,                
-                JobTypes = jobType,
-                
+                JobTypes = jobType,                
             });
 
             checkJobList = await HttpClient.GetListJsonAsync<List<Job>>($"https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
