@@ -6,6 +6,7 @@
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
 @using XebecPortal.UI.Utils.Handlers;
 @using System.Net.Http.Headers;
+@using Microsoft.JSInterop;
 <head>
 
 </head>
@@ -426,8 +427,12 @@
 
     .delete-question-header {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
+        gap:30%;
+    }
+    .delete-question-body{
+        padding: 0 0 0 15%;
     }
 
     .delete-questions-left-table {
@@ -450,6 +455,15 @@
 
     .summary-word {
         font-weight: bold;
+    }
+    .question-list {
+        width: 20px;
+        text-align: center;
+    }
+    .question-list:hover {
+        cursor: pointer;
+        background-color: #FF4D5A;
+        color:white;
     }
 </style>
 @if (prevPage == false && nextPage == false)
@@ -498,7 +512,7 @@
                                                     @formQuestion.question
 
                                                 </p>
-                                                <span @onclick="() => DeleteFormQuestion(formQuestion)">
+                                                <span class="question-list" @onclick="() => DeleteFormQuestion(formQuestion)">
                                                     <i class="fas fa-times"></i>
                                                 </span>
                                             </div>
@@ -547,7 +561,7 @@
 
                 </div>
                 <div class="form-left">
-                    @if (string.Equals("super admin", _state.Role, StringComparison.OrdinalIgnoreCase))
+                    @if (string.Equals("super admin", _state.Role, StringComparison.OrdinalIgnoreCase) || string.Equals("hradmin", _state.Role, StringComparison.OrdinalIgnoreCase))
                     {
 
 
@@ -810,9 +824,9 @@ else if (nextPage == true)
     public async Task DeleteQuestion(CustomQuestion q)
     {
         Console.WriteLine(q);
-        if (q != null)
+        if (q.questionDescription != null)
         {
-            if (await JSRuntime.InvokeAsync<bool>("Confirm", "Are you sure you want to delete this question"))
+            if (await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this question"))
             {
                 var deleteQuestions = await httpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/question/{q.Id}", new AuthenticationHeaderValue("Bearer", token));
                 await OnInitializedAsync();
@@ -855,13 +869,27 @@ else if (nextPage == true)
 
     public async Task AddQuestion()
     {
-
-        if (tempQuestion.questionDescription != "")
+        Console.WriteLine(tempQuestion.questionDescription);
+        if (!String.IsNullOrEmpty(tempQuestion.questionDescription))
         {
+            if(await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to add this question?"))
+            {
+                tempQuestion.answerTypeId = Types.FirstOrDefault(q => q.Type == tempType).Id;
+                var addQuestion = await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/question", tempQuestion, new AuthenticationHeaderValue("Bearer", token));
+                await OnInitializedAsync();
 
-            tempQuestion.answerTypeId = Types.FirstOrDefault(q => q.Type == tempType).Id;
-            await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/question", tempQuestion, new AuthenticationHeaderValue("Bearer", token));
-            await OnInitializedAsync();
+                if (addQuestion.IsSuccessStatusCode)
+                {
+                    await JSRuntime.InvokeAsync<object>("alert", "Question successfully addded!");
+
+                }
+
+            }
+
+        }
+        else
+        {
+            await JSRuntime.InvokeAsync<object>("alert", "Please enter a question.");
         }
     }
 
@@ -886,8 +914,18 @@ else if (nextPage == true)
     private async Task Save()
     {
         TempJob.formQuestions = FormQuestions;
-        Console.WriteLine("Questions Added");
-        await TempJobChanged.InvokeAsync(TempJob);
+        if(FormQuestions.Count > 0)
+        {
+            Console.WriteLine("Questions Added");
+            await TempJobChanged.InvokeAsync(TempJob);
+            await JSRuntime.InvokeAsync<object>("alert", "Questions saved successfully.");
+
+        }
+        else
+        {
+            await JSRuntime.InvokeAsync<object>("alert", "Please select at least one question.");
+        }
+
     }
 
     private string QuestionCardClass(CustomQuestion question)
