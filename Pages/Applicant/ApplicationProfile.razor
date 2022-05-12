@@ -67,8 +67,8 @@
     .drag-drop-input {
         position: absolute;
         background-color: pink;
-        left: 23%;
-        top: 30%;
+        left: 27.5%;
+        top: 34.7%;
         width: 690px;
         height: 140px;
         opacity: 0;
@@ -493,7 +493,7 @@
 
     .position-history-card {
         position: relative;
-        left: 20%;
+        left: 25%;
         top: -4%;
     }
 
@@ -1495,56 +1495,6 @@
                                     </div>
                                 </div>
                             </div>
-                            @*<div class="row" style="margin-top: 50px;">
-            <div class="col-12 shadow-sm bg-body rounded-edges white-back">
-                <div class="personalInfo-header">Additional Documents</div>
-                <div class="row p-3">
-                    <div class="dragable-spot">
-                        <div class="rounded-edges">
-                            <MudPaper @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
-                                      @ondragleave="@(() => _dragEnterStyle = null)"
-                                      @ondragend="@(() => _dragEnterStyle = null)"
-                                      Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
-
-                                <InputFile OnChange="OnInputFileChangedAsync" multiple class="drag-drop-input" />
-                                @if (fileNames == null)
-                                {
-                                    <MudText Typo="Typo.h3" Align="Align.Center">
-                                        <i class="fa fa-upload"></i>
-                                        <br />
-                                        Upload File
-                                    </MudText>
-                                }
-                                else
-                                {
-                                    <MudList Style="padding:2em;width:100%;" Dense="true">
-                                        <MudListItem @key="@fileNames.Name">
-                                            <MudChip Color="Color.Dark"
-                                                     Style="width:60px; overflow:hidden;"
-                                                     Text="@(fileNames.Name.Split(".").Last())" />
-                                            @fileNames.Name
-                                        </MudListItem>
-                                    </MudList>
-                                }
-                            </MudPaper>
-                        </div>
-
-                        <div class="form-group createjob-form-group">
-                            <div class="createjob-form-individual" style="width: 200%;">
-                                <div class="createjob-form-individual">
-
-                                </div>
-                            </div>
-                            <div class="createjob-form-individual">
-                                <input type="button" value="Delete Department" class="form-buttons" @onclick="() => removeDepartment(department)" />
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <button class="btn formButton" style="margin-left: 45%;" type="submit" value="Save">Save</button>
-            </div>
-        </div>*@
                         </EditForm>
                     </div>
                 </div>
@@ -1560,7 +1510,7 @@
                                     <div class="col-9 p-5">
                                         <div class="row shadow-sm bg-body rounded-edges white-back position-white">
                                             <div class="education-header">References</div>
-                                            <div class="col-12" style="height: 35vh">
+                                            <div class="col-12" >
 
                                                 <div class="row p-3">
                                                     <div class="col-6">
@@ -1891,7 +1841,7 @@
             firstName = 0;
         }
 
-        else if (!string.IsNullOrEmpty(personalInformation.LastName) && lastName != 1)
+        if (!string.IsNullOrEmpty(personalInformation.LastName) && lastName != 1)
         {
             count++;
             lastName = 1;
@@ -1902,7 +1852,7 @@
             lastName = 0;
         }
 
-        else if (!string.IsNullOrEmpty(personalInformation.Email) && emailAddress != 1)
+        if (!string.IsNullOrEmpty(personalInformation.Email) && emailAddress != 1)
         {
             count++;
             emailAddress = 1;
@@ -1913,7 +1863,7 @@
             emailAddress = 0;
         }
 
-        else if (!string.IsNullOrEmpty(personalInformation.PhoneNumber) && phoneNum != 1)
+        if (!string.IsNullOrEmpty(personalInformation.PhoneNumber) && phoneNum != 1)
         {
             count++;
             phoneNum = 1;
@@ -1924,7 +1874,7 @@
             phoneNum = 0;
         }
 
-        else if (!string.IsNullOrEmpty(additionalInformation.Ethnicity) && ethnicity != 1)
+        if (!string.IsNullOrEmpty(additionalInformation.Ethnicity) && ethnicity != 1)
         {
             count++;
             ethnicity = 1;
@@ -1935,7 +1885,7 @@
             ethnicity = 0;
         }
 
-        else if (!string.IsNullOrEmpty(additionalInformation.Gender) && gender != 1)
+        if (!string.IsNullOrEmpty(additionalInformation.Gender) && gender != 1)
         {
             count++;
             gender = 1;
@@ -1946,7 +1896,7 @@
             gender = 0;
         }
 
-        else if (!string.IsNullOrEmpty(personalInformation.IdNumber) && idNum != 1)
+        if (!string.IsNullOrEmpty(personalInformation.IdNumber) && idNum != 1)
         {
             count++;
             idNum = 1;
@@ -1957,7 +1907,7 @@
             idNum = 0;
         }
 
-        else if (!string.IsNullOrEmpty(personalInformation.Address) && address != 1)
+        if (!string.IsNullOrEmpty(personalInformation.Address) && address != 1)
         {
             count++;
             address = 1;

@@ -394,4 +394,27 @@ namespace XebecPortal.UI.Pages.Applicant
         public List<Attribution> attributions { get; set; }
         public List<Datum> data { get; set; }
     }
+
+    public class Document
+    {
+        public int Id { get; set; }
+
+        public string CV { get; set; }
+
+        public string MatricCertificate { get; set; }
+
+        public string UniversityTranscript { get; set; }
+
+        public string AdditionalCert1 { get; set; }
+
+        public string AdditionalCert2 { get; set; }
+
+        public string AdditionalCert3 { get; set; }
+
+
+        //Foreign Key: AppUser
+        public int AppUserId { get; set; }
+
+        public AppUser AppUser { get; set; }
+    }
 }
