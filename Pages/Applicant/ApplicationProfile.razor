@@ -149,7 +149,7 @@
     .nav-item > .nav-link1 {
         font-size: 1em;
         font-weight: 600 !important;
-        color: #004393;        
+        color: #004393;
         word-wrap: break-word;
         max-width: 120px;
     }
@@ -646,7 +646,7 @@
 
     .work-history-job-title {
         text-align: left;
-        padding-left: 1em;        
+        padding-left: 1em;
         font-weight: bold;
         font-size: 1em;
     }
@@ -709,7 +709,7 @@
             margin-left: 1.75vh;
         }
 
-        
+
         /*Search bar CSS*/
     .hr-job-search-bar {
         width: 43%;
@@ -884,7 +884,7 @@
         top: 62%;
         width: 190px;
         height: 144px;
-        opacity: 0; 
+        opacity: 0;
         cursor: pointer;
         z-index: 2;
         border: unset;
@@ -897,7 +897,7 @@
         top: 62%;
         width: 190px;
         height: 144px;
-         opacity: 0; 
+         opacity: 0;
         cursor: pointer;
         z-index: 2;
         border: unset;
@@ -911,6 +911,14 @@
         background: white !important;
         height: 62vh !important;
         margin-top: 11vh;
+        width: 98vh;
+    }
+
+    .matric-cert-image {
+        background: src( @getUserDoc.matricCertificate);
+        background-size: cover;
+        width: 305px;
+        height: 144px;
     }
 }
 </style>
@@ -1341,10 +1349,9 @@
                 <!--Additional Documents Tab-->
 
                 <div id="additionalDocuments" class="container tab-pane">
-                    <div class="d-flex justify-content-center">
-                        <EditForm Model="@personalInformation" OnValidSubmit="@AddPersonalInformation" style="width: 60%;">
-                            <DataAnnotationsValidator />
-
+                    <EditForm Model="@doc" >
+                        <DataAnnotationsValidator />
+                    <div class="d-flex justify-content-center">                     
                             <div class="rounded-edges documents-white-back">
                                 <div class="personalInfo-header">Additional Documents</div>
 
@@ -1356,7 +1363,7 @@
                                                   Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
 
                                             <InputFile OnChange="OnInputMatricCertChangedAsync" multiple class="matric-drag-drop-input" />
-                                            @if (fileNames == null)
+                                            @if (getUserDoc.matricCertificate == null)
                                             {
                                                 <MudText Typo="Typo.h3" Align="Align.Center">
                                                     <i class="fa fa-upload"></i>
@@ -1366,14 +1373,8 @@
                                             }
                                             else
                                             {
-                                                <MudList Style="padding:2em;width:100%;" Dense="true">
-                                                    <MudListItem @key="@fileNames.Name">
-                                                        <MudChip Color="Color.Dark"
-                                                                 Style="width:60px; overflow:hidden;"
-                                                                 Text="@(fileNames.Name.Split(".").Last())" />
-                                                        @fileNames.Name
-                                                    </MudListItem>
-                                                </MudList>
+                                                <div class="matric-cert-image"></div> 
+                                                <iframe src="@getUserDoc.matricCertificate" style="width:100%; height:100%;"></iframe>
                                             }
                                         </MudPaper>
                                     </div>
@@ -1395,11 +1396,11 @@
                                             else
                                             {
                                                 <MudList Style="padding:2em;width:100%;" Dense="true">
-                                                    <MudListItem @key="@fileNames.Name">
+                                                    <MudListItem @key="@doc.universityTranscript">
                                                         <MudChip Color="Color.Dark"
                                                                  Style="width:60px; overflow:hidden;"
                                                                  Text="@(fileNames.Name.Split(".").Last())" />
-                                                        @fileNames.Name
+                                                        @doc.universityTranscript
                                                     </MudListItem>
                                                 </MudList>
                                             }
@@ -1426,11 +1427,11 @@
                                                 else
                                                 {
                                                     <MudList Style="padding:2em;width:100%;" Dense="true">
-                                                        <MudListItem @key="@fileNames.Name">
+                                                        <MudListItem @key="@doc.additionalCert1">
                                                             <MudChip Color="Color.Dark"
                                                                      Style="width:60px; overflow:hidden;"
                                                                      Text="@(fileNames.Name.Split(".").Last())" />
-                                                            @fileNames.Name
+                                                            @doc.additionalCert1
                                                         </MudListItem>
                                                     </MudList>
                                                 }
@@ -1454,11 +1455,11 @@
                                                 else
                                                 {
                                                     <MudList Style="padding:2em;width:100%;" Dense="true">
-                                                        <MudListItem @key="@fileNames.Name">
+                                                        <MudListItem @key="@doc.additionalCert2">
                                                             <MudChip Color="Color.Dark"
                                                                      Style="width:60px; overflow:hidden;"
                                                                      Text="@(fileNames.Name.Split(".").Last())" />
-                                                            @fileNames.Name
+                                                            @doc.additionalCert2
                                                         </MudListItem>
                                                     </MudList>
                                                 }
@@ -1482,11 +1483,11 @@
                                                 else
                                                 {
                                                     <MudList Style="padding:2em;width:100%;" Dense="true">
-                                                        <MudListItem @key="@fileNames.Name">
+                                                        <MudListItem @key="@doc.additionalCert3">
                                                             <MudChip Color="Color.Dark"
                                                                      Style="width:60px; overflow:hidden;"
                                                                      Text="@(fileNames.Name.Split(".").Last())" />
-                                                            @fileNames.Name
+                                                            @doc.additionalCert3
                                                         </MudListItem>
                                                     </MudList>
                                                 }
@@ -1494,9 +1495,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </EditForm>
+                            </div>                       
                     </div>
+                        </EditForm>
                 </div>
 
                 <!--References tab-->

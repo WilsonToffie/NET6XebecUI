@@ -1,23 +1,19 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
+﻿using Azure;
+using Azure.Storage;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
-using MudBlazor;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
-using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
-using Azure.Storage;
-using Azure;
 using System.Net.Http;
-using System.Text;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using XebecPortal.UI.Pages.Model;
-using Microsoft.Extensions.Logging;
 using System.Net.Http.Headers;
-using Microsoft.AspNetCore.Components;
+using System.Text;
+using System.Threading.Tasks;
+using XebecPortal.UI.Pages.Model;
 using XebecPortal.UI.Utils.Handlers;
 
 namespace XebecPortal.UI.Pages.Applicant
@@ -65,6 +61,10 @@ namespace XebecPortal.UI.Pages.Applicant
         private IList<SkillBank> apiSkills = new List<SkillBank>();
         private IList<SkillBank> skillListFilter = new List<SkillBank>();
 
+        private List<Documents> userDoc = new List<Documents>();
+        private List<Documents> checkUserDoc = new List<Documents>();
+        private Documents getUserDoc = new Documents();
+
         private IJSObjectReference _jsModule;
         string _dragEnterStyle;
         IBrowserFile fileNames;
@@ -87,6 +87,7 @@ namespace XebecPortal.UI.Pages.Applicant
         private IList<ProfilePortfolioLink> profilePortfolioInfo { get; set; }
         private IList<References> referencesHistory{ get; set; }
         private IList<SkillsInformation> skillHistory { get; set; }
+        private IList<Documents> userDocuments { get; set; }
 
         private bool newPersonalInfo = false;
         private bool newAdditionalInfo = false;
@@ -95,12 +96,21 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool newSkillInfo = false;
         private bool newRefInfo = false;
         private bool newPortFolioInfo = false;
+        private bool newDocumentInfo = false;
+        private bool validUpload = false;
 
-
+        
         // private CustomHandler cust = new CustomHandler();
         string token;
-
+        private string cvContent;
+        private string martricCertContent;
+        private string transcriptContent;
+        private string cert1Content;
+        private string cert2Content;
+        private string cert3Content;
         private bool onlineProfileValidPost;
+
+        private Documents doc = new Documents(); 
         protected override async Task OnInitializedAsync()
         {
             loadInfo = true;
@@ -154,6 +164,21 @@ namespace XebecPortal.UI.Pages.Applicant
 
                 referencesList = await httpClient.GetListJsonAsync<List<References>>($"https://xebecapi.azurewebsites.net/api/Reference/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
                 //referencesList = referencesHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
+
+                userDocuments = await httpClient.GetListJsonAsync<List<Documents>>($"https://xebecapi.azurewebsites.net/api/Document/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+                checkUserDoc = userDocuments.ToList();
+                if (checkUserDoc.Count == 0)
+                {
+                    newDocumentInfo = true;
+                }
+                else
+                {
+                    Console.WriteLine("user already has documents");
+                    foreach (var item in checkUserDoc)
+                    {
+                        getUserDoc = item;
+                    }
+                }
 
                 profilePortfolioList = await httpClient.GetListJsonAsync<List<ProfilePortfolioLink>>($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
                 //profilePortfolioList = profilePortfolioInfo.ToList();
@@ -824,7 +849,7 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private string storageAcc = "xebecstorage";
         private string imgContainer = "linkedincv";
-        private string azureCredentials = "?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-05-07T15:09:45Z&st=2022-05-06T07:09:45Z&spr=https&sig=qxeI0Xt9nd9SkysOYEnMFKqbYiocU%2BcfRK%2FpxN8yN0E%3D";
+        private string azureCredentials = "?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-09-11T22:04:48Z&st=2022-05-11T14:04:48Z&spr=https&sig=MTkK0ODHx%2Fj%2BBwTPXnhcauQN%2F8A1HPhfG0kA%2BGKklmE%3D";
         private static int num = 1;
 
 
@@ -885,30 +910,57 @@ namespace XebecPortal.UI.Pages.Applicant
                 //     new StringContent(JsonSerializer.Serialize("content"""), Encoding.UTF8, "applicationModel/json");
 
                 //var response = await httpClient.GetAsync("https://xebecapi.azurewebsites.net/api/ResumeParser");
+                cvContent = blobUri.ToString();
+
+                doc.cv = cvContent;
+                doc.appUserId = state.AppUserId;
+                doc.matricCertificate = null;
+                doc.universityTranscript = null;
+                doc.additionalCert1 = null;
+                doc.additionalCert2 = null;
+                doc.additionalCert3 = null;
+                if (newDocumentInfo)
+                {
+
+                    var resp = await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Document", doc, new AuthenticationHeaderValue("Bearer", token));
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        validUpload = true;
+                        //var respContent = await resp.Content.ReadAsStringAsync();
+
+                        //resumeResultModel = JsonConvert.DeserializeObject<ResumeResultModel>(respContent);
+
+                        //Console.WriteLine($"Content {respContent}");
+                        //Console.WriteLine($"Result model {resumeResultModel}");
+                        ////resumeResultModel =  System.Text.Json.JsonSerializer.Deserialize<ResumeResultModel>(respContent);
 
 
-                var resp = await httpClient.PostJsonAsync("http://localhost:5002/api/ResumeParser/", content, new AuthenticationHeaderValue("Bearer", token));
-                //status = new StringBuilder(resp.StatusCode.ToString());
-                var respContent = await resp.Content.ReadAsStringAsync();
+                        //personalInformation.FirstName = resumeResultModel.Name;
+                        //personalInformation.Email = resumeResultModel.EmailAddress;
 
-                resumeResultModel = JsonConvert.DeserializeObject<ResumeResultModel>(respContent);
+                        //education.Insitution = resumeResultModel.CollegeName;
+                        //education.Qualification = resumeResultModel.CollegeName;
 
-                Console.WriteLine($"Content {respContent}");
-                Console.WriteLine($"Result model {resumeResultModel}");
-                //resumeResultModel =  System.Text.Json.JsonSerializer.Deserialize<ResumeResultModel>(respContent);
+                        //workHistory.CompanyName = resumeResultModel.CompaniesWorkedAt;
+                        //workHistory.JobTitle = resumeResultModel.Designation;                        
+                    }
+                }
+                else
+                {
+                    doc.id = getUserDoc.id;
+                    var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.id}", doc, new AuthenticationHeaderValue("Bearer", token));
 
-
-                personalInformation.FirstName = resumeResultModel.Name;
-                personalInformation.Email = resumeResultModel.EmailAddress;
-
-                education.Insitution = resumeResultModel.CollegeName;
-                education.Qualification = resumeResultModel.CollegeName;
-
-                workHistory.CompanyName = resumeResultModel.CompaniesWorkedAt;
-                workHistory.JobTitle = resumeResultModel.Designation;
-
-
-                //status = new StringBuilder(await resp.Content.ReadAsStringAsync());
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        userDoc.Clear();
+                        validUpload = true;
+                    }
+                }
+                if (validUpload)
+                {
+                    await OnInitializedAsync();
+                    await jsRuntime.InvokeAsync<object>("alert", "Your CV has successfully been uploaded");
+                }                
             }
         }        
 
@@ -918,10 +970,9 @@ namespace XebecPortal.UI.Pages.Applicant
         {
             //https://xebecstorage.blob.core.windows.net/matric-certificates
             // Getting the file
+            fileNames = e.File;
             var fileName = state.AppUserId;//fileArray[0] + Guid.NewGuid().ToString().Substring(0, 5) + "." + fileArray[1]; // change file name to be their appUserID
             var fileInfo = e.File;
-            // You require a azure account with a storage account. You use that link for below. The 'images' is the file that the file image is stored in in Azure.
-            // https://xebecstorage.blob.core.windows.net/profile-images
 
             var blobUri = new Uri("https://"
                 + storageAcc
@@ -948,18 +999,42 @@ namespace XebecPortal.UI.Pages.Applicant
 
                 // This is needs to change to the Model for matric stuffs
                 //personalInfo.Id = state.AppUserId; 
-                //personalInfo.ImageUrl = blobUri.ToString(); // This will be where the link will be stored 
+                martricCertContent = blobUri.ToString(); // This will be where the link will be stored 
+                doc.appUserId = state.AppUserId;
+                doc.cv = cvContent;
+                doc.matricCertificate = martricCertContent;
+                
                 Console.WriteLine("Result is true whooooo");
                 var content = new FormUrlEncodedContent(new[]
                                 {
                                     new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
                                 });
-                //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
-
-
-                // The endpoint would need to change
-
-                //var resp = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo, new AuthenticationHeaderValue("Bearer", token));
+                
+                if (newDocumentInfo)
+                {
+                    var resp = await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Document", doc, new AuthenticationHeaderValue("Bearer", token));
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        Console.WriteLine("it does get here");
+                        validUpload = true;
+                    }
+                }
+                else
+                {
+                    doc.id = getUserDoc.id;
+                    var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.id}", doc, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
+                    if (resp.IsSuccessStatusCode)
+                    {                        
+                        validUpload = true;
+                    }
+                    Console.WriteLine("Already uploaded");                    
+                }
+                if (validUpload)
+                {
+                    await OnInitializedAsync();
+                    await jsRuntime.InvokeAsync<object>("alert", "Your CV has successfully been uploaded");
+                    
+                }
             }
             else
             {
@@ -1010,11 +1085,36 @@ namespace XebecPortal.UI.Pages.Applicant
                                 });
                 //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
 
+                transcriptContent = blobUri.ToString();
+                doc.appUserId = state.AppUserId;
+                doc.cv = cvContent;
+                doc.matricCertificate = martricCertContent;
+                doc.universityTranscript = transcriptContent;
+                
+                if (newDocumentInfo)
+                {
+                    var resp = await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Document", doc, new AuthenticationHeaderValue("Bearer", token));
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        validUpload = true;
+                    }
+                }
+                else
+                {
 
-                // The endpoint would need to change
+                    doc.id = getUserDoc.id;
+                    var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.id}", doc, new AuthenticationHeaderValue("Bearer", token));
+                    if (resp.IsSuccessStatusCode)
+                    {                        
+                        validUpload = true;
+                    }
 
-                //var resp = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
-                // var newresp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo); //{personalInfo.Id}
+                }
+                if (validUpload)
+                {
+                    await OnInitializedAsync();
+                    await jsRuntime.InvokeAsync<object>("alert", "Your CV has successfully been uploaded");
+                }
             }
             else
             {
@@ -1029,9 +1129,7 @@ namespace XebecPortal.UI.Pages.Applicant
             //https://xebecstorage.blob.core.windows.net/additional-documents-1
             // Getting the file
             var fileName = state.AppUserId;//fileArray[0] + Guid.NewGuid().ToString().Substring(0, 5) + "." + fileArray[1]; // change file name to be their appUserID
-            var fileInfo = e.File;
-            // You require a azure account with a storage account. You use that link for below. The 'images' is the file that the file image is stored in in Azure.
-            // https://xebecstorage.blob.core.windows.net/profile-images
+            var fileInfo = e.File;            
 
             var blobUri = new Uri("https://"
                 + storageAcc
@@ -1066,11 +1164,43 @@ namespace XebecPortal.UI.Pages.Applicant
                                 });
                 //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
 
+                cert1Content = blobUri.ToString();
 
-                // The endpoint would need to change
+                doc.appUserId = state.AppUserId;
+                doc.cv = cvContent;
+                doc.matricCertificate = martricCertContent;
+                doc.universityTranscript = transcriptContent;
+                doc.additionalCert1 = cert1Content;
 
-                //var resp = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
-                // var newresp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo); //{personalInfo.Id}
+                
+                if (newDocumentInfo)
+                {
+
+                    var resp = await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Document", doc, new AuthenticationHeaderValue("Bearer", token));
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        validUpload = true;
+                    }
+
+                }
+                else
+                {
+                    doc.id = getUserDoc.id;
+                    var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.id}", doc, new AuthenticationHeaderValue("Bearer", token));
+
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        userDoc.Clear();
+                        validUpload = true;
+                    }
+
+                }
+                if (validUpload)
+                {
+                    await OnInitializedAsync();
+                    await jsRuntime.InvokeAsync<object>("alert", "Your Document has successfully been uploaded");
+                }
+
             }
             else
             {
@@ -1112,9 +1242,7 @@ namespace XebecPortal.UI.Pages.Applicant
             if (res.GetRawResponse().Status <= 205)
             {
 
-                // This is needs to change to the Model for matric stuffs
-                //personalInfo.Id = state.AppUserId; 
-                //personalInfo.ImageUrl = blobUri.ToString(); // This will be where the link will be stored 
+                
                 Console.WriteLine("Result is true whooooo");
                 var content = new FormUrlEncodedContent(new[]
                                 {
@@ -1122,11 +1250,38 @@ namespace XebecPortal.UI.Pages.Applicant
                                 });
                 //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
 
+                cert2Content = blobUri.ToString();
 
-                // The endpoint would need to change
+                doc.cv = cvContent;
+                doc.matricCertificate = martricCertContent;
+                doc.universityTranscript = transcriptContent;
+                doc.additionalCert1 = cert1Content;
+                doc.additionalCert2 = cert2Content;
+                doc.appUserId = state.AppUserId;
 
-                //var resp = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
-                // var newresp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo); //{personalInfo.Id}
+                if (newDocumentInfo)
+                {
+                    var resp = await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Document", doc, new AuthenticationHeaderValue("Bearer", token));
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        validUpload = true;
+                    }
+                }
+                else
+                {
+                    doc.id = getUserDoc.id;
+                    var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.id}", doc, new AuthenticationHeaderValue("Bearer", token));
+
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        validUpload = true;
+                    }
+                }
+                if (validUpload)
+                {
+                    await OnInitializedAsync();
+                    await jsRuntime.InvokeAsync<object>("alert", "Your CV has successfully been uploaded");
+                }                    
             }
             else
             {
@@ -1134,7 +1289,7 @@ namespace XebecPortal.UI.Pages.Applicant
             }
         }
 
-        // Uploading of the Second Certificate
+        // Uploading of the Third Certificate
         private string thirdCertContainer = "additional-documents-3";
         private async Task OnInputThirdDocumentChangedAsync(InputFileChangeEventArgs e)
         {
@@ -1178,11 +1333,39 @@ namespace XebecPortal.UI.Pages.Applicant
                                 });
                 //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
 
+                cert3Content = content.ToString();
+                doc.cv = cvContent;
+                doc.matricCertificate = martricCertContent;
+                doc.universityTranscript = transcriptContent;
+                doc.additionalCert1 = cert1Content;
+                doc.additionalCert2 = cert2Content;
+                doc.additionalCert3 = cert3Content;
+                doc.appUserId = state.AppUserId;
 
-                // The endpoint would need to change
+                if (newDocumentInfo)
+                {
+                    var resp = await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Document", doc, new AuthenticationHeaderValue("Bearer", token));
+                    if (resp.IsSuccessStatusCode)
+                    {
+                        validUpload = true;
+                    }
+                }
+                else
+                {
+                    doc.id = getUserDoc.id;
+                    var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.id}", doc, new AuthenticationHeaderValue("Bearer", token));
 
-                //var resp = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
-                // var newresp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo); //{personalInfo.Id}
+                    if (resp.IsSuccessStatusCode)
+                    {
+
+                        validUpload = true;
+                    }
+                }
+                if (validUpload)
+                {
+                    await OnInitializedAsync();
+                    await jsRuntime.InvokeAsync<object>("alert", "Your CV has successfully been uploaded");
+                }
             }
             else
             {
