@@ -395,16 +395,26 @@ namespace XebecPortal.UI.Pages.Applicant
         public List<Datum> data { get; set; }
     }
 
-    public class Documents
+    public class Document
     {
-        public int id { get; set; }
-        public string cv { get; set; }
-        public string matricCertificate { get; set; }
-        public string universityTranscript { get; set; }
-        public string additionalCert1 { get; set; }
-        public string additionalCert2 { get; set; }
-        public string additionalCert3 { get; set; }
-        public int appUserId { get; set; }
-        public IList<AppUser> AppUser { get; set; }
+        public int Id { get; set; }
+
+        public string CV { get; set; }
+
+        public string MatricCertificate { get; set; }
+
+        public string UniversityTranscript { get; set; }
+
+        public string AdditionalCert1 { get; set; }
+
+        public string AdditionalCert2 { get; set; }
+
+        public string AdditionalCert3 { get; set; }
+
+
+        //Foreign Key: AppUser
+        public int AppUserId { get; set; }
+
+        public AppUser AppUser { get; set; }
     }
 }
