@@ -61,9 +61,9 @@ namespace XebecPortal.UI.Pages.Applicant
         private IList<SkillBank> apiSkills = new List<SkillBank>();
         private IList<SkillBank> skillListFilter = new List<SkillBank>();
 
-        private List<Documents> userDoc = new List<Documents>();
-        private List<Documents> checkUserDoc = new List<Documents>();
-        private Documents getUserDoc = new Documents();
+        private List<Document> userDoc = new List<Document>();
+        private List<Document> checkUserDoc = new List<Document>();
+        private Document getUserDoc = new Document();
 
         private IJSObjectReference _jsModule;
         string _dragEnterStyle;
@@ -87,7 +87,7 @@ namespace XebecPortal.UI.Pages.Applicant
         private IList<ProfilePortfolioLink> profilePortfolioInfo { get; set; }
         private IList<References> referencesHistory{ get; set; }
         private IList<SkillsInformation> skillHistory { get; set; }
-        private IList<Documents> userDocuments { get; set; }
+        private IList<Document> userDocuments { get; set; }
 
         private bool newPersonalInfo = false;
         private bool newAdditionalInfo = false;
@@ -110,7 +110,7 @@ namespace XebecPortal.UI.Pages.Applicant
         private string cert3Content;
         private bool onlineProfileValidPost;
 
-        private Documents doc = new Documents(); 
+        private Document doc = new Document(); 
         protected override async Task OnInitializedAsync()
         {
             loadInfo = true;
@@ -165,7 +165,7 @@ namespace XebecPortal.UI.Pages.Applicant
                 referencesList = await httpClient.GetListJsonAsync<List<References>>($"https://xebecapi.azurewebsites.net/api/Reference/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
                 //referencesList = referencesHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
 
-                userDocuments = await httpClient.GetListJsonAsync<List<Documents>>($"https://xebecapi.azurewebsites.net/api/Document/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+                userDocuments = await httpClient.GetListJsonAsync<List<Document>>($"https://xebecapi.azurewebsites.net/api/Document/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
                 checkUserDoc = userDocuments.ToList();
                 if (checkUserDoc.Count == 0)
                 {
@@ -912,13 +912,8 @@ namespace XebecPortal.UI.Pages.Applicant
                 //var response = await httpClient.GetAsync("https://xebecapi.azurewebsites.net/api/ResumeParser");
                 cvContent = blobUri.ToString();
 
-                doc.cv = cvContent;
-                doc.appUserId = state.AppUserId;
-                doc.matricCertificate = null;
-                doc.universityTranscript = null;
-                doc.additionalCert1 = null;
-                doc.additionalCert2 = null;
-                doc.additionalCert3 = null;
+                doc.CV = cvContent;
+                doc.AppUserId = state.AppUserId;               
                 if (newDocumentInfo)
                 {
 
@@ -947,8 +942,8 @@ namespace XebecPortal.UI.Pages.Applicant
                 }
                 else
                 {
-                    doc.id = getUserDoc.id;
-                    var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.id}", doc, new AuthenticationHeaderValue("Bearer", token));
+                    doc.Id = getUserDoc.Id;
+                    var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.Id}", doc, new AuthenticationHeaderValue("Bearer", token));
 
                     if (resp.IsSuccessStatusCode)
                     {
@@ -1000,9 +995,8 @@ namespace XebecPortal.UI.Pages.Applicant
                 // This is needs to change to the Model for matric stuffs
                 //personalInfo.Id = state.AppUserId; 
                 martricCertContent = blobUri.ToString(); // This will be where the link will be stored 
-                doc.appUserId = state.AppUserId;
-                doc.cv = cvContent;
-                doc.matricCertificate = martricCertContent;
+                doc.AppUserId = state.AppUserId;               
+                doc.MatricCertificate = martricCertContent;
                 
                 Console.WriteLine("Result is true whooooo");
                 var content = new FormUrlEncodedContent(new[]
@@ -1021,8 +1015,8 @@ namespace XebecPortal.UI.Pages.Applicant
                 }
                 else
                 {
-                    doc.id = getUserDoc.id;
-                    var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.id}", doc, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
+                    doc.Id = getUserDoc.Id;
+                    var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.Id}", doc, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
                     if (resp.IsSuccessStatusCode)
                     {                        
                         validUpload = true;
@@ -1086,10 +1080,8 @@ namespace XebecPortal.UI.Pages.Applicant
                 //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
 
                 transcriptContent = blobUri.ToString();
-                doc.appUserId = state.AppUserId;
-                doc.cv = cvContent;
-                doc.matricCertificate = martricCertContent;
-                doc.universityTranscript = transcriptContent;
+                doc.AppUserId = state.AppUserId;                
+                doc.UniversityTranscript = transcriptContent;
                 
                 if (newDocumentInfo)
                 {
@@ -1102,8 +1094,8 @@ namespace XebecPortal.UI.Pages.Applicant
                 else
                 {
 
-                    doc.id = getUserDoc.id;
-                    var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.id}", doc, new AuthenticationHeaderValue("Bearer", token));
+                    doc.Id = getUserDoc.Id;
+                    var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.Id}", doc, new AuthenticationHeaderValue("Bearer", token));
                     if (resp.IsSuccessStatusCode)
                     {                        
                         validUpload = true;
@@ -1166,11 +1158,8 @@ namespace XebecPortal.UI.Pages.Applicant
 
                 cert1Content = blobUri.ToString();
 
-                doc.appUserId = state.AppUserId;
-                doc.cv = cvContent;
-                doc.matricCertificate = martricCertContent;
-                doc.universityTranscript = transcriptContent;
-                doc.additionalCert1 = cert1Content;
+                doc.AppUserId = state.AppUserId;
+                doc.AdditionalCert1 = cert1Content;
 
                 
                 if (newDocumentInfo)
@@ -1185,8 +1174,8 @@ namespace XebecPortal.UI.Pages.Applicant
                 }
                 else
                 {
-                    doc.id = getUserDoc.id;
-                    var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.id}", doc, new AuthenticationHeaderValue("Bearer", token));
+                    doc.Id = getUserDoc.Id;
+                    var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.Id}", doc, new AuthenticationHeaderValue("Bearer", token));
 
                     if (resp.IsSuccessStatusCode)
                     {
@@ -1251,13 +1240,9 @@ namespace XebecPortal.UI.Pages.Applicant
                 //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
 
                 cert2Content = blobUri.ToString();
-
-                doc.cv = cvContent;
-                doc.matricCertificate = martricCertContent;
-                doc.universityTranscript = transcriptContent;
-                doc.additionalCert1 = cert1Content;
-                doc.additionalCert2 = cert2Content;
-                doc.appUserId = state.AppUserId;
+                
+                doc.AdditionalCert2 = cert2Content;
+                doc.AppUserId = state.AppUserId;
 
                 if (newDocumentInfo)
                 {
@@ -1269,8 +1254,8 @@ namespace XebecPortal.UI.Pages.Applicant
                 }
                 else
                 {
-                    doc.id = getUserDoc.id;
-                    var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.id}", doc, new AuthenticationHeaderValue("Bearer", token));
+                    doc.Id = getUserDoc.Id;
+                    var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.Id}", doc, new AuthenticationHeaderValue("Bearer", token));
 
                     if (resp.IsSuccessStatusCode)
                     {
@@ -1333,14 +1318,9 @@ namespace XebecPortal.UI.Pages.Applicant
                                 });
                 //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
 
-                cert3Content = content.ToString();
-                doc.cv = cvContent;
-                doc.matricCertificate = martricCertContent;
-                doc.universityTranscript = transcriptContent;
-                doc.additionalCert1 = cert1Content;
-                doc.additionalCert2 = cert2Content;
-                doc.additionalCert3 = cert3Content;
-                doc.appUserId = state.AppUserId;
+                cert3Content = blobUri.ToString();                
+                doc.AdditionalCert3 = cert3Content;
+                doc.AppUserId = state.AppUserId;
 
                 if (newDocumentInfo)
                 {
@@ -1352,8 +1332,8 @@ namespace XebecPortal.UI.Pages.Applicant
                 }
                 else
                 {
-                    doc.id = getUserDoc.id;
-                    var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.id}", doc, new AuthenticationHeaderValue("Bearer", token));
+                    doc.Id = getUserDoc.Id;
+                    var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.Id}", doc, new AuthenticationHeaderValue("Bearer", token));
 
                     if (resp.IsSuccessStatusCode)
                     {
