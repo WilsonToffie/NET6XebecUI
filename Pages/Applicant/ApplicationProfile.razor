@@ -258,30 +258,6 @@
         position: relative;
         width: 0%;
     }
-    .space-text-layout {
-        position: absolute;
-        left: 91%;
-    }
-
-    .lift-off-text {
-        position: absolute;
-    }
-
-    .left-atmosphere-text {
-        position: absolute;
-    }
-
-    .into-orbit-text {
-        position: absolute;
-    }
-
-    .to-the-mooon-text {
-        position: absolute;
-    }
-
-    .you-done-text {
-        position: absolute;
-    }
 
     /*animation for space */
     .stars-display-effects {
@@ -487,7 +463,7 @@
         position: relative;
         /*height: 60vh;*/
         width: 84%;
-        left: 28%;
+        left: 26%;
         top: 11%;
     }
 
@@ -559,7 +535,7 @@
         right: 0;
         width: calc(100% - @completionVar);
     }
-    .nav-link{
+    .nav-link-background{
         background: white !important;
     }
 
@@ -855,9 +831,9 @@
     .academic-drag-drop-input {
         position: absolute;
         background-color: pink;
-        left: 51%;
+        left: 54%;
         top: 34%;
-        width: 310px;
+        width: 318px;
         height: 144px;
         opacity: 0;
         cursor: pointer;
@@ -912,16 +888,30 @@
         height: 62vh !important;
         margin-top: 11vh;
         width: 98vh;
+        margin-left: -5vh;
     }
 
-    .matric-cert-image {
-        background: src( @getUserDoc.MatricCertificate);
-        background-size: cover;
+    .matric-cert-image {        
         width: 305px;
         height: 144px;
     }
+
+    .upload-button-location {
+        text-align: center;
+        margin-top: -1.3vh;
+    }
+
+    .documents-styling{
+        width:100%; 
+        height:100%;         
+    }
+
+    .documents-styling:hover{
+        transform: scale(2);
+    }
 }
 </style>
+
 <div class="h-95 container-fluid d-flex justify-content-center align-items-center overflow-hidden">
     <div class="col-1"></div>
     <div class="row d-flex justify-content-center row-style">
@@ -934,25 +924,25 @@
         <div class="child shrinker timelapse"></div>*@
                 <!--Container-->
                 <li class="nav-item p-1">
-                    <a id="personal-tab" class="nav-link nav-link1 active" data-bs-toggle="tab" href="#personal-information" @onclick="progressCheck">Personal Information</a>
+                    <a id="personal-tab" class="nav-link-background nav-link1 active" data-bs-toggle="tab" href="#personal-information" @onclick="progressCheck">Personal Information</a>
                 </li>
                 <li class="nav-item p-1">
-                    <a class="nav-link nav-link1" data-bs-toggle="tab" href="#work-history" @onclick="progressCheck">Work History</a>
+                    <a class="nav-link-background nav-link1" data-bs-toggle="tab" href="#work-history" @onclick="progressCheck">Work History</a>
                 </li>
                 <li class="nav-item p-1">
-                    <a class="nav-link nav-link1" data-bs-toggle="tab" href="#education" @onclick="progressCheck">Education</a>
+                    <a class="nav-link-background nav-link1" data-bs-toggle="tab" href="#education" @onclick="progressCheck">Education</a>
                 </li>
                 <li class="nav-item p-1">
-                    <a class="nav-link nav-link1" data-bs-toggle="tab" href="#skills" @onclick="progressCheck">Skills</a>
+                    <a class="nav-link-background nav-link1" data-bs-toggle="tab" href="#skills" @onclick="progressCheck">Skills</a>
                 </li>
                 <li class="nav-item p-1">
-                    <a class="nav-link nav-link1" data-bs-toggle="tab" href="#references" @onclick="progressCheck">References</a>
+                    <a class="nav-link-background nav-link1" data-bs-toggle="tab" href="#references" @onclick="progressCheck">References</a>
                 </li>
                 <li class="nav-item p-1">
-                    <a class="nav-link nav-link1" data-bs-toggle="tab" href="#additionalDocuments" @onclick="progressCheck">Additional Documents</a>
+                    <a class="nav-link-background nav-link1" data-bs-toggle="tab" href="#additionalDocuments" @onclick="progressCheck">Additional Documents</a>
                 </li>
                 <li class="nav-item p-1">
-                    <a id="online-tag" class="nav-link nav-link1" data-bs-toggle="tab" href="#online-profile" @onclick="progressCheck">Online Presence</a>
+                    <a id="online-tag" class="nav-link-background nav-link1" data-bs-toggle="tab" href="#online-profile" @onclick="progressCheck">Online Presence</a>
                 </li>
             </ul>
         </div>
@@ -971,7 +961,7 @@
                     <div class="d-flex justify-content-center">
                         <EditForm Model="@personalInformation" OnValidSubmit="@AddPersonalInformation" style="width: 60%;">
                             <DataAnnotationsValidator />
-                            <div class="row" style="margin-top: 50px;">
+                            <div class="row" style="margin-top: 50px; margin-left: -7%;">
                                 <div class="col-12 shadow-sm bg-body rounded-edges white-back" style=" margin-top: 4vh;">
                                     <div class="personalInfo-header">Personal Information</div>
                                     <div class="row p-3">
@@ -1361,10 +1351,10 @@
                                                   @ondragleave="@(() => _dragEnterStyle = null)"
                                                   @ondragend="@(() => _dragEnterStyle = null)"
                                                   Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
-
-                                            <InputFile OnChange="OnInputMatricCertChangedAsync" multiple class="matric-drag-drop-input" />
                                             @if (getUserDoc.MatricCertificate == null)
                                             {
+                                                <InputFile OnChange="OnInputMatricCertChangedAsync" multiple class="matric-drag-drop-input" />
+
                                                 <MudText Typo="Typo.h3" Align="Align.Center">
                                                     <i class="fa fa-upload"></i>
                                                     <br />
@@ -1373,11 +1363,20 @@
                                             }
                                             else
                                             {
-                                                <div class="matric-cert-image"></div> 
-                                                <iframe src="@getUserDoc.MatricCertificate" style="width:100%; height:100%;"></iframe>
+                                                <div class="matric-cert-image"></div>
+                                                
+                                                    <iframe src="@getUserDoc.MatricCertificate" class="documents-styling"></iframe>
+                                                
+                                                
                                             }
-                                        </MudPaper>
+                                        </MudPaper>                                        
+                                        <div class="upload-button-location">
+                                            <label class="btn formButton">
+                                                <InputFile OnChange="OnInputMatricCertChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
+                                            </label>
+                                        </div>
                                     </div>
+
                                     <div class="createjob-form-individual">
                                         <MudPaper @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
                                                   @ondragleave="@(() => _dragEnterStyle = null)"
@@ -1395,14 +1394,14 @@
                                             }
                                             else
                                             {
-                                                <MudList Style="padding:2em;width:100%;" Dense="true">
+                                                @*<MudList Style="padding:2em;width:100%;" Dense="true">
                                                     <MudListItem @key="@doc.UniversityTranscript">
                                                         <MudChip Color="Color.Dark"
                                                                  Style="width:60px; overflow:hidden;"
                                                                  Text="@(fileNames.Name.Split(".").Last())" />
                                                         @doc.UniversityTranscript
                                                     </MudListItem>
-                                                </MudList>
+                                                </MudList>*@
                                             }
                                         </MudPaper>
                                     </div>
@@ -1426,14 +1425,14 @@
                                                 }
                                                 else
                                                 {
-                                                    <MudList Style="padding:2em;width:100%;" Dense="true">
+                                                    @*<MudList Style="padding:2em;width:100%;" Dense="true">
                                                         <MudListItem @key="@doc.AdditionalCert1">
                                                             <MudChip Color="Color.Dark"
                                                                      Style="width:60px; overflow:hidden;"
                                                                      Text="@(fileNames.Name.Split(".").Last())" />
                                                             @doc.AdditionalCert1
                                                         </MudListItem>
-                                                    </MudList>
+                                                    </MudList>*@
                                                 }
                                             </MudPaper>
                                         </div>
@@ -1454,14 +1453,14 @@
                                                 }
                                                 else
                                                 {
-                                                    <MudList Style="padding:2em;width:100%;" Dense="true">
+                                                    @*<MudList Style="padding:2em;width:100%;" Dense="true">
                                                         <MudListItem @key="@doc.AdditionalCert2">
                                                             <MudChip Color="Color.Dark"
                                                                      Style="width:60px; overflow:hidden;"
                                                                      Text="@(fileNames.Name.Split(".").Last())" />
                                                             @doc.AdditionalCert2
                                                         </MudListItem>
-                                                    </MudList>
+                                                    </MudList>*@
                                                 }
                                             </MudPaper>
                                         </div>
@@ -1482,14 +1481,14 @@
                                                 }
                                                 else
                                                 {
-                                                    <MudList Style="padding:2em;width:100%;" Dense="true">
+                                                    @*<MudList Style="padding:2em;width:100%;" Dense="true">
                                                         <MudListItem @key="@doc.AdditionalCert3">
                                                             <MudChip Color="Color.Dark"
                                                                      Style="width:60px; overflow:hidden;"
                                                                      Text="@(fileNames.Name.Split(".").Last())" />
                                                             @doc.AdditionalCert3
                                                         </MudListItem>
-                                                    </MudList>
+                                                    </MudList>*@
                                                 }
                                             </MudPaper>
                                         </div>
@@ -1643,32 +1642,6 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!--Newly added stuffs-->
-    <div class="col-1">
-
-        @if (calc > 0 && calc <= 25)
-        {
-            <!--Change the background images here-->
-            <!--
-            <div class=" space-text-layout lift-off-text" style="bottom: 25%">We have lift off!</div>-->
-        }
-        else if (calc > 25 && calc <= 50)
-        {
-            <!--<div class="space-text-layout left-atmosphere-text" style="bottom: 35%;">We've just left the atmosphere!</div>-->
-        }
-        else if (calc > 50 && calc <= 75)
-        {
-            <!--<div class="space-text-layout into-orbit-text" style="bottom: 50%;">Into orbit we go!</div>-->
-        }
-        else if (calc > 75 && calc < 100)
-        {
-            <!--<div class="space-text-layout to-the-mooon-text" style="bottom: 65%">To the moon!</div> -->
-        }
-        else if (calc == 100)
-        {
-            <!--<div class="space-text-layout you-done-text" style="bottom: 80%">Congratulations! You are done</div> -->
-        }
     </div>
 </div>
 @if (loadInfo)

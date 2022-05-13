@@ -659,7 +659,10 @@ namespace XebecPortal.UI.Pages.Applicant
             return "#d35bc9;";
         }
 
-
+        private string zoomDocument()
+        {
+            return "transform: scale(2);";
+        }
         private async Task SaveWorkHistory(WorkHistory workHistoryValues)
         {
             if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Override This Item?"))
@@ -943,6 +946,13 @@ namespace XebecPortal.UI.Pages.Applicant
                 else
                 {
                     doc.Id = getUserDoc.Id;
+                    doc.CV = cvContent;
+                    doc.MatricCertificate = getUserDoc.MatricCertificate;
+                    doc.UniversityTranscript = getUserDoc.UniversityTranscript;
+                    doc.AdditionalCert1 = getUserDoc.AdditionalCert1;
+                    doc.AdditionalCert2 = getUserDoc.AdditionalCert2;
+                    doc.AdditionalCert3 = getUserDoc.AdditionalCert3;
+                    doc.AppUserId = getUserDoc.AppUserId;
                     var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.Id}", doc, new AuthenticationHeaderValue("Bearer", token));
 
                     if (resp.IsSuccessStatusCode)
@@ -968,7 +978,7 @@ namespace XebecPortal.UI.Pages.Applicant
             fileNames = e.File;
             var fileName = state.AppUserId;//fileArray[0] + Guid.NewGuid().ToString().Substring(0, 5) + "." + fileArray[1]; // change file name to be their appUserID
             var fileInfo = e.File;
-
+            Console.WriteLine("FileType: " + fileInfo.ContentType);
             var blobUri = new Uri("https://"
                 + storageAcc
                 + ".blob.core.windows.net/"
@@ -1016,6 +1026,13 @@ namespace XebecPortal.UI.Pages.Applicant
                 else
                 {
                     doc.Id = getUserDoc.Id;
+                    doc.CV = getUserDoc.CV;
+                    doc.MatricCertificate = martricCertContent;
+                    doc.UniversityTranscript = getUserDoc.UniversityTranscript;
+                    doc.AdditionalCert1 = getUserDoc.AdditionalCert1;
+                    doc.AdditionalCert2 = getUserDoc.AdditionalCert2;
+                    doc.AdditionalCert3 = getUserDoc.AdditionalCert3;
+                    doc.AppUserId = getUserDoc.AppUserId;
                     var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.Id}", doc, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
                     if (resp.IsSuccessStatusCode)
                     {                        
@@ -1025,9 +1042,8 @@ namespace XebecPortal.UI.Pages.Applicant
                 }
                 if (validUpload)
                 {
-                    await OnInitializedAsync();
-                    await jsRuntime.InvokeAsync<object>("alert", "Your CV has successfully been uploaded");
-                    
+                    await jsRuntime.InvokeAsync<object>("alert", "Your Matric Certificate has successfully been uploaded");
+                    await OnInitializedAsync();                     
                 }
             }
             else
@@ -1039,13 +1055,9 @@ namespace XebecPortal.UI.Pages.Applicant
         private string transcriptContainer = "transcripts";       
         private async Task OnInputTranscriptChangedAsync(InputFileChangeEventArgs e)
         {
-            //https://xebecstorage.blob.core.windows.net/transcripts
-            // Getting the file
-            var fileName = state.AppUserId;//fileArray[0] + Guid.NewGuid().ToString().Substring(0, 5) + "." + fileArray[1]; // change file name to be their appUserID
+            var fileName = state.AppUserId;
             var fileInfo = e.File;
-            // You require a azure account with a storage account. You use that link for below. The 'images' is the file that the file image is stored in in Azure.
-            // https://xebecstorage.blob.core.windows.net/profile-images
-
+            
             var blobUri = new Uri("https://"
                 + storageAcc
                 + ".blob.core.windows.net/"
@@ -1068,17 +1080,11 @@ namespace XebecPortal.UI.Pages.Applicant
 
             if (res.GetRawResponse().Status <= 205)
             {
-
-                // This is needs to change to the Model for matric stuffs
-                //personalInfo.Id = state.AppUserId; 
-                //personalInfo.ImageUrl = blobUri.ToString(); // This will be where the link will be stored 
-                Console.WriteLine("Result is true whooooo");
                 var content = new FormUrlEncodedContent(new[]
                                 {
                                     new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
                                 });
-                //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
-
+                
                 transcriptContent = blobUri.ToString();
                 doc.AppUserId = state.AppUserId;                
                 doc.UniversityTranscript = transcriptContent;
@@ -1093,8 +1099,14 @@ namespace XebecPortal.UI.Pages.Applicant
                 }
                 else
                 {
-
                     doc.Id = getUserDoc.Id;
+                    doc.CV = getUserDoc.CV;
+                    doc.MatricCertificate = getUserDoc.MatricCertificate;
+                    doc.UniversityTranscript = transcriptContent;
+                    doc.AdditionalCert1 = getUserDoc.AdditionalCert1;
+                    doc.AdditionalCert2 = getUserDoc.AdditionalCert2;
+                    doc.AdditionalCert3 = getUserDoc.AdditionalCert3;
+                    doc.AppUserId = getUserDoc.AppUserId;
                     var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.Id}", doc, new AuthenticationHeaderValue("Bearer", token));
                     if (resp.IsSuccessStatusCode)
                     {                        
@@ -1104,8 +1116,8 @@ namespace XebecPortal.UI.Pages.Applicant
                 }
                 if (validUpload)
                 {
+                    await jsRuntime.InvokeAsync<object>("alert", "Your Academic Transcript has successfully been uploaded");
                     await OnInitializedAsync();
-                    await jsRuntime.InvokeAsync<object>("alert", "Your CV has successfully been uploaded");
                 }
             }
             else
@@ -1117,10 +1129,8 @@ namespace XebecPortal.UI.Pages.Applicant
         // Uploading of the First Certificate
         private string firstCertContainer = "additional-documents-1";
         private async Task OnInputFirstDocumentChangedAsync(InputFileChangeEventArgs e)
-        {
-            //https://xebecstorage.blob.core.windows.net/additional-documents-1
-            // Getting the file
-            var fileName = state.AppUserId;//fileArray[0] + Guid.NewGuid().ToString().Substring(0, 5) + "." + fileArray[1]; // change file name to be their appUserID
+        {            
+            var fileName = state.AppUserId;
             var fileInfo = e.File;            
 
             var blobUri = new Uri("https://"
@@ -1145,36 +1155,35 @@ namespace XebecPortal.UI.Pages.Applicant
 
             if (res.GetRawResponse().Status <= 205)
             {
-
-                // This is needs to change to the Model for matric stuffs
-                //personalInfo.Id = state.AppUserId; 
-                //personalInfo.ImageUrl = blobUri.ToString(); // This will be where the link will be stored 
-                Console.WriteLine("Result is true whooooo");
                 var content = new FormUrlEncodedContent(new[]
                                 {
                                     new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
                                 });
-                //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
 
                 cert1Content = blobUri.ToString();
 
                 doc.AppUserId = state.AppUserId;
                 doc.AdditionalCert1 = cert1Content;
-
                 
                 if (newDocumentInfo)
                 {
-
                     var resp = await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Document", doc, new AuthenticationHeaderValue("Bearer", token));
                     if (resp.IsSuccessStatusCode)
                     {
                         validUpload = true;
                     }
-
                 }
                 else
                 {
                     doc.Id = getUserDoc.Id;
+                    doc.CV = getUserDoc.CV;
+                    doc.MatricCertificate = getUserDoc.MatricCertificate;
+                    doc.UniversityTranscript = getUserDoc.UniversityTranscript;
+                    doc.AdditionalCert1 = cert1Content;
+                    doc.AdditionalCert2 = getUserDoc.AdditionalCert2;
+                    doc.AdditionalCert3 = getUserDoc.AdditionalCert3;
+                    doc.AppUserId = getUserDoc.AppUserId;
+
                     var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.Id}", doc, new AuthenticationHeaderValue("Bearer", token));
 
                     if (resp.IsSuccessStatusCode)
@@ -1182,14 +1191,13 @@ namespace XebecPortal.UI.Pages.Applicant
                         userDoc.Clear();
                         validUpload = true;
                     }
-
                 }
+
                 if (validUpload)
                 {
+                    await jsRuntime.InvokeAsync<object>("alert", "Your first Additional Certificate has successfully been uploaded");
                     await OnInitializedAsync();
-                    await jsRuntime.InvokeAsync<object>("alert", "Your Document has successfully been uploaded");
                 }
-
             }
             else
             {
@@ -1201,13 +1209,10 @@ namespace XebecPortal.UI.Pages.Applicant
         private string secondCertContainer = "additional-documents-2";
         private async Task OnInputSecondDocumentChangedAsync(InputFileChangeEventArgs e)
         {
-            //https://xebecstorage.blob.core.windows.net/additional-documents-2
-            // Getting the file
-            var fileName = state.AppUserId;//fileArray[0] + Guid.NewGuid().ToString().Substring(0, 5) + "." + fileArray[1]; // change file name to be their appUserID
+            
+            var fileName = state.AppUserId;
             var fileInfo = e.File;
-            // You require a azure account with a storage account. You use that link for below. The 'images' is the file that the file image is stored in in Azure.
-            // https://xebecstorage.blob.core.windows.net/profile-images
-
+            
             var blobUri = new Uri("https://"
                 + storageAcc
                 + ".blob.core.windows.net/"
@@ -1229,15 +1234,11 @@ namespace XebecPortal.UI.Pages.Applicant
             });
 
             if (res.GetRawResponse().Status <= 205)
-            {
-
-                
-                Console.WriteLine("Result is true whooooo");
+            {                
                 var content = new FormUrlEncodedContent(new[]
                                 {
                                     new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
-                                });
-                //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
+                                });            
 
                 cert2Content = blobUri.ToString();
                 
@@ -1255,6 +1256,14 @@ namespace XebecPortal.UI.Pages.Applicant
                 else
                 {
                     doc.Id = getUserDoc.Id;
+                    doc.CV = getUserDoc.CV;
+                    doc.MatricCertificate = getUserDoc.MatricCertificate;
+                    doc.UniversityTranscript = getUserDoc.UniversityTranscript;
+                    doc.AdditionalCert1 = getUserDoc.AdditionalCert1;
+                    doc.AdditionalCert2 = cert2Content;
+                    doc.AdditionalCert3 = getUserDoc.AdditionalCert3;
+                    doc.AppUserId = getUserDoc.AppUserId;
+
                     var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.Id}", doc, new AuthenticationHeaderValue("Bearer", token));
 
                     if (resp.IsSuccessStatusCode)
@@ -1262,10 +1271,11 @@ namespace XebecPortal.UI.Pages.Applicant
                         validUpload = true;
                     }
                 }
+
                 if (validUpload)
                 {
-                    await OnInitializedAsync();
-                    await jsRuntime.InvokeAsync<object>("alert", "Your CV has successfully been uploaded");
+                    await jsRuntime.InvokeAsync<object>("alert", "Your second Additional Certificate has successfully been uploaded");
+                    await OnInitializedAsync();                    
                 }                    
             }
             else
@@ -1277,14 +1287,9 @@ namespace XebecPortal.UI.Pages.Applicant
         // Uploading of the Third Certificate
         private string thirdCertContainer = "additional-documents-3";
         private async Task OnInputThirdDocumentChangedAsync(InputFileChangeEventArgs e)
-        {
-            //https://xebecstorage.blob.core.windows.net/additional-documents-3
-            // Getting the file
+        {            
             var fileName = state.AppUserId;//fileArray[0] + Guid.NewGuid().ToString().Substring(0, 5) + "." + fileArray[1]; // change file name to be their appUserID
-            var fileInfo = e.File;
-            // You require a azure account with a storage account. You use that link for below. The 'images' is the file that the file image is stored in in Azure.
-            // https://xebecstorage.blob.core.windows.net/profile-images
-
+            var fileInfo = e.File;            
             var blobUri = new Uri("https://"
                 + storageAcc
                 + ".blob.core.windows.net/"
@@ -1306,18 +1311,12 @@ namespace XebecPortal.UI.Pages.Applicant
             });
 
             if (res.GetRawResponse().Status <= 205)
-            {
-
-                // This is needs to change to the Model for matric stuffs
-                //personalInfo.Id = state.AppUserId; 
-                //personalInfo.ImageUrl = blobUri.ToString(); // This will be where the link will be stored 
-                Console.WriteLine("Result is true whooooo");
+            {                
                 var content = new FormUrlEncodedContent(new[]
                                 {
                                     new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
                                 });
-                //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
-
+                
                 cert3Content = blobUri.ToString();                
                 doc.AdditionalCert3 = cert3Content;
                 doc.AppUserId = state.AppUserId;
@@ -1333,18 +1332,25 @@ namespace XebecPortal.UI.Pages.Applicant
                 else
                 {
                     doc.Id = getUserDoc.Id;
+                    doc.CV = getUserDoc.CV;
+                    doc.MatricCertificate = getUserDoc.MatricCertificate;                    
+                    doc.UniversityTranscript = getUserDoc.UniversityTranscript;
+                    doc.AdditionalCert1 = getUserDoc.AdditionalCert1;
+                    doc.AdditionalCert2 = getUserDoc.AdditionalCert2;
+                    doc.AdditionalCert3 = cert3Content;
+                    doc.AppUserId = getUserDoc.AppUserId;
+
                     var resp = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Document/{doc.Id}", doc, new AuthenticationHeaderValue("Bearer", token));
 
                     if (resp.IsSuccessStatusCode)
                     {
-
                         validUpload = true;
                     }
                 }
                 if (validUpload)
                 {
-                    await OnInitializedAsync();
-                    await jsRuntime.InvokeAsync<object>("alert", "Your CV has successfully been uploaded");
+                    await jsRuntime.InvokeAsync<object>("alert", "Your third Additional Certificate has successfully been uploaded");
+                    await OnInitializedAsync();                    
                 }
             }
             else
