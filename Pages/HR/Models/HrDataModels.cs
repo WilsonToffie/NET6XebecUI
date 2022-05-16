@@ -313,6 +313,10 @@ namespace XebecPortal.UI.Pages.HR
 
         public string Surname { get; set; }
 
+        public string JobTitle { get; set; }
+
+        public int JobId { get; set; }
+
         public int ApplicationId { get; set; }
 
         public int AppUserId { get; set; }

@@ -110,12 +110,16 @@ namespace XebecPortal.UI.Shared
             hrDataAnalyticsTool = false;
             hrJobPortal = true;
             hrCreateAJob = false;
+            hrApplicantPortal = false;
+            hrPhaseManager = false;
         }
         private void showHRCreateAJob()
         {
             hrDataAnalyticsTool = false;
             hrJobPortal = false;
             hrCreateAJob = true;
+            hrApplicantPortal = false;
+            hrPhaseManager = false;
         }
 
         private void showHRApplicantPortal()
