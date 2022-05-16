@@ -347,8 +347,7 @@
         position: absolute;
         height: 10vh;
         width: 100%;
-        color: pink;
-        top: 15%;
+        top: 11%;
         left: 0%;
         display: flex;
         align-items: center;
@@ -358,7 +357,7 @@
     .circle {
         height: 70px;
         width: 70px;
-        background-color: #bbb;
+        background-color: #A9ABA7;
         border-radius: 50%;
     }
 
@@ -373,9 +372,95 @@
         width: 83%;
         position: absolute;
         height: 2vh;
-        bottom: 79%;
+        bottom: 83%;
         left: 8%;
-        background-color: #bbb;
+        background-color: #A9ABA7;
+        z-index: -1;
+    }
+
+    .NumberDisplay {
+        position: absolute;
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        left: 0%;
+        top: 13%;
+        font-weight: 800;
+        color: white;
+        font-size: 2em;
+    }
+
+    .TextDisplay {
+        font-weight: 600;
+    }
+
+    .selected-create-a-job-text {
+        color: #00bcae;
+        position: absolute;
+        top: 21%;
+        left: 4%;
+    }
+
+    .application-form-text {
+        left: 17%;
+        position: absolute;
+        top: 21%;
+    }
+
+    .selected-application-form-text {
+        left: 17%;
+        position: absolute;
+        color: #00bcae;
+        top: 21%;
+    }
+
+    .collaboration-text {
+        left: 45.5%;
+        position: absolute;
+        top: 21%;
+    }
+
+    .collaboration-text-part-2 {
+        left: 58.5%;
+        position: absolute;
+        top: 21%;
+    }
+
+    .phases-text {
+        left: 32.5%;
+        position: absolute;
+        top: 21%;
+    }
+
+    .post-a-job-text {
+        left: 76.5%;
+        position: absolute;
+        top: 21%;
+    }
+
+    .summary-text {
+        left: 91%;
+        position: absolute;
+        top: 21%;
+    }
+    /*This is test classes for other pages to indicate that their progress*/
+    .selected-rod {
+        width: 20%;
+        position: absolute;
+        height: 2vh;
+        bottom: 83%;
+        left: 10%;
+        background-color: #00bcae;
+        z-index: -1;
+    }
+
+    .progress-rod-page-2 {
+        width: 60%;
+        position: absolute;
+        height: 2vh;
+        bottom: 83%;
+        left: 30%;
+        background-color: #A9ABA7;
         z-index: -1;
     }
 </style>
@@ -385,18 +470,48 @@
 }
 else
 {
-    <!--<div class="top-Image-thing">
-        <div class="progressed-circle"></div>-->
-        @*<div class="progress-rod"></div>*@
-        <!--<div class="circle"></div>-->
-        @*<div class="progress-rod"></div>*@
-        <!--<div class="circle"></div>-->
-        @*<div class="progress-rod"></div>*@
-        <!--<div class="circle"></div>-->
-        @*<div class="progress-rod"></div>*@
-        <!--<div class="circle"></div>
+    @*<div class="top-Image-thing">
+        <div class="progressed-circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
     </div>
-    <div class="progress-rod"></div>-->
+    <div class="progress-rod"></div>
+    <div class="NumberDisplay">
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div>5</div>
+        <div>6</div>
+        <div>7</div>
+    </div>
+    <div class="TextDisplay">
+        <div class="selected-create-a-job-text">Create A Job</div>
+        <div class="application-form-text">Build Application Form</div>
+        <div class="collaboration-text">Select Collaboration</div>
+        <div class="collaboration-text-part-2">Select Collaboration Part 2</div>
+        <div class="phases-text">Select Phases</div>
+        <div class="post-a-job-text">Post Job</div>
+        <div class="summary-text">Summary</div>
+    </div>*@
+    <!--This is the progress for the second page-->
+    @*<div class="top-Image-thing">
+            <div class="progressed-circle"></div>
+            <div class="progressed-circle"></div>
+            <div class="circle"></div>
+            <div class="circle"></div>
+            <div class="circle"></div>
+        </div>
+        <div class="selected-rod"></div>
+        <div class="progress-rod-page-2"></div>*@
+
+
+
+
     <div class="create-job-summary">
         <div class="page-title">Summary</div>
 

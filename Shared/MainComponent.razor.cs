@@ -88,12 +88,16 @@ namespace XebecPortal.UI.Shared
             hrDataAnalyticsTool = false;
             hrJobPortal = true;
             hrCreateAJob = false;
+            hrApplicantPortal = false;
+            hrPhaseManager = false;
         }
         private void showHRCreateAJob()
         {
             hrDataAnalyticsTool = false;
             hrJobPortal = false;
             hrCreateAJob = true;
+            hrApplicantPortal = false;
+            hrPhaseManager = false;
         }
 
         private void showHRApplicantPortal()
@@ -147,7 +151,8 @@ namespace XebecPortal.UI.Shared
 
         private string storageAcc = "xebecstorage";//"storageaccountxebecac6b";
         private string imgContainer = "profile-images";//"images";
-        private string azureCredentials = "?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-05-07T15:09:45Z&st=2022-05-06T07:09:45Z&spr=https&sig=qxeI0Xt9nd9SkysOYEnMFKqbYiocU%2BcfRK%2FpxN8yN0E%3D";
+        private string azureCredentials = "?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-09-11T22:04:48Z&st=2022-05-11T14:04:48Z&spr=https&sig=MTkK0ODHx%2Fj%2BBwTPXnhcauQN%2F8A1HPhfG0kA%2BGKklmE%3D";
+            // private string azureCredentials = "?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-05-07T15:09:45Z&st=2022-05-06T07:09:45Z&spr=https&sig=qxeI0Xt9nd9SkysOYEnMFKqbYiocU%2BcfRK%2FpxN8yN0E%3D";
         private string userPicInfo;
         private async Task UploadingProfilePic(InputFileChangeEventArgs e)
         {
