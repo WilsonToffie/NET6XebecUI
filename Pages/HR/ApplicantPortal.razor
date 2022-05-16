@@ -777,15 +777,37 @@
     {
         searchCandidate = e.Value.ToString();
 
-        try
-        {
-            usersFiltered = users.Where(x => x.name.ToLower().Contains(searchCandidate.ToLower())).ToList();
-        }
-        catch (NullReferenceException nr)
+        //usersFiltered.Clear();
+
+        if (users != null)
         {
 
-            Console.WriteLine("searchValue: " + searchCandidate.ToLower() + usersFiltered.Count()); ;
+
+            foreach (var user in users)
+            {
+                if (user.name == null)
+                {
+                    Console.WriteLine("null error");
+                }
+
+                Console.WriteLine(user.name);
+
+                //if (user.name.ToLower().Contains(searchCandidate.ToLower()))
+                //{
+                //    usersFiltered.Add(user);
+                //}
+            }
         }
+
+        //try
+        //{
+        //    usersFiltered = users.Where(x => x.name.ToLower().Contains(searchCandidate.ToLower())).ToList();
+        //}
+        //catch (NullReferenceException nr)
+        //{
+
+        //    Console.WriteLine("searchValue: " + searchCandidate.ToLower() + usersFiltered.Count()); ;
+        //}
     }
 
 }
