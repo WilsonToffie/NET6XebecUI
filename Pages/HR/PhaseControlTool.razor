@@ -1,11 +1,10 @@
 ﻿@page "/phasecontrol"
-@using XebecPortal.UI.Utils.Handlers
-@using System.Net.Http.Headers
 @inject HttpClient httpClient
 @inject IJSRuntime jsr
 @inject NavigationManager NavigationManager
 @inject UserState _state
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IDialogService Dialog
 
 <style>
 
@@ -400,7 +399,7 @@
 
     .grid-container {
         display: grid;
-        grid-template-columns: 60% 5% 35%;
+        grid-template-columns: auto auto auto;
     }
 
     .grid-container-content {
@@ -414,9 +413,6 @@
 
     .grid-item {
         text-align: center;
-        background-color: rgba(255,255,255,1);
-        box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
-        height: 37em;
     }
 
     .grid-item-summary {
@@ -441,24 +437,42 @@
         <div class="form-heading">
             <h4 class="form-subheading">PHASE FORM</h4>
         </div>
-        <div class="form-main">
-            <div class="row">
-                <div class="col-4">
-                    <p class="select-heading">Phase Selection</p>
-
-                    <select class="select-form">
+        <br />
+        <div>
+            <div class="grid-container">
+                <div class="grid-item">
+                    <select class="select-form" style="width: 15em">
                         <option selected disabled="disabled">Select Phase</option>
                         @foreach (var item in phases)
                         {
-                            <option value="@item.id">@item.description</option>
+                            <option value="@item.id" @onclick="() => AddPhase(item)">@item.description</option>
                         }
                     </select>
                 </div>
-                <div class="col-4">
-                    <button class="down-button">Add Phase</button>
+                <div class="grid-item">
+                    <button class="btn rounded-3" style="background: #00bcae" @onclick="OpenAddPhaseDialog">Add Phase</button>
                 </div>
-                <div class="col-4">
-                    <button class="down-button">Delete Phase</button>
+                <div class="grid-item">
+                    <button class="btn rounded-3" style="background: #00bcae" @onclick="OpenDeletePhaseDialog">Delete Phase</button>
+                </div>
+                <div class="grid-item d-flex justify-content-center">
+                    <div class="overflow-auto" style="width: 15em; height: 22em">
+                        @if (phasesAdded?.Any() == true)
+                        {
+                            foreach (var item in phasesAdded)
+                            {
+                                <br />
+                                <div class="card" style="width: 14em">
+                                    <div class="card-header d-flex justify-content-end">
+                                        <button type="button" class="btn-close" @onclick="() => DeletePhaseOrderPhase(item)"></button>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">@item.description</h5>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
                 </div>
             </div>
         </div>
@@ -475,6 +489,60 @@
 <div class="nav-btns">
     <button class="down-button">Submit</button>
 </div>
+
+<MudDialog @bind-IsVisible="isDialogAddPhaseVisible" Options="closeButton">
+    <TitleContent>
+        <MudText Typo="Typo.h3">
+            Add Phase
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <div class="row">
+            <div class="col-12">
+                <input class="create-form-text" placeholder="Phase Name" @bind-value="addPhaseValue" />
+            </div>
+            <div class="col-12">
+                <br />
+            </div>
+            <div class="col-12 d-flex justify-content-center">
+                <button class="btn rounded-3" type="button" style="background: #00bcae" @onclick="AddPhase">ADD</button>
+            </div>
+        </div>
+    </DialogContent>
+</MudDialog>
+
+<MudDialog @bind-IsVisible="isDialogDeletePhaseVisible" Options="closeButton">
+    <TitleContent>
+        <MudText Typo="Typo.h3">
+            Delete Phase
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <div class="row">
+            <div class="col-12">
+                <div class="grid-item d-flex justify-content-center">
+                    <div class="overflow-auto" style="height: 22em">
+                        @if (phases?.Any() == true)
+                        {
+                            foreach (var item in phases)
+                            {
+                                <br />
+                                <div class="card">
+                                    <div class="card-header d-flex justify-content-end">
+                                        <button type="button" class="btn-close" @onclick="() => DeletePhase(item)"></button>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">@item.description</h5>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </DialogContent>
+</MudDialog>
 
 @*
     <div class="collaborators-container">
@@ -605,6 +673,9 @@
 *@
 @code
 {
+    @using XebecPortal.UI.Utils.Handlers;
+    @using System.Net.Http.Headers;
+
     [Parameter]
     public CreateJobPost TempJob { get; set; }
 
@@ -615,10 +686,15 @@
     private List<ApplicationPhase> phasesAdded = new List<ApplicationPhase>();
     private IList<Job> jobs = new List<Job>();
     ApplicationPhase phaseValue = new ApplicationPhase();
+    ApplicationPhase tempPhaseValue = new ApplicationPhase();
     private string developerAssigned = "";
     private string token;
+    private string addPhaseValue;
     private bool showModalSubmitPhase = false;
     private bool showModalDeletePhase = false;
+    private bool isDialogAddPhaseVisible;
+    private bool isDialogDeletePhaseVisible;
+    MudBlazor.DialogOptions closeButton = new MudBlazor.DialogOptions() { CloseButton = true, FullWidth = true, DisableBackdropClick = true, CloseOnEscapeKey = false };
 
     protected override async Task OnInitializedAsync()
     {
@@ -642,19 +718,25 @@
 
     private async Task DeletePhase(ApplicationPhase phase)
     {
-        await httpClient.DeleteAsync($"https://xebecapi.azurewebsites.net/api/applicationphase/{phase.id}");
-        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
-
-        await jsr.InvokeVoidAsync("alert", "Deleted!");
+        phases.Remove(phase);
+        /*await httpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/applicationphase/{phase.id}", new AuthenticationHeaderValue("Bearer", token));
+        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));*/
+        //await jsr.InvokeVoidAsync("alert", "Deleted!");
     }
 
     private async Task AddPhase()
     {
-        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/applicationphase", phaseValue);
-
-        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
-
-        showModalSubmitPhase = !showModalSubmitPhase;
+        Console.WriteLine(1);
+        if (string.IsNullOrWhiteSpace(addPhaseValue) == false)
+        {
+            tempPhaseValue = new() { description = addPhaseValue };
+            /*await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/applicationphase", tempPhaseValue);
+            phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));*/
+            phases.Add(tempPhaseValue);
+            addPhaseValue = "";
+            //showModalSubmitPhase = !showModalSubmitPhase;
+        }
+        isDialogAddPhaseVisible = true;
     }
 
     private async Task SubmitPhases()
@@ -804,4 +886,7 @@
 
         return "";
     }
+
+    private void OpenAddPhaseDialog() => isDialogAddPhaseVisible = true;
+    private void OpenDeletePhaseDialog() => isDialogDeletePhaseVisible = true;
 }
