@@ -437,33 +437,43 @@
             }
         }
 
-        <div class="main-wrapper-child job-cards rejection-card">
-            <div class="card-header  d-flex align-content-center justify-content-center rejection-heading">
-                <span class="count">@countUnsuccessfull.Count</span><span style="margin-left:5px;">Unsuccessful</span><br><span style="margin-left:5px;">Application</span>@if (countUnsuccessfull.Count > 1)
-                {
-                    <span>s</span>}
-                else
-                { <span></span>}
-            </div>
-
-            @foreach (var application in applications)
+    <div class="main-wrapper-child job-cards rejection-card">
+        <div class="card-header  d-flex align-content-center justify-content-center rejection-heading">
+            <span class="count">@countUnsuccessfull.Count</span><span style="margin-left:5px;">Unsuccessful</span><br><span style="margin-left:5px;">Application</span>@if (countUnsuccessfull.Count > 1)
             {
-                Job currentJob = jobs.Where(x => x.Id == application.JobId).FirstOrDefault();
-                ApplicationPhase currentPhase = phases.Where(x => x.id == application.ApplicationPhaseId).FirstOrDefault();
-
-                @if (rejectedCandidates.Where(x => x.applicationId == application.Id).FirstOrDefault() != null)
-                {
-                    <div class="job-card rejection">
-                        <span class="position">@currentJob.Title</span>
-                        <span class="company">@currentJob.Company</span>
-                        <small class="addition-details">@currentJob.Location</small>
-                        <small class="phase left-text">Last Phase : <button class="rejection-phase">@currentPhase.description</button></small>
-                        <small class="addition-details">Date Advertised: @currentJob.CreationDate</small>
-                        <small class="addition-details left-text">Date Closed : @currentJob.DueDate</small>
-                    </div>
-                }
-            }
+                <span>s</span>}
+            else
+            { <span></span>}
         </div>
+
+        @foreach (var application in applications)
+        {
+            Job currentJob;
+
+            if(jobsFiltered!=null)
+            {
+                currentJob = jobsFiltered.Where(x => x.Id == application.JobId).FirstOrDefault();
+            }
+            else
+            {
+                currentJob = jobs.Where(x => x.Id == application.JobId).FirstOrDefault();
+            }
+
+            ApplicationPhase currentPhase = phases.Where(x => x.id == application.ApplicationPhaseId).FirstOrDefault();
+
+            @if (rejectedCandidates.Where(x => x.applicationId == application.Id).FirstOrDefault() != null && currentJob != null)
+            {
+                <div class="job-card rejection">
+                    <span class="position">@currentJob.Title</span>
+                    <span class="company">@currentJob.Company</span>
+                    <small class="addition-details">@currentJob.Location</small>
+                    <small class="phase left-text">Last Phase : <button class="rejection-phase">@currentPhase.description</button></small>
+                    <small class="addition-details">Date Advertised: @currentJob.CreationDate</small>
+                    <small class="addition-details left-text">Date Closed : @currentJob.DueDate</small>
+                </div>
+            }
+        }
+    </div>
 
     </div>
 }
