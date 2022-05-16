@@ -5,7 +5,7 @@
 @using Microsoft.Extensions.Logging
 @inject ILogger<ApplicationProfile>  Logger
 @inject UserState state
-@inject Blazored.LocalStorage.ILocalStorageService localStorage 
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <style>
     .nav1 {
@@ -67,9 +67,9 @@
     .drag-drop-input {
         position: absolute;
         background-color: pink;
-        left: 27.5%;
+        left: 29.5%;
         top: 34.7%;
-        width: 690px;
+        width: 720px;
         height: 140px;
         opacity: 0;
         cursor: pointer;
@@ -461,10 +461,11 @@
     .position-white {
         display: inline-block;
         position: relative;
-        /*height: 60vh;*/
-        width: 84%;
-        left: 26%;
+        /* height: 60vh; */
+        width: 90%;
+        left: 23%;
         top: 11%;
+        margin-top: 1vh;
     }
 
     .position-history-card {
@@ -747,11 +748,11 @@
     }
 
     .progress-bar-spot-size {
-        height: 2vh;
+        height: 3vh;
         position: absolute;
         left: 30%;
         top: 22%;
-        width: 38%;
+        width: 46%;
     }
 
     .progress-bar-progression {
@@ -789,7 +790,11 @@
              background-color: lightblue;
         }*@
 
-
+    .progress-bar-text {
+        position: absolute;
+        color: black;
+        top: 1px;
+    }
         /*Draggable items*/
     .dragable-spot {
         width: 10vh;
@@ -885,13 +890,13 @@
 
     .documents-white-back {
         background: white !important;
-        height: 62vh !important;
-        margin-top: 11vh;
+        height: 66vh !important;
+        margin-top: 12vh;
         width: 98vh;
         margin-left: -5vh;
     }
 
-    .matric-cert-image {        
+    .matric-cert-image {
         width: 305px;
         height: 144px;
     }
@@ -901,14 +906,46 @@
         margin-top: -1.3vh;
     }
 
-    .documents-styling{
-        width:100%; 
-        height:100%;         
+    .documents-styling {
+        width: 90%;
+        height: 90%;
+        margin-top: 7px;
+    }
+    .document-preview {
+        /*width: 100%;*/
+        /* height: 100%; */
+        text-align: center;
+        align-content: center;
+    }
+    /*styling to show document page*/
+    .dimmed {
+        background: rgb(0 0 0 / 0.20);
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
-    .documents-styling:hover{
-        transform: scale(2);
+    .document-magnified {
+        height: 90vh;
+        width: 40vw;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: white;
+        border-radius: 1em;
+        z-index: 1;
     }
+
+        .document-magnified iframe {
+            width: 90%;
+            height: 90%;
+        }
 }
 </style>
 
@@ -921,7 +958,7 @@
 
             <ul class="nav nav1 nav-tabs" role="tablist">
                 @*<div class="child progress"></div>
-        <div class="child shrinker timelapse"></div>*@
+                    <div class="child shrinker timelapse"></div>*@
                 <!--Container-->
                 <li class="nav-item p-1">
                     <a id="personal-tab" class="nav-link-background nav-link1 active" data-bs-toggle="tab" href="#personal-information" @onclick="progressCheck">Personal Information</a>
@@ -949,8 +986,8 @@
         <div class="progress-bar-spot-size">
             <div class="progress-bar-progression">
             </div>
-            <div style="position: absolute; left: -3%; color: black; top: -3px;">0%</div>
-            <div style="position: absolute; left: 100%; color: black; top: -3px;">100%</div>
+            <div class="progress-bar-text"style="left: -3%; ">0%</div>
+            <div class="progress-bar-text" style="left: 100%;">100%</div>
         </div>
         <!--Content Panel-->
         <div class="col-12 d-flex justify-content-center align-items-start ">
@@ -962,7 +999,7 @@
                         <EditForm Model="@personalInformation" OnValidSubmit="@AddPersonalInformation" style="width: 60%;">
                             <DataAnnotationsValidator />
                             <div class="row" style="margin-top: 50px; margin-left: -7%;">
-                                <div class="col-12 shadow-sm bg-body rounded-edges white-back" style=" margin-top: 4vh;">
+                                <div class="col-12 shadow-sm bg-body rounded-edges white-back" style=" margin-top: 5vh;">
                                     <div class="personalInfo-header">Personal Information</div>
                                     <div class="row p-3">
                                         <div class="col-12">
@@ -972,9 +1009,9 @@
                                                           @ondragend="@(() => _dragEnterStyle = null)"
                                                           Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
 
-                                                    <InputFile OnChange="OnInputFileChangedAsync" multiple class="drag-drop-input" />
-                                                    @if (fileNames == null)
+                                                    @if (getUserDoc.CV == null)
                                                     {
+                                                        <InputFile OnChange="OnInputFileChangedAsync" multiple class="drag-drop-input" />
                                                         <MudText Typo="Typo.h3" Align="Align.Center">
                                                             <i class="fa fa-upload"></i>
                                                             <br />
@@ -983,26 +1020,27 @@
                                                     }
                                                     else
                                                     {
-                                                        <MudList Style="padding:2em;width:100%;" Dense="true">
-                                                            <MudListItem @key="@fileNames.Name">
-                                                                <MudChip Color="Color.Dark"
-                                                                         Style="width:60px; overflow:hidden;"
-                                                                         Text="@(fileNames.Name.Split(".").Last())" />
-                                                                @fileNames.Name
-                                                            </MudListItem>
-                                                        </MudList>
+                                                        <i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i>
+                                                        <div class="document-preview">
+                                                            <a href="@getUserDoc.CV" target="_blank">CV</a>
+                                                        </div>
                                                     }
                                                 </MudPaper>
+                                                <div class="upload-button-location">
+                                                    <label class="btn formButton">
+                                                        <InputFile OnChange="OnInputFileChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
+                                                    </label>
+                                                </div>
                                             </div>
 
-                                            <MudGrid Justify="Justify.Center" Spacing="4">
-                                                <MudItem>
+                                            <!--<MudGrid Justify="Justify.Center" Spacing="4">-->
+                                                @*<MudItem>
                                                     <MudButton OnClick="Upload" Disabled="@(!(fileNames == null))" Style="color: white; background-color: #00BCAE; font-size: small; margin-top: 5px;" Variant="Variant.Filled">Upload</MudButton>
-                                                </MudItem>
-                                                <MudItem>
+                                                </MudItem>*@
+                                                @*<MudItem>
                                                     <MudButton OnClick="@ResetFileNames" Disabled="@(fileNames == null)" Style="color: white; background-color: #00BCAE; font-size: small; margin-top: 5px;" Variant="Variant.Filled">Clear</MudButton>
-                                                </MudItem>
-                                            </MudGrid>
+                                                </MudItem>*@
+                                            <!--</MudGrid>-->
                                         </div>
                                     </div>
                                     <div class="row p-3">
@@ -1339,9 +1377,9 @@
                 <!--Additional Documents Tab-->
 
                 <div id="additionalDocuments" class="container tab-pane">
-                    <EditForm Model="@doc" >
+                    <EditForm Model="@doc">
                         <DataAnnotationsValidator />
-                    <div class="d-flex justify-content-center">                     
+                        <div class="d-flex justify-content-center">
                             <div class="rounded-edges documents-white-back">
                                 <div class="personalInfo-header">Additional Documents</div>
 
@@ -1363,13 +1401,13 @@
                                             }
                                             else
                                             {
-                                                <div class="matric-cert-image"></div>
-                                                
-                                                    <iframe src="@getUserDoc.MatricCertificate" class="documents-styling"></iframe>
-                                                
-                                                
+                                                <i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i>
+                                                <div class="document-preview">
+                                                    <!--@onclick="() => showDetailedDocumentPage(true)"-->                                                    
+                                                    <a href="@getUserDoc.MatricCertificate" target="_blank">Matric Certificate</a>
+                                                </div>
                                             }
-                                        </MudPaper>                                        
+                                        </MudPaper>
                                         <div class="upload-button-location">
                                             <label class="btn formButton">
                                                 <InputFile OnChange="OnInputMatricCertChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
@@ -1383,9 +1421,10 @@
                                                   @ondragend="@(() => _dragEnterStyle = null)"
                                                   Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
 
-                                            <InputFile OnChange="OnInputTranscriptChangedAsync" multiple class="academic-drag-drop-input" />
-                                            @if (fileNames == null)
+                                            @if (getUserDoc.UniversityTranscript == null)
                                             {
+                                                <InputFile OnChange="OnInputTranscriptChangedAsync" multiple class="academic-drag-drop-input" />
+
                                                 <MudText Typo="Typo.h3" Align="Align.Center">
                                                     <i class="fa fa-upload"></i>
                                                     <br />
@@ -1394,16 +1433,18 @@
                                             }
                                             else
                                             {
-                                                @*<MudList Style="padding:2em;width:100%;" Dense="true">
-                                                    <MudListItem @key="@doc.UniversityTranscript">
-                                                        <MudChip Color="Color.Dark"
-                                                                 Style="width:60px; overflow:hidden;"
-                                                                 Text="@(fileNames.Name.Split(".").Last())" />
-                                                        @doc.UniversityTranscript
-                                                    </MudListItem>
-                                                </MudList>*@
+                                                <i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i>
+                                                <div class="document-preview">
+                                                    <!--@onclick="() => showDetailedDocumentPage(true)"-->                                                    
+                                                    <a href="@getUserDoc.UniversityTranscript" target="_blank">Academic Transcript</a>
+                                                </div>
                                             }
                                         </MudPaper>
+                                        <div class="upload-button-location">
+                                            <label class="btn formButton">
+                                                <InputFile OnChange="OnInputTranscriptChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="spacing-between-dragable-items">
@@ -1414,9 +1455,9 @@
                                                       @ondragend="@(() => _dragEnterStyle = null)"
                                                       Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
 
-                                                <InputFile OnChange="OnInputFirstDocumentChangedAsync" multiple class="certificate-drag-drop-input" />
-                                                @if (fileNames == null)
+                                                @if (getUserDoc.AdditionalCert1 == null)
                                                 {
+                                                    <InputFile OnChange="OnInputFirstDocumentChangedAsync" multiple class="certificate-drag-drop-input" />
                                                     <MudText Typo="Typo.h3" Align="Align.Center">
                                                         <i class="fa fa-upload"></i>
                                                         <br />
@@ -1425,54 +1466,29 @@
                                                 }
                                                 else
                                                 {
-                                                    @*<MudList Style="padding:2em;width:100%;" Dense="true">
-                                                        <MudListItem @key="@doc.AdditionalCert1">
-                                                            <MudChip Color="Color.Dark"
-                                                                     Style="width:60px; overflow:hidden;"
-                                                                     Text="@(fileNames.Name.Split(".").Last())" />
-                                                            @doc.AdditionalCert1
-                                                        </MudListItem>
-                                                    </MudList>*@
+                                                    <i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i>
+                                                    <div class="document-preview">
+                                                        <!--@onclick="() => showDetailedDocumentPage(true)"-->
+                                                        <a href="@getUserDoc.AdditionalCert1" target="_blank">Additional Document</a>
+                                                    </div>
                                                 }
                                             </MudPaper>
+                                            <div class="upload-button-location">
+                                                <label class="btn formButton">
+                                                    <InputFile OnChange="OnInputFirstDocumentChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
+                                                </label>
+                                            </div>
                                         </div>
+
                                         <div class="createjob-form-individual">
                                             <MudPaper @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
                                                       @ondragleave="@(() => _dragEnterStyle = null)"
                                                       @ondragend="@(() => _dragEnterStyle = null)"
                                                       Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
 
-                                                <InputFile OnChange="OnInputSecondDocumentChangedAsync" multiple class="certificate-two-drag-drop-input" />
-                                                @if (fileNames == null)
+                                                @if (getUserDoc.AdditionalCert2 == null)
                                                 {
-                                            <MudText Typo="Typo.h3" Align="Align.Center">
-                                                <i class="fa fa-upload"></i>
-                                                <br />
-                                                Drop Certificate
-                                            </MudText>
-                                                }
-                                                else
-                                                {
-                                                    @*<MudList Style="padding:2em;width:100%;" Dense="true">
-                                                        <MudListItem @key="@doc.AdditionalCert2">
-                                                            <MudChip Color="Color.Dark"
-                                                                     Style="width:60px; overflow:hidden;"
-                                                                     Text="@(fileNames.Name.Split(".").Last())" />
-                                                            @doc.AdditionalCert2
-                                                        </MudListItem>
-                                                    </MudList>*@
-                                                }
-                                            </MudPaper>
-                                        </div>
-                                        <div class="createjob-form-individual">
-                                            <MudPaper @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
-                                                      @ondragleave="@(() => _dragEnterStyle = null)"
-                                                      @ondragend="@(() => _dragEnterStyle = null)"
-                                                      Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
-
-                                                <InputFile OnChange="OnInputThirdDocumentChangedAsync" multiple class="certificate-three-drag-drop-input" />
-                                                @if (fileNames == null)
-                                                {
+                                                    <InputFile OnChange="OnInputSecondDocumentChangedAsync" multiple class="certificate-two-drag-drop-input" />
                                                     <MudText Typo="Typo.h3" Align="Align.Center">
                                                         <i class="fa fa-upload"></i>
                                                         <br />
@@ -1481,22 +1497,57 @@
                                                 }
                                                 else
                                                 {
-                                                    @*<MudList Style="padding:2em;width:100%;" Dense="true">
-                                                        <MudListItem @key="@doc.AdditionalCert3">
-                                                            <MudChip Color="Color.Dark"
-                                                                     Style="width:60px; overflow:hidden;"
-                                                                     Text="@(fileNames.Name.Split(".").Last())" />
-                                                            @doc.AdditionalCert3
-                                                        </MudListItem>
-                                                    </MudList>*@
+                                                    <i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i>
+                                                    <div class="document-preview">
+                                                        <!--@onclick="() => showDetailedDocumentPage(true)"-->
+
+                                                        <a href="@getUserDoc.AdditionalCert2" target="_blank">Additional Document</a>
+                                                    </div>
                                                 }
                                             </MudPaper>
+                                            <div class="upload-button-location">
+                                                <label class="btn formButton">
+                                                    <InputFile OnChange="OnInputSecondDocumentChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="createjob-form-individual">
+                                            <MudPaper @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
+                                                      @ondragleave="@(() => _dragEnterStyle = null)"
+                                                      @ondragend="@(() => _dragEnterStyle = null)"
+                                                      Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
+
+                                                @if (getUserDoc.AdditionalCert3 == null)
+                                                {
+                                                    <InputFile OnChange="OnInputThirdDocumentChangedAsync" multiple class="certificate-three-drag-drop-input" />
+                                                    <MudText Typo="Typo.h3" Align="Align.Center">
+                                                        <i class="fa fa-upload"></i>
+                                                        <br />
+                                                        Drop Certificate
+                                                    </MudText>
+                                                }
+                                                else
+                                                {
+                                            <i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i>
+                                                    <div class="document-preview">
+                                                        <!--@onclick="() => showDetailedDocumentPage(true)"-->
+
+                                                        <a href="@getUserDoc.AdditionalCert3" target="_blank">Additional Document</a>
+                                                    </div>
+                                                }
+                                            </MudPaper>
+                                            <div class="upload-button-location">
+                                                <label class="btn formButton">
+                                                    <InputFile OnChange="OnInputThirdDocumentChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>                       
-                    </div>
-                        </EditForm>
+                            </div>
+                        </div>
+                    </EditForm>
                 </div>
 
                 <!--References tab-->
@@ -1510,7 +1561,7 @@
                                     <div class="col-9 p-5">
                                         <div class="row shadow-sm bg-body rounded-edges white-back position-white">
                                             <div class="education-header">References</div>
-                                            <div class="col-12" >
+                                            <div class="col-12">
 
                                                 <div class="row p-3">
                                                     <div class="col-6">
@@ -1559,7 +1610,7 @@
                                                 <div class="text-center history-status-intransit">
                                                     <p class="history-status  text-tight">References</p>
                                                 </div>
-                                                <br />                                                
+                                                <br />
                                                 @if (referencesList != null && referencesList.Count > 0)
                                                 {
                                                     foreach (var items in referencesList)
@@ -1571,7 +1622,7 @@
                                                                 <div class="work-history-comp-name">@items.RefFirstName</div>
                                                                 <div class="work-history-job-title">@items.RefLastName</div>
                                                                 <div class="work-history-job-title">@items.RefEmail</div>
-                                                                <div class="work-history-job-title">@items.RefPhone</div>                                       
+                                                                <div class="work-history-job-title">@items.RefPhone</div>
                                                             </div>
                                                         </div>
                                                     }
@@ -1586,10 +1637,10 @@
                 </div>
 
                 <!--Online Presence-->
-                <div id="online-profile" class="container tab-pane" style="height: 60vh; width: 120vh; margin-top: 50px;">
+                <div id="online-profile" class="container tab-pane" style=" margin-top: 50px;">
                     <form class="col-12 d-flex justify-content-center align-items-start">
                         <div class="row col-9">
-                            <div class="col-12 shadow-sm bg-body rounded-edges align-self-start white-back " style=" margin-top: 3vh;">
+                            <div class="col-12 shadow-sm bg-body rounded-edges align-self-start white-back" style="margin-top: -5.25vh; margin-left: 5vh; width: 87.5%; " >
                                 <div class="education-header">Online Presence</div>
                                 <div class="row p-3">
                                     <div class="col-6">
@@ -1629,7 +1680,7 @@
                                 </div>
                                 <!--Validation to ensure that the page is 100% completed-->
                                 @*@if (calc == 100)
-                        {*@
+                                    {*@
                                 <div class="row p-3">
                                     <div class="col-12 d-flex justify-content-center">
                                         <input class="btn formButton" type="button" value="Done" @onclick="Submit" />

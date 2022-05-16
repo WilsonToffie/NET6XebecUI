@@ -216,7 +216,17 @@
         border: 0.4em rgba(0,0,0,0.2) solid;
         border-radius: 100%;
     }
-
+    .profile-image-div-cover-empty{
+        height: 18vh;
+        width: 50%;
+        margin: auto;
+        background-color: grey;
+        background-size: cover;
+        /*background-repeat: no-repeat;*
+        /*background-color: none;*/
+        border: 0.4em rgba(0,0,0,0.2) solid;
+        border-radius: 100%;
+    }
     .profile-image-div {
         height: 16vh;
         margin-top: 1vh;
@@ -472,14 +482,30 @@
             </div>
             <div class="mainlayout-profile">
                 <div class="profile-div">
-                    <div class="profile-image-div-cover">
-                        <div class="upload-profile-btn">
-                            <label class="to-top">
-                                <InputFile OnChange="@UploadingProfilePic" class="drag-drop-input-image" id="fileInput" />
-                            </label>
-                        </div>
+                    @if (newUser)
+                    {
 
-                    </div>
+
+                        <div class="profile-image-div-cover-empty">
+                            @*<div class="upload-profile-btn">
+                                <label class="to-top">
+                                <InputFile OnChange="@UploadingProfilePic" class="drag-drop-input-image" id="fileInput" />
+                                </label>
+                            </div>*@
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="profile-image-div-cover">
+                            <div class="upload-profile-btn">
+                                <label class="to-top">
+                                    <InputFile OnChange="@UploadingProfilePic" class="drag-drop-input-image" id="fileInput" />
+                                </label>
+                            </div>
+                        </div>
+                    }
+
+
                     <div class="profile-name-div">
                         <h2 class="profile-name">@state.Name &nbsp @state.Surname</h2>
                     </div>
@@ -619,14 +645,27 @@
             </div>
             <div class="mainlayout-profile">
                 <div class="profile-div">
-                    <div class="profile-image-div-cover">
-                        <div class="upload-profile-btn">
-                            <label class="to-top">
-                                <InputFile OnChange="@UploadingProfilePic" class="drag-drop-input-image" id="fileInput" />
-                            </label>
+                    @if (newUser)
+                    {
+                        <div class="profile-image-div-cover-empty">
+                            @*<div class="upload-profile-btn">
+                                <label class="to-top">
+                                    <InputFile OnChange="@UploadingProfilePic" class="drag-drop-input-image" id="fileInput" />
+                                </label>
+                            </div>*@
                         </div>
-
+                }
+                else
+                {
+                <div class="profile-image-div-cover">
+                    <div class="upload-profile-btn">
+                        <label class="to-top">
+                            <InputFile OnChange="@UploadingProfilePic" class="drag-drop-input-image" id="fileInput" />
+                        </label>
                     </div>
+                </div>
+                }
+                    
                     <div class="profile-name-div">
                         <h2 class="profile-name">@state.Name &nbsp @state.Surname</h2>
                     </div>
