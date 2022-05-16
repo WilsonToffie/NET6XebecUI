@@ -445,17 +445,20 @@
 
 
                         //user = usersFiltered.Where(x => x.id == application.AppUserId).FirstOrDefault();
-                        string jobTitle = jobs.Where(x => x.Id == application.JobId).FirstOrDefault().Title;
-                        int jobId = jobs.Where(x => x.Id == application.JobId).FirstOrDefault().Id;
-                        <tr>
-                            <td><img src="@user.imageUrl" alt="Avatar"></td>
-                            <td style="font-size: 1.2em; font-family: opensans-condensed-bold">@user.name @empty @user.surname</td>
-                            <td>@jobTitle</td>
-                            <td>@FindCurrentPhase(user.id, jobId)</td>
-                            <td style="font-weight: 400; font-family: opensans-condensed-bold; font-size: 1em; color: #d35bc9">@($"{application.TimeApplied:dd MMM yyyy}")</td>
-                            <td style="text-decoration: underline; font-family: opensans-condensed-bold"><a @onclick="() => toggleApplicationForm(user)">View Application Form</a></td>
-                            <td><input type="button" class="btn-view-documents" value="View Documents" @onclick="() => toggleDocuments(user)" /></td>
-                        </tr>
+                        @if (user.id == application.AppUserId)
+                        {
+                            string jobTitle = jobs.Where(x => x.Id == application.JobId).FirstOrDefault().Title;
+                            int jobId = jobs.Where(x => x.Id == application.JobId).FirstOrDefault().Id;
+                            <tr>
+                                <td><img src="@user.imageUrl" alt="Avatar"></td>
+                                <td style="font-size: 1.2em; font-family: opensans-condensed-bold">@user.name @empty @user.surname</td>
+                                <td>@jobTitle</td>
+                                <td>@FindCurrentPhase(user.id, jobId)</td>
+                                <td style="font-weight: 400; font-family: opensans-condensed-bold; font-size: 1em; color: #d35bc9">@($"{application.TimeApplied:dd MMM yyyy}")</td>
+                                <td style="text-decoration: underline; font-family: opensans-condensed-bold"><a @onclick="() => toggleApplicationForm(user, jobId)">View Application Form</a></td>
+                                <td><input type="button" class="btn-view-documents" value="View Documents" @onclick="() => toggleDocuments(user)" /></td>
+                            </tr>
+                        }
                     }
                 }
                 else
@@ -473,7 +476,7 @@
                                     <td>@jobTitle</td>
                                     <td>@FindCurrentPhase(@user.id, JobId)</td>
                                     <td style="font-weight: 400; font-family: opensans-condensed-bold; font-size: 1em; color: #d35bc9">@($"{application.TimeApplied:dd MMM yyyy}")</td>
-                                    <td style="text-decoration: underline; font-family: opensans-condensed-bold"><a @onclick="() => toggleApplicationForm(user)">View Application Form</a></td>
+                                    <td style="text-decoration: underline; font-family: opensans-condensed-bold"><a @onclick="() => toggleApplicationForm(user, JobId)">View Application Form</a></td>
                                     <td><input type="button" class="btn-view-documents" value="View Documents" @onclick="() => toggleDocuments(user)" /></td>
                                 </tr>
 
@@ -659,7 +662,7 @@
     private string searchTerm = "";
     private CandidateRecommender selectedCandidate;
     private AppUser selectedUser;
-    private IList<AppUser> usersFiltered;
+    private IList<AppUser> usersFiltered = null;
     private IList<Job> jobs = new List<Job>();
     private IList<CandidateRecommender> candidates = null;
     private IList<AppUser> users = new List<AppUser>();
@@ -727,10 +730,11 @@
         showDocuments = !showDocuments;
     }
 
-    private void toggleApplicationForm(AppUser user)
+    private void toggleApplicationForm(AppUser user, int jobId)
     {
         showApplicationForm = !showApplicationForm;
         SetSelectedCandidate(user);
+        JobId = jobId;
     }
 
     private void toggleApplicationForm()
@@ -777,7 +781,8 @@
     {
         searchCandidate = e.Value.ToString();
 
-        //usersFiltered.Clear();
+        usersFiltered = new List<AppUser>();
+        usersFiltered.Clear();
 
         if (users != null)
         {
@@ -785,17 +790,13 @@
 
             foreach (var user in users)
             {
-                if (user.name == null)
+                if (user.name != null)
                 {
-                    Console.WriteLine("null error");
+                    if (user.name.ToLower().Contains(searchCandidate.ToLower()))
+                    {
+                        usersFiltered.Add(user);
+                    }
                 }
-
-                Console.WriteLine(user.name);
-
-                //if (user.name.ToLower().Contains(searchCandidate.ToLower()))
-                //{
-                //    usersFiltered.Add(user);
-                //}
             }
         }
 
