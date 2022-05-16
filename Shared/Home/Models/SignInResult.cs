@@ -15,7 +15,7 @@ namespace XebecPortal.UI.Shared.Home.Models
         public string Surname { get; set; }
         public string jwtBearer { get; set; }
         public bool Success { get; set; }   //Used as a flag to indicate whether everything was a success or not
-        public string Avator { get;set;}
+        public string Avatar { get;set;}
        // public string Title { get;set;} // The title will not have values due to the new API parameters / variables
 
         
