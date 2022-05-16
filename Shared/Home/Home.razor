@@ -117,36 +117,8 @@
         line-height: 10vh;
         font-family: opensans-bold;
     }
-    .dropdown-container{
-        height: 600px;
-        width: 500px;
-        background-color: black;
-    }
-    .dropdown-view{
-        height: 8vh;
-        width: 500px;
-        background-color: white;
-        color: black;
-        font-size: 50px;
-    }
-    .dropdown-search {
-        height: 8vh;
-        width: 500px;
-        background-color: white;
-        color: black;
-        font-size: 50px;
-    }
-    .dropdown-options-container{
-        height: 5vh;
-        width: 500px;
-        background-color: green;
-        color: white;
-        font-size: 16px;
-    }
-    .dropdown-label{
-        font-size: 2em;
-        color: white;
-    }
+   
+
 </style>
 
 <div class="home-container">
@@ -162,59 +134,21 @@
             </div>
         </div>
         <div class="right">
+
             <div class="home-image-container">
-            <div class="image1"></div>
-            <div class="home-image-label">APPLICANTS PORTAL</div>
-        </div>
-        <div class="home-image-container">
-            <div class="image2"></div>
-            <div class="home-image-label">HUMAN RESOURCES PORTAL</div>
-        </div>
-         
+                <div class="image1"></div>
+                <div class="home-image-label">APPLICANTS PORTAL</div>
+            </div>
+            <div class="home-image-container">
+                <div class="image2"></div>
+                <div class="home-image-label">HUMAN RESOURCES PORTAL</div>
+            </div>
+            
+
         </div>
     </div>
-
-
 </div>
 
 @code{
 
-    private string value = "Select Option";
-    private string[] options = new string[] { "a", "b", "c", "d", "e" };
-    private List<string> selected = new List<string>();
-
-    private void SelectAll()
-    {
-        foreach (string opt in options)
-        {
-            selected.Add(opt);
-        }
-
-        BuildValue();
-    }
-
-    private void BuildValue()
-    {
-        for(int ele=0;ele<selected.Count;ele++)
-        {
-            value = value + " " + selected[ele];
-        }
-    }
-
-
-    private void SelectThis(string option)
-    {
-
-        if (!selected.Contains(option))
-        {
-            selected.Add(option);
-            BuildValue();
-        }
-
-    }
-
-    private void Clear()
-    {
-
-    }
 }

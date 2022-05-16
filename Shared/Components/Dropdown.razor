@@ -1,0 +1,324 @@
+﻿@using System.Collections.Generic
+@using System.IO
+@using System
+
+<style>
+
+    .dropdown-container {
+        height: 40vh;
+        width: 15vw;
+        background-color: white;
+        border-bottom-left-radius: 2em;
+        border-bottom-right-radius: 2em;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .dropdown-view-container {
+        height: 8vh;
+        width: 15vw;
+        background-color: #00bcae;
+        border-radius: 2em;
+        display: flex;
+    }
+
+    .dropdown-view {
+        height: 8vh;
+        margin-top: 0;
+        margin-left: 10%;
+        width: 70%;
+        background-color: transparent;
+        border: none;
+        color: white;
+        font-size: 1em;
+        font-family: opensans-condensed-bold;
+        line-height: 8vh;
+    }
+
+    .dropdown-icon {
+        font-size: 2rem;
+        text-align: right;
+        color: white;
+        line-height: 8vh;
+        height: 8vh;
+        background-color: transparent;
+        width: 10%;
+        margin-right: 10%;
+        cursor: pointer;
+    }
+
+    .dropdown-search {
+        height: 5vh;
+        width: 90%;
+        margin-left: 5%;
+        margin-right: 5%;
+        margin-top: 1vh;
+        margin-bottom: 1vh;
+        padding-left: 5%;
+        background-color: transparent;
+        border: none;
+        color: grey;
+        font-family: opensans-condensed;
+        font-weight: 600;
+        border: #00bcae 1px solid;
+        border-radius: 2em;
+    }
+
+        .dropdown-search:focus {
+            border: none;
+        }
+
+        .dropdown-search::placeholder {
+            font-size: 1em;
+            color: grey;
+            font-family: opensans-condensed;
+            font-weight: 600;
+        }
+
+    .dropdown-options-container {
+        height: 5vh;
+        width: 90%;
+        background-color: white;
+        margin: auto;
+        border: none;
+        border-radius: 1em;
+    }
+
+    .dropdown-options-container-pressed {
+        height: 5vh;
+        width: 90%;
+        background-color: rgba(0, 188, 174,0.3);
+        margin: auto;
+        border-radius: 1em;
+    }
+
+        .dropdown-options-container:hover, .dropdown-options-container-pressed:hover, .dropdown-options-container:focus, .dropdown-options-container-pressed:focus {
+            background-color: rgba(0, 188, 174,0.3);
+        }
+
+    .dropdown-label {
+        height: 5vh;
+        margin-top: 0;
+        width: 100%;
+        margin-left: 5%;
+        font-size: 1em;
+        color: #666666;
+        font-family: opensans-condensed-light;
+        font-weight: 600;
+        line-height: 5vh;
+    }
+
+    .dropdown-label-pressed {
+        height: 5vh;
+        margin-top: 0;
+        width: 100%;
+        margin-left: 5%;
+        font-size: 1em;
+        color: #666666;
+        font-family: opensans-condensed-bold;
+        font-weight: 900;
+        line-height: 5vh;
+    }
+
+    .selected-options {
+        height: 3vh;
+        line-height: 3vh;
+        color: #00bcae;
+        width: 90%;
+        margin: auto;
+        font-size: 1em;
+        font-family: opensans-condensed-light;
+        text-align: center;
+        font-weight: 600;
+    }
+</style>
+
+<div>
+
+    <div class="dropdown-view-container">
+        <h2 class="dropdown-view">@optionsname</h2>
+        @{
+            if (showDropdown)
+            {
+                <i class="fas fa-angle-up dropdown-icon" @onclick="ToggleDropDown"></i>
+            }
+            else
+            {
+                <i class="fas fa-angle-down dropdown-icon" @onclick="ToggleDropDown"></i>
+            }
+        }
+
+    </div>
+
+    @if (showDropdown)
+    {
+        <div class="dropdown-container">
+            <h3 class="selected-options">@value</h3>
+            <div class="dropdown-search-container">
+                <input type="text" class="dropdown-search" value="@query" @oninput="Search" placeholder="Search" />
+            </div>
+            @{
+                if (selectAll == false)
+                {
+                    <div class="dropdown-options-container">
+                        <h2 class="dropdown-label" @onclick="SelectAll">Select All</h2>
+                    </div>
+                }
+                else if (selectAll == true)
+                {
+                    <div class="dropdown-options-container-pressed">
+                        <h2 class="dropdown-label-pressed" @onclick="SelectAll">Select All</h2>
+                    </div>
+                }
+            }
+
+
+            @for (int i = 0; i < display.Count; i++)
+            {
+                var num = i;
+                if (references[i] == false)
+                {
+                    <div class="dropdown-options-container" @onclick="@(e => SelectThis(e, num))">
+                        <h2 class="dropdown-label">@display[i]</h2>
+                    </div>
+                }
+                else if (references[i] == true)
+                {
+                    <div class="dropdown-options-container-pressed" @onclick="@(e => SelectThis(e, num))">
+                        <h2 class="dropdown-label-pressed">@display[i]</h2>
+                    </div>
+                }
+            }
+
+        </div>
+    }
+</div>
+
+@code {
+    private bool showDropdown = false;
+    private List<string> display;
+    private List<string> selections;
+    private List<bool> references;
+    private bool selectAll;
+    private string query;
+    private string value = "selected options";
+
+    private List<string> selected = new List<string>();
+
+    [Parameter]
+    public string[] options { get; set; }
+
+    [Parameter]
+    public string optionsname { get; set; }
+
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; } 
+
+    protected override async Task OnInitializedAsync()
+    {
+        selections = new List<string>();
+        references = new List<bool>();
+        display = new List<string>();
+
+        for (int i = 0; i < options.Length; i++)
+        {
+            display.Add(options[i]);
+            references.Add(false);
+        }
+
+        selectAll = false;
+        query = "";
+        await Build();
+    }
+
+
+    private void ToggleDropDown()
+    {
+        showDropdown = !showDropdown;
+    }
+
+    private async Task SelectNone()
+    {
+
+        selectAll = false;
+        for (int i = 0; i < references.Count; i++)
+        {
+            references[i] = false;
+        }
+        await Build();
+    }
+
+    private async Task SelectAll()
+    {
+        if (selectAll == true)
+        {
+            await SelectNone();
+        }
+        else if (selectAll == false)
+        {
+            selectAll = true;
+            for (int i = 0; i < references.Count; i++)
+            {
+                references[i] = true;
+            }
+            await Build();
+        }
+    }
+
+    private async Task SelectThis(MouseEventArgs e, int ele)
+    {
+        Console.WriteLine(ele);
+        Console.WriteLine(references[ele]);
+        references[ele] = !references[ele];
+        //await Task.Delay(0);
+        await Build();
+    }
+
+    private async Task Build()
+    {
+        selections.Clear();
+        display.Count();
+        value = "selected options";
+        for (int i = 0; i < references.Count; i++)
+        {
+            if (references[i] == true)
+            {
+                selections.Add(display[i]);
+                if (value.Contains("selected options"))
+                {
+                    value = display[i];
+                }
+                else if (selections.Count <= 5)
+                {
+                    value = value + ", " + display[i];
+                }
+                else if (!value.Contains("..."))
+                {
+                    value = value + "...";
+                }
+
+            }
+
+        }
+        await Task.Delay(0);
+    }
+
+    private async Task Search(ChangeEventArgs e)
+    {
+        display.Clear();
+        references.Clear();
+        query = ((string)e.Value);
+        await ValueChanged.InvokeAsync(query);
+        for (int i = 0; i < options.Length; i++)
+        {
+            if (options[i].Contains(query, StringComparison.OrdinalIgnoreCase))
+            {
+                display.Add(options[i]);
+                references.Add(false);
+            }
+
+        }
+    }
+}
+
