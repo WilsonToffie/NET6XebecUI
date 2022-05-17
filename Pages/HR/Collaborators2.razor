@@ -1,0 +1,201 @@
+﻿@using Bogus
+@using XebecPortal.UI.Services.Models
+@using System.Text
+@using XebecPortal.UI.Utils.Handlers;
+@using System.Net.Http.Headers;
+@inject HttpClient HttpClient
+@inject IJSRuntime jsRuntime
+@inject NavigationManager nav
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+<style>
+    .collaborators2-container {
+        width: 100%;
+        height: 55vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .collaborators2-inner {
+        height: 55vh;
+        width: 70%;
+        background-color: rgba(255,255,255,1);
+        border: solid white 0.1em;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
+    }
+
+    .summary {
+        background-color: teal;
+        height: 100%;
+        width: 30%;
+    }
+
+    .selects-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        flex-direction: column;
+        height: 80%;
+    }
+    .heading{
+
+    }
+</style>
+
+@if (!prevPage && !nextPage)
+{
+    <div class="collaborators2-container">
+        <div class="collaborators2-inner">
+            <div class="heading">
+                <h3>APPLICATION FORM</h3>
+            </div>
+            <div class="selects-container">
+                @foreach (var question in ChosenQuestions)
+                {
+                    <div class="question-selected">
+
+                        <p>@question.question</p>
+                        <select>
+                            <option>Select who can view answers</option>
+                            @foreach(var collab in ListOfCollaborators)
+                            {
+                                <option>@collab.name</option>
+                            }
+                            
+                        </select>
+                    </div>
+
+                }
+
+
+            </div>
+
+        </div>
+        <div class="summary">
+            <div>SUMMARY</div>
+            <div class="collaborators-left-table">
+                @if (ChosenQuestions != null)
+                {
+                    foreach (var formQuestion in ChosenQuestions)
+                    {
+                        <div class="right-list-item-preview">
+                            <div class="close-item-panel">
+
+                            </div>
+                            <div class="summary-preview-item-body">
+                                <div class="summary-preview-item-description">
+                                    <p style="margin:0 0 0px;">@formQuestion.question</p>
+                                    @*<span @onclick="() => DeleteFormQuestion(formQuestion)">
+                                    <i class="fas fa-times"></i>
+                                </span>*@
+                                </div>
+                                <div class="preview-item-control">
+                                    @{
+                                        var placeholder = "Expected answer";
+                                    }
+                                    @switch (formQuestion.answerTypeId)
+                                    {
+                                        case 1:
+                                            <input type="number" class="form-input" placeholder="@placeholder" style="width: 100%" disabled @bind="formQuestion.answer">
+                                            break;
+                                        case 2:
+                                            <textarea type="text" class="form-input" placeholder="@placeholder" style="width: 100%" disabled @bind="formQuestion.answer"></textarea>
+                                            break;
+                                        case 3:
+                                            <input type="text" class="form-input" placeholder="@placeholder" style="width: 100%" disabled @bind="formQuestion.answer">
+                                            break;
+                                        case 4:
+                                            <input type="date" id="test" class="form-input" placeholder="@placeholder" style="width: 100%" disabled @onchange="(e) => { formQuestion.answer = e.Value.ToString(); }">
+                                            break;
+                                        case 5:
+                                            <select @bind="formQuestion.answer">
+                                                <option disabled value="yes" selected>Yes</option>
+                                                <option disabled value="no">No</option>
+                                            </select>
+                                            break;
+                                        <small class="text-muted text-small">(Select expected answer)</small>
+                                        case 6:
+                                            <input type="file" class="form-input" placeholder="@placeholder" style="width: 100%" disabled @bind="formQuestion.answer">
+                                            break;
+
+                                        case 7:
+                                            <input type="text" class="form-input" placeholder="@placeholder" style="width: 100%" disabled @bind="formQuestion.answer">
+                                            break;
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+
+            </div>
+        </div>
+    </div>
+    <div class="bottom-buttons">
+        <input type="button" value="Prev" class="button-functions" @onclick="Prev" />
+        <input type="button" value="Save" class="button-functions" />
+        <input type="button" value="Next" class="button-functions" @onclick="Next" />
+    </div>
+
+}
+else if (nextPage)
+{
+    <XebecPortal.UI.Pages.HR.PhaseControlTool />
+}
+else if (prevPage)
+{
+    <XebecPortal.UI.Pages.HR.Collaborators />
+}
+
+@code {
+
+
+    [Parameter]
+    public List<FormQuestion> ChosenQuestions { get; set; }
+
+    [Parameter]
+    public EventCallback<FormQuestion> ChosenQuestionChanged { get; set; }
+
+    public List<FormQuestion> CollabQuestions = new List<FormQuestion>();
+
+    [Parameter]
+    public List<AppUser> ListOfCollaborators { get; set; }
+
+    [Parameter]
+    public EventCallback<AppUser> ListOfCollaboratorsChanged { get; set; }
+
+    [Parameter]
+    public int JobId { get; set; }
+
+
+
+
+    public List<AppUser> Collaborators = new List<AppUser>();
+
+    bool nextPage;
+    bool prevPage;
+    public void QuestionsTest()
+    {
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        nextPage = false;
+        prevPage = false;
+    }
+    private void Prev()
+    {
+        prevPage = true;
+    }
+
+    private void Next()
+    {
+        //this should probably also save, or alert the user that changes are not saved
+        nextPage = true;
+    }
+
+}

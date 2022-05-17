@@ -9,573 +9,13 @@
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <style>
-    .collaborators-container {
-        height: 55vh;
-        width: 50%;
-        margin-left: 25%;
-        margin-right: 25%;
-        background-color: rgba(255,255,255,1);
-        border: solid white 0.1em;
-        box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
-        display: flex;
-        justify-content: center;
-    }
-
-    .collaborators-left::-webkit-scrollbar {
-        width: 12px !important;
-        background-color: white !important;
-    }
-
-    .collaborators-left::-webkit-scrollbar-track {
-        background: white !important;
-    }
-
-    .collaborators-left::-webkit-scrollbar-thumb {
-        /* background: #f7f7f7 !important;*/
-        background-color: #666666 !important;
-    }
-
-        .collaborators-left::-webkit-scrollbar-thumb:hover {
-            background-color: #666666 !important;
-            cursor: pointer !important;
-        }
-
-    .collaborators-left {
-        height: 55vh;
-        width: 50%;
-    }
-
-    .collaborators-right {
-        height: 55vh;
-        width: 50%;
-        border-left: black 0.1em solid;
-    }
-
-    .collaborators-heading {
-        height: 5vh;
-        margin-top: 2.5vh;
-        margin-bottom: 2.5vh;
-        width: 100%;
-        text-align: center;
-    }
-
-    .collaborators-heading-text {
-        font-family: opensans-condensed-bold;
-        font-weight: 800;
-        font-size: 1.5em;
-        color: #00bcae !important;
-    }
-
-    .collaborators-left-main {
-        height: 40vh;
-        overflow-y: auto;
-        width: 100%;
-        margin-bottom: 5vh;
-    }
-
-
-    .collaborators-left-table {
-        height: 45vh;
-        width: 80%;
-        margin-left: 10%;
-        margin-right: 10%;
-    }
-
-    .collaborators-left-row {
-        box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.4), 0 2px 10px 0 rgba(0,0,0,0.4);
-        height: 8vh;
-        color: black;
-        font-family: opensans-condensed-bold;
-        font-weight: 900;
-        font-size: 1em;
-        width: 100%;
-        margin-bottom: 5px;
-        background-color: rgba(255,255,255,1);
-    }
-
-        .collaborators-left-row:hover {
-            box-shadow: 0 2px 5px 0 rgba(0,0,0,1), 0 2px 10px 0 rgba(0,0,0,1);
-            color: white;
-            font-family: opensans-condensed-bold;
-            font-weight: 900;
-            font-size: 1em;
-            margin-bottom: 5px;
-            background-color: black;
-            cursor: pointer;
-        }
-
-
-
-    .appform-left-buttons {
-        margin-top: 5vh;
-        height: 5vh;
-        width: 100%;
-    }
-
-    .appform-left-main {
-        height: 35vh;
-        overflow-y: auto;
-        overflow-x: hidden;
-        width: 100%;
-        padding: 5px;
-    }
-
-    .appform-left-row {
-        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px, rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
-        border-radius: 20px !important;
-        min-height: 5vh;
-        color: black;
-        font-family: opensans-condensed-bold;
-        font-weight: 900;
-        font-size: 1em;
-        min-width: 100%;
-        margin-bottom: 5px;
-        background-color: rgba(255,255,255,1);
-        padding: 5px !important;
-    }
-
-    .appform-left-row-selected {
-        border-radius: 20px !important;
-        min-height: 9vh;
-        color: #00bcae;
-        !important;
-        font-family: opensans-condensed-bold;
-        font-weight: 900;
-        font-size: 1em;
-        margin-bottom: 5px;
-        background-color: rgb(243,242,242);
-        min-width: 100%;
-        transition: 0.1s;
-        padding: 5px !important;
-        overflow: hidden !important;
-        cursor: pointer;
-    }
-
-    .appform-left-row:hover {
-        box-shadow: 0 2px 5px 0 rgba(0,0,0,1), 0 2px 10px 0 rgba(0,0,0,1);
-        color: black !important;
-        font-family: opensans-condensed-bold;
-        font-weight: 900;
-        font-size: 1em;
-        margin-bottom: 5px;
-        background-color: rgb(243,242,242);
-        min-width: 100%;
-        transition: 0.1s;
-        cursor: pointer;
-    }
-
-    .appform-right-row {
-        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px, rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
-        border-radius: 10px !important;
-        min-height: 7vh;
-        min-width: 100%;
-        margin-bottom: 5px;
-        background-color: rgba(255,255,255,1);
-    }
-
-    .appform-text {
-        color: black;
-        font-family: opensans-condensed-bold;
-        font-weight: 900;
-        font-size: 1em;
-        margin: 0;
-        padding: 0;
-        width: 90%;
-    }
-
-    .question-select {
-        width: 500px;
-        height: 500px;
-        background-color: #f2f2f2;
-        border-radius: 5px;
-        border: 2px solid grey;
-    }
-
-    .question-button {
-        width: 80%;
-        margin-left: 10%;
-        height: 15%;
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-    }
-
-    .form-questions {
-        height: 75%;
-        overflow: auto;
-    }
-
-    .form-button {
-        height: 15%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .add-popup {
-        position: absolute;
-        margin: 0 auto;
-        top: 18%;
-        width: 500px;
-        height: 350px;
-        background-color: #f2f2f2;
-        border: 2px solid black;
-        border-radius: 5px;
-        animation-name: fade-in;
-        animation-duration: 0.3s;
-    }
-
-    .delete-popup {
-        position: absolute;
-        margin: 0 auto;
-        top: 18%;
-        width: 500px;
-        height: 450px;
-        background-color: #f2f2f2;
-        border: 2px solid black;
-        border-radius: 5px;
-        animation-name: fade-in;
-        animation-duration: 0.3s;
-    }
-
-    .add-popup-header {
-        width: 100%;
-        height: 15%;
-        display: flex;
-        align-items: center;
-    }
-
-    .add-popup-body {
-        width: 100%;
-        height: 60%;
-        display: flex;
-        justify-content: center;
-    }
-
-    .add-popup-type {
-        width: 100%;
-        height: 10%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .add-popup-button {
-        width: 100%;
-        height: 15%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .delete-popup-header {
-        width: 100%;
-        height: 10%;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-    }
-
-    .delete-popup-body {
-        width: 100%;
-        height: 90%;
-        display: flex;
-        justify-content: center;
-        overflow-y: scroll;
-        background-color: white;
-    }
-
-    .delete-popup-question {
-        word-wrap: break-word;
-        width: 450px;
-    }
-
-    .appform-close-button {
-        width: 10%;
-        text-align: end;
-    }
-
-    .form-preview-question {
-        width: 100%;
-        display: flex;
-        height: 50%;
-    }
-
-    .form-preview-input {
-        width: calc(100% - 10px);
-        margin: 0;
-        padding: 0;
-        height: 50%;
-    }
-
-    @@keyframes fade-in {
-        from {
-            opacity: 0;
-            top: 10%
-        }
-
-        to {
-            opacity: 1;
-            top: 18%
-        }
-    }
-
-    .appform-main-button {
-        height: 5vh;
-        background-color: #00bcae;
-        border: none;
-        border-radius: 100px;
-        color: white;
-        text-align: center;
-        font-family: opensans-bold;
-        font-weight: 700;
-    }
-
-        .appform-main-button:hover {
-            background-color: #d35bc9;
-            border: none;
-            border-radius: 100px;
-            color: white;
-            text-align: center;
-            font-family: opensans-bold;
-            font-weight: 700;
-        }
-
-    .collaborators-left-main {
-        padding: 10px;
-    }
-
-    .developer-profile-picture {
-        height: 7vh;
-        margin-right: 1vw;
-    }
-
-        .developer-profile-picture img {
-            height: 100%;
-            border-radius: 50%;
-            box-shadow: rgba(6, 24, 44, 0.4) 0 0 0 2px, rgba(6, 24, 44, 0.65) 0 4px 6px -1px, rgba(255, 255, 255, 0.08) 0 1px 0 inset;
-            object-fit: cover;
-        }
-
-    .collaborator-div {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-    }
-
-    .collaborator-name {
-        font-size: 2rem;
-    }
-
-    .selected-question {
-        background: red;
-    }
-
-
-    details > summary {
-        list-style-type: '▶';
-    }
-
-    details[open] > summary {
-        list-style-type: '🔽';
-        color: black;
-        display: inline-block;
-    }
-
-    .form-control:hover, .access-question:hover {
-        cursor: pointer;
-    }
-
-    .btn-info-email {
-        background-color: #d35bc9;
-        color: whitesmoke;
-    }
-
-    .info-email {
-        color: #d35bc9;
-    }
-
-    /*new styles*/
-
-
-    .collaborators-title {
-        height: 8%;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .collaborators-title-text {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-family: opensans-condensed-bold;
-        color: #004393;
-        background-color: transparent;
-        font-size: 1.8em;
-    }
-
-    .collaborators-hiring-lead {
-        width: 50%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .hiring-lead-container {
-        width: 100%;
-        height: 6%;
-        display: flex;
-        justify-content: center;
-    }
-
-    .dropdown-container {
-        width: 100%;
-        height: 6%;
-        display: flex;
-        justify-content: center;
-    }
-
-    .collaborators-dropdown {
-        width: 50%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .hiring-lead-selected {
-        width: 100%;
-        height: 5%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .collaborators-tooltip {
-        width: 100%;
-        height: 5%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .collaborators-tooltip-text {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-family: opensans-condensed-bold;
-        color: black;
-        background-color: transparent;
-        font-size: 1em;
-    }
-
-    .collaborators-listed {
-        width: 100%;
-        max-height: 23%;
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-        padding-top: 5px;
-    }
-
-    .collaborators-questions-area {
-        width: 100%;
-        height: 40%;
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-    }
-
-    .collaborators-question-card {
-        width: 160px;
-        height: 150px;
-        border-radius: 8px;
-        background-color: lightgrey;
-    }
-
-    .collaborators-question-card-title {
-        height: 20%;
-        width: 100%;
-        color: white;
-        text-align: center;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding-top: 2px;
-    }
-
-    .collaborators-question-card-body {
-        height: 80%;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        overflow-y: auto;
-    }
-
-    .collaborators-question-card-list {
-        columns: 1;
-    }
-
-    .collaborators-appuser-item {
-        color: #00BCAE;
-        padding: 4px;
-    }
-
-    .collaborators-chosen-list {
-        overflow-y: auto;
-        max-height: 100%;
-    }
-
-    .question-appuser-item {
-        width: 100px;
-        height: 30px;
-        word-break: break-word;
-        border-radius: 10px;
-        background-color: lightpink;
-        color: #d35bc9;
-    }
-    .collaborator-item-pill {
-        height: 40px;
-        width: 100px;
-        border-radius: 20px;
-        display: flex;
-        background-color: #00BCAE;
-        border: 1px solid blue;
-        font-weight: 500;
-        padding-left: 0.2em;
-        padding-right: 0.2em;
-    }
-
-    .collaborator-item-pill-content {
-        border-radius: 20px;
-        width: 80%;
-        word-wrap: break-word;
-        color: white;
-        display: flex;
-        text-align: center;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .collaborator-item-pill-close {
-        border-radius: 20px;
-        width: 20%;
-        display: flex;
-        align-items: center;
-    }
-
-/*    attempt 3*/
 
     .collaborators-appform-container {
         height: 55vh;
         width: 70%;
-        margin-left: 15%;
-        margin-right: 15%;
         background-color: rgba(255,255,255,1);
         border: solid white 0.1em;
         box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
-        display: flex;
     }
 
     .collaborators-form {
@@ -598,131 +38,242 @@
         text-transform: uppercase;
     }
 
-    .collaborators-form-body {
-        height: 85%;
+    .collaborators-main-container {
+        height: 55vh;
         width: 100%;
         display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
     }
 
-    .collaborators-form-left {
+    .summary {
+        background-color: teal;
         height: 100%;
-        width: 50%;
-        border-right: 1px solid black;
-        background-color: lightgrey;
+        width: 30%;
+        overflow-y:scroll;
     }
 
-    .collaborators-form-right {
-        height: 100%;
-        width: 50%;
-        overflow-y: auto;
-        background-color: lightgreen;
+    .select-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
     }
 
-    .collaborators-mudselect {
-        width: 80%;
-        cursor: pointer;
-        background-color: white;
-        height: 7vh;
-        font-size: 1.5em;
-        font-weight: bold;
-        color: black;
-        border-radius: 1em;
-        padding-bottom: 5vh;
-        padding-left: 4vh;
-        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
+    .selected-collaborators {
+        margin-top: 20px;
+        height: 70%;
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        gap: 10px;
+        justify-content: flex-start;
+        padding: 0 25px 0 25px;
+        overflow-y:scroll;
+        /*display: grid;
+        grid-template-columns: repeat(auto-fill,minmax(30%, 1fr));*/
     }
 
-        .collaborators-mudselect:hover {
-            border-radius: 1em;
-            border: 0.1em solid black;
+        .selected-collaborators > * {
+            flex: 0 0 32%;
         }
 
-    .collaborators-question-item {
-        width: 100%;
-        height: 35%;
-        text-align: center;
-        align-items: center;
-        word-wrap: break-word;
-        padding: 5px;
-        border: 1px solid grey;
-        background-color: lightsalmon;
+    .inner-selected-collaborators {
+        background-color: rgba(255,255,255,1);
+        border: solid white 0.1em;
+        box-shadow: 0 2px 5px 0 rgb(0 0 0 / 20%), 0 2px 10px 0 rgb(0 0 0 / 10%);
+        border-radius: 5px;
+        height:78px;
+       
+       
     }
 
+    .collaborator-details {
+        display: flex;
+        justify-content: space-around;
+        height:35%;
+    }
+    .collaborator-select {
+        padding: 2px 0px 5px 5px;
+        border: solid #00968B;
+        border-radius: 5px;
+    }
+    .crown {
+        display: flex;
+        justify-content: flex-end;
+    }
+    .colab-image {
+        width: 40px;
+        height: 40px;
+        border-radius:50%;
+    }
+    .colab-name {
+        width: 70px;
+        color: #004392;
+        font-weight:700;
+        display:flex;
+        justify-content:space-around;
+    }
+    .collab-remove{
+        display:flex;
+        justify-content:flex-end;
+    }
+    .bottom-buttons {
+        margin-top: 3vh;
+        margin-left: 20%;
+        position: absolute;
+        bottom: 5vh;
+    }
+    .button-functions {
+        margin-top: 3vh;
+        height: 5vh;
+        width: 10vh;
+        border: none;
+        border-radius: 1em;
+        background-color: rgba(0, 188, 174,1); /*#00bcae;*/
+        color: white;
+        /*font-family: opensans-bold;*/
+        font-weight: 500;
+        padding-left: 0.2em;
+        padding-right: 0.2em;
+    }
+
+        .button-functions:hover {
+            background-color: #d35bc9;
+        }
+    .summary-section {
+        color: #004392;
+        font-weight: bold;
+        text-align: center;
+        width: 100%;
+    }
+    .hiring-lead{
+        padding:10px;
+        text-align:center;
+    }
+    .hiring-lead-heading{
+        font-weight:600;
+
+    }
+    .lead-heading-details{
+        display:flex;
+        justify-content:space-evenly;
+        color:#FFFFFF;
+    }
+    .collaborators-list{
+        padding:10px;
+        text-align:center;
+    }
+    .collab-list-heading{
+        font-weight:600;
+    }
+    .list-of-collabs {
+        display: flex;
+        justify-content: space-evenly;
+        color: #FFFFFF;
+    }
 
 </style>
 <!--Tables of developers/HR-->
-
 @if (!prevPage && !nextPage)
 {
-<div class="collaborators-appform-container">
-    <div class="collaborators-form">
+    <div class="collaborators-main-container">
+        <div class="collaborators-appform-container">
+            <div class="collaborators-form">
 
-        <div class="collaborators-form-title">
-            Select Collaborators
-        </div>
-        <div class="collaborators-form-body">
-            <div class="collaborators-form-left">
-                <MudSelect T="AppUser" Class="collaborators-mudselect" ToStringFunc="converter" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter"  @bind-Value="HiringLead" Placeholder="Select Hiring Lead">
-                    @if (AppUserList.Any() == true)
-                    {
-                        @foreach (var user in AppUserList)
-                        {
-                            <MudSelectItem T="AppUser" Value="user"></MudSelectItem>
-                        }
-                    }
-                </MudSelect>
-
-                <MudSelect T="AppUser" Class="collaborators-mudselect" DisableUnderLine="true" ToStringFunc="converter" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" MultiSelection="true" Label="Select Collaborators" @bind-SelectedValues="ListOfCollaborators" @bind-SelectedValues:event="onchange">
-                    @if (AppUserList.Any() == true)
-                    {
-                        @foreach (var user in AppUserList)
-                        {
-                            <MudSelectItem T="AppUser" Value="user"></MudSelectItem>
-                        }
-                    }
-                </MudSelect>
-            </div>
-
-
-
-            <div class="collaborators-form-right">
-                @foreach(var item in ChosenQuestions)
-                {
-                <div class="collaborators-question-item">
-                    @item.question
-
-                    <MudSelect T="string" Class="collaborators-mudselect" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" MultiSelection="true" Label="Select Collaborators">
-                        @if (SelectedUsers.Any() == true)
-                        {
-                            @foreach (var user in AppUserList)
-                            {
-                                <MudSelectItem T="string" Value="user.name">user</MudSelectItem>
-                            }
-                        }
-                    </MudSelect>
+                <div class="collaborators-form-title">
+                    Select Collaborators
                 </div>
+                <div class="select-container">
+                    <div class="collaborators-select">
+
+                        <select class="collaborator-select"  @onchange="AddToCollaborator">
+                            <option >Select collaborator</option>
+                            @foreach (var colab in AppUserList)
+                            {
+                                <option>@colab.name</option>
+                            }
+                        </select>
+
+                    </div>
+                    <div class="hiring-lead-select">
+                        <select @onchange="AddHiringLead" class="collaborator-select">
+                            <option>Select Hiring Lead</option>
+                            @foreach(var lead in ListOfCollaborators)
+                            {
+                                <option>@lead.name</option>
+                            }
+                            
+                            
+                        </select>
+                    </div>
+
+                </div>
+                <div class="selected-collaborators">
+                    @foreach(var collab in ListOfCollaborators)
+                {
+                    <div class="inner-selected-collaborators">
+                        <div class="crown"><i class="fa-solid fa-crown"></i></div>
+                        <div class="collaborator-details">
+                            <img src="@collab.imageUrl" alt="avator" class="colab-image"  />
+                            <div  class="colab-name">
+                                <p>@collab.name</p><p>@collab.surname</p>
+                            </div>
+                            
+                        </div>
+                        <div class="collab-remove">
+                            <input type="button" value="Remove" class="button-functions" @onclick="() => RemoveCollab(collab)" style="margin-top:0px; height:23px;" />
+                        </div>
+
+                    </div>
                 }
+                   
+                </div>
+
 
 
             </div>
+
         </div>
+        <div class="summary">
+            <div class="summary-heading">
+                <h3>SUMMARY</h3>
+            </div>
+            <div class="summary-details">
+                <div class="hiring-lead">
+                    <p class="hiring-lead-heading">Hiring Lead</p>
+                    @foreach( var lead in HiringLeads)
+                    {
+                        <p class="lead-heading-details"><span>@lead.name</span><span>@lead.surname</span></p>
+                    }
+                    
+                </div>
+                <div class="collaborators-list">
+                    <p class="collab-list-heading">Collaborators</p>
+                    <ul>
+                        @foreach(var collab in ListOfCollaborators)
+                        {
+                            <li class="list-of-collabs"><span>@collab.name</span><span>@collab.surname</span></li>
+                        }
+                        
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
     </div>
+
 
     <div class="bottom-buttons">
         <input type="button" value="Prev" class="button-functions" @onclick="Prev" />
         <input type="button" value="Save" class="button-functions" @onclick="Save" />
         <input type="button" value="Next" class="button-functions" @onclick="Next" />
     </div>
-</div>
-
-
-
-
-
 }
 else if (nextPage)
 {
-    <XebecPortal.UI.Pages.HR.PhaseControlTool />
+    <XebecPortal.UI.Pages.HR.Collaborators2  ChosenQuestions="ChosenQuestions" ListOfCollaborators="ListOfCollaborators" />
 }
 else if (prevPage)
 {
@@ -737,15 +288,22 @@ else if (prevPage)
     private List<CollaboratorsAssigned> collaborators = new List<CollaboratorsAssigned>();
     AppUser HiringLead = new();
     Func<AppUser, string> converter = x => x?.name;
-    List<AppUser> ListOfCollaborators = new();
 
+    List<AppUser> ListOfCollaborators = new List<AppUser>();
+    List<AppUser> HiringLeads = new List<AppUser>();
+
+    private List<AppUser> collaborator = new List<AppUser>();
     private List<string> SelectedUsers = new List<string>();
     public Dictionary<FormQuestion, List<AppUser>> QuestionsDictionary = new Dictionary<FormQuestion, List<AppUser>>();
+
+    public List<AppUser> selected = new List<AppUser>();
 
     bool nextPage;
     bool prevPage;
 
     public List<CollaboratorQuestion> CollabQuestions = new List<CollaboratorQuestion>();
+
+    public EventCallback<List<AppUser>> CollaboratorChanged { get; set; }
 
 
     //int JobId = 1;
@@ -774,6 +332,9 @@ else if (prevPage)
 
         AppUserList = await HttpClient.GetListJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user", new AuthenticationHeaderValue("Bearer", token));
         AppUserList = AppUserList.Where(x => x.role != "Candidate").ToList();
+
+        collaborator = await HttpClient.GetListJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", new AuthenticationHeaderValue("Bearer", token));
+        collaborator = collaborator.Where(x => x.role == "Collaborator").ToList();
 
         collaborators = await HttpClient.GetListJsonAsync<List<CollaboratorsAssigned>>("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", new AuthenticationHeaderValue("Bearer", token));
 
@@ -810,7 +371,7 @@ else if (prevPage)
 
         try
         {
-            foreach(var question in ChosenQuestions)
+            foreach (var question in ChosenQuestions)
             {
                 QuestionsDictionary.Add(question, new List<AppUser>());
 
@@ -877,6 +438,23 @@ else if (prevPage)
         //SelectedUsers = value;
     }
 
+    public async Task AddToCollab(AppUser user)
+    {
+        //AppUser ques = new CustomQuestion();
+        //ListOf .FirstOrDefault(x => e.Value.ToString() == x.questionDescription);
+
+        ListOfCollaborators.Add(user);
+
+
+
+    }
+
+    private void TestClick(AppUser user)
+    {
+        Console.WriteLine(user.name);
+    }
+
+
 
     private void Prev()
     {
@@ -887,6 +465,78 @@ else if (prevPage)
     {
         //this should probably also save, or alert the user that changes are not saved
         nextPage = true;
+    }
+
+
+    public async Task AddToCollaborator(ChangeEventArgs e)
+    {
+        AppUser collab = new AppUser();
+        collab = AppUserList.FirstOrDefault(x => e.Value.ToString() == x.name);
+        //string x = e.Value.ToString();
+        //Console.WriteLine(x);
+
+
+        AppUser temp = new AppUser();
+        temp.id = collab.id;
+        temp.email = collab.email;
+        temp.role = collab.role;
+        temp.passwordhash = collab.passwordhash;
+        temp.name = collab.name;
+        temp.surname = collab.surname;
+        temp.registered = collab.registered;
+        temp.linkVisits = collab.linkVisits;
+        temp.imageUrl = collab.imageUrl;
+
+        ListOfCollaborators.Add(temp);
+        await CollaboratorChanged.InvokeAsync(AppUserList);
+
+        Console.WriteLine("Check");
+
+    }
+
+    public async Task AddHiringLead(ChangeEventArgs e)
+    {
+        AppUser Lead = new AppUser();
+        Lead = AppUserList.FirstOrDefault(x => e.Value.ToString() == x.name);
+
+        AppUser temp = new AppUser();
+        temp.id = Lead.id;
+        temp.email = Lead.email;
+        temp.role = Lead.role;
+        temp.passwordhash = Lead.passwordhash;
+        temp.name = Lead.name;
+        temp.surname = Lead.surname;
+        temp.registered = Lead.registered;
+        temp.linkVisits = Lead.linkVisits;
+        temp.imageUrl = Lead.imageUrl;
+        if (HiringLeads.Count == 0)
+        {
+            HiringLeads.Add(temp);
+            await CollaboratorChanged.InvokeAsync(AppUserList);
+
+        }
+        if(HiringLeads.Count >= 1)
+        {
+            await jsRuntime.InvokeAsync<string>("alert", "You can only select 1 hiring lead");
+        }
+
+
+
+    }
+
+    private void RemoveCollab(AppUser user)
+    {
+        ListOfCollaborators.RemoveAll(q => q.id == user.id);
+        Console.WriteLine("Removed");
+
+    }
+
+    public async Task ChangeColor (ChangeEventArgs e)
+    {
+        string color = "crown";
+
+
+
     }
 
 }
