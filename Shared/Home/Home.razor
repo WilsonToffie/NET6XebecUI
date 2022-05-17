@@ -33,7 +33,7 @@
     .right {
         height: 90vh;
         width: 60%;
-        display: flex;
+        //display: flex;
     }
 
     .home-left-block {
@@ -117,6 +117,8 @@
         line-height: 10vh;
         font-family: opensans-bold;
     }
+   
+
 </style>
 
 <div class="home-container">
@@ -132,21 +134,25 @@
             </div>
         </div>
         <div class="right">
+
+            @*
             <div class="home-image-container">
-                <div class="image1"></div>
-                <div class="home-image-label">APPLICANTS PORTAL</div>
-            </div>
-            <div class="home-image-container">
-                <div class="image2"></div>
-                <div class="home-image-label">HUMAN RESOURCES PORTAL</div>
-            </div>
+            <div class="image1"></div>
+            <div class="home-image-label">APPLICANTS PORTAL</div>
+        </div>
+        <div class="home-image-container">
+            <div class="image2"></div>
+            <div class="home-image-label">HUMAN RESOURCES PORTAL</div>
+        </div>
+            *@
+            <XebecPortal.UI.Shared.Components.Text_Editor.TextEditor content="@content"/>
+
         </div>
     </div>
-
-
 </div>
 
 @code{
 
-    
+    private string content = "Room Raccoon was founded by an independent hotel owner who understood the real struggles faced by hoteliers. This led to a drive to find a solution that really works — and we found one! We're proud to say that Room Raccoon was voted Best Hotel Management System in 2020 and 2021.";
+
 }
