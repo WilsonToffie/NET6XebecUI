@@ -344,11 +344,16 @@
 </style>
 
 
-<div class="page-top-select-job">
+@*<div class="page-top-select-job">
     <div class="hr-job-search-bar">
         <input class="hr-job-search-bar-input" type="text" placeholder="Search Applicants" @bind-value="searchTerm" @bind-value:event="oninput" />
     </div>
+</div>*@
+
+<div class="myjob-search-bar d-flex justify-content-center" >
+    <input class="search-image hr-job-search-bar-input" style="padding-left: 2.5em; width: 30%;" type="text" placeholder="Search Applicants" @bind-value="searchTerm" @bind-value:event="oninput" />
 </div>
+
 <div class="phase-manager-container">
 
     @if (LoadingDialog)
