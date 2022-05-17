@@ -377,12 +377,35 @@
             width: 90%;
             height: 90%;
         }
+
+    .myjob-search-bar {
+        width: 40%;
+        height: 5vh;
+        margin-bottom: 2.5vh;
+        margin-top: 2.5vh;
+        margin-left: 30%;
+        margin-right: 30%;
+    }
+
+    .search-image {
+        padding-left: 1em;
+        background: url(/Img/search.svg) no-repeat left;
+        background-size: 30px;
+    }
+
+    .hr-job-search-bar-input {
+        padding-left: 3em;
+        background-color: white;
+        height: 6vh;
+        width: 100%;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
+        border: white solid 0.1em;
+        border-radius: 1.5em;
+    }
 </style>
 
-<div class="page-top">
-    <div class="hr-job-search-bar">
-        <input class="hr-job-search-bar-input" type="text" placeholder="Search" @oninput="SearchCandidate" />
-    </div>
+<div class="myjob-search-bar">
+    <input class="search-image hr-job-search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Applicants" @oninput="SearchApplicants"/>
 </div>
 
 
@@ -390,7 +413,7 @@
 
     @if (candidates != null && candidates.Count != 0)
     {
-        FilterCandidatesByJob();
+        //FilterCandidatesByJob();
         <table>
             <thead>
                 <tr>
@@ -405,23 +428,59 @@
             </thead>
             <tbody>
 
-                @foreach (var user in users)
+                @if (JobId == 0)
                 {
                     @foreach (var application in applications)
                     {
-                        @if (JobId == application.JobId && application.AppUserId == user.id)
+                        AppUser user = new AppUser();
+
+                        @if (usersFiltered == null || searchCandidate == "" || searchCandidate == " ")
                         {
-                            string jobTitle = jobs.Where(x => x.Id == JobId).FirstOrDefault().Title;
+                            user = users.Where(x => x.id == application.AppUserId).FirstOrDefault();
+                        }
+                        else if (usersFiltered.Where(x => x.id == application.AppUserId).FirstOrDefault() != null)
+                        {
+                            user = usersFiltered.Where(x => x.id == application.AppUserId).FirstOrDefault();
+                        }
+
+
+                        //user = usersFiltered.Where(x => x.id == application.AppUserId).FirstOrDefault();
+                        @if (user.id == application.AppUserId)
+                        {
+                            string jobTitle = jobs.Where(x => x.Id == application.JobId).FirstOrDefault().Title;
+                            int jobId = jobs.Where(x => x.Id == application.JobId).FirstOrDefault().Id;
                             <tr>
                                 <td><img src="@user.imageUrl" alt="Avatar"></td>
                                 <td style="font-size: 1.2em; font-family: opensans-condensed-bold">@user.name @empty @user.surname</td>
                                 <td>@jobTitle</td>
-                                <td>@FindCurrentPhase(@user.id, JobId)</td>
+                                <td>@FindCurrentPhase(user.id, jobId)</td>
                                 <td style="font-weight: 400; font-family: opensans-condensed-bold; font-size: 1em; color: #d35bc9">@($"{application.TimeApplied:dd MMM yyyy}")</td>
-                                <td style="text-decoration: underline; font-family: opensans-condensed-bold"><a @onclick="() => toggleApplicationForm(user)">View Application Form</a></td>
+                                <td style="text-decoration: underline; font-family: opensans-condensed-bold"><a @onclick="() => toggleApplicationForm(user, jobId)">View Application Form</a></td>
                                 <td><input type="button" class="btn-view-documents" value="View Documents" @onclick="() => toggleDocuments(user)" /></td>
                             </tr>
+                        }
+                    }
+                }
+                else
+                {
+                    @foreach (var user in users)
+                    {
+                        @foreach (var application in applications)
+                        {
+                            @if (JobId == application.JobId && application.AppUserId == user.id)
+                            {
+                                string jobTitle = jobs.Where(x => x.Id == JobId).FirstOrDefault().Title;
+                                <tr>
+                                    <td><img src="@user.imageUrl" alt="Avatar"></td>
+                                    <td style="font-size: 1.2em; font-family: opensans-condensed-bold">@user.name @empty @user.surname</td>
+                                    <td>@jobTitle</td>
+                                    <td>@FindCurrentPhase(@user.id, JobId)</td>
+                                    <td style="font-weight: 400; font-family: opensans-condensed-bold; font-size: 1em; color: #d35bc9">@($"{application.TimeApplied:dd MMM yyyy}")</td>
+                                    <td style="text-decoration: underline; font-family: opensans-condensed-bold"><a @onclick="() => toggleApplicationForm(user, JobId)">View Application Form</a></td>
+                                    <td><input type="button" class="btn-view-documents" value="View Documents" @onclick="() => toggleDocuments(user)" /></td>
+                                </tr>
 
+                            }
                         }
                     }
                 }
@@ -449,46 +508,46 @@
         <div class="modal-frame-documents">
             <div class="modal-document-header">
                 <div class="modal-document-profile">
-                    <div class="modal-frame-documents-rows"><img src="@selectedUser.imageUrl" alt="Avatar"></div>
+                    <div class="modal-frame-documents-rows"><img src="https://xebecstorage.blob.core.windows.net/profile-images/@selectedUser.id" alt="Avatar"></div>
                     <div class="modal-frame-documents-rows" style="color: #004393; font-family: opensans-condensed-bold">@selectedUser.name @empty @selectedUser.surname @empty Documents </div>
                 </div>
                 <input type="button" class="btn-view-documents" style="width: 100px; margin-right: 25px; margin-left:245px" value="Close" @onclick="toggleDocuments" />
             </div>
             <div class="modal-frame-documents-rows">
                 <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("linkedincv")'>
-                    <img src="@selectedUser.imageUrl" alt="Avatar">
+                    <img src="https://xebecstorage.blob.core.windows.net/linkedincv/@selectedUser.id" alt="Avatar">
                     <div style="color: #00bcae; font-family: opensans-condensed-bold">
                         CV
                     </div>
                 </div>
                 <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("matric-certificates")'>
-                    <img src="$https://xebecstorage.blob.core.windows.net/matric-certificates/{@selectedUser.id}" alt="Avatar">
+                    <img src="https://xebecstorage.blob.core.windows.net/matric-certificates/@selectedUser.id" alt="Avatar">
                     <div style="color: #00bcae; font-family: opensans-condensed-bold">
                         Matric Certificate
                     </div>
                 </div>
-                <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("trancripts")'>
-                    <img src="@selectedUser.imageUrl" alt="Avatar">
+                <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("transcripts")'>
+                    <img src="https://xebecstorage.blob.core.windows.net/transcripts/@selectedUser.id" alt="Avatar">
                     <div style="color: #00bcae; font-family: opensans-condensed-bold">
                         Academic Transcript
                     </div>
                 </div>
             </div>
             <div class="modal-frame-documents-rows">
-                <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("additional-document-1")'>
-                    <img src="@selectedUser.imageUrl" alt="Avatar">
+                <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("additional-documents-1")'>
+                    <img src="https://xebecstorage.blob.core.windows.net/additional-documents-1/@selectedUser.id" alt="Avatar">
                     <div style="color: #00bcae; font-family: opensans-condensed-bold">
                         Certificate A
                     </div>
                 </div>
-                <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("additional-document-2")'>
-                    <img src="@selectedUser.imageUrl" alt="Avatar">
+                <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("additional-documents-2")'>
+                    <img src="https://xebecstorage.blob.core.windows.net/additional-documents-2/@selectedUser.id" alt="Avatar">
                     <div style="color: #00bcae; font-family: opensans-condensed-bold">
                         Certificate B
                     </div>
                 </div>
-                <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("additional-document-3")'>
-                    <img src="@selectedUser.imageUrl" alt="Avatar">
+                <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("additional-documents-3")'>
+                    <img src="https://xebecstorage.blob.core.windows.net/additional-documents-3/@selectedUser.id" alt="Avatar">
                     <div style="color: #00bcae; font-family: opensans-condensed-bold">
                         Certificate C
                     </div>
@@ -505,7 +564,7 @@
     <div class="dimmed">
         <div class="img-magnified">
             <input type="button" class="btn-view-document" style="margin-left:85%; margin-bottom: 2%;" value="Close" @onclick='() => toggleMagnifiedDocument("")' />
-            <img src="@selectedUser.imageUrl" />
+            <img src="https://xebecstorage.blob.core.windows.net/@selectedDocument/@selectedUser.id" />
         </div>
     </div>
 }
@@ -603,7 +662,7 @@
     private string searchTerm = "";
     private CandidateRecommender selectedCandidate;
     private AppUser selectedUser;
-    private IList<AppUser> usersFiltered;
+    private IList<AppUser> usersFiltered = null;
     private IList<Job> jobs = new List<Job>();
     private IList<CandidateRecommender> candidates = null;
     private IList<AppUser> users = new List<AppUser>();
@@ -661,6 +720,7 @@
 
     private void toggleDocuments(AppUser user)
     {
+        Console.WriteLine(user.id);
         showDocuments = !showDocuments;
         SetSelectedCandidate(user);
     }
@@ -670,10 +730,11 @@
         showDocuments = !showDocuments;
     }
 
-    private void toggleApplicationForm(AppUser user)
+    private void toggleApplicationForm(AppUser user, int jobId)
     {
         showApplicationForm = !showApplicationForm;
         SetSelectedCandidate(user);
+        JobId = jobId;
     }
 
     private void toggleApplicationForm()
@@ -683,18 +744,25 @@
 
     private string FindCurrentPhase(int candidateId, int jobId)
     {
-        string phaseDescription = "";
+        try
+        {
+            string phaseDescription = "";
 
-        int applicationId = applications.Where(x => x.JobId == jobId && x.AppUserId == candidateId).FirstOrDefault().Id;
+            int applicationId = applications.Where(x => x.JobId == jobId && x.AppUserId == candidateId).FirstOrDefault().Id;
 
-        List<ApplicationPhaseHelper> phases_ = phasesHelpers.Where(x => x.ApplicationId == applicationId).ToList();
-        phases_ = phases_.OrderByDescending(x => x.TimeMoved).ToList();
+            List<ApplicationPhaseHelper> phases_ = phasesHelpers.Where(x => x.ApplicationId == applicationId).ToList();
+            phases_ = phases_.OrderByDescending(x => x.TimeMoved).ToList();
 
-        ApplicationPhaseHelper currentPhase = phases_.FirstOrDefault();
+            ApplicationPhaseHelper currentPhase = phases_.FirstOrDefault();
 
-        phaseDescription = phases.Where(x => x.id == currentPhase.ApplicationPhaseId).FirstOrDefault().description;
+            phaseDescription = phases.Where(x => x.id == currentPhase.ApplicationPhaseId).FirstOrDefault().description;
 
-        return phaseDescription;
+            return phaseDescription;
+        }
+        catch (NullReferenceException nr)
+        {
+            return "No Phase";
+        }
     }
 
     private void SetSelectedCandidate(CandidateRecommender candidate)
@@ -707,6 +775,40 @@
     {
         if (user != null)
             selectedUser = user;
+    }
+
+    private void SearchApplicants(ChangeEventArgs e)
+    {
+        searchCandidate = e.Value.ToString();
+
+        usersFiltered = new List<AppUser>();
+        usersFiltered.Clear();
+
+        if (users != null)
+        {
+
+
+            foreach (var user in users)
+            {
+                if (user.name != null)
+                {
+                    if (user.name.ToLower().Contains(searchCandidate.ToLower()))
+                    {
+                        usersFiltered.Add(user);
+                    }
+                }
+            }
+        }
+
+        //try
+        //{
+        //    usersFiltered = users.Where(x => x.name.ToLower().Contains(searchCandidate.ToLower())).ToList();
+        //}
+        //catch (NullReferenceException nr)
+        //{
+
+        //    Console.WriteLine("searchValue: " + searchCandidate.ToLower() + usersFiltered.Count()); ;
+        //}
     }
 
 }

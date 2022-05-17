@@ -401,7 +401,7 @@
                 state.Name = result.Name;
                 state.Surname = result.Surname;
                 state.Role = result.Role;
-                state.Avator = result.Avator;
+                state.Avator = result.Avatar;
                 // state.Title = result.Title;
 
                 test = result.jwtBearer;
@@ -505,6 +505,8 @@
         // authenticating the request
         var httpMessageResponse = await HttpClient.PostAsJsonAsync<SignInModel>($"https://xebecapi.azurewebsites.net/api/auth/loginnew", signIn); // The api will need to be different since it needs to actually validate the Token on the back-end site. This is where Tshego's API endpoint will be entered
 
+
+
         // sending the token to the client to Store
         return await httpMessageResponse.Content.ReadFromJsonAsync<SignInResult>();
     }
@@ -523,6 +525,7 @@
         //SignInResult signInResult = await AuthenticateJWT();
         thisUser = await AuthenticateJWT();
 
+
         if (thisUser.jwtBearer != string.Empty)
         {
             // storing the token to localstorage on the Browser
@@ -533,7 +536,7 @@
             state.Name = thisUser.Name;
             state.Surname = thisUser.Surname;
             state.Role = thisUser.Role;
-            state.Avator = thisUser.Avator;
+            state.Avator = thisUser.Avatar;
 
             message = thisUser.Message;
 

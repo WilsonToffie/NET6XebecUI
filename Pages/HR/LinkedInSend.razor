@@ -349,7 +349,7 @@
 
                         @foreach (var item in profiles)
                         {
-                            <input type="checkbox" value="@item" style="width: 40px;" @onchange="eventArgs => { CheckboxClicked(item, eventArgs.Value); }" />@item.platformName<br><!-- @onchange="eventArgs => { CheckboxClicked(club, eventArgs.Value); }"-->
+                            <input type="checkbox" value="@item" style=" width: 40px; height: 15px;" @onchange="eventArgs => { CheckboxClicked(item, eventArgs.Value); }" />@item.platformName<br><!-- @onchange="eventArgs => { CheckboxClicked(club, eventArgs.Value); }"-->
                         }
 
                     </div>
