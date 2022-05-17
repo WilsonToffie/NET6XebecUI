@@ -1,0 +1,139 @@
+﻿@using Blazored.TextEditor
+@using System.IO
+@inject IJSRuntime JSRuntime
+
+<style>
+    .text-editor-component {
+        height: 50vh;
+        width: 40vw;
+        background-color: white;
+        border-radius: 2em;
+    }
+    .text-editor-container{
+        height: 40vh;
+        width: 40vw;
+  
+    }
+    .text-editor-toolbar{
+        border-top-left-radius: 2em;
+        border-top-right-radius: 2em;
+
+    }
+    .text-editor-button-container{
+        height: 7vh;
+        background-color: white;
+        margin-bottom: 1vh;
+        width: 40vw;
+        display: flex;
+        justify-content: center;
+    }
+    .text-editor-button {
+        height: 5vh;
+        background-color: #00bcae;
+        color: white;
+        text-align: center;
+        font-size: 1em;
+        font-family: opensans-condensed-bold;
+        width: 25%;
+        margin:auto;
+        border: none;
+        border-radius: 2em;
+    }
+        .text-editor-button:hover .text-editor-button:focus {
+            background-color: #d35bc9;
+        }
+
+</style>
+
+
+<div>
+    <div class="text-editor-component">
+        @if (EditorEnabled)
+        {
+            <div id="toolbar">
+                <span class="ql-formats">
+                    <select class="ql-font">
+                        <option selected=""></option>
+                        <option value="serif"></option>
+                        <option value="monospace"></option>
+                    </select>
+                    <select class="ql-size">
+                        <option value="small"></option>
+                        <option selected=""></option>
+                        <option value="large"></option>
+                        <option value="huge"></option>
+                    </select>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-bold"></button>
+                    <button class="ql-italic"></button>
+                    <button class="ql-underline"></button>
+                    <button class="ql-strike"></button>
+                </span>
+                <span class="ql-formats">
+                    <select class="ql-color"></select>
+                    <select class="ql-background"></select>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-list" value="ordered"></button>
+                    <button class="ql-list" value="bullet"></button>
+                    <button class="ql-indent" value="-1"></button>
+                    <button class="ql-indent" value="+1"></button>
+                    <select class="ql-align">
+                        <option selected=""></option>
+                        <option value="center"></option>
+                        <option value="right"></option>
+                        <option value="justify"></option>
+                    </select>
+                </span>
+                <span class="ql-formats">
+                    <button class="ql-link"></button>
+                </span>
+            </div>
+        }
+        <div @ref="@divEditorElement" >
+            HI
+            <input type="text" value="@model.content"/>
+        </div>
+        <div class="text-editor-button-container">
+            <input type="button" class="text-editor-button" value="Save" @onclick="Save" />
+        </div>
+    </div>
+
+</div>
+
+
+@code {
+
+    BlazoredTextEditor QuillHtml;
+    string QuillHTMLContent;
+    private ElementReference divEditorElement;
+    private bool EditorEnabled = true;
+    private TextEditorModel model = new TextEditorModel();
+
+    [Parameter]
+    public string content { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("Content is: "+content);
+        model.content = content;
+        Console.WriteLine("Model content is: " + model.content);
+        await Task.Delay(0);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeAsync<string>(
+                "QuillFunctions.createQuill", divEditorElement);
+        }
+    }
+
+    private void Save()
+    {
+        model.content = content;
+    }
+
+}
