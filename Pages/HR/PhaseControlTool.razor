@@ -441,12 +441,17 @@
         <div>
             <div class="grid-container">
                 <div class="grid-item">
-                    <select class="select-form" style="width: 15em">
-                        <option selected disabled="disabled">Select Phase</option>
-                        @foreach (var item in phases)
-                        {
-                            <option value="@item.id" @onclick="() => AddPhase(item)">@item.description</option>
-                        }
+                    <select class="select-form" style="width: 15em" @onchange="customAddPhase">
+                            <option selected disabled="disabled">Select Phase</option>
+                        <optgroup label="Select All Phases">
+                            <option @onclick="AddAllPhases" value="50">Add All Phases</option>
+                        </optgroup>
+                        <optgroup label="Phase Options">
+                            @foreach (var item in phases)
+                            {
+                                <option value="@item.id">@item.description</option>
+                            }
+                        </optgroup>
                     </select>
                 </div>
                 <div class="grid-item">
@@ -487,19 +492,22 @@
     </div>
 </div>
 <div class="nav-btns">
-    <button class="down-button">Submit</button>
+    <button class="down-button">Prev</button>
+    <button class="down-button">Save</button>
+    <button class="down-button">Next</button>
 </div>
 
-<MudDialog @bind-IsVisible="isDialogAddPhaseVisible" Options="closeButton">
-    <TitleContent>
-        <MudText Typo="Typo.h3">
-            Add Phase
-        </MudText>
-    </TitleContent>
-    <DialogContent>
+
+
+<MatDialog @bind-IsOpen="isDialogAddPhaseVisible">
+    <MatDialogTitle>Add Phase</MatDialogTitle>
+    <MatDialogContent>
         <div class="row">
             <div class="col-12">
-                <input class="create-form-text" placeholder="Phase Name" @bind-value="addPhaseValue" />
+                <br />
+            </div>
+            <div class="col-12">
+                <input class="create-form-text" placeholder="Phase Name" @bind="addPhaseValue" />
             </div>
             <div class="col-12">
                 <br />
@@ -508,17 +516,16 @@
                 <button class="btn rounded-3" type="button" style="background: #00bcae" @onclick="AddPhase">ADD</button>
             </div>
         </div>
-    </DialogContent>
-</MudDialog>
+    </MatDialogContent>
+</MatDialog>
 
-<MudDialog @bind-IsVisible="isDialogDeletePhaseVisible" Options="closeButton">
-    <TitleContent>
-        <MudText Typo="Typo.h3">
-            Delete Phase
-        </MudText>
-    </TitleContent>
-    <DialogContent>
+<MatDialog @bind-IsOpen="isDialogDeletePhaseVisible">
+    <MatDialogTitle>Delete Phase</MatDialogTitle>
+    <MatDialogContent>
         <div class="row">
+            <div class="col-12">
+                <br />
+            </div>
             <div class="col-12">
                 <div class="grid-item d-flex justify-content-center">
                     <div class="overflow-auto" style="height: 22em">
@@ -541,136 +548,10 @@
                 </div>
             </div>
         </div>
-    </DialogContent>
-</MudDialog>
+    </MatDialogContent>
+</MatDialog>
 
-@*
-    <div class="collaborators-container">
-        <div class="collaborators-left">
-            <div class="collaborators-heading">
-                <h2 class="collaborators-heading-text">Select Phases</h2>
-            </div>
-            <div class="appform-left-main">
-                <div class="collaborators-left-table">
-                    @if (phases == null)
-                    {
-                        <div>Loading...</div>
-                    }
-                    else
-                    {
-                        @if (phases != null)
-                        {
-                            foreach (var phase in phases)
-                            {
-                                <div class="@PhaseCardClass(phase) pl-2 phase-div" @onclick="() => AddPhase(phase)">
-                                    <p class="phase-name">@phase.description</p>
-                                    @* <span class="phase-pill" @GetPillStyle(phase)></span>
-                            </div>
-                        }
-                    }
-                }
-*@
-@*
-        </div>
-    </div>
-*@
-@*
-            @if (string.Equals("super admin", _state.Role, StringComparison.OrdinalIgnoreCase))
-            {
-                <div class="appform-left-buttons">
-                    <div class="question-button">
-                        <button class="btn appform-main-button" @onclick="ToggleModalSubmitPhase">Add Phase</button>
-                        <button class="btn appform-main-button" @onclick="ToggleModalDeletePhase">Delete Phase</button>
-                    </div>
-                </div>
-            }
-        </div>
-        <div class="collaborators-right">
-            <div class="collaborators-heading">
-                <h2 class="collaborators-heading-text">Chosen Phases</h2>
-            </div>
-            <div class="appform-left-main">
-                <div class="collaborators-left-table">
-                    @if (phases == null)
-                    {
-                        <div>Loading...</div>
-                    }
-                    else
-                    {
-                        @if (phasesAdded != null)
-                        {
-                            foreach (var phase in phasesAdded)
-                            {
-                                <div class="right-list-item-preview">
-                                    <div class="close-item-panel">
-                                        <span @onclick="() => DeletePhaseOrderPhase(phase)">
-                                            <i class="fas fa-times"></i>
-                                        </span>
-                                    </div>
-                                    <div class="preview-item-body">
-                                        <div class="preview-item-description">
-                                            <p class="">@phase.description</p>
-                                        </div>
-                                        @if (phase.description.ToLower().Contains("interview"))
-                                        {
-                                            <div class="preview-item-control">
-                                                <p type="email" class="form-control" style="width: 100%">Interviewer : @developerAssigned</p>
-                                            </div>
-                                        }
-                                    </div>
-                                </div>
-                            }
-                        }
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
 
-    @if (showModalSubmitPhase)
-    {
-        <div class="modalbox">
-            <div class="modal-content">
-                <span class="close" @onclick="ToggleModalSubmitPhase">&times;</span>
-                <p>Phase:</p>
-                <input type="text" @bind="@phaseValue.description" />
-                <div class="button">
-                    <button type="submit" @onclick="AddPhase" class="button-content">Submit Phase</button>
-                </div>
-            </div>
-        </div>
-    }
-
-    @if (showModalDeletePhase)
-    {
-        <div class="modalbox p-1">
-
-            <div class="card" style="height: 50vh; width: 40vw;">
-
-                <div class="card-header">
-                    <span class="text-dark">Delete a Phase</span>
-                    <span class="close" @onclick="ToggleModalDeletePhase">
-                        <i class="fas fa-times"></i>
-                    </span>
-                </div>
-                <div style="overflow: auto;" class="card-body">
-
-                    @foreach (var phase in phases)
-                    {
-                        <p type="email" class="form-control modal-delete-phase" style="width: 100%">
-                            <span class="lead"><strong>@phase.description</strong></span>
-                            <br>
-                            <a class="btn btn-danger" @onclick="() => DeletePhase(phase)">Delete Phase <i class="fa fa-trash" aria-hidden="true"></i></a>
-                            <br>
-                            <small class="text-muted">Please Note: this process cannot be undone</small>
-                        </p>
-                    }
-                </div>
-            </div>
-        </div>
-    }
-    <input type="button" value="Submit" class="createjob-bottom-main-button" @onclick="Submit" />
-*@
 @code
 {
     @using XebecPortal.UI.Utils.Handlers;
@@ -682,7 +563,15 @@
     [Parameter]
     public EventCallback<CreateJobPost> TempJobChanged { get; set; }
 
-    private IList<ApplicationPhase> phases = new List<ApplicationPhase>();
+    //[Parameter]
+    //public int CurrentJobId { get; set; }
+
+    public int CurrentJobId = 1;
+
+    //[Parameter]
+    //public EventCallback<int> JobIdChanged { get; set; }
+
+    private List<ApplicationPhase> phases = new List<ApplicationPhase>();
     private List<ApplicationPhase> phasesAdded = new List<ApplicationPhase>();
     private IList<Job> jobs = new List<Job>();
     ApplicationPhase phaseValue = new ApplicationPhase();
@@ -690,11 +579,8 @@
     private string developerAssigned = "";
     private string token;
     private string addPhaseValue;
-    private bool showModalSubmitPhase = false;
-    private bool showModalDeletePhase = false;
     private bool isDialogAddPhaseVisible;
     private bool isDialogDeletePhaseVisible;
-    MudBlazor.DialogOptions closeButton = new MudBlazor.DialogOptions() { CloseButton = true, FullWidth = true, DisableBackdropClick = true, CloseOnEscapeKey = false };
 
     protected override async Task OnInitializedAsync()
     {
@@ -703,60 +589,70 @@
         phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
 
         jobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job", new AuthenticationHeaderValue("Bearer", token));
-        //Todo get developer
     }
 
-    private void ToggleModalSubmitPhase()
-    {
-        showModalSubmitPhase = !showModalSubmitPhase;
-    }
 
-    private void ToggleModalDeletePhase()
-    {
-        showModalDeletePhase = !showModalDeletePhase;
-    }
 
     private async Task DeletePhase(ApplicationPhase phase)
     {
-        phases.Remove(phase);
-        /*await httpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/applicationphase/{phase.id}", new AuthenticationHeaderValue("Bearer", token));
-        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));*/
-        //await jsr.InvokeVoidAsync("alert", "Deleted!");
+        //this deletes from the db
+        await httpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/applicationphase/{phase.id}", new AuthenticationHeaderValue("Bearer", token));
+        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
     }
 
     private async Task AddPhase()
     {
-        Console.WriteLine(1);
         if (string.IsNullOrWhiteSpace(addPhaseValue) == false)
         {
             tempPhaseValue = new() { description = addPhaseValue };
-            /*await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/applicationphase", tempPhaseValue);
-            phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));*/
-            phases.Add(tempPhaseValue);
+            await httpClient.PostJsonAsync<ApplicationPhase>("https://xebecapi.azurewebsites.net/api/applicationphase", tempPhaseValue, new AuthenticationHeaderValue("Bearer", token));
+            phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
             addPhaseValue = "";
-            //showModalSubmitPhase = !showModalSubmitPhase;
+
+            isDialogAddPhaseVisible = !isDialogAddPhaseVisible;
         }
-        isDialogAddPhaseVisible = true;
     }
 
     private async Task SubmitPhases()
     {
         foreach (var phase in phasesAdded)
         {
+            JobApplicationPhase temp = new JobApplicationPhase();
+            temp.JobId = CurrentJobId;
+            temp.ApplicationPhaseId = phase.id;
+            await httpClient.PostJsonAsync<JobApplicationPhase>("https://xebecapi.azurewebsites.net/api/jobapplicationphase", temp, new AuthenticationHeaderValue("Bearer", token));
+
+
             await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobapplicationphase", phaseValue);
         }
     }
 
     private void AddPhase(ApplicationPhase phase)
     {
+
         if (!phasesAdded.Contains(phase))
         {
             phasesAdded.Add(phase);
         }
     }
 
+    private void AddAllPhases()
+    {
+        if (phasesAdded != phases && phasesAdded.Count != phases.Count)
+        {
+            foreach (var item in phases)
+            {
+                if (!phasesAdded.Contains(item))
+                {
+                    phasesAdded.Add(item);
+                }
+            }
+        }
+    }
+
     private void DeletePhaseOrderPhase(ApplicationPhase phase)
     {
+        //this just removes from the list
         phasesAdded.Remove(phase);
     }
 
@@ -773,7 +669,6 @@
         job.Description = TempJob.Description;
         job.Company = TempJob.Company;
         job.Location = TempJob.Location;
-        //job.Department = TempJob.Department;
         job.DueDate = TempJob.DueDate;
         job.CreationDate = TempJob.CreationDate;
 
@@ -781,7 +676,6 @@
         Console.WriteLine(job.Description);
         Console.WriteLine(job.Company);
         Console.WriteLine(job.Location);
-        //Console.WriteLine(job.Department);
         Console.WriteLine(job.DueDate);
         Console.WriteLine(job.CreationDate);
 
@@ -857,36 +751,29 @@
         await TempJobChanged.InvokeAsync(TempJob);
     }
 
-    private string PhaseCardClass(ApplicationPhase phase)
+    private void OpenAddPhaseDialog()
     {
-        if (phasesAdded.FindAll(d => d.id == phase.id).Count() > 0)
-            return "appform-left-row-selected";
-        return "appform-left-row";
+        isDialogAddPhaseVisible = true;
+        isDialogDeletePhaseVisible = false;
     }
 
-    private string GetPillStyle(ApplicationPhase phase)
+    private void OpenDeletePhaseDialog()
     {
-        var thisPhase = phase.description.ToLower();
-        if (thisPhase.Contains("application") || thisPhase.Contains("applied"))
-            return "background: #ff5201; color: rgba(0, 0, 0, 0.35)";
-        else if (thisPhase.Contains("screen"))
-            return "background: #ff9d01 ; color: rgba(0, 0, 0, 0.35)";
-        else if (thisPhase.Contains("screen"))
-            return "background: #ffbc01; color: rgba(0, 0, 0, 0.35)";
-        else if (thisPhase.Contains("screen"))
-            return "background: #ffbc01; color: rgba(0, 0, 0, 0.35)";
-        else if (thisPhase.Contains("screen"))
-            return "background: #ffd401; color: rgba(0, 0, 0, 0.35)";
-        else if (thisPhase.Contains("screen"))
-            return "background: #ebff01; color: rgba(0, 0, 0, 0.35);";
-        else if (thisPhase.Contains("screen"))
-            return "background: #baff01; color: rgba(0, 0, 0, 0.35)";
-        else if (thisPhase.Contains("screen"))
-            return "background: #05ff01; color: rgba(0, 0, 0, 0.35)";
-
-        return "";
+        isDialogDeletePhaseVisible = true;
+        isDialogAddPhaseVisible = false;
     }
 
-    private void OpenAddPhaseDialog() => isDialogAddPhaseVisible = true;
-    private void OpenDeletePhaseDialog() => isDialogDeletePhaseVisible = true;
+    private void customAddPhase(ChangeEventArgs e)
+    {
+        //"50" is passed if Select All Phases is selected
+        if(e.Value.ToString() == "50")
+        {
+            AddAllPhases();
+        }
+        else
+        {
+            AddPhase(phases.First(x => x.id.ToString() == e.Value.ToString()));
+        }
+
+    }
 }
