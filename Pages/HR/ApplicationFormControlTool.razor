@@ -320,6 +320,7 @@
         height: 100%;
         margin-left: 20px;
         font-weight: bold;
+        padding: 15px;
     }
 
     .left-inner {
@@ -465,6 +466,29 @@
         background-color: #FF4D5A;
         color:white;
     }
+    .bottom-buttons {
+        margin-top: 3vh;
+        margin-left: 20%;
+        position: absolute;
+        bottom: 5vh;
+    }
+    .button-functions {
+        margin-top: 3vh;
+        height: 5vh;
+        width: 10vh;
+        border: none;
+        border-radius: 1em;
+        background-color: rgba(0, 188, 174,1); /*#00bcae;*/
+        color: white;
+        /*font-family: opensans-bold;*/
+        font-weight: 500;
+        padding-left: 0.2em;
+        padding-right: 0.2em;
+    }
+
+        .button-functions:hover {
+            background-color: #d35bc9;
+        }
 </style>
 @if (prevPage == false && nextPage == false)
 {
@@ -730,10 +754,10 @@
 
 
     </div>
-    <div class="nav-btns">
-        <button class="down-button" @onclick="Prev">Prev</button>
-        <button class="down-button" @onclick="Save">Save</button>
-        <button class="down-button" @onclick="Next">Next</button>
+    <div class="bottom-buttons">
+        <input type="button" value="Prev" class="button-functions" @onclick="Prev"/>
+        <input type="submit" value="Save" class="button-functions" @onclick="Save" />
+        <input type="button" value="Next" class="button-functions" @onclick="Next" />
     </div>
 }
 else if (prevPage == true)
