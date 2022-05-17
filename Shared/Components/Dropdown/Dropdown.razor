@@ -202,11 +202,10 @@
     private bool selectAll;
     private string query;
     private string value = "selected options";
-
-    private List<string> selected = new List<string>();
+    private DropdownModel model = new DropdownModel();
 
     [Parameter]
-    public string[] options { get; set; }
+    public List<string> options { get; set; }
 
     [Parameter]
     public string optionsname { get; set; }
@@ -217,11 +216,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        selections = new List<string>();
+        model.result = new List<string>();
         references = new List<bool>();
         display = new List<string>();
 
-        for (int i = 0; i < options.Length; i++)
+        for (int i = 0; i < options.Count; i++)
         {
             display.Add(options[i]);
             references.Add(false);
@@ -268,28 +267,25 @@
 
     private async Task SelectThis(MouseEventArgs e, int ele)
     {
-        Console.WriteLine(ele);
-        Console.WriteLine(references[ele]);
         references[ele] = !references[ele];
-        //await Task.Delay(0);
         await Build();
     }
 
     private async Task Build()
     {
-        selections.Clear();
+        model.result.Clear();
         display.Count();
         value = "selected options";
         for (int i = 0; i < references.Count; i++)
         {
             if (references[i] == true)
             {
-                selections.Add(display[i]);
+                model.result.Add(display[i]);
                 if (value.Contains("selected options"))
                 {
                     value = display[i];
                 }
-                else if (selections.Count <= 5)
+                else if (model.result.Count <= 5)
                 {
                     value = value + ", " + display[i];
                 }
@@ -310,7 +306,7 @@
         references.Clear();
         query = ((string)e.Value);
         await ValueChanged.InvokeAsync(query);
-        for (int i = 0; i < options.Length; i++)
+        for (int i = 0; i < options.Count; i++)
         {
             if (options[i].Contains(query, StringComparison.OrdinalIgnoreCase))
             {
