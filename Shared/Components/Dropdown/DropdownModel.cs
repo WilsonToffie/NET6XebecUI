@@ -5,10 +5,8 @@ using System.Threading.Tasks;
 
 namespace XebecPortal.UI.Shared.Components
 {
-    public class LocationModel
+    public class DropdownModel
     {
-        public string country_name;
-        public string country_short_name;
-        public string country_phone_code;
+        public List<string> result { get; set; } 
     }
 }

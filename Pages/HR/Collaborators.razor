@@ -197,11 +197,11 @@
 
                     </div>
                     <div class="hiring-lead-select">
-                        <select @onchange="AddHiringLead" class="collaborator-select">
+                        <select @onchange="TestClick" class="collaborator-select">
                             <option>Select Hiring Lead</option>
                             @foreach(var lead in ListOfCollaborators)
                             {
-                                <option>@lead.name</option>
+                                <option>@lead.name  @lead.surname </option>
                             }
                             
                             
@@ -242,18 +242,16 @@
             <div class="summary-details">
                 <div class="hiring-lead">
                     <p class="hiring-lead-heading">Hiring Lead</p>
-                    @foreach( var lead in HiringLeads)
-                    {
-                        <p class="lead-heading-details"><span>@lead.name</span><span>@lead.surname</span></p>
-                    }
-                    
+                   
+                        <p class="lead-heading-details">@hiringLead</p>
+                  
                 </div>
                 <div class="collaborators-list">
                     <p class="collab-list-heading">Collaborators</p>
                     <ul>
                         @foreach(var collab in ListOfCollaborators)
                         {
-                            <li class="list-of-collabs"><span>@collab.name</span><span>@collab.surname</span></li>
+                            <li class="list-of-collabs">@collab.name  @collab.surname</li>
                         }
                         
                     </ul>
@@ -322,6 +320,8 @@ else if (prevPage)
     public EventCallback<List<FormQuestion>> ChosenQuestionsChanged { get; set; }
 
     string token;
+
+    string hiringLead;
 
     protected override async Task OnInitializedAsync()
     {
@@ -449,9 +449,10 @@ else if (prevPage)
 
     }
 
-    private void TestClick(AppUser user)
+    private async Task TestClick(ChangeEventArgs e)
     {
-        Console.WriteLine(user.name);
+        hiringLead = e.Value.ToString();
+        
     }
 
 
@@ -509,16 +510,15 @@ else if (prevPage)
         temp.registered = Lead.registered;
         temp.linkVisits = Lead.linkVisits;
         temp.imageUrl = Lead.imageUrl;
-        if (HiringLeads.Count == 0)
-        {
-            HiringLeads.Add(temp);
-            await CollaboratorChanged.InvokeAsync(AppUserList);
+       
+        HiringLeads.Add(temp);
+        await CollaboratorChanged.InvokeAsync(AppUserList);
 
-        }
-        if(HiringLeads.Count >= 1)
-        {
-            await jsRuntime.InvokeAsync<string>("alert", "You can only select 1 hiring lead");
-        }
+       
+        //if(HiringLeads.Count >= 1)
+        //{
+        //    await jsRuntime.InvokeAsync<string>("alert", "You can only select 1 hiring lead");
+        //}
 
 
 

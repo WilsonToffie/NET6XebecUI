@@ -49,7 +49,6 @@ namespace XebecPortal.UI
             builder.Services.AddScoped<IPhaseDataService, PhaseDataService>();            
             //Testing
             builder.Services.AddScoped<IMyJobListDataService, MyJobListDataService>();
-
             // builder.Services.AddSmart();
             // builder.Services.AddMatBlazor();
 
@@ -66,7 +65,7 @@ namespace XebecPortal.UI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddBlazoredLocalisation(); // This adds the IBrowserDateTimeProvider to the DI container
-            services.AddBlazoredLocalStorage(); // This adds the ability to store the JWT key locally in the browsers storage, it is used on the sign in page.            
+            services.AddBlazoredLocalStorage(); // This adds the ability to store the JWT key locally in the browsers storage, it is used on the sign in page.                                               // services.AddRazorPages();
         }
     }
 }
