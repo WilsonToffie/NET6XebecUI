@@ -45,7 +45,6 @@
 
 </style>
 
-
 <div>
     <div class="text-editor-component">
         @if (EditorEnabled)
@@ -91,12 +90,23 @@
                 </span>
             </div>
         }
-        <div @ref="@divEditorElement" >
-            HI
-            <input type="text" value="@model.content"/>
+        <div @ref="@divEditorElement">
+
         </div>
         <div class="text-editor-button-container">
-            <input type="button" class="text-editor-button" value="Save" @onclick="Save" />
+            <input type="button" class="text-editor-button" @onclick="GetText" value="Get Text" />
+            <input type="button" class="text-editor-button" @onclick="GetHTML" value="Get HTML" />
+            <input type="button" class="text-editor-button" @onclick="GetEditorContent" value="Get Content" />
+        </div>
+        <div class="text-editor-button-container">
+            <input type="button" class="text-editor-button" @onclick="Save" value="Save" />
+            <input type="button" class="text-editor-button" @onclick="Load" value="Load" />
+        </div>
+        <div>
+            @EditorContent
+        </div>
+        <div>
+            @((MarkupString)@EditorHTMLContent)
         </div>
     </div>
 
@@ -105,9 +115,10 @@
 
 @code {
 
-    BlazoredTextEditor QuillHtml;
-    string QuillHTMLContent;
+    private string strSavedContent = "";
     private ElementReference divEditorElement;
+    private string EditorContent;
+    private string EditorHTMLContent;
     private bool EditorEnabled = true;
     private TextEditorModel model = new TextEditorModel();
 
@@ -118,6 +129,8 @@
     {
         Console.WriteLine("Content is: "+content);
         model.content = content;
+        strSavedContent = model.content;
+        await Load();
         Console.WriteLine("Model content is: " + model.content);
         await Task.Delay(0);
     }
@@ -130,10 +143,34 @@
                 "QuillFunctions.createQuill", divEditorElement);
         }
     }
-
-    private void Save()
+    async Task GetText()
     {
-        model.content = content;
+        EditorHTMLContent = "";
+        
+        EditorContent = await JSRuntime.InvokeAsync<string>(
+            "QuillFunctions.getQuillText", divEditorElement);
+    }
+    async Task GetHTML()
+    {
+        EditorContent = "";
+        EditorHTMLContent = await JSRuntime.InvokeAsync<string>(
+            "QuillFunctions.getQuillHTML", divEditorElement);
+    }
+    async Task GetEditorContent()
+    {
+        EditorHTMLContent = "";
+        EditorContent = await JSRuntime.InvokeAsync<string>(
+            "QuillFunctions.getQuillContent", divEditorElement);
+    }
+    async Task Save()
+    {
+        strSavedContent = await JSRuntime.InvokeAsync<string>(
+            "QuillFunctions.getQuillContent", divEditorElement);
+    }
+    async Task Load()
+    {
+        var QuillDelta = await JSRuntime.InvokeAsync<TextEditorModel>(
+            "QuillFunctions.load", divEditorElement, model);
     }
 
 }
