@@ -218,20 +218,7 @@
 
 
 
-<div class="create-job-summary">
-    <div class="page-title">Summary</div>
-    <div class="summary-container">
-        <div class="summary-individual">
-            <div class="text-font-styling"> Platforms selected</div>
-            <div class="summary-text-style">
-                @foreach (var item in selectedValue)
-                {
-                    <div>@item.platformName</div>
-                }
-            </div>
-        </div>
-    </div>
-</div>
+
 
 @if (prev)
 {
@@ -243,6 +230,20 @@ else if (next)
 }
 else
 {
+    <div class="create-job-summary">
+        <div class="page-title">Summary</div>
+        <div class="summary-container">
+            <div class="summary-individual">
+                <div class="text-font-styling"> Platforms selected</div>
+                <div class="summary-text-style">
+                    @foreach (var item in selectedValue)
+                    {
+                        <div>@item.platformName</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="postjob-form-container">
         <EditForm Model="@TempJob" class="postjob-form" OnValidSubmit="@Save">
             <DataAnnotationsValidator />
