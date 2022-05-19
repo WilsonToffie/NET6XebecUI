@@ -1,0 +1,46 @@
+﻿
+/*
+    So thoughts on how to implement the CSS global feature
+    I mainly think it should have the colour scheme, padding, font size, font colour, any hover effects, etc. included.
+    Somethings that I can think of mainly is :
+        button, 
+        the text styling (font, weight, size)        
+*/
+
+/*
+    input[type = "button"], input[type = "submit"] {
+    /*background-color: rgba(0, 188, 174,1);
+    color: white;
+    text-align: center;
+    font-size: 1em;
+    font-weight: 600;
+    font-family: opensans-condensed-bold;
+    border-radius: 1em;
+    border: none;
+}*/
+
+/*    input[type = "button"], input[type = "submit"]:hover {
+        background-color: #d35bc9;
+    }*/
+
+/*
+    * {
+    font-size: 1em;
+    font-weight: 600;
+    font-family: opensans-condensed-bold;
+}*/
+/*
+h1{
+    font-family: opensans-condensed-bold;
+}
+
+h2 {
+    font-family: opensans;
+    font-weight: 600;
+}
+
+p{
+    font-family: opensans;
+}
+
+*/

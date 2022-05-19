@@ -273,7 +273,18 @@
         font-weight: bold;
     }
 
-    .modal-frame-documents{
+    .btn-view-document {
+        height: 5%;
+        width: 10%;
+        border-radius: 2em;
+        border: none;
+        color: white;
+        background-color: #00BCAE;
+        font-weight: 700;
+        font-weight: bold;
+    }
+
+    .modal-frame-documents {
         height: 85%;
         width: 65%;
         border-radius: 1em;
@@ -308,6 +319,19 @@
         flex-direction: column;
     }
 
+        .mini-modal-frame-documents:hover {
+            height: 25vh;
+            width: 16vw;
+            border-radius: 1em;
+            background-color: white;
+            box-shadow: 0 4px 8px 0 #00bcae, 0 6px 20px 0 #00bcae;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
     .img-document-profile {
         height: 80px;
         width: 80px;
@@ -318,27 +342,70 @@
         width: 90%;
     }
 
-    .modal-document-header{
-        display:flex;
-        justify-content:right;
+    .modal-document-header {
+        display: flex;
+        justify-content: right;
     }
 
-    .modal-document-profile{
+    .modal-document-profile {
         display: flex;
         flex-direction: column;
     }
 
-    .modal-document-profile img{
-        width: 90px;
-        height: 90px;
+        .modal-document-profile img {
+            width: 90px;
+            height: 90px;
+        }
+
+
+    a:hover {
+        cursor: pointer;
     }
 
+    .img-magnified {
+        height: 90vh;
+        width: 40vw;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: white;
+        border-radius: 1em;
+    }
+
+        .img-magnified img {
+            width: 90%;
+            height: 90%;
+        }
+
+    .myjob-search-bar {
+        width: 40%;
+        height: 5vh;
+        margin-bottom: 2.5vh;
+        margin-top: 2.5vh;
+        margin-left: 30%;
+        margin-right: 30%;
+    }
+
+    .search-image {
+        padding-left: 1em;
+        background: url(/Img/search.svg) no-repeat left;
+        background-size: 30px;
+    }
+
+    .hr-job-search-bar-input {
+        padding-left: 3em;
+        background-color: white;
+        height: 6vh;
+        width: 100%;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
+        border: white solid 0.1em;
+        border-radius: 1.5em;
+    }
 </style>
 
-<div class="page-top">
-    <div class="hr-job-search-bar">
-        <input class="hr-job-search-bar-input" type="text" placeholder="Search" @oninput="SearchCandidate" />
-    </div>
+<div class="myjob-search-bar">
+    <input class="search-image hr-job-search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Applicants" @oninput="SearchApplicants"/>
 </div>
 
 
@@ -346,7 +413,7 @@
 
     @if (candidates != null && candidates.Count != 0)
     {
-        FilterCandidatesByJob();
+        //FilterCandidatesByJob();
         <table>
             <thead>
                 <tr>
@@ -361,82 +428,63 @@
             </thead>
             <tbody>
 
-                @foreach (var user in users)
+                @if (JobId == 0)
                 {
                     @foreach (var application in applications)
                     {
-                        @if (JobId == application.JobId && application.AppUserId == user.id)
+                        AppUser user = new AppUser();
+
+                        @if (usersFiltered == null || searchCandidate == "" || searchCandidate == " ")
                         {
-                            string jobTitle = jobs.Where(x => x.Id == JobId).FirstOrDefault().Title;
+                            user = users.Where(x => x.id == application.AppUserId).FirstOrDefault();
+                        }
+                        else if (usersFiltered.Where(x => x.id == application.AppUserId).FirstOrDefault() != null)
+                        {
+                            user = usersFiltered.Where(x => x.id == application.AppUserId).FirstOrDefault();
+                        }
+
+
+                        //user = usersFiltered.Where(x => x.id == application.AppUserId).FirstOrDefault();
+                        @if (user.id == application.AppUserId)
+                        {
+                            string jobTitle = jobs.Where(x => x.Id == application.JobId).FirstOrDefault().Title;
+                            int jobId = jobs.Where(x => x.Id == application.JobId).FirstOrDefault().Id;
                             <tr>
                                 <td><img src="@user.imageUrl" alt="Avatar"></td>
                                 <td style="font-size: 1.2em; font-family: opensans-condensed-bold">@user.name @empty @user.surname</td>
                                 <td>@jobTitle</td>
-                                <td>@FindCurrentPhase(@user.id, JobId)</td>
+                                <td>@FindCurrentPhase(user.id, jobId)</td>
                                 <td style="font-weight: 400; font-family: opensans-condensed-bold; font-size: 1em; color: #d35bc9">@($"{application.TimeApplied:dd MMM yyyy}")</td>
-                                <td style="text-decoration: underline; font-family: opensans-condensed-bold"><a href="#">View Application Form</a></td>
+                                <td style="text-decoration: underline; font-family: opensans-condensed-bold"><a @onclick="() => toggleApplicationForm(user, jobId)">View Application Form</a></td>
                                 <td><input type="button" class="btn-view-documents" value="View Documents" @onclick="() => toggleDocuments(user)" /></td>
                             </tr>
+                        }
+                    }
+                }
+                else
+                {
+                    @foreach (var user in users)
+                    {
+                        @foreach (var application in applications)
+                        {
+                            @if (JobId == application.JobId && application.AppUserId == user.id)
+                            {
+                                string jobTitle = jobs.Where(x => x.Id == JobId).FirstOrDefault().Title;
+                                <tr>
+                                    <td><img src="@user.imageUrl" alt="Avatar"></td>
+                                    <td style="font-size: 1.2em; font-family: opensans-condensed-bold">@user.name @empty @user.surname</td>
+                                    <td>@jobTitle</td>
+                                    <td>@FindCurrentPhase(@user.id, JobId)</td>
+                                    <td style="font-weight: 400; font-family: opensans-condensed-bold; font-size: 1em; color: #d35bc9">@($"{application.TimeApplied:dd MMM yyyy}")</td>
+                                    <td style="text-decoration: underline; font-family: opensans-condensed-bold"><a @onclick="() => toggleApplicationForm(user, JobId)">View Application Form</a></td>
+                                    <td><input type="button" class="btn-view-documents" value="View Documents" @onclick="() => toggleDocuments(user)" /></td>
+                                </tr>
 
+                            }
                         }
                     }
                 }
 
-
-
-
-
-                @*@foreach (var candidate in candidates)
-                    {
-                        AppUser currentUser = null;
-                        CandidateRecommender tempCandidate = null;
-                        @if (usersFiltered == null || searchCandidate == "" || searchCandidate == " ")
-                        {
-                            currentUser = users.Where(x => x.id == candidate.AppUserId).FirstOrDefault();
-                        }
-                        else if (usersFiltered.Where(x => x.id == candidate.AppUserId).FirstOrDefault() != null)
-                        {
-                            currentUser = usersFiltered.Where(x => x.id == candidate.AppUserId).FirstOrDefault();
-                        }
-
-
-                        @if (currentUser != null)
-                        {
-                            ApplicationModel currentApplication = applications.Where(x => x.AppUserId == currentUser.id).FirstOrDefault();
-
-
-                            <tr>
-                                <td style="font-weight: 900; font-family: opensans-extra-bold; font-size: 1.2em">
-                                    @(candidates.IndexOf(candidate) + 1)
-                                </td>
-
-                                <td>
-                                    <img src="@currentUser.imageUrl" alt="Avatar">
-                                </td>
-                                <td><h4 style="font-size: 1.2em; font-family: opensans-condensed-bold; text-align:left">@currentUser.name @empty @currentUser.surname</h4></td>
-
-                                @if (candidates.Where(x => x.AppUserId == currentUser.id).FirstOrDefault() != null)
-                                {
-                                    tempCandidate = candidates.Where(x => x.AppUserId == currentUser.id).FirstOrDefault();
-
-                                    <td style="padding-left: 35px">
-                                    <td class="total-match-pill" style="@(GetPillStyle(candidate))">@Math.Round(tempCandidate.TotalMatch) %</td></td>
-                                }
-
-
-                                <td style="font-weight: 400;">@FindCurrentPhase(currentUser.id, JobId)</td>
-                                <td style="font-weight: 400; font-family: opensans-condensed-bold; font-size: 1em; color: #d35bc9">@($"{currentApplication.TimeApplied:dd MMM yyyy}")</td>
-                                <td class="show-more-td" @onclick="() => togglePersonalInformations(candidate)">...</td>
-                                <td class="show-more-td" @onclick="() => toggleWorkHistory(candidate)">...</td>
-                                <td class="show-more-td" @onclick="() => toggleEducation(candidate)">...</td>
-                                <td class="show-more-td" @onclick="() => togglePortfolio(candidate)">...</td>
-                                <td class="show-more-td" @onclick="() => toggleReferences(candidate)">...</td>
-                                <td class="show-more-td" @onclick="() => toggleApplicationForm(candidate)">...</td>
-                            </tr>
-
-                        }
-
-                    }*@
                 @if (candidates == null || candidates.Count == 0)
                 {
                     <p style="text-align: center">No applicants for this job.</p>
@@ -453,469 +501,74 @@
 </div>
 
 
-
 @if (showDocuments)
 {
-<div class="dimmed">
+    <div class="dimmed">
 
-    <div class="modal-frame-documents">
-        <div class="modal-document-header">
-            <div class="modal-document-profile">
-                <div class="modal-frame-documents-rows"><img src="@selectedUser.imageUrl" alt="Avatar"></div>
-                <div class="modal-frame-documents-rows" style="color: #004393; font-family: opensans-condensed-bold">@selectedUser.name @empty @selectedUser.surname @empty Documents </div>
+        <div class="modal-frame-documents">
+            <div class="modal-document-header">
+                <div class="modal-document-profile">
+                    <div class="modal-frame-documents-rows"><img src="https://xebecstorage.blob.core.windows.net/profile-images/@selectedUser.id" alt="Avatar"></div>
+                    <div class="modal-frame-documents-rows" style="color: #004393; font-family: opensans-condensed-bold">@selectedUser.name @empty @selectedUser.surname @empty Documents </div>
+                </div>
+                <input type="button" class="btn-view-documents" style="width: 100px; margin-right: 25px; margin-left:245px" value="Close" @onclick="toggleDocuments" />
             </div>
-            <input type="button" class="btn-view-documents" style="width: 100px; margin-right: 25px; margin-left:245px" value="Close" @onclick="toggleDocuments" />
-        </div>
-        <div class="modal-frame-documents-rows">
-            <div class="mini-modal-frame-documents">
-                <img src="@selectedUser.imageUrl" alt="Avatar">
-                <div style="color: #00bcae; font-family: opensans-condensed-bold">
-                CV
+            <div class="modal-frame-documents-rows">
+                <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("linkedincv")'>
+                    <img src="https://xebecstorage.blob.core.windows.net/linkedincv/@selectedUser.id" alt="Avatar">
+                    <div style="color: #00bcae; font-family: opensans-condensed-bold">
+                        CV
+                    </div>
+                </div>
+                <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("matric-certificates")'>
+                    <img src="https://xebecstorage.blob.core.windows.net/matric-certificates/@selectedUser.id" alt="Avatar">
+                    <div style="color: #00bcae; font-family: opensans-condensed-bold">
+                        Matric Certificate
+                    </div>
+                </div>
+                <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("transcripts")'>
+                    <img src="https://xebecstorage.blob.core.windows.net/transcripts/@selectedUser.id" alt="Avatar">
+                    <div style="color: #00bcae; font-family: opensans-condensed-bold">
+                        Academic Transcript
+                    </div>
                 </div>
             </div>
-            <div class="mini-modal-frame-documents">
-                <img src="$https://xebecstorage.blob.core.windows.net/matric-certificates/{@selectedUser.id}" alt="Avatar">
-                <div style="color: #00bcae; font-family: opensans-condensed-bold">
-                    Matric Certificate
+            <div class="modal-frame-documents-rows">
+                <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("additional-documents-1")'>
+                    <img src="https://xebecstorage.blob.core.windows.net/additional-documents-1/@selectedUser.id" alt="Avatar">
+                    <div style="color: #00bcae; font-family: opensans-condensed-bold">
+                        Certificate A
+                    </div>
                 </div>
-            </div>
-            <div class="mini-modal-frame-documents">
-                <img src="@selectedUser.imageUrl" alt="Avatar">
-                <div style="color: #00bcae; font-family: opensans-condensed-bold">
-                    Academic Transcript
+                <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("additional-documents-2")'>
+                    <img src="https://xebecstorage.blob.core.windows.net/additional-documents-2/@selectedUser.id" alt="Avatar">
+                    <div style="color: #00bcae; font-family: opensans-condensed-bold">
+                        Certificate B
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="modal-frame-documents-rows">
-            <div class="mini-modal-frame-documents">
-                <img src="@selectedUser.imageUrl" alt="Avatar">
-                <div style="color: #00bcae; font-family: opensans-condensed-bold">
-                    Certificate A
-                </div>
-            </div>
-            <div class="mini-modal-frame-documents">
-                <img src="@selectedUser.imageUrl" alt="Avatar">
-                <div style="color: #00bcae; font-family: opensans-condensed-bold">
-                    Certificate B
-                </div>
-            </div>
-            <div class="mini-modal-frame-documents">
-                <img src="@selectedUser.imageUrl" alt="Avatar">
-                <div style="color: #00bcae; font-family: opensans-condensed-bold">
-                    Certificate C
+                <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("additional-documents-3")'>
+                    <img src="https://xebecstorage.blob.core.windows.net/additional-documents-3/@selectedUser.id" alt="Avatar">
+                    <div style="color: #00bcae; font-family: opensans-condensed-bold">
+                        Certificate C
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 }
 
 
-
-<!--Personal Information Model-->
-@if (showPersonalInformation)
+<!--Magnified Document-->
+@if (showMagnifiedDocument)
 {
-    @if (personalInformations != null && selectedCandidate != null)
-    {
-        @if (personalInformations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
-        {
-
-            <div class="dimmed">
-                <div class="modal-frame">
-                    <table>
-                        <thead>
-                            <tr>
-                                <td class="title-modal">Personal Information: </td>
-                                <td class="close-modal" @onclick="togglePersonalInformations">x</td>
-                            </tr>
-                            <tr></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="info-empty">Candidate doesn't have any information saved.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        }
-        else
-        {
-            PersonalInformation personalInformation = personalInformations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
-
-            <div class="dimmed">
-                <div class="modal-frame">
-                    <table>
-                        <thead>
-                            <tr>
-                                <td class="title-modal">Personal Information: </td>
-                                <td class="close-modal" @onclick="togglePersonalInformations">x</td>
-                            </tr>
-                            <tr></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="title-column">First Name</td>
-                                <td class="form-control">@personalInformation.FirstName</td>
-                            </tr>
-
-                            <tr>
-                                <td class="title-column">Last Name</td>
-                                <td class="form-control">@personalInformation.LastName</td>
-                            </tr>
-
-                            <tr>
-                                <td class="title-column">Email</td>
-                                <td class="form-control">@personalInformation.Email</td>
-                            </tr>
-
-                            <tr>
-                                <td class="title-column">Phone Number</td>
-                                <td class="form-control">@personalInformation.PhoneNumber</td>
-                            </tr>
-
-                            @if (additionalInformations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
-                            {
-                                <tr>
-                                    <td class="title-column">Ethnicity</td>
-                                    <td class="form-control info-empty">Empty</td>
-                                </tr>
-                                <tr>
-                                    <td class="title-column">Gender</td>
-                                    <td class="form-control info-empty">Empty</td>
-                                </tr>
-                            }
-                            else
-                            {
-                                AdditionalInformation additionalInformation = additionalInformations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
-                                <tr>
-                                    <td class="title-column">Ethnicity</td>
-                                    <td class="form-control">@additionalInformation.Ethnicity</td>
-                                </tr>
-                                <tr>
-                                    <td class="title-column">Gender</td>
-                                    <td class="form-control">@additionalInformation.Gender</td>
-                                </tr>
-
-                            }
-
-                            <tr>
-                                <td class="title-column">ID Number</td>
-                                <td id="id-number" class="form-control">@personalInformation.IdNumber</td>
-                            </tr>
-                            <tr>
-                                <td class="title-column">Address</td>
-                                <td class="form-control" rows="4">@personalInformation.Address </td>
-                            </tr>
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        }
-
-    }
-    else if (personalInformations == null)
-    {
-        <p>Getting personal information...</p>
-    }
+    <div class="dimmed">
+        <div class="img-magnified">
+            <input type="button" class="btn-view-document" style="margin-left:85%; margin-bottom: 2%;" value="Close" @onclick='() => toggleMagnifiedDocument("")' />
+            <img src="https://xebecstorage.blob.core.windows.net/@selectedDocument/@selectedUser.id" />
+        </div>
+    </div>
 }
 
-
-<!--Work History Modal-->
-@if (showWorkHistory)
-{
-    @if (workHistories != null && selectedCandidate != null)
-    {
-        @if (workHistories.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
-        {
-            <div class="dimmed">
-                <div class="modal-frame">
-                    <table>
-                        <thead>
-                            <tr>
-                                <td class="title-modal">Work History: </td>
-                                <td class="close-modal" @onclick="toggleWorkHistory">x</td>
-                            </tr>
-                            <tr></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="info-empty">Candidate doesn't have any work history.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        }
-        else
-        {
-            List<WorkHistory> workHistory = workHistories.Where(x => x.AppUserId == selectedCandidate.AppUserId).ToList();
-
-            <div class="dimmed">
-                <div class="modal-frame">
-                    <table>
-                        <thead>
-                            <tr>
-                                <td class="title-modal">Work History: </td>
-                                <td class="close-modal" @onclick="toggleWorkHistory">x</td>
-                            </tr>
-                            <tr></tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in workHistory)
-                            {
-                                <tr class="work-history-card" style="padding-left: 10px">
-
-                                <tr class="grid-container">
-                                    <td class="work-history-company-name">@item.CompanyName</td>
-                                    <td class="work-history-job-title">@item.JobTitle</td>
-                                    <td class="work-history-description">@item.Description</td>
-                                    <td class="work-history-date">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</td>
-                                </tr>
-
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        }
-    }
-    else if (workHistories == null)
-    {
-        <p>Getting Work history...</p>
-    }
-}
-
-<!--Education modal-->
-
-@if (showEducation)
-{
-    @if (educations != null && selectedCandidate != null)
-    {
-        @if (educations.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
-        {
-            <div class="dimmed">
-                <div class="modal-frame">
-                    <table>
-                        <thead>
-                            <tr>
-                                <td class="title-modal">Education: </td>
-                                <td class="close-modal" @onclick="toggleEducation">x</td>
-                            </tr>
-                            <tr></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="info-empty">Candidate doesn't have any education history.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        }
-        else
-        {
-            List<Education> education = educations.Where(x => x.AppUserId == selectedCandidate.AppUserId).ToList();
-
-            <div class="dimmed">
-                <div class="modal-frame">
-                    <table>
-                        <thead>
-                            <tr>
-                                <td class="title-modal">Education: </td>
-                                <td class="close-modal" @onclick="toggleEducation">x</td>
-                            </tr>
-                            <tr></tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in education)
-                            {
-                                <tr class="work-history-card" style="padding-left: 10px">
-
-                                <tr class="grid-container">
-                                    <td class="work-history-company-name">@item.Qualification</td>
-                                    <td class="work-history-job-title"></td>
-                                    <td class="work-history-description">@item.Insitution</td>
-                                    <td class="work-history-date">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</td>
-                                </tr>
-
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        }
-    }
-    else if (educations == null)
-    {
-        <p>Getting education history...</p>
-    }
-}
-
-<!--Profile Links modal-->
-@if (showPortfolio)
-{
-    @if (profilePortfolio != null && selectedCandidate != null)
-    {
-
-        @if (profilePortfolio.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
-        {
-            <div class="dimmed">
-                <div class="modal-frame">
-                    <table>
-                        <thead>
-                            <tr>
-                                <td class="title-modal">Education: </td>
-                                <td class="close-modal" @onclick="togglePortfolio">x</td>
-                            </tr>
-                            <tr></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="info-empty">Candidate doesn't have any portfolio information.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        }
-        else
-        {
-            ProfilePortfolioLink portfolioLinks = profilePortfolio.Where(x => x.AppUserId == selectedCandidate.AppUserId).FirstOrDefault();
-
-            <div class="dimmed">
-                <div class="modal-frame">
-                    <table>
-                        <thead>
-                            <tr>
-                                <td class="title-modal">Portfolio Links: </td>
-                                <td class="close-modal" @onclick="togglePortfolio">x</td>
-                            </tr>
-                            <tr></tr>
-                        </thead>
-
-                        <tbody>
-                            <tr class="col-12">
-                                <td class="row p-3">
-                                <td class="col-6">
-                                <td>
-                                    <label class="form-label" for="github">Github</label>
-                                    &ensp;
-                                    <i class="fab fa-github fa-2x"></i>
-                                </td>
-                                <td id="github" class="form-control shadow bg-body rounded"><a href="@portfolioLinks.GitHubLink">@portfolioLinks.GitHubLink</a></td>
-                                </td>
-                                <td class="col-6">
-                                <td>
-                                    <label class="form-label" for="linkedin">LinkedIn</label>
-                                    &ensp;
-                                    <i class="fab fa-linkedin-in fa-2x" style="color: #0077b5"></i>
-                                </td>
-                                <td id="linkedin" class="form-control shadow bg-body rounded">
-                                    <a href="@portfolioLinks.LinkedInLink">@portfolioLinks.LinkedInLink</a>
-                                </td>
-                                </td>
-                                </td>
-                                <td class="row p-3">
-                                <td class="col-6">
-                                <td>
-                                    <label class="form-label" for="twitter">Twitter</label>
-                                    &ensp;
-                                    <i class="fab fa-twitter-square fa-2x" style="color: #00acee"></i>
-                                </td>
-                                <td id="twitter" class="form-control shadow bg-body rounded">
-                                    <a href="@portfolioLinks.TwitterLink">@portfolioLinks.TwitterLink</a>
-                                </td>
-                                </td>
-                                <td class="col-6">
-                                <td>
-                                    <label class="form-label" for="personal-website">Personal Website</label>
-                                    &ensp;
-                                    <i class="fas fa-globe fa-2x" style="color: #35afc0"></i>
-                                </td>
-                                <td id="personal-website" class="form-control shadow bg-body rounded">
-                                    <a href="@portfolioLinks.PersonalWebsiteUrl">@portfolioLinks.PersonalWebsiteUrl</a>
-                                </td>
-                                </td>
-
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        }
-    }
-    else if (profilePortfolio == null)
-    {
-        <p>Getting profile links...</p>
-    }
-}
-
-<!--References Modal-->
-@if (showReferences)
-{
-    @if (references != null && selectedCandidate != null)
-    {
-        @if (references.Where(x => x.appUserId == selectedCandidate.AppUserId).FirstOrDefault() == null)
-        {
-            <div class="dimmed">
-                <div class="modal-frame">
-                    <table>
-                        <thead>
-                            <tr>
-                                <td class="title-modal">References: </td>
-                                <td class="close-modal" @onclick="toggleReferences">x</td>
-                            </tr>
-                            <tr></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="info-empty">Candidate doesn't have any references.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        }
-        else
-        {
-            List<References> modalReference = references.Where(x => x.appUserId == selectedCandidate.AppUserId).ToList();
-
-            <div class="dimmed">
-                <div class="modal-frame">
-                    <table>
-                        <thead>
-                            <tr>
-                                <td class="title-modal">References: </td>
-                                <td class="close-modal" @onclick="toggleReferences">x</td>
-                            </tr>
-                            <tr></tr>
-                        </thead>
-                        <tbody class="work-references-card" style="padding-left: 10px; overflow: hidden">
-                            @foreach (var item in modalReference)
-                            {
-                                <tr class="grid-container-references">
-                                    <td class="ref-name">@item.refFirstName  @item.refLastName</td>
-                                    <td class="ref-phone">@item.refPhone</td>
-                                    <td class="ref-email">@item.refEmail</td>
-                                    <td class="ref-relationship">@item.relationship</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        }
-    }
-    else if (workHistories == null)
-    {
-        <p>Getting references...</p>
-    }
-}
 
 <!--ApplicationForm Modal-->
 @if (showApplicationForm)
@@ -935,14 +588,26 @@
                     <tbody>
                         @foreach (var answer in AnswerList)
                         {
-                            @if (answer.appUserId == selectedCandidate.AppUserId)
+                            @if (answer.appUserId == selectedUser.id)
                             {
-                                FormQuestion question = QuestionList.Where(x => x.id == answer.questionnaireHRFormId && answer.appUserId == selectedCandidate.AppUserId).FirstOrDefault();
-
-                                <tr>
-                                    <td class="form-label" for="last-name">@question.question</td>
-                                    <td id="last-name" class="form-control name">@answer.applicantAnswer</td>
-                                </tr>
+                                FormQuestion question = QuestionList.Where(x => x.id == answer.questionnaireHRFormId && answer.appUserId == selectedUser.id).FirstOrDefault();
+                                @if (question.jobId == JobId)
+                                {
+                                    @if (answer.applicantAnswer == "" || answer.applicantAnswer == " " || answer.applicantAnswer == null)
+                                    {
+                                        <tr>
+                                            <td class="form-label" for="last-name">@question.question</td>
+                                            <td id="last-name" class="form-control name" style="color: red">Not answered</td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td class="form-label" for="last-name">@question.question</td>
+                                            <td id="last-name" class="form-control name">@answer.applicantAnswer</td>
+                                        </tr>
+                                    }
+                                }
                             }
                         }
                     </tbody>
@@ -978,13 +643,9 @@
     @using System.Net.Http.Headers;
 
     string empty = "  ";
-    bool showPersonalInformation = false;
-    bool showWorkHistory = false;
-    bool showEducation = false;
-    bool showPortfolio = false;
-    bool showReferences = false;
     bool showApplicationForm = false;
     bool showDocuments = false;
+    bool showMagnifiedDocument = false;
 
     string currentPhase;
 
@@ -997,22 +658,18 @@
     private string searchCandidate;
     private ApplicationPhase phaseFinal;
     private string selectedJob = "";
+    private string selectedDocument = "";
     private string searchTerm = "";
     private CandidateRecommender selectedCandidate;
     private AppUser selectedUser;
-    private IList<AppUser> usersFiltered;
+    private IList<AppUser> usersFiltered = null;
     private IList<Job> jobs = new List<Job>();
     private IList<CandidateRecommender> candidates = null;
     private IList<AppUser> users = new List<AppUser>();
     private IList<ApplicationPhaseHelper> phasesHelpers = new List<ApplicationPhaseHelper>();
     private IList<ApplicationModel> applications = new List<ApplicationModel>();
     private IList<ApplicationPhase> phases = new List<ApplicationPhase>();
-    private IList<PersonalInformation> personalInformations { get; set; }
-    private IList<AdditionalInformation> additionalInformations { get; set; }
-    private IList<WorkHistory> workHistories { get; set; }
-    private IList<Education> educations { get; set; }
-    private IList<ProfilePortfolioLink> profilePortfolio { get; set; }
-    private IList<References> references { get; set; }
+
     private currentPhase phase { get; set; }
     [Parameter] public int JobId { get; set; }
 
@@ -1023,10 +680,6 @@
 
         jobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
         candidates = await httpClient.GetListJsonAsync<List<CandidateRecommender>>("https://xebecapi.azurewebsites.net/api/candidaterecommender", new AuthenticationHeaderValue("Bearer", token));
-        personalInformations = await httpClient.GetListJsonAsync<List<PersonalInformation>>("https://xebecapi.azurewebsites.net/api/PersonalInformation", new AuthenticationHeaderValue("Bearer", token));
-        additionalInformations = await httpClient.GetListJsonAsync<List<AdditionalInformation>>("https://xebecapi.azurewebsites.net/api/AdditionalInformation", new AuthenticationHeaderValue("Bearer", token));
-        workHistories = await httpClient.GetListJsonAsync<List<WorkHistory>>("https://xebecapi.azurewebsites.net/api/WorkHistory", new AuthenticationHeaderValue("Bearer", token));
-        educations = await httpClient.GetListJsonAsync<List<Education>>("https://xebecapi.azurewebsites.net/api/Education", new AuthenticationHeaderValue("Bearer", token));
         applications = await httpClient.GetListJsonAsync<List<ApplicationModel>>("https://xebecapi.azurewebsites.net/api/application", new AuthenticationHeaderValue("Bearer", token));
         AnswerList = await httpClient.GetListJsonAsync<List<ApplicantAnswer>>("https://xebecapi.azurewebsites.net/api/ApplicantQuestionnaire", new AuthenticationHeaderValue("Bearer", token));
         QuestionList = await httpClient.GetListJsonAsync<List<FormQuestion>>("https://xebecapi.azurewebsites.net/api/Questionnaire", new AuthenticationHeaderValue("Bearer", token));
@@ -1035,8 +688,6 @@
         phasesHelpers = await httpClient.GetListJsonAsync<List<ApplicationPhaseHelper>>("https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper", new AuthenticationHeaderValue("Bearer", token));
         applications = await httpClient.GetListJsonAsync<List<ApplicationModel>>("https://xebecapi.azurewebsites.net/api/Application", new AuthenticationHeaderValue("Bearer", token));
         phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/ApplicationPhase", new AuthenticationHeaderValue("Bearer", token));
-        profilePortfolio = await httpClient.GetListJsonAsync<List<ProfilePortfolioLink>>("https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink", new AuthenticationHeaderValue("Bearer", token));
-        references = await httpClient.GetListJsonAsync<List<References>>("https://xebecapi.azurewebsites.net/api/Reference", new AuthenticationHeaderValue("Bearer", token));
 
         SetSelectedCandidate(candidates.FirstOrDefault());
     }
@@ -1061,8 +712,15 @@
         candidates = await httpClient.GetListJsonAsync<List<CandidateRecommender>>("https://xebecapi.azurewebsites.net/api/candidaterecommender", new AuthenticationHeaderValue("Bearer", token));
     }
 
+    private void toggleMagnifiedDocument(string documentType)
+    {
+        showMagnifiedDocument = !showMagnifiedDocument;
+        selectedDocument = documentType;
+    }
+
     private void toggleDocuments(AppUser user)
     {
+        Console.WriteLine(user.id);
         showDocuments = !showDocuments;
         SetSelectedCandidate(user);
     }
@@ -1072,105 +730,40 @@
         showDocuments = !showDocuments;
     }
 
-    private void togglePersonalInformations(CandidateRecommender candidate)
-    {
-        showPersonalInformation = !showPersonalInformation;
-        SetSelectedCandidate(candidate);
-    }
-
-    private void togglePersonalInformations()
-    {
-        showPersonalInformation = !showPersonalInformation;
-    }
-
-    private void toggleWorkHistory(CandidateRecommender candidate)
-    {
-        showWorkHistory = !showWorkHistory;
-        SetSelectedCandidate(candidate);
-    }
-
-    private void toggleWorkHistory()
-    {
-        showWorkHistory = !showWorkHistory;
-    }
-
-    private void toggleEducation(CandidateRecommender candidate)
-    {
-        showEducation = !showEducation;
-        SetSelectedCandidate(candidate);
-    }
-
-    private void toggleEducation()
-    {
-        showEducation = !showEducation;
-    }
-
-    private void togglePortfolio(CandidateRecommender candidate)
-    {
-        showPortfolio = !showPortfolio;
-        SetSelectedCandidate(candidate);
-    }
-
-    private void togglePortfolio()
-    {
-        showPortfolio = !showPortfolio;
-    }
-
-    private void toggleApplicationForm(CandidateRecommender candidate)
+    private void toggleApplicationForm(AppUser user, int jobId)
     {
         showApplicationForm = !showApplicationForm;
-        SetSelectedCandidate(candidate);
+        SetSelectedCandidate(user);
+        JobId = jobId;
     }
 
     private void toggleApplicationForm()
     {
         showApplicationForm = !showApplicationForm;
-    }
-
-    private void toggleReferences(CandidateRecommender candidate)
-    {
-        showReferences = !showReferences;
-        SetSelectedCandidate(candidate);
-    }
-
-    private void toggleReferences()
-    {
-        showReferences = !showReferences;
-    }
-
-    private void AssignApplication(ApplicationModel application)
-    {
-        tempApplication = application;
+        JobId = 0;
     }
 
     private string FindCurrentPhase(int candidateId, int jobId)
     {
-        string phaseDescription = "";
-
-        int applicationId = applications.Where(x => x.JobId == jobId && x.AppUserId == candidateId).FirstOrDefault().Id;
-
-        List<ApplicationPhaseHelper> phases_ = phasesHelpers.Where(x => x.ApplicationId == applicationId).ToList();
-        phases_ = phases_.OrderByDescending(x => x.TimeMoved).ToList();
-
-        ApplicationPhaseHelper currentPhase = phases_.FirstOrDefault();
-
-        phaseDescription = phases.Where(x => x.id == currentPhase.ApplicationPhaseId).FirstOrDefault().description;
-
-        return phaseDescription;
-    }
-
-    private string SetCurrentPhase()
-    {
-        @if (phase != null)
+        try
         {
-            currentPhase = phases.Where(x => x.id == phase.phases.LastOrDefault().applicationPhaseId).FirstOrDefault().description;
-        }
-        else
-        {
-            currentPhase = "none";
-        }
+            string phaseDescription = "";
 
-        return currentPhase;
+            int applicationId = applications.Where(x => x.JobId == jobId && x.AppUserId == candidateId).FirstOrDefault().Id;
+
+            List<ApplicationPhaseHelper> phases_ = phasesHelpers.Where(x => x.ApplicationId == applicationId).ToList();
+            phases_ = phases_.OrderByDescending(x => x.TimeMoved).ToList();
+
+            ApplicationPhaseHelper currentPhase = phases_.FirstOrDefault();
+
+            phaseDescription = phases.Where(x => x.id == currentPhase.ApplicationPhaseId).FirstOrDefault().description;
+
+            return phaseDescription;
+        }
+        catch (NullReferenceException nr)
+        {
+            return "No Phase";
+        }
     }
 
     private void SetSelectedCandidate(CandidateRecommender candidate)
@@ -1185,34 +778,38 @@
             selectedUser = user;
     }
 
-    private object GetPillStyle(CandidateRecommender candidate)
+    private void SearchApplicants(ChangeEventArgs e)
     {
-        double totalMatch = candidate.TotalMatch;
-        if (totalMatch <= 30)
-            return "background: #ff5201; color: rgba(0, 0, 0, 0.35)";
-        else if (totalMatch <= 40)
-            return "background: #ff8401; color: rgba(0, 0, 0, 0.35)";
-        else if (totalMatch <= 50)
-            return "background: #ff9d01; color: rgba(0, 0, 0, 0.35)";
-        else if (totalMatch <= 60)
-            return "background: #ffbc01; color: rgba(0, 0, 0, 0.35)";
-        else if (totalMatch <= 70)
-            return "background: #ffd401; color: rgba(0, 0, 0, 0.35)";
-        else if (totalMatch <= 80)
-            return "background: #ebff01; color: rgba(0, 0, 0, 0.35)";
-        else if (totalMatch <= 90)
-            return "background: #baff01; color: rgba(0, 0, 0, 0.35)";
-        else if (totalMatch <= 100)
-            return "background: #05ff01; color: rgba(0, 0, 0, 0.35)";
+        searchCandidate = e.Value.ToString();
 
-        return "";
-    }
+        usersFiltered = new List<AppUser>();
+        usersFiltered.Clear();
 
-    private object GetStyle(CandidateRecommender candidate)
-    {
-        if (selectedCandidate == candidate)
-            return "border-left: 5px solid #00bcae;";
-        return "";
+        if (users != null)
+        {
+
+
+            foreach (var user in users)
+            {
+                if (user.name != null)
+                {
+                    if (user.name.ToLower().Contains(searchCandidate.ToLower()))
+                    {
+                        usersFiltered.Add(user);
+                    }
+                }
+            }
+        }
+
+        //try
+        //{
+        //    usersFiltered = users.Where(x => x.name.ToLower().Contains(searchCandidate.ToLower())).ToList();
+        //}
+        //catch (NullReferenceException nr)
+        //{
+
+        //    Console.WriteLine("searchValue: " + searchCandidate.ToLower() + usersFiltered.Count()); ;
+        //}
     }
 
 }

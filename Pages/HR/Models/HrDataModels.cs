@@ -313,6 +313,10 @@ namespace XebecPortal.UI.Pages.HR
 
         public string Surname { get; set; }
 
+        public string JobTitle { get; set; }
+
+        public int JobId { get; set; }
+
         public int ApplicationId { get; set; }
 
         public int AppUserId { get; set; }
@@ -396,6 +400,43 @@ namespace XebecPortal.UI.Pages.HR
         public int FormQuestionId { get; set; }
 
         public FormQuestion FormQuestion { get; set; }
-    }   
+    }
+
+    public class Document
+    {
+        public int Id { get; set; }
+
+        public string CV { get; set; }
+
+        public string MatricCertificate { get; set; }
+
+        public string UniversityTranscript { get; set; }
+
+        public string AdditionalCert1 { get; set; }
+
+        public string AdditionalCert2 { get; set; }
+
+        public string AdditionalCert3 { get; set; }
+
+
+        //Foreign Key: AppUser
+        public int AppUserId { get; set; }
+
+        public AppUser AppUser { get; set; }
+    }
+
+    public class QuestionnaireHrForm
+    {
+        public int Id { get; set; }
+        public string Question { get; set; }
+
+        public string Answer { get; set; }
+
+        public int JobId { get; set; }
+        public Job Job { get; set; }
+
+        public int AnswerTypeId { get; set; }
+        public AnswerType AnswerType { get; set; }
+    }
 
 }

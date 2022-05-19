@@ -1,0 +1,206 @@
+﻿@using Bogus
+@using XebecPortal.UI.Services.Models
+@using System.Text
+@using XebecPortal.UI.Utils.Handlers;
+@using System.Net.Http.Headers;
+@inject HttpClient HttpClient
+@inject IJSRuntime jsRuntime
+@inject NavigationManager nav
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+<style>
+    .collaborators2-container {
+        width: 100%;
+        height: 55vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .collaborators2-inner {
+        height: 55vh;
+        width: 70%;
+        background-color: rgba(255,255,255,1);
+        border: solid white 0.1em;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
+    }
+
+    .summary {
+        background-color: teal;
+        height: 100%;
+        width: 30%;
+    }
+
+    .selects-container {
+        display: flex;
+        
+        align-items: center;
+        flex-direction: column;
+        height: 80%;
+        gap:20px;
+        overflow-y:scroll;
+    }
+    .heading {
+        text-align: center;
+        color: #004393;
+    }
+    .select {
+        padding: 2px 0px 5px 5px;
+        border: solid #00968B;
+        border-radius: 5px;
+    }
+    .question{
+        font-weight:bold;
+    }
+    .summary-name{
+        text-align:center;
+
+    }
+    .summary2-preview-item-description{
+        text-align:center;
+    }
+    
+</style>
+
+@if (!prevPage && !nextPage)
+{
+    <div class="collaborators2-container">
+        <div class="collaborators2-inner">
+            <div class="heading">
+                <h3 style="font-weight:600;">APPLICATION FORM</h3>
+            </div>
+            <div  class="selects-container">
+                @foreach (var question in ChosenQuestions)
+                {
+                    <div class="question-selected">
+
+                        <p class="question">@question.question</p>
+                        <select class="select" @onchange="Collabs" >
+                            <option>Select who can view answers</option>
+                            @foreach(var collab in ListOfCollaborators)
+                            {
+                                <option>@collab.name @collab.surname</option>
+                            }
+                            
+                        </select>
+                    </div>
+
+                }
+
+
+            </div>
+
+        </div>
+        <div class="summary">
+            <div class="summary-name">
+                <h3 style="font-weight: 600; color: #004392;">SUMMARY</h3>
+            </div>
+            <div style="overflow-y:scroll;" class="collaborators-left-table">
+                @if (ChosenQuestions != null)
+                {
+                    foreach (var formQuestion in ChosenQuestions)
+                    {
+                        <div class="right-list-item-preview">
+                            <div class="close-item-panel">
+
+                            </div>
+                            <div class="summary-preview-item-body">
+                                <div class="summary2-preview-item-description">
+                                    <p style="font-weight:600;">@formQuestion.question</p>
+
+                                </div>
+                                <div class="summary2-preview-item-description">
+                                    
+                                    @foreach (var user in SelectedUsers)
+                                    {
+
+                                        <p style="color:#FFFFFF; font-weight:600;">@user</p>
+                                    }
+
+                                </div>
+                                
+
+
+
+
+                            </div>
+                        </div>
+                    }
+                }
+
+            </div>
+        </div>
+    </div>
+    <div class="bottom-buttons">
+        <input type="button" value="Prev" class="button-functions" @onclick="Prev" />
+        <input type="button" value="Save" class="button-functions" />
+        <input type="button" value="Next" class="button-functions" @onclick="Next" />
+    </div>
+
+}
+else if (nextPage)
+{
+    <XebecPortal.UI.Pages.HR.PhaseControlTool />
+}
+else if (prevPage)
+{
+    <XebecPortal.UI.Pages.HR.Collaborators />
+}
+
+@code {
+
+
+    [Parameter]
+    public List<FormQuestion> ChosenQuestions { get; set; }
+
+    [Parameter]
+    public EventCallback<FormQuestion> ChosenQuestionChanged { get; set; }
+
+    public List<FormQuestion> CollabQuestions = new List<FormQuestion>();
+
+    [Parameter]
+    public List<AppUser> ListOfCollaborators { get; set; }
+
+    [Parameter]
+    public EventCallback<AppUser> ListOfCollaboratorsChanged { get; set; }
+
+    [Parameter]
+    public int JobId { get; set; }
+
+
+    string selectedCollab;
+    private List<string> SelectedUsers = new List<string>();
+
+    public List<AppUser> Collaborators = new List<AppUser>();
+
+    bool nextPage;
+    bool prevPage;
+    public void QuestionsTest()
+    {
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        nextPage = false;
+        prevPage = false;
+    }
+    private void Prev()
+    {
+        prevPage = true;
+    }
+
+    private void Next()
+    {
+        //this should probably also save, or alert the user that changes are not saved
+        nextPage = true;
+    }
+
+    public async Task Collabs(ChangeEventArgs e)
+    {
+        selectedCollab = e.Value.ToString();
+        SelectedUsers.Add(selectedCollab);
+    }
+
+}

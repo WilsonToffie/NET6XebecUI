@@ -25,6 +25,7 @@ namespace XebecPortal.UI.Shared
 
 
         PersonalInformation personalInfo = new PersonalInformation();
+        private IList<PersonalInformation> personalInfoStuff { get; set; }
         List<PersonalInformation> personalInfoList = new List<PersonalInformation>();
         private IList<Job> jobs = new List<Job>();
         private IList<JobType> jobTypes = new List<JobType>();
@@ -36,26 +37,47 @@ namespace XebecPortal.UI.Shared
         private string token;
         private List<Department> departments;
 
+        private bool newUser = false;
         protected override async Task OnInitializedAsync()
         {
-            token = await localStorage.GetItemAsync<string>("jwt_token");
-
-            jobs = await HttpClient.GetListJsonAsync<IList<Job>>($"https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
-
-            jobTypes = await HttpClient.GetListJsonAsync<IList<JobType>>("https://xebecapi.azurewebsites.net/api/JobType", new AuthenticationHeaderValue("Bearer", token));
-            
-            personalInfo = await HttpClient.GetListJsonAsync<PersonalInformation>($"https://xebecapi.azurewebsites.net/api/personalinformation/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token)); // !!!!!! Change the ID to be the userID later 
-
-            departments = await HttpClient.GetFromJsonAsync<List<Department>>("/mockData/departmentMockDatav1.json");
-
-            if (state.Role.Equals("Candidate"))
+            try
             {
-                showApplicantJobPortal();
+                token = await localStorage.GetItemAsync<string>("jwt_token");
+
+                jobs = await HttpClient.GetListJsonAsync<IList<Job>>($"https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
+
+                jobTypes = await HttpClient.GetListJsonAsync<IList<JobType>>("https://xebecapi.azurewebsites.net/api/JobType", new AuthenticationHeaderValue("Bearer", token));
+
+                personalInfoStuff = await HttpClient.GetListJsonAsync<List<PersonalInformation>>($"https://xebecapi.azurewebsites.net/api/personalinformation", new AuthenticationHeaderValue("Bearer", token)); // !!!!!! Change the ID to be the userID later 
+                personalInfoList = personalInfoStuff.Where(x => x.AppUserId == state.AppUserId).ToList();
+
+                if (personalInfoList.Count > 0)
+                {
+                    foreach (var item in personalInfoList)
+                    {
+                        personalInfo = item;
+                        newUser = false;
+                    }
+                }
+                else
+                {
+                    newUser = true;
+                }
+                departments = await HttpClient.GetFromJsonAsync<List<Department>>("/mockData/departmentMockDatav1.json");
+
+                if (state.Role.Equals("Candidate"))
+                {
+                    showApplicantJobPortal();
+                }
+                else
+                {
+                    showHRJobPortal();
+                }
             }
-            else
+            catch (NullReferenceException e)
             {
-                showHRJobPortal();
-            }
+                Console.WriteLine("Error at Main Component " + e);
+            }        
         }
 
         private void showApplicantApplicationProfile()
@@ -88,12 +110,16 @@ namespace XebecPortal.UI.Shared
             hrDataAnalyticsTool = false;
             hrJobPortal = true;
             hrCreateAJob = false;
+            hrApplicantPortal = false;
+            hrPhaseManager = false;
         }
         private void showHRCreateAJob()
         {
             hrDataAnalyticsTool = false;
             hrJobPortal = false;
             hrCreateAJob = true;
+            hrApplicantPortal = false;
+            hrPhaseManager = false;
         }
 
         private void showHRApplicantPortal()
@@ -144,9 +170,10 @@ namespace XebecPortal.UI.Shared
             return $"Selected Type{(selectedValues.Count > 1 ? "s" : " ")}: {string.Join(", ", selectedValues.Select(x => x))}";
         }
 
-
         private string storageAcc = "xebecstorage";//"storageaccountxebecac6b";
         private string imgContainer = "profile-images";//"images";
+        private string azureCredentials = "?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-09-11T22:04:48Z&st=2022-05-11T14:04:48Z&spr=https&sig=MTkK0ODHx%2Fj%2BBwTPXnhcauQN%2F8A1HPhfG0kA%2BGKklmE%3D";
+            // private string azureCredentials = "?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-05-07T15:09:45Z&st=2022-05-06T07:09:45Z&spr=https&sig=qxeI0Xt9nd9SkysOYEnMFKqbYiocU%2BcfRK%2FpxN8yN0E%3D";
         private string userPicInfo;
         private async Task UploadingProfilePic(InputFileChangeEventArgs e)
         {
@@ -165,7 +192,7 @@ namespace XebecPortal.UI.Shared
                 + "/"
                 + fileName);
 
-            AzureSasCredential credential = new AzureSasCredential("?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-05-04T17:43:51Z&st=2022-05-04T09:43:51Z&spr=https&sig=LmUPm%2BSGZPm%2Bi115YYmdV7hsdcaPaOurNP9WZ%2FeeVmI%3D");
+            AzureSasCredential credential = new AzureSasCredential(azureCredentials);
             BlobClient blobClient = new BlobClient(blobUri, credential);
 
             var res = await blobClient.UploadAsync(fileInfo.OpenReadStream(1512000), new BlobUploadOptions
@@ -180,9 +207,7 @@ namespace XebecPortal.UI.Shared
 
             if (res.GetRawResponse().Status <= 205)
             {
-                
-                // remember to fix / change later
-                personalInfo.Id = state.AppUserId; // 1st person in DB THIS NEEDS TO CHANGE TO BE THEIR ID
+                personalInfo.AppUserId = state.AppUserId; 
                 personalInfo.ImageUrl = blobUri.ToString();
                 Console.WriteLine("Result is true whooooo");
                 var content = new FormUrlEncodedContent(new[]
@@ -190,9 +215,10 @@ namespace XebecPortal.UI.Shared
                                     new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
                                 });
                 //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
+                // var resp = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/User/{state.AppUserId}", state, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
 
                 var resp = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
-               // var newresp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo); //{personalInfo.Id}
+                // var newresp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo); //{personalInfo.Id}
             }
             else
             {

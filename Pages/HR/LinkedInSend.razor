@@ -1,8 +1,9 @@
 ﻿@inject HttpClient httpClient
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject IJSRuntime jsRuntime
 <style>
 
-    .layout {
+    /*.layout {
         position: relative;
         height: 90%;
     }
@@ -12,16 +13,16 @@
     }
 
     .cardStyle {
-        height: 29vh;
-        /*width: 37vh; can adjust this or remove it if it get's to big*/
-        position: relative;
+        height: 29vh;*/
+    /*width: 37vh; can adjust this or remove it if it get's to big*/
+    /*position: relative;
         top: 30%;
         border-radius: 16px;
         border: 5px double darkgrey;
         margin-left: 10px;
         margin-right: 10px;
-        background-color: #FFFFFF; /*rgba(255, 255, 255, 0.5);*/
-        text-align: center;
+        background-color: #FFFFFF;*/ /*rgba(255, 255, 255, 0.5);*/
+    /*text-align: center;
         padding-top: 0.2em;
     }
 
@@ -37,11 +38,11 @@
         border-radius: 16px;
         border: 5px solid #00bcae;
         margin-left: 10px;
-        margin-right: 10px;
-        /*box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;*/
-        padding-top: 0.2em;
-        /*this is what causes the border colour*/
-        background-color: #FFFFFF;
+        margin-right: 10px;*/
+    /*box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;*/
+    /*padding-top: 0.2em;*/
+    /*this is what causes the border colour*/
+    /*background-color: #FFFFFF;
         text-align: center;
     }
 
@@ -69,138 +70,381 @@
 
         .buttonStyle:hover {
             background-color: #d35bc9;
+        }*/
+
+    .postjob-form-container {
+        overflow-y: auto;
+        height: 55vh;
+        width: 65%;
+        margin-left: 10%;
+        margin-right: 25%;
+        background-color: rgba(255,255,255,1);
+        border: solid white 0.1em;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
+        border-radius: 10px;
+    }
+
+    .postjob-form {
+        height: auto;
+        width: 100%;
+    }
+
+    .page-title {
+        text-align: center;
+        font-family: opensans-condensed-bold;
+        font-size: 2em;
+        font-weight: 900;
+        color: #004393;
+        margin-top: 1vh;
+        text-transform: uppercase;
+    }
+
+    .postjob-form-individual {
+        width: 45%;
+        margin-left: 2.5%;
+        margin-right: 2.5%;
+        height: 5vh;
+    }
+
+    .text-font-styling {
+        font-family: opensans-bold;
+        width: 30vh;
+    }
+
+    .create-form-text {
+        background-color: transparent;
+        width: 100%;
+        height: 5vh;
+        font-size: 1em;
+        border: solid 0.15em #00bcae /*rgba(0,0,0, 0.2)*/;
+        border-radius: 0.5em;
+        font-weight: 600;
+        color: black;
+        font-family: opensans-condensed-light;
+        padding-left: 1em;
+        padding-bottom: 0.1em;
+    }
+
+    .spacing-for-stuff {
+        margin-top: 5vh;
+    }
+
+    .create-job-summary {
+        background-color: #00bcae;
+        height: 55vh;
+        width: 45vh;
+        position: absolute;
+        left: 70%;
+        border-radius: 10px;
+        /* overflow-y: auto;*/
+    }
+
+    .summary-container {
+        width: 100%;
+        height: 48vh;
+        overflow-y: auto;
+        padding-left: 1em;
+        padding-right: 1em;
+    }
+
+    .summary-individual {
+        width: 45%;
+        margin-left: 2.5%;
+        margin-right: 2.5%;
+        height: 5vh;
+        margin-bottom: 1em;
+    }
+
+    .summary-text-style {
+        font-size: 1em;
+        font-weight: 600;
+        color: white;
+        font-family: opensans-condensed-light;
+    }
+
+    .createjob-select {
+        background-color: transparent;
+        width: 100%;
+        height: 5vh;
+        font-size: 1em;
+        border: solid 0.15em #00bcae;
+        font-weight: 600;
+        border-radius: 0.5em;
+        color: black;
+        font-family: opensans-condensed-light;
+        padding-left: 1em;
+        padding-bottom: 0.1em;
+    }
+
+    .createjob-form-option {
+        font-size: 1em;
+        font-weight: 500;
+        color: black;
+        font-family: opensans-condensed-bold;
+    }
+
+    .bottom-buttons {
+        margin-top: 3vh;
+        margin-left: 20%;
+        position: absolute;
+        bottom: 5vh;
+    }
+
+    .summary-text-style {
+        font-size: 1em;
+        font-weight: 600;
+        color: white;
+        font-family: opensans-condensed-light;
+    }
+
+    .hr-jobportal-mudselect {
+        cursor: pointer !important;
+        background-color: white !important;
+        height: 7vh !important;
+        font-size: 1.5em !important;
+        font-weight: bold !important;
+        color: black !important;
+        border-radius: 1em !important;
+        padding-bottom: 5vh !important;
+        padding-left: 4vh !important;
+        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2) !important;
+    }
+
+        .hr-jobportal-mudselect:hover {
+            border-radius: 1em !important;
+            border: 0.1em solid black !important;
         }
 </style>
 
-<div class="layout">
-    <div class="row content-middle">
-
-        <div class="col-1"></div>
-
-        @if (profiles != null)
-        {
-            for (int i = 0; i < profiles.Count; i++)
-            {
-                var companyProfileID = profiles[i];
-
-                @if (selectedProfile.Contains(companyProfileID))
+<div class="create-job-summary">
+    <div class="page-title">Summary</div>
+    <div class="summary-container">
+        <div class="summary-individual">
+            <div class="text-font-styling"> Platforms selected</div>
+            <div class="summary-text-style">
+                @foreach (var item in selectedValue)
                 {
-                    <div class="col-2">
-                        <div class="cardStyle-selected" @onclick="() => RemoveSelectProfile(companyProfileID)">
-                            <!--This is the profiles are chosen-->
-                            @if ((profiles[i].platformName).Equals("Main 1Nebula Platform"))
-                            {
-                                <img src="/Img/logo.svg" style="height: 40%; width: 80%; margin-top: 35%;  ">
-                            }
-                            else if ((profiles[i].platformName).Equals("Xebec Platform"))
-                            {
-                                <img src="/Img/xebeclogoblack.png" style="height: 60%; width: 80%; margin-top: 20%; object-fit: cover; object-position: center ">
-                            }
-                            else if ((profiles[i].platformName).Equals("48Software"))
-                            {
-                                <img src="/Img/48 full-logo-colour.png" style="color: rgba(62,179,231,255); height: auto; width: 100%; margin-top: 40%; object-fit: cover; object-position: center ">
-                            }
-                            else if ((profiles[i].platformName).Equals("OneView"))
-                            {
-                                <img src="/Img/OneView dark logo.png" style="height: auto; width: 100%; margin-top: 35%; object-fit: cover; object-position: center ">
-                            }
-                            else if ((profiles[i].platformName).Equals("Stactize"))
-                            {
-                                <img src="/Img/Stactize logo colour-01.png" style="height: auto; width: 100%; margin-top: 40%; object-fit: cover; object-position: center ">
-                            }
-                        </div>
-                    </div>
+                    <div>@item.platformName</div>
                 }
-                else if (profiles.Contains(companyProfileID))
-                {
-                    <div class="col-2">
-                        <div class="cardStyle card-text-Style" @onclick="() => AddSelectProfile(companyProfileID)">
-                            <!--This is the profiles are getting chosen-->
-                            @if ((profiles[i].platformName).Equals("Main 1Nebula Platform"))
-                            {
-                                <img src="/Img/logo.svg" style="height: 40%; width: 80%; margin-top: 35%;  ">
-                            }
-                            else if ((profiles[i].platformName).Equals("Xebec Platform"))
-                            {
-                                <img src="/Img/xebeclogoblack.png" style="height: 60%; width: 80%; margin-top: 20%; object-fit: cover; object-position: center ">
-                            }
-                            else if ((profiles[i].platformName).Equals("48Software"))
-                            {
-                                <img src="/Img/48 full-logo-colour.png" style="color: rgba(62,179,231,255); height: auto; width: 100%; margin-top: 40%; object-fit: cover; object-position: center ">
-                            }
-                            else if ((profiles[i].platformName).Equals("OneView"))
-                            {
-                                <img src="/Img/OneView dark logo.png" style="height: auto; width: 100%; margin-top: 35%; object-fit: cover; object-position: center ">
-                            }
-                            else if ((profiles[i].platformName).Equals("Stactize"))
-                            {
-                                <img src="/Img/Stactize logo colour-01.png" style="height: auto; width: 100%; margin-top: 40%; object-fit: cover; object-position: center ">
-                            }
-                        </div>
-                    </div>
-                }
-            }
-        }
+            </div>
+        </div>
     </div>
 </div>
 
+
+<div class="postjob-form-container">
+    <EditForm Model="@TempJob" class="postjob-form" OnValidSubmit="@Save">
+        <DataAnnotationsValidator />
+        @if (managejobPlatform)
+        {
+            @if (createjobPlatform)
+            {
+                <div class="page-title">Create New Platform</div>
+
+                <div class="form-group createjob-form-group">
+                    <div class="createjob-form-individual" style="width: 200%;">
+                        <div class="createjob-form-individual">
+                            <div class="text-font-styling"> Platform's Name</div>
+                            <InputText placeholder="" class="create-form-text" @bind-Value="addPlatform.platformName" />
+                        </div>
+                    </div>
+                    <div class="createjob-form-individual">
+                        <input type="button" value="Add Platform" class="form-buttons" @onclick="() => addJobPlatform(addPlatform)" />
+                    </div>
+                </div>
+                <div class="spacing-for-creating-stuff">
+                    <div class="createjob-form-individual">
+                        <div class="text-font-styling"> Platforms Recently Added</div>
+                        <div class="created-items-container">
+                            @foreach (var item in recentlyAdded)
+                            {
+                                <div class="text-font-for-created-items-styling">@item.platformName</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="createNew-buttton-function">
+                    <input type="button" value="Done" class="button-functions" @onclick="savePlatform" />
+                    @*<input type="button" value="Save" class="button-functions" @onclick="saveDep" />*@
+                </div>
+            }
+            else if (deleteJobPlatform)
+            {
+                <div class="page-title">Delete existing Platform</div>
+
+                <div class="form-group createjob-form-group">
+                    <div class="createjob-form-individual" style="width: 200%;">
+                        <div class="createjob-form-individual">
+                            <InputSelect class="createjob-select" style="margin-top: 3vh;" @bind-Value="platform.id">
+                                <option value="0" selected disabled>Select Platform</option>
+                                @foreach (var item in profiles)
+                                        {
+                                    <option value="@item.id">@item.platformName</option>
+                                        }
+                            </InputSelect>
+                        </div>
+                    </div>
+                    <div class="createjob-form-individual">
+                        <input type="button" value="Delete Department" class="form-buttons" @onclick="() => removePlatform(platform)" />
+                    </div>
+                </div>
+                <div class="createNew-buttton-function">
+                    <input type="button" value="Done" class="button-functions" @onclick="() => deletePlatform(false)" />
+                </div>
+            }
+            else
+            {
+                <div class="page-title">Manage Platform</div>
+
+                <div class="form-group createjob-form-group">
+                    <div class="createjob-form-individual">
+                        <input type="button" value="Add Platform" class="form-buttons" @onclick="() => createPlatform(true)" />
+                    </div>
+                    <div class="createjob-form-individual">
+                        <input type="button" value="Delete Platform" class="form-buttons" @onclick="() => deletePlatform(true)" />
+                    </div>
+                </div>
+
+                <div class="spacing-for-creating-stuff">
+                    <div class="createjob-form-individual">
+                        <div class="text-font-styling"> Platforms Added</div>
+                        <div class="created-items-container">
+                            @foreach (var item in profiles)
+                            {
+                                <div class="text-font-for-created-items-styling">@item.platformName</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="createNew-buttton-function">
+                    <input type="button" value="Done" class="button-functions" @onclick="() => managePlatform(false)" />
+                </div>
+            }
+
+            @*<div class="spacing-for-creating-stuff">
+                <div class="createjob-form-individual">
+                    <div class="text-font-styling"> Departments Created</div>
+                    <div class="created-items-container">
+                        @foreach (var item in Departments)
+                        {
+                            <div class="text-font-for-created-items-styling">@item.Name</div>
+                        }
+                    </div>
+                </div>
+            </div>*@
+
+
+        }
+        else
+        {
+
+            <div class="page-title">Post a job</div>
+
+            <div class="spacing-for-stuff">
+                <div class="form-group createjob-form-group">
+                    <div class="postjob-form-individual">
+
+                        <div class="text-font-styling">Platform Selection</div>
+
+                        @foreach (var item in profiles)
+                        {
+                            <input type="checkbox" value="@item" style=" width: 40px; height: 15px;" @onchange="eventArgs => { CheckboxClicked(item, eventArgs.Value); }" />@item.platformName<br><!-- @onchange="eventArgs => { CheckboxClicked(club, eventArgs.Value); }"-->
+                        }
+
+                    </div>
+                    <div class="createjob-form-individual">
+                        <input type="button" value="Manage Platform" class="form-buttons" @onclick="() => managePlatform(true)" />
+                    </div>
+                </div>
+            </div>
+            <div class="validation-message"><ValidationSummary /></div>
+
+            <div class="bottom-buttons">
+                <input type="button" value="Prev" class="button-functions" />
+                <input type="button" value="Save" class="button-functions" @onclick="Save" />
+                <input type="button" value="Next" class="button-functions" />
+            </div>
+        }
+    </EditForm>
+</div>
+        
+@*<div class="layout">
+    <div class="row content-middle">
+
+        <div class="col-1"></div>*@
+
+@*@if (profiles != null)
+    {
+        for (int i = 0; i < profiles.Count; i++)
+        {*@
+@*var companyProfileID = profiles[i];*@
+
+@*@if (selectedProfile.Contains(companyProfileID))
+    {*@
+<!--<div class="col-2">
+    <div class="cardStyle-selected" @onclick="() => RemoveSelectProfile(companyProfileID)">-->
+<!--This is the profiles are chosen-->
+@*@if ((profiles[i].platformName).Equals("Main 1Nebula Platform"))
+    {
+        <img src="/Img/logo.svg" style="height: 40%; width: 80%; margin-top: 35%;  ">
+    }
+    else if ((profiles[i].platformName).Equals("Xebec Platform"))
+    {
+        <img src="/Img/xebeclogoblack.png" style="height: 60%; width: 80%; margin-top: 20%; object-fit: cover; object-position: center ">
+    }
+    else if ((profiles[i].platformName).Equals("48Software"))
+    {
+        <img src="/Img/48 full-logo-colour.png" style="color: rgba(62,179,231,255); height: auto; width: 100%; margin-top: 40%; object-fit: cover; object-position: center ">
+    }
+    else if ((profiles[i].platformName).Equals("OneView"))
+    {
+        <img src="/Img/OneView dark logo.png" style="height: auto; width: 100%; margin-top: 35%; object-fit: cover; object-position: center ">
+    }
+    else if ((profiles[i].platformName).Equals("Stactize"))
+    {
+        <img src="/Img/Stactize logo colour-01.png" style="height: auto; width: 100%; margin-top: 40%; object-fit: cover; object-position: center ">
+    }*@
+@*</div>
+    </div>*@
+@*}
+    else if (profiles.Contains(companyProfileID))
+    {*@
+@*<div class="col-2">
+    <div class="cardStyle card-text-Style" @onclick="() => AddSelectProfile(companyProfileID)">*@
+<!--This is the profiles are getting chosen-->
+@*@if ((profiles[i].platformName).Equals("Main 1Nebula Platform"))
+    {
+        <img src="/Img/logo.svg" style="height: 40%; width: 80%; margin-top: 35%;  ">
+    }
+    else if ((profiles[i].platformName).Equals("Xebec Platform"))
+    {
+        <img src="/Img/xebeclogoblack.png" style="height: 60%; width: 80%; margin-top: 20%; object-fit: cover; object-position: center ">
+    }
+    else if ((profiles[i].platformName).Equals("48Software"))
+    {
+        <img src="/Img/48 full-logo-colour.png" style="color: rgba(62,179,231,255); height: auto; width: 100%; margin-top: 40%; object-fit: cover; object-position: center ">
+    }
+    else if ((profiles[i].platformName).Equals("OneView"))
+    {
+        <img src="/Img/OneView dark logo.png" style="height: auto; width: 100%; margin-top: 35%; object-fit: cover; object-position: center ">
+    }
+    else if ((profiles[i].platformName).Equals("Stactize"))
+    {
+        <img src="/Img/Stactize logo colour-01.png" style="height: auto; width: 100%; margin-top: 40%; object-fit: cover; object-position: center ">
+    }*@
+@*</div>
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div>*@
+
 @*<div class="row content-bottom">
-    <input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save" />
-</div>*@
+        <input type="button" value="Save" class="createjob-bottom-main-button" @onclick="Save" />
+    </div>*@
 
 @code {
-
-    @using System.Net.Http.Headers;
-    @using XebecPortal.UI.Utils.Handlers;
-
-    [Parameter]
-    public CreateJobPost TempJob { get; set; }
-
-    [Parameter]
-    public EventCallback<CreateJobPost> TempJobChanged { get; set; }
-
-    private List<JobPlatform> profiles;
-    private List<JobPlatform> selectedProfile = new List<JobPlatform>();
-
-    string token;
-
-    protected override async Task OnInitializedAsync()
-    {
-        token = await localStorage.GetItemAsync<string>("jwt_token");
-        profiles = await httpClient.GetListJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform", new AuthenticationHeaderValue("Bearer", token));
-    }
-
-    protected void AddSelectProfile(JobPlatform profile)
-    {
-        selectedProfile.Add(profile);
-    }
-
-    protected void RemoveSelectProfile(JobPlatform profile)
-    {
-        selectedProfile.Remove(profile);
-    }
-
-    /*
-    private object selectedCompanyProfile(JobPlatform profile)
-    {
-        if (selectedProfile.FindAll(d => d.id == profile.id).Count() >0)
-            return "cardStyle-selected";
-        return "cardStyle";
-    }
-    */
-
-    private object deselectCompanyProfile(JobPlatform profile)
-    {
-        if (selectedProfile.FindAll(d => d.id == profile.id).Count() > 0)
-            return "cardStyle";
-        return "cardStyle-selected";
-    }
-
-    //private async Task Save()
-    //{
-    //    TempJob.JobPlatforms = selectedProfile;
-    //    Console.WriteLine("Saving the Profiles");
-    //    await TempJobChanged.InvokeAsync(TempJob);
-    //}
 
 }

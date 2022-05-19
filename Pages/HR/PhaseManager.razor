@@ -1,4 +1,6 @@
-﻿@inject HrJobState hrJobState
+﻿@using System.Net.Http.Headers;
+@using XebecPortal.UI.Utils.Handlers;
+@inject HrJobState hrJobState
 @inject HttpClient httpClient
 @inject UserState userstate
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
@@ -16,6 +18,8 @@
         height: 5vh;
         width: 100%;
         margin-bottom: 2.5vh;
+        display: flex;
+        justify-content: center;
     }
 
     .phase-container {
@@ -340,11 +344,16 @@
 </style>
 
 
-<div class="page-top-select-job">
+@*<div class="page-top-select-job">
     <div class="hr-job-search-bar">
         <input class="hr-job-search-bar-input" type="text" placeholder="Search Applicants" @bind-value="searchTerm" @bind-value:event="oninput" />
     </div>
+</div>*@
+
+<div class="myjob-search-bar d-flex justify-content-center" >
+    <input class="search-image hr-job-search-bar-input" style="padding-left: 2.5em; width: 30%;" type="text" placeholder="Search Applicants" @bind-value="searchTerm" @bind-value:event="oninput" />
 </div>
+
 <div class="phase-manager-container">
 
     @if (LoadingDialog)
@@ -1049,23 +1058,96 @@
         </div>
     </MatDialog>
 
+
+
+
+
+
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasFilter">
+        <div class="offcanvas-header-alert offcanvas-header-color1">
+            <div style="padding: 2em 0em 0em 2em">
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+        </div>
+        <div class="align-items-center">
+            <p class="configure-alerts-heading">Filter</p>
+        </div>
+        <div class="offcanvas-body p-5 pt-0 d-grid gap-5">
+            <div class="col-12">
+                <!--Location-->
+                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" AnchorOrigin="Origin.BottomCenter"  MultiSelection="true" FullWidth="true"  Label="Job Title" SelectedValuesChanged="SearchListTitle">
+                    @if (FilteredItems?.Any() == true)
+                    {
+                        @foreach (var item in Items.Select(x => x.JobTitle).OrderBy(x => x).Distinct())
+                        {
+                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                        }
+
+                    }
+                </MudSelect>
+            </div>
+            <div class="col-12">
+                <!--Company-->
+                @*<MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Companies" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextCompany)" Label="Company" SelectedValuesChanged="SearchListCompany">
+                    @if (jobListFilter?.Any() == true)
+                    {
+                        @foreach (var item in jobList.Select(x => x.Company).OrderBy(x => x).Distinct())
+                        {
+                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                        }
+
+                    }
+                </MudSelect>*@
+            </div>
+            <div class="col-12">
+                <!--Department-->
+                @*<MudSelect T="int" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
+                    @if (jobListFilter?.Any() == true)
+                    {
+                        @foreach (var item in departments)
+                        {
+                            <MudSelectItem T="int" Value="item.Id">@item.Name</MudSelectItem>
+                        }
+
+                    }
+                </MudSelect>*@
+            </div>
+            <div class="col-12">
+                <!--Status-->
+                @*<MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Status" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextStatus)" Label="Status" SelectedValuesChanged="SearchListStatus">
+                    @if (jobListFilter?.Any() == true)
+                    {
+                        @foreach (var item in status.Select(x => x.name))
+                        {
+                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
+                        }
+
+                    }
+                </MudSelect>*@
+            </div>
+        </div>
+    </div>
+
+    <div class="col-1 d-flex justify-content-end pb-5" style="height: 45em !important">
+        <div style="padding-top: 3em">
+            <button class="detail-button-colour filter-button-trans rounded-pill" type="button" style="width: 8em; height: 3em" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilter">Filters</button>
+        </div>
+    </div>
+
 </div>
 
 
 
 @code {
 
-    @using System.Net.Http.Headers;
-    @using XebecPortal.UI.Utils.Handlers;
-
-    [Parameter] public int CurrentJobId { get; set; }
-
+    //parameter jobid
+    //[Parameter]
+    //public int JobId { get; set; }
 
     public ApplicationPhaseItem CurrentItem;
 
     public string searchTerm = "";
     public int tempReasonId = -1;
-    public string CurrentJobTitle = "";
     public string CurrentEmailRecipient = "";
     public string CurrentEmailTemplate = "";
 
@@ -1082,22 +1164,30 @@
     bool NoApplicants = false;
 
     //which phases the page will display
-    List<int> TotalPhases = new List<int>();
+    List<int> TotalPhases = new List<int>() { 1, 10, 11, 12, 13, 36, 3, 5, 25, 27, 26, 28, 29, 30, 31, 32, 33, 34, 35};
 
     //tables we need
     List<ApplicationPhase> AppPhases = new List<ApplicationPhase>();
     List<AppUser> tempAppUsers = new List<AppUser>();
     List<UnsuccessfulReason> Unsuccessful = new List<UnsuccessfulReason>();
     List<RejectedCandidate> RejectedUsers = new List<RejectedCandidate>();
+    List<Job> AllJobs = new List<Job>();
+
+
+
 
     //filtered output
     List<Application> CurrentApplications;
-    List<JobApplicationPhase> JobPhases;
-    Job CurrentJob;
 
     //list for draggable items
     List<ApplicationPhaseItem> Items = new List<ApplicationPhaseItem>();
-    List<ApplicationPhaseItem> FilteredItems => Items.Where(item => item.Name.ToLower().Contains(searchTerm.ToLower()) || item.Surname.ToLower().Contains(searchTerm.ToLower())).ToList();
+
+    //list for filtered items
+    List<ApplicationPhaseItem> FilterItems = new List<ApplicationPhaseItem>();
+
+
+    //not sure we will need a search anymore?
+    List<ApplicationPhaseItem> FilteredItems => FilterItems.Where(item => item.Name.ToLower().Contains(searchTerm.ToLower()) || item.Surname.ToLower().Contains(searchTerm.ToLower())).ToList();
 
 
 
@@ -1140,85 +1230,70 @@
     string NotHired = "";
 
 
-
     string token;
-    protected override async Task OnParametersSetAsync()
-    {
-        CurrentJob = await httpClient.GetListJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/job/{CurrentJobId}", new AuthenticationHeaderValue("Bearer", token));
 
-        CurrentApplications = await httpClient.GetListJsonAsync<List<Application>>($"https://xebecapi.azurewebsites.net/api/application/job/{CurrentJobId}", new AuthenticationHeaderValue("Bearer", token));
-        JobPhases = await httpClient.GetListJsonAsync<List<JobApplicationPhase>>($"https://xebecapi.azurewebsites.net/api/jobapplicationphase/job/{CurrentJobId}", new AuthenticationHeaderValue("Bearer", token));
-
-        CurrentJobTitle = CurrentJob.Title;
-
-
-        if (CurrentJobId != 0)
-        {
-            TotalPhases.Clear();
-            TotalPhases.Add(1);
-            TotalPhases.Add(13);
-            TotalPhases.Add(36);
-
-            foreach (var phase in JobPhases)
-            {
-                TotalPhases.Add(phase.ApplicationPhaseId);
-            }
-
-            if (JobPhases.Exists((x) => x.ApplicationPhaseId is 3 or 5 or 25))
-            {
-                TotalPhases.Add(10);
-            }
-            if (JobPhases.Exists((x) => x.ApplicationPhaseId is 26 or 28 or 29 or 30 or 31))
-            {
-                TotalPhases.Add(11);
-            }
-            if (JobPhases.Exists((x) => x.ApplicationPhaseId is 33 or 34 or 35))
-            {
-                TotalPhases.Add(12);
-            }
-
-            Items.Clear();
-            FilteredItems.Clear();
-
-            foreach (var application in CurrentApplications)
-            {
-                ApplicationPhaseItem temp = new ApplicationPhaseItem();
-                temp.Id = application.Id;
-                temp.ApplicationId = application.Id;
-                temp.Name = tempAppUsers.First((x) => x.id == application.AppUserId).name;
-                temp.Surname = tempAppUsers.First((x) => x.id == application.AppUserId).surname;
-                temp.Email = tempAppUsers.First((x) => x.id == application.AppUserId).email;
-                temp.Picture = tempAppUsers.First((x) => x.id == application.AppUserId).imageUrl;
-
-                temp.ApplicationPhaseId = CurrentApplications.First((x) => x.Id == temp.ApplicationId).ApplicationPhaseId;
-
-                Items.Add(temp);
-            }
-
-
-            if (FilteredItems.Count != 0)
-            {
-                LoadingDialog = false;
-            }
-            else
-            {
-                LoadingDialog = false;
-                NoApplicants = true;
-            }
-        }
-
-    }
 
     protected override async Task OnInitializedAsync()
     {
+        token = await localStorage.GetItemAsync<string>("jwt_token");
+
+        Console.WriteLine(TotalPhases.Count);
+
         try
         {
-            token = await localStorage.GetItemAsync<string>("jwt_token");
 
             tempAppUsers = await httpClient.GetListJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user", new AuthenticationHeaderValue("Bearer", token));
             AppPhases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
             Unsuccessful = await httpClient.GetListJsonAsync<List<UnsuccessfulReason>>("https://xebecapi.azurewebsites.net/api/unsuccessfulreason", new AuthenticationHeaderValue("Bearer", token));
             RejectedUsers = await httpClient.GetListJsonAsync<List<RejectedCandidate>>("https://xebecapi.azurewebsites.net/api/rejectedcandidate", new AuthenticationHeaderValue("Bearer", token));
+            AllJobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job", new AuthenticationHeaderValue("Bearer", token));
+
+
+
+            CurrentApplications = await httpClient.GetListJsonAsync<List<Application>>($"https://xebecapi.azurewebsites.net/api/application", new AuthenticationHeaderValue("Bearer", token));
+
+            if (AllJobs.Count>0)
+            {
+                Items.Clear();
+                FilteredItems.Clear();
+
+                foreach (var application in CurrentApplications)
+                {
+                    ApplicationPhaseItem temp = new ApplicationPhaseItem();
+                    temp.Id = application.Id;
+                    temp.ApplicationId = application.Id;
+                    temp.Name = tempAppUsers.First((x) => x.id == application.AppUserId).name;
+                    temp.Surname = tempAppUsers.First((x) => x.id == application.AppUserId).surname;
+                    temp.Email = tempAppUsers.First((x) => x.id == application.AppUserId).email;
+                    temp.Picture = tempAppUsers.First((x) => x.id == application.AppUserId).imageUrl;
+
+
+                    //this is temporary
+                    temp.JobTitle = AllJobs.First(x => x.Id == application.JobId).Title;
+                    temp.JobId = AllJobs.First(x => x.Id == application.JobId).Id;
+
+                    //temp.JobDepartment = AllJobs.First(x => x.Id == application.JobId).DepartmentId;
+
+                    temp.ApplicationPhaseId = CurrentApplications.First((x) => x.Id == temp.ApplicationId).ApplicationPhaseId;
+
+                    Items.Add(temp);
+                }
+
+                FilterItems = Items;
+
+
+                if (FilteredItems.Count != 0)
+                {
+                    LoadingDialog = false;
+                }
+                else
+                {
+                    LoadingDialog = false;
+                    NoApplicants = true;
+                }
+            }
+
+
         }
         catch
         {
@@ -1371,7 +1446,7 @@
             test.CandidateSurname = CurrentItem.Surname;
             test.AuthorizerEmail = userstate.Email;
             test.Phase = AppPhases.FirstOrDefault(x => x.id == CurrentItem.ApplicationPhaseId).description;
-            test.Job = CurrentJobTitle;
+            test.Job = CurrentItem.JobTitle;
             test.DateTime = DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss");
 
             //Not sure if this needs to be done
@@ -1597,6 +1672,15 @@
             {
                 Hired = "currentphase";
                 CurrentEmailTemplate = ConvertEmail(AppPhases.First(x => x.id == 36).EmailTemplate);
+
+
+
+
+                //this will change when we are back to one jobid
+                Job FilledJob = await httpClient.GetListJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/job/{CurrentItem.JobId}", new AuthenticationHeaderValue("Bearer", token));
+                FilledJob.Status = "Filled";
+
+                await httpClient.PutJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/job/{FilledJob.Id}", FilledJob, new AuthenticationHeaderValue("Bearer", token));
             }
         }
 
@@ -1613,15 +1697,16 @@
             temp = CurrentApplications.Single(i => i.Id == CurrentItem.ApplicationId);
             temp.ApplicationPhaseId = i;
 
-            await httpClient.PutAsJsonAsync<Application>($"https://xebecapi.azurewebsites.net/api/application/{CurrentItem.ApplicationId}", temp);
+            await httpClient.PutJsonAsync<Application>($"https://xebecapi.azurewebsites.net/api/application/{CurrentItem.ApplicationId}", temp, new AuthenticationHeaderValue("Bearer", token));
         }
+
 
         ApplicationPhasesHelper tempHelper = new ApplicationPhasesHelper();
         tempHelper.ApplicationId = CurrentItem.ApplicationId;
         tempHelper.ApplicationPhaseId = i;
         tempHelper.TimeMoved = DateTime.Now;
 
-        await httpClient.PostAsJsonAsync<ApplicationPhasesHelper>("https://xebecapi.azurewebsites.net/api/applicationphasehelper", tempHelper);
+        await httpClient.PostJsonAsync<ApplicationPhasesHelper>("https://xebecapi.azurewebsites.net/api/applicationphasehelper", tempHelper, new AuthenticationHeaderValue("Bearer", token));
 
 
         HrEmailModel test = new HrEmailModel();
@@ -1629,12 +1714,10 @@
         test.CandidateSurname = CurrentItem.Surname;
         test.AuthorizerEmail = userstate.Email;
         test.Phase = AppPhases.FirstOrDefault(x => x.id == CurrentItem.ApplicationPhaseId).description;
-        test.Job = CurrentJobTitle;
+        test.Job = CurrentItem.JobTitle;
         test.DateTime = DateTime.Now.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss");
 
         await httpClient.PostAsJsonAsync<HrEmailModel>("https://prod-68.westeurope.logic.azure.com:443/workflows/26a113fe926648e795fa4feda3fa611f/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=F5kfz52-z0loxc0VL-CQ8Tdg6DRfMo0xkKACdb22GJA", test);
-
-
 
     }
 
@@ -1665,8 +1748,8 @@
             temp.ApplicationId = CurrentItem.ApplicationId;
             temp.UnsuccessfulReasonId = tempReasonId;
 
-            await httpClient.PostAsJsonAsync<RejectedCandidate>("https://xebecapi.azurewebsites.net/api/rejectedcandidate", temp);
-            RejectedUsers = await httpClient.GetFromJsonAsync<List<RejectedCandidate>>("https://xebecapi.azurewebsites.net/api/rejectedcandidate");
+            await httpClient.PostJsonAsync<RejectedCandidate>("https://xebecapi.azurewebsites.net/api/rejectedcandidate", temp, new AuthenticationHeaderValue("Bearer", token));
+            RejectedUsers = await httpClient.GetListJsonAsync<List<RejectedCandidate>>("https://xebecapi.azurewebsites.net/api/rejectedcandidate", new AuthenticationHeaderValue("Bearer", token));
 
             await MovePhase(36);
         }
@@ -1682,7 +1765,7 @@
             email = email.Replace("{firstname}", CurrentItem.Name);
             email = email.Replace("{surname}", CurrentItem.Surname);
 
-            email = email.Replace("{jobtitle}", CurrentJobTitle);
+            email = email.Replace("{jobtitle}", CurrentItem.JobTitle);
 
             email = email.Replace("{date}", DateTime.Now.ToString("MMM-dd"));
             email = email.Replace("{time}", DateTime.Now.ToString("HH:mm:ss"));
@@ -1710,7 +1793,7 @@
             CurrentEmail.CandidateFirstName = CurrentItem.Name;
             CurrentEmail.CandidateLastName = CurrentItem.Surname;
             CurrentEmail.CandidateEmail = CurrentEmailRecipient;
-            CurrentEmail.JobName = CurrentJobTitle;
+            CurrentEmail.JobName = CurrentItem.JobTitle;
             CurrentEmail.Body = CurrentEmailTemplate;
 
             EmailSending = true;
@@ -1728,7 +1811,7 @@
         }
     }
 
-    bool IsValidEmail(string email)
+    public bool IsValidEmail(string email)
     {
         var trimmedEmail = email.Trim();
 
@@ -1744,6 +1827,52 @@
         catch
         {
             return false;
+        }
+    }
+
+
+
+    //FILTERS
+
+    public IEnumerable<string> mudSelectTitle;
+    public IEnumerable<string> mudSelectDepartment;
+    public IEnumerable<string> mudSelectLocation;
+    public IEnumerable<string> mudSelectDate;
+
+    private void SearchListTitle(IEnumerable<string> value)
+    {
+        mudSelectTitle = value;
+        FilterItems = Items;
+        FilterDataHelper();
+    }
+
+    private void SearchListDepartment(IEnumerable<string> value)
+    {
+        mudSelectTitle = value;
+        FilterItems = Items;
+        FilterDataHelper();
+    }
+
+    private void SearchListLocation(IEnumerable<string> value)
+    {
+        mudSelectTitle = value;
+        FilterItems = Items;
+        FilterDataHelper();
+    }
+
+    private void SearchListDate(IEnumerable<string> value)
+    {
+        mudSelectTitle = value;
+        FilterItems = Items;
+        FilterDataHelper();
+    }
+
+    private void FilterDataHelper()
+    {
+        if(mudSelectTitle?.Any()==true)
+        {
+            var listTitles = FilterItems.Select(x => x.JobTitle).Except(mudSelectTitle).ToList();
+            FilterItems = FilterItems.Where(x => !listTitles.Contains(x.JobTitle)).ToList();
         }
     }
 }
