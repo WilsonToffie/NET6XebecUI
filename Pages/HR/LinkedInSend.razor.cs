@@ -42,12 +42,20 @@ namespace XebecPortal.UI.Pages.HR
         private string token;
         private bool validUpdate;
 
+        //navigation stuff for demo - Daniel
+        bool next;
+        bool prev;
+
         private bool managejobPlatform;
         private bool createjobPlatform;
         private bool deleteJobPlatform;
         private bool addedNewPlatform;
         protected override async Task OnInitializedAsync()
         {
+            //navigation stuff for demo - Daniel
+            prev = false;
+            next = false;
+
             token = await localStorage.GetItemAsync<string>("jwt_token");
             jobId = 217;
             profiles = await httpClient.GetListJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform", new AuthenticationHeaderValue("Bearer", token));
@@ -208,6 +216,18 @@ namespace XebecPortal.UI.Pages.HR
             recentlyAdded.Clear();
             //await OnInitializedAsync();
             await createPlatform(false);
+        }
+
+
+        //navigation stuff for demo - Daniel
+        private void Previous()
+        {
+            prev = true;
+        }
+
+        private void Next()
+        {
+            next = true;
         }
     }
 }
