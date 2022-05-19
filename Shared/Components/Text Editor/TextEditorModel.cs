@@ -8,5 +8,6 @@ namespace XebecPortal.UI.Shared.Components.Text_Editor
     public class TextEditorModel
     {
         public string content { get; set; }
+        public string newline { get; set; } = "\n";
     }
 }

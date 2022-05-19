@@ -23,9 +23,13 @@
         getQuillHTML: function (quillControl) {
             return quillControl.__quill.root.innerHTML;
         },
-        loadQuillContent: function (quillControl, quillContent) {
-            return quillControl.__quill.setContents(quillContent, 'api');
+        load: function (quillControl, quillContent) {
+            content = JSON.parse(quillContent);
+            return quillControl.__quill.setContents(content);
         },
-
+        loadQuillContent: function (quillControl, quillContent) {
+            content = JSON.parse(quillContent);
+            return quillControl.__quill.setContents(content, 'api');
+        }
     };
 })();
