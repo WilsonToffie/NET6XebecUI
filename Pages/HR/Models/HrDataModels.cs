@@ -425,4 +425,18 @@ namespace XebecPortal.UI.Pages.HR
         public AppUser AppUser { get; set; }
     }
 
+    public class QuestionnaireHrForm
+    {
+        public int Id { get; set; }
+        public string Question { get; set; }
+
+        public string Answer { get; set; }
+
+        public int JobId { get; set; }
+        public Job Job { get; set; }
+
+        public int AnswerTypeId { get; set; }
+        public AnswerType AnswerType { get; set; }
+    }
+
 }

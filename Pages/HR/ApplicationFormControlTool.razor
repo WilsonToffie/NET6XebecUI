@@ -321,6 +321,7 @@
         margin-left: 20px;
         font-weight: bold;
         padding: 15px;
+        overflow-y:scroll;
     }
 
     .left-inner {
@@ -422,9 +423,7 @@
         justify-content: center;
     }
 
-    .collaborators-left-table {
-        overflow-y: scroll;
-    }
+    
 
     .delete-question-header {
         display: flex;
@@ -756,7 +755,7 @@
     </div>
     <div class="bottom-buttons">
         <input type="button" value="Prev" class="button-functions" @onclick="Prev"/>
-        <input type="submit" value="Save" class="button-functions" @onclick="Save" />
+        <input type="submit" value="Save" class="button-functions" @onclick="SaveQuestion" />
         <input type="button" value="Next" class="button-functions" @onclick="Next" />
     </div>
 }
@@ -808,11 +807,15 @@ else if (nextPage == true)
     bool ShowManage = true;
     public CustomQuestion tempQuestion = new CustomQuestion();
 
+    public List<QuestionnaireHrForm> questionnaireHrForms = new List<QuestionnaireHrForm>();
+
+
 
     //public CreateJobPost newJobpost = new CreateJobPost();
 
     protected override async Task OnInitializedAsync()
     {
+        jobId = 5;
         prevPage = false;
         nextPage = false;
         Console.WriteLine("JobID passed: " + jobId);
@@ -838,6 +841,7 @@ else if (nextPage == true)
         temp.question = question.questionDescription + " " + tempString;
         temp.answerTypeId = question.answerTypeId;
         temp.jobId = jobId;
+
         if (!FormQuestions.FindAll(z => z.id == question.Id).Any())
         {
             FormQuestions.Add(temp);
@@ -916,6 +920,41 @@ else if (nextPage == true)
             await JSRuntime.InvokeAsync<object>("alert", "Please enter a question.");
         }
     }
+
+    public async Task SaveQuestion()
+    {
+        if (FormQuestions != null)
+        {
+            foreach (var question in FormQuestions)
+            {
+
+
+                QuestionnaireHrForm tempForm = new()
+                {
+                    Question = question.question,
+                    Answer = question.answer,
+                    AnswerTypeId = question.answerTypeId,
+                    JobId = jobId
+                };
+
+                questionnaireHrForms.Add(tempForm);
+            };
+
+            var post = await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/questionnaire/lst", questionnaireHrForms, new AuthenticationHeaderValue("Bearer", token));
+                if (post.IsSuccessStatusCode)
+                {
+                    await JSRuntime.InvokeAsync<object>("alert", "Questions saved successfully");
+                }
+            Console.WriteLine("success!");
+            
+
+
+        }
+        //await httpClient.PostJsonAsync<List<FormQuestion>>("https://xebecapi.azurewebsites.net/api/questionnaire/lst", FormQuestions, new AuthenticationHeaderValue("Bearer", token));
+        //Console.WriteLine("success!");
+    }
+    
+
 
     public void CloseAddPopup()
     {
