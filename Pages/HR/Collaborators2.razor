@@ -34,15 +34,33 @@
 
     .selects-container {
         display: flex;
-        justify-content: space-around;
+        
         align-items: center;
         flex-direction: column;
         height: 80%;
+        gap:20px;
+        overflow-y:scroll;
     }
     .heading {
         text-align: center;
         color: #004393;
     }
+    .select {
+        padding: 2px 0px 5px 5px;
+        border: solid #00968B;
+        border-radius: 5px;
+    }
+    .question{
+        font-weight:bold;
+    }
+    .summary-name{
+        text-align:center;
+
+    }
+    .summary2-preview-item-description{
+        text-align:center;
+    }
+    
 </style>
 
 @if (!prevPage && !nextPage)
@@ -52,17 +70,17 @@
             <div class="heading">
                 <h3 style="font-weight:600;">APPLICATION FORM</h3>
             </div>
-            <div class="selects-container">
+            <div  class="selects-container">
                 @foreach (var question in ChosenQuestions)
                 {
                     <div class="question-selected">
 
-                        <p>@question.question</p>
-                        <select>
+                        <p class="question">@question.question</p>
+                        <select class="select" @onchange="Collabs" >
                             <option>Select who can view answers</option>
                             @foreach(var collab in ListOfCollaborators)
                             {
-                                <option>@collab.name</option>
+                                <option>@collab.name @collab.surname</option>
                             }
                             
                         </select>
@@ -75,8 +93,10 @@
 
         </div>
         <div class="summary">
-            <div>SUMMARY</div>
-            <div class="collaborators-left-table">
+            <div class="summary-name">
+                <h3 style="font-weight: 600; color: #004392;">SUMMARY</h3>
+            </div>
+            <div style="overflow-y:scroll;" class="collaborators-left-table">
                 @if (ChosenQuestions != null)
                 {
                     foreach (var formQuestion in ChosenQuestions)
@@ -86,47 +106,24 @@
 
                             </div>
                             <div class="summary-preview-item-body">
-                                <div class="summary-preview-item-description">
-                                    <p style="margin:0 0 0px;">@formQuestion.question</p>
-                                    @*<span @onclick="() => DeleteFormQuestion(formQuestion)">
-                                    <i class="fas fa-times"></i>
-                                </span>*@
+                                <div class="summary2-preview-item-description">
+                                    <p style="font-weight:600;">@formQuestion.question</p>
+
                                 </div>
-                                <div class="preview-item-control">
-                                    @{
-                                        var placeholder = "Expected answer";
-                                    }
-                                    @switch (formQuestion.answerTypeId)
+                                <div class="summary2-preview-item-description">
+                                    
+                                    @foreach (var user in SelectedUsers)
                                     {
-                                        case 1:
-                                            <input type="number" class="form-input" placeholder="@placeholder" style="width: 100%" disabled @bind="formQuestion.answer">
-                                            break;
-                                        case 2:
-                                            <textarea type="text" class="form-input" placeholder="@placeholder" style="width: 100%" disabled @bind="formQuestion.answer"></textarea>
-                                            break;
-                                        case 3:
-                                            <input type="text" class="form-input" placeholder="@placeholder" style="width: 100%" disabled @bind="formQuestion.answer">
-                                            break;
-                                        case 4:
-                                            <input type="date" id="test" class="form-input" placeholder="@placeholder" style="width: 100%" disabled @onchange="(e) => { formQuestion.answer = e.Value.ToString(); }">
-                                            break;
-                                        case 5:
-                                            <select @bind="formQuestion.answer">
-                                                <option disabled value="yes" selected>Yes</option>
-                                                <option disabled value="no">No</option>
-                                            </select>
-                                            break;
-                                        <small class="text-muted text-small">(Select expected answer)</small>
-                                        case 6:
-                                            <input type="file" class="form-input" placeholder="@placeholder" style="width: 100%" disabled @bind="formQuestion.answer">
-                                            break;
 
-                                        case 7:
-                                            <input type="text" class="form-input" placeholder="@placeholder" style="width: 100%" disabled @bind="formQuestion.answer">
-                                            break;
+                                        <p style="color:#FFFFFF; font-weight:600;">@user</p>
                                     }
 
                                 </div>
+                                
+
+
+
+
                             </div>
                         </div>
                     }
@@ -172,7 +169,8 @@ else if (prevPage)
     public int JobId { get; set; }
 
 
-
+    string selectedCollab;
+    private List<string> SelectedUsers = new List<string>();
 
     public List<AppUser> Collaborators = new List<AppUser>();
 
@@ -197,6 +195,12 @@ else if (prevPage)
     {
         //this should probably also save, or alert the user that changes are not saved
         nextPage = true;
+    }
+
+    public async Task Collabs(ChangeEventArgs e)
+    {
+        selectedCollab = e.Value.ToString();
+        SelectedUsers.Add(selectedCollab);
     }
 
 }
