@@ -435,7 +435,7 @@
 
 @if (prev)
 {
-    <Collaborators2></Collaborators2>
+    <Collaborators2 JobId="CurrentJobId" ChosenQuestions="ChosenQuestions" TempJob="TempJob"></Collaborators2>
 }
 else
 {
@@ -500,8 +500,7 @@ else
     </div>
     <div class="nav-btns">
         <button class="down-button" @onclick="Previous">Prev</button>
-        <button class="down-button" @onclick="SubmitPhases">Save</button>
-        <button class="down-button" @onclick="Next">Next</button>
+        <button class="down-button" @onclick="SubmitPhases">Submit</button>
     </div>
 }
 
@@ -574,13 +573,21 @@ else
     [Parameter]
     public EventCallback<CreateJobPost> TempJobChanged { get; set; }
 
-    //[Parameter]
-    //public int CurrentJobId { get; set; }
+    //public int CurrentJobId = 12;
 
-    public int CurrentJobId = 12;
+    [Parameter]
+    public int CurrentJobId { get; set; }
 
-    //[Parameter]
-    //public EventCallback<int> JobIdChanged { get; set; }
+    [Parameter]
+    public EventCallback<int> JobIdChanged { get; set; }
+
+
+    //these are needed if we want to go back to collaboratos2 from this page, as that page needs these params to load
+    [Parameter]
+    public List<FormQuestion> ChosenQuestions { get; set; }
+
+    [Parameter]
+    public EventCallback<FormQuestion> ChosenQuestionChanged { get; set; }
 
 
     //nav stuff for demo - Daniel
@@ -596,12 +603,21 @@ else
     private bool isDialogAddPhaseVisible;
     private bool isDialogDeletePhaseVisible;
 
+    Job currentJob = new Job();
+
     protected override async Task OnInitializedAsync()
     {
+
         prev = false;
         next = false;
 
         token = await localStorage.GetItemAsync<string>("jwt_token");
+
+        //This is temporary just so we dont get errors when navigating using the top nav - Daniel
+        CurrentJobId = 5;
+
+        currentJob = await httpClient.GetListJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/job/{CurrentJobId}", new AuthenticationHeaderValue("Bearer", token));
+
 
         phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
     }
@@ -637,11 +653,17 @@ else
             temp.ApplicationPhaseId = phase.id;
             await httpClient.PostJsonAsync<JobApplicationPhase>("https://xebecapi.azurewebsites.net/api/jobapplicationphase", temp, new AuthenticationHeaderValue("Bearer", token));
         }
+
+
+        //also update job to be 'Open'
+
+        currentJob.Status = "Open";
+
+        await httpClient.PutJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/job/{CurrentJobId}", currentJob, new AuthenticationHeaderValue("Bearer", token));
     }
 
     private void AddPhase(ApplicationPhase phase)
     {
-
         if (!phasesAdded.Contains(phase))
         {
             phasesAdded.Add(phase);

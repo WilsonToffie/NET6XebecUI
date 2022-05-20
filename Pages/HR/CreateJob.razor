@@ -217,6 +217,17 @@
                 </div>
             </div>
         </div>
+
+        <div class="hr-createjob-div-space"></div>
+        <div class="hr-createjob-div">
+            <div class="createjob-createjob-top-mini" @onclick="() => NavigateToSection(CreateJobSection.Collaborators2)">
+                <div class="createjob-top-number-div" style="@GetActiveColor(CreateJobSection.Collaborators2)">
+                    <i class="fas fa-cubes createjob-top-number"></i>
+                    <h3 class="create-job-top-text">Assign Collaborators</h3>
+                </div>
+            </div>
+        </div>
+
         <div class="hr-createjob-div-space"></div>
         <div class="hr-createjob-div">
             <div class="phases-createjob-top-mini" @onclick="() => NavigateToSection(CreateJobSection.SelectPhase)">
@@ -242,7 +253,7 @@
         </div>
 
         <div class="row createjob-bottom-container" hidden="@LinkedInIsHidden">
-            <div class="col-1"></div>            
+            <div class="col-1"></div>
             <div class="col-10 createjob-bottom-main-container">
                 <div class="createjob-bottom-main">
                     <XebecPortal.UI.Pages.HR.LinkedInSend @bind-TempJob="tempJob" />
@@ -255,11 +266,23 @@
             <div class="col-1"></div>
             <div class="col-10 createjob-bottom-main-container">
                 <div class="createjob-bottom-main">
-                    <XebecPortal.UI.Pages.HR.Collaborators @bind-ChosenQuestions="ChosenQuestions"  />
+                    <XebecPortal.UI.Pages.HR.Collaborators @bind-ChosenQuestions="ChosenQuestions" />
                 </div>
             </div>
             <div class="col-1"></div>
         </div>
+
+        <div class="row createjob-bottom-container" hidden="@Collaborators2IsHidden">
+            <div class="col-1"></div>
+            <div class="col-10 createjob-bottom-main-container">
+                <div class="createjob-bottom-main">
+                    <XebecPortal.UI.Pages.HR.Collaborators2 @bind-TempJob="tempJob" ChosenQuestions="ChosenQuestions"/>
+                </div>
+            </div>
+            <div class="col-1"></div>
+        </div>
+
+
         <div class="row createjob-bottom-container" hidden="@ApplicationFormIsHidden">
             <div class="col-1"></div>
             <div class="col-10 createjob-bottom-main-container">
@@ -283,10 +306,10 @@
 
 @code {
 
-    private bool CreateJobIsHidden, LinkedInIsHidden, CollaboratorsIsHidden, ApplicationFormIsHidden, PhasesIsHidden;
+    private bool CreateJobIsHidden, LinkedInIsHidden, CollaboratorsIsHidden, ApplicationFormIsHidden, PhasesIsHidden, Collaborators2IsHidden;
 
     CreateJobPost tempJob = new CreateJobPost {Collaborators = new List<AppUser>(), JobPlatforms = new List<JobPlatform>(), formQuestions = new List<FormQuestion>(), JobPhases = new List<ApplicationPhase>(), JobType = new JobType()};
-    
+
     public List<FormQuestion> ChosenQuestions { get; set; }
     protected override async Task OnInitializedAsync()
     {
@@ -295,37 +318,43 @@
             ChosenQuestions = new();
         }
         CreateJobIsHidden = false;
-        LinkedInIsHidden = CollaboratorsIsHidden = ApplicationFormIsHidden = PhasesIsHidden = true;
+        LinkedInIsHidden = CollaboratorsIsHidden = ApplicationFormIsHidden = PhasesIsHidden = Collaborators2IsHidden = true;
     }
 
     private void ShowCreateJob()
     {
         CreateJobIsHidden = false;
-        LinkedInIsHidden = CollaboratorsIsHidden = ApplicationFormIsHidden = PhasesIsHidden = true;
+        LinkedInIsHidden = CollaboratorsIsHidden = ApplicationFormIsHidden = PhasesIsHidden = Collaborators2IsHidden = true;
     }
 
     private void ShowLinkedIn()
     {
         LinkedInIsHidden = false;
-        CreateJobIsHidden = CollaboratorsIsHidden = ApplicationFormIsHidden = PhasesIsHidden = true;
+        CreateJobIsHidden = CollaboratorsIsHidden = ApplicationFormIsHidden = PhasesIsHidden = Collaborators2IsHidden = true;
     }
 
     private void ShowCollaborators()
     {
         CollaboratorsIsHidden = false;
-        LinkedInIsHidden = CreateJobIsHidden = ApplicationFormIsHidden = PhasesIsHidden = true;
+        LinkedInIsHidden = CreateJobIsHidden = ApplicationFormIsHidden = PhasesIsHidden = Collaborators2IsHidden = true;
     }
 
     private void ShowApplicationForm()
     {
         ApplicationFormIsHidden = false;
-        LinkedInIsHidden = CreateJobIsHidden = CollaboratorsIsHidden = PhasesIsHidden = true;
+        LinkedInIsHidden = CreateJobIsHidden = CollaboratorsIsHidden = PhasesIsHidden = Collaborators2IsHidden = true;
     }
 
     private void ShowPhases()
     {
         PhasesIsHidden = false;
-        LinkedInIsHidden = CreateJobIsHidden = ApplicationFormIsHidden = CollaboratorsIsHidden = true;
+        LinkedInIsHidden = CreateJobIsHidden = ApplicationFormIsHidden = CollaboratorsIsHidden = Collaborators2IsHidden = true;
+    }
+
+    private void ShowCollaborators2()
+    {
+        Collaborators2IsHidden = false;
+        LinkedInIsHidden = CreateJobIsHidden = ApplicationFormIsHidden = CollaboratorsIsHidden = PhasesIsHidden = true;
     }
 
     private enum CreateJobSection
@@ -333,6 +362,7 @@
         CreateJob,
         SendToLinkedIn,
         SelectCollaborators,
+        Collaborators2,
         CreateApplicationForm,
         SelectPhase
     }
@@ -361,6 +391,10 @@
                 if (!PhasesIsHidden)
                     return "color: #d35bc9  !important;";
                 return "color: #00bcae  !important;";
+            case CreateJobSection.Collaborators2:
+                if(!Collaborators2IsHidden)
+                    return "color: #d35bc9  !important;";
+                return "color: #00bcae  !important;";
             default:
                 throw new ArgumentOutOfRangeException(nameof(section), section, null);
         }
@@ -384,6 +418,9 @@
                 break;
             case CreateJobSection.SelectPhase:
                 ShowPhases();
+                break;
+            case CreateJobSection.Collaborators2:
+                ShowCollaborators2();
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(section), section, null);

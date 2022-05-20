@@ -271,11 +271,11 @@
 }
 else if (nextPage)
 {
-    <XebecPortal.UI.Pages.HR.Collaborators2  ChosenQuestions="ChosenQuestions" ListOfCollaborators="ListOfCollaborators" />
+    <XebecPortal.UI.Pages.HR.Collaborators2  ChosenQuestions="ChosenQuestions" ListOfCollaborators="ListOfCollaborators" JobId="JobId" TempJob="TempJob"/>
 }
 else if (prevPage)
 {
-    <XebecPortal.UI.Pages.HR.ApplicationFormControlTool />
+    <XebecPortal.UI.Pages.HR.ApplicationFormControlTool jobId="JobId" TempJob="TempJob"/>
 }
 
 
@@ -321,6 +321,17 @@ else if (prevPage)
 
     [Parameter]
     public EventCallback<List<FormQuestion>> ChosenQuestionsChanged { get; set; }
+
+
+
+    //I think this is required for nav to work, for now - Daniel
+    [Parameter]
+    public CreateJobPost TempJob { get; set; }
+
+    [Parameter]
+    public EventCallback<CreateJobPost> TempJobChanged { get; set; }
+
+
 
     AppUser currentHiringLead = new();
 
@@ -495,7 +506,7 @@ else if (prevPage)
 
     public async Task Save()
     {
-        
+
         if(ListOfCollaborators != null)
         {
 

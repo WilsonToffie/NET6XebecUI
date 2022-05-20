@@ -141,11 +141,11 @@
 }
 else if (nextPage)
 {
-    <XebecPortal.UI.Pages.HR.PhaseControlTool />
+    <XebecPortal.UI.Pages.HR.PhaseControlTool CurrentJobId="JobId" ChosenQuestions="ChosenQuestions" TempJob="TempJob"/>
 }
 else if (prevPage)
 {
-    <XebecPortal.UI.Pages.HR.Collaborators />
+    <XebecPortal.UI.Pages.HR.Collaborators JobId="JobId" ChosenQuestions="ChosenQuestions" TempJob="TempJob"/>
 }
 
 @code {
@@ -167,6 +167,14 @@ else if (prevPage)
 
     [Parameter]
     public int JobId { get; set; }
+
+
+    //I think these are needed for nav to work, for now - Daniel
+    [Parameter]
+    public CreateJobPost TempJob { get; set; }
+
+    [Parameter]
+    public EventCallback<CreateJobPost> TempJobChanged { get; set; }
 
 
     string selectedCollab;
