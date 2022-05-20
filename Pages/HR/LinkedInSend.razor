@@ -216,159 +216,175 @@
         }
 </style>
 
-<div class="create-job-summary">
-    <div class="page-title">Summary</div>
-    <div class="summary-container">
-        <div class="summary-individual">
-            <div class="text-font-styling"> Platforms selected</div>
-            <div class="summary-text-style">
-                @foreach (var item in selectedValue)
-                {
-                    <div>@item.platformName</div>
-                }
+
+
+
+
+@if (prev)
+{
+    <CreateAJobForm TempJob="TempJob"></CreateAJobForm>
+}
+else if (next)
+{
+    <ApplicationFormControlTool TempJob="TempJob" jobId="jobId"></ApplicationFormControlTool>
+}
+else
+{
+    <div class="create-job-summary">
+        <div class="page-title">Summary</div>
+        <div class="summary-container">
+            <div class="summary-individual">
+                <div class="text-font-styling"> Platforms selected</div>
+                <div class="summary-text-style">
+                    @foreach (var item in selectedValue)
+                    {
+                        <div>@item.platformName</div>
+                    }
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-
-<div class="postjob-form-container">
-    <EditForm Model="@TempJob" class="postjob-form" OnValidSubmit="@Save">
-        <DataAnnotationsValidator />
-        @if (managejobPlatform)
-        {
-            @if (createjobPlatform)
+    <div class="postjob-form-container">
+        <EditForm Model="@TempJob" class="postjob-form" OnValidSubmit="@Save">
+            <DataAnnotationsValidator />
+            @if (managejobPlatform)
             {
-                <div class="page-title">Create New Platform</div>
+                @if (createjobPlatform)
+                {
+                    <div class="page-title">Create New Platform</div>
 
-                <div class="form-group createjob-form-group">
-                    <div class="createjob-form-individual" style="width: 200%;">
+                    <div class="form-group createjob-form-group">
+                        <div class="createjob-form-individual" style="width: 200%;">
+                            <div class="createjob-form-individual">
+                                <div class="text-font-styling"> Platform's Name</div>
+                                <InputText placeholder="" class="create-form-text" @bind-Value="addPlatform.platformName" />
+                            </div>
+                        </div>
                         <div class="createjob-form-individual">
-                            <div class="text-font-styling"> Platform's Name</div>
-                            <InputText placeholder="" class="create-form-text" @bind-Value="addPlatform.platformName" />
+                            <input type="button" value="Add Platform" class="form-buttons" @onclick="() => addJobPlatform(addPlatform)" />
                         </div>
                     </div>
-                    <div class="createjob-form-individual">
-                        <input type="button" value="Add Platform" class="form-buttons" @onclick="() => addJobPlatform(addPlatform)" />
-                    </div>
-                </div>
-                <div class="spacing-for-creating-stuff">
-                    <div class="createjob-form-individual">
-                        <div class="text-font-styling"> Platforms Recently Added</div>
-                        <div class="created-items-container">
-                            @foreach (var item in recentlyAdded)
-                            {
-                                <div class="text-font-for-created-items-styling">@item.platformName</div>
-                            }
+                    <div class="spacing-for-creating-stuff">
+                        <div class="createjob-form-individual">
+                            <div class="text-font-styling"> Platforms Recently Added</div>
+                            <div class="created-items-container">
+                                @foreach (var item in recentlyAdded)
+                                {
+                                    <div class="text-font-for-created-items-styling">@item.platformName</div>
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="createNew-buttton-function">
-                    <input type="button" value="Done" class="button-functions" @onclick="savePlatform" />
-                    @*<input type="button" value="Save" class="button-functions" @onclick="saveDep" />*@
-                </div>
-            }
-            else if (deleteJobPlatform)
-            {
-                <div class="page-title">Delete existing Platform</div>
+                    <div class="createNew-buttton-function">
+                        <input type="button" value="Done" class="button-functions" @onclick="savePlatform" />
+                        @*<input type="button" value="Save" class="button-functions" @onclick="saveDep" />*@
+                    </div>
+                }
+                else if (deleteJobPlatform)
+                {
+                    <div class="page-title">Delete existing Platform</div>
 
-                <div class="form-group createjob-form-group">
-                    <div class="createjob-form-individual" style="width: 200%;">
+                    <div class="form-group createjob-form-group">
+                        <div class="createjob-form-individual" style="width: 200%;">
+                            <div class="createjob-form-individual">
+                                <InputSelect class="createjob-select" style="margin-top: 3vh;" @bind-Value="platform.id">
+                                    <option value="0" selected disabled>Select Platform</option>
+                                    @foreach (var item in profiles)
+                                                {
+                                        <option value="@item.id">@item.platformName</option>
+                                                }
+                                </InputSelect>
+                            </div>
+                        </div>
                         <div class="createjob-form-individual">
-                            <InputSelect class="createjob-select" style="margin-top: 3vh;" @bind-Value="platform.id">
-                                <option value="0" selected disabled>Select Platform</option>
+                            <input type="button" value="Delete Department" class="form-buttons" @onclick="() => removePlatform(platform)" />
+                        </div>
+                    </div>
+                    <div class="createNew-buttton-function">
+                        <input type="button" value="Done" class="button-functions" @onclick="() => deletePlatform(false)" />
+                    </div>
+                }
+                else
+                {
+                    <div class="page-title">Manage Platform</div>
+
+                    <div class="form-group createjob-form-group">
+                        <div class="createjob-form-individual">
+                            <input type="button" value="Add Platform" class="form-buttons" @onclick="() => createPlatform(true)" />
+                        </div>
+                        <div class="createjob-form-individual">
+                            <input type="button" value="Delete Platform" class="form-buttons" @onclick="() => deletePlatform(true)" />
+                        </div>
+                    </div>
+
+                    <div class="spacing-for-creating-stuff">
+                        <div class="createjob-form-individual">
+                            <div class="text-font-styling"> Platforms Added</div>
+                            <div class="created-items-container">
                                 @foreach (var item in profiles)
-                                        {
-                                    <option value="@item.id">@item.platformName</option>
-                                        }
-                            </InputSelect>
+                                {
+                                    <div class="text-font-for-created-items-styling">@item.platformName</div>
+                                }
+                            </div>
                         </div>
                     </div>
-                    <div class="createjob-form-individual">
-                        <input type="button" value="Delete Department" class="form-buttons" @onclick="() => removePlatform(platform)" />
+
+                    <div class="createNew-buttton-function">
+                        <input type="button" value="Done" class="button-functions" @onclick="() => managePlatform(false)" />
                     </div>
-                </div>
-                <div class="createNew-buttton-function">
-                    <input type="button" value="Done" class="button-functions" @onclick="() => deletePlatform(false)" />
-                </div>
+                }
+
+                @*<div class="spacing-for-creating-stuff">
+                        <div class="createjob-form-individual">
+                            <div class="text-font-styling"> Departments Created</div>
+                            <div class="created-items-container">
+                                @foreach (var item in Departments)
+                                {
+                                    <div class="text-font-for-created-items-styling">@item.Name</div>
+                                }
+                            </div>
+                        </div>
+                    </div>*@
+
+
             }
             else
             {
-                <div class="page-title">Manage Platform</div>
 
-                <div class="form-group createjob-form-group">
-                    <div class="createjob-form-individual">
-                        <input type="button" value="Add Platform" class="form-buttons" @onclick="() => createPlatform(true)" />
-                    </div>
-                    <div class="createjob-form-individual">
-                        <input type="button" value="Delete Platform" class="form-buttons" @onclick="() => deletePlatform(true)" />
-                    </div>
-                </div>
+                <div class="page-title">Post a job</div>
 
-                <div class="spacing-for-creating-stuff">
-                    <div class="createjob-form-individual">
-                        <div class="text-font-styling"> Platforms Added</div>
-                        <div class="created-items-container">
+                <div class="spacing-for-stuff">
+                    <div class="form-group createjob-form-group">
+                        <div class="postjob-form-individual">
+
+                            <div class="text-font-styling">Platform Selection</div>
+
                             @foreach (var item in profiles)
                             {
-                                <div class="text-font-for-created-items-styling">@item.platformName</div>
+                                <input type="checkbox" value="@item" style=" width: 40px; height: 15px;" @onchange="eventArgs => { CheckboxClicked(item, eventArgs.Value); }" />@item.platformName<br><!-- @onchange="eventArgs => { CheckboxClicked(club, eventArgs.Value); }"-->
                             }
+
+                        </div>
+                        <div class="createjob-form-individual">
+                            <input type="button" value="Manage Platform" class="form-buttons" @onclick="() => managePlatform(true)" />
                         </div>
                     </div>
                 </div>
+                <div class="validation-message"><ValidationSummary /></div>
 
-                <div class="createNew-buttton-function">
-                    <input type="button" value="Done" class="button-functions" @onclick="() => managePlatform(false)" />
+                <div class="bottom-buttons">
+                    <input type="button" value="Prev" class="button-functions" @onclick="Previous" />
+                    <input type="button" value="Save" class="button-functions" @onclick="Save" />
+                    <input type="button" value="Next" class="button-functions" @onclick="Next" />
                 </div>
             }
-
-            @*<div class="spacing-for-creating-stuff">
-                <div class="createjob-form-individual">
-                    <div class="text-font-styling"> Departments Created</div>
-                    <div class="created-items-container">
-                        @foreach (var item in Departments)
-                        {
-                            <div class="text-font-for-created-items-styling">@item.Name</div>
-                        }
-                    </div>
-                </div>
-            </div>*@
+        </EditForm>
+    </div>
+}
 
 
-        }
-        else
-        {
 
-            <div class="page-title">Post a job</div>
 
-            <div class="spacing-for-stuff">
-                <div class="form-group createjob-form-group">
-                    <div class="postjob-form-individual">
-
-                        <div class="text-font-styling">Platform Selection</div>
-
-                        @foreach (var item in profiles)
-                        {
-                            <input type="checkbox" value="@item" style=" width: 40px; height: 15px;" @onchange="eventArgs => { CheckboxClicked(item, eventArgs.Value); }" />@item.platformName<br><!-- @onchange="eventArgs => { CheckboxClicked(club, eventArgs.Value); }"-->
-                        }
-
-                    </div>
-                    <div class="createjob-form-individual">
-                        <input type="button" value="Manage Platform" class="form-buttons" @onclick="() => managePlatform(true)" />
-                    </div>
-                </div>
-            </div>
-            <div class="validation-message"><ValidationSummary /></div>
-
-            <div class="bottom-buttons">
-                <input type="button" value="Prev" class="button-functions" />
-                <input type="button" value="Save" class="button-functions" @onclick="Save" />
-                <input type="button" value="Next" class="button-functions" />
-            </div>
-        }
-    </EditForm>
-</div>
-        
 @*<div class="layout">
     <div class="row content-middle">
 

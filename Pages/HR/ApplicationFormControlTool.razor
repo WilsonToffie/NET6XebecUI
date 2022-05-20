@@ -761,11 +761,11 @@
 }
 else if (prevPage == true)
 {
-    <XebecPortal.UI.Pages.HR.CreateAJobForm @bind-TempJob="TempJob" />
+    <XebecPortal.UI.Pages.HR.LinkedInSend @bind-TempJob="TempJob" jobId="jobId" />
 }
 else if (nextPage == true)
 {
-    <XebecPortal.UI.Pages.HR.Collaborators @bind-ChosenQuestions="FormQuestions" @bind-JobId="jobId" />
+    <XebecPortal.UI.Pages.HR.Collaborators @bind-ChosenQuestions="FormQuestions" @bind-JobId="jobId" @bind-TempJob="TempJob"/>
 }
 
 
