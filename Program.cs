@@ -30,6 +30,9 @@ namespace XebecPortal.UI
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
+
+            //builder.RootComponents.Add<HeadOutlet>("head::after");
+
             builder.Services.AddSingleton<State>();
             builder.Services.AddSingleton<HrJobState>();
             builder.Services.AddSingleton<UserState>();
