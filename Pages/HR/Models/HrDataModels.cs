@@ -95,33 +95,33 @@ namespace XebecPortal.UI.Pages.HR
 
     public class CreateJobPost
     {
-        public int Id { get; set; }
+        public int Id { get; set; } = 0;
         [Required]
-        public string Title { get; set; }
+        public string Title { get; set; } = string.Empty;
         [Required]
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
         [Required]
-        public string Company { get; set; }
-        public decimal? Compensation { get; set; }
-        public int? MinimumExperience { get; set; }
+        public string Company { get; set; } = string.Empty;
+        public decimal? Compensation { get; set; } = null;
+        public int? MinimumExperience { get; set; } = 0;
         [Required]
-        public string Location { get; set; }
+        public string Location { get; set; } = string.Empty;
         //[Required]
         //public string Department { get; set; }
         [Required]
-        public string Policy { get; set; } // Not sure what data type it should be, but policy is a required field   
-        public int JobTypeId { get; set; }
-        public int DepartmentId { get; set; } // testing problem
-        public string Status { get; set; }
+        public string Policy { get; set; } = string.Empty;// Not sure what data type it should be, but policy is a required field   
+        public int JobTypeId { get; set; } = 0;
+        public int DepartmentId { get; set; } = 0;// testing problem
+        public string Status { get; set; }  = string.Empty;
         [Required]
-        public DateTime DueDate { get; set; }
-        public DateTime CreationDate { get; set; }
-        public JobType JobType { get; set; }
-        public Department Department { get; set; }
-        public List<JobPlatform> JobPlatforms { get; set; }
-        public List<ApplicationPhase> JobPhases { get; set; }
-        public List<FormQuestion> formQuestions { get; set; }
-        public List<AppUser> Collaborators { get; set; }
+        public DateTime DueDate { get; set; } = DateTime.Today;
+        public DateTime CreationDate { get; set; } = DateTime.Today;
+        public JobType JobType { get; set; } = null;
+        public Department Department { get; set; } = null;
+        public List<JobPlatform> JobPlatforms { get; set; } = null;
+        public List<ApplicationPhase> JobPhases { get; set; } = null;
+        public List<FormQuestion> formQuestions { get; set; } = null;
+        public List<AppUser> Collaborators { get; set; } = null;
         
     }
 
@@ -437,6 +437,11 @@ namespace XebecPortal.UI.Pages.HR
 
         public int AnswerTypeId { get; set; }
         public AnswerType AnswerType { get; set; }
+    }
+
+    public class jobState
+    {
+        // jobID, questions, collaborators,     
     }
 
 }

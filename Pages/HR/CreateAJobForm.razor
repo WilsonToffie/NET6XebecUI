@@ -2,6 +2,7 @@
 @inject IJSRuntime jsRuntime
 @inject NavigationManager nav
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject CreateJobPost TempJob
 <style>
     .createjob-form-container {
         overflow-y: auto;
@@ -463,6 +464,7 @@
         background-color: #A9ABA7;
         z-index: -1;
     }
+
 </style>
 @if (redirectpage)
 {
@@ -470,7 +472,7 @@
 }
 else
 {
-    @*<div class="top-Image-thing">
+    <div class="top-Image-thing">
         <div class="progressed-circle"></div>
         <div class="circle"></div>
         <div class="circle"></div>
@@ -497,7 +499,7 @@ else
         <div class="phases-text">Select Phases</div>
         <div class="post-a-job-text">Post Job</div>
         <div class="summary-text">Summary</div>
-    </div>*@
+    </div>
 
     <!--This is the progress for the second page-->
     @*<div class="top-Image-thing">
@@ -542,10 +544,10 @@ else
                 <div class="summary-text-style">@TempJob.Location</div>
             </div>
 
-            <div class="summary-individual">
+            @*<div class="summary-individual">
                 <div class="text-font-styling"> Job Type</div>
                 <div class="summary-text-style">@TempJob.JobType.Type</div>
-            </div>
+            </div>*@
 
             <div class="summary-individual">
                 <div class="text-font-styling"> Application Due Date</div>
@@ -831,7 +833,7 @@ else
                 <div class="spacing-for-stuff">
                     <div class="createjob-form-individual">
                         <div class="text-font-styling">Application Due Date:</div>
-                        <InputDate type="date" class="createjob-form-date" @bind-Value="TempJob.DueDate" style="padding-right: 5px;" />
+                        <InputDate class="createjob-form-date" @bind-Value="TempJob.DueDate" style="padding-right: 5px;" />
                     </div>
                 </div>
 

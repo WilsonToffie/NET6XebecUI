@@ -6,10 +6,18 @@
         button, 
         the text styling (font, weight, size)        
 */
+/* 
+    Scrollbar background - grey
+    The green colour is generalized to an action event... We are using the colour for everything instead!!!!
+    Burger menu isn't pointer cursor
+    Each element / component that is being re-used need to have the same style...    
+*/
 
-/*
+
+
+/*    
     input[type = "button"], input[type = "submit"] {
-    /*background-color: rgba(0, 188, 174,1);
+    background-color: rgba(0, 188, 174,1);
     color: white;
     text-align: center;
     font-size: 1em;
@@ -17,18 +25,16 @@
     font-family: opensans-condensed-bold;
     border-radius: 1em;
     border: none;
-}*/
+    }
+*/
 
-/*    input[type = "button"], input[type = "submit"]:hover {
+/*    
+    input[type = "button"], input[type = "submit"]:hover {
         background-color: #d35bc9;
-    }*/
+    }
 
-/*
-    * {
-    font-size: 1em;
-    font-weight: 600;
-    font-family: opensans-condensed-bold;
-}*/
+*/
+
 /*
 h1{
     font-family: opensans-condensed-bold;
