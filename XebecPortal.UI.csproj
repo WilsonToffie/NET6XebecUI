@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Pages\Applicant\RocketAnimation.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Pages\HR\ApplicantControlTool.razor.css" />
   </ItemGroup>
 

@@ -34,7 +34,7 @@ namespace XebecPortal.UI.Pages.HR
         private List<CollaboratorsAssigned> collaboratorsAssigned;
         private List<Department> departments;
         private List<string> locations = new() { "Eastern Cape", "Free State", " Gauteng", "KwaZulu-Natal", "Limpopo", "Mpumalanga", "Northen Cape", "North West", "Western Cape" };
-        private MudBlazor.DialogOptions options = new() { CloseButton = true, FullWidth = true };
+        private MudBlazor.DialogOptions options = new() { CloseButton = true, FullWidth = true};
 
         private IEnumerable<string> mudSelectLocation;
         private IEnumerable<string> mudSelectCompany;
@@ -62,12 +62,13 @@ namespace XebecPortal.UI.Pages.HR
             collaboratorsAssigned = await httpClient.GetListJsonAsync<List<CollaboratorsAssigned>>($"https://xebecapi.azurewebsites.net/api/CollaboratorsAssigned", new AuthenticationHeaderValue("Bearer", token));
             status = await httpClient.GetFromJsonAsync<List<Status>>("/mockData/Status.json");
             departments = await httpClient.GetFromJsonAsync<List<Department>>("/mockData/departmentMockDatav1.json");
-            _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/HR/JobPortals.js");
+            _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/jsPages/HR/JobPortalv3.js");
 
             jobListFilter = jobList;
             jobPagedList = jobListFilter.ToPagedList(1, 17);
             displayJobDetail = jobListFilter.FirstOrDefault();
             DisplayJobDetail(displayJobDetail.Id);
+            OpenJobCollabToolTip(displayJobDetail.Id);
         }
 
         protected override Task OnAfterRenderAsync(bool firstRender)

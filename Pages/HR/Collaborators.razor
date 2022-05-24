@@ -51,7 +51,7 @@
         background-color: teal;
         height: 100%;
         width: 30%;
-        overflow-y:scroll;
+        overflow-y: scroll;
     }
 
     .select-container {
@@ -69,7 +69,7 @@
         gap: 10px;
         justify-content: flex-start;
         padding: 0 25px 0 25px;
-        overflow-y:scroll;
+        overflow-y: scroll;
         /*display: grid;
         grid-template-columns: repeat(auto-fill,minmax(30%, 1fr));*/
     }
@@ -83,47 +83,52 @@
         border: solid white 0.1em;
         box-shadow: 0 2px 5px 0 rgb(0 0 0 / 20%), 0 2px 10px 0 rgb(0 0 0 / 10%);
         border-radius: 5px;
-        height:78px;
-       
-       
+        height: 78px;
     }
 
     .collaborator-details {
         display: flex;
         justify-content: space-around;
-        height:35%;
+        height: 35%;
     }
+
     .collaborator-select {
         padding: 2px 0px 5px 5px;
         border: solid #00968B;
         border-radius: 5px;
     }
+
     .crown {
         display: flex;
         justify-content: flex-end;
     }
+
     .colab-image {
         width: 40px;
         height: 40px;
-        border-radius:50%;
+        border-radius: 50%;
     }
+
     .colab-name {
         width: 70px;
         color: #004392;
-        font-weight:700;
-        display:flex;
-        justify-content:space-around;
+        font-weight: 700;
+        display: flex;
+        justify-content: space-around;
     }
-    .collab-remove{
-        display:flex;
-        justify-content:flex-end;
+
+    .collab-remove {
+        display: flex;
+        justify-content: flex-end;
     }
+
     .bottom-buttons {
         margin-top: 3vh;
         margin-left: 20%;
         position: absolute;
         bottom: 5vh;
     }
+
     .button-functions {
         margin-top: 3vh;
         height: 5vh;
@@ -141,45 +146,71 @@
         .button-functions:hover {
             background-color: #d35bc9;
         }
+
     .summary-section {
         color: #004392;
         font-weight: bold;
         text-align: center;
         width: 100%;
     }
-    .hiring-lead{
-        padding:10px;
-        text-align:center;
-    }
-    .hiring-lead-heading{
-        font-weight:600;
 
+    .hiring-lead {
+        padding: 10px;
+        text-align: center;
     }
-    .lead-heading-details{
-        display:flex;
-        justify-content:space-evenly;
-        color:#FFFFFF;
+
+    .hiring-lead-heading {
+        font-weight: 600;
     }
-    .collaborators-list{
-        padding:10px;
-        text-align:center;
-    }
-    .collab-list-heading{
-        font-weight:600;
-    }
-    .list-of-collabs {
+
+    .lead-heading-details {
         display: flex;
         justify-content: space-evenly;
         color: #FFFFFF;
     }
 
+    .collaborators-list {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .collab-list-heading {
+        font-weight: 600;
+    }
+
+    .list-of-collabs {
+        display: flex;
+        justify-content: space-evenly;
+        color: #FFFFFF;
+    }
 </style>
 <!--Tables of developers/HR-->
 @if (!prevPage && !nextPage)
 {
-    <div class="collaborators-main-container">
-        <div class="collaborators-appform-container">
-            <div class="collaborators-form">
+    <div class="create-job-summary">
+        <div class="page-title">Summary</div>
+
+        <div class="summary-details">
+            <div class="hiring-lead">
+                <p class="hiring-lead-heading">Hiring Lead</p>
+
+                <p class="lead-heading-details">@hiringLead</p>
+            </div>
+            <div class="collaborators-list">
+                <p class="collab-list-heading">Collaborators</p>
+                <ul>
+                    @foreach (var collab in ListOfCollaborators)
+                    {
+                        <li class="list-of-collabs">@collab.name  @collab.surname</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="createjob-form-container">
+        <div>
+            <div>
 
                 <div class="collaborators-form-title">
                     Select Collaborators
@@ -187,81 +218,115 @@
                 <div class="select-container">
                     <div class="collaborators-select">
 
-                        <select class="collaborator-select"  @onchange="AddToCollaborator">
-                            <option >Select collaborator</option>
+                        <select class="collaborator-select" @onchange="AddToCollaborator">
+                            <option>Select collaborator</option>
                             @foreach (var colab in AppUserList)
                             {
                                 <option>@colab.name</option>
                             }
                         </select>
-
                     </div>
                     <div class="hiring-lead-select">
                         <select @onchange="TestClick" class="collaborator-select">
-                            <option >Select Hiring Lead</option>
-                            @foreach(var lead in ListOfCollaborators)
+                            <option>Select Hiring Lead</option>
+                            @foreach (var lead in ListOfCollaborators)
                             {
-                                <option value="@lead.id">@lead.name  @lead.surname </option>
+                                <option>@lead.name  @lead.surname </option>
                             }
-                            
-                            
                         </select>
                     </div>
-
                 </div>
                 <div class="selected-collaborators">
-                    @foreach(var collab in ListOfCollaborators)
-                {
-                    <div class="inner-selected-collaborators">
-                        <div class="crown"><i class="fa-solid fa-crown"></i></div>
-                        <div class="collaborator-details">
-                            <img src="@collab.imageUrl" alt="avator" class="colab-image"  />
-                            <div  class="colab-name">
-                                <p>@collab.name</p><p>@collab.surname</p>
+                    @foreach (var collab in ListOfCollaborators)
+                    {
+                        <div class="inner-selected-collaborators">
+                            <div class="crown"><i class="fa-solid fa-crown"></i></div>
+                            <div class="collaborator-details">
+                                <img src="@collab.imageUrl" alt="avator" class="colab-image" />
+                                <div class="colab-name">
+                                    <p>@collab.name</p><p>@collab.surname</p>
+                                </div>
                             </div>
-                            
+                            <div class="collab-remove">
+                                <input type="button" value="Remove" class="button-functions" @onclick="() => RemoveCollab(collab)" style="margin-top:0px; height:23px;" />
+                            </div>
                         </div>
-                        <div class="collab-remove">
-                            <input type="button" value="Remove" class="button-functions" @onclick="() => RemoveCollab(collab)" style="margin-top:0px; height:23px;" />
-                        </div>
-
-                    </div>
-                }
-                   
+                    }
                 </div>
-
-
-
             </div>
-
         </div>
-        <div class="summary">
-            <div class="summary-heading">
-                <h3>SUMMARY</h3>
-            </div>
-            <div class="summary-details">
-                <div class="hiring-lead">
-                    <p class="hiring-lead-heading">Hiring Lead</p>
-                   
-                        <p class="lead-heading-details">@hiringLead</p>
-                  
-                </div>
-                <div class="collaborators-list">
-                    <p class="collab-list-heading">Collaborators</p>
-                    <ul>
-                        @foreach(var collab in ListOfCollaborators)
-                        {
-                            <li class="list-of-collabs">@collab.name  @collab.surname</li>
-                        }
-                        
-                    </ul>
-                </div>
-            </div>
-
-        </div>
-
     </div>
 
+    @*<div class="collaborators-main-container">
+            <div class="collaborators-appform-container">
+                <div class="collaborators-form">
+
+                    <div class="collaborators-form-title">
+                        Select Collaborators
+                    </div>
+                    <div class="select-container">
+                        <div class="collaborators-select">
+
+                            <select class="collaborator-select"  @onchange="AddToCollaborator">
+                                <option >Select collaborator</option>
+                                @foreach (var colab in AppUserList)
+                                {
+                                    <option>@colab.name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="hiring-lead-select">
+                            <select @onchange="TestClick" class="collaborator-select">
+                                <option>Select Hiring Lead</option>
+                                @foreach(var lead in ListOfCollaborators)
+                                {
+                                    <option>@lead.name  @lead.surname </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="selected-collaborators">
+                        @foreach(var collab in ListOfCollaborators)
+                    {
+                        <div class="inner-selected-collaborators">
+                            <div class="crown"><i class="fa-solid fa-crown"></i></div>
+                            <div class="collaborator-details">
+                                <img src="@collab.imageUrl" alt="avator" class="colab-image" />
+                                <div  class="colab-name">
+                                    <p>@collab.name</p><p>@collab.surname</p>
+                                </div>
+                            </div>
+                            <div class="collab-remove">
+                                <input type="button" value="Remove" class="button-functions" @onclick="() => RemoveCollab(collab)" style="margin-top:0px; height:23px;" />
+                            </div>
+                        </div>
+                    }
+                    </div>
+                </div>
+            </div>
+            <div class="summary">
+                <div class="summary-heading">
+                    <h3>SUMMARY</h3>
+                </div>
+                <div class="summary-details">
+                    <div class="hiring-lead">
+                        <p class="hiring-lead-heading">Hiring Lead</p>
+
+                            <p class="lead-heading-details">@hiringLead</p>
+                    </div>
+                    <div class="collaborators-list">
+                        <p class="collab-list-heading">Collaborators</p>
+                        <ul>
+                            @foreach(var collab in ListOfCollaborators)
+                            {
+                                <li class="list-of-collabs">@collab.name  @collab.surname</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    *@
 
     <div class="bottom-buttons">
         <input type="button" value="Prev" class="button-functions" @onclick="Prev" />
@@ -271,13 +336,12 @@
 }
 else if (nextPage)
 {
-    <XebecPortal.UI.Pages.HR.Collaborators2  ChosenQuestions="ChosenQuestions" ListOfCollaborators="ListOfCollaborators" JobId="JobId" TempJob="TempJob"/>
+    <XebecPortal.UI.Pages.HR.Collaborators2 ChosenQuestions="ChosenQuestions" ListOfCollaborators="ListOfCollaborators" />
 }
 else if (prevPage)
 {
-    <XebecPortal.UI.Pages.HR.ApplicationFormControlTool jobId="JobId" TempJob="TempJob"/>
+    <XebecPortal.UI.Pages.HR.ApplicationFormControlTool />
 }
-
 
 @code {
 
@@ -296,16 +360,12 @@ else if (prevPage)
 
     public List<AppUser> selected = new List<AppUser>();
 
-    public List<CollaboratorsAssigned> collaboratorsToSave = new List<CollaboratorsAssigned>();
-
-
     bool nextPage;
     bool prevPage;
 
     public List<CollaboratorQuestion> CollabQuestions = new List<CollaboratorQuestion>();
 
     public EventCallback<List<AppUser>> CollaboratorChanged { get; set; }
-
 
     //int JobId = 1;
 
@@ -322,26 +382,12 @@ else if (prevPage)
     [Parameter]
     public EventCallback<List<FormQuestion>> ChosenQuestionsChanged { get; set; }
 
-
-
-    //I think this is required for nav to work, for now - Daniel
-    [Parameter]
-    public CreateJobPost TempJob { get; set; }
-
-    [Parameter]
-    public EventCallback<CreateJobPost> TempJobChanged { get; set; }
-
-
-
-    AppUser currentHiringLead = new();
-
     string token;
 
     string hiringLead;
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine("New Job id is" + JobId);
         nextPage = false;
         prevPage = false;
 
@@ -357,32 +403,29 @@ else if (prevPage)
 
         CollabQuestions = await HttpClient.GetListJsonAsync<List<CollaboratorQuestion>>("https://xebecapi.azurewebsites.net/api/collaboratorquestion", new AuthenticationHeaderValue("Bearer", token));
 
-
         //check for hiring lead, if it exists, load it
-        //try
-        //{
-        //    HiringLead = AppUserList.Find(y => y.id == collaborators.Find(x => x.JobId == JobId && x.Name == "Hiring Manager").AppUserId);
-        //}
-        //catch
-        //{
-        //    Console.WriteLine("No hiring lead for this job");
-        //}
+        try
+        {
+            HiringLead = AppUserList.Find(y => y.id == collaborators.Find(x => x.JobId == JobId && x.Name == "Hiring Manager").AppUserId);
+        }
+        catch
+        {
+            Console.WriteLine("No hiring lead for this job");
+        }
 
+        //same for collaborators
+        try
+        {
+            foreach (var collab in collaborators.Where(x => x.JobId == JobId && x.Name == "Collaborator"))
+            {
+                ListOfCollaborators.Add(AppUserList.Find(x => x.id == collab.AppUserId));
+            }
+        }
+        catch
+        {
+            Console.WriteLine("No collaborators");
 
-        ////same for collaborators
-        //try
-        //{
-        //    foreach (var collab in collaborators.Where(x => x.JobId == JobId && x.Name == "Collaborator"))
-        //    {
-        //        ListOfCollaborators.Add(AppUserList.Find(x => x.id == collab.AppUserId));
-        //    }
-        //}
-        //catch
-        //{
-        //    Console.WriteLine("No collaborators");
-
-        //}
-
+        }
 
         //questions and their collabs
 
@@ -405,6 +448,53 @@ else if (prevPage)
 
     }
 
+    private async Task Save()
+    {
+        //needs to first check what exists, and update accordingly.. yikes
+
+        //if (HiringLead != "")
+        //{
+        //    CollaboratorsAssigned lead = new CollaboratorsAssigned();
+        //    lead.Name = "Hiring Manager";
+        //    lead.AppUserId = AppUserList.FirstOrDefault(x => HiringLead.Contains(x.name) && HiringLead.Contains(x.surname)).id;
+        //    lead.JobId = JobId;
+
+        //    await HttpClient.PostJsonAsync<CollaboratorsAssigned>("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", lead, new AuthenticationHeaderValue("Bearer", token));
+        //}
+
+        //if (SelectedUsers.Count != 0)
+        //{
+        //    foreach (var collab in SelectedUsers)
+        //    {
+        //        CollaboratorsAssigned collaborator = new CollaboratorsAssigned();
+        //        collaborator.Name = "Collaborator";
+        //        collaborator.AppUserId = AppUserList.FirstOrDefault(x => collab.Contains(x.name) && HiringLead.Contains(x.surname)).id;
+        //        collaborator.JobId = JobId;
+
+        //        await HttpClient.PostJsonAsync<CollaboratorsAssigned>("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", collaborator, new AuthenticationHeaderValue("Bearer", token));
+        //    }
+        //}
+
+        //if (QuestionsDictionary.Count != 0)
+        //{
+        //    foreach (var collab in QuestionsDictionary)
+        //    {
+        //        //<formquestion, appuser>
+
+        //        CollaboratorQuestion cq = new CollaboratorQuestion();
+        //        cq.FormQuestionId = collab.Key.id;
+        //        cq.AppUserId = AppUserList.FirstOrDefault(x => collab.Value.Contains(x.name) && HiringLead.Contains(x.surname)).id;
+
+        //        await HttpClient.PostJsonAsync<CollaboratorQuestion>("https://xebecapi.azurewebsites.net/api/collaboratorquestion", cq, new AuthenticationHeaderValue("Bearer", token));
+        //    }
+        //}
+
+    }
+
+    private async Task testfunc(IEnumerable<AppUser> value)
+    {
+        //SelectedUsers = value;
+    }
 
     public async Task AddToCollab(AppUser user)
     {
@@ -413,23 +503,13 @@ else if (prevPage)
 
         ListOfCollaborators.Add(user);
 
-
-
     }
 
     private async Task TestClick(ChangeEventArgs e)
     {
-        int temp = int.Parse(e.Value.ToString());
-        currentHiringLead = ListOfCollaborators.FirstOrDefault(x => temp == x.id);
-
-        hiringLead = currentHiringLead.name + " " + currentHiringLead.surname;
-
-
-        Console.WriteLine(e.Value);
+        hiringLead = e.Value.ToString();
 
     }
-
-
 
     private void Prev()
     {
@@ -442,14 +522,12 @@ else if (prevPage)
         nextPage = true;
     }
 
-
     public async Task AddToCollaborator(ChangeEventArgs e)
     {
         AppUser collab = new AppUser();
         collab = AppUserList.FirstOrDefault(x => e.Value.ToString() == x.name);
         //string x = e.Value.ToString();
         //Console.WriteLine(x);
-
 
         AppUser temp = new AppUser();
         temp.id = collab.id;
@@ -488,6 +566,10 @@ else if (prevPage)
         HiringLeads.Add(temp);
         await CollaboratorChanged.InvokeAsync(AppUserList);
 
+        //if(HiringLeads.Count >= 1)
+        //{
+        //    await jsRuntime.InvokeAsync<string>("alert", "You can only select 1 hiring lead");
+        //}
 
     }
 
@@ -498,52 +580,10 @@ else if (prevPage)
 
     }
 
-    public async Task ChangeColor (ChangeEventArgs e)
+    public async Task ChangeColor(ChangeEventArgs e)
     {
         string color = "crown";
 
     }
 
-    public async Task Save()
-    {
-
-        if(ListOfCollaborators != null)
-        {
-
-            foreach (var collaborator in ListOfCollaborators)
-            {
-                CollaboratorsAssigned tempCollab = new()
-                {
-                    Name = "Collaborator",
-                    AppUserId = collaborator.id,
-                    JobId = JobId
-                };
-                collaboratorsToSave.Add(tempCollab);
-            };
-
-            if(currentHiringLead != null)
-            {
-                collaboratorsToSave.Find(x => x.AppUserId == currentHiringLead.id).Name = "Hiring Manager";
-
-            }
-            foreach(var saved in collaboratorsToSave)
-            {
-                await HttpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", saved, new AuthenticationHeaderValue("Bearer", token));
-            };
-
-            //var addcollaborator = await HttpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", collaboratorsToSave, new AuthenticationHeaderValue("Bearer", token));
-
-            //if (addcollaborator.IsSuccessStatusCode)
-            //{
-            //    await jsRuntime.InvokeAsync<object>("alert", "Collaboratos saved successfully");
-            //    Console.WriteLine("Added");
-            //}
-
-
-        }
-
-    }
-
-
 }
-
