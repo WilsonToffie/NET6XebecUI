@@ -347,8 +347,6 @@
         .filter-button-trans:hover {
             transform: rotate(0deg);
         }
-
-
 </style>
 
 @if (ShowingJobPortal)
@@ -441,7 +439,7 @@
                     <MudTooltip Class="shades white shades-text text-black" Placement="Placement.Right">
                         <ChildContent>
                             <!--Card list for jobs-->
-                            <div id="small-cards" class="col-12 overflow-auto p-3" style="height: 45em !important; margin-top: 1vh">
+                            <div id="small-cards" class="col-12 overflow-auto p-3" style="height: 44em !important; margin-top: 1vh">
                                 @foreach (var item in jobListFilter)
                                 {
                                     <div class="card job-portal-card m-1 small-card-colour-change" @onclick="() => DisplayJobDetail(item.Id)" @onmouseover="() => OpenJobCollabToolTip(item.Id)" style="@GetStyling(item) background-color: @SmallCardActive(item.Id)">
@@ -463,34 +461,38 @@
                         <TooltipContent>
                             @if (appUserFilter?.Any() == true)
                             {
-                                <div class="row" style="background-color:azure">
-                                    <div class="col-12">
+                                <MudGrid Style="background-color: azure">
+                                    <MudItem lg="12" md="12">
                                         <h3 class="text-center"><u><i><b>Hiring Lead</b></i></u></h3>
-                                        <div class="row g-0">
-                                            <div class="col-6 d-flex justify-content-center">
-                                                <img class="img-fluid rounded ms-5 mb-2" width="120" src="@appUserFilter.FirstOrDefault().imageUrl" />
-                                            </div>
-                                            <div class="col-6 d-flex align-content-around flex-wrap">
-                                                <div class="col-12">
-                                                    <label class="d-flex justify-content-center text-muted">Full Name:</label>
-                                                    <h4 class="d-flex justify-content-center"><b>@appUserFilter.FirstOrDefault().name @appUserFilter.FirstOrDefault().surname</b></h4>
-                                                </div>
-                                                <div class="col-12">
-                                                    <label class="d-flex justify-content-center text-muted">Role:</label>
-                                                    <h4 class="d-flex justify-content-center"><b>@appUserFilter.FirstOrDefault().role</b></h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                        <MudGrid Spacing="0">
+                                            <MudItem Class="mt-2" lg="6" md="6">
+                                                <img class="img-fluid rounded" width="120" src="@appUserFilter.FirstOrDefault().imageUrl" />
+                                            </MudItem>
+                                            <MudItem lg="6" md="6" Class="flex-wrap">
+                                                <MudItem lg="12" md="12">
+                                                    <label class="text-muted">Full Name:</label>
+                                                </MudItem>
+                                                <MudItem lg="12" md="12">
+                                                    <h4><b>@appUserFilter.FirstOrDefault().name @appUserFilter.FirstOrDefault().surname</b></h4>
+                                                </MudItem>
+                                                <MudItem lg="12" md="12">
+                                                    <label class="text-muted">Role:</label>
+                                                </MudItem>
+                                                <MudItem lg="12" md="12">
+                                                    <h4><b>@appUserFilter.FirstOrDefault().role</b></h4>
+                                                </MudItem>
+                                            </MudItem>
+                                        </MudGrid>
+                                    </MudItem>
+                                </MudGrid>
                             }
                             else
                             {
-                                <div class="row" style="background-color:azure">
-                                    <div class="col-12">
+                                <MudGrid Style="background-color: azure">
+                                    <MudItem lg="12" md="12">
                                         <h4 class="text-center">There Are No Hiring Lead For This Job.</h4>
-                                    </div>
-                                </div>
+                                    </MudItem>
+                                </MudGrid>
                             }
                         </TooltipContent>
                     </MudTooltip>
@@ -499,7 +501,7 @@
                 <div class="col-9 job-portal-right-main">
 
                     <!--The Form for editing and deleting a job-->
-                    <div class="col-12" style="height: 45em !important; margin-top: 1vh">
+                    <div class="col-12" style="height: 44em !important; margin-top: 1vh">
                         <div class="col-12 job-portal-right">
                             <form class="job-portal-form ">
                                 <div class="row">
@@ -532,11 +534,7 @@
                                                 <div class="col mt-5">
                                                     <button class="btn detail-button-colour rounded-pill" type="button" @onclick="() => OpenJobCollabDialog(displayJobDetail.Id)">Collaborators</button>
                                                 </div>
-                                                @*
-                                                    <div class="col mt-5">
-                                                        <button class="btn detail-button-colour rounded-pill" type="button" @onclick="() => ShowApplicantPortal(displayJobDetail.Id)">Applicant Portal</button>
-                                                    </div>
-                                                *@
+
                                                 @if (state.Role == "Super Admin")
                                                 {
                                                     <div class="col mt-5">
@@ -677,7 +675,7 @@
                     </div>
                 </div>
 
-                <div class="col-1 d-flex justify-content-end pb-5" style="height: 45em !important">
+                <div class="col-1 d-flex justify-content-end pb-5" style="height: 44em !important">
                     <div style="padding-top: 3em">
                         <button class="detail-button-colour filter-button-trans rounded-pill" type="button" style="width: 8em; height: 3em" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilter">Filters</button>
                     </div>
@@ -748,46 +746,54 @@
     <DialogContent>
         @if (appUserFilter?.Any() == true)
         {
-            <div class="row">
-                <div class="col-12 border border-2 mb-1 pb-2">
-                    <h2 class="text-center"><b>Hiring Lead</b></h2>
-                    <div class="row">
-                        <div class="col-12">
-                            <img class="img-fluid rounded-circle mx-auto d-block" src="@appUserFilter.FirstOrDefault().imageUrl" />
-                        </div>
-                        <div class="col-12">
-                            <h4 class="text-center">@appUserFilter.FirstOrDefault().name @appUserFilter.FirstOrDefault().surname</h4>
-                        </div>
-                        <div class="col-12">
-                            <h5 class="text-center">@appUserFilter.FirstOrDefault().role</h5>
-                        </div>
-                    </div>
-                </div>
+            <MudGrid Spacing="1" Class="pb-2">
+                <MudItem Class="border border-2 mb-1" lg="12" md="12">
+                    <MudItem lg="12" md="12">
+                        <h2 class="text-center"><b>Hiring Lead</b></h2>
+                    </MudItem>
+                    <MudItem lg="12" md="12">
+                        <img class="img-fluid rounded-circle mx-auto d-block" width="230" src="@appUserFilter.FirstOrDefault().imageUrl" />
+                    </MudItem>
+                    <MudItem lg="12" md="12">
+                        <h4 class="text-center">@appUserFilter.FirstOrDefault().name @appUserFilter.FirstOrDefault().surname</h4>
+                    </MudItem>
+                    <MudItem lg="12" md="12">
+                        <h5 class="text-center">@appUserFilter.FirstOrDefault().role</h5>
+                    </MudItem>
+                </MudItem>
 
-                <div class="col-12 border border-2 mt-1">
-                    <h2 class="text-center"><b>Team Assigned For This Job</b></h2>
-                    <div class="row overflow-auto d-flex justify-content-center" style="height: 15em">
-                        @foreach (var item in appUserFilter)
-                        {
-                            <div class="col-3">
-                                <div class="col-12">
-                                    <img class="img-fluid rounded-circle mx-auto d-block" src="@item.imageUrl" />
-                                </div>
-                                <div class="col-12">
-                                    <h4 class="text-center">@item.name @item.surname</h4>
-                                </div>
-                                <div class="col-12">
-                                    <h5 class="text-center">@item.role</h5>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
+                <MudItem Class="border border-2 mt-1" lg="12" md="12">
+                    <MudItem lg="12" md="12">
+                        <h2 class="text-center"><b>Team Assigned For This Job</b></h2>
+                    </MudItem>
+                    <MudItem Class="overflow-auto" lg="12" md="12" Style="height: 14em">
+                        <MudGrid Class="d-flex justify-content-center" Spacing="1" Style="width: 38em">
+                            @foreach (var item in appUserFilter)
+                            {
+                                <MudItem lg="3" md="3">
+                                    <MudItem lg="12" md="12">
+                                        <img class="img-fluid rounded-circle mx-auto d-block" src="@item.imageUrl" />
+                                    </MudItem>
+                                    <MudItem lg="12" md="12">
+                                        <h4 class="text-center">@item.name @item.surname</h4>
+                                    </MudItem>
+                                    <MudItem lg="12" md="12">
+                                        <h5 class="text-center">@item.role</h5>
+                                    </MudItem>
+                                </MudItem>
+                            }
+                        </MudGrid>
+                    </MudItem>
+                </MudItem>
+            </MudGrid>
         }
         else
         {
-            <h4 class="text-center">There Are No Collaborators Assigned To This Job.</h4>
+            <MudGrid>
+                <MudItem lg="12" md="12">
+                    <h4 class="text-center">There Are No Collaborators Assigned To This Job.</h4>
+                </MudItem>
+            </MudGrid>
         }
     </DialogContent>
 </MudDialog>
