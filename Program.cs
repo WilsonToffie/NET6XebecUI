@@ -30,26 +30,25 @@ namespace XebecPortal.UI
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
-
-            //builder.RootComponents.Add<HeadOutlet>("head::after");
-
             builder.Services.AddSingleton<State>();
             builder.Services.AddSingleton<HrJobState>();
             builder.Services.AddSingleton<UserState>();
             builder.Services.AddSingleton<JobState>();
+            builder.Services.AddSingleton<CreateJobPost>();
+
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddScoped<IApplicantDataService, ApplicantDataService>();
             builder.Services.AddScoped<IApplicationDataService, ApplicationDataService>();
             builder.Services.AddScoped<IJobDataService, JobDataService>();
             builder.Services.AddScoped<IApplicationPhaseHelperDataService, ApplicationPhaseHelperDataService>();
-            
+
             builder.Services.AddScoped<IPersonalInformationDataService, PersonalInformationDataService>();
             builder.Services.AddScoped<IWorkHistoryDataService, WorkHistoryDataService>();
             builder.Services.AddScoped<IEducationDataService, EducationDataService>();
             builder.Services.AddScoped<IEducationDataService, EducationDataService>();
             builder.Services.AddScoped<IAdditionalInformationDataService, AdditionalInformationDataService>();
             builder.Services.AddScoped<IStatusDataService, StatusDataService>();
-            builder.Services.AddScoped<IPhaseDataService, PhaseDataService>();            
+            builder.Services.AddScoped<IPhaseDataService, PhaseDataService>();
             //Testing
             builder.Services.AddScoped<IMyJobListDataService, MyJobListDataService>();
             // builder.Services.AddSmart();
@@ -62,7 +61,7 @@ namespace XebecPortal.UI
             //builder.Services.AddTransient<CustomHandler>();
 
 
-            await builder.Build().RunAsync();            
+            await builder.Build().RunAsync();
         }
 
         public void ConfigureServices(IServiceCollection services)

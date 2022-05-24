@@ -213,14 +213,13 @@
         background-size: cover;
         /*background-repeat: no-repeat;*
         /*background-color: none;*/
-        border: 0.4em rgba(0,0,0,0.2) solid;
         border-radius: 100%;
     }
-    .profile-image-div-cover-empty{
+    .profile-image-div-cover-empty {
         height: 18vh;
         width: 50%;
         margin: auto;
-        background-color: grey;
+        background-color: #A9ABA7; /*background-color: rgba(128,128,128,0.8);*/
         background-size: cover;
         /*background-repeat: no-repeat;*
         /*background-color: none;*/
@@ -353,6 +352,7 @@
         width: 2em;
         height: 2em;
         background: white;
+        position: absolute;
         margin-top: 14vh;
         margin-left: 6vw;
         border-radius: 50%;
@@ -458,6 +458,12 @@
         line-height: 10vh;
         margin-right: 1.8vw;
     }
+
+    .default-image-location {
+        text-align: center;
+        margin-top: 2vh;
+    }
+
 </style>
 
 @if (state.Role.Equals("Candidate"))
@@ -484,14 +490,10 @@
                 <div class="profile-div">
                     @if (newUser)
                     {
-
-
                         <div class="profile-image-div-cover-empty">
-                            @*<div class="upload-profile-btn">
-                                <label class="to-top">
-                                <InputFile OnChange="@UploadingProfilePic" class="drag-drop-input-image" id="fileInput" />
-                                </label>
-                            </div>*@
+                            <div class="default-image-location"> 
+                                <i class="fas fa-user fa-6x"></i>                                
+                            </div>                 
                         </div>
                     }
                     else
@@ -504,7 +506,6 @@
                             </div>
                         </div>
                     }
-
 
                     <div class="profile-name-div">
                         <h2 class="profile-name">@state.Name &nbsp @state.Surname</h2>
@@ -647,13 +648,11 @@
                 <div class="profile-div">
                     @if (newUser)
                     {
-                        <div class="profile-image-div-cover-empty">
-                            @*<div class="upload-profile-btn">
-                                <label class="to-top">
-                                    <InputFile OnChange="@UploadingProfilePic" class="drag-drop-input-image" id="fileInput" />
-                                </label>
-                            </div>*@
+                    <div class="profile-image-div-cover-empty">
+                        <div class="default-image-location">
+                            <i class="fas fa-user fa-6x"></i>
                         </div>
+                    </div>
                 }
                 else
                 {
@@ -708,7 +707,7 @@
                 }
                 @if (hrCreateAJob)
                 {
-                    <XebecPortal.UI.Pages.HR.CreateJob />
+                    <XebecPortal.UI.Pages.HR.CreateAJobForm />
                 }
                 @if (hrApplicantPortal)
                 {
