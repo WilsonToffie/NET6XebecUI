@@ -39,12 +39,12 @@
 
     .hr-job-search-bar {
         /*width: 40%;
-        height: 5vh;
-        margin-bottom: 2.5vh;*/
+            height: 5vh;
+            margin-bottom: 2.5vh;*/
         margin-top: 1vh;
         /*margin-left: 30%;
-        margin-right: 30%;
-        border: none;*/
+            margin-right: 30%;
+            border: none;*/
     }
 
     .hr-job-filters {
@@ -251,9 +251,9 @@
         .hr-job-search-bar-input::placeholder {
             color: #666666;
             /*font-weight: 900;
-            font-size: 0.8em;
-            padding-left: 1em;
-            padding-top: 1em;*/
+                font-size: 0.8em;
+                padding-left: 1em;
+                padding-top: 1em;*/
         }
 
         .hr-job-search-bar-input:hover {
@@ -535,6 +535,10 @@
                                                     <button class="btn detail-button-colour rounded-pill" type="button" @onclick="() => OpenJobCollabDialog(displayJobDetail.Id)">Collaborators</button>
                                                 </div>
 
+                                                <div class="col mt-5">
+                                                    <button class="btn detail-button-colour rounded-pill" type="button" @onclick="() => ShowApplicantPortal(displayJobDetail.Id)">Applicant Portal</button>
+                                                </div>
+
                                                 @if (state.Role == "Super Admin")
                                                 {
                                                     <div class="col mt-5">
@@ -714,9 +718,9 @@
                 <input type="button" value="Job Portal" @onclick="ShowJobPortal" class="job-portal-nav-btn" style="margin-left: 100px; width: 50%" />
             </div>
             <div class="col-4 hr-job-name">@displayJobDetail.Title</div>
-            <div class="col-2">
-                <input type="button" value="Phase Manager" @onclick="ShowPhaseManager" class="job-portal-nav-btn" style="width: 50%;" />
-            </div>
+            @*            <div class="col-2">
+        <input type="button" value="Phase Manager" @onclick="ShowPhaseManager" class="job-portal-nav-btn" style="width: 50%;" />
+        </div>*@
             <div class="col-2"></div>
         </div>
         <div class="job-portal-inner-bottom">
