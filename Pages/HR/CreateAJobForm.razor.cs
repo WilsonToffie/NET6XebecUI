@@ -15,11 +15,11 @@ namespace XebecPortal.UI.Pages.HR
     public partial class CreateAJobForm
     {
         public Job job = new();
-        [Parameter]
-        public CreateJobPost TempJob { get; set; }
+        //[Parameter]
+        //public CreateJobPost TempJob { get; set; }
 
-        [Parameter]
-        public EventCallback<CreateJobPost> TempJobChanged { get; set; }
+        //[Parameter]
+        //public EventCallback<CreateJobPost> TempJobChanged { get; set; }
         private List<string> Company = new List<string>() { "Nebula", "Deloitte" };
         private List<string> Locations = new List<string>() { "Remote", "Eastern Cape", "Free State", " Gauteng", "KwaZulu-Natal", "Limpopo", "Mpumalanga", "Northen Cape", "North West", "Western Cape" };
         //private List<string> Statuses = new List<string>() { "Open", "Draft", "Filled", "Closed" };

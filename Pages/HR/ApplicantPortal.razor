@@ -350,6 +350,7 @@
     .modal-document-profile {
         display: flex;
         flex-direction: column;
+        margin-right: 4%;
     }
 
         .modal-document-profile img {
@@ -388,7 +389,7 @@
     }
 
     .search-image {
-        padding-left: 1em;
+        padding-left: 2em;
         background: url(/Img/search.svg) no-repeat left;
         background-size: 30px;
     }
@@ -402,10 +403,11 @@
         border: white solid 0.1em;
         border-radius: 1.5em;
     }
+
 </style>
 
 <div class="myjob-search-bar">
-    <input class="search-image hr-job-search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Applicants" @oninput="SearchApplicants"/>
+    <input class="search-image hr-job-search-bar-input" style="padding-left: 2.5em;" type="text" placeholder="Search For Applicants" @oninput="SearchApplicants" />
 </div>
 
 
@@ -413,7 +415,6 @@
 
     @if (candidates != null && candidates.Count != 0)
     {
-        //FilterCandidatesByJob();
         <table>
             <thead>
                 <tr>
@@ -427,63 +428,64 @@
                 </tr>
             </thead>
             <tbody>
-
-                @if (JobId == 0)
+                @foreach (var application in applications)
                 {
-                    @foreach (var application in applications)
+                    AppUser user = new AppUser();
+
+                    //Shows users according to search
+                    @if (usersFiltered == null || searchCandidate == "" || searchCandidate == " ")
                     {
-                        AppUser user = new AppUser();
-
-                        @if (usersFiltered == null || searchCandidate == "" || searchCandidate == " ")
-                        {
-                            user = users.Where(x => x.id == application.AppUserId).FirstOrDefault();
-                        }
-                        else if (usersFiltered.Where(x => x.id == application.AppUserId).FirstOrDefault() != null)
-                        {
-                            user = usersFiltered.Where(x => x.id == application.AppUserId).FirstOrDefault();
-                        }
-
-
-                        //user = usersFiltered.Where(x => x.id == application.AppUserId).FirstOrDefault();
-                        @if (user.id == application.AppUserId)
-                        {
-                            string jobTitle = jobs.Where(x => x.Id == application.JobId).FirstOrDefault().Title;
-                            int jobId = jobs.Where(x => x.Id == application.JobId).FirstOrDefault().Id;
-                            <tr>
-                                <td><img src="@user.imageUrl" alt="Avatar"></td>
-                                <td style="font-size: 1.2em; font-family: opensans-condensed-bold">@user.name @empty @user.surname</td>
-                                <td>@jobTitle</td>
-                                <td>@FindCurrentPhase(user.id, jobId)</td>
-                                <td style="font-weight: 400; font-family: opensans-condensed-bold; font-size: 1em; color: #d35bc9">@($"{application.TimeApplied:dd MMM yyyy}")</td>
-                                <td style="text-decoration: underline; font-family: opensans-condensed-bold"><a @onclick="() => toggleApplicationForm(user, jobId)">View Application Form</a></td>
-                                <td><input type="button" class="btn-view-documents" value="View Documents" @onclick="() => toggleDocuments(user)" /></td>
-                            </tr>
-                        }
+                        user = users.Where(x => x.id == application.AppUserId).FirstOrDefault();
                     }
-                }
-                else
-                {
-                    @foreach (var user in users)
+                    else if (usersFiltered.Where(x => x.id == application.AppUserId).FirstOrDefault() != null)
                     {
-                        @foreach (var application in applications)
-                        {
-                            @if (JobId == application.JobId && application.AppUserId == user.id)
-                            {
-                                string jobTitle = jobs.Where(x => x.Id == JobId).FirstOrDefault().Title;
-                                <tr>
-                                    <td><img src="@user.imageUrl" alt="Avatar"></td>
-                                    <td style="font-size: 1.2em; font-family: opensans-condensed-bold">@user.name @empty @user.surname</td>
-                                    <td>@jobTitle</td>
-                                    <td>@FindCurrentPhase(@user.id, JobId)</td>
-                                    <td style="font-weight: 400; font-family: opensans-condensed-bold; font-size: 1em; color: #d35bc9">@($"{application.TimeApplied:dd MMM yyyy}")</td>
-                                    <td style="text-decoration: underline; font-family: opensans-condensed-bold"><a @onclick="() => toggleApplicationForm(user, JobId)">View Application Form</a></td>
-                                    <td><input type="button" class="btn-view-documents" value="View Documents" @onclick="() => toggleDocuments(user)" /></td>
-                                </tr>
+                        user = usersFiltered.Where(x => x.id == application.AppUserId).FirstOrDefault();
+                    }
 
+                    @if (JobId == application.JobId && application.AppUserId == user.id)
+                    {
+                        string jobTitle = jobs.Where(x => x.Id == JobId).FirstOrDefault().Title;
+                        string img;
+                        //Checks that the profile picture exists
+                        if (personalInformation.Where(x => x.AppUserId == user.id).FirstOrDefault() != null)
+                        {
+                            if (personalInformation.Where(x => x.AppUserId == user.id).FirstOrDefault().ImageUrl != null)
+                            {
+                                img = personalInformation.Where(x => x.AppUserId == user.id).FirstOrDefault().ImageUrl;
+                            }
+                            else
+                            {
+                                img = "https://xebecstorage.blob.core.windows.net/profile-images/0";
                             }
                         }
+                        else
+                        {
+                            img = "https://xebecstorage.blob.core.windows.net/profile-images/0";
+                        }
+
+                        <tr>
+                            <td><img src="@img" alt="Avatar"></td>
+                            <td style="font-size: 1.2em; font-family: opensans-condensed-bold">@user.name @empty @user.surname</td>
+                            <td>@jobTitle</td>
+                            <td>
+                                <select>
+                                    <option selected>@FindCurrentPhase(@user.id, JobId)</option>
+
+                                    @foreach (var phase in phases)
+                                    {
+                                        <option value="@phase.id">@phase.description</option>
+                                    }
+                                </select>
+                            </td>
+                            @*<td>@FindCurrentPhase(@user.id, JobId)</td>*@
+                            <td style="font-weight: 400; font-family: opensans-condensed-bold; font-size: 1em; color: #d35bc9">@($"{application.TimeApplied:dd MMM yyyy}")</td>
+                            <td style="text-decoration: underline; font-family: opensans-condensed-bold"><a @onclick="() => toggleApplicationForm(user, JobId)">View Application Form</a></td>
+                            <td><input type="button" class="btn-view-documents" value="View Documents" @onclick="() => toggleDocuments(user)" /></td>
+                        </tr>
+
                     }
                 }
+
 
                 @if (candidates == null || candidates.Count == 0)
                 {
@@ -503,12 +505,31 @@
 
 @if (showDocuments)
 {
+    string img;
+    if (personalInformation.Where(x => x.AppUserId == selectedUser.id).FirstOrDefault() != null)
+    {
+        if (personalInformation.Where(x => x.AppUserId == selectedUser.id).FirstOrDefault().ImageUrl != null)
+        {
+            img = personalInformation.Where(x => x.AppUserId == selectedUser.id).FirstOrDefault().ImageUrl;
+        }
+        else
+        {
+            img = "https://xebecstorage.blob.core.windows.net/profile-images/0";
+        }
+    }
+    else
+    {
+        img = "https://xebecstorage.blob.core.windows.net/profile-images/0";
+    }
+
+
+
     <div class="dimmed">
 
         <div class="modal-frame-documents">
             <div class="modal-document-header">
                 <div class="modal-document-profile">
-                    <div class="modal-frame-documents-rows"><img src="https://xebecstorage.blob.core.windows.net/profile-images/@selectedUser.id" alt="Avatar"></div>
+                    <div class="modal-frame-documents-rows"><img src="@img" alt="Avatar"></div>
                     <div class="modal-frame-documents-rows" style="color: #004393; font-family: opensans-condensed-bold">@selectedUser.name @empty @selectedUser.surname @empty Documents </div>
                 </div>
                 <input type="button" class="btn-view-documents" style="width: 100px; margin-right: 25px; margin-left:245px" value="Close" @onclick="toggleDocuments" />
@@ -643,11 +664,15 @@
     @using System.Net.Http.Headers;
 
     string empty = "  ";
+    string phaseDescription = "";
+    string phaseEdit = "";
+    string savePhase = "";
     bool showApplicationForm = false;
     bool showDocuments = false;
     bool showMagnifiedDocument = false;
 
     string currentPhase;
+    int phaseId;
 
     private List<FormQuestion> QuestionList = new List<FormQuestion>();
     private List<ApplicantAnswer> AnswerList = new List<ApplicantAnswer>();
@@ -669,6 +694,7 @@
     private IList<ApplicationPhaseHelper> phasesHelpers = new List<ApplicationPhaseHelper>();
     private IList<ApplicationModel> applications = new List<ApplicationModel>();
     private IList<ApplicationPhase> phases = new List<ApplicationPhase>();
+    private IList<PersonalInformation> personalInformation = new List<PersonalInformation>();
 
     private currentPhase phase { get; set; }
     [Parameter] public int JobId { get; set; }
@@ -688,6 +714,8 @@
         phasesHelpers = await httpClient.GetListJsonAsync<List<ApplicationPhaseHelper>>("https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper", new AuthenticationHeaderValue("Bearer", token));
         applications = await httpClient.GetListJsonAsync<List<ApplicationModel>>("https://xebecapi.azurewebsites.net/api/Application", new AuthenticationHeaderValue("Bearer", token));
         phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/ApplicationPhase", new AuthenticationHeaderValue("Bearer", token));
+        personalInformation = await httpClient.GetListJsonAsync<List<PersonalInformation>>("https://xebecapi.azurewebsites.net/api/PersonalInformation", new AuthenticationHeaderValue("Bearer", token));
+
 
         SetSelectedCandidate(candidates.FirstOrDefault());
     }
@@ -706,6 +734,7 @@
         candidates = candidates.Where(o => o.jobId == JobId).ToList();
         candidates = candidates.OrderByDescending(o => o.TotalMatch).ToList();
     }
+
 
     private async Task GetCandidates()
     {
@@ -734,13 +763,11 @@
     {
         showApplicationForm = !showApplicationForm;
         SetSelectedCandidate(user);
-        JobId = jobId;
     }
 
     private void toggleApplicationForm()
     {
         showApplicationForm = !showApplicationForm;
-        JobId = 0;
     }
 
     private string FindCurrentPhase(int candidateId, int jobId)
@@ -787,8 +814,6 @@
 
         if (users != null)
         {
-
-
             foreach (var user in users)
             {
                 if (user.name != null)
@@ -800,16 +825,5 @@
                 }
             }
         }
-
-        //try
-        //{
-        //    usersFiltered = users.Where(x => x.name.ToLower().Contains(searchCandidate.ToLower())).ToList();
-        //}
-        //catch (NullReferenceException nr)
-        //{
-
-        //    Console.WriteLine("searchValue: " + searchCandidate.ToLower() + usersFiltered.Count()); ;
-        //}
     }
-
 }
