@@ -119,13 +119,7 @@
         margin-top: 2.5vh;
         transform: scale(1.5);
     }
-    .applicant-job-portal {
-        height: 30vh;
-        background-image: url(/Img/applicantjobportal.png);
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
+
 
     .applicant-my-jobs {
         height: 30vh;
@@ -143,20 +137,22 @@
         background-position: center;
     }
 
-    .hr-data-analytics {
-        height: 30vh;
-        background-image: url(/Img/dat.png);
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-
     .hr-create-a-job {
         height: 30vh;
         background-image: url(/Img/createjob.png);
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
+        cursor: zoom-in;
+    }
+
+    .hr-create-a-job-zoomed {
+        height: 100%;
+        background-image: url(/Img/createjob.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        cursor: zoom-out;
     }
     .applicant-applicant-profile {
         height: 30vh;
@@ -178,13 +174,7 @@
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
-        transition: 0.25s all ease-in-out;
     }
-
-        .applicant-job-portal:hover {
-            margin-top: 2.5vh;
-            transform: scale(1.5);
-        }
 
     .applicant-my-jobs {
         height: 30vh;
@@ -206,13 +196,17 @@
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
-        transition: 0.25s all ease-in-out;
+        cursor: zoom-in;
+    }
+    .hr-job-portal-zoomed {
+        height: 100%;        
+        background-image: url(/Img/applicantcontrol.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;        
+        cursor: zoom-out;
     }
 
-        .hr-job-portal:hover {
-            margin-top: 2.5vh;
-            transform: scale(1.5);
-        }
 
     .hr-data-analytics {
         height: 30vh;
@@ -220,27 +214,17 @@
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
-        transition: 0.25s all ease-in-out;
+        cursor: zoom-in;
     }
 
-    .hr-data-analytics:hover {
-        margin-top: 2.5vh;
-        transform: scale(1.5);
-    }
-
-    .hr-create-a-job {
-        height: 30vh;
-        background-image: url(/Img/createjob.png);
+    .hr-data-analytics-zoomed {
+        height: 100%;
+        background-image: url(/Img/dat.png);
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
-        transition: 0.25s all ease-in-out;
+        cursor: zoom-out;
     }
-
-        .hr-create-a-job:hover {
-            margin-top: 2.5vh;
-            transform: scale(1.5);
-        }
 
     p {
         color: #004393;
@@ -248,54 +232,14 @@
         font-family: opensans-condensed-bold;
         font-size: 1em;
         text-align: center;
-    }
+    }   
 
-    .applicant-applicant-profile1 {
-        height: 100%;
-        background-image: url(/Img/applicantprofile.png);
-        background-size: cover;
-        background-position: center;
-    }
-
-    .applicant-job-portal1 {
-        height: 100%;
-        background-image: url(/Img/applicantjobportal.png);
-        background-size: cover;
-        background-position: center;
-    }
-
-    .applicant-my-jobs1 {
-        height: 100%;
-        background-image: url(/Img/myjobs.png);
-        background-size: cover;
-        background-position: center;
-    }
-
-    .hr-job-portal1 {
-        height: 50vh;
-        margin-top: 10vh;
-        background-image: url(/Img/applicantcontrol.png);
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-
-    .hr-data-analytics1 {
-        height: 50vh;
-        margin-top: 10vh;
-        background-image: url(/Img/dat.png);
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center;
-    }
-
-    .hr-create-a-job1 {
-        height: 50vh;
-        margin-top: 10vh;
-        background-image: url(/Img/createjob.png);
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center;
+    .zoomed-image-location {
+        width: 90%;
+        height: 80vh;
+        position: absolute;
+        top: 0%;        
+        left: 5%;
     }
 </style>
 
@@ -306,20 +250,22 @@
     <div class="bottom">
         <div class="three">
             <div class="services-label">APPLICANT CONTROL TOOL</div>
+
             <div class="services-image">
-                <div class="hr-job-portal"></div>
+                <div class="hr-job-portal" @onclick="zoomJobPortal"></div>
             </div>
+
             <div class="services-bottom">
                 <p>
                     Track the status of jobs advertised.
                 </p>
             </div>
         </div>
-     
+
         <div class="three">
             <div class="services-label">JOB CONTROL TOOL</div>
             <div class="services-image">
-                <div class="hr-create-a-job" ></div>
+                <div class="hr-create-a-job" @onclick="zoomCreateAJob"></div>
             </div>
             <div class="services-bottom">
                 <p>
@@ -327,11 +273,11 @@
                 </p>
             </div>
         </div>
-       
+
         <div class="three">
             <div class="services-label">DATA ANALYTICS TOOL</div>
             <div class="services-image">
-                <div class="hr-data-analytics" ></div>
+                <div class="hr-data-analytics" @onclick="zoomDataAnalytics"></div>
             </div>
             <div class="services-bottom">
                 <p>
@@ -339,11 +285,68 @@
                 </p>
             </div>
         </div>
-       
     </div>
+    @if (zoomedJobPortal)
+    {
+        <div class="zoomed-image-location">
+            <div class="hr-job-portal-zoomed" @onclick="zoomJobPortal"></div>
+        </div>
+    }
+
+    @if (zoomedCreateAJob)
+    {
+        <div class="zoomed-image-location">
+            <div class="hr-create-a-job-zoomed" @onclick="zoomCreateAJob"></div>
+        </div>
+    }
+
+    @if (zoomedDataAnalytics)
+    {
+        <div class="zoomed-image-location">
+            <div class="hr-data-analytics-zoomed" @onclick="zoomDataAnalytics"></div>
+        </div>
+    }
 </div>
 
 @code {
-   
-    
+
+    private bool zoomedJobPortal = false;
+    private bool zoomedCreateAJob = false;
+    private bool zoomedDataAnalytics = false;
+
+    private void zoomJobPortal()
+    {
+        if (zoomedJobPortal)
+        {
+            zoomedJobPortal = false;
+        }
+        else
+        {
+            zoomedJobPortal = true;
+        }
+    }
+
+    private void zoomCreateAJob()
+    {
+        if (zoomedCreateAJob)
+        {
+            zoomedCreateAJob = false;
+        }
+        else
+        {
+            zoomedCreateAJob = true;
+        }
+    }
+
+    private void zoomDataAnalytics()
+    {
+        if (zoomedDataAnalytics)
+        {
+            zoomedDataAnalytics = false;
+        }
+        else
+        {
+            zoomedDataAnalytics = true;
+        }
+    }
 }

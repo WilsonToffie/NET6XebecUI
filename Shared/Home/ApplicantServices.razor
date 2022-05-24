@@ -37,9 +37,7 @@
     .three {
         height: auto;
         width: 33.3vw;
-    }
-
-    
+    }    
 
     .three-container {
         height: 65vh;
@@ -78,18 +76,23 @@
         border-bottom-right-radius: 7em;
     }
 
-    .applicant-applicant-profile {
+    .applicant-profile {
         height: 30vh;
         background-image: url(/Img/applicantprofile.png);
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
-        transition: 0.25s all ease-in-out;
+        cursor: zoom-in;
     }
-        .applicant-applicant-profile:hover {
-            margin-top: 2.5vh;
-            transform: scale(1.5);
-        }
+
+    .applicant-profile-zoomed {
+        height: 100%;
+        background-image: url(/Img/applicantprofile.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        cursor: zoom-out;        
+    }
 
     .applicant-job-portal {
         height: 30vh;
@@ -97,13 +100,16 @@
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
-        transition: 0.25s all ease-in-out;
+        cursor: zoom-in;
     }
 
-    .applicant-job-portal:hover {
-        margin-top: 2.5vh;
-        transform: scale(1.5);
-    
+    .applicant-job-portal-zoomed {
+        height: 100%;
+        background-image: url(/Img/applicantjobportal.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        cursor: zoom-out;        
     }
 
     .applicant-my-jobs {
@@ -112,54 +118,17 @@
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
-        transition: 0.25s all ease-in-out;
+        cursor: zoom-in;
     }
 
-    .applicant-my-jobs:hover {
-        margin-top: 2.5vh;
-        transform: scale(1.5);
-    }
-
-    .hr-job-portal {
-        height: 30vh;
-        background-image: url(/Img/applicantcontrol.png);
+    .applicant-my-jobs-zoomed {
+        height: 100%;
+        background-image: url(/Img/myjobs.png);
         background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
-        transition: 0.25s all ease-in-out;
-    }
-
-    .hr-job-portal:hover {
-        margin-top: 2.5vh;
-        transform: scale(1.5);
-    }
-    .hr-data-analytics {
-        height: 30vh;
-        background-image: url(/Img/dat.png);
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-        transition: 0.25s all ease-in-out;
-    }
-
-    .hr-data-analytics-profile:hover {
-        margin-top: 2.5vh;
-        transform: scale(1.5);
-    }
-
-    .hr-create-a-job {
-        height: 30vh;
-        background-image: url(/Img/createjob.png);
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-        transition: 0.25s all ease-in-out;
-    }
-
-    .hr-create-a-job:hover {
-        margin-top: 2.5vh;
-        transform: scale(1.5);
-    }
+        cursor: zoom-out;
+    }   
 
     p {
         color: #004393;
@@ -169,6 +138,13 @@
         text-align: center;
     }
 
+    .applicant-zoomed-image-location {
+        width: 90%;
+        height: 80vh;
+        position: absolute;
+        top: 0%;
+        left: 5%;
+    }
    
 </style>
 
@@ -180,7 +156,7 @@
         <div class="three">
             <div class="services-label">APPLICANT PROFILE</div>
             <div class="services-image">
-                <div class="applicant-applicant-profile"></div>
+                <div class="applicant-profile" @onclick="zoomApplicantProfile"></div>
             </div>
             <div class="services-bottom">
                 <p>
@@ -188,12 +164,12 @@
                 </p>
             </div>
         </div>
-        
+
 
         <div class="three">
             <div class="services-label">JOB PORTAL</div>
             <div class="services-image">
-                <div class="applicant-job-portal"></div>
+                <div class="applicant-job-portal" @onclick="zoomApplicantJobPortal"></div>
             </div>
             <div class="services-bottom">
                 <p>
@@ -201,12 +177,12 @@
                 </p>
             </div>
         </div>
-       
+
 
         <div class="three">
             <div class="services-label">MY JOBS</div>
             <div class="services-image">
-                <div class="applicant-my-jobs"></div>
+                <div class="applicant-my-jobs" @onclick="zoomApplicantMyJobs"></div>
             </div>
             <div class="services-bottom">
                 <p>
@@ -214,11 +190,68 @@
                 </p>
             </div>
         </div>
-        
     </div>
+
+    @if (zoomedApplicantProfile)
+    {
+        <div class="applicant-zoomed-image-location">
+            <div class="applicant-profile-zoomed" @onclick="zoomApplicantProfile"></div>
+        </div>
+    }
+
+    @if (zoomededApplicantJobPortal)
+    {
+        <div class="applicant-zoomed-image-location">
+            <div class="applicant-job-portal-zoomed" @onclick="zoomApplicantJobPortal"></div>
+        </div>
+    }
+    @if (zoomedApplicantMyJobs)
+	{
+        <div class="applicant-zoomed-image-location">
+            <div class="applicant-my-jobs-zoomed" @onclick="zoomApplicantMyJobs"></div>
+        </div>
+	}
 </div>
 
 @code {
-   
-    
+
+    private bool zoomedApplicantProfile = false;
+    private bool zoomededApplicantJobPortal = false;
+    private bool zoomedApplicantMyJobs = false;
+
+    private void zoomApplicantProfile()
+    {
+        if (zoomedApplicantProfile)
+        {
+            zoomedApplicantProfile = false;
+        }
+        else
+        {
+            zoomedApplicantProfile = true;
+        }
+    }
+
+    private void zoomApplicantJobPortal()
+    {
+        if (zoomededApplicantJobPortal)
+        {
+            zoomededApplicantJobPortal = false;
+        }
+        else
+        {
+            zoomededApplicantJobPortal = true;
+        }
+    }
+
+    private void zoomApplicantMyJobs()
+    {
+        if (zoomedApplicantMyJobs)
+        {
+            zoomedApplicantMyJobs = false;
+        }
+        else
+        {
+            zoomedApplicantMyJobs = true;
+        }
+    }
 }
