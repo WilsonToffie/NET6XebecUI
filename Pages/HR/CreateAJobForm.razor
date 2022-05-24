@@ -767,9 +767,9 @@ else
                                 <!--@bind-Value=" @TempJob.Department.Name"-->
                                 <option selected disabled value="0">Select Department</option>
                                 @foreach (var item in Departments)
-                                        {
-                                    <option value="@item.Id">@item.Name</option>
-                                        }
+                                {
+                                <option value="@item.Id">@item.Name</option>
+                                }
                             </InputSelect>
                         </div>
                         <div class="createjob-form-individual">
@@ -788,11 +788,11 @@ else
                             <div class="text-font-styling">Company Information</div>
                             <InputSelect class="createjob-select" @bind-Value="TempJob.Company" @onchange="OnCompanyChanged">
                                 <!--style="width: 107%;"-->
-                                <option selected disabled>Select Company</option>
+                                <option selected disabled >Select Company</option>
                                 @foreach (var company in Company)
-                                        {
+                                {
                                     <option>@company</option>
-                                        }
+                                }
                             </InputSelect>
                         </div>
                         <div class="createjob-form-individual">
@@ -809,11 +809,11 @@ else
                         <div class="createjob-form-individual">
                             <div class="text-font-styling">Location Information</div>
                             <InputSelect class="createjob-select" @bind-Value="TempJob.Policy" @onchange="OnPolicyChanged">
-                                <option selected disabled>Select WFH Policy</option>
+                                <option selected disabled >Select WFH Policy</option>
                                 @foreach (var location in Policies)
-                                        {
+                                {
                                     <option>@location</option>
-                                        }
+                                }
                             </InputSelect>
                         </div>
                         <div class="createjob-form-individual">
