@@ -2,6 +2,14 @@
     $('#small-cards').scrollTop(0);
 }
 
+export function CursorWait() {
+    document.body.style.cursor = 'wait';
+}
+
+export function CursorDefault() {
+    document.body.style.cursor = 'default';
+}
+
 export function ResizeTextArea() {
     var text = $('.description-text');
 
@@ -12,8 +20,10 @@ export function ResizeTextArea() {
     text.each(function () {
         $(this).attr('rows', 1);
         resize($(this));
-        if ($('.description-text').height() >= 290)
+        if ($('.description-text').height() >= 290) {
+            $('.description-text').height(370);
             $('.description-text').css('overflow', 'auto');
+        }
         else
             $('.description-text').css('overflow', 'hidden');
     });
