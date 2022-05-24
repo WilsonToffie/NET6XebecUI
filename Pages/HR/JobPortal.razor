@@ -347,6 +347,11 @@
         .filter-button-trans:hover {
             transform: rotate(0deg);
         }
+
+    .center-items{
+        display: flex !important; 
+        justify-content: center !important
+    }
 </style>
 
 @if (ShowingJobPortal)
@@ -767,7 +772,7 @@
                         <h2 class="text-center"><b>Team Assigned For This Job</b></h2>
                     </MudItem>
                     <MudItem Class="overflow-auto" lg="12" md="12" Style="height: 14em">
-                        <MudGrid Class="d-flex justify-content-center" Spacing="1" Style="width: 38em">
+                        <MudGrid Spacing="1" Class="center-items" Style="width: 38em">
                             @foreach (var item in appUserFilter)
                             {
                                 <MudItem lg="3" md="3">
