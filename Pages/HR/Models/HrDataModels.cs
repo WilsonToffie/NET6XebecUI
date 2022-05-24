@@ -439,9 +439,5 @@ namespace XebecPortal.UI.Pages.HR
         public AnswerType AnswerType { get; set; }
     }
 
-    public class jobState
-    {
-        // jobID, questions, collaborators,     
-    }
 
 }
