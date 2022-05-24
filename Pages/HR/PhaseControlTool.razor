@@ -432,14 +432,76 @@
     }
 </style>
 
+<div class="create-job-summary">
+    <div class="page-title">Summary</div>
 
-@if (prev)
-{
-    <Collaborators2 JobId="CurrentJobId" ChosenQuestions="ChosenQuestions" TempJob="TempJob"></Collaborators2>
-}
-else
-{
-    <div class="form-container">
+    <div class="summary-container">
+        <div class="text-center">
+            @foreach (var item in phasesAdded)
+            {
+                <span style="color: white">@item.description</span>
+                <br />
+            }
+        </div>
+    </div>
+</div>
+
+<div class="createjob-form-container">
+    <h4 class="form-subheading text-center">PHASE FORM</h4>
+    <br />
+    <div>
+        <div class="grid-container">
+            <div class="grid-item">
+                <select class="select-form" style="width: 15em" @onchange="customAddPhase">
+                    <option selected disabled="disabled">Select Phase</option>
+                    <optgroup label="Select All Phases">
+                        <option @onclick="AddAllPhases" value="50">Add All Phases</option>
+                    </optgroup>
+                    <optgroup label="Phase Options">
+                        @foreach (var item in phases)
+                        {
+                            <option value="@item.id">@item.description</option>
+                        }
+                    </optgroup>
+                </select>
+            </div>
+            <div class="grid-item">
+                <button class="btn rounded-3" style="background: #00bcae" @onclick="OpenAddPhaseDialog">Add Phase</button>
+            </div>
+            <div class="grid-item">
+                <button class="btn rounded-3" style="background: #00bcae" @onclick="OpenDeletePhaseDialog">Delete Phase</button>
+            </div>
+            <div class="grid-item d-flex justify-content-center">
+                <div class="overflow-auto" style="width: 15em; height: 21em">
+                    @if (phasesAdded?.Any() == true)
+                    {
+                        foreach (var item in phasesAdded)
+                        {
+                            <br />
+                            <div class="card" style="width: 14em">
+                                <div class="card-header d-flex justify-content-end">
+                                    <button type="button" class="btn-close" @onclick="() => DeletePhaseOrderPhase(item)"></button>
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">@item.description</h5>
+                                </div>
+                            </div>
+                        }
+                        <br />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bottom-buttons">
+    <button class="button-functions">Prev</button>
+    <button class="button-functions">Save</button>
+    <button class="button-functions">Next</button>
+</div>
+
+@*<div class="form-container">
         <div class="inner-form-container">
             <div class="form-heading">
                 <h4 class="form-subheading">PHASE FORM</h4>
@@ -499,13 +561,10 @@ else
         </div>
     </div>
     <div class="nav-btns">
-        <button class="down-button" @onclick="Previous">Prev</button>
-        <button class="down-button" @onclick="SubmitPhases">Submit</button>
-    </div>
-}
-
-
-
+        <button class="down-button">Prev</button>
+        <button class="down-button">Save</button>
+        <button class="down-button">Next</button>
+    </div>*@
 
 
 
@@ -573,53 +632,32 @@ else
     [Parameter]
     public EventCallback<CreateJobPost> TempJobChanged { get; set; }
 
-    //public int CurrentJobId = 12;
+    //[Parameter]
+    //public int CurrentJobId { get; set; }
 
-    [Parameter]
-    public int CurrentJobId { get; set; }
+    public int CurrentJobId = 1;
 
-    [Parameter]
-    public EventCallback<int> JobIdChanged { get; set; }
-
-
-    //these are needed if we want to go back to collaboratos2 from this page, as that page needs these params to load
-    [Parameter]
-    public List<FormQuestion> ChosenQuestions { get; set; }
-
-    [Parameter]
-    public EventCallback<FormQuestion> ChosenQuestionChanged { get; set; }
-
-
-    //nav stuff for demo - Daniel
-    bool prev;
-    bool next;
+    //[Parameter]
+    //public EventCallback<int> JobIdChanged { get; set; }
 
     private List<ApplicationPhase> phases = new List<ApplicationPhase>();
     private List<ApplicationPhase> phasesAdded = new List<ApplicationPhase>();
+    private IList<Job> jobs = new List<Job>();
+    ApplicationPhase phaseValue = new ApplicationPhase();
     ApplicationPhase tempPhaseValue = new ApplicationPhase();
-    //private string developerAssigned = "";
+    private string developerAssigned = "";
     private string token;
     private string addPhaseValue;
     private bool isDialogAddPhaseVisible;
     private bool isDialogDeletePhaseVisible;
 
-    Job currentJob = new Job();
-
     protected override async Task OnInitializedAsync()
     {
-
-        prev = false;
-        next = false;
-
         token = await localStorage.GetItemAsync<string>("jwt_token");
 
-        //This is temporary just so we dont get errors when navigating using the top nav - Daniel
-        CurrentJobId = 5;
-
-        currentJob = await httpClient.GetListJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/job/{CurrentJobId}", new AuthenticationHeaderValue("Bearer", token));
-
-
         phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
+
+        jobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job", new AuthenticationHeaderValue("Bearer", token));
     }
 
 
@@ -652,18 +690,15 @@ else
             temp.JobId = CurrentJobId;
             temp.ApplicationPhaseId = phase.id;
             await httpClient.PostJsonAsync<JobApplicationPhase>("https://xebecapi.azurewebsites.net/api/jobapplicationphase", temp, new AuthenticationHeaderValue("Bearer", token));
+
+
+            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobapplicationphase", phaseValue);
         }
-
-
-        //also update job to be 'Open'
-
-        currentJob.Status = "Open";
-
-        await httpClient.PutJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/job/{CurrentJobId}", currentJob, new AuthenticationHeaderValue("Bearer", token));
     }
 
     private void AddPhase(ApplicationPhase phase)
     {
+
         if (!phasesAdded.Contains(phase))
         {
             phasesAdded.Add(phase);
@@ -688,6 +723,101 @@ else
     {
         //this just removes from the list
         phasesAdded.Remove(phase);
+    }
+
+    private async Task Submit()
+    {
+        TempJob.JobPhases = phasesAdded;
+        await TempJobChanged.InvokeAsync(TempJob);
+
+        //Job page post
+        Job job = new Job();
+        job.MinimumExperience = null;
+
+        job.Title = TempJob.Title;
+        job.Description = TempJob.Description;
+        job.Company = TempJob.Company;
+        job.Location = TempJob.Location;
+        job.DueDate = TempJob.DueDate;
+        job.CreationDate = TempJob.CreationDate;
+
+        Console.WriteLine(job.Title);
+        Console.WriteLine(job.Description);
+        Console.WriteLine(job.Company);
+        Console.WriteLine(job.Location);
+        Console.WriteLine(job.DueDate);
+        Console.WriteLine(job.CreationDate);
+
+        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/job", job);
+        job = null;
+
+        job = await GetJob();
+
+        SubmitRest(job);
+    }
+
+    private async Task<Job> GetJob()
+    {
+        List<Job> ListOfJobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job", new AuthenticationHeaderValue("Bearer", token));
+        return ListOfJobs.LastOrDefault(x => x.Title == TempJob.Title);
+    }
+
+    private async Task SubmitRest(Job job)
+    {
+        //Add Job type to JobTypeHelpers
+        JobTypeHelper jobTypeHelper = new JobTypeHelper();
+        jobTypeHelper.JobId = job.Id;
+        jobTypeHelper.JobTypeId = TempJob.JobType.Id;
+
+        Console.WriteLine("JobType that should post.");
+        Console.WriteLine("JobTypeHelper ID: " + job.Id);
+        Console.WriteLine("JobTypeHelper JobTypeId: " + TempJob.JobType.Id);
+
+        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobtypehelper", jobTypeHelper);
+
+        //Add selected platforms to JobPlatformHelpers
+        foreach (var platform in TempJob.JobPlatforms)
+        {
+            JobPlatformHelper jobPlatformHelper = new JobPlatformHelper();
+            jobPlatformHelper.JobId = job.Id;
+            jobPlatformHelper.JobPlatformId = platform.id;
+
+            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobplatformhelper", jobPlatformHelper);
+        }
+
+        //Add collaborators to CollaboratorsAssigned
+        foreach (var Collaborator in TempJob.Collaborators)
+        {
+            Collaborator collaborator = new Collaborator();
+            collaborator.Name = Collaborator.name;
+            collaborator.JobId = job.Id;
+            collaborator.AppUserId = Collaborator.id;
+
+            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", collaborator);
+        }
+
+        //Add form questions
+        foreach (var formQuestion in TempJob.formQuestions)
+        {
+            formQuestion.jobId = job.Id;
+        }
+        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Questionnaire/lst", TempJob.formQuestions);
+
+        //Add Application Phases
+        foreach (var phase in phasesAdded)
+        {
+            Console.WriteLine("Phases that should post.");
+            JobApplicationPhase JobApplicationPhase_ = new JobApplicationPhase();
+            JobApplicationPhase_.JobId = job.Id;
+            JobApplicationPhase_.ApplicationPhaseId = phase.id;
+
+            Console.WriteLine(JobApplicationPhase_.Id);
+            Console.WriteLine(JobApplicationPhase_.JobId);
+            Console.WriteLine(JobApplicationPhase_.ApplicationPhaseId);
+            await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/jobapplicationphase/{job.Id}", JobApplicationPhase_);
+        }
+
+        await TempJobChanged.InvokeAsync(TempJob);
     }
 
     private void OpenAddPhaseDialog()
@@ -715,112 +845,4 @@ else
         }
 
     }
-
-    private void Next()
-    {
-        next = true;
-    }
-
-    private void Previous()
-    {
-        prev = true;
-
-    }
-
-    //private async Task Submit()
-    //{
-    //    TempJob.JobPhases = phasesAdded;
-    //    await TempJobChanged.InvokeAsync(TempJob);
-
-    //    //Job page post
-    //    Job job = new Job();
-    //    job.MinimumExperience = null;
-
-    //    job.Title = TempJob.Title;
-    //    job.Description = TempJob.Description;
-    //    job.Company = TempJob.Company;
-    //    job.Location = TempJob.Location;
-    //    job.DueDate = TempJob.DueDate;
-    //    job.CreationDate = TempJob.CreationDate;
-
-    //    Console.WriteLine(job.Title);
-    //    Console.WriteLine(job.Description);
-    //    Console.WriteLine(job.Company);
-    //    Console.WriteLine(job.Location);
-    //    Console.WriteLine(job.DueDate);
-    //    Console.WriteLine(job.CreationDate);
-
-    //    await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/job", job);
-    //    job = null;
-
-    //    job = await GetJob();
-
-    //    SubmitRest(job);
-    //}
-
-    //private async Task<Job> GetJob()
-    //{
-    //    List<Job> ListOfJobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job", new AuthenticationHeaderValue("Bearer", token));
-    //    return ListOfJobs.LastOrDefault(x => x.Title == TempJob.Title);
-    //}
-
-    //private async Task SubmitRest(Job job)
-    //{
-    //    //Add Job type to JobTypeHelpers
-    //    JobTypeHelper jobTypeHelper = new JobTypeHelper();
-    //    jobTypeHelper.JobId = job.Id;
-    //    jobTypeHelper.JobTypeId = TempJob.JobType.Id;
-
-    //    Console.WriteLine("JobType that should post.");
-    //    Console.WriteLine("JobTypeHelper ID: " + job.Id);
-    //    Console.WriteLine("JobTypeHelper JobTypeId: " + TempJob.JobType.Id);
-
-    //    await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobtypehelper", jobTypeHelper);
-
-    //    //Add selected platforms to JobPlatformHelpers
-    //    foreach (var platform in TempJob.JobPlatforms)
-    //    {
-    //        JobPlatformHelper jobPlatformHelper = new JobPlatformHelper();
-    //        jobPlatformHelper.JobId = job.Id;
-    //        jobPlatformHelper.JobPlatformId = platform.id;
-
-    //        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobplatformhelper", jobPlatformHelper);
-    //    }
-
-    //    //Add collaborators to CollaboratorsAssigned
-    //    foreach (var Collaborator in TempJob.Collaborators)
-    //    {
-    //        Collaborator collaborator = new Collaborator();
-    //        collaborator.Name = Collaborator.name;
-    //        collaborator.JobId = job.Id;
-    //        collaborator.AppUserId = Collaborator.id;
-
-    //        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", collaborator);
-    //    }
-
-    //    //Add form questions
-    //    foreach (var formQuestion in TempJob.formQuestions)
-    //    {
-    //        formQuestion.jobId = job.Id;
-    //    }
-    //    await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Questionnaire/lst", TempJob.formQuestions);
-
-    //    //Add Application Phases
-    //    foreach (var phase in phasesAdded)
-    //    {
-    //        Console.WriteLine("Phases that should post.");
-    //        JobApplicationPhase JobApplicationPhase_ = new JobApplicationPhase();
-    //        JobApplicationPhase_.JobId = job.Id;
-    //        JobApplicationPhase_.ApplicationPhaseId = phase.id;
-
-    //        Console.WriteLine(JobApplicationPhase_.Id);
-    //        Console.WriteLine(JobApplicationPhase_.JobId);
-    //        Console.WriteLine(JobApplicationPhase_.ApplicationPhaseId);
-    //        await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/jobapplicationphase/{job.Id}", JobApplicationPhase_);
-    //    }
-
-    //    await TempJobChanged.InvokeAsync(TempJob);
-    //}
-
-
 }

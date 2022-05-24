@@ -479,7 +479,7 @@
             <div id="small-cards" class="col-2 job-portal-left overflow-auto">
 
                 <!--Card list for jobs-->
-                <div class="col-12" style="height: 45em !important; margin-top: 1vh">
+                <div class="col-12" style="height: 44em !important; margin-top: 1vh">
                     @foreach (var item in jobListFilter)
                     {
                         <div class="card job-portal-card small-card-colour-change" @onclick="() => DisplayJobDetail(item.Id)" style="@GetStyling(item) background-color: @SmallCardActive(item.Id)">
@@ -499,7 +499,7 @@
 
                 <!--The Form for applying a job-->
                 <div>
-                    <div class="col-12" style="height: 45em !important; margin-top: 1vh">
+                    <div class="col-12" style="height: 44em !important; margin-top: 1vh">
                         <div class="col-12 job-portal-right">
                             <form class="job-portal-form">
                                 <div class="row">
@@ -552,7 +552,7 @@
                 </div>
             </div>
 
-            <div class="col-1 d-flex justify-content-end" style="height: 45em !important">
+            <div class="col-1 d-flex justify-content-end" style="height: 44em !important">
                 <div style="padding-top: 3em">
                     <button class="detail-button-colour filter-button-trans rounded-pill" type="button" style="width: 8em; height: 3em" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilter">Filters</button>
                 </div>
