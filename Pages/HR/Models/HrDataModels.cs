@@ -101,27 +101,27 @@ namespace XebecPortal.UI.Pages.HR
         [Required]
         public string Description { get; set; } = string.Empty;
         [Required]
-        public string Company { get; set; } = string.Empty;
+        public string Company { get; set; } = "Select Company"; // Remember to change this to string.Empty
         public decimal? Compensation { get; set; } = null;
         public int? MinimumExperience { get; set; } = 0;
         [Required]
-        public string Location { get; set; } = string.Empty;
+        public string Location { get; set; } = "Select Office Location"; // Remember to change this to string.Empty
         //[Required]
         //public string Department { get; set; }
         [Required]
-        public string Policy { get; set; } = string.Empty;// Not sure what data type it should be, but policy is a required field   
+        public string Policy { get; set; } = "Select WFH Policy";//string.Empty;// Not sure what data type it should be, but policy is a required field   
         public int JobTypeId { get; set; } = 0;
         public int DepartmentId { get; set; } = 0;// testing problem
         public string Status { get; set; }  = string.Empty;
         [Required]
-        public DateTime DueDate { get; set; } = DateTime.Today;
-        public DateTime CreationDate { get; set; } = DateTime.Today;
-        public JobType JobType { get; set; } = null;
-        public Department Department { get; set; } = null;
-        public List<JobPlatform> JobPlatforms { get; set; } = null;
-        public List<ApplicationPhase> JobPhases { get; set; } = null;
-        public List<FormQuestion> formQuestions { get; set; } = null;
-        public List<AppUser> Collaborators { get; set; } = null;
+        public DateTime DueDate { get; set; } = DateTime.Today.Date;
+        public DateTime CreationDate { get; set; } = DateTime.Today.Date;
+        public JobType JobType { get; set; } = new();
+        public Department Department { get; set; } = new();
+        public List<JobPlatform> JobPlatforms { get; set; } = new ();
+        public List<ApplicationPhase> JobPhases { get; set; } = new();
+        public List<FormQuestion> formQuestions { get; set; } = new();
+        public List<AppUser> Collaborators { get; set; } = new();
         
     }
 

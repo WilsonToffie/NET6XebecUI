@@ -489,8 +489,8 @@
         <div class="circle"></div>
         <div class="circle"></div>
         <div class="circle"></div>
-        <div class="circle"></div>
-        <div class="circle"></div>
+        @*<div class="circle"></div>
+        <div class="circle"></div>*@
     </div>
     <div class="selected-rod"></div>
     <div class="progress-rod-page-2"></div>
@@ -500,17 +500,17 @@
         <div>3</div>
         <div>4</div>
         <div>5</div>
-        <div>6</div>
-        <div>7</div>
+        @*<div>6</div>
+        <div>7</div>*@
     </div>
     <div class="TextDisplay">
         <div class="selected-create-a-job-text">Create A Job</div>
         <div class="selected-application-form-text">Build Application Form</div>
         <div class="collaboration-text">Select Collaboration</div>
-        <div class="collaboration-text-part-2">Select Collaboration Part 2</div>
+        @*<div class="collaboration-text-part-2">Select Collaboration Part 2</div>*@
         <div class="phases-text">Select Phases</div>
         <div class="post-a-job-text">Post Job</div>
-        <div class="summary-text">Summary</div>
+        @*<div class="summary-text">Summary</div>*@
     </div>
 @if (prevPage == false && nextPage == false)
 {
@@ -982,11 +982,11 @@
 }
 else if (prevPage == true)
 {
-    <XebecPortal.UI.Pages.HR.CreateAJobForm @bind-TempJob="TempJob" />
+    <XebecPortal.UI.Pages.HR.CreateAJobForm />
 }
 else if (nextPage == true)
 {
-    <XebecPortal.UI.Pages.HR.Collaborators @bind-ChosenQuestions="FormQuestions" @bind-JobId="jobId" />
+    <XebecPortal.UI.Pages.HR.PhaseControlTool />
 }
 
 @code {
