@@ -48,8 +48,11 @@ namespace XebecPortal.UI.Pages.HR
         private bool createjobPlatform;
         private bool deleteJobPlatform;
         private bool addedNewPlatform;
+
+        bool prevPage;
         protected override async Task OnInitializedAsync()
         {
+            prevPage = false;
             Console.WriteLine("TempjobId :" + TempJob.Id);
             token = await localStorage.GetItemAsync<string>("jwt_token");
             TempJob.Id = 217;
@@ -210,6 +213,11 @@ namespace XebecPortal.UI.Pages.HR
             recentlyAdded.Clear();
             //await OnInitializedAsync();
             await createPlatform(false);
+        }
+
+        private void Prev()
+        {
+            prevPage = true;
         }
     }
 }

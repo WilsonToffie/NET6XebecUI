@@ -217,7 +217,10 @@
         }
 </style>
 
-<div class="top-Image-thing">
+
+@if(!prevPage)
+{
+    <div class="top-Image-thing">
         <div class="progressed-circle"></div>
         <div class="progressed-circle"></div>
         <div class="progressed-circle"></div>
@@ -392,13 +395,20 @@
             <div class="validation-message"><ValidationSummary /></div>
 
             <div class="bottom-buttons">
-                <input type="button" value="Prev" class="button-functions" />
+                <input type="button" value="Prev" class="button-functions" @onclick="Prev"/>
                 <input type="button" value="Save" class="button-functions" @onclick="Save" />
                 <input type="button" value="Next" class="button-functions" />
             </div>
         }
     </EditForm>
 </div>
+}
+else
+{
+    <Collaborators/>
+}
+
+
         
 @*<div class="layout">
     <div class="row content-middle">
