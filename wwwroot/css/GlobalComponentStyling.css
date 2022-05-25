@@ -70,17 +70,30 @@ p{
 }
 
 .progress-rod-page-2 {
-    width: 63%;
+    /*width: 63%;
     position: absolute;
     height: 2vh;
     bottom: 83%;
     left: 30%;
     background-color: #A9ABA7;
+    z-index: -1;*/
+    width: 50%;
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 40%;
+    background-color: #A9ABA7;
     z-index: -1;
 }
 
 .progress-rod-page-3 {
-    width: 50%;
+    /*width: 50%;
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 43%;
+    background-color: #A9ABA7;
+    z-index: -1;*/
     position: absolute;
     height: 2vh;
     bottom: 83%;
@@ -90,11 +103,17 @@ p{
 }
 
 .progress-rod-page-4 {
-    width: 36%;
+    /*width: 36%;
     position: absolute;
     height: 2vh;
     bottom: 83%;
     left: 57%;
+    background-color: #A9ABA7;
+    z-index: -1;*/
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 80%;
     background-color: #A9ABA7;
     z-index: -1;
 }
@@ -117,7 +136,14 @@ p{
 }
 
 .selected-rod {
-    width: 22%;
+    /*width: 23%;
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 8%;
+    background-color: #00bcae;
+    z-index: -1;*/
+    width: 32%;
     position: absolute;
     height: 2vh;
     bottom: 83%;
@@ -127,7 +153,14 @@ p{
 }
 
 .selected-rod-selected-phase-page {
-    width: 35%;
+    /*width: 35%;
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 8%;
+    background-color: #00bcae;
+    z-index: -1;*/
+    width: 52%;
     position: absolute;
     height: 2vh;
     bottom: 83%;
@@ -137,7 +170,14 @@ p{
 }
 
 .selected-rod-selected-collaborators-page {
-    width: 49%;
+    /*width: 49%;
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 8%;
+    background-color: #00bcae;
+    z-index: -1;*/
+    width: 72%;
     position: absolute;
     height: 2vh;
     bottom: 83%;
@@ -173,33 +213,50 @@ p{
 }
 
 .selected-create-a-job-text {
+    /*color: #00bcae;
+    position: absolute;
+    top: 21%;
+    left: 4%;*/
     color: #00bcae;
     position: absolute;
     top: 21%;
-    left: 4%;
+    left: 7%;   
 }
 
 .application-form-text {
-    left: 17%;
+    /* left: 17%;
+    position: absolute;
+    top: 21%;*/
+    left: 25%;
     position: absolute;
     top: 21%;
 }
 
 .selected-application-form-text {
-    left: 17%;
+    /*left: 17%;
     position: absolute;
-    color: #00bcae;
     top: 21%;
+    */
+    left: 25%;
+    position: absolute;
+    top: 21%;
+    color: #00bcae;
 }
 
 .collaboration-text {
-    left: 45.5%;
+    /*left: 45.5%;
+    position: absolute;
+    top: 21%;*/
+    left: 65.5%;
     position: absolute;
     top: 21%;
 }
 
 .selected-collaboration-text {
-    left: 45.5%;
+    /*left: 45.5%;
+    position: absolute;
+    top: 21%;*/
+    left: 65.5%;
     position: absolute;
     top: 21%;
     color: #00bcae;
@@ -219,20 +276,29 @@ p{
 }
 
 .phases-text {
-    left: 32.5%;
+    /*left: 32.5%;
+    position: absolute;
+    top: 21%;*/
+    left: 47%;
     position: absolute;
     top: 21%;
 }
 
 .selected-phases-text {
-    left: 32.5%;
+    /*left: 32.5%;
+    position: absolute;
+    top: 21%;*/
+    left: 47%;
     position: absolute;
     top: 21%;
     color: #00bcae;
 }
 
 .post-a-job-text {
-    left: 76.5%;
+    /*left: 76.5%;
+    position: absolute;
+    top: 21%;*/
+    left: 88%;
     position: absolute;
     top: 21%;
 }

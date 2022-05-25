@@ -67,7 +67,7 @@ namespace XebecPortal.UI.Pages.HR
 
             jobTypes = await HttpClient.GetListJsonAsync<List<JobType>>($"https://xebecapi.azurewebsites.net/api/jobtype", new AuthenticationHeaderValue("Bearer", token));
             Departments = await HttpClient.GetListJsonAsync<List<Department>>($"https://xebecapi.azurewebsites.net/api/Department", new AuthenticationHeaderValue("Bearer", token));
-            TempJob.DueDate = TempJob.CreationDate = DateTime.Today;
+            TempJob.DueDate = TempJob.CreationDate = DateTime.Now;
         }
 
 
