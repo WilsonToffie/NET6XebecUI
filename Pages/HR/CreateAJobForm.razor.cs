@@ -225,7 +225,8 @@ namespace XebecPortal.UI.Pages.HR
             foreach (var item in checkJobList)
             {
                 if (item.Title.Equals(TempJob.Title) && item.Description.Equals(TempJob.Description) && item.Company.Equals(TempJob.Company) && item.Location.Equals(TempJob.Location) && item.DepartmentId.Equals(departments.Id) && item.Policy.Equals(TempJob.Policy) && item.Status.Equals("Draft")) // && item.DueDate.Equals(TempJob.DueDate) && item.JobTypes.Equals(jobType)
-                {                    
+                {
+                    TempJob.Id = item.Id;
                     existJobId = item.Id; 
                     createJobExists = true;
                 }
@@ -237,19 +238,6 @@ namespace XebecPortal.UI.Pages.HR
 
             foreach (var item in jobList)
             {
-                Console.WriteLine("Title: " + item.Title);
-                Console.WriteLine("Description: " + item.Description);
-                Console.WriteLine("Company: " + item.Company);
-                Console.WriteLine("Location: " + item.Location);
-                Console.WriteLine("DepartmentId: " + item.DepartmentId);
-                // Console.WriteLine("Department: " + item.Department);
-                Console.WriteLine("Policy: " + item.Policy);
-                Console.WriteLine("Status: " + item.Status);
-                Console.WriteLine("Due Date: " + item.DueDate);
-                Console.WriteLine("Creation Date: " + item.CreationDate);
-                //Console.WriteLine("JobTypes: " + item.JobTypes);
-
-                Console.WriteLine(item);
                 if (createJobExists)
                 {
                     Console.WriteLine("Job exists already with ID of: " + existJobId);

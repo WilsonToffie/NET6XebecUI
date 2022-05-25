@@ -7,7 +7,7 @@
 @inject IJSRuntime jsRuntime
 @inject NavigationManager nav
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
-
+@inject CreateJobPost TempJob
 <style>
     .collaborators2-container {
         width: 100%;
@@ -45,8 +45,38 @@
         color: #004393;
     }
 </style>
+<div class="top-Image-thing">
+        <div class="progressed-circle"></div>
+        <div class="progressed-circle"></div>
+        <div class="progressed-circle"></div>
+        <div class="progressed-circle"></div>
+        <div class="progressed-circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+ </div>
+    <div class="selected-rod-selected-collaborators-page-2"></div>
+    <div class="progress-rod-page-5"></div>
+    <div class="NumberDisplay">
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div>5</div>
+        <div>6</div>
+        <div>7</div>
+    </div>
+    <div class="TextDisplay">
+        <div class="selected-create-a-job-text">Create A Job</div>
+        <div class="selected-application-form-text">Build Application Form</div>
+        <div class="selected-phases-text">Select Phases</div>
+        <div class="selected-collaboration-text">Select Collaboration</div>
+        <div class="selected-collaboration-text-part-2">Select Collaboration Part 2</div>        
+        <div class="post-a-job-text">Post Job</div>
+        <div class="summary-text">Summary</div>
+    </div>
 
-@if (!prevPage && !nextPage)
+
+@*@if (!prevPage && !nextPage)
 {
     <div class="create-job-summary">
         <div class="page-title">Summary</div>
@@ -55,17 +85,17 @@
             @if (ChosenQuestions != null)
             {
                 foreach (var formQuestion in ChosenQuestions)
-                {
-                    <div class="right-list-item-preview">
+                {*@
+                    @*<div class="right-list-item-preview">
                         <div class="close-item-panel">
                         </div>
                         <div class="summary-preview-item-body">
                             <div class="summary-preview-item-description">
-                                <p style="margin:0 0 0px;">@formQuestion.question</p>
+                                <p style="margin:0 0 0px;">@formQuestion.question</p>*@
                                 @*<span @onclick="() => DeleteFormQuestion(formQuestion)">
                                 <i class="fas fa-times"></i>
                             </span>*@
-                            </div>
+                           @* </div>
                             <div class="preview-item-control">
                                 @{
                                     var placeholder = "Expected answer";
@@ -101,17 +131,17 @@
                                 }
                             </div>
                         </div>
-                    </div>
-                }
+                    </div>*@
+               @* }
             }
         </div>
-    </div>
+    </div>*@
 
     <div class="createjob-form-container">
         <h3 class="form-subheading text-center" style="font-weight:600">APPLICATION FORM</h3>
         <br />
         <div class="selects-container">
-            @foreach (var question in ChosenQuestions)
+           @* @foreach (var question in ChosenQuestions)
             {
                 <div class="question-selected">
 
@@ -125,7 +155,7 @@
                     </select>
                 </div>
 
-            }
+            }*@
         </div>
     </div>
 
@@ -229,11 +259,11 @@ else if (prevPage)
 
 @code {
 
-    [Parameter]
-    public List<FormQuestion> ChosenQuestions { get; set; }
+    //[Parameter]
+    //public List<FormQuestion> ChosenQuestions { get; set; }
 
-    [Parameter]
-    public EventCallback<FormQuestion> ChosenQuestionChanged { get; set; }
+    //[Parameter]
+    //public EventCallback<FormQuestion> ChosenQuestionChanged { get; set; }
 
     public List<FormQuestion> CollabQuestions = new List<FormQuestion>();
 
