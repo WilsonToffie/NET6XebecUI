@@ -308,6 +308,7 @@
         margin-left: 20px;
         font-weight: bold;
         padding: 15px;
+        overflow-y: scroll;
     }
 
     .left-inner {
@@ -976,7 +977,7 @@
     </div>*@
     <div class="bottom-buttons">
         <input type="button" value="Prev" class="button-functions" @onclick="Prev" />
-        <input type="submit" value="Save" class="button-functions" @onclick="Save" />
+        <input type="submit" value="Save" class="button-functions" @onclick="SaveQuestion" />
         <input type="button" value="Next" class="button-functions" @onclick="Next" />
     </div>
 }
@@ -1024,6 +1025,8 @@ else if (nextPage == true)
     bool ShowDeletePopup = false;
     bool ShowManage = true;
     public CustomQuestion tempQuestion = new CustomQuestion();
+
+    public List<QuestionnaireHrForm> questionnaireHrForms = new List<QuestionnaireHrForm>();
 
     //public CreateJobPost newJobpost = new CreateJobPost();
 
@@ -1181,6 +1184,49 @@ else if (nextPage == true)
     private void Next()
     {
         nextPage = true;
+    }
+
+    public async Task SaveQuestion()
+    {
+        if (FormQuestions != null)
+        {
+            foreach (var question in FormQuestions)
+            {
+                QuestionnaireHrForm tempForm = new()
+                    {
+                        Question = question.question,
+                        Answer = question.answer,
+                        AnswerTypeId = question.answerTypeId,
+                        JobId = jobId
+            };
+
+                Console.WriteLine(tempForm.Question);
+                Console.WriteLine(tempForm.Answer);
+                Console.WriteLine(tempForm.AnswerTypeId);
+                Console.WriteLine(tempForm.JobId);
+
+
+                questionnaireHrForms.Add(tempForm);
+            };
+
+
+            foreach(var question in questionnaireHrForms)
+            {
+                await httpClient.PostJsonAsync<QuestionnaireHrForm>("https://xebecapi.azurewebsites.net/api/questionnaire", question, new AuthenticationHeaderValue("Bearer", token));
+            }
+
+            //var post = await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/questionnaire/lst", questionnaireHrForms, new AuthenticationHeaderValue("Bearer", token));
+            //    if (post.IsSuccessStatusCode)
+            //    {
+            //        await JSRuntime.InvokeAsync<object>("alert", "Questions saved successfully");
+            //    }
+            Console.WriteLine("success!");
+            
+
+
+        }
+        //await httpClient.PostJsonAsync<List<FormQuestion>>("https://xebecapi.azurewebsites.net/api/questionnaire/lst", FormQuestions, new AuthenticationHeaderValue("Bearer", token));
+        //Console.WriteLine("success!");
     }
 
 }

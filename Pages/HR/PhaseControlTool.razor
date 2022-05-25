@@ -432,7 +432,17 @@
     }
 </style>
 <!--The HTML for the progress bar-->
- <div class="top-Image-thing">
+@if(prevPage)
+{
+    <ApplicationFormControlTool/>
+}
+else if(nextPage)
+{
+    <Collaborators/>
+}
+else
+{
+     <div class="top-Image-thing">
         <div class="progressed-circle"></div>
         <div class="progressed-circle"></div>
         <div class="progressed-circle"></div>
@@ -527,10 +537,13 @@
 </div>
 
 <div class="bottom-buttons">
-    <button class="button-functions">Prev</button>
-    <button class="button-functions">Save</button>
-    <button class="button-functions">Next</button>
+    <button class="button-functions" @onclick="Previous">Prev</button>
+    <button class="button-functions" @onclick="SubmitPhases">Save</button>
+    <button class="button-functions" @onclick="Next">Next</button>
 </div>
+}
+
+
 
 @*<div class="form-container">
         <div class="inner-form-container">
@@ -538,7 +551,7 @@
                 <h4 class="form-subheading">PHASE FORM</h4>
             </div>
             <br />
-            <div>
+            <div>prev
                 <div class="grid-container">
                     <div class="grid-item">
                         <select class="select-form" style="width: 15em" @onchange="customAddPhase">
@@ -682,6 +695,10 @@
     private bool isDialogAddPhaseVisible;
     private bool isDialogDeletePhaseVisible;
     public int CurrentJobId;
+
+    bool nextPage = false;
+    bool prevPage = false;
+
     protected override async Task OnInitializedAsync()
     {
         CurrentJobId = TempJob.Id;
@@ -722,10 +739,8 @@
             temp.JobId = CurrentJobId;
             temp.ApplicationPhaseId = phase.id;
             await httpClient.PostJsonAsync<JobApplicationPhase>("https://xebecapi.azurewebsites.net/api/jobapplicationphase", temp, new AuthenticationHeaderValue("Bearer", token));
-
-
-            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobapplicationphase", phaseValue);
         }
+
     }
 
     private void AddPhase(ApplicationPhase phase)
@@ -875,6 +890,17 @@
         {
             AddPhase(phases.First(x => x.id.ToString() == e.Value.ToString()));
         }
+
+    }
+
+    private void Next()
+    {
+        nextPage = true;
+    }
+
+    private void Previous()
+    {
+        prevPage = true;
 
     }
 }
