@@ -261,13 +261,13 @@
                         <div class="index-form-icon">
                             <i class="fa fa-user"></i>
                         </div>
-                        <input type="email" required placeholder="Email address" @bind="@Email" @ref="SignInElementInFocus" />
+                        <input type="email" required placeholder="Email address" @bind="@Email" /> <!-- @ref="SignInElementInFocus"-->
                     </div>
                     <div class="form-group index-form-group index-group">
                         <div class="index-form-icon">
                             <i class="fa fa-lock "></i>
                         </div>
-                        <input type="password" placeholder="Password" @bind="@Password">
+                        <input type="password" placeholder="Password" @bind="@Password" @onkeydown="@SignInEnter">
                     </div>
                     <div class="form-group forgot-password">
                         <h1 class="forgotpassword" @onclick="GoToEmail" style="margin-left: 45px;">Forgot Password?</h1>
@@ -300,7 +300,7 @@
                         <div class="index-form-icon">
                             <i class="fa fa-user"></i>
                         </div>
-                        <input type="email" required placeholder="Email address" @bind="@Email" @ref="EmailElementInFocus">
+                        <input type="email" required placeholder="Email address" @bind="@Email" @onkeydown="@ForgotPasswordEnter" > <!--@ref="EmailElementInFocus"-->
                     </div>
                     <div class="form-group forgot-password">
                         <h1 class="forgotpassword" @onclick="GoToLogin">Back</h1>
@@ -370,17 +370,17 @@
         await GoToLogin();
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (LoginForm)
-        {
-            await SignInElementInFocus.FocusAsync();
-        }
-        else if (EmailForgotPasswordForm)
-        {
-            await EmailElementInFocus.FocusAsync();
-        }
-    }
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    if (LoginForm)
+    //    {
+    //        await SignInElementInFocus.FocusAsync();
+    //    }
+    //    else if (EmailForgotPasswordForm)
+    //    {
+    //        await EmailElementInFocus.FocusAsync();
+    //    }
+    //}
 
     string test;
     private async Task Login()
@@ -434,6 +434,22 @@
                     successfullLogin = false;
                 }
             }
+        }
+    }
+
+    public async Task SignInEnter(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            await JWTLogin();
+        }
+    }
+
+    public async Task ForgotPasswordEnter(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            await SubmitEmail();
         }
     }
 
