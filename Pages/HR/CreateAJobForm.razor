@@ -392,10 +392,6 @@
         font-size: 2em;
     }
 
-    .TextDisplay {
-        font-weight: 600;
-    }
-
     /*Fixing styling conflicts, not too sure where it's located and why it's happening*/
     .main {
         top: 10vh !important;
@@ -435,7 +431,7 @@ else
         <div>7</div>*@
     </div>
     <div class="TextDisplay">
-        <div class="selected-create-a-job-text">Create A Job</div>
+        <div class="selected-create-a-job-text-page">Create A Job</div>
         <div class="application-form-text">Build Application Form</div>
         <div class="collaboration-text">Select Collaboration</div>
         @*<div class="collaboration-text-part-2">Select Collaboration Part 2</div>*@
@@ -456,9 +452,6 @@ else
         </div>
         <div class="selected-rod"></div>
         <div class="progress-rod-page-2"></div>*@
-
-
-
 
     <div class="create-job-summary">
         <div class="page-title">Summary</div>
@@ -513,7 +506,7 @@ else
             {
                 @if (createNewDep)
                 {
-                    <EditForm Model="@department" OnValidSubmit="@saveJobState" Context="Departments">
+                    <EditForm Model="@department" OnValidSubmit="@saveDep" Context="Departments">
                         <div class="page-title">Create Department</div>
 
                         <div class="form-group createjob-form-group">
@@ -539,7 +532,7 @@ else
                             </div>
                         </div>
                         <div class="createNew-buttton-function">
-                            <input type="button" value="Done" class="button-functions" @onclick="saveDep" />
+                            <input type="button" value="Done" class="button-functions" /> <!-- @onclick="saveDep"-->
                             @*<input type="button" value="Save" class="button-functions" @onclick="saveDep" />*@
                         </div>
                     </EditForm>
@@ -809,9 +802,9 @@ else
             }
 
         </EditForm>
-        <div class="bottom-buttons">
+        @*<div class="bottom-buttons">
             <input type="button" value="Next" style="margin-left: 106%;" class="button-functions" @onclick="() => RedirectToNextPage(true)" />
-        </div>
+        </div>*@
     </div>
 }
 

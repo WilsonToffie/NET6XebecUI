@@ -169,6 +169,16 @@ p{
     z-index: -1;
 }
 
+.selected-rod-selected-post-page {
+    width: 83%;
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 8%;
+    background-color: #00bcae;
+    z-index: -1;
+}
+
 .selected-rod-selected-collaborators-page {
     /*width: 49%;
     position: absolute;
@@ -212,7 +222,7 @@ p{
     font-weight: 600;
 }
 
-.selected-create-a-job-text {
+.selected-create-a-job-text-page {
     /*color: #00bcae;
     position: absolute;
     top: 22%;
@@ -301,6 +311,16 @@ p{
     left: 88%;
     position: absolute;
     top: 22%;
+}
+
+.selected-post-a-job-text {
+    /*left: 76.5%;
+    position: absolute;
+    top: 22%;*/
+    left: 88%;
+    position: absolute;
+    top: 22%;
+    color: #00bcae;
 }
 
 .summary-text {
