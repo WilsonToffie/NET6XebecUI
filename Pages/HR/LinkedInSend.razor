@@ -1,6 +1,7 @@
 ﻿@inject HttpClient httpClient
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject IJSRuntime jsRuntime
+@inject CreateJobPost TempJob
 <style>
 
     /*.layout {
@@ -75,13 +76,13 @@
     .postjob-form-container {
         overflow-y: auto;
         height: 55vh;
-        width: 73%;
-        margin-left: 2%;
-        margin-right: 17%;
+        width: 54%;
+        margin-top: 8%;
+        margin-left: 15%;
+        margin-right: 25%;
         background-color: rgba(255,255,255,1);
         border: solid white 0.1em;
-        box-shadow: 0 2px 5px 0 rgba(0,0,0, 0.2), 0 2px 10px 0 rgba(0,0,0,0.1);
-        border-radius: 10px;
+        box-shadow: 0 2px 5px 0 rgb(0 0 0 / 20%), 0 2px 10px 0 rgb(0 0 0 / 10%);
     }
 
     .postjob-form {
@@ -215,6 +216,39 @@
             border: 0.1em solid black !important;
         }
 </style>
+
+
+@if(!prevPage)
+{
+    <div class="top-Image-thing">
+        <div class="progressed-circle"></div>
+        <div class="progressed-circle"></div>
+        <div class="progressed-circle"></div>
+        <div class="progressed-circle"></div>
+        <div class="progressed-circle"></div>
+        @*<div class="circle"></div>
+        <div class="circle"></div>*@
+    </div>
+    <div class="selected-rod-selected-phase-page"></div>
+    <div class="progress-rod-page-5"></div>
+    <div class="NumberDisplay">
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div>5</div>
+        @*<div>6</div>
+        <div>7</div>*@
+    </div>
+    <div class="TextDisplay">
+        <div class="selected-create-a-job-text">Create A Job</div>
+        <div class="selected-application-form-text">Build Application Form</div>
+        <div class="selected-phases-text">Select Phases</div>
+        <div class="collaboration-text">Select Collaboration</div>
+        @*<div class="collaboration-text-part-2">Select Collaboration Part 2</div>*@        
+        <div class="post-a-job-text">Post Job</div>
+        @*<div class="summary-text">Summary</div>*@
+    </div>
 
 <div class="create-job-summary">
     <div class="page-title">Summary</div>
@@ -361,13 +395,20 @@
             <div class="validation-message"><ValidationSummary /></div>
 
             <div class="bottom-buttons">
-                <input type="button" value="Prev" class="button-functions" />
+                <input type="button" value="Prev" class="button-functions" @onclick="Prev"/>
                 <input type="button" value="Save" class="button-functions" @onclick="Save" />
                 <input type="button" value="Next" class="button-functions" />
             </div>
         }
     </EditForm>
 </div>
+}
+else if(prevPage)
+{
+    <Collaborators/>
+}
+
+
         
 @*<div class="layout">
     <div class="row content-middle">

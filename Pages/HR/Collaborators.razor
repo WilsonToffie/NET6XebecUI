@@ -7,6 +7,7 @@
 @inject IJSRuntime jsRuntime
 @inject NavigationManager nav
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject CreateJobPost TempJob
 
 <style>
 
@@ -184,9 +185,40 @@
         color: #FFFFFF;
     }
 </style>
+
+
 <!--Tables of developers/HR-->
 @if (!prevPage && !nextPage)
 {
+    <div class="top-Image-thing">
+        <div class="progressed-circle"></div>
+        <div class="progressed-circle"></div>
+        <div class="progressed-circle"></div>
+        <div class="progressed-circle"></div>
+        <div class="circle"></div>
+        @*<div class="circle"></div>
+        <div class="circle"></div>*@
+ </div>
+    <div class="selected-rod-selected-collaborators-page"></div>
+    <div class="progress-rod-page-4"></div>
+    <div class="NumberDisplay">
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div>5</div>
+        @*<div>6</div>
+        <div>7</div>*@
+    </div>
+    <div class="TextDisplay">
+        <div class="selected-create-a-job-text">Create A Job</div>
+        <div class="selected-application-form-text">Build Application Form</div>
+        <div class="selected-phases-text">Select Phases</div>
+        <div class="selected-collaboration-text">Select Collaboration</div>
+        @*<div class="collaboration-text-part-2">Select Collaboration Part 2</div> *@       
+        <div class="post-a-job-text">Post Job</div>
+        @*<div class="summary-text">Summary</div>*@
+    </div>
     <div class="create-job-summary">
         <div class="page-title">Summary</div>
 
@@ -231,7 +263,7 @@
                             <option>Select Hiring Lead</option>
                             @foreach (var lead in ListOfCollaborators)
                             {
-                                <option>@lead.name  @lead.surname </option>
+                                <option value="@lead.id">@lead.name  @lead.surname </option>
                             }
                         </select>
                     </div>
@@ -336,7 +368,7 @@
 }
 else if (nextPage)
 {
-    <XebecPortal.UI.Pages.HR.Collaborators2 ChosenQuestions="ChosenQuestions" ListOfCollaborators="ListOfCollaborators" />
+    <LinkedInSend />
 }
 else if (prevPage)
 {
@@ -367,20 +399,25 @@ else if (prevPage)
 
     public EventCallback<List<AppUser>> CollaboratorChanged { get; set; }
 
-    //int JobId = 1;
+    int JobId;
 
-    [Parameter]
-    public int JobId { get; set; }
+    //[Parameter]
+    //public int JobId { get; set; }
 
-    [Parameter]
-    public EventCallback<int> JobIdChanged { get; set; }
+    //[Parameter]
+    //public EventCallback<int> JobIdChanged { get; set; }
 
-    //our questions
-    [Parameter]
-    public List<FormQuestion> ChosenQuestions { get; set; }
+    ////our questions
+    //[Parameter]
+    //public List<FormQuestion> ChosenQuestions { get; set; }
 
-    [Parameter]
-    public EventCallback<List<FormQuestion>> ChosenQuestionsChanged { get; set; }
+    //[Parameter]
+    //public EventCallback<List<FormQuestion>> ChosenQuestionsChanged { get; set; }
+
+    public List<CollaboratorsAssigned> collaboratorsToSave = new List<CollaboratorsAssigned>();
+
+    AppUser currentHiringLead;
+
 
     string token;
 
@@ -388,6 +425,9 @@ else if (prevPage)
 
     protected override async Task OnInitializedAsync()
     {
+        //jobId = TempJob.Id;
+        JobId = TempJob.Id;
+
         nextPage = false;
         prevPage = false;
 
@@ -404,91 +444,87 @@ else if (prevPage)
         CollabQuestions = await HttpClient.GetListJsonAsync<List<CollaboratorQuestion>>("https://xebecapi.azurewebsites.net/api/collaboratorquestion", new AuthenticationHeaderValue("Bearer", token));
 
         //check for hiring lead, if it exists, load it
-        try
-        {
-            HiringLead = AppUserList.Find(y => y.id == collaborators.Find(x => x.JobId == JobId && x.Name == "Hiring Manager").AppUserId);
-        }
-        catch
-        {
-            Console.WriteLine("No hiring lead for this job");
-        }
+        //try
+        //{
+        //    HiringLead = AppUserList.Find(y => y.id == collaborators.Find(x => x.JobId == JobId && x.Name == "Hiring Manager").AppUserId);
+        //}
+        //catch
+        //{
+        //    Console.WriteLine("No hiring lead for this job");
+        //}
 
         //same for collaborators
-        try
-        {
-            foreach (var collab in collaborators.Where(x => x.JobId == JobId && x.Name == "Collaborator"))
-            {
-                ListOfCollaborators.Add(AppUserList.Find(x => x.id == collab.AppUserId));
-            }
-        }
-        catch
-        {
-            Console.WriteLine("No collaborators");
+        //try
+        //{
+        //    foreach (var collab in collaborators.Where(x => x.JobId == JobId && x.Name == "Collaborator"))
+        //    {
+        //        ListOfCollaborators.Add(AppUserList.Find(x => x.id == collab.AppUserId));
+        //    }
+        //}
+        //catch
+        //{
+        //    Console.WriteLine("No collaborators");
 
-        }
+        //}
 
         //questions and their collabs
 
-        try
-        {
-            foreach (var question in ChosenQuestions)
-            {
-                QuestionsDictionary.Add(question, new List<AppUser>());
+        //try
+        //{
+        //    foreach (var question in ChosenQuestions)
+        //    {
+        //        QuestionsDictionary.Add(question, new List<AppUser>());
 
-                foreach (var k in CollabQuestions.Where(x => x.FormQuestionId == question.id))
-                {
-                    QuestionsDictionary[question].Add(AppUserList.FirstOrDefault(x => x.id == k.AppUserId));
-                }
-            }
-        }
-        catch
-        {
-            Console.WriteLine("Problem loading questions");
-        }
+        //        foreach (var k in CollabQuestions.Where(x => x.FormQuestionId == question.id))
+        //        {
+        //            QuestionsDictionary[question].Add(AppUserList.FirstOrDefault(x => x.id == k.AppUserId));
+        //        }
+        //    }
+        //}
+        //catch
+        //{
+        //    Console.WriteLine("Problem loading questions");
+        //}
 
     }
 
-    private async Task Save()
+    public async Task Save()
     {
-        //needs to first check what exists, and update accordingly.. yikes
 
-        //if (HiringLead != "")
-        //{
-        //    CollaboratorsAssigned lead = new CollaboratorsAssigned();
-        //    lead.Name = "Hiring Manager";
-        //    lead.AppUserId = AppUserList.FirstOrDefault(x => HiringLead.Contains(x.name) && HiringLead.Contains(x.surname)).id;
-        //    lead.JobId = JobId;
+        if (ListOfCollaborators != null)
+        {
 
-        //    await HttpClient.PostJsonAsync<CollaboratorsAssigned>("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", lead, new AuthenticationHeaderValue("Bearer", token));
-        //}
+            foreach (var collaborator in ListOfCollaborators)
+            {
+                CollaboratorsAssigned tempCollab = new()
+                    {
+                        Name = "Collaborator",
+                        AppUserId = collaborator.id,
+                        JobId = JobId
+                    };
+                collaboratorsToSave.Add(tempCollab);
+            };
 
-        //if (SelectedUsers.Count != 0)
-        //{
-        //    foreach (var collab in SelectedUsers)
-        //    {
-        //        CollaboratorsAssigned collaborator = new CollaboratorsAssigned();
-        //        collaborator.Name = "Collaborator";
-        //        collaborator.AppUserId = AppUserList.FirstOrDefault(x => collab.Contains(x.name) && HiringLead.Contains(x.surname)).id;
-        //        collaborator.JobId = JobId;
+            if (currentHiringLead != null)
+            {
+                collaboratorsToSave.Find(x => x.AppUserId == currentHiringLead.id).Name = "Hiring Manager";
 
-        //        await HttpClient.PostJsonAsync<CollaboratorsAssigned>("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", collaborator, new AuthenticationHeaderValue("Bearer", token));
-        //    }
-        //}
+            }
+            foreach (var saved in collaboratorsToSave)
+            {
+                await HttpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", saved, new AuthenticationHeaderValue("Bearer", token));
+            };
 
-        //if (QuestionsDictionary.Count != 0)
-        //{
-        //    foreach (var collab in QuestionsDictionary)
-        //    {
-        //        //<formquestion, appuser>
+            //var addcollaborator = await HttpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", collaboratorsToSave, new AuthenticationHeaderValue("Bearer", token));
 
-        //        CollaboratorQuestion cq = new CollaboratorQuestion();
-        //        cq.FormQuestionId = collab.Key.id;
-        //        cq.AppUserId = AppUserList.FirstOrDefault(x => collab.Value.Contains(x.name) && HiringLead.Contains(x.surname)).id;
+            //if (addcollaborator.IsSuccessStatusCode)
+            //{
+            //    await jsRuntime.InvokeAsync<object>("alert", "Collaboratos saved successfully");
+            //    Console.WriteLine("Added");
+            //}
 
-        //        await HttpClient.PostJsonAsync<CollaboratorQuestion>("https://xebecapi.azurewebsites.net/api/collaboratorquestion", cq, new AuthenticationHeaderValue("Bearer", token));
-        //    }
-        //}
 
+        }
     }
 
     private async Task testfunc(IEnumerable<AppUser> value)
@@ -507,7 +543,13 @@ else if (prevPage)
 
     private async Task TestClick(ChangeEventArgs e)
     {
-        hiringLead = e.Value.ToString();
+        int temp = int.Parse(e.Value.ToString());
+        currentHiringLead = ListOfCollaborators.FirstOrDefault(x => temp == x.id);
+
+        hiringLead = currentHiringLead.name + " " + currentHiringLead.surname;
+
+
+        Console.WriteLine(e.Value);
 
     }
 
@@ -566,10 +608,6 @@ else if (prevPage)
         HiringLeads.Add(temp);
         await CollaboratorChanged.InvokeAsync(AppUserList);
 
-        //if(HiringLeads.Count >= 1)
-        //{
-        //    await jsRuntime.InvokeAsync<string>("alert", "You can only select 1 hiring lead");
-        //}
 
     }
 

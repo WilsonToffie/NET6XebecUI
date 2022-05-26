@@ -5,7 +5,7 @@
 @inject UserState _state
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 @inject IDialogService Dialog
-
+@inject CreateJobPost TempJob
 <style>
 
     .select-phase {
@@ -431,6 +431,47 @@
         color: navy
     }
 </style>
+<!--The HTML for the progress bar-->
+@if(prevPage)
+{
+    <ApplicationFormControlTool/>
+}
+else if(nextPage)
+{
+    <Collaborators/>
+}
+else
+{
+     <div class="top-Image-thing">
+        <div class="progressed-circle"></div>
+        <div class="progressed-circle"></div>
+        <div class="progressed-circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        @*<div class="circle"></div>
+        <div class="circle"></div>*@
+ </div>
+    <div class="selected-rod-selected-phase-page"></div>
+    <div class="progress-rod-page-3"></div>
+    <div class="NumberDisplay">
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div>5</div>
+        @*<div>6</div>
+        <div>7</div>*@
+    </div>
+    <div class="TextDisplay">
+        <div class="selected-create-a-job-text">Create A Job</div>
+        <div class="selected-application-form-text">Build Application Form</div>
+        <div class="selected-phases-text">Select Phases</div>
+        <div class="collaboration-text">Select Collaboration</div>
+        @*<div class="collaboration-text-part-2">Select Collaboration Part 2</div>*@        
+        <div class="post-a-job-text">Post Job</div>
+        @*<div class="summary-text">Summary</div>*@
+    </div>
+
 
 <div class="create-job-summary">
     <div class="page-title">Summary</div>
@@ -496,10 +537,13 @@
 </div>
 
 <div class="bottom-buttons">
-    <button class="button-functions">Prev</button>
-    <button class="button-functions">Save</button>
-    <button class="button-functions">Next</button>
+    <button class="button-functions" @onclick="Previous">Prev</button>
+    <button class="button-functions" @onclick="SubmitPhases">Save</button>
+    <button class="button-functions" @onclick="Next">Next</button>
 </div>
+}
+
+
 
 @*<div class="form-container">
         <div class="inner-form-container">
@@ -507,7 +551,7 @@
                 <h4 class="form-subheading">PHASE FORM</h4>
             </div>
             <br />
-            <div>
+            <div>prev
                 <div class="grid-container">
                     <div class="grid-item">
                         <select class="select-form" style="width: 15em" @onchange="customAddPhase">
@@ -626,16 +670,16 @@
     @using XebecPortal.UI.Utils.Handlers;
     @using System.Net.Http.Headers;
 
-    [Parameter]
-    public CreateJobPost TempJob { get; set; }
+    //[Parameter]
+    //public CreateJobPost TempJob { get; set; }
 
-    [Parameter]
-    public EventCallback<CreateJobPost> TempJobChanged { get; set; }
+    //[Parameter]
+    //public EventCallback<CreateJobPost> TempJobChanged { get; set; }
 
     //[Parameter]
     //public int CurrentJobId { get; set; }
 
-    public int CurrentJobId = 1;
+
 
     //[Parameter]
     //public EventCallback<int> JobIdChanged { get; set; }
@@ -650,9 +694,14 @@
     private string addPhaseValue;
     private bool isDialogAddPhaseVisible;
     private bool isDialogDeletePhaseVisible;
+    public int CurrentJobId;
+
+    bool nextPage = false;
+    bool prevPage = false;
 
     protected override async Task OnInitializedAsync()
     {
+        CurrentJobId = TempJob.Id;
         token = await localStorage.GetItemAsync<string>("jwt_token");
 
         phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
@@ -690,10 +739,8 @@
             temp.JobId = CurrentJobId;
             temp.ApplicationPhaseId = phase.id;
             await httpClient.PostJsonAsync<JobApplicationPhase>("https://xebecapi.azurewebsites.net/api/jobapplicationphase", temp, new AuthenticationHeaderValue("Bearer", token));
-
-
-            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobapplicationphase", phaseValue);
         }
+
     }
 
     private void AddPhase(ApplicationPhase phase)
@@ -728,7 +775,7 @@
     private async Task Submit()
     {
         TempJob.JobPhases = phasesAdded;
-        await TempJobChanged.InvokeAsync(TempJob);
+       //await TempJobChanged.InvokeAsync(TempJob);
 
         //Job page post
         Job job = new Job();
@@ -817,7 +864,7 @@
             await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/jobapplicationphase/{job.Id}", JobApplicationPhase_);
         }
 
-        await TempJobChanged.InvokeAsync(TempJob);
+        //await TempJobChanged.InvokeAsync(TempJob);
     }
 
     private void OpenAddPhaseDialog()
@@ -843,6 +890,17 @@
         {
             AddPhase(phases.First(x => x.id.ToString() == e.Value.ToString()));
         }
+
+    }
+
+    private void Next()
+    {
+        nextPage = true;
+    }
+
+    private void Previous()
+    {
+        prevPage = true;
 
     }
 }

@@ -396,76 +396,6 @@
         font-weight: 600;
     }
 
-    .selected-create-a-job-text {
-        color: #00bcae;
-        position: absolute;
-        top: 21%;
-        left: 4%;
-    }
-
-    .application-form-text {
-        left: 17%;
-        position: absolute;
-        top: 21%;
-    }
-
-    .selected-application-form-text {
-        left: 17%;
-        position: absolute;
-        color: #00bcae;
-        top: 21%;
-    }
-
-    .collaboration-text {
-        left: 45.5%;
-        position: absolute;
-        top: 21%;
-    }
-
-    .collaboration-text-part-2 {
-        left: 58.5%;
-        position: absolute;
-        top: 21%;
-    }
-
-    .phases-text {
-        left: 32.5%;
-        position: absolute;
-        top: 21%;
-    }
-
-    .post-a-job-text {
-        left: 76.5%;
-        position: absolute;
-        top: 21%;
-    }
-
-    .summary-text {
-        left: 91%;
-        position: absolute;
-        top: 21%;
-    }
-    /*This is test classes for other pages to indicate that their progress*/
-    .selected-rod {
-        width: 20%;
-        position: absolute;
-        height: 2vh;
-        bottom: 83%;
-        left: 10%;
-        background-color: #00bcae;
-        z-index: -1;
-    }
-
-    .progress-rod-page-2 {
-        width: 60%;
-        position: absolute;
-        height: 2vh;
-        bottom: 83%;
-        left: 30%;
-        background-color: #A9ABA7;
-        z-index: -1;
-    }
-
     /*Fixing styling conflicts, not too sure where it's located and why it's happening*/
     .main {
         top: 10vh !important;
@@ -478,9 +408,10 @@
         width: 100% !important;
     }
 </style>
+
 @if (redirectpage)
 {
-    <XebecPortal.UI.Pages.HR.ApplicationFormControlTool @bind-jobId="existJobId" @bind-TempJob="TempJob" />
+    <XebecPortal.UI.Pages.HR.ApplicationFormControlTool/>
 }
 else
 {
@@ -490,8 +421,8 @@ else
         <div class="circle"></div>
         <div class="circle"></div>
         <div class="circle"></div>
-        <div class="circle"></div>
-        <div class="circle"></div>
+@*        <div class="circle"></div>
+        <div class="circle"></div>*@
     </div>
     <div class="progress-rod"></div>
     <div class="NumberDisplay">
@@ -500,23 +431,25 @@ else
         <div>3</div>
         <div>4</div>
         <div>5</div>
-        <div>6</div>
-        <div>7</div>
+@*        <div>6</div>
+        <div>7</div>*@
     </div>
     <div class="TextDisplay">
         <div class="selected-create-a-job-text">Create A Job</div>
         <div class="application-form-text">Build Application Form</div>
         <div class="collaboration-text">Select Collaboration</div>
-        <div class="collaboration-text-part-2">Select Collaboration Part 2</div>
+        @*<div class="collaboration-text-part-2">Select Collaboration Part 2</div>*@
         <div class="phases-text">Select Phases</div>
         <div class="post-a-job-text">Post Job</div>
-        <div class="summary-text">Summary</div>
+        @*<div class="summary-text">Summary</div>*@
     </div>
 
     <!--This is the progress for the second page-->
     @*<div class="top-Image-thing">
             <div class="progressed-circle"></div>
             <div class="progressed-circle"></div>
+            <div class="circle"></div>
+            <div class="circle"></div>
             <div class="circle"></div>
             <div class="circle"></div>
             <div class="circle"></div>
@@ -556,14 +489,14 @@ else
                 <div class="summary-text-style">@TempJob.Location</div>
             </div>
 
-            @*<div class="summary-individual">
+            <div class="summary-individual">
                 <div class="text-font-styling"> Job Type</div>
                 <div class="summary-text-style">@TempJob.JobType.Type</div>
-            </div>*@
+            </div>
 
             <div class="summary-individual">
                 <div class="text-font-styling"> Application Due Date</div>
-                <div class="summary-text-style">@TempJob.DueDate</div>
+                <div class="summary-text-style">@TempJob.DueDate.ToString("d MMMM yyyy")</div>
             </div>
 
             <div class="summary-individual">
@@ -787,8 +720,8 @@ else
                             <!--style="width: 200%;"-->
                             <div class="text-font-styling">Company Information</div>
                             <InputSelect class="createjob-select" @bind-Value="TempJob.Company" @onchange="OnCompanyChanged">
-                                <!--style="width: 107%;"-->
-                                <option selected disabled >Select Company</option>
+                                <!--style="width: 107%;"--> 
+                                <option selected disabled value="Select Company">Select Company</option>
                                 @foreach (var company in Company)
                                 {
                                     <option>@company</option>
@@ -876,6 +809,9 @@ else
             }
 
         </EditForm>
+        <div class="bottom-buttons">
+            <input type="button" value="Next" style="margin-left: 106%;" class="button-functions" @onclick="() => RedirectToNextPage(true)" />
+        </div>
     </div>
 }
 
