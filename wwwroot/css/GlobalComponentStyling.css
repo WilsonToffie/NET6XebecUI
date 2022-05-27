@@ -1,6 +1,7 @@
 ﻿
 /*
     So thoughts on how to implement the CSS global feature
+
     I mainly think it should have the colour scheme, padding, font size, font colour, any hover effects, etc. included.
     Somethings that I can think of mainly is :
         button, 
@@ -13,6 +14,15 @@
     Each element / component that is being re-used need to have the same style...    
 */
 
+/*
+    Loading screen,
+    Scroll bar,
+    Buttons,
+    Titles,
+    Search Bar
+    Any icon that is interactable - hoverable
+    Form design
+*/
 
 
 /*    
@@ -51,6 +61,9 @@ p{
 
 */
 
+
+
+
 .top-Image-thing {
     position: absolute;
     height: 10vh;
@@ -69,61 +82,12 @@ p{
     border-radius: 50%;
 }
 
-.progress-rod-page-2 {
-    /*width: 63%;
+.progress-rod {
+    width: 83%;
     position: absolute;
     height: 2vh;
     bottom: 83%;
-    left: 30%;
-    background-color: #A9ABA7;
-    z-index: -1;*/
-    width: 50%;
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 40%;
-    background-color: #A9ABA7;
-    z-index: -1;
-}
-
-.progress-rod-page-3 {
-    /*width: 50%;
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 43%;
-    background-color: #A9ABA7;
-    z-index: -1;*/
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 43%;
-    background-color: #A9ABA7;
-    z-index: -1;
-}
-
-.progress-rod-page-4 {
-    /*width: 36%;
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 57%;
-    background-color: #A9ABA7;
-    z-index: -1;*/
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 80%;
-    background-color: #A9ABA7;
-    z-index: -1;
-}
-
-.progress-rod-page-5 {
-    width: 22%;
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 71%;
+    left: 8%;
     background-color: #A9ABA7;
     z-index: -1;
 }
@@ -144,60 +108,6 @@ p{
     background-color: #00bcae;
     z-index: -1;*/
     width: 32%;
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 8%;
-    background-color: #00bcae;
-    z-index: -1;
-}
-
-.selected-rod-selected-phase-page {
-    /*width: 35%;
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 8%;
-    background-color: #00bcae;
-    z-index: -1;*/
-    width: 52%;
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 8%;
-    background-color: #00bcae;
-    z-index: -1;
-}
-
-.selected-rod-selected-post-page {
-    width: 83%;
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 8%;
-    background-color: #00bcae;
-    z-index: -1;
-}
-
-.selected-rod-selected-collaborators-page {
-    /*width: 49%;
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 8%;
-    background-color: #00bcae;
-    z-index: -1;*/
-    width: 72%;
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 8%;
-    background-color: #00bcae;
-    z-index: -1;
-}
-
-.selected-rod-selected-collaborators-page-2 {
-    width: 63%;
     position: absolute;
     height: 2vh;
     bottom: 83%;
