@@ -25,18 +25,19 @@
 */
 
 
-/*    
-    input[type = "button"], input[type = "submit"] {
-    background-color: rgba(0, 188, 174,1);
-    color: white;
-    text-align: center;
-    font-size: 1em;
-    font-weight: 600;
-    font-family: opensans-condensed-bold;
-    border-radius: 1em;
-    border: none;
-    }
-*/
+    
+    /*input[type = "button"], input[type = "submit"], button {
+        background-color: rgba(0, 188, 174,1);
+        color: white;
+        text-align: center;
+        font-size: 1em;
+        font-weight: 600;
+        font-family: opensans-condensed-bold;
+        border-radius: 1em;
+        border: none;
+        cursor: pointer;
+    }*/
+
 
 /*    
     input[type = "button"], input[type = "submit"]:hover {
@@ -238,3 +239,46 @@ p{
     position: absolute;
     top: 22%;
 }
+
+
+
+/*Search bar classes*/
+
+.search-wrapper-container {
+    position: relative;
+    margin-top: 25px;
+    margin-bottom: 5px;
+    width: 40%;
+    margin-left: 30%;
+}
+
+    .search-wrapper-container img {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        margin-left: 0.4em;
+        padding-top: 0.1em;
+    }
+
+.search-bar-pic {
+    width: 30px;
+    height: 30px;
+}
+
+.search-bar-input {
+    padding-left: 3.5em;
+    background-color: white;
+    height: 6vh;
+    width: 100%;
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 20%), 0 2px 10px 0 rgb(0 0 0 / 20%);
+    border: white solid 0.1em;
+    border-radius: 0.9em;
+}
+
+/*
+
+    <div class="search-wrapper-container">
+        <input class="search-bar-input" placeholder="Search For Jobs" type="text" @oninput="SearchApplicants" />
+        <img class="search-bar-pic" src="/Img/search.svg"/>
+    </div>
+*/
