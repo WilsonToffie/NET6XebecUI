@@ -50,3 +50,281 @@ p{
 }
 
 */
+
+.top-Image-thing {
+    position: absolute;
+    height: 10vh;
+    width: 100%;
+    top: 11%;
+    left: 0%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.progressed-circle {
+    height: 70px;
+    width: 70px;
+    background-color: #00BCAE;
+    border-radius: 50%;
+}
+
+.progress-rod-page-2 {
+    /*width: 63%;
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 30%;
+    background-color: #A9ABA7;
+    z-index: -1;*/
+    width: 50%;
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 40%;
+    background-color: #A9ABA7;
+    z-index: -1;
+}
+
+.progress-rod-page-3 {
+    /*width: 50%;
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 43%;
+    background-color: #A9ABA7;
+    z-index: -1;*/
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 43%;
+    background-color: #A9ABA7;
+    z-index: -1;
+}
+
+.progress-rod-page-4 {
+    /*width: 36%;
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 57%;
+    background-color: #A9ABA7;
+    z-index: -1;*/
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 80%;
+    background-color: #A9ABA7;
+    z-index: -1;
+}
+
+.progress-rod-page-5 {
+    width: 22%;
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 71%;
+    background-color: #A9ABA7;
+    z-index: -1;
+}
+
+.circle {
+    height: 70px;
+    width: 70px;
+    background-color: #A9ABA7;
+    border-radius: 50%;
+}
+
+.selected-rod {
+    /*width: 23%;
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 8%;
+    background-color: #00bcae;
+    z-index: -1;*/
+    width: 32%;
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 8%;
+    background-color: #00bcae;
+    z-index: -1;
+}
+
+.selected-rod-selected-phase-page {
+    /*width: 35%;
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 8%;
+    background-color: #00bcae;
+    z-index: -1;*/
+    width: 52%;
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 8%;
+    background-color: #00bcae;
+    z-index: -1;
+}
+
+.selected-rod-selected-post-page {
+    width: 83%;
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 8%;
+    background-color: #00bcae;
+    z-index: -1;
+}
+
+.selected-rod-selected-collaborators-page {
+    /*width: 49%;
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 8%;
+    background-color: #00bcae;
+    z-index: -1;*/
+    width: 72%;
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 8%;
+    background-color: #00bcae;
+    z-index: -1;
+}
+
+.selected-rod-selected-collaborators-page-2 {
+    width: 63%;
+    position: absolute;
+    height: 2vh;
+    bottom: 83%;
+    left: 8%;
+    background-color: #00bcae;
+    z-index: -1;
+}
+
+.NumberDisplay {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    left: 0%;
+    top: 13%;
+    font-weight: 800;
+    color: white;
+    font-size: 2em;
+}
+
+.TextDisplay {
+    font-weight: 600;
+}
+
+.selected-create-a-job-text-page {
+    /*color: #00bcae;
+    position: absolute;
+    top: 22%;
+    left: 4%;*/
+    color: #00bcae;
+    position: absolute;
+    top: 22%;
+    left: 7%;   
+}
+
+.application-form-text {
+    /* left: 17%;
+    position: absolute;
+    top: 22%;*/
+    left: 25%;
+    position: absolute;
+    top: 22%;
+}
+
+.selected-application-form-text {
+    /*left: 17%;
+    position: absolute;
+    top: 22%;
+    */
+    left: 25%;
+    position: absolute;
+    top: 22%;
+    color: #00bcae;
+}
+
+.collaboration-text {
+    /*left: 45.5%;
+    position: absolute;
+    top: 22%;*/
+    left: 65.5%;
+    position: absolute;
+    top: 22%;
+}
+
+.selected-collaboration-text {
+    /*left: 45.5%;
+    position: absolute;
+    top: 22%;*/
+    left: 65.5%;
+    position: absolute;
+    top: 22%;
+    color: #00bcae;
+}
+
+.collaboration-text-part-2 {
+    left: 58.5%;
+    position: absolute;
+    top: 22%;
+}
+
+.selected-collaboration-text-part-2 {
+    left: 58.5%;
+    position: absolute;
+    top: 22%;
+    color: #00bcae;
+}
+
+.phases-text {
+    /*left: 32.5%;
+    position: absolute;
+    top: 22%;*/
+    left: 47%;
+    position: absolute;
+    top: 22%;
+}
+
+.selected-phases-text {
+    /*left: 32.5%;
+    position: absolute;
+    top: 22%;*/
+    left: 47%;
+    position: absolute;
+    top: 22%;
+    color: #00bcae;
+}
+
+.post-a-job-text {
+    /*left: 76.5%;
+    position: absolute;
+    top: 22%;*/
+    left: 88%;
+    position: absolute;
+    top: 22%;
+}
+
+.selected-post-a-job-text {
+    /*left: 76.5%;
+    position: absolute;
+    top: 22%;*/
+    left: 88%;
+    position: absolute;
+    top: 22%;
+    color: #00bcae;
+}
+
+.summary-text {
+    left: 91%;
+    position: absolute;
+    top: 22%;
+}

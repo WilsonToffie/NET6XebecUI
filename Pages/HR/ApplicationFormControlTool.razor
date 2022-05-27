@@ -7,6 +7,7 @@
 @using XebecPortal.UI.Utils.Handlers;
 @using System.Net.Http.Headers;
 @using Microsoft.JSInterop;
+@inject CreateJobPost TempJob
 <head>
 </head>
 <style>
@@ -307,6 +308,7 @@
         margin-left: 20px;
         font-weight: bold;
         padding: 15px;
+        overflow-y: scroll;
     }
 
     .left-inner {
@@ -481,6 +483,36 @@
             background-color: #d35bc9;
         }
 </style>
+
+    <div class="top-Image-thing">
+        <div class="progressed-circle"></div>
+        <div class="progressed-circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+        @*<div class="circle"></div>
+        <div class="circle"></div>*@
+    </div>
+    <div class="selected-rod"></div>
+    <div class="progress-rod-page-2"></div>
+    <div class="NumberDisplay">
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+        <div>5</div>
+        @*<div>6</div>
+        <div>7</div>*@
+    </div>
+    <div class="TextDisplay">
+        <div class="selected-create-a-job-text-page">Create A Job</div>
+        <div class="selected-application-form-text">Build Application Form</div>
+        <div class="collaboration-text">Select Collaboration</div>
+        @*<div class="collaboration-text-part-2">Select Collaboration Part 2</div>*@
+        <div class="phases-text">Select Phases</div>
+        <div class="post-a-job-text">Post Job</div>
+        @*<div class="summary-text">Summary</div>*@
+    </div>
 @if (prevPage == false && nextPage == false)
 {
 
@@ -945,17 +977,17 @@
     </div>*@
     <div class="bottom-buttons">
         <input type="button" value="Prev" class="button-functions" @onclick="Prev" />
-        <input type="submit" value="Save" class="button-functions" @onclick="Save" />
+        <input type="submit" value="Save" class="button-functions" @onclick="SaveQuestion" />
         <input type="button" value="Next" class="button-functions" @onclick="Next" />
     </div>
 }
 else if (prevPage == true)
 {
-    <XebecPortal.UI.Pages.HR.CreateAJobForm @bind-TempJob="TempJob" />
+    <XebecPortal.UI.Pages.HR.CreateAJobForm />
 }
 else if (nextPage == true)
 {
-    <XebecPortal.UI.Pages.HR.Collaborators @bind-ChosenQuestions="FormQuestions" @bind-JobId="jobId" />
+    <XebecPortal.UI.Pages.HR.PhaseControlTool />
 }
 
 @code {
@@ -966,20 +998,20 @@ else if (nextPage == true)
 
     public EventCallback<List<FormQuestion>> FormQuestionsChanged { get; set; }
 
-    [Parameter]
-    public CreateJobPost TempJob { get; set; }
+    //[Parameter]
+    //public CreateJobPost TempJob { get; set; }
 
-    [Parameter]
-    public EventCallback<CreateJobPost> TempJobChanged { get; set; }
+    //[Parameter]
+    //public EventCallback<CreateJobPost> TempJobChanged { get; set; }
 
-    [Parameter]
-    public int jobId { get; set; }
+    //[Parameter]
+    //public int jobId { get; set; }
 
-    [Parameter]
-    public EventCallback<int> jobIdChanged { get; set; }
+    //[Parameter]
+    //public EventCallback<int> jobIdChanged { get; set; }
 
     string tempString = "";
-
+    private int jobId;
     List<CustomQuestion> Questions = new List<CustomQuestion>();
 
     List<QuestionType> Types = new List<QuestionType>();
@@ -994,10 +1026,15 @@ else if (nextPage == true)
     bool ShowManage = true;
     public CustomQuestion tempQuestion = new CustomQuestion();
 
+    public List<QuestionnaireHrForm> questionnaireHrForms = new List<QuestionnaireHrForm>();
+
     //public CreateJobPost newJobpost = new CreateJobPost();
 
     protected override async Task OnInitializedAsync()
     {
+        jobId = TempJob.Id;
+
+        Console.WriteLine("jobId " + jobId);
         prevPage = false;
         nextPage = false;
         Console.WriteLine("JobID passed: " + jobId);
@@ -1122,7 +1159,7 @@ else if (nextPage == true)
         if (FormQuestions.Count > 0)
         {
             Console.WriteLine("Questions Added");
-            await TempJobChanged.InvokeAsync(TempJob);
+            //await TempJobChanged.InvokeAsync(TempJob);
             await JSRuntime.InvokeAsync<object>("alert", "Questions saved successfully.");
 
         }
@@ -1147,6 +1184,49 @@ else if (nextPage == true)
     private void Next()
     {
         nextPage = true;
+    }
+
+    public async Task SaveQuestion()
+    {
+        if (FormQuestions != null)
+        {
+            foreach (var question in FormQuestions)
+            {
+                QuestionnaireHrForm tempForm = new()
+                    {
+                        Question = question.question,
+                        Answer = question.answer,
+                        AnswerTypeId = question.answerTypeId,
+                        JobId = jobId
+            };
+
+                Console.WriteLine(tempForm.Question);
+                Console.WriteLine(tempForm.Answer);
+                Console.WriteLine(tempForm.AnswerTypeId);
+                Console.WriteLine(tempForm.JobId);
+
+
+                questionnaireHrForms.Add(tempForm);
+            };
+
+
+            foreach(var question in questionnaireHrForms)
+            {
+                await httpClient.PostJsonAsync<QuestionnaireHrForm>("https://xebecapi.azurewebsites.net/api/questionnaire", question, new AuthenticationHeaderValue("Bearer", token));
+            }
+
+            //var post = await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/questionnaire/lst", questionnaireHrForms, new AuthenticationHeaderValue("Bearer", token));
+            //    if (post.IsSuccessStatusCode)
+            //    {
+            //        await JSRuntime.InvokeAsync<object>("alert", "Questions saved successfully");
+            //    }
+            Console.WriteLine("success!");
+            
+
+
+        }
+        //await httpClient.PostJsonAsync<List<FormQuestion>>("https://xebecapi.azurewebsites.net/api/questionnaire/lst", FormQuestions, new AuthenticationHeaderValue("Bearer", token));
+        //Console.WriteLine("success!");
     }
 
 }

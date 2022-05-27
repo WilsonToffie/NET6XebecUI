@@ -10,16 +10,18 @@ using Microsoft.JSInterop;
 namespace XebecPortal.UI.Pages.HR
 {
     public partial class LinkedInSend
-    {       
-        [Parameter]
-        public CreateJobPost TempJob { get; set; }
+    {
+        //[Parameter]
+        //public CreateJobPost TempJob { get; set; }
 
-        [Parameter]
-        public EventCallback<CreateJobPost> TempJobChanged { get; set; }
+        //[Parameter]
+        //public EventCallback<CreateJobPost> TempJobChanged { get; set; }
 
-        [Parameter]
-        public int jobId { get; set; }
+        //[Parameter]
+        //public int jobId { get; set; }
 
+        //
+        
         [Parameter]
         public EventCallback<int> jobIdChanged { get; set; }
 
@@ -46,13 +48,15 @@ namespace XebecPortal.UI.Pages.HR
         private bool createjobPlatform;
         private bool deleteJobPlatform;
         private bool addedNewPlatform;
+
+        bool prevPage;
         protected override async Task OnInitializedAsync()
         {
+            prevPage = false;
+            Console.WriteLine("TempjobId :" + TempJob.Id);
             token = await localStorage.GetItemAsync<string>("jwt_token");
-            jobId = 217;
             profiles = await httpClient.GetListJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform", new AuthenticationHeaderValue("Bearer", token));
-            getJobInfo = await httpClient.GetListJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/Job/{jobId}", new AuthenticationHeaderValue("Bearer", token));
-
+            getJobInfo = await httpClient.GetListJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/Job/{TempJob.Id}", new AuthenticationHeaderValue("Bearer", token));
         }
 
         private async Task Save()
@@ -61,7 +65,7 @@ namespace XebecPortal.UI.Pages.HR
             {
                 jobPlatformHelper.Add(new()
                 {
-                    JobId = jobId,
+                    JobId = TempJob.Id,
                     //Job = getJobInfo,
                     JobPlatformId = item.id,
                 });
@@ -72,7 +76,7 @@ namespace XebecPortal.UI.Pages.HR
             
             changeJobStatus.Add(new()
             {
-                Id = jobId,
+                Id = TempJob.Id,
                 Title = getJobInfo.Title,
                 Description = getJobInfo.Description,
                 Company = getJobInfo.Company,
@@ -91,9 +95,9 @@ namespace XebecPortal.UI.Pages.HR
 
             foreach (var item in changeJobStatus)
             {
-                item.Id = jobId;
+                item.Id = TempJob.Id;
 
-                var validNewUpload = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Job/{jobId}", item, new AuthenticationHeaderValue("Bearer", token));
+                var validNewUpload = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Job/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
                 if (validNewUpload.IsSuccessStatusCode)
                 {
                     validUpdate = true;
@@ -208,6 +212,11 @@ namespace XebecPortal.UI.Pages.HR
             recentlyAdded.Clear();
             //await OnInitializedAsync();
             await createPlatform(false);
+        }
+
+        private void Prev()
+        {
+            prevPage = true;
         }
     }
 }
