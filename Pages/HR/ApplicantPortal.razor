@@ -468,16 +468,15 @@
                             <td style="font-size: 1.2em; font-family: opensans-condensed-bold">@user.name @empty @user.surname</td>
                             <td>@jobTitle</td>
                             <td>
-                                <select>
+                                <select @onblur="() => setApplication(application.Id)" @onchange="updatePhase">
                                     <option selected>@FindCurrentPhase(@user.id, JobId)</option>
 
                                     @foreach (var phase in phases)
                                     {
-                                        <option value="@phase.id">@phase.description</option>
+                                        <option>@phase.description</option>
                                     }
                                 </select>
                             </td>
-                            @*<td>@FindCurrentPhase(@user.id, JobId)</td>*@
                             <td style="font-weight: 400; font-family: opensans-condensed-bold; font-size: 1em; color: #d35bc9">@($"{application.TimeApplied:dd MMM yyyy}")</td>
                             <td style="text-decoration: underline; font-family: opensans-condensed-bold"><a @onclick="() => toggleApplicationForm(user, JobId)">View Application Form</a></td>
                             <td><input type="button" class="btn-view-documents" value="View Documents" @onclick="() => toggleDocuments(user)" /></td>
@@ -673,6 +672,7 @@
 
     string currentPhase;
     int phaseId;
+    int applicationId;
 
     private List<FormQuestion> QuestionList = new List<FormQuestion>();
     private List<ApplicantAnswer> AnswerList = new List<ApplicantAnswer>();
@@ -693,6 +693,7 @@
     private IList<AppUser> users = new List<AppUser>();
     private IList<ApplicationPhaseHelper> phasesHelpers = new List<ApplicationPhaseHelper>();
     private IList<ApplicationModel> applications = new List<ApplicationModel>();
+    private IList<Application> Applications = new List<Application>();
     private IList<ApplicationPhase> phases = new List<ApplicationPhase>();
     private IList<PersonalInformation> personalInformation = new List<PersonalInformation>();
 
@@ -706,7 +707,7 @@
 
         jobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
         candidates = await httpClient.GetListJsonAsync<List<CandidateRecommender>>("https://xebecapi.azurewebsites.net/api/candidaterecommender", new AuthenticationHeaderValue("Bearer", token));
-        applications = await httpClient.GetListJsonAsync<List<ApplicationModel>>("https://xebecapi.azurewebsites.net/api/application", new AuthenticationHeaderValue("Bearer", token));
+        Applications = await httpClient.GetListJsonAsync<List<Application>>("https://xebecapi.azurewebsites.net/api/application", new AuthenticationHeaderValue("Bearer", token));
         AnswerList = await httpClient.GetListJsonAsync<List<ApplicantAnswer>>("https://xebecapi.azurewebsites.net/api/ApplicantQuestionnaire", new AuthenticationHeaderValue("Bearer", token));
         QuestionList = await httpClient.GetListJsonAsync<List<FormQuestion>>("https://xebecapi.azurewebsites.net/api/Questionnaire", new AuthenticationHeaderValue("Bearer", token));
 
@@ -715,30 +716,30 @@
         applications = await httpClient.GetListJsonAsync<List<ApplicationModel>>("https://xebecapi.azurewebsites.net/api/Application", new AuthenticationHeaderValue("Bearer", token));
         phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/ApplicationPhase", new AuthenticationHeaderValue("Bearer", token));
         personalInformation = await httpClient.GetListJsonAsync<List<PersonalInformation>>("https://xebecapi.azurewebsites.net/api/PersonalInformation", new AuthenticationHeaderValue("Bearer", token));
-
-
-        SetSelectedCandidate(candidates.FirstOrDefault());
     }
 
-    private void SearchCandidate(ChangeEventArgs e)
+    private async Task setApplication(int id)
     {
-        searchCandidate = e.Value.ToString();
+        applicationId = id;
 
-        usersFiltered = users.Where(x => x.name.ToLower().Contains(searchCandidate.ToLower()) || x.surname.ToLower().Contains(searchCandidate.ToLower())).ToList();
+        Application temp = new Application();
+
+        temp = Applications.FirstOrDefault(i => i.Id == applicationId);
+        temp.ApplicationPhaseId = phaseId;
+
+        await httpClient.PutJsonAsync<Application>($"https://xebecapi.azurewebsites.net/api/application/{applicationId}", temp, new AuthenticationHeaderValue("Bearer", token));
+
+        ApplicationPhasesHelper tempHelper = new ApplicationPhasesHelper();
+        tempHelper.ApplicationId = applicationId;
+        tempHelper.ApplicationPhaseId = phaseId;
+        tempHelper.TimeMoved = DateTime.Now;
+
+        await httpClient.PostJsonAsync<ApplicationPhasesHelper>("https://xebecapi.azurewebsites.net/api/applicationphasehelper", tempHelper, new AuthenticationHeaderValue("Bearer", token));
     }
 
-    private void FilterCandidatesByJob()
+    private void updatePhase(ChangeEventArgs e)
     {
-        GetCandidates();
-
-        candidates = candidates.Where(o => o.jobId == JobId).ToList();
-        candidates = candidates.OrderByDescending(o => o.TotalMatch).ToList();
-    }
-
-
-    private async Task GetCandidates()
-    {
-        candidates = await httpClient.GetListJsonAsync<List<CandidateRecommender>>("https://xebecapi.azurewebsites.net/api/candidaterecommender", new AuthenticationHeaderValue("Bearer", token));
+        phaseId = phases.FirstOrDefault(x => x.description.ToLower() == e.Value.ToString().ToLower()).id;
     }
 
     private void toggleMagnifiedDocument(string documentType)
@@ -791,12 +792,6 @@
         {
             return "No Phase";
         }
-    }
-
-    private void SetSelectedCandidate(CandidateRecommender candidate)
-    {
-        if (candidate != null)
-            selectedCandidate = candidate;
     }
 
     private void SetSelectedCandidate(AppUser user)

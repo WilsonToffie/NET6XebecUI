@@ -380,7 +380,7 @@
                         <div class="index-form-icon">
                             <i class="fas fa-user"></i>
                         </div>
-                        <input type="text" placeholder="Name" @bind="@Name" > <!--@ref="SignUpElementInFocus"-->
+                        <input type="text" placeholder="Name" @bind="@Name" @ref="SignUpElementInFocus"> <!---->
                     </div>
                     <div class="index-group-register">
                         <div class="index-form-icon">
@@ -499,10 +499,13 @@
         await Task.Delay(0);
     }
 
-    //protected override void OnAfterRender(bool firstRender)
-    //{
-    //    SignUpElementInFocus.FocusAsync();
-    //}
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            SignUpElementInFocus.FocusAsync();
+        }        
+    }
 
     private bool RegisterPasswordCheck()
     {

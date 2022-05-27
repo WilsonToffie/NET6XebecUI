@@ -261,7 +261,7 @@
                         <div class="index-form-icon">
                             <i class="fa fa-user"></i>
                         </div>
-                        <input type="email" required placeholder="Email address" @bind="@Email" /> <!-- @ref="SignInElementInFocus"-->
+                        <input type="email" required placeholder="Email address" @bind="@Email" @ref="SignInElementInFocus" /> <!-- -->
                     </div>
                     <div class="form-group index-form-group index-group">
                         <div class="index-form-icon">
@@ -300,7 +300,7 @@
                         <div class="index-form-icon">
                             <i class="fa fa-user"></i>
                         </div>
-                        <input type="email" required placeholder="Email address" @bind="@Email" @onkeydown="@ForgotPasswordEnter" > <!--@ref="EmailElementInFocus"-->
+                        <input type="email" required placeholder="Email address" @bind="@Email" @onkeydown="@ForgotPasswordEnter" @ref="EmailElementInFocus" > <!---->
                     </div>
                     <div class="form-group forgot-password">
                         <h1 class="forgotpassword" @onclick="GoToLogin">Back</h1>
@@ -370,17 +370,21 @@
         await GoToLogin();
     }
 
-    //protected override async Task OnAfterRenderAsync(bool firstRender)
-    //{
-    //    if (LoginForm)
-    //    {
-    //        await SignInElementInFocus.FocusAsync();
-    //    }
-    //    else if (EmailForgotPasswordForm)
-    //    {
-    //        await EmailElementInFocus.FocusAsync();
-    //    }
-    //}
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (LoginForm)
+            {
+                await SignInElementInFocus.FocusAsync();
+            }
+            else if (EmailForgotPasswordForm)
+            {
+                await EmailElementInFocus.FocusAsync();
+            }
+        }
+        
+    }
 
     string test;
     private async Task Login()
@@ -502,21 +506,10 @@
     {
         navmanager.NavigateTo("applicantsignup");
     }
-    // Local storage is not the route to go, since it can be intercepted by attackers.
-    // Session storage would be the best cause, however I do not think it allows a browser to be refreshed and stay logged in.
-    /*
-    How to prevent it from happening:
-        Store the token using the browser sessionStorage container.
-        Add it as a Bearer HTTP Authentication header with C# when calling services.
-        Add fingerprint information to the token.
-    */
-    // SignInModel contains Email,Password = AuthenticationRequest in vid
-    // AuthenticationResponse only contains the Token, but it is equal to SignInResult.Key
 
     public async Task<SignInResult> AuthenticateJWT()
     {
         // Creating the authentication request
-        //SignInModel signInModel = new SignInModel();
         signIn.Email = this.Email;
         signIn.Password = this.Password;
 
@@ -529,24 +522,15 @@
         return await httpMessageResponse.Content.ReadFromJsonAsync<SignInResult>();
     }
 
-    //https://xebecapi.azurewebsites.net/api/user // gets all of the Appusers
-    //https://xebecapi.azurewebsites.net/api/user/AllAuth // Give you a list of your details , can use console.writeLine
-    //https://xebecapi.azurewebsites.net/api/user/Admins (Only super admin can log in)
-
-
-    //Get the token from the Website
-    // Add the token to the header
-    // Make an api request...
     string token = "";
     private async Task JWTLogin()
     {
-        //SignInResult signInResult = await AuthenticateJWT();
         thisUser = await AuthenticateJWT();
 
 
         if (thisUser.jwtBearer != string.Empty)
         {
-            // storing the token to localstorage on the Browser
+            // storing the token to localstorage in the Browser
             await localStorage.SetItemAsync("jwt_token", thisUser.jwtBearer); // The value in " " is just the name that you will give it when it is displayed in the browser under application
 
             state.AppUserId = thisUser.AppUserId;
@@ -560,8 +544,6 @@
 
             if (thisUser.Success)
             {
-
-
                 successfullLogin = true;
                 state.isLoggedIn = true;
                 SubmitPressed = false;
@@ -583,7 +565,5 @@
             //await localStorage.ClearAsync(); // Use this at log out
         }
     }
-    // SignInResults is where you will store the JWT Token
-
-}
+    }
 }

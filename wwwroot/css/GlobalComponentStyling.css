@@ -1,6 +1,7 @@
 ﻿
 /*
     So thoughts on how to implement the CSS global feature
+
     I mainly think it should have the colour scheme, padding, font size, font colour, any hover effects, etc. included.
     Somethings that I can think of mainly is :
         button, 
@@ -13,20 +14,30 @@
     Each element / component that is being re-used need to have the same style...    
 */
 
-
-
-/*    
-    input[type = "button"], input[type = "submit"] {
-    background-color: rgba(0, 188, 174,1);
-    color: white;
-    text-align: center;
-    font-size: 1em;
-    font-weight: 600;
-    font-family: opensans-condensed-bold;
-    border-radius: 1em;
-    border: none;
-    }
+/*
+    Loading screen,
+    Scroll bar,
+    Buttons,
+    Titles,
+    Search Bar
+    Any icon that is interactable - hoverable
+    Form design
 */
+
+
+    
+    /*input[type = "button"], input[type = "submit"], button {
+        background-color: rgba(0, 188, 174,1);
+        color: white;
+        text-align: center;
+        font-size: 1em;
+        font-weight: 600;
+        font-family: opensans-condensed-bold;
+        border-radius: 1em;
+        border: none;
+        cursor: pointer;
+    }*/
+
 
 /*    
     input[type = "button"], input[type = "submit"]:hover {
@@ -51,6 +62,9 @@ p{
 
 */
 
+
+
+
 .top-Image-thing {
     position: absolute;
     height: 10vh;
@@ -69,61 +83,12 @@ p{
     border-radius: 50%;
 }
 
-.progress-rod-page-2 {
-    /*width: 63%;
+.progress-rod {
+    width: 83%;
     position: absolute;
     height: 2vh;
     bottom: 83%;
-    left: 30%;
-    background-color: #A9ABA7;
-    z-index: -1;*/
-    width: 50%;
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 40%;
-    background-color: #A9ABA7;
-    z-index: -1;
-}
-
-.progress-rod-page-3 {
-    /*width: 50%;
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 43%;
-    background-color: #A9ABA7;
-    z-index: -1;*/
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 43%;
-    background-color: #A9ABA7;
-    z-index: -1;
-}
-
-.progress-rod-page-4 {
-    /*width: 36%;
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 57%;
-    background-color: #A9ABA7;
-    z-index: -1;*/
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 80%;
-    background-color: #A9ABA7;
-    z-index: -1;
-}
-
-.progress-rod-page-5 {
-    width: 22%;
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 71%;
+    left: 8%;
     background-color: #A9ABA7;
     z-index: -1;
 }
@@ -152,50 +117,6 @@ p{
     z-index: -1;
 }
 
-.selected-rod-selected-phase-page {
-    /*width: 35%;
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 8%;
-    background-color: #00bcae;
-    z-index: -1;*/
-    width: 52%;
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 8%;
-    background-color: #00bcae;
-    z-index: -1;
-}
-
-.selected-rod-selected-collaborators-page {
-    /*width: 49%;
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 8%;
-    background-color: #00bcae;
-    z-index: -1;*/
-    width: 72%;
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 8%;
-    background-color: #00bcae;
-    z-index: -1;
-}
-
-.selected-rod-selected-collaborators-page-2 {
-    width: 63%;
-    position: absolute;
-    height: 2vh;
-    bottom: 83%;
-    left: 8%;
-    background-color: #00bcae;
-    z-index: -1;
-}
-
 .NumberDisplay {
     position: absolute;
     width: 100%;
@@ -212,7 +133,7 @@ p{
     font-weight: 600;
 }
 
-.selected-create-a-job-text {
+.selected-create-a-job-text-page {
     /*color: #00bcae;
     position: absolute;
     top: 22%;
@@ -303,8 +224,61 @@ p{
     top: 22%;
 }
 
+.selected-post-a-job-text {
+    /*left: 76.5%;
+    position: absolute;
+    top: 22%;*/
+    left: 88%;
+    position: absolute;
+    top: 22%;
+    color: #00bcae;
+}
+
 .summary-text {
     left: 91%;
     position: absolute;
     top: 22%;
 }
+
+
+
+/*Search bar classes*/
+
+.search-wrapper-container {
+    position: relative;
+    margin-top: 25px;
+    margin-bottom: 5px;
+    width: 40%;
+    margin-left: 30%;
+}
+
+    .search-wrapper-container img {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        margin-left: 0.4em;
+        padding-top: 0.1em;
+    }
+
+.search-bar-pic {
+    width: 30px;
+    height: 30px;
+}
+
+.search-bar-input {
+    padding-left: 3.5em;
+    background-color: white;
+    height: 6vh;
+    width: 100%;
+    box-shadow: 0 2px 5px 0 rgb(0 0 0 / 20%), 0 2px 10px 0 rgb(0 0 0 / 20%);
+    border: white solid 0.1em;
+    border-radius: 0.9em;
+}
+
+/*
+
+    <div class="search-wrapper-container">
+        <input class="search-bar-input" placeholder="Search For Jobs" type="text" @oninput="SearchApplicants" />
+        <img class="search-bar-pic" src="/Img/search.svg"/>
+    </div>
+*/

@@ -55,7 +55,6 @@ namespace XebecPortal.UI.Pages.HR
             prevPage = false;
             Console.WriteLine("TempjobId :" + TempJob.Id);
             token = await localStorage.GetItemAsync<string>("jwt_token");
-            TempJob.Id = 217;
             profiles = await httpClient.GetListJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform", new AuthenticationHeaderValue("Bearer", token));
             getJobInfo = await httpClient.GetListJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/Job/{TempJob.Id}", new AuthenticationHeaderValue("Bearer", token));
         }
