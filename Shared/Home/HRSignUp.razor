@@ -447,7 +447,7 @@
                         <div class="index-form-icon">
                             <i class="fas fa-user"></i>
                         </div>
-                        <input type="text" placeholder="Name" @bind="@Name" > <!--@ref="SignUpElementInFocus"-->
+                        <input type="text" placeholder="Name" @bind="@Name" @ref="SignUpElementInFocus" >
                     </div>
                     <div class="index-group-register">
                         <div class="index-form-icon">
@@ -584,10 +584,13 @@
         await showRegistrationForm();
     }
 
-    //protected override async Task OnAfterRenderAsync(bool firstRender)
-    //{
-    //    await SignUpElementInFocus.FocusAsync();
-    //}
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await SignUpElementInFocus.FocusAsync();
+        }        
+    }
 
     private Task OnRoleChanged(ChangeEventArgs e)
     {
