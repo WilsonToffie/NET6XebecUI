@@ -106,7 +106,6 @@ namespace XebecPortal.UI.Pages.Applicant
             Console.WriteLine("5");
             //
 
-
             Console.WriteLine("6");
 
             //var Questions = QuestionList.Where(x => x.jobId == displayJobDetail.Id);
@@ -312,6 +311,11 @@ namespace XebecPortal.UI.Pages.Applicant
             };
 
             await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper", phaseHelper, new AuthenticationHeaderValue("Bearer", token));
+
+            jobList = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
+            applicationList = await httpClient.GetListJsonAsync<List<Application>>($"https://xebecapi.azurewebsites.net/api/Application", new AuthenticationHeaderValue("Bearer", token));
+            jobList = jobList.Where(x => x.Status == "Open").ToList();
+            jobListFilter = jobList;
 
             ToJobPortal();
             submitModal = false;
