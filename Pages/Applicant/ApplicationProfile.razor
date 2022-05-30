@@ -968,8 +968,9 @@
                                                         </div>
                                                     }
                                                 </MudPaper>
+                                                <br>
                                                 <div class="upload-button-location">
-                                                    <label class="default-button-style">
+                                                    <label class="default-button-style" style="padding-top: 7px;">
                                                         <InputFile OnChange="OnInputFileChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
                                                     </label>
                                                 </div>
@@ -1067,7 +1068,9 @@
                                         </div>
                                     </div>
                                     <div class="validation-message"><ValidationSummary /></div>
-                                    <button class="btn formButton" style="margin-left: 45%;" type="submit" value="Save">Save</button>
+                                    <div style="text-align: center;">
+                                        <button class="default-button-style" style="margin-bottom: 10px;" type="submit" value="Save">Save</button>
+                                    </div>
                                 </div>
                             </div>
                         </EditForm>
@@ -1115,12 +1118,12 @@
                                                     <div class="col-12 d-flex justify-content-around">
                                                         @if (workEditMode)
                                                         {
-                                                            <input class="btn formButton" type="button" value="Save" @onclick="() => SaveWorkHistory(workHistory)" />
-                                                            <input class="btn formButton" type="button" value="Cancel" @onclick="() => CancelWorkHistory(workHistory)" />
+                                                            <input style="margin-top: 2vh;" type="button" value="Save" @onclick="() => SaveWorkHistory(workHistory)" />
+                                                            <input style="margin-top: 2vh;" type="button" value="Cancel" @onclick="() => CancelWorkHistory(workHistory)" />
                                                         }
                                                         else
                                                         {
-                                                            <button class="btn formButton" type="submit" value="Add">Add</button>
+                                                            <button class="default-button-style" style="margin-top: 10px;" type="submit" value="Add">Add</button>
                                                         }
                                                     </div>
                                                 </div>
@@ -1203,12 +1206,12 @@
                                                     <div class="col-12 d-flex justify-content-around">
                                                         @if (eduEditMode)
                                                         {
-                                                            <input class="btn formButton" type="button" value="Save" @onclick="() => SaveEducation(education)" />
-                                                            <input class="btn formButton" type="button" value="Cancel" @onclick="() => CancelEducation(education)" />
+                                                            <input type="button" value="Save" @onclick="() => SaveEducation(education)" />
+                                                            <input type="button" value="Cancel" @onclick="() => CancelEducation(education)" />
                                                         }
                                                         else
                                                         {
-                                                            <button class="btn formButton" type="submit" value="Add">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
+                                                            <button class="default-button-style" type="submit" value="Add">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
                                                         }
 
 
@@ -1266,18 +1269,22 @@
                                     <div class="col-9 p-5">
                                         <div class="row shadow-sm bg-body rounded-edges white-back position-white">
                                             <div class="education-header">Skills</div>
-                                            <InputText id="skill" class="skill-input form-control shadow bg-body rounded" @bind-Value="skillInfo.Description" placeholder="Enter your skills" @onfocusout="completion" />
+                                            <div style="text-align:center;"> 
+                                                <InputText id="skill" class="skill-input form-control shadow bg-body rounded" @bind-Value="skillInfo.Description" placeholder="Enter your skills" @onfocusout="completion" />
+                                            </div>
                                             <div class="row p-3">
                                                 <div class="validation-message"><ValidationSummary /></div>
 
                                                 @if (skillEditMode)
                                                 {
-                                                    <input class="btn formButton" style=" margin-left: 20%;" type="button" value="Save" @onclick="() => SaveSkill(skillInfo)" />
-                                                    <input class="btn formButton" style=" margin-left: 40%;" type="button" value="Cancel" @onclick="() => CancelSkill(skillInfo)" />
+                                                    <input style=" margin-left: 20%;" type="button" value="Save" @onclick="() => SaveSkill(skillInfo)" />
+                                                    <input style=" margin-left: 40%;" type="button" value="Cancel" @onclick="() => CancelSkill(skillInfo)" />
                                                 }
                                                 else
                                                 {
-                                                    <button class="skill-button btn" type="submit" value="Add">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
+                                                    <div style="text-align:center;">
+                                                        <button class="default-button-style" type="submit" value="Add">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
+                                                    </div>
                                                 }
 
                                             </div>
@@ -1532,12 +1539,12 @@
 
                                                         @if (editMode)
                                                         {
-                                                            <input class="btn formButton" type="button" value="Save" @onclick="() => Save(references)" />
-                                                            <input class="btn formButton" type="button" value="Cancel" @onclick="() => Cancel(references)" />
+                                                            <input type="button" value="Save" @onclick="() => Save(references)" />
+                                                            <input type="button" value="Cancel" @onclick="() => Cancel(references)" />
                                                         }
                                                         else
                                                         {
-                                                            <button class="btn formButton" type="submit" value="Add">Add</button> <!--@onclick="() => AddReferences()"-->
+                                                            <button class="default-button-style" type="submit" value="Add">Add</button> <!--@onclick="() => AddReferences()"-->
                                                         }
 
                                                     </div>
@@ -1625,7 +1632,7 @@
                                     {*@
                                 <div class="row p-3">
                                     <div class="col-12 d-flex justify-content-center">
-                                        <input class="btn formButton" type="button" value="Done" @onclick="Submit" />
+                                        <input type="button" value="Done" @onclick="Submit" />
                                     </div>
                                 </div>
                                 @*}*@
