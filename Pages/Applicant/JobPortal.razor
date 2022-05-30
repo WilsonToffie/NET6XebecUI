@@ -16,27 +16,6 @@
         height: 15px;
         margin: 2px;
     }
-
-    ::-webkit-scrollbar {
-        width: 10px !important;
-        background-color: #004393 !important;
-        border-radius: 20px !important;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: transparent !important;
-        border-radius: 10px !important;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: #f7f7f7 !important;
-        border-radius: 5px !important;
-    }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #f7f7f7 !important;
-        }
-
     .hr-job-search-bar {
         /*width: 40%;
         height: 5vh;
@@ -542,7 +521,7 @@
                                         }
                                         else
                                         {
-                                            <button class="btn detail-button-colour rounded-pill" type="button" style="width: 8em; height: fit-content !important" @onclick="() => Apply(displayJobDetail.Id)">Apply</button>
+                                            <button class="default-button-style" type="button" @onclick="() => Apply(displayJobDetail.Id)">Apply</button> <!--class="btn detail-button-colour rounded-pill"-->
                                         }
                                     </div>
                                 </div>

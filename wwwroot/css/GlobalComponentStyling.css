@@ -21,23 +21,83 @@
     Titles,
     Search Bar
     Any icon that is interactable - hoverable
-    Form design
+    Form design,
+    Drop down list
 */
 
 
-    
-    /*input[type = "button"], input[type = "submit"], button {
-        background-color: rgba(0, 188, 174,1);
-        color: white;
-        text-align: center;
-        font-size: 1em;
-        font-weight: 600;
-        font-family: opensans-condensed-bold;
-        border-radius: 1em;
-        border: none;
-        cursor: pointer;
-    }*/
+/** {
+    font-family: opensans-condensed
+}*/
 
+/* Global button styling */
+input[type = "button"], input[type = "submit"], button {
+    background-color: rgba(0, 188, 174,1);
+    color: white;
+    width: 100px;
+    height: 5vh;
+    border: none;
+    text-align: center;
+    font-size: 1em;
+    font-weight: 700;
+    font-family: opensans-condensed-bold;
+    font-weight: 600;
+    border: none;
+    border-radius: 0.4em;
+}
+
+.default-button-style {
+    background-color: rgba(0, 188, 174,1);
+    color: white;
+    width: 100px;
+    height: 5vh;
+    border: none;
+    text-align: center;
+    font-size: 1em;
+    font-weight: 700;
+    font-family: opensans-condensed-bold;
+    font-weight: 600;
+    border: none;
+    border-radius: 0.4em;
+}
+
+button {
+    background-color: rgba(0, 188, 174,1);
+    color: white;
+    width: 100px;
+    height: 5vh;
+    border: none;
+    text-align: center;
+    font-size: 1em;
+    font-weight: 700;
+    font-family: opensans-condensed-bold;
+    font-weight: 600;
+    border: none;
+    border-radius: 0.4em;
+}
+
+/* Global scroll bar changes */
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    /*background: #f1f1f1;*/
+    background: rgba(0, 188, 174,1);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    cursor: zoom-in;
+}
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
 
 /*    
     input[type = "button"], input[type = "submit"]:hover {
@@ -61,9 +121,6 @@ p{
 }
 
 */
-
-
-
 
 .top-Image-thing {
     position: absolute;
