@@ -439,11 +439,7 @@
     .education-header {
         text-align: center;
         margin-top: 2vh;
-        margin-bottom: 2vh;
-        font-family: opensans-condensed-bold;
-        font-size: 3em;
-        font-weight: 900;
-        color: #004393;
+        margin-bottom: 2vh;        
     }
     .personalInfo-header {
         text-align: center;
@@ -942,7 +938,10 @@
                             <DataAnnotationsValidator />
                             <div class="row" style="margin-top: 50px; margin-left: -7%;">
                                 <div class="col-12 shadow-sm bg-body rounded-edges white-back" style=" margin-top: 5vh;">
-                                    <div class="personalInfo-header">Personal Information</div>
+                                    @*<div class="personalInfo-header">Personal Information</div>*@
+                                    <div style="text-align: center;">
+                                        <h1>Personal Information</h1>
+                                        </div>
                                     <div class="row p-3">
                                         <div class="col-12">
                                             <div class="rounded-edges">
@@ -1086,7 +1085,9 @@
                                 <div class="row">
                                     <div class="col-9 p-5">
                                         <div class="row shadow-sm bg-body rounded-edges white-back position-white">
-                                            <div class="education-header">Work History</div>
+                                            <div class="education-header">
+                                                <h1>Work History</h1>
+                                            </div>
                                             <div class="col-12">
                                                 <div class="row p-3">
                                                     <div class="col-6">
@@ -1177,7 +1178,9 @@
                                 <div class="row">
                                     <div class="col-9 p-5">
                                         <div class="row shadow-sm bg-body rounded-edges white-back position-white">
-                                            <div class="education-header">Educational details</div>
+                                            <div class="education-header">
+                                                <h1>Educational details</h1>
+                                            </div>
                                             <div class="col-12">
                                                 <div class="row p-3">
                                                     <div class="col-6">
@@ -1268,11 +1271,13 @@
                                 <div class="row">
                                     <div class="col-9 p-5">
                                         <div class="row shadow-sm bg-body rounded-edges white-back position-white">
-                                            <div class="education-header">Skills</div>
+                                            <div class="education-header">
+                                                <h1>Skills</h1>
+                                            </div>
                                             <div style="text-align:center;"> 
                                                 <InputText id="skill" class="skill-input form-control shadow bg-body rounded" @bind-Value="skillInfo.Description" placeholder="Enter your skills" @onfocusout="completion" />
                                             </div>
-                                            <div class="row p-3">
+                                            <div style="margin-top: 10px; margin-bottom: 10px;">
                                                 <div class="validation-message"><ValidationSummary /></div>
 
                                                 @if (skillEditMode)
@@ -1330,7 +1335,9 @@
                         <DataAnnotationsValidator />
                         <div class="d-flex justify-content-center">
                             <div class="rounded-edges documents-white-back">
-                                <div class="personalInfo-header">Additional Documents</div>
+                                <div class="personalInfo-header"> 
+                                    <h1>Additional Documents</h1>
+                                </div>
 
                                 <div class="form-group createjob-form-group">
                                     <div class="createjob-form-individual">
@@ -1509,7 +1516,9 @@
                                 <div class="row">
                                     <div class="col-9 p-5">
                                         <div class="row shadow-sm bg-body rounded-edges white-back position-white">
-                                            <div class="education-header">References</div>
+                                            <div class="education-header">
+                                                <h1>References</h1>                                                
+                                            </div>
                                             <div class="col-12">
 
                                                 <div class="row p-3">
@@ -1590,7 +1599,9 @@
                     <form class="col-12 d-flex justify-content-center align-items-start">
                         <div class="row col-9">
                             <div class="col-12 shadow-sm bg-body rounded-edges align-self-start white-back" style="margin-top: -5.25vh; margin-left: 5vh; width: 87.5%; " >
-                                <div class="education-header">Online Presence</div>
+                                <div class="education-header">
+                                    <h1>Online Presence</h1>
+                                </div>
                                 <div class="row p-3">
                                     <div class="col-6">
                                         <div>

@@ -517,7 +517,9 @@
 {
 
     <div class="create-job-summary">
-        <div class="page-title">Summary</div>
+        <div class="page-title">
+            <h1 style="font-size: 38px !important;">Summary</h1>
+        </div>
 
         <div class="summary-container">
             <div class="collaborators-left-table">
@@ -578,13 +580,14 @@
     </div>
 
     <div class="createjob-form-container">
+        <div class="page-title" style="text-align:center;">                        
+             <h1 style="font-size: 38px !important;">Question Selection</h1>     
+        </div>
         <div class="form-main">
             <div class="form-right">
 
                 <div class="options">
-                    <div class="question-select-div">
-                        <p class="select-heading">Question Selection</p>
-                    </div>
+                    
                     <select @onchange="AddToForm" class="select-form">
                         <option>Select Question</option>
                         @foreach (var question in Questions)
