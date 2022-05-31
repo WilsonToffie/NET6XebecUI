@@ -56,8 +56,8 @@
         height: 3vh;
         font-size: 1em;
         font-family: opensans-condensed-bold;
-        color: #004393;
-        background-color: transparent;
+        color: #004393 !important;
+        background-color: transparent !important;
         border: none;
         border-radius: 1em;
         width: 70%;
@@ -182,28 +182,28 @@
         </div>
         <div class="second"></div>
         <div class="third">
-            <input type="button" class="nav-buttons" value="HOME" @onclick="ToHome" />
+            <button type="button" class="nav-buttons" value="HOME" @onclick="ToHome" >HOME</button>
         </div>
         <div class="third">
-            <input type="button" class="nav-buttons" value="SERVICES" @onclick="ToServices" data-toggle="dropdown" />
+            <button type="button" class="nav-buttons" value="SERVICES" @onclick="ToServices" data-toggle="dropdown" >SERVICES</button>
             <ul class="dropdown-menu" style="margin-left: 60vw; border-radius: 20%; width: 10vw;">
                 <li >
-                    <input type="button" class="fourth-buttons" value="HR SERVICES" @onclick="ToHRServices" />
+                    <input type="button" class="fourth-buttons" style="width:90%" value="HR SERVICES" @onclick="ToHRServices" />
                 </li>
                 <li >
-                    <input type="button" class="fourth-buttons" value="APPLICANT SERVICES" @onclick="ToApplicantServices"/>
+                    <input type="button" class="fourth-buttons" style="width:90%" value="APPLICANT SERVICES" @onclick="ToApplicantServices"/>
                 </li>
             </ul>
 
         </div>
         <div class="third">
-            <input type="button" class="nav-buttons" value="JOB PORTAL" @onclick="ToJobPortal" />
+            <button type="button" class="nav-buttons" value="JOB PORTAL" @onclick="ToJobPortal" >JOB PORTAL</button>
         </div>
         <div class="third">
-            <input type="button" class="nav-buttons" value="SIGN IN" @onclick="ToSignIn" />
+            <button type="button" class="nav-buttons" value="SIGN IN" @onclick="ToSignIn" >SIGN IN</button>
         </div>
         <div class="third">
-            <input type="button" class="nav-buttons" value="CONTACT" @onclick="ToContact" />
+            <button type="button" class="nav-buttons" value="CONTACT" @onclick="ToContact">CONTACT</button>
         </div>
     </div>
     <div class="overlay">

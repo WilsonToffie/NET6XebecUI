@@ -16,27 +16,6 @@
         height: 15px;
         margin: 2px;
     }
-
-    ::-webkit-scrollbar {
-        width: 10px !important;
-        background-color: #004393 !important;
-        border-radius: 20px !important;
-    }
-
-    ::-webkit-scrollbar-track {
-        background: transparent !important;
-        border-radius: 10px !important;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: #f7f7f7 !important;
-        border-radius: 5px !important;
-    }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #f7f7f7 !important;
-        }
-
     .hr-job-search-bar {
         /*width: 40%;
         height: 5vh;
@@ -487,7 +466,7 @@
                                 <h3 class="card-title small-card-name" style="color: @SmallCardFontTitleColour(item.Id)">@item.Title</h3>
                                 <h5 class="card-subtitle text-muted small-card-company" style="color: @SmallCardFontColour(item.Id)"><b>@item.Company</b></h5>
                                 <h5 class="card-text small-card-location" style="color: @SmallCardFontColour(item.Id)">@item.Location</h5>
-                                <h5 class="card-text small-card-date" style="color: @SmallCardFontColour(item.Id)">Due Date: @item.DueDate.ToString("d MMMM yyyy")</h5>
+                                <h5 class="card-text small-card-date" style="color: @SmallCardFontColour(item.Id)">Closing Date: @item.DueDate.ToString("dd MMM yyyy")</h5>
                             </div>
                         </div>
                         <br />
@@ -507,7 +486,7 @@
                                         <h3 class="big-card-name" style="color: #004393 !important">@displayJobDetail.Title</h3>
                                     </div>
                                     <div class="col-6 p-2 mt-5 d-flex justify-content-end">
-                                        <h5 class="small-card-date">Due Date: @displayJobDetail.DueDate.ToString("d MMMM yyyy")</h5>
+                                        <h5 class="small-card-date">Closing Date: @displayJobDetail.DueDate.ToString("d MMMM yyyy")</h5>
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-start">
                                         <h5 class="card-text small-card-location">Company:</h5> &nbsp;
@@ -542,7 +521,7 @@
                                         }
                                         else
                                         {
-                                            <button class="btn detail-button-colour rounded-pill" type="button" style="width: 8em; height: fit-content !important" @onclick="() => Apply(displayJobDetail.Id)">Apply</button>
+                                            <button class="default-button-style" type="button" @onclick="() => Apply(displayJobDetail.Id)">Apply</button> <!--class="btn detail-button-colour rounded-pill"-->
                                         }
                                     </div>
                                 </div>

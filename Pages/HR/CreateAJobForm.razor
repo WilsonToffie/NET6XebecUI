@@ -252,17 +252,17 @@
         }
 
     .button-functions-not-redirectable {
-        margin-top: 3vh;
+       /* margin-top: 3vh;
         height: 5vh;
         width: 10vh;
         border: none;
         border-radius: 1em;
-        background-color: rgba(169,169,169,1); /*#00bcae;*/
+        background-color: rgba(169,169,169,1); 
         color: white;
-        /*font-family: opensans-bold;*/
         font-weight: 500;
         padding-left: 0.2em;
-        padding-right: 0.2em;
+        padding-right: 0.2em;*/
+        background-color: rgba(169,169,169,1) !important;
     }
 
     .created-items-container {
@@ -506,8 +506,8 @@ else
                                     <InputText placeholder="" class="create-form-text" @bind-Value="department.Name" />
                                 </div>
                             </div>
-                            <div class="createjob-form-individual">
-                                <input type="button" value="Add Department" class="form-buttons" @onclick="() => addDepartment(department)" />
+                            <div class="createjob-form-individual">         
+                                <input type="button" value="Add Department" style="width: 100%" class="form-buttons" @onclick="() => addDepartment(department)" />
                             </div>
                         </div>
                         <div class="spacing-for-creating-stuff">
@@ -522,7 +522,7 @@ else
                             </div>
                         </div>
                         <div class="createNew-buttton-function">
-                            <input type="button" value="Done" class="button-functions" /> <!-- @onclick="saveDep"-->
+                            <input type="button" value="Done" class="button-functions" @onclick="() => createDep(false)" /> <!-- @onclick="saveDep"-->
                             @*<input type="button" value="Save" class="button-functions" @onclick="saveDep" />*@
                         </div>
                     </EditForm>
@@ -546,7 +546,7 @@ else
                             </div>
                         </div>
                         <div class="createjob-form-individual">
-                            <input type="button" value="Delete Department" class="form-buttons" @onclick="() => removeDepartment(department)" />
+                            <input type="button" value="Delete Department" style="width: 100%" class="form-buttons" @onclick="() => removeDepartment(department)" />
                         </div>
                     </div>
                     <div class="createNew-buttton-function">
@@ -559,10 +559,10 @@ else
                     <div class="page-title">Manage Department</div>
                     <div class="form-group createjob-form-group">
                         <div class="createjob-form-individual">
-                            <input type="button" value="Add Department" class="form-buttons" @onclick="() => createDep(true)" />
+                            <input type="button" value="Add Department" style="width: 100%;" class="form-buttons" @onclick="() => createDep(true)" />
                         </div>
                         <div class="createjob-form-individual">
-                            <input type="button" value="Delete Department" class="form-buttons" @onclick="() => deleteDepartment(true)" />
+                            <input type="button" value="Delete Department" style="width: 100%;" class="form-buttons" @onclick="() => deleteDepartment(true)" />
                         </div>
                     </div>
 
@@ -598,7 +598,7 @@ else
                             </div>
                         </div>
                         <div class="createjob-form-individual">
-                            <input type="button" value="Add Company" class="form-buttons" @onclick="() => addCompany(companyToAdd)" />
+                            <input type="button" value="Add Company" style="width: 100%;" class="form-buttons" @onclick="() => addCompany(companyToAdd)" />
                         </div>
                     </div>
 
@@ -626,7 +626,7 @@ else
                             </div>
                         </div>
                         <div class="createjob-form-individual">
-                            <input type="button" value="Delete Company" class="form-buttons" @onclick="() => removeCompany(TempJob.Company)" />
+                            <input type="button" value="Delete Company" style="width: 100%;" class="form-buttons" @onclick="() => removeCompany(TempJob.Company)" />
                         </div>
                     </div>
                     <div class="createNew-buttton-function">
@@ -640,10 +640,10 @@ else
 
                     <div class="form-group createjob-form-group">
                         <div class="createjob-form-individual">
-                            <input type="button" value="Add Company" class="form-buttons" @onclick="() => createComp(true)" />
+                            <input type="button" value="Add Company" style="width: 100%;" class="form-buttons" @onclick="() => createComp(true)" />
                         </div>
                         <div class="createjob-form-individual">
-                            <input type="button" value="Delete Company" class="form-buttons" @onclick="() => deleteCompany(true)" />
+                            <input type="button" value="Delete Company" style="width: 100%;" class="form-buttons" @onclick="() => deleteCompany(true)" />
                         </div>
                     </div>
 
@@ -689,7 +689,7 @@ else
                             </InputSelect>
                         </div>
                         <div class="createjob-form-individual">
-                            <input type="button" value="Manage Department" class="form-buttons" @onclick="() => manageDepartment(true)" />
+                            <input style="width: 100%;" type="button" value="Manage Department" class="form-buttons" @onclick="() => manageDepartment(true)" />
                         </div>
                         @*<div class="createjob-form-individual">
                                 <input type="button" value="Delete Departement" class="form-buttons" />
@@ -712,7 +712,7 @@ else
                             </InputSelect>
                         </div>
                         <div class="createjob-form-individual">
-                            <input type="button" value="Manage Company" class="form-buttons" @onclick="() => manageCompany(true)" />
+                            <input style="width: 100%;" type="button" value="Manage Company" class="form-buttons" @onclick="() => manageCompany(true)" />
                         </div>
                         @*<div class="createjob-form-individual">
                                 <input type="button" value="   Delete Company  " class="form-buttons" />
@@ -778,23 +778,23 @@ else
             {
                 <div class="bottom-buttons">
                     @*<input type="button" value="Prev" class="button-functions" />*@
-                    <input type="submit" value="Save" class="button-functions" />
-                    <input type="button" value="Next" class="button-functions" @onclick="() => RedirectToNextPage(true)" />
+                    <input type="submit" value="Save" />
+                    <input type="button" value="Next" @onclick="() => RedirectToNextPage(true)" />
                 </div>
             }
             else
             {
                 <div class="bottom-buttons">
                     @*<input type="button" value="Prev" class="button-functions" />*@
-                    <input type="submit" value="Save" class="button-functions"/>
+                    <input type="submit" value="Save"/>
                     <input type="button" value="Next" disabled class="button-functions-not-redirectable" />
                 </div>
             }
 
         </EditForm>
-        @*<div class="bottom-buttons">
+        <div class="bottom-buttons">
             <input type="button" value="Next" style="margin-left: 106%;" class="button-functions" @onclick="() => RedirectToNextPage(true)" />
-        </div>*@
+        </div>
     </div>
 }
 
