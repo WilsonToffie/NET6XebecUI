@@ -347,7 +347,32 @@
         .filter-button-trans:hover {
             transform: rotate(0deg);
         }
+    .collab-image{
+        height:40px;
+        width:40px;
+        border-radius:50%;
+
+    }
+    
+    
+    .tooltip-c .tooltip-text {
+        visibility: hidden;
+        width: 120px;
+        background-color: #F2F2F2;
+        color: #828282;
+        /*text-align: center;
+        padding: 5px 0;
+        position:relative;*/
+        display:flex;
+        flex-direction:collumn;
+        
+        z-index: 1;
+    }
+    .tooltip-c:hover .tooltip-text {
+        visibility: visible;
+    }
 </style>
+
 
 @if (ShowingJobPortal)
 {
@@ -531,6 +556,60 @@
                                             }
                                             else
                                             {
+                                                        
+                                                
+                                                  
+                                                <div class="col mt-5">
+                                                    @{
+                                                    var collabId = collaboratorsAssigned.Where(x => x.JobId == displayJobDetail.Id).Select(x => x.AppUserId);
+                                                    appUserFilter = appUser.Where(x => collabId.Contains(x.id) && x.role != "Candidate").ToList();
+                                                            
+                                                     
+                                                    }
+                                                    
+                                                         
+                                                        @if(appUserFilter.Count < 3)
+                                                        {
+                                                            <div class="image-div">
+                                                                @for (var i = 0; i < appUserFilter.Count; i++)
+                                                                {
+                                                                    <div class="tooltip-c">
+                                                                        <img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" />
+
+                                                                    </div>
+                                                                     
+                                                                    <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname</span>
+                                                            
+                                                          
+                                                                }
+                                                                    
+
+                                                            </div>
+                                                             
+                                                        }
+                      
+                                                </div>
+                                                @if(appUserFilter.Count > 3)
+                                                {
+                                                    <div class="col mt-5">
+                                                        <div class="image-div">
+                                                             @for (var i = 0; i < 3; i++)
+                                                            {
+                                                                <div class="tooltip-c">
+                                                                     <img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image " /> 
+                                                                </div>
+                                                               
+                                                                <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname</span>   
+                                                            }
+                                                        
+                                                            <p>+ @((@appUserFilter.Count)-3)</p>
+
+                                                        </div>
+                                                       
+                                                    </div>   
+                                                }
+                                                
+
                                                 <div class="col mt-5">
                                                     <button class="btn detail-button-colour rounded-pill" type="button" @onclick="() => OpenJobCollabDialog(displayJobDetail.Id)">Collaborators</button>
                                                 </div>
