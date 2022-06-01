@@ -251,11 +251,13 @@
     }
 
     .total-match-pill {
+        margin-top: 30px;
         width: 50px;
-        height: 4px;
+        height: 20px;
         border-radius: 1em;
         font-weight: bold;
         border-color: #2f2f2f;
+        text-align: center;
     }
 
     .loading-icon {
@@ -420,6 +422,7 @@
                 <tr>
                     <td></td>
                     <td>Personal Information</td>
+                    <td>Total Match</td>
                     <td>Position</td>
                     <td>Application Phase</td>
                     <td>Application Date</td>
@@ -444,6 +447,12 @@
 
                     @if (JobId == application.JobId && application.AppUserId == user.id)
                     {
+                        double match = 0;
+                        @if (candidates.Where(x => x.AppUserId == user.id).FirstOrDefault() != null)
+                        {
+                            match = Math.Round(candidates.Where(x => x.AppUserId == user.id).FirstOrDefault().TotalMatch,2);
+                        }
+                        
                         string jobTitle = jobs.Where(x => x.Id == JobId).FirstOrDefault().Title;
                         string img;
                         //Checks that the profile picture exists
@@ -466,6 +475,7 @@
                         <tr>
                             <td><img src="@img" alt="Avatar"></td>
                             <td style="font-size: 1.2em; font-family: opensans-condensed-bold">@user.name @empty @user.surname</td>
+                            <td style="display: flex; justify-content: center"><div class="total-match-pill" style="@setMatch(match)">@match</div></td>
                             <td>@jobTitle</td>
                             <td>
                                 <select @onblur="() => setApplication(application.Id)" @onchange="updatePhase">
@@ -821,4 +831,37 @@
             }
         }
     }
+
+    private string setMatch(double match)
+    {
+        if (match < 30)
+        {
+            return "background: red";
+        }
+        else if (match <= 40)
+        {
+            return "background: #FF4C25";
+        }
+        else if (match <= 50)
+        {
+            return "background: #FFB65A";
+        }
+        else if (match <= 60)
+        {
+            return "background: #FFDF5A";
+        }
+        else if (match <= 70)
+        {
+            return "background: #E0FF5A";
+        }
+        else if (match <= 80)
+        {
+            return "background: #CCFF5A";
+        }
+        else
+        {
+            return "background: #CCFF5A";
+        }
+    }
+
 }
