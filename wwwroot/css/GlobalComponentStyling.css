@@ -18,12 +18,11 @@
     Loading screen,
     Scroll bar - done,
     Buttons - done,
-    Titles,
-    Search Bar
+    Titles - done,
+    Search Bar - Done (Need to implement on the various pages),
     Any icon that is interactable - hoverable
     Form design,
     Drop down list,
-    Any text input border - the same as the sign in page? 
 */
 
 
@@ -354,5 +353,26 @@ p {
     <div class="search-wrapper-container">
         <input class="search-bar-input" placeholder="Search For Jobs" type="text" @oninput="SearchApplicants" />
         <img class="search-bar-pic" src="/Img/search.svg"/>
+    </div>
+*/
+
+/*Loading screen classes*/
+
+
+/*
+    .appform-submit-modal {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        top: 0;
+        left: 0;
+    }
+
+
+    <div class="appform-submit-modal">
+        <MudProgressCircular Color="Color.Info" Style="height:140px; width:140px;" Indeterminate="true" />
     </div>
 */

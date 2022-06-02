@@ -10,7 +10,7 @@
 <style>
     .nav1 {
         position: absolute;
-        left: 23%;
+        left: 18%;
         text-align: center;
         align-items: center;
         background-color: #FFFFFF !important;
@@ -877,6 +877,42 @@
         align-content: center;
     }
 
+
+    .enter-matric-mark-page{
+        position: absolute;
+        margin-top: 0%;
+        top: 40%;
+        left: 30%;
+        width: 45%;
+        height: 40%;
+        background-color: white;
+    }
+
+    .subjects{
+        display: flex;
+        justify-content: space-around;
+        width: 80%;
+        margin-left: 10%;
+    }
+
+    .mark-input{
+        display: flex;
+        justify-content: center;
+    }
+
+    .matric-white-back{
+        background: white;
+        height: 40vh;
+        margin-top: -5.5vh;
+        width: 102vh;
+        margin-left: -5vh;
+    }
+
+    .mark-input-container{
+        max-height: 10vh;
+        overflow-y: auto;
+    }
+
     @@media screen and (max-width: 700px) {
         .nav1{
 
@@ -906,6 +942,9 @@
                 </li>
                 <li class="nav-item p-1">
                     <a class="nav-link-background nav-link1" data-bs-toggle="tab" href="#education" @onclick="progressCheck">Education</a>
+                </li>
+                <li class="nav-item p-1">
+                    <a class="nav-link-background nav-link1" data-bs-toggle="tab" href="#matricMarks" @onclick="progressCheck">Matric Marks</a>
                 </li>
                 <li class="nav-item p-1">
                     <a class="nav-link-background nav-link1" data-bs-toggle="tab" href="#skills" @onclick="progressCheck">Skills</a>
@@ -1259,6 +1298,53 @@
                     </EditForm>
                 </div>
 
+                <!--Matric marks-->
+                <div id="matricMarks" class="container tab-pane">                   
+                        <div class="d-flex justify-content-center">
+                            <div class="rounded-edges matric-white-back">
+                                <div class="personalInfo-header"> 
+                                    <h1>Matric Marks</h1>
+                                </div>  
+                                <div class="subjects"> 
+                                    <h3>Subject</h3>
+                                    <h3>Mark(%)</h3>
+                                </div>
+                                <div class="mark-input-container">
+                                 @foreach (var item in matricInputs)
+                                 {                                     
+                                         <div style="display: flex; justify-content: center;">
+                                            <div style="width: 150px;margin-right: 142px;">@item.subject</div>
+                                            <div style="width: 40px;">@item.mark </div>      
+                                         </div>                                      
+                                 }
+                                 </div>
+                                 @if (enterNewMark)
+                                 {
+                                 <EditForm Model="@marks" OnValidSubmit="@insertMarks">
+                                 <DataAnnotationsValidator />
+                                    <div class="mark-input">
+                                         <div style="width: 120px; margin-right: 100px;">
+                                             <input class="form-control" type="text" placeholder="Subject's Name" @bind="marks.subject">
+                                         </div>
+                                         <div style="width: 120px;">
+                                            <input class="form-control" type="text" placeholder="Mark" @bind="marks.mark">
+                                         </div>            
+                                    </div> 
+                                    <div style="text-align: center; margin-top: 20px;">
+                                        <input type="submit" value="Add mark"/>
+                                    </div>
+                                 </EditForm>
+                                 }
+                                 else
+                                 {
+                                     <div style="text-align: center;">
+                                         <input type="button" value="Add another" @onclick="() => addAnotherMark(true)"/>
+                                     </div>
+                                 }
+                            </div>
+                        </div>
+                    </div>               
+
                 <!--Skills tab-->
 
                 <div id="skills" class="container tab-pane">
@@ -1367,7 +1453,7 @@
                                         <div class="upload-button-location">
                                             <label class="btn formButton">
                                                 <InputFile OnChange="OnInputMatricCertChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
-                                            </label>
+                                            </label>                                            
                                         </div>
                                     </div>
 
@@ -1655,6 +1741,7 @@
         </div>
     </div>
 </div>
+
 @if (loadInfo)
 {
     <div class="appform-submit-modal">
