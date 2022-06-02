@@ -1329,8 +1329,8 @@
                                  @foreach (var item in matricInputs)
                                  {                                     
                                          <div style="display: flex; justify-content: center;">
-                                            <div style="width: 150px;margin-right: 142px;">@item.subject</div>
-                                            <div style="width: 40px;">@item.mark </div>      
+                                            <div style="width: 150px;margin-right: 142px;">@item.SubjectName</div>
+                                            <div style="width: 40px;">@item.SubjectMark </div>      
                                          </div>                                      
                                  }
                                  </div>
@@ -1340,10 +1340,10 @@
                                  <DataAnnotationsValidator />
                                     <div class="mark-input">
                                          <div style="width: 120px; margin-right: 100px;">
-                                             <input class="form-control" type="text" placeholder="Subject's Name" @bind="marks.subject">
+                                             <input class="form-control" type="text" placeholder="Subject's Name" @bind="marks.SubjectName">
                                          </div>
                                          <div style="width: 120px;">
-                                            <input class="form-control" type="text" placeholder="Mark" @bind="marks.mark">
+                                            <input class="form-control" type="text" placeholder="Mark" @bind="marks.SubjectMark">
                                          </div>            
                                     </div> 
                                     <div style="text-align: center; margin-top: 20px;">
@@ -1355,6 +1355,7 @@
                                  {
                                      <div style="text-align: center;">
                                          <input type="button" value="Add another" @onclick="() => addAnotherMark(true)"/>
+                                         <input type="button" value="Save" @onclick="SaveMarks"/>
                                      </div>
                                  }
                             </div>

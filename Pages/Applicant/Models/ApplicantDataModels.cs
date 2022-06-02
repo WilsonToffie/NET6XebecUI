@@ -422,8 +422,12 @@ namespace XebecPortal.UI.Pages.Applicant
     {
         public int id { get; set; }
         [Required]
-        public string subject { get; set; }
+        public string SubjectName { get; set; }
         [Required]
-        public int mark { get; set; }
+        public int SubjectMark { get; set; }
+
+        public int AppUserId { get; set; }
+
+        public AppUser AppUser { get; set; }
     }
 }
