@@ -356,6 +356,7 @@
         
        
         position:relative;
+        display: inline-block;
     }
     .tooltip-text {
         visibility: hidden;
@@ -366,9 +367,18 @@
         padding: 5px 0;
         border-radius: 6px;
         position:absolute;
+        top:100%;
+        roght:90%;
         
         
         z-index: 1;
+    }
+    .tooltip-text::after{
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+
     }
     .tooltip-c:hover .tooltip-text {
         visibility: visible;
