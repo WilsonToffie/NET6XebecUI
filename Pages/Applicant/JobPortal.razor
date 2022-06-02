@@ -97,30 +97,16 @@
         width: 100%;
     }
 
-    .small-card-name {
-        font-weight: bold !important;
-        font-size: 1em !important;
-    }
-    /*.small-card-name:hover {
-        color: white
-    }*/
-
     .small-card-company {
-        color: rgba(0,0,0,0.5) !important;
-        font-weight: bold !important;
-        font-size: 1em !important;
+        color: rgba(0,0,0,0.5) !important;        
     }
 
     .small-card-location {
         color: rgba(0,0,0,0.5) !important;
-        font-weight: lighter !important;
-        font-size: 1em !important;
     }
 
     .small-card-date {
-        color: #D35BC9 !important;
-        font-weight: bold !important;
-        font-size: 1em !important;
+        color: #D35BC9 !important;        
     }
 
     .job-portal-right {
@@ -463,7 +449,7 @@
                     {
                         <div class="card job-portal-card small-card-colour-change" @onclick="() => DisplayJobDetail(item.Id)" style="@GetStyling(item) background-color: @SmallCardActive(item.Id)">
                             <div class="card-body job-portal-card-body">
-                                <h3 class="card-title small-card-name" style="color: @SmallCardFontTitleColour(item.Id)">@item.Title</h3>
+                                <h3 class="card-title" style="color: @SmallCardFontTitleColour(item.Id)">@item.Title</h3>
                                 <h5 class="card-subtitle text-muted small-card-company" style="color: @SmallCardFontColour(item.Id)"><b>@item.Company</b></h5>
                                 <h5 class="card-text small-card-location" style="color: @SmallCardFontColour(item.Id)">@item.Location</h5>
                                 <h5 class="card-text small-card-date" style="color: @SmallCardFontColour(item.Id)">Closing Date: @item.DueDate.ToString("dd MMM yyyy")</h5>
@@ -489,23 +475,23 @@
                                         <h5 class="small-card-date">Closing Date: @displayJobDetail.DueDate.ToString("d MMMM yyyy")</h5>
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-start">
-                                        <h5 class="card-text small-card-location">Company:</h5> &nbsp;
+                                        <h5 class="card-text">Company:</h5> &nbsp;
                                         <h5 class="text-muted small-card-company"><b>@displayJobDetail.Company</b></h5>
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
-                                        <h5 class="card-text small-card-location">Location:</h5> &nbsp;
+                                        <h5 class="card-text">Location:</h5> &nbsp;
                                         <h5 class="text-muted small-card-company">@displayJobDetail.Location</h5>
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-start">
 
                                         @if (displayJobDetail.JobTypes?.Any() == true)
                                         {
-                                            <h5 class="card-text small-card-location">Job Type:</h5><span>&nbsp;</span>
+                                            <h5 class="card-text">Job Type:</h5><span>&nbsp;</span>
                                             <h5 class="text-muted small-card-company">@GetJobType(displayJobDetail.Id)</h5>
                                         }
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
-                                        <h5 class="card-text small-card-location">Department:</h5> &nbsp;
+                                        <h5 class="card-text">Department:</h5> &nbsp;
                                         <h5 class="text-muted small-card-company">@displayJobDetail.Department.Name</h5>
                                     </div>
                                     <div class="col-12 p-2">

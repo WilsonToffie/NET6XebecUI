@@ -16,13 +16,13 @@
 
 /*
     Loading screen,
-    Scroll bar,
-    Buttons,
-    Titles,
-    Search Bar
+    Scroll bar - done,
+    Buttons - done,
+    Titles - done,
+    Search Bar - Done (Need to implement on the various pages),
     Any icon that is interactable - hoverable
     Form design,
-    Drop down list
+    Drop down list,
 */
 
 
@@ -54,7 +54,6 @@ input[type = "button"], input[type = "submit"], button {
     border: none;
     text-align: center;
     font-size: 1em;
-    font-weight: 700;
     font-family: opensans-condensed-bold;
     font-weight: 600;
     border: none;
@@ -69,7 +68,6 @@ button {
     border: none;
     text-align: center;
     font-size: 1em;
-    font-weight: 700;
     font-family: opensans-condensed-bold;
     font-weight: 600;
     border: none;
@@ -91,12 +89,12 @@ button {
 /* Handle */
 ::-webkit-scrollbar-thumb {
     background: #888;
-    cursor: zoom-in;
 }
 
     /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {
         background: #555;
+        cursor: pointer;
     }
 
 /*    
@@ -106,21 +104,39 @@ button {
 
 */
 
-/*
-h1{
-    font-family: opensans-condensed-bold;
+/*Text formatting*/
+
+h1 {
+    font-family: opensans-condensed-bold !important;
+    font-weight: bold !important;
+    color: #004393 !important;
+    font-size: 44px !important;
 }
 
 h2 {
-    font-family: opensans;
-    font-weight: 600;
+    font-family: opensans-condensed-bold !important;
+    font-weight: bold !important;
+    font-size: 28px !important;
+    color: #004393 !important;
 }
 
-p{
-    font-family: opensans;
+h3 {
+    font-family: opensans-condensed-bold !important;
+    font-weight: bold !important;
+    font-size: 15px !important;
 }
 
-*/
+h5 {
+    font-family: opensans-condensed-bold !important;
+    font-weight: bold !important;
+    font-size: 16px !important;
+}
+
+p {
+    font-family: opensans-condensed-bold !important;
+    font-size: 16px !important;
+}
+
 
 .top-Image-thing {
     position: absolute;
@@ -337,5 +353,26 @@ p{
     <div class="search-wrapper-container">
         <input class="search-bar-input" placeholder="Search For Jobs" type="text" @oninput="SearchApplicants" />
         <img class="search-bar-pic" src="/Img/search.svg"/>
+    </div>
+*/
+
+/*Loading screen classes*/
+
+
+/*
+    .appform-submit-modal {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        top: 0;
+        left: 0;
+    }
+
+
+    <div class="appform-submit-modal">
+        <MudProgressCircular Color="Color.Info" Style="height:140px; width:140px;" Indeterminate="true" />
     </div>
 */

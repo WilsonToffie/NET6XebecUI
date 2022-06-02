@@ -91,13 +91,7 @@
     }
 
     .page-title {
-        text-align: center;
-        font-family: opensans-condensed-bold;
-        font-size: 2em;
-        font-weight: 900;
-        color: #004393;
-        margin-top: 1vh;
-        text-transform: uppercase;
+        text-align: center;        
     }
 
     .postjob-form-individual {
@@ -250,7 +244,9 @@
     </div>
 
 <div class="create-job-summary">
-    <div class="page-title">Summary</div>
+    <div class="page-title">
+        <h1 style="font-size: 38px !important;">Summary</h1>
+    </div>
     <div class="summary-container">
         <div class="summary-individual">
             <div class="text-font-styling"> Platforms selected</div>
@@ -272,7 +268,9 @@
         {
             @if (createjobPlatform)
             {
-                <div class="page-title">Create New Platform</div>
+                <div class="page-title">
+                    <h1 style="font-size: 38px !important;">Create New Platform</h1>
+                </div>
 
                 <div class="form-group createjob-form-group">
                     <div class="createjob-form-individual" style="width: 200%;">
@@ -372,7 +370,9 @@
         else
         {
 
-            <div class="page-title">Post a job</div>
+            <div class="page-title">
+                <h1 style="font-size: 38px !important;">Post a job</h1>
+            </div>
 
             <div class="spacing-for-stuff">
                 <div class="form-group createjob-form-group">
