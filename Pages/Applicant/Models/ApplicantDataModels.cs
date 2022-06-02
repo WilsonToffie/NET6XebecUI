@@ -417,4 +417,13 @@ namespace XebecPortal.UI.Pages.Applicant
 
         public AppUser AppUser { get; set; }
     }
+
+    public class matricMarks
+    {
+        public int id { get; set; }
+        [Required]
+        public string subject { get; set; }
+        [Required]
+        public int mark { get; set; }
+    }
 }

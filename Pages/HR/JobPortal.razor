@@ -163,7 +163,7 @@
     .big-card-name {
         color: black;
         font-weight: 900;
-        font-size: 2em;
+        font-size: 2em !important;
         font-weight: bold;
     }
 
@@ -478,8 +478,8 @@
                                     <div class="card job-portal-card m-1 small-card-colour-change" @onclick="() => DisplayJobDetail(item.Id)" @onmouseover="() => OpenJobCollabToolTip(item.Id)" style="@GetStyling(item) background-color: @SmallCardActive(item.Id)">
                                         <div class="card-body job-portal-card-body">
                                             <div class="row">
-                                                <div class="col-10"><h3 class="card-title small-card-name" style="color: @SmallCardFontTitleColour(item.Id)">@item.Title</h3></div>
-                                                <div class="col-2"> <h3 class="card-title small-card-name"><i class="handPointer fa fa-trash" style="color: @SmallCardTrashColour(item.Id); font-size: x-large; margin-left: -1em" @onclick="() => DeleteData(item.Id)"></i></h3></div>
+                                                <div class="col-10"><h3 class="card-title" style="color: @SmallCardFontTitleColour(item.Id)">@item.Title</h3></div>
+                                                <div class="col-2"> <h3 class="card-title"><i class="handPointer fa fa-trash" style="color: @SmallCardTrashColour(item.Id); font-size: x-large; margin-left: -1em" @onclick="() => DeleteData(item.Id)"></i></h3></div>
                                                 <div class="col-12"><h5 class="card-subtitle text-muted small-card-company" style="color: @SmallCardFontColour(item.Id)"><b>@item.Company</b></h5></div>
                                                 <div class="col-12"><h5 class="card-text small-card-location" style="color: @SmallCardFontColour(item.Id)">@item.Location</h5></div>
                                                 <div class="col-12"><h5 class="card-text" style="color: @SmallCardFontColour(item.Id)">Status: <b>@item.Status</b></h5></div>
@@ -660,7 +660,7 @@
                                         }
                                         else
                                         {
-                                            <h5 class="card-text small-card-location">Company:</h5> <span>&nbsp;</span>
+                                            <h5 class="card-text">Company:</h5> <span>&nbsp;</span>
                                             <h5 class="text-muted small-card-company">@displayJobDetail.Company</h5>
                                         }
                                     </div>
@@ -693,7 +693,7 @@
                                         }
                                         else
                                         {
-                                            <h5 class="card-text small-card-location">Location:</h5> <span>&nbsp;</span>
+                                            <h5 class="card-text">Location:</h5> <span>&nbsp;</span>
                                             <h5 class="text-muted small-card-company">@displayJobDetail.Location</h5>
                                         }
                                     </div>
@@ -713,7 +713,7 @@
                                         {
                                             if (displayJobDetail.JobTypes?.Any() == true)
                                             {
-                                                <h5 class="card-text small-card-location">Job Type:</h5> <span>&nbsp;</span>
+                                                <h5 class="card-text">Job Type:</h5> <span>&nbsp;</span>
                                                 <h5 class="text-muted small-card-company">@GetJobType(displayJobDetail.Id)</h5>
                                             }
                                         }
@@ -734,7 +734,7 @@
                                         }
                                         else
                                         {
-                                            <h5 class="card-text small-card-location">Department:</h5> <span>&nbsp;</span>
+                                            <h5 class="card-text">Department:</h5> <span>&nbsp;</span>
                                             <h5 class="text-muted small-card-company">@displayJobDetail.Department.Name</h5>
                                         }
                                     </div>
