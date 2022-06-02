@@ -1,21 +1,5 @@
-﻿
-/*
-    So thoughts on how to implement the CSS global feature
-
-    I mainly think it should have the colour scheme, padding, font size, font colour, any hover effects, etc. included.
-    Somethings that I can think of mainly is :
-        button, 
-        the text styling (font, weight, size)        
-*/
-/* 
-    Scrollbar background - grey
-    The green colour is generalized to an action event... We are using the colour for everything instead!!!!
-    Burger menu isn't pointer cursor
-    Each element / component that is being re-used need to have the same style...    
-*/
-
-/*
-    Loading screen,
+﻿/*
+    Loading screen (small, grey) - done,
     Scroll bar - done,
     Buttons - done,
     Titles - done,
@@ -358,8 +342,6 @@ p {
 
 /*Loading screen classes*/
 
-
-/*
     .appform-submit-modal {
         width: 100%;
         height: 100%;
@@ -372,7 +354,8 @@ p {
     }
 
 
-    <div class="appform-submit-modal">
-        <MudProgressCircular Color="Color.Info" Style="height:140px; width:140px;" Indeterminate="true" />
-    </div>
+/*
+        <div class="appform-submit-modal">
+            <MudProgressCircular Size="Size.Large" Indeterminate="true" />
+        </div>
 */
