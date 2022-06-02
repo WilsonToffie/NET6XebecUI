@@ -987,26 +987,35 @@
                                         </div>
                                     </div>
                                     <div class="row p-3">
-                                        <div class="col-4">
+                                        <div class="col-4" style="position: relative">
                                             @*<label class="form-label" for="first-name">First Name</label>*@
+                                            <ValidationMessage For="@(() => personalInformation.FirstName)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
                                             <InputText id="first-name" class="form-control shadow bg-body rounded" @bind-Value="personalInformation.FirstName" placeholder="First Name" @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                            
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-4" style="position: relative">
                                             @*<label class="form-label" for="last-name">Last Name</label>*@
+                                            <ValidationMessage For="@(() => personalInformation.LastName)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
                                             <InputText id="last-name" class="form-control shadow bg-body rounded" @bind-Value="personalInformation.LastName" placeholder="Last Name" @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                            
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-4" style="position: relative">
                                             @*<label class="form-label" for="email-address">Email Address</label>*@
+                                            <ValidationMessage For="@(() => personalInformation.Email)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
                                             <InputText id="email-address" class="form-control shadow bg-body rounded" type="email" @bind-Value="personalInformation.Email" placeholder="Email Address" @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                            
                                         </div>
                                     </div>
                                     <div class="row p-3">
-                                        <div class="col-4">
+                                        <div class="col-4" style="position: relative">
                                             @*<label class="form-label" for="phone-number">Phone Number</label>*@
+                                            <ValidationMessage For="@(() => personalInformation.PhoneNumber)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
                                             <InputText id="phone-number" class="form-control shadow bg-body rounded" style="margin-top: 3.7vh;" @bind-Value="personalInformation.PhoneNumber" placeholder="Contact Number" @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                            
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-4" style="position: relative">
                                             <label class="form-label" for="ethnicity">Ethnicity</label>
+                                            <ValidationMessage For="@(() => additionalInformation.Ethnicity)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
                                             <InputSelect id="ethnicity" class="form-select shadow bg-body rounded" @bind-Value="additionalInformation.Ethnicity" @onfocusout="completion">
                                                 <!--@onfocusout="completion" -->
 
@@ -1032,9 +1041,11 @@
                                                     }
                                                 }
                                             </InputSelect>
+                                            
                                         </div>
-                                        <div class="col-4">
+                                        <div class="col-4" style="position: relative">
                                             <label class="form-label" for="gender">Gender</label>
+                                            <ValidationMessage For="@(() => additionalInformation.Gender)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
                                             <InputSelect id="gender" class="form-select shadow bg-body rounded" @bind-Value="additionalInformation.Gender" @onfocusout="completion">
                                                 <!--@onfocusout="completion" -->
                                                 @if (newAdditionalInfo)
@@ -1055,19 +1066,24 @@
                                                     }
                                                 }
                                             </InputSelect>
+                                            
                                         </div>
                                     </div>
                                     <div class="row p-3">
-                                        <div class="col-4">
+                                        <div class="col-4" style="position: relative">
                                             @*<label class="form-label" for="id-number">ID Number</label>*@
+                                            <ValidationMessage For="@(() => personalInformation.IdNumber)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
                                             <InputText id="id-number" class="form-control shadow bg-body rounded" min="13" max="13" @bind-Value="personalInformation.IdNumber" placeholder="ID Number" @onfocusout="completion" /> <!--@onfocusout="completion" -->
+                                            
                                         </div>
-                                        <div class="col-8">
+                                        <div class="col-8" style="position: relative">
                                             @*<label class="form-label" for="address">Address</label>*@
+                                            <ValidationMessage For="@(() => personalInformation.Address)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
                                             <InputTextArea id="address" class="form-control shadow bg-body rounded" @bind-Value="personalInformation.Address" placeholder="Address" rows="1" @onfocusout="completion"></InputTextArea>
+                                            
                                         </div>
                                     </div>
-                                    <div class="validation-message"><ValidationSummary /></div>
+                                    @*<div class="validation-message"><ValidationSummary /></div>*@
                                     <div style="text-align: center;">
                                         <button class="default-button-style" style="margin-bottom: 10px;" type="submit" value="Save">Save</button>
                                     </div>
@@ -1694,6 +1710,7 @@
     private int eduCount = 0;
     private int refCount = 0;
     private int skillCount = 0;
+
 
     private void progressCheck()
     {
