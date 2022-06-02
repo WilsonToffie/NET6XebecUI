@@ -241,6 +241,7 @@
             color: #d35bc9;
             cursor: pointer;
         }
+
 </style>
 
 <div class="overlay-login" id="login">
@@ -250,8 +251,8 @@
                 @if (LoginForm)
                 {
                     <div class="form-group index-form-heading">
-                        <h1 class="index-form-heading-1">SIGN IN</h1>
-                        <h1 class="forgotpassword" style="text-align: center;" @onclick="GoToSignup">Don't have an account? Sign Up</h1>
+                        <h1>SIGN IN</h1> <!--class="index-form-heading-1"-->
+                        <h3 class="forgotpassword" style="text-align: center;" @onclick="GoToSignup">Don't have an account? Sign Up</h3>
                     </div>
                     <div class="register-link">
 
@@ -270,20 +271,20 @@
                         <input type="password" placeholder="Password" @bind="@Password" @onkeydown="@SignInEnter">
                     </div>
                     <div class="form-group forgot-password">
-                        <h1 class="forgotpassword" @onclick="GoToEmail" style="margin-left: 45px;">Forgot Password?</h1>
+                        <h3 class="forgotpassword" @onclick="GoToEmail" style="margin-left: 45px;">Forgot Password?</h3>
                     </div>
                     <div class="form-group index-form-or">
                         @if (invalidCredentials)
                         {
-                            <h1 class="index-form-heading-3">Invalid credentials</h1>
+                            <h3 class="index-form-heading-3">Invalid credentials</h3>
                         }
                         @if (successfullLogin)
                         {
-                            <h1 class="index-form-heading-3">Successful login</h1>
+                            <h3 class="index-form-heading-3">Successful login</h3>
                         }
                         @if (SubmitPressed)
                         {
-                            <h1 class="index-form-heading-3">Submit pressed</h1>
+                            <h3 class="index-form-heading-3">Submit pressed</h3>
                         }
                     </div>
                     <div class="form-group login-button-div">
@@ -323,9 +324,7 @@
                     <div class="form-group login-button-div">
                         <input type="button" class="index-form-button" @onclick="SubmitEmail" value="Submit" />
                     </div>
-
                 }
-
             </form>
         </div>
         <div class="login-right"></div>

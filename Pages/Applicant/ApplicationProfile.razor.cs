@@ -102,7 +102,8 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool updateEducation = false;
         private bool updateSkill = false;
         private bool updateReferences = false;
-
+        private bool enterMatricMarks = false;
+        private bool enterNewMark = false;
         
         // private CustomHandler cust = new CustomHandler();
         string token;
@@ -114,7 +115,10 @@ namespace XebecPortal.UI.Pages.Applicant
         private string cert3Content;
         private bool onlineProfileValidPost;
 
-        private Document doc = new Document(); 
+        private Document doc = new Document();
+
+        private List<matricMarks> matricInputs = new();
+        private matricMarks marks = new();
         protected override async Task OnInitializedAsync()
         {
             loadInfo = true;
@@ -1475,5 +1479,27 @@ namespace XebecPortal.UI.Pages.Applicant
             Snackbar.Add("TODO: Upload your files!", Severity.Normal);*/
         }
 
+        private void enterMarksPage(bool value)
+        {
+            enterMatricMarks = value;
+        }
+
+
+        private void addAnotherMark(bool value)
+        {
+            enterNewMark = value;
+        }
+
+        private void insertMarks()
+        {
+            matricInputs.Add(new()
+            {
+                subject = marks.subject,
+                mark = marks.mark,
+            });
+            marks.subject = string.Empty;
+            marks.mark = 0;
+            enterNewMark = false;
+        }
     }
 }

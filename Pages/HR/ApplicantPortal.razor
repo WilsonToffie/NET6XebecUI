@@ -448,9 +448,9 @@
                     @if (JobId == application.JobId && application.AppUserId == user.id)
                     {
                         double match = 0;
-                        @if (candidates.Where(x => x.AppUserId == user.id).FirstOrDefault() != null)
+                        @if (candidates.Where(x => x.AppUserId == user.id && x.jobId == JobId).FirstOrDefault() != null)
                         {
-                            match = Math.Round(candidates.Where(x => x.AppUserId == user.id).FirstOrDefault().TotalMatch,2);
+                            match = Math.Round(candidates.Where(x => x.AppUserId == user.id && x.jobId == JobId).FirstOrDefault().TotalMatch,2);
                         }
                         
                         string jobTitle = jobs.Where(x => x.Id == JobId).FirstOrDefault().Title;
@@ -603,7 +603,7 @@
 <!--ApplicationForm Modal-->
 @if (showApplicationForm)
 {
-    @if (AnswerList != null && QuestionList != null && selectedCandidate != null)
+    @if (AnswerList != null && QuestionList != null && selectedUser != null)
     {
         <div class="dimmed">
             <div class="modal-frame">
@@ -749,7 +749,7 @@
 
     private void updatePhase(ChangeEventArgs e)
     {
-        phaseId = phases.FirstOrDefault(x => x.description.ToLower() == e.Value.ToString().ToLower()).id;
+        phaseId = phases.Where(x => x.description.ToLower() == e.Value.ToString().ToLower()).FirstOrDefault().id;
     }
 
     private void toggleMagnifiedDocument(string documentType)

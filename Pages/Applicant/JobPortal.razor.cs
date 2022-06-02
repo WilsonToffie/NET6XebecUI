@@ -38,7 +38,7 @@ namespace XebecPortal.UI.Pages.Applicant
         private List<Department> departments;
         private List<FormQuestion> QuestionList = new List<FormQuestion>();
         private List<QuestionType> Types = new List<QuestionType>();
-        private IList<ApplicantQuestion> ApplicantAnswers = new List<ApplicantQuestion>();
+        private IList<ApplicantQuestion> Questions = new List<ApplicantQuestion>();
         private List<ApplicantAnswer> AnswerList = new List<ApplicantAnswer>();
         private List<CandidateRecommender> candidates = new List<CandidateRecommender>();
         private ApplicationModel application = new ApplicationModel();
@@ -82,7 +82,7 @@ namespace XebecPortal.UI.Pages.Applicant
         private async Task Apply(int id)
         {
             submitModal = true;
-            ApplicantAnswers.Clear();
+            Questions.Clear();
             jobId = id;
             application = new()
             {
@@ -114,7 +114,7 @@ namespace XebecPortal.UI.Pages.Applicant
                     TypeId = q.answerTypeId
                 };
 
-                ApplicantAnswers.Add(tempAppQuestion);
+                Questions.Add(tempAppQuestion);
             }
             submitModal = false;
         }
@@ -273,7 +273,7 @@ namespace XebecPortal.UI.Pages.Applicant
             double tempScore;
             double tempMatches = 0;
 
-            foreach (var q in ApplicantAnswers)
+            foreach (var q in Questions)
             {
                 ApplicantAnswer tempAnswer = new()
                 {
@@ -285,15 +285,17 @@ namespace XebecPortal.UI.Pages.Applicant
                 AnswerList.Add(tempAnswer);
             }
 
-            for (int i = 0; i < ApplicantAnswers.Count; i++)
+            for (int i = 0; i < QuestionList.Count; i++)
             {
-                if (ApplicantAnswers[i].Applicantanswer == AnswerList[i].applicantAnswer)
+                Console.WriteLine(QuestionList[i].answer + " " + AnswerList[i].applicantAnswer);
+                if (QuestionList[i].answer == AnswerList[i].applicantAnswer)
                 {
                     tempMatches++;
                 }
             }
 
-            tempScore = tempMatches / ApplicantAnswers.Count * 100;
+            tempScore = tempMatches / QuestionList.Count * 100;
+            Console.WriteLine(tempMatches + " / " + QuestionList.Count + " * " + 100);
 
             CandidateRecommender candidateRecommender = new CandidateRecommender();
 

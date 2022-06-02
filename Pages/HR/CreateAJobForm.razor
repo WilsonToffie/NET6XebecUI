@@ -299,7 +299,7 @@
 
     .summary-container {
         width: 100%;
-        height: 48vh;
+        height: 44vh;
         overflow-y: auto;
         padding-left: 1em;
         padding-right: 1em;
@@ -444,7 +444,9 @@ else
         <div class="progress-rod-page-2"></div>*@
 
     <div class="create-job-summary">
-        <div class="page-title">Summary</div>
+        <div class="page-title">
+            <h1 style="font-size: 38px !important;">Summary</h1>
+        </div>
 
         <div class="summary-container">
             <div class="summary-individual">
@@ -497,7 +499,9 @@ else
                 @if (createNewDep)
                 {
                     <EditForm Model="@department" OnValidSubmit="@saveDep" Context="Departments">
-                        <div class="page-title">Create Department</div>
+                        <div class="page-title">
+                            <h1 style="font-size: 38px !important;">Create Department</h1>
+                        </div>
 
                         <div class="form-group createjob-form-group">
                             <div class="createjob-form-individual" style="width: 200%;">
@@ -529,7 +533,9 @@ else
                 }
                 else if (deleteDep)
                 {
-                    <div class="page-title">Delete Department</div>
+                    <div class="page-title">
+                        <h1 style="font-size: 38px !important;">Delete Department</h1>
+                    </div>
 
                     <div class="form-group createjob-form-group">
                         <div class="createjob-form-individual" style="width: 200%;">
@@ -556,7 +562,9 @@ else
                 }
                 else
                 {
-                    <div class="page-title">Manage Department</div>
+                    <div class="page-title">
+                        <h1 style="font-size: 38px !important;">Manage Department</h1>
+                    </div>
                     <div class="form-group createjob-form-group">
                         <div class="createjob-form-individual">
                             <input type="button" value="Add Department" style="width: 100%;" class="form-buttons" @onclick="() => createDep(true)" />
@@ -588,7 +596,9 @@ else
 
                 @if (createNewComp)
                 {
-                    <div class="page-title">Create Company</div>
+                    <div class="page-title">
+                        <h1 style="font-size: 38px !important;">Create Company</h1>
+                    </div>
 
                     <div class="form-group createjob-form-group">
                         <div class="createjob-form-individual" style="width: 200%;">
@@ -609,7 +619,9 @@ else
                 }
                 else if (deleteComp)
                 {
-                    <div class="page-title">Delete Company</div>
+                    <div class="page-title">
+                        <h1 style="font-size: 38px !important;">Delete Company</h1>
+                    </div>
 
                     <div class="form-group createjob-form-group">
                         <div class="createjob-form-individual" style="width: 200%;">
@@ -636,7 +648,9 @@ else
                 }
                 else
                 {
-                    <div class="page-title">Manage Company</div>
+                    <div class="page-title">
+                        <h1 style="font-size: 38px !important;">Manage Company</h1>
+                    </div>
 
                     <div class="form-group createjob-form-group">
                         <div class="createjob-form-individual">
@@ -666,7 +680,9 @@ else
             }
             else
             {
-                <div class="page-title">Create a job form</div>
+                <div class="page-title">
+                    <h1 style="font-size: 38px !important;">Create a job form</h1>
+                </div>
 
                 <div class="createjob-form-individual">
                     <div class="text-font-styling"> Job Name</div>
