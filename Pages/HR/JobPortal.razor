@@ -351,6 +351,7 @@
             width:40px;
             height:40px;
             border-radius:50%;
+           
         }
     .tooltip-c{
         
@@ -382,6 +383,11 @@
     }
     .tooltip-c:hover .tooltip-text {
         visibility: visible;
+    }
+    .tooltip-c:hover .collab-image {
+        outline: 2px solid #828282;
+        width:42px;
+        height:42px;
     }
     
     .image-div{
@@ -583,7 +589,7 @@
                                                         personalInformation = personalInformation.Where(x => collabId.Contains(x.Id)).ToList();
                                                         collaboratorsAssigned2 = collaboratorsAssigned.Where(x => collabId.Contains(x.Id)).ToList();
                                                         appUserFilter = appUser.Where(x => collabId.Contains(x.id)).ToList();
-
+                                                        
                                                         Console.WriteLine(personalInformation.Count);
 
                                                     }
@@ -598,9 +604,11 @@
                                                                         @for(var i = 0; i < appUserFilter.Count; i++)
                                                                         {
                                                                                    
-                                                                                     <img src="@appUser[i].imageUrl" alt="image" class="collab-image" /> 
-                                                                                    <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname @collaboratorsAssigned2[i].Name</span>
+                                                                                    <img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" /> 
 
+                                                                                    <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname @collaboratorsAssigned2[i].Name </span>
+
+                                                                                    
                                                                         }
                                                                       
                                                                         @*<img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" />*@
@@ -626,8 +634,7 @@
                                                                    
                                                                       <img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" />
                                                                        <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname @collaboratorsAssigned2[i].Name </span>
-
-                                                                   
+                                                                       
                                                                      @*<img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image " /> 
                                                                      <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname</span>*@ 
                                                                 </div>
@@ -925,4 +932,6 @@
 }
 
 @code {
+    [Parameter] public string text { get; set; }
+    
 }
