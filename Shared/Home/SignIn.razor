@@ -243,7 +243,9 @@
         }
 
 </style>
-
+<head>
+    
+</head>
 <div class="overlay-login" id="login">
     <div class="login-page">
         <div class="login-left">
@@ -290,6 +292,9 @@
                     <div class="form-group login-button-div">
                         <input type="button" class="index-form-button" @onclick="JWTLogin" value="Submit" />
                     </div>
+                    <div>
+                    <a href="https://xebecapi.azurewebsites.net/newgoogle-login" target="_blank">Login Using Google</a>                    
+                    </div>
                 }
 
                 @if (EmailForgotPasswordForm)
@@ -324,12 +329,15 @@
                     <div class="form-group login-button-div">
                         <input type="button" class="index-form-button" @onclick="SubmitEmail" value="Submit" />
                     </div>
+                    
                 }
             </form>
         </div>
         <div class="login-right"></div>
     </div>
 </div>
+
+
 
 @code{
 
@@ -382,7 +390,23 @@
                 await EmailElementInFocus.FocusAsync();
             }
         }
-        
+
+    }
+
+
+    private async Task googleSignIn()
+    {
+        var result = await HttpClient.GetAsync("https://xebecapi.azurewebsites.net/account/googleSignIn");
+        Console.WriteLine("Whatever the result will be " + result);
+
+        if (result.IsSuccessStatusCode)
+        {
+            navmanager.NavigateTo("/main");
+        }else
+        {
+            Console.WriteLine("this error sucks soo much");
+        }
+
     }
 
     string test;
