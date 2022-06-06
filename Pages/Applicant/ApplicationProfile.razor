@@ -433,7 +433,7 @@
         overflow: auto;
         background: rgba(255, 255, 255, 0.5);
         left: 10%;
-        margin-left: 7%;
+        margin-left: 21%;
     }
 
     .education-header {
@@ -1145,12 +1145,14 @@
                                             </div>
                                             <div class="col-12">
                                                 <div class="row p-3">
-                                                    <div class="col-6">
+                                                    <div class="col-6" style="position: relative">
                                                         <!--<label class="form-label" for="company-name">Company Name</label>-->
+                                                        <ValidationMessage For="@(() => workHistory.CompanyName)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
                                                         <InputText id="company-name" class="form-control shadow bg-body rounded" @bind-Value="workHistory.CompanyName" placeholder="Company Name" @onfocusout="completion" />
                                                     </div>
-                                                    <div class="col-6">
+                                                    <div class="col-6" style="position: relative">
                                                         <!--<label class="form-label" for="job-title">Job Title</label>-->
+                                                        <ValidationMessage For="@(() => workHistory.JobTitle)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
                                                         <InputText id="job-title" class="form-control shadow bg-body rounded" @bind-Value="workHistory.JobTitle" placeholder="Job Title" @onfocusout="completion" />
                                                     </div>
                                                 </div>
@@ -1166,11 +1168,12 @@
 
                                                 </div>
                                                 <div class="row p-3">
-                                                    <div class="col-12">
+                                                    <div class="col-12" style="position: relative">
                                                         <!--<label class="form-label" for="description">Description</label>-->
+                                                        <ValidationMessage For="@(() => workHistory.Description)" style="font-size: 0.8em; position: absolute; bottom: 70px;"/>
                                                         <InputTextArea id="description" class="form-control shadow bg-body rounded" placeholder="Description" @bind-Value="workHistory.Description" rows="3" @onfocusout="completion"></InputTextArea> <!--@onfocusout="completion" -->
                                                     </div>
-                                                    <div class="validation-message"><ValidationSummary /></div>
+                                                    @*<div class="validation-message"><ValidationSummary /></div>*@
                                                     <div class="col-12 d-flex justify-content-around">
                                                         @if (workEditMode)
                                                         {
@@ -1238,13 +1241,15 @@
                                             </div>
                                             <div class="col-12">
                                                 <div class="row p-3">
-                                                    <div class="col-6">
+                                                    <div class="col-6" style="position: relative">
                                                         <!--<label class="form-label" for="institution">Institution</label>-->
+                                                        <ValidationMessage For="@(() => education.Qualification)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
                                                         <InputText id="qualification" class="form-control shadow bg-body rounded" @bind-Value="education.Qualification" placeholder="Qualification" @onfocusout="completion" /> <!--@onfocusout="completion" -->
 
                                                     </div>
-                                                    <div class="col-6">
+                                                    <div class="col-6" style="position: relative">
                                                         <!--<label class="form-label" for="qualification">Qualification</label>-->
+                                                        <ValidationMessage For="@(() => education.Insitution)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
                                                         <InputText id="Institution" class="form-control shadow bg-body rounded" @bind-Value="education.Insitution" placeholder="Institution" @onfocusout="completion" /> <!--@onfocusout="completion" -->
                                                     </div>
                                                 </div>
@@ -1260,7 +1265,7 @@
                                                 </div>
 
                                                 <div class="row p-3">
-                                                    <div class="validation-message"><ValidationSummary /></div>
+                                                    @*<div class="validation-message"><ValidationSummary /></div>*@
                                                     <div class="col-12 d-flex justify-content-around">
                                                         @if (eduEditMode)
                                                         {
@@ -1329,8 +1334,9 @@
                                  @foreach (var item in matricInputs)
                                  {                                     
                                          <div style="display: flex; justify-content: center;">
-                                            <div style="width: 150px;margin-right: 142px;">@item.subject</div>
-                                            <div style="width: 40px;">@item.mark </div>      
+                                            <div style="width: 150px;margin-right: 142px;">@item.SubjectName</div>
+                                            <div style="width: 40px;">@item.SubjectMark </div>  
+                                            <button type="button" class="btn-close text-reset" @onclick="() => RemoveMark(item)"></button>
                                          </div>                                      
                                  }
                                  </div>
@@ -1340,10 +1346,10 @@
                                  <DataAnnotationsValidator />
                                     <div class="mark-input">
                                          <div style="width: 120px; margin-right: 100px;">
-                                             <input class="form-control" type="text" placeholder="Subject's Name" @bind="marks.subject">
+                                             <input class="form-control" type="text" placeholder="Subject's Name" @bind="marks.SubjectName">
                                          </div>
                                          <div style="width: 120px;">
-                                            <input class="form-control" type="text" placeholder="Mark" @bind="marks.mark">
+                                            <input class="form-control" type="text" placeholder="Mark" @bind="marks.SubjectMark">
                                          </div>            
                                     </div> 
                                     <div style="text-align: center; margin-top: 20px;">
@@ -1355,6 +1361,7 @@
                                  {
                                      <div style="text-align: center;">
                                          <input type="button" value="Add another" @onclick="() => addAnotherMark(true)"/>
+                                         <input type="button" value="Save" @onclick="SaveMarks"/>
                                      </div>
                                  }
                             </div>
@@ -1624,28 +1631,32 @@
                                             <div class="col-12">
 
                                                 <div class="row p-3">
-                                                    <div class="col-6">
+                                                    <div class="col-6" style="position: relative">
                                                         <!--<label class="form-label" for="referenceName">Name</label>-->
+                                                        <ValidationMessage For="@(() => references.RefFirstName)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
                                                         <InputText id="referenceName" class="form-control shadow bg-body rounded" placeholder="Name" @bind-Value="references.RefFirstName" @onfocusout="completion" /> <!--@onfocusout="completion" -->
                                                     </div>
-                                                    <div class="col-6">
+                                                    <div class="col-6" style="position: relative">
                                                         <!--<label class="form-label" for="referenceSurname">Surname</label>-->
+                                                        <ValidationMessage For="@(() => references.RefLastName)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
                                                         <InputText id="referenceSurname" class="form-control shadow bg-body rounded" placeholder="Surname" @bind-Value="references.RefLastName" @onfocusout="completion" /> <!--@onfocusout="completion" -->
                                                     </div>
                                                 </div>
 
                                                 <div class="row p-3">
-                                                    <div class="col-6">
+                                                    <div class="col-6" style="position: relative">
                                                         <!--<label class="form-label" for="referenceEmail">Email</label>-->
+                                                        <ValidationMessage For="@(() => references.RefEmail)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
                                                         <InputText id="referenceEmail" class="form-control shadow bg-body rounded" placeholder="Email" @bind-Value="references.RefEmail" @onfocusout="completion" /> <!--@onfocusout="completion" -->
                                                     </div>
-                                                    <div class="col-6">
+                                                    <div class="col-6" style="position: relative">
                                                         <!--<label class="form-label" for="referenceContactNum">Phone Number</label>-->
+                                                        <ValidationMessage For="@(() => references.RefPhone)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
                                                         <InputText id="referenceContactNum" class="form-control shadow bg-body rounded" placeholder="Phone Number" @bind-Value="references.RefPhone" @onfocusout="completion" /> <!--@onfocusout="completion" -->
                                                     </div>
                                                 </div>
                                                 <div class="row p-3">
-                                                    <div class="validation-message"><ValidationSummary /></div>
+                                                    @*<div class="validation-message"><ValidationSummary /></div>*@
                                                     <div class="col-12 d-flex justify-content-around">
 
                                                         @if (editMode)
