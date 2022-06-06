@@ -1525,6 +1525,25 @@ namespace XebecPortal.UI.Pages.Applicant
             }
 
             matricMarksAdded.Clear();
+            matricInputs.Clear();
+
+            matricInputs = await httpClient.GetListJsonAsync<List<matricMarks>>($"https://xebecapi.azurewebsites.net/api/matricMark/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+        }
+
+        private async void RemoveMark(matricMarks item)
+        {
+
+            if(matricMarksAdded.Exists(x => x.SubjectName == item.SubjectName))
+            {
+                matricMarksAdded.Remove(item);
+                matricInputs.Remove(item);
+            }
+            else
+            {
+                matricInputs.Remove(item);
+                await httpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/matricMark/{item.id}", new AuthenticationHeaderValue("Bearer", token));
+            }
+            
         }
     }
 }
