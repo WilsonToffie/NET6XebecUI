@@ -362,7 +362,7 @@
     .tooltip-text {
         visibility: hidden;
         width:120px;
-        background-color: black;
+        background-color: #828282;
         color: #fff;
         text-align: center;
         padding: 5px 0;
@@ -507,7 +507,7 @@
                                 }
                             </div>
                         </ChildContent>
-                        <TooltipContent>
+                        @*<TooltipContent>
                             @if (appUserFilter?.Any() == true)
                             {
                                 <MudGrid Style="background-color: azure">
@@ -543,7 +543,7 @@
                                     </MudItem>
                                 </MudGrid>
                             }
-                        </TooltipContent>
+                        </TooltipContent>*@
                     </MudTooltip>
                 </div>
 
@@ -589,13 +589,10 @@
                                                         personalInformation = personalInformation.Where(x => collabId.Contains(x.Id)).ToList();
                                                         collaboratorsAssigned2 = collaboratorsAssigned.Where(x => collabId.Contains(x.Id)).ToList();
                                                         appUserFilter = appUser.Where(x => collabId.Contains(x.id)).ToList();
-                                                        
-                                                        Console.WriteLine(personalInformation.Count);
-
+                                                      
                                                     }
                                                     
-                                                         
-                                                        @if(appUserFilter.Count < 3)
+                                                        @if(appUserFilter.Count < 3 && appUserFilter.Count > 0)
                                                         {
                                                             <div class="image-div">
                                                                
@@ -604,9 +601,9 @@
                                                                         @for(var i = 0; i < appUserFilter.Count; i++)
                                                                         {
                                                                                    
-                                                                                    <img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" /> 
+                                                                              <img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" /> 
 
-                                                                                    <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname @collaboratorsAssigned2[i].Name </span>
+                                                                              <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname @collaboratorsAssigned2[i].Name </span>
 
                                                                                     
                                                                         }
@@ -865,7 +862,7 @@
     </div>
 }
 
-<MudDialog @bind-IsVisible="isDialogVisible" Options="options">
+@*<MudDialog @bind-IsVisible="isDialogVisible" Options="options">
     <DialogContent>
         @if (appUserFilter?.Any() == true)
         {
@@ -919,7 +916,7 @@
             </MudGrid>
         }
     </DialogContent>
-</MudDialog>
+</MudDialog>*@
 
 @{
     isFilterContainAnyVal = !string.IsNullOrEmpty(searchJob) || mudSelectLocation?.Any() == true || mudSelectCompany?.Any() == true || mudSelectDepartment?.Any() == true || mudSelectStatus?.Any() == true;
@@ -932,6 +929,6 @@
 }
 
 @code {
-    [Parameter] public string text { get; set; }
+   
     
 }
