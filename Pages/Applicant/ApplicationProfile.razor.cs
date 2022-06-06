@@ -118,6 +118,7 @@ namespace XebecPortal.UI.Pages.Applicant
         private Document doc = new Document();
 
         private List<matricMarks> matricInputs = new();
+        private List<matricMarks> matricMarksAdded = new();
         private matricMarks marks = new();
         protected override async Task OnInitializedAsync()
         {
@@ -172,6 +173,9 @@ namespace XebecPortal.UI.Pages.Applicant
 
                 referencesList = await httpClient.GetListJsonAsync<List<References>>($"https://xebecapi.azurewebsites.net/api/Reference/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
                 //referencesList = referencesHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
+
+                matricInputs = await httpClient.GetListJsonAsync<List<matricMarks>>($"https://xebecapi.azurewebsites.net/api/MatricMark/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+
 
                 userDocuments = await httpClient.GetListJsonAsync<List<Document>>($"https://xebecapi.azurewebsites.net/api/Document/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
                 checkUserDoc = userDocuments.ToList();
@@ -1494,12 +1498,33 @@ namespace XebecPortal.UI.Pages.Applicant
         {
             matricInputs.Add(new()
             {
-                subject = marks.subject,
-                mark = marks.mark,
+                SubjectName = marks.SubjectName,
+                SubjectMark = marks.SubjectMark,
+                AppUserId = state.AppUserId
             });
-            marks.subject = string.Empty;
-            marks.mark = 0;
+            matricMarksAdded.Add(new()
+            {
+                SubjectName = marks.SubjectName,
+                SubjectMark = marks.SubjectMark,
+                AppUserId = state.AppUserId
+            });
+
+            marks.SubjectName = string.Empty;
+            marks.SubjectMark = 0;
             enterNewMark = false;
+
+        }
+
+        private async void SaveMarks()
+        {
+            foreach(var mark in matricMarksAdded)
+            {
+                Console.WriteLine("This should happen at least once");
+                Console.WriteLine(mark.SubjectMark);
+                await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/matricMark", mark, new AuthenticationHeaderValue("Bearer", token));
+            }
+
+            matricMarksAdded.Clear();
         }
     }
 }
