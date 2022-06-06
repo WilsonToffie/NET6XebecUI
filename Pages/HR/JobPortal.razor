@@ -347,6 +347,54 @@
         .filter-button-trans:hover {
             transform: rotate(0deg);
         }
+        .collab-image{
+            width:40px;
+            height:40px;
+            border-radius:50%;
+           
+        }
+    .tooltip-c{
+        
+       
+        position:relative;
+        display: inline-block;
+    }
+    .tooltip-text {
+        visibility: hidden;
+        width:120px;
+        background-color: #828282;
+        color: #fff;
+        text-align: center;
+        padding: 5px 0;
+        border-radius: 6px;
+        position:absolute;
+        top:100%;
+        right:90%;
+        
+        
+        z-index: 1;
+    }
+    .tooltip-text::after{
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+
+    }
+    .tooltip-c:hover .tooltip-text {
+        visibility: visible;
+    }
+    .tooltip-c:hover .collab-image {
+        outline: 2px solid #828282;
+        width:42px;
+        height:42px;
+    }
+    
+    .image-div{
+        display: flex;
+        gap: 5px;
+        
+    }
 </style>
 
 
@@ -459,7 +507,7 @@
                                 }
                             </div>
                         </ChildContent>
-                        <TooltipContent>
+                        @*<TooltipContent>
                             @if (appUserFilter?.Any() == true)
                             {
                                 <MudGrid Style="background-color: azure">
@@ -495,7 +543,7 @@
                                     </MudItem>
                                 </MudGrid>
                             }
-                        </TooltipContent>
+                        </TooltipContent>*@
                     </MudTooltip>
                 </div>
 
@@ -537,28 +585,34 @@
                                                   
                                                 <div class="col mt-5">
                                                     @{
-                                                    var collabId = collaboratorsAssigned.Where(x => x.JobId == displayJobDetail.Id).Select(x => x.AppUserId);
-                                                    appUserFilter = appUser.Where(x => collabId.Contains(x.id) && x.role != "Candidate").ToList();
-                                                            
-                                                     
+                                                        var collabId = collaboratorsAssigned.Where(x => x.JobId == displayJobDetail.Id).Select(x => x.AppUserId);
+                                                        personalInformation = personalInformation.Where(x => collabId.Contains(x.Id)).ToList();
+                                                        collaboratorsAssigned2 = collaboratorsAssigned.Where(x => collabId.Contains(x.Id)).ToList();
+                                                        appUserFilter = appUser.Where(x => collabId.Contains(x.id)).ToList();
+                                                      
                                                     }
                                                     
-                                                         
-                                                        @if(appUserFilter.Count < 3)
+                                                        @if(appUserFilter.Count < 3 && appUserFilter.Count > 0)
                                                         {
                                                             <div class="image-div">
-                                                                @for (var i = 0; i < appUserFilter.Count; i++)
-                                                                {
+                                                               
                                                                     <div class="tooltip-c">
-                                                                        <img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" />
+                                                                   
+                                                                        @for(var i = 0; i < appUserFilter.Count; i++)
+                                                                        {
+                                                                                   
+                                                                              <img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" /> 
 
+                                                                              <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname @collaboratorsAssigned2[i].Name </span>
+
+                                                                                    
+                                                                        }
+                                                                      
+                                                                        @*<img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" />*@
+                                                                       
+                                                                  
                                                                     </div>
-                                                                     
-                                                                    <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname</span>
-                                                            
-                                                          
-                                                                }
-                                                                    
+                                                                 
 
                                                             </div>
                                                              
@@ -571,14 +625,21 @@
                                                         <div class="image-div">
                                                              @for (var i = 0; i < 3; i++)
                                                             {
+                                                                
                                                                 <div class="tooltip-c">
-                                                                     <img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image " /> 
+                                                                    
+                                                                   
+                                                                      <img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" />
+                                                                       <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname @collaboratorsAssigned2[i].Name </span>
+                                                                       
+                                                                     @*<img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image " /> 
+                                                                     <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname</span>*@ 
                                                                 </div>
                                                                
-                                                                <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname</span>   
+                                                                  
                                                             }
                                                         
-                                                            <p>+ @((@appUserFilter.Count)-3)</p>
+                                                            @*<p class="plus">+ @((@appUserFilter.Count)-3)</p>*@
 
                                                         </div>
                                                        
@@ -586,9 +647,9 @@
                                                 }
                                                 
 
-                                                <div class="col mt-5">
+                                               @* <div class="col mt-5">
                                                     <button class="default-button-style" type="button" @onclick="() => OpenJobCollabDialog(displayJobDetail.Id)">Collaborators</button>
-                                                </div>
+                                                </div>*@
 
                                                 <div class="col mt-5">
                                                     <button class="default-button-style" type="button" @onclick="() => ShowApplicantPortal(displayJobDetail.Id)">Applicant Portal</button>
@@ -801,7 +862,7 @@
     </div>
 }
 
-<MudDialog @bind-IsVisible="isDialogVisible" Options="options">
+@*<MudDialog @bind-IsVisible="isDialogVisible" Options="options">
     <DialogContent>
         @if (appUserFilter?.Any() == true)
         {
@@ -855,7 +916,7 @@
             </MudGrid>
         }
     </DialogContent>
-</MudDialog>
+</MudDialog>*@
 
 @{
     isFilterContainAnyVal = !string.IsNullOrEmpty(searchJob) || mudSelectLocation?.Any() == true || mudSelectCompany?.Any() == true || mudSelectDepartment?.Any() == true || mudSelectStatus?.Any() == true;
@@ -868,4 +929,6 @@
 }
 
 @code {
+   
+    
 }

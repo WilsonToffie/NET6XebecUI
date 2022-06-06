@@ -32,6 +32,8 @@ namespace XebecPortal.UI.Pages.HR
         private List<AppUser> appUser;
         private List<AppUser> appUserFilter;
         private List<CollaboratorsAssigned> collaboratorsAssigned;
+        private List<CollaboratorsAssigned> collaboratorsAssigned2;
+        private List<PersonalInformation> personalInformation;
         private List<Department> departments;
         private List<string> locations = new() { "Eastern Cape", "Free State", " Gauteng", "KwaZulu-Natal", "Limpopo", "Mpumalanga", "Northen Cape", "North West", "Western Cape" };
         private MudBlazor.DialogOptions options = new() { CloseButton = true, FullWidth = true};
@@ -60,6 +62,8 @@ namespace XebecPortal.UI.Pages.HR
             jobTypeHelper = await httpClient.GetListJsonAsync<List<JobTypeHelper>>($"https://xebecapi.azurewebsites.net/api/JobTypeHelper", new AuthenticationHeaderValue("Bearer", token));
             appUser = await httpClient.GetListJsonAsync<List<AppUser>>($"https://xebecapi.azurewebsites.net/api/User", new AuthenticationHeaderValue("Bearer", token));
             collaboratorsAssigned = await httpClient.GetListJsonAsync<List<CollaboratorsAssigned>>($"https://xebecapi.azurewebsites.net/api/CollaboratorsAssigned", new AuthenticationHeaderValue("Bearer", token));
+            personalInformation = await httpClient.GetListJsonAsync<List<PersonalInformation>>("https://xebecapi.azurewebsites.net/api/PersonalInformation", new AuthenticationHeaderValue("Bearer", token));
+
             status = await httpClient.GetFromJsonAsync<List<Status>>("/mockData/Status.json");
             departments = await httpClient.GetFromJsonAsync<List<Department>>("/mockData/departmentMockDatav1.json");
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/jsPages/HR/JobPortalv3.js");
