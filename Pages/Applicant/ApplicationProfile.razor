@@ -1335,7 +1335,8 @@
                                  {                                     
                                          <div style="display: flex; justify-content: center;">
                                             <div style="width: 150px;margin-right: 142px;">@item.SubjectName</div>
-                                            <div style="width: 40px;">@item.SubjectMark </div>      
+                                            <div style="width: 40px;">@item.SubjectMark </div>  
+                                            <button type="button" class="btn-close text-reset" @onclick="() => RemoveMark(item)"></button>
                                          </div>                                      
                                  }
                                  </div>
