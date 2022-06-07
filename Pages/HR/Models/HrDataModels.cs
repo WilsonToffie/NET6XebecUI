@@ -65,11 +65,15 @@ namespace XebecPortal.UI.Pages.HR
         [Required]
         public string Description { get; set; }
         [Required]
-        public string Company { get; set; }
+        public int CompanyId { get; set; }
+
+        public Company Company { get; set; }
         public decimal? Compensation { get; set; }
         public int? MinimumExperience { get; set; }
         [Required]
-        public string Location { get; set; }
+        public int LocationId { get; set; }
+
+        public Location Location { get; set; }
         public int DepartmentId { get; set; }
         public Department Department { get; set; } // Dont have to fill in this info when sending it to the DB
         public string Status { get; set; }
@@ -84,7 +88,9 @@ namespace XebecPortal.UI.Pages.HR
         public List<Application> Applications { get; set; }
 
         [Required]
-        public string Policy { get; set; }
+        public int PolicyId { get; set; }
+
+        public Policy Policy { get; set; }
     }
 
     public class Department
@@ -451,6 +457,27 @@ namespace XebecPortal.UI.Pages.HR
         public string ImageUrl { get; set; }
         public int AppUserId { get; set; }
         public AppUser AppUser{ get; set; }
+    }
+
+    public class Location
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+    }
+
+    public class Company
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+    }
+
+    public class Policy
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
     }
 
 

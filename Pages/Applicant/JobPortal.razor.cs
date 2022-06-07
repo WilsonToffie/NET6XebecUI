@@ -233,14 +233,14 @@ namespace XebecPortal.UI.Pages.Applicant
 
             if (mudSelectLocation?.Any() == true)
             {
-                var listLocations = jobListFilter.Select(x => x.Location).Except(mudSelectLocation).ToList();
-                jobListFilter = jobListFilter.Where(x => !listLocations.Contains(x.Location)).ToList();
+                var listLocations = jobListFilter.Select(x => x.Location.Name).Except(mudSelectLocation).ToList();
+                jobListFilter = jobListFilter.Where(x => !listLocations.Contains(x.Location.Name)).ToList();
             }
 
             if (mudSelectCompany?.Any() == true)
             {
-                var listCompany = jobListFilter.Select(x => x.Company).Except(mudSelectCompany).ToList();
-                jobListFilter = jobListFilter.Where(x => !listCompany.Contains(x.Company)).ToList();
+                var listCompany = jobListFilter.Select(x => x.Company.Name).Except(mudSelectCompany).ToList();
+                jobListFilter = jobListFilter.Where(x => !listCompany.Contains(x.Company.Name)).ToList();
             }
 
             if (mudSelectDepartment?.Any() == true)
