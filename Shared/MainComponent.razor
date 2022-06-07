@@ -562,7 +562,7 @@
                             <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Companies" MultiSelection="true" Label="Filter by Company" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextCompany)">
                                 @if (jobs?.Any() == true)
                                 {
-                                    @foreach (var item in jobs.Select(x => x.Company).Distinct())
+                                    @foreach (var item in jobs.Select(x => x.Company.Name).Distinct())
                                     {
                                         <MudSelectItem T="string" Value="item">@item</MudSelectItem>
                                     }
@@ -573,7 +573,7 @@
                             <MudSelect T="string" Class="form-control mainlayout-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer; font-size: 2em;" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Locations" MultiSelection="true" Label="Filter by Location" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextLocation)">
                                 @if (jobs?.Any() == true)
                                 {
-                                    @foreach (var item in jobs.Select(x => x.Location).Distinct())
+                                    @foreach (var item in jobs.Select(x => x.Location.Name).Distinct())
                                     {
                                         <MudSelectItem T="string" Value="item">@item</MudSelectItem>
                                     }

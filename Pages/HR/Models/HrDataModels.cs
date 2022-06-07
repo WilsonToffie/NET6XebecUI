@@ -107,15 +107,21 @@ namespace XebecPortal.UI.Pages.HR
         [Required]
         public string Description { get; set; } = string.Empty;
         [Required]
-        public string Company { get; set; } = "Select Company"; // Remember to change this to string.Empty
+        public int CompanyId { get; set; } = 0; // Remember to change this to string.Empty
+
+        public Company Company { get; set; }
         public decimal? Compensation { get; set; } = null;
         public int? MinimumExperience { get; set; } = 0;
         [Required]
-        public string Location { get; set; } = "Select Office Location"; // Remember to change this to string.Empty
+        public int LocationId { get; set; } = 0; // Remember to change this to string.Empty
+
+        public Location Location { get; set; }
         //[Required]
         //public string Department { get; set; }
         [Required]
-        public string Policy { get; set; } = "Select WFH Policy";//string.Empty;// Not sure what data type it should be, but policy is a required field   
+        public int PolicyId { get; set; } = 0;//string.Empty;// Not sure what data type it should be, but policy is a required field
+                                              //
+        public Policy Policy { get; set; }
         public int JobTypeId { get; set; } = 0;
         public int DepartmentId { get; set; } = 0;// testing problem
         public string Status { get; set; }  = string.Empty;

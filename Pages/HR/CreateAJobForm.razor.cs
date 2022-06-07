@@ -206,13 +206,13 @@ namespace XebecPortal.UI.Pages.HR
             {
                 Title = TempJob.Title,
                 Description = TempJob.Description,
-                Company = TempJob.Company,
+                CompanyId = TempJob.CompanyId,
                 Compensation = TempJob.Compensation,
                 MinimumExperience = TempJob.MinimumExperience,
-                Location = TempJob.Location,
+                LocationId = TempJob.LocationId,
                 DepartmentId = departments.Id,
                 //Department = departments,
-                Policy = TempJob.Policy,
+                PolicyId = TempJob.PolicyId,
                 Status = "Draft",
                 DueDate = TempJob.DueDate,
                 CreationDate = DateTime.Today,                
@@ -224,7 +224,7 @@ namespace XebecPortal.UI.Pages.HR
             // Please find a better way....
             foreach (var item in checkJobList)
             {
-                if (item.Title.Equals(TempJob.Title) && item.Description.Equals(TempJob.Description) && item.Company.Equals(TempJob.Company) && item.Location.Equals(TempJob.Location) && item.DepartmentId.Equals(departments.Id) && item.Policy.Equals(TempJob.Policy) && item.Status.Equals("Draft")) // && item.DueDate.Equals(TempJob.DueDate) && item.JobTypes.Equals(jobType)
+                if (item.Title.Equals(TempJob.Title) && item.Description.Equals(TempJob.Description) && item.CompanyId.Equals(TempJob.CompanyId) && item.LocationId.Equals(TempJob.LocationId) && item.DepartmentId.Equals(departments.Id) && item.PolicyId.Equals(TempJob.PolicyId) && item.Status.Equals("Draft")) // && item.DueDate.Equals(TempJob.DueDate) && item.JobTypes.Equals(jobType)
                 {
                     TempJob.Id = item.Id;
                     existJobId = item.Id; 
