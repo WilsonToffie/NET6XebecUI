@@ -76,25 +76,37 @@ namespace XebecPortal.UI.Pages.Applicant
     public class Job
     {
         public int Id { get; set; }
+        [Required]
         public string Title { get; set; }
+        [Required]
         public string Description { get; set; }
-        public string Company { get; set; }
+        [Required]
+        public int CompanyId { get; set; }
+
+        public Company Company { get; set; }
         public decimal? Compensation { get; set; }
         public int? MinimumExperience { get; set; }
-        public string Location { get; set; }
+        [Required]
+        public int LocationId { get; set; }
+
+        public Location Location { get; set; }
         public int DepartmentId { get; set; }
-
-        public Department Department { get; set; }
-
-        public string Policy { get; set; }
+        public Department Department { get; set; } // Dont have to fill in this info when sending it to the DB
         public string Status { get; set; }
+        [Required]
         public DateTime DueDate { get; set; }
         public DateTime CreationDate { get; set; }
-        public IList<JobTypeHelper> JobTypes { get; set; }
-        public IList<JobPlatformHelper> JobPlatforms { get; set; }
-        public IList<JobApplicationPhase> JobPhases { get; set; }
-        public IList<Application> Applications { get; set; }
+        //[Required]
+        public List<JobTypeHelper> JobTypes { get; set; }
+        public List<JobPlatformHelper> JobPlatforms { get; set; }
+        public List<JobApplicationPhase> JobPhases { get; set; }
 
+        public List<Application> Applications { get; set; }
+
+        [Required]
+        public int PolicyId { get; set; }
+
+        public Policy Policy { get; set; }
     }
 
     public class Department
@@ -429,5 +441,26 @@ namespace XebecPortal.UI.Pages.Applicant
         public int AppUserId { get; set; }
 
         public AppUser AppUser { get; set; }
+    }
+
+    public class Location
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+    }
+
+    public class Company
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
+    }
+
+    public class Policy
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
     }
 }
