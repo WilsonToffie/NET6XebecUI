@@ -376,8 +376,12 @@
                     </div>
                     <div class="offcanvas-body p-5 pt-0 d-grid gap-5">
                         <div class="col-12">
-                            <div class="hr-job-search-bar">
+                            @*<div class="hr-job-search-bar">
                                 <input class="search-image hr-job-search-bar-input rounded-pill" style="padding-left: 4em;" type="text" placeholder="Search For Jobs" @oninput="SearchListJob" />
+                            </div>*@
+                            <div class="search-wrapper-container">
+                                <input class="search-bar-input" placeholder="Search For Jobs" type="text" @oninput="SearchListJob" />
+                                <img class="search-bar-pic" src="/Img/search.svg"/>
                             </div>
                         </div>
                         <div class="col-12">
@@ -539,8 +543,11 @@
             <br />
         }
         <div class="row">
-            <div class="col-12 d-flex justify-content-center">
+            @*<div class="col-12 d-flex justify-content-center">
                 <MudProgressCircular Color="Color.Info" Style="height:140px;width:140px;" Indeterminate="true" />
+            </div>*@
+            <div class="appform-submit-modal">
+                <MudProgressCircular Size="Size.Large" Indeterminate="true" />
             </div>
         </div>
     }
