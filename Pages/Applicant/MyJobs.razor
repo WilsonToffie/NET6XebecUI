@@ -310,8 +310,8 @@
                 {
                     <div class="job-card">
                         <span class="position">@currentJob.Title</span>
-                        <span class="company">@currentJob.Company</span>
-                        <small class="addition-details text-muted">@currentJob.Location</small>
+                        <span class="company">@currentJob.Company.Name</span>
+                        <small class="addition-details text-muted">@currentJob.Location.Name</small>
                         <small class="phase left-text">
                             <span class="phase-pill" style="@(GetColor(currentPhase.description))">@currentPhase.description</span>
                         </small>
@@ -347,8 +347,8 @@
 
                     <div class="job-card">
                         <span class="position">@currentJob.Title</span>
-                        <span class="company">@currentJob.Company</span>
-                        <small class="addition-details text-muted">@currentJob.Location</small>
+                        <span class="company">@currentJob.Company.Name</span>
+                        <small class="addition-details text-muted">@currentJob.Location.Name</small>
                         <small class="phase left-text">
                             <span class="phase-pill" style="@(GetColor(currentPhase.description))">@currentPhase.description</span>
                         </small>
@@ -408,8 +408,8 @@
                 {
                     <div class="job-card">
                         <span class="position">@currentJob.Title</span>
-                        <span class="company">@currentJob.Company</span>
-                        <small class="addition-details text-muted">@currentJob.Location</small>
+                        <span class="company">@currentJob.Company.Name</span>
+                        <small class="addition-details text-muted">@currentJob.Location.Name</small>
                         <small class="phase left-text">
                             <span class="phase-pill" style="@(GetColor(currentPhase.description))">@currentPhase.description</span>
                         </small>
@@ -470,9 +470,11 @@
             {
                 <div class="job-card rejection">
                     <span class="position">@currentJob.Title</span>
-                    <span class="company">@currentJob.Company</span>
-                    <small class="addition-details">@currentJob.Location</small>
-                    <small class="phase left-text">Last Phase : <button class="rejection-phase">@currentPhase.description</button></small>
+                    <span class="company">@currentJob.Company.Name</span>
+                    <small class="addition-details">@currentJob.Location.Name</small>
+                    <small class="phase left-text">Last Phase : 
+                        <span class="phase-pill rejection-phase" style="@(GetColor(currentPhase.description))">@currentPhase.description</span>
+                    </small>
                     <small class="addition-details">Date Advertised: @currentJob.CreationDate</small>
                     <small class="addition-details">Date Closed : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@currentJob.DueDate</small>
                 </div>
