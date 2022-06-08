@@ -1511,7 +1511,7 @@ namespace XebecPortal.UI.Pages.Applicant
 
             marks.SubjectName = string.Empty;
             marks.SubjectMark = 0;
-            enterNewMark = false;
+            enterNewMark = true;
 
         }
 
@@ -1519,8 +1519,6 @@ namespace XebecPortal.UI.Pages.Applicant
         {
             foreach(var mark in matricMarksAdded)
             {
-                Console.WriteLine("This should happen at least once");
-                Console.WriteLine(mark.SubjectMark);
                 await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/matricMark", mark, new AuthenticationHeaderValue("Bearer", token));
             }
 
@@ -1533,7 +1531,7 @@ namespace XebecPortal.UI.Pages.Applicant
         private async void RemoveMark(matricMarks item)
         {
 
-            if(matricMarksAdded.Exists(x => x.SubjectName == item.SubjectName))
+            if(matricMarksAdded.Exists(x => x.SubjectName.Equals(item.SubjectName)))
             {
                 matricMarksAdded.Remove(item);
                 matricInputs.Remove(item);
@@ -1542,8 +1540,7 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 matricInputs.Remove(item);
                 await httpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/matricMark/{item.id}", new AuthenticationHeaderValue("Bearer", token));
-            }
-            
+            }            
         }
     }
 }
