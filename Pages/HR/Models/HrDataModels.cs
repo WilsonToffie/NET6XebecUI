@@ -66,8 +66,10 @@ namespace XebecPortal.UI.Pages.HR
         public string Description { get; set; }
         [Required]
         public int CompanyId { get; set; }
-
         public Company Company { get; set; }
+        [Required]
+        public int PolicyId { get; set; }
+        public Policy Policy { get; set; }
         public decimal? Compensation { get; set; }
         public int? MinimumExperience { get; set; }
         [Required]
@@ -87,10 +89,7 @@ namespace XebecPortal.UI.Pages.HR
 
         public List<Application> Applications { get; set; }
 
-        [Required]
-        public int PolicyId { get; set; }
-
-        public Policy Policy { get; set; }
+        
     }
 
     public class Department

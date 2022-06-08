@@ -257,35 +257,44 @@ namespace XebecPortal.UI.Pages.HR
 
         private async Task saveJobState()
         {
-
+            Console.WriteLine("policies.Id When entering saveJobState" + policies.Id);
             jobType.Add(new()
             {
                 JobTypeId = jobtype.JobTypeId,
             });
             Console.WriteLine("Joblist count: " + jobList.Count);
+
             jobList.Add(new()
             {
                 Title = TempJob.Title,
                 Description = TempJob.Description,
-                CompanyId = TempJob.CompanyId,
+                CompanyId = companies.Id,
                 Compensation = TempJob.Compensation,
                 MinimumExperience = TempJob.MinimumExperience,
-                LocationId = TempJob.LocationId,
+                LocationId = locations.Id,
                 DepartmentId = departments.Id,
-                //Department = departments,
-                PolicyId = TempJob.PolicyId,
+                PolicyId = policies.Id,
                 Status = "Draft",
                 DueDate = TempJob.DueDate,
                 CreationDate = DateTime.Today,                
                 JobTypes = jobType,                
-            });
+        });
+
+            Console.WriteLine("Title " + TempJob.Title);
+            Console.WriteLine("Description " + TempJob.Description);
+            Console.WriteLine("LocationId " + locations.Id);
+            Console.WriteLine("DepartmentID " + departments.Id);
+            Console.WriteLine("Policies ID " + policies.Id);
+            Console.WriteLine("JobTypes " + jobType);
 
             checkJobList = await HttpClient.GetListJsonAsync<List<Job>>($"https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
             //checkJob = checkJobList.Where(x => x.Title == TempJob.Title).ToList();
             // Please find a better way....
+            Console.WriteLine("JOb count" + checkJobList.Count());
             foreach (var item in checkJobList)
-            {
-                if (item.Title.Equals(TempJob.Title) && item.Description.Equals(TempJob.Description) && item.CompanyId.Equals(TempJob.CompanyId) && item.LocationId.Equals(TempJob.LocationId) && item.DepartmentId.Equals(departments.Id) && item.PolicyId.Equals(TempJob.PolicyId) && item.Status.Equals("Draft")) // && item.DueDate.Equals(TempJob.DueDate) && item.JobTypes.Equals(jobType)
+            {                
+
+                if (item.Title.Equals(TempJob.Title) && item.Description.Equals(TempJob.Description) && (item.DepartmentId == departments.Id) && (item.LocationId == locations.Id)) //) && item.PolicyId == policies.Id item.PolicyId == policies.Id && item.DueDate.Equals(TempJob.DueDate) && item.JobTypes.Equals(jobType)
                 {
                     TempJob.Id = item.Id;
                     existJobId = item.Id; 
@@ -385,6 +394,7 @@ namespace XebecPortal.UI.Pages.HR
         {
             if (policyID > 0)
             {
+                Console.WriteLine("Policy ID when selected: " + policyID);
                 displayPolicy = await HttpClient.GetListJsonAsync<Policy>($"https://xebecapi.azurewebsites.net/api/Policy/single/{policyID}", new AuthenticationHeaderValue("Bearer", token));
                 TempJob.Policy.Id = displayPolicy.Id;
                 TempJob.Policy.Name = displayPolicy.Name;
