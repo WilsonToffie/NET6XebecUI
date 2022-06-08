@@ -20,23 +20,33 @@ namespace XebecPortal.UI.Pages.HR
 
         //[Parameter]
         //public EventCallback<CreateJobPost> TempJobChanged { get; set; }
-        private List<string> Company = new List<string>() { "Nebula", "Deloitte" };
-        private List<string> Locations = new List<string>() { "Remote", "Eastern Cape", "Free State", " Gauteng", "KwaZulu-Natal", "Limpopo", "Mpumalanga", "Northen Cape", "North West", "Western Cape" };
+        private List<Company> Company = new List<Company>();
+        private List<Company> NewCompanies = new List<Company>();
+        private List<Location> Locations = new List<Location>();
         //private List<string> Statuses = new List<string>() { "Open", "Draft", "Filled", "Closed" };
-        private List<string> Policies = new List<string>() { "Remote", "Hybrid", "Onsite" };
+        private List<Policy> Policies = new List<Policy>();
         private IList<JobType> jobTypes = new List<JobType>();
         private IList<Department> Departments = new List<Department>();
         private IList<Department> NewDepartments = new List<Department>();
         //private JobType tempJobType = new JobType();
         //private Department tempDepartment = new Department();
         private Department department = new Department();
+        private Company company = new Company();
+        private Location location = new Location();
+        private Policy policy = new Policy();
         private Department departments = new Department(); // this is mainly used for the department display 
+        private Company companies = new Company(); // this is mainly used for the Company display 
+        private Location locations = new Location(); // this is mainly used for the Location display 
+        private Policy policies = new Policy(); // this is mainly used for the Policy display 
         private List<JobPlatform> ListOfPlatforms = new List<JobPlatform>();
         private IList<Job> jobList = new List<Job>();
         private List<JobTypeHelper> jobType = new List<JobTypeHelper>();
         private JobTypeHelper jobtype = new JobTypeHelper();
         private Department displayDepartment = new Department();
         private JobType displayJobType = new JobType();
+        private Company displayCompany= new Company();
+        private Location displayLocations = new Location();
+        private Policy displayPolicy = new Policy();
         private Job checkJob = new Job();
         private IList<Job> checkJobList { get; set; }
 
@@ -56,6 +66,7 @@ namespace XebecPortal.UI.Pages.HR
         private int existJobId;
 
         private bool addedNewDep;
+        private bool addedNewComp;
         private bool validUpload;
         private bool allowedToRedirect = false;
 
@@ -64,6 +75,10 @@ namespace XebecPortal.UI.Pages.HR
         protected override async Task OnInitializedAsync()
         {            
             token = await localStorage.GetItemAsync<string>("jwt_token");
+
+            Company = await HttpClient.GetListJsonAsync<List<Company>>($"https://xebecapi.azurewebsites.net/api/Company", new AuthenticationHeaderValue("Bearer", token));
+            Locations = await HttpClient.GetListJsonAsync<List<Location>>($"https://xebecapi.azurewebsites.net/api/Location", new AuthenticationHeaderValue("Bearer", token));
+            Policies = await HttpClient.GetListJsonAsync<List<Policy>>($"https://xebecapi.azurewebsites.net/api/Policy", new AuthenticationHeaderValue("Bearer", token));
 
             jobTypes = await HttpClient.GetListJsonAsync<List<JobType>>($"https://xebecapi.azurewebsites.net/api/jobtype", new AuthenticationHeaderValue("Bearer", token));
             Departments = await HttpClient.GetListJsonAsync<List<Department>>($"https://xebecapi.azurewebsites.net/api/Department", new AuthenticationHeaderValue("Bearer", token));
@@ -172,18 +187,64 @@ namespace XebecPortal.UI.Pages.HR
             
             await createDep(false);
         }
-        private void addCompany(string value)
+        private void addCompany(Company value)
         {
             if (!value.Equals(string.Empty))
             {
-                Company.Add(value);
-                companyToAdd = string.Empty;
+                NewCompanies.Add(new() { 
+                    Name = value.Name
+                });
+                company.Name = string.Empty;
             }
         }
-        private void removeCompany(string value)
+        private async Task removeCompany(Company value)
         {
-            Company.Remove(value);
+            if (value.Id > 0)
+            {
+                if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Remove This Company?"))
+                {
+
+                    // Departments.Remove(value);
+                    var removeComp = await HttpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/Company/{value.Id}", new AuthenticationHeaderValue("Bearer", token));
+                    if (removeComp.IsSuccessStatusCode)
+                    {
+                        await jsRuntime.InvokeAsync<object>("alert", "Department has successfully been removed!");
+                    }
+                }
+            }
+            else
+            {
+                await jsRuntime.InvokeAsync<object>("alert", "Please select a valid Company!");
+            }
+            await OnInitializedAsync();
         }
+
+        private async Task saveCompany()
+        {
+            foreach (var item in NewCompanies)
+            {
+                var newCompAdded = await HttpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Company", item, new AuthenticationHeaderValue("Bearer", token));
+                if (newCompAdded.IsSuccessStatusCode)
+                {
+                    addedNewComp = true;
+                }
+                else
+                {
+                    addedNewComp = false;
+                }
+
+            }
+
+            if (addedNewComp)
+            {
+                await jsRuntime.InvokeAsync<object>("alert", "Newly added departments has been saved!");
+            }
+            NewCompanies.Clear();
+
+            await createDep(false);
+        }
+
+
         private void manageCompany(bool value)
         {
             manageComp = value;
@@ -308,6 +369,36 @@ namespace XebecPortal.UI.Pages.HR
                 TempJob.JobType.Id = displayJobType.Id;
                 TempJob.JobType.Type = displayJobType.Type;
             }            
+        }
+
+        private async Task displayCompName(int compID)
+        {
+            if (compID > 0)
+            {
+                displayCompany = await HttpClient.GetListJsonAsync<Company>($"https://xebecapi.azurewebsites.net/api/Company/single/{compID}", new AuthenticationHeaderValue("Bearer", token));
+                TempJob.Company.Id = displayCompany.Id;
+                TempJob.Company.Name = displayCompany.Name;
+            }
+        }
+
+        private async Task displayPolicyName(int policyID)
+        {
+            if (policyID > 0)
+            {
+                displayPolicy = await HttpClient.GetListJsonAsync<Policy>($"https://xebecapi.azurewebsites.net/api/Policy/single/{policyID}", new AuthenticationHeaderValue("Bearer", token));
+                TempJob.Policy.Id = displayPolicy.Id;
+                TempJob.Policy.Name = displayPolicy.Name;
+            }
+        }
+
+        private async Task displayLocationName(int locationId)
+        {
+            if (locationId > 0)
+            {
+                displayLocations = await HttpClient.GetListJsonAsync<Location>($"https://xebecapi.azurewebsites.net/api/Location/single/{locationId}", new AuthenticationHeaderValue("Bearer", token));
+                TempJob.Location.Id = displayLocations.Id;
+                TempJob.Location.Name = displayLocations.Name;
+            }
         }
     }
 }
