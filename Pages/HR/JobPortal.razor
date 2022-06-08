@@ -499,9 +499,9 @@
                                         <div class="card-body job-portal-card-body">
                                             <div class="row">
                                                 <div class="col-10"><h3 class="card-title" style="color: @SmallCardFontTitleColour(item.Id)">@item.Title</h3></div>
-                                                <div class="col-2"> <h3 class="card-title"><i class="handPointer fa fa-trash" style="color: @SmallCardTrashColour(item.Id); font-size: x-large; margin-left: -1em" @onclick="() => DeleteData(item.Id)"></i></h3></div>
-                                                <div class="col-12"><h5 class="card-subtitle text-muted small-card-company" style="color: @SmallCardFontColour(item.Id)"><b>@item.Company</b></h5></div>
-                                                <div class="col-12"><h5 class="card-text small-card-location" style="color: @SmallCardFontColour(item.Id)">@item.Location</h5></div>
+                                                <div class="col-2"> <h3 class="card-title"><i class="handPointer fa fa-trash" style="color: @SmallCardTrashColour(item.Id); font-size: x-large; margin-left: -0.5em;" @onclick="() => DeleteData(item.Id)"></i></h3></div>
+                                                <div class="col-12"><h5 class="card-subtitle text-muted small-card-company" style="color: @SmallCardFontColour(item.Id)"><b>@item.Company.Name</b></h5></div>
+                                                <div class="col-12"><h5 class="card-text small-card-location" style="color: @SmallCardFontColour(item.Id)">@item.Location.Name</h5></div>
                                                 <div class="col-12"><h5 class="card-text" style="color: @SmallCardFontColour(item.Id)">Status: <b>@item.Status</b></h5></div>
                                                 <div class="col-12"><h5 class="card-text small-card-date" style="color: @SmallCardFontColour(item.Id)">Closing Date: @item.DueDate.ToString("dd MMM yyyy")</h5></div>
                                             </div>
@@ -588,10 +588,11 @@
                                                 
                                                   
                                                 <div class="col mt-5">
+                                                    
                                                     @{
                                                         var collabId = collaboratorsAssigned.Where(x => x.JobId == displayJobDetail.Id).Select(x => x.AppUserId);
                                                         personalInformation = personalInformation.Where(x => collabId.Contains(x.Id)).ToList();
-                                                        collaboratorsAssigned2 = collaboratorsAssigned.Where(x => collabId.Contains(x.Id)).ToList();
+                                                        collaboratorsAssigned2 = collaboratorsAssigned.Where(x => x.JobId == displayJobDetail.Id).ToList();
                                                         appUserFilter = appUser.Where(x => collabId.Contains(x.id)).ToList();
                                                       
                                                     }
@@ -604,7 +605,7 @@
                                                                    
                                                                         @for(var i = 0; i < appUserFilter.Count; i++)
                                                                         {
-                                                                                   
+
                                                                               <img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" /> 
 
                                                                               <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname @collaboratorsAssigned2[i].Name </span>
@@ -673,13 +674,13 @@
                                         {
                                             <div class="col-12">
                                                 <label for="company">Company</label>
-                                                <input id="company" type="text" class="form-control" placeholder="Company Name" @bind="displayJobDetail.Company" />
+                                                <input id="company" type="text" class="form-control" placeholder="Company Name" @bind="displayJobDetail.Company.Name" />
                                             </div>
                                         }
                                         else
                                         {
                                             <h5 class="card-text">Company:</h5> <span>&nbsp;</span>
-                                            <h5 class="text-muted small-card-company">@displayJobDetail.Company</h5>
+                                            <h5 class="text-muted small-card-company">@displayJobDetail.Company.Name</h5>
                                         }
                                     </div>
                                     @if (changeForm)
@@ -701,7 +702,7 @@
                                         {
                                             <div class="col-12">
                                                 <label for="location">Location</label>
-                                                <select id="location" class="form-select inputDefaults" @bind="displayJobDetail.Location">
+                                                <select id="location" class="form-select inputDefaults" @bind="displayJobDetail.Location.Name">
                                                     @foreach (var item in locations)
                                                     {
                                                         <option>@item</option>
@@ -712,7 +713,7 @@
                                         else
                                         {
                                             <h5 class="card-text">Location:</h5> <span>&nbsp;</span>
-                                            <h5 class="text-muted small-card-company">@displayJobDetail.Location</h5>
+                                            <h5 class="text-muted small-card-company">@displayJobDetail.Location.Name</h5>
                                         }
                                     </div>
                                     <div class="@AlignItemsStart()">
