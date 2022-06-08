@@ -10,7 +10,7 @@
 <style>
     .nav1 {
         position: absolute;
-        left: 18%;
+        left: 13%;
         text-align: center;
         align-items: center;
         background-color: #FFFFFF !important;
@@ -459,14 +459,13 @@
         position: relative;
         /* height: 60vh; */
         width: 90%;
-        left: 23%;
+        left: 100px;
         top: 11%;
         margin-top: 1vh;
     }
 
     .position-history-card {
         position: relative;
-        left: 25%;
         top: -4%;
     }
 
@@ -708,9 +707,9 @@
     .progress-bar-spot-size {
         height: 3vh;
         position: absolute;
-        left: 30%;
-        top: 22%;
-        width: 46%;
+        left: 350px;
+        top: 160px;
+        width: 49%;
     }
 
     .progress-bar-progression {
@@ -972,8 +971,8 @@
                 <br />
                 <!--Personal Information-->
                 <div id="personal-information" class="container tab-pane active">
-                    <div class="d-flex justify-content-center">
-                        <EditForm Model="@personalInformation" OnValidSubmit="@AddPersonalInformation" style="width: 60%;">
+                    <div class="d-flex">
+                        <EditForm Model="@personalInformation" OnValidSubmit="@AddPersonalInformation" style="width: 60%; margin-left: 150px;">
                             <DataAnnotationsValidator />
                             <div class="row" style="margin-top: 50px; margin-left: -7%;">
                                 <div class="col-12 shadow-sm bg-body rounded-edges white-back" style=" margin-top: 5vh;">
@@ -1321,7 +1320,7 @@
 
                 <!--Matric marks-->
                 <div id="matricMarks" class="container tab-pane">                   
-                        <div class="d-flex justify-content-center">
+                        <div class="d-flex" style="margin-left: 130px;">
                             <div class="rounded-edges matric-white-back">
                                 <div class="personalInfo-header"> 
                                     <h1>Matric Marks</h1>
@@ -1333,14 +1332,14 @@
                                 <div class="mark-input-container">
                                  @foreach (var item in matricInputs)
                                  {                                     
-                                         <div style="display: flex; justify-content: center;">
+                                         <div style="display: flex; justify-content: center; margin-left: 10px;">
                                             <div style="width: 150px;margin-right: 142px;">@item.SubjectName</div>
                                             <div style="width: 40px;">@item.SubjectMark </div>  
                                             <button type="button" class="btn-close text-reset" @onclick="() => RemoveMark(item)"></button>
                                          </div>                                      
                                  }
                                  </div>
-                                 @if (enterNewMark)
+                                 @if (!enterNewMark)
                                  {
                                  <EditForm Model="@marks" OnValidSubmit="@insertMarks">
                                  <DataAnnotationsValidator />
@@ -1360,7 +1359,7 @@
                                  else
                                  {
                                      <div style="text-align: center;">
-                                         <input type="button" value="Add another" @onclick="() => addAnotherMark(true)"/>
+                                         <input type="button" value="Add another" @onclick="() => addAnotherMark(false)"/>
                                          <input type="button" value="Save" @onclick="SaveMarks"/>
                                      </div>
                                  }
@@ -1442,7 +1441,7 @@
                 <div id="additionalDocuments" class="container tab-pane">
                     <EditForm Model="@doc">
                         <DataAnnotationsValidator />
-                        <div class="d-flex justify-content-center">
+                        <div class="d-flex " style="margin-left: 130px;">
                             <div class="rounded-edges documents-white-back">
                                 <div class="personalInfo-header"> 
                                     <h1>Additional Documents</h1>
@@ -1709,9 +1708,9 @@
 
                 <!--Online Presence-->
                 <div id="online-profile" class="container tab-pane" style=" margin-top: 50px;">
-                    <form class="col-12 d-flex justify-content-center align-items-start">
+                    <form class="col-12 d-flex" style="margin-left: 110px;">
                         <div class="row col-9">
-                            <div class="col-12 shadow-sm bg-body rounded-edges align-self-start white-back" style="margin-top: -5.25vh; margin-left: 5vh; width: 87.5%; " >
+                            <div class="col-12 shadow-sm bg-body rounded-edges align-self-start white-back" style="margin-top: -9vh; width: 87.5%; " >
                                 <div class="education-header">
                                     <h1>Online Presence</h1>
                                 </div>
