@@ -17,7 +17,35 @@ namespace XebecPortal.UI.Pages.HR
         public string phase { get; set; }
     }
 
+    public class SkillsInformation : ICloneable
+    {
+        public int Id { get; set; }
+        public string Description { get; set; }
+        public int AppUserId { get; set; }
 
+        public object Clone()
+        {
+            return MemberwiseClone();
+        }
+
+        public override bool Equals(object obj)
+        {
+            SkillsInformation test = (SkillsInformation)obj;
+            return string.Equals(this.Description, test.Description, StringComparison.OrdinalIgnoreCase);
+        }
+    }
+    public class matricMarks
+    {
+        public int id { get; set; }
+        [Required]
+        public string SubjectName { get; set; }
+        [Required]
+        public int SubjectMark { get; set; }
+
+        public int AppUserId { get; set; }
+
+        public AppUser AppUser { get; set; }
+    }
     public class currentPhase
     {
         public currentPhases[] phases { get; set; }
