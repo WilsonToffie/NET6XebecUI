@@ -305,7 +305,7 @@
 
         .modal-frame-documents-rows .mini-modal-frame-documents img {
             height: 80%;
-            width: 80%;
+            width: 60%;
             margin-top: 10px;
         }
 
@@ -367,7 +367,7 @@
 
     .img-magnified {
         height: 90vh;
-        width: 40vw;
+        width: 35vw;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -406,6 +406,24 @@
         border-radius: 1.5em;
     }
 
+    .additional-information
+    {
+        color: #00bcae;
+        margin-top: 5px;
+    }
+
+    .additional-information:hover
+    {
+        color: #d35bc9;
+        cursor: pointer;
+    }
+
+    .additional-information-title
+    {
+        font: extra-bold;
+        font-size: 25px;
+    }
+
 </style>
 
 <div class="myjob-search-bar">
@@ -422,7 +440,7 @@
                 <tr>
                     <td></td>
                     <td>Personal Information</td>
-                    <td>Total Match</td>
+                    <td>Application Match</td>
                     <td>Position</td>
                     <td>Application Phase</td>
                     <td>Application Date</td>
@@ -450,9 +468,9 @@
                         double match = 0;
                         @if (candidates.Where(x => x.AppUserId == user.id && x.jobId == JobId).FirstOrDefault() != null)
                         {
-                            match = Math.Round(candidates.Where(x => x.AppUserId == user.id && x.jobId == JobId).FirstOrDefault().TotalMatch,2);
+                            match = Math.Round(candidates.Where(x => x.AppUserId == user.id && x.jobId == JobId).FirstOrDefault().TotalMatch, 2);
                         }
-                        
+
                         string jobTitle = jobs.Where(x => x.Id == JobId).FirstOrDefault().Title;
                         string img;
                         //Checks that the profile picture exists
@@ -545,7 +563,9 @@
             </div>
             <div class="modal-frame-documents-rows">
                 <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("linkedincv")'>
+
                     <img src="https://xebecstorage.blob.core.windows.net/linkedincv/@selectedUser.id" alt="Avatar">
+
                     <div style="color: #00bcae; font-family: opensans-condensed-bold">
                         CV
                     </div>
@@ -593,7 +613,7 @@
 {
     <div class="dimmed">
         <div class="img-magnified">
-            <input type="button" class="btn-view-document" style="margin-left:85%; margin-bottom: 2%;" value="Close" @onclick='() => toggleMagnifiedDocument("")' />
+            <input type="button" class="btn-view-document" style="margin-left:70%; margin-bottom: 2%;" value="Close" @onclick='() => toggleMagnifiedDocument("")' />
             <img src="https://xebecstorage.blob.core.windows.net/@selectedDocument/@selectedUser.id" />
         </div>
     </div>
@@ -616,6 +636,11 @@
                         <tr></tr>
                     </thead>
                     <tbody>
+                        <tr>
+                            <td>
+                                <div class="additional-information" @onclick="toggleAdditionalInformation">Show Additional Information</div>
+                            </td>
+                        </tr>
                         @foreach (var answer in AnswerList)
                         {
                             @if (answer.appUserId == selectedUser.id)
@@ -668,6 +693,172 @@
     }
 }
 
+
+<!--Additional information Modal-->
+@if (showAdditionalInformation)
+{
+    <div class="dimmed">
+        <div class="modal-frame">
+
+            <table>
+                <thead>
+                    <tr>
+                        <td class="title-modal">Additional Information: </td>
+                        <td class="close-modal" @onclick="toggleAdditionalInformation">x</td>
+                    </tr>
+                    <tr></tr>
+                </thead>
+                <tbody>
+
+                    <!--Education-->
+                    <tr>
+                        <td>
+                            <div class="additional-information-title">Education:</div>
+                        </td>
+                    </tr>
+                    @foreach (var education in educations)
+                    {
+                        @if (education.AppUserId == selectedUser.id)
+                        {
+
+                            <tr>
+                                <td class="form-label" for="last-name">Institution</td>
+                                <td id="last-name" class="form-control name">@education.Insitution</td>
+                            </tr>
+                            <tr>
+                                <td class="form-label" for="last-name">Qualification</td>
+                                <td id="last-name" class="form-control name">@education.Qualification</td>
+                            </tr>
+                            <tr>
+                                <td class="form-label" for="last-name">Start & Completion</td>
+                                <td id="last-name" class="form-control name">@($"{education.StartDate:dd MMM yyyy}") - @($"{education.EndDate:dd MMM yyyy}")</td>
+                            </tr>
+                            <tr>
+                                <td> </td>
+                            </tr>
+                        }
+                    }
+
+
+                    <!--Matric Marks-->
+                    <tr>
+                        <td>
+                            <div class="additional-information-title">Matric Marks:</div>
+                        </td>
+                    </tr>
+                    @foreach (var mark in marks)
+                    {
+                        @if (mark.AppUserId == selectedUser.id)
+                        {
+
+                            <tr>
+                                <td class="form-label" for="last-name">Subject</td>
+                                <td id="last-name" class="form-control name">@mark.SubjectName</td>
+                            </tr>
+                            <tr>
+                                <td class="form-label" for="last-name">Mark Obtained</td>
+                                <td id="last-name" class="form-control name">@mark.SubjectMark</td>
+                            </tr>
+                            <tr>
+                                <td> </td>
+                            </tr>
+                        }
+                    }
+
+
+                    <!--Work Histories-->
+                    <tr>
+                        <td>
+                            <div class="additional-information-title">Work Experience:</div>
+                        </td>
+                    </tr>
+                    @foreach (var workHistory in workHistories)
+                    {
+                        @if (workHistory.AppUserId == selectedUser.id)
+                        {
+
+                            <tr>
+                                <td class="form-label" for="last-name">Company</td>
+                                <td id="last-name" class="form-control name">@workHistory.CompanyName</td>
+                            </tr>
+                            <tr>
+                                <td class="form-label" for="last-name">Title</td>
+                                <td id="last-name" class="form-control name">@workHistory.JobTitle</td>
+                            </tr>
+                            <tr>
+                                <td class="form-label" for="last-name">Start & Completion</td>
+                                <td id="last-name" class="form-control name">@($"{workHistory.StartDate:dd MMM yyyy}") - @($"{workHistory.EndDate:dd MMM yyyy}")</td>
+                            </tr>
+                            <tr>
+                                <td> </td>
+                            </tr>
+                        }
+                    }
+
+
+                    <!--Skills-->
+                    <tr>
+                        <td>
+                            <div class="additional-information-title">Skills:</div>
+                        </td>
+                    </tr>
+                    @foreach (var skill in skills)
+                    {
+                        @if (skill.AppUserId == selectedUser.id)
+                        {
+
+                            <tr>
+                                <td class="form-label" for="last-name">Skill</td>
+                                <td id="last-name" class="form-control name">@skill.Description</td>
+                            </tr>
+                            <tr>
+                                <td> </td>
+                            </tr>
+                        }
+                    }
+
+
+                    <!--References-->
+                    <tr>
+                        <td>
+                            <div class="additional-information-title">References:</div>
+                        </td>
+                    </tr>
+                    @foreach (var reference in references)
+                    {
+                        @if (reference.appUserId == selectedUser.id)
+                        {
+
+                            <tr>
+                                <td class="form-label" for="last-name">Name</td>
+                                <td id="last-name" class="form-control name">@reference.refFirstName @empty @reference.refLastName</td>
+                            </tr>
+                            <tr>
+                                <td class="form-label" for="last-name">Relationship</td>
+                                <td id="last-name" class="form-control name">@reference.relationship</td>
+                            </tr>
+                            <tr>
+                                <td class="form-label" for="last-name">Phone</td>
+                                <td id="last-name" class="form-control name">@reference.refPhone</td>
+                            </tr>
+                            <tr>
+                                <td class="form-label" for="last-name">Email</td>
+                                <td id="last-name" class="form-control name">@reference.refEmail</td>
+                            </tr>
+                            <tr>
+                                <td> </td>
+                            </tr>
+                        }
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+
 @code {
     @using XebecPortal.UI.Utils.Handlers;
     @using System.Net.Http.Headers;
@@ -677,6 +868,7 @@
     string phaseEdit = "";
     string savePhase = "";
     bool showApplicationForm = false;
+    bool showAdditionalInformation = false;
     bool showDocuments = false;
     bool showMagnifiedDocument = false;
 
@@ -706,6 +898,11 @@
     private IList<Application> Applications = new List<Application>();
     private IList<ApplicationPhase> phases = new List<ApplicationPhase>();
     private IList<PersonalInformation> personalInformation = new List<PersonalInformation>();
+    private IList<Education> educations = new List<Education>();
+    private IList<matricMarks> marks = new List<matricMarks>();
+    private IList<WorkHistory> workHistories = new List<WorkHistory>();
+    private IList<SkillsInformation> skills = new List<SkillsInformation>();
+    private IList<References> references = new List<References>();
 
     private currentPhase phase { get; set; }
     [Parameter] public int JobId { get; set; }
@@ -720,6 +917,10 @@
         Applications = await httpClient.GetListJsonAsync<List<Application>>("https://xebecapi.azurewebsites.net/api/application", new AuthenticationHeaderValue("Bearer", token));
         AnswerList = await httpClient.GetListJsonAsync<List<ApplicantAnswer>>("https://xebecapi.azurewebsites.net/api/ApplicantQuestionnaire", new AuthenticationHeaderValue("Bearer", token));
         QuestionList = await httpClient.GetListJsonAsync<List<FormQuestion>>("https://xebecapi.azurewebsites.net/api/Questionnaire", new AuthenticationHeaderValue("Bearer", token));
+        educations = await httpClient.GetListJsonAsync<List<Education>>("https://xebecapi.azurewebsites.net/api/Education", new AuthenticationHeaderValue("Bearer", token));
+        marks = await httpClient.GetListJsonAsync<List<matricMarks>>("https://xebecapi.azurewebsites.net/api/MatricMark", new AuthenticationHeaderValue("Bearer", token));
+        skills = await httpClient.GetListJsonAsync<List<SkillsInformation>>("https://xebecapi.azurewebsites.net/api/Skill", new AuthenticationHeaderValue("Bearer", token));
+        references = await httpClient.GetListJsonAsync<List<References>>("https://xebecapi.azurewebsites.net/api/Reference", new AuthenticationHeaderValue("Bearer", token));
 
         users = await httpClient.GetListJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user", new AuthenticationHeaderValue("Bearer", token));
         phasesHelpers = await httpClient.GetListJsonAsync<List<ApplicationPhaseHelper>>("https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper", new AuthenticationHeaderValue("Bearer", token));
@@ -779,6 +980,17 @@
     private void toggleApplicationForm()
     {
         showApplicationForm = !showApplicationForm;
+    }
+
+    private void toggleAdditionalInformation(AppUser user, int jobId)
+    {
+        showAdditionalInformation = !showAdditionalInformation;
+        SetSelectedCandidate(user);
+    }
+
+    private void toggleAdditionalInformation()
+    {
+        showAdditionalInformation = !showAdditionalInformation;
     }
 
     private string FindCurrentPhase(int candidateId, int jobId)
