@@ -27,7 +27,7 @@ namespace XebecPortal.UI.Services
         public async Task<List<ApplicationPhaseHelper>> GetAllApplicationPhaseHelpers()
         {
             var phaseHelpers = await JsonSerializer.DeserializeAsync<List<ApplicationPhaseHelper>>(
-                utf8Json: await AltClient.GetStreamAsync($"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper"),
+                utf8Json: await AltClient.GetStreamAsync($"ApplicationPhaseHelper"),
                 options: new JsonSerializerOptions()
                 {
                     PropertyNameCaseInsensitive = true
@@ -40,7 +40,7 @@ namespace XebecPortal.UI.Services
             //Todo populate application, application.job, applicationPhase, status
             Console.WriteLine($">>>>>ApplicationPhaseHelperDataService : getting helper for {appUserId}");
              return (AltClient.GetFromJsonAsync<List<ApplicationPhaseHelper>>(
-                 $"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/userId={appUserId}"));
+                 $"ApplicationPhaseHelper/userId={appUserId}"));
         }
 
         public async Task<List<ApplicationPhaseHelper>> GetAssApplicationPhaseHelpers(Applicant applicant,
@@ -56,14 +56,14 @@ namespace XebecPortal.UI.Services
         public async Task UpdateApplicationPhaseHelper(ApplicationPhaseHelper applicationPhaseHelper)
         {
             // var applicationHelperJson = new StringContent(JsonSerializer.Serialize(applicationPhaseHelper), Encoding.UTF8,"application/json");
-            // await AltClient.PutAsync($"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/{applicationPhaseHelper.Id}",applicationHelperJson);
-            await AltClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/{applicationPhaseHelper.Id}", applicationPhaseHelper);
+            // await AltClient.PutAsync($"ApplicationPhaseHelper/{applicationPhaseHelper.Id}",applicationHelperJson);
+            await AltClient.PutAsJsonAsync($"ApplicationPhaseHelper/{applicationPhaseHelper.Id}", applicationPhaseHelper);
         }
 
         public async Task<ApplicationPhaseHelper> GetApplicationPhaseHelperByUserId(int appUserId)
         {
             var helpers = (await AltClient.GetFromJsonAsync<List<ApplicationPhaseHelper>>(
-                $"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/userId={appUserId}"));
+                $"ApplicationPhaseHelper/userId={appUserId}"));
             if (helpers.Count > 0)
             {
                 return helpers[0];

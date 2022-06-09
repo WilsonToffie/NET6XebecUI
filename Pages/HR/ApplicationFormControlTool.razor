@@ -801,12 +801,12 @@ else if (nextPage == true)
         if (FormQuestions == null)
             FormQuestions = new();
 
-        Questions = await httpClient.GetListJsonAsync<List<CustomQuestion>>("https://xebecapi.azurewebsites.net/api/question", new AuthenticationHeaderValue("Bearer", token));
-        Jobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job", new AuthenticationHeaderValue("Bearer", token));
-        Types = await httpClient.GetListJsonAsync<List<QuestionType>>("https://xebecapi.azurewebsites.net/api/answertype", new AuthenticationHeaderValue("Bearer", token));
+        Questions = await httpClient.GetListJsonAsync<List<CustomQuestion>>("question", new AuthenticationHeaderValue("Bearer", token));
+        Jobs = await httpClient.GetListJsonAsync<List<Job>>("job", new AuthenticationHeaderValue("Bearer", token));
+        Types = await httpClient.GetListJsonAsync<List<QuestionType>>("answertype", new AuthenticationHeaderValue("Bearer", token));
 
         //preload based on jobid
-        FormQuestions = await httpClient.GetListJsonAsync<List<FormQuestion>>($"https://xebecapi.azurewebsites.net/api/questionnaire/job/{jobId}", new AuthenticationHeaderValue("Bearer", token));
+        FormQuestions = await httpClient.GetListJsonAsync<List<FormQuestion>>($"questionnaire/job/{jobId}", new AuthenticationHeaderValue("Bearer", token));
     }
 
     public async Task AddToForm(ChangeEventArgs e)
@@ -833,7 +833,7 @@ else if (nextPage == true)
         {
             if (await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this question"))
             {
-                var deleteQuestions = await httpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/question/{q.Id}", new AuthenticationHeaderValue("Bearer", token));
+                var deleteQuestions = await httpClient.DeleteJsonAsync($"question/{q.Id}", new AuthenticationHeaderValue("Bearer", token));
                 await OnInitializedAsync();
                 if (deleteQuestions.IsSuccessStatusCode)
                 {
@@ -879,7 +879,7 @@ else if (nextPage == true)
             if (await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to add this question?"))
             {
                 tempQuestion.answerTypeId = Types.FirstOrDefault(q => q.Type == tempType).Id;
-                var addQuestion = await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/question", tempQuestion, new AuthenticationHeaderValue("Bearer", token));
+                var addQuestion = await httpClient.PostJsonAsync("question", tempQuestion, new AuthenticationHeaderValue("Bearer", token));
                 await OnInitializedAsync();
 
                 if (addQuestion.IsSuccessStatusCode)
@@ -974,10 +974,10 @@ else if (nextPage == true)
 
             foreach(var question in questionnaireHrForms)
             {
-                await httpClient.PostJsonAsync<QuestionnaireHrForm>("https://xebecapi.azurewebsites.net/api/questionnaire", question, new AuthenticationHeaderValue("Bearer", token));
+                await httpClient.PostJsonAsync<QuestionnaireHrForm>("questionnaire", question, new AuthenticationHeaderValue("Bearer", token));
             }
 
-            //var post = await httpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/questionnaire/lst", questionnaireHrForms, new AuthenticationHeaderValue("Bearer", token));
+            //var post = await httpClient.PostJsonAsync("questionnaire/lst", questionnaireHrForms, new AuthenticationHeaderValue("Bearer", token));
             //    if (post.IsSuccessStatusCode)
             //    {
             //        await JSRuntime.InvokeAsync<object>("alert", "Questions saved successfully");
@@ -987,7 +987,7 @@ else if (nextPage == true)
 
 
         }
-        //await httpClient.PostJsonAsync<List<FormQuestion>>("https://xebecapi.azurewebsites.net/api/questionnaire/lst", FormQuestions, new AuthenticationHeaderValue("Bearer", token));
+        //await httpClient.PostJsonAsync<List<FormQuestion>>("questionnaire/lst", FormQuestions, new AuthenticationHeaderValue("Bearer", token));
         //Console.WriteLine("success!");
     }
 

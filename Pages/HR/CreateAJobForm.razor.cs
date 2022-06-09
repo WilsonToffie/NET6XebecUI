@@ -76,12 +76,12 @@ namespace XebecPortal.UI.Pages.HR
         {            
             token = await localStorage.GetItemAsync<string>("jwt_token");
 
-            Company = await HttpClient.GetListJsonAsync<List<Company>>($"https://xebecapi.azurewebsites.net/api/Company", new AuthenticationHeaderValue("Bearer", token));
-            Locations = await HttpClient.GetListJsonAsync<List<Location>>($"https://xebecapi.azurewebsites.net/api/Location", new AuthenticationHeaderValue("Bearer", token));
-            Policies = await HttpClient.GetListJsonAsync<List<Policy>>($"https://xebecapi.azurewebsites.net/api/Policy", new AuthenticationHeaderValue("Bearer", token));
+            Company = await HttpClient.GetListJsonAsync<List<Company>>($"Company", new AuthenticationHeaderValue("Bearer", token));
+            Locations = await HttpClient.GetListJsonAsync<List<Location>>($"Location", new AuthenticationHeaderValue("Bearer", token));
+            Policies = await HttpClient.GetListJsonAsync<List<Policy>>($"Policy", new AuthenticationHeaderValue("Bearer", token));
 
-            jobTypes = await HttpClient.GetListJsonAsync<List<JobType>>($"https://xebecapi.azurewebsites.net/api/jobtype", new AuthenticationHeaderValue("Bearer", token));
-            Departments = await HttpClient.GetListJsonAsync<List<Department>>($"https://xebecapi.azurewebsites.net/api/Department", new AuthenticationHeaderValue("Bearer", token));
+            jobTypes = await HttpClient.GetListJsonAsync<List<JobType>>($"jobtype", new AuthenticationHeaderValue("Bearer", token));
+            Departments = await HttpClient.GetListJsonAsync<List<Department>>($"Department", new AuthenticationHeaderValue("Bearer", token));
             TempJob.DueDate = TempJob.CreationDate = DateTime.Now;
         }
 
@@ -148,7 +148,7 @@ namespace XebecPortal.UI.Pages.HR
                 {
                 
                    // Departments.Remove(value);
-                    var removeDep = await HttpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/Department/{value.Id}", new AuthenticationHeaderValue("Bearer", token));
+                    var removeDep = await HttpClient.DeleteJsonAsync($"Department/{value.Id}", new AuthenticationHeaderValue("Bearer", token));
                     if (removeDep.IsSuccessStatusCode)
                     {
                         await jsRuntime.InvokeAsync<object>("alert", "Department has successfully been removed!");
@@ -167,7 +167,7 @@ namespace XebecPortal.UI.Pages.HR
         {
             foreach (var item in NewDepartments)
             {
-                var newDepAdded = await HttpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Department", item, new AuthenticationHeaderValue("Bearer", token));
+                var newDepAdded = await HttpClient.PostJsonAsync($"Department", item, new AuthenticationHeaderValue("Bearer", token));
                 if (newDepAdded.IsSuccessStatusCode)
                 {
                     addedNewDep = true;
@@ -205,7 +205,7 @@ namespace XebecPortal.UI.Pages.HR
                 {
 
                     // Departments.Remove(value);
-                    var removeComp = await HttpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/Company/{value.Id}", new AuthenticationHeaderValue("Bearer", token));
+                    var removeComp = await HttpClient.DeleteJsonAsync($"Company/{value.Id}", new AuthenticationHeaderValue("Bearer", token));
                     if (removeComp.IsSuccessStatusCode)
                     {
                         await jsRuntime.InvokeAsync<object>("alert", "Department has successfully been removed!");
@@ -223,7 +223,7 @@ namespace XebecPortal.UI.Pages.HR
         {
             foreach (var item in NewCompanies)
             {
-                var newCompAdded = await HttpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Company", item, new AuthenticationHeaderValue("Bearer", token));
+                var newCompAdded = await HttpClient.PostJsonAsync($"Company", item, new AuthenticationHeaderValue("Bearer", token));
                 if (newCompAdded.IsSuccessStatusCode)
                 {
                     addedNewComp = true;
@@ -287,7 +287,7 @@ namespace XebecPortal.UI.Pages.HR
             Console.WriteLine("Policies ID " + policies.Id);
             Console.WriteLine("JobTypes " + jobType);
 
-            checkJobList = await HttpClient.GetListJsonAsync<List<Job>>($"https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
+            checkJobList = await HttpClient.GetListJsonAsync<List<Job>>($"Job", new AuthenticationHeaderValue("Bearer", token));
             //checkJob = checkJobList.Where(x => x.Title == TempJob.Title).ToList();
             // Please find a better way....
             Console.WriteLine("JOb count" + checkJobList.Count());
@@ -312,8 +312,8 @@ namespace XebecPortal.UI.Pages.HR
                 {
                     Console.WriteLine("Job exists already with ID of: " + existJobId);
                     item.Id = existJobId;
-                    var validNewUpload = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Job/{existJobId}", item, new AuthenticationHeaderValue("Bearer", token));
-                    //var validNewUpload = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Job/213", item, new AuthenticationHeaderValue("Bearer", token));
+                    var validNewUpload = await HttpClient.PutJsonAsync($"Job/{existJobId}", item, new AuthenticationHeaderValue("Bearer", token));
+                    //var validNewUpload = await HttpClient.PutJsonAsync($"Job/213", item, new AuthenticationHeaderValue("Bearer", token));
                     if (validNewUpload.IsSuccessStatusCode)
                     {
                         validUpload = true;
@@ -327,8 +327,8 @@ namespace XebecPortal.UI.Pages.HR
                 else
                 {
                     Console.WriteLine("Job Doesnt exist yet");
-                    //var validExistingUpload = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Job/213", item, new AuthenticationHeaderValue("Bearer", token));
-                    var validExistingUpload = await HttpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/Job", item, new AuthenticationHeaderValue("Bearer", token));
+                    //var validExistingUpload = await HttpClient.PutJsonAsync($"Job/213", item, new AuthenticationHeaderValue("Bearer", token));
+                    var validExistingUpload = await HttpClient.PostJsonAsync($"Job", item, new AuthenticationHeaderValue("Bearer", token));
                     if (validExistingUpload.IsSuccessStatusCode)
                     {
                         validUpload = true;
@@ -364,7 +364,7 @@ namespace XebecPortal.UI.Pages.HR
         {
             if (depNameID > 0)
             {
-                displayDepartment = await HttpClient.GetListJsonAsync<Department>($"https://xebecapi.azurewebsites.net/api/Department/single/{depNameID}", new AuthenticationHeaderValue("Bearer", token));
+                displayDepartment = await HttpClient.GetListJsonAsync<Department>($"Department/single/{depNameID}", new AuthenticationHeaderValue("Bearer", token));
                 departments.Id = displayDepartment.Id;
                 departments.Name = displayDepartment.Name;
             }            
@@ -374,7 +374,7 @@ namespace XebecPortal.UI.Pages.HR
         {
             if (jobTypeId > 0)
             {
-                displayJobType = await HttpClient.GetListJsonAsync<JobType>($"https://xebecapi.azurewebsites.net/api/JobType/{jobTypeId}", new AuthenticationHeaderValue("Bearer", token));
+                displayJobType = await HttpClient.GetListJsonAsync<JobType>($"JobType/{jobTypeId}", new AuthenticationHeaderValue("Bearer", token));
                 TempJob.JobType.Id = displayJobType.Id;
                 TempJob.JobType.Type = displayJobType.Type;
             }            
@@ -384,7 +384,7 @@ namespace XebecPortal.UI.Pages.HR
         {
             if (compID > 0)
             {
-                displayCompany = await HttpClient.GetListJsonAsync<Company>($"https://xebecapi.azurewebsites.net/api/Company/single/{compID}", new AuthenticationHeaderValue("Bearer", token));
+                displayCompany = await HttpClient.GetListJsonAsync<Company>($"Company/single/{compID}", new AuthenticationHeaderValue("Bearer", token));
                 TempJob.Company.Id = displayCompany.Id;
                 TempJob.Company.Name = displayCompany.Name;
             }
@@ -395,7 +395,7 @@ namespace XebecPortal.UI.Pages.HR
             if (policyID > 0)
             {
                 Console.WriteLine("Policy ID when selected: " + policyID);
-                displayPolicy = await HttpClient.GetListJsonAsync<Policy>($"https://xebecapi.azurewebsites.net/api/Policy/single/{policyID}", new AuthenticationHeaderValue("Bearer", token));
+                displayPolicy = await HttpClient.GetListJsonAsync<Policy>($"Policy/single/{policyID}", new AuthenticationHeaderValue("Bearer", token));
                 TempJob.Policy.Id = displayPolicy.Id;
                 TempJob.Policy.Name = displayPolicy.Name;
             }
@@ -405,7 +405,7 @@ namespace XebecPortal.UI.Pages.HR
         {
             if (locationId > 0)
             {
-                displayLocations = await HttpClient.GetListJsonAsync<Location>($"https://xebecapi.azurewebsites.net/api/Location/single/{locationId}", new AuthenticationHeaderValue("Bearer", token));
+                displayLocations = await HttpClient.GetListJsonAsync<Location>($"Location/single/{locationId}", new AuthenticationHeaderValue("Bearer", token));
                 TempJob.Location.Id = displayLocations.Id;
                 TempJob.Location.Name = displayLocations.Name;
             }

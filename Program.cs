@@ -36,7 +36,12 @@ namespace XebecPortal.UI
             builder.Services.AddSingleton<JobState>();
             builder.Services.AddSingleton<CreateJobPost>();
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            //this is in appsettings and can be changed
+            var baseAddress = builder.Configuration.GetValue<string>("BaseUrl");
+
+            //builder.HostEnvironment.BaseAddress
+
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseAddress) });
             builder.Services.AddScoped<IApplicantDataService, ApplicantDataService>();
             builder.Services.AddScoped<IApplicationDataService, ApplicationDataService>();
             builder.Services.AddScoped<IJobDataService, JobDataService>();

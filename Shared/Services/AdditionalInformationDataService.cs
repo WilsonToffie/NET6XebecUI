@@ -21,7 +21,7 @@ namespace XebecPortal.UI.Services
         {
             return await JsonSerializer.DeserializeAsync<AdditionalInformation>
             (await altClient.GetStreamAsync(
-                    $"https://xebecapi.azurewebsites.net/api/AdditionalInformation/{appUserId}"),
+                    $"AdditionalInformation/{appUserId}"),
                 new JsonSerializerOptions()
                 {
                     PropertyNameCaseInsensitive = true
