@@ -495,7 +495,7 @@
                             <div id="small-cards" class="col-12 overflow-auto p-3" style="height: 44em !important; margin-top: 1vh">
                                 @foreach (var item in jobListFilter)
                                 {
-                                    <div class="card job-portal-card m-1 small-card-colour-change" @onclick="() => DisplayJobDetail(item.Id)" @onmouseover="() => OpenJobCollabToolTip(item.Id)" style="@GetStyling(item) background-color: @SmallCardActive(item.Id)">
+                                    <div class="card job-portal-card m-1 small-card-colour-change" @onclick="() => DisplayJobDetail(item.Id)"  style="@GetStyling(item) background-color: @SmallCardActive(item.Id)"> <!--@onmouseover="() => OpenJobCollabToolTip(item.Id)"-->
                                         <div class="card-body job-portal-card-body">
                                             <div class="row">
                                                 <div class="col-10"><h3 class="card-title" style="color: @SmallCardFontTitleColour(item.Id)">@item.Title</h3></div>
@@ -605,49 +605,33 @@
                                                                    
                                                                         @for(var i = 0; i < appUserFilter.Count; i++)
                                                                         {
-
                                                                               <img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" /> 
 
-                                                                              <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname @collaboratorsAssigned2[i].Name </span>
-
-                                                                                    
+                                                                              <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname @collaboratorsAssigned2[i].Name </span>                                                                                  
                                                                         }
                                                                       
-                                                                        @*<img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" />*@
-                                                                       
+                                                                        @*<img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" />*@                                                                      
                                                                   
-                                                                    </div>
-                                                                 
-
-                                                            </div>
-                                                             
-                                                        }
-                      
+                                                                    </div>                                                                
+                                                            </div>                                                             
+                                                        }                      
                                                 </div>
+
                                                 @if(appUserFilter.Count > 3)
                                                 {
                                                     <div class="col mt-5">
                                                         <div class="image-div">
                                                              @for (var i = 0; i < 3; i++)
-                                                            {
-                                                                
-                                                                <div class="tooltip-c">
-                                                                    
-                                                                   
+                                                            {                                                                
+                                                                <div class="tooltip-c">                                                                   
                                                                       <img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" />
                                                                        <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname @collaboratorsAssigned2[i].Name </span>
-                                                                       
                                                                      @*<img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image " /> 
                                                                      <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname</span>*@ 
-                                                                </div>
-                                                               
-                                                                  
-                                                            }
-                                                        
+                                                                </div> 
+                                                            }                                                        
                                                             @*<p class="plus">+ @((@appUserFilter.Count)-3)</p>*@
-
-                                                        </div>
-                                                       
+                                                        </div>                                                       
                                                     </div>   
                                                 }
                                                 
