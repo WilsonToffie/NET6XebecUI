@@ -18,7 +18,6 @@
     <None Include="Shared\Home\ForgotPassword.razor" />
     <None Include="Shared\Home\Home.razor" />
     <None Include="Shared\Home\HRSignUp.razor" />
-    <None Include="Shared\Home\JobPortal.razor" />
     <None Include="Shared\Home\SignIn.razor" />
     <None Include="Shared\MainComponent.razor" />
     <None Include="Shared\MainLayout.razor" />

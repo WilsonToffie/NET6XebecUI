@@ -1,4 +1,4 @@
-﻿@page "/applicantjobportal"
+﻿@page "/jobportal"
 @inject NavigationManager navmanager
 @inject HttpClient httpClient
 @inject UserState state
@@ -505,13 +505,16 @@
                                         @* <p>@displayJobDetail.JobPlatforms</p> *@
                                     </div>
                                     <div class="col-6 p-2 d-flex justify-content-end">
-                                        @if (applicationList != null && applicationList.Count(x => x.AppUserId == state.AppUserId && x.JobId == displayJobDetail.Id) > 0)
-                                        {
-                                            <p>You Have Applied For This Post</p>
-                                        }
-                                        else
-                                        {
-                                            <button class="default-button-style" type="button" @onclick="() => Apply(displayJobDetail.Id)">Apply</button> <!--class="btn detail-button-colour rounded-pill"-->
+                                        @if (@state.isLoggedIn)
+                                        {                                          
+                                            @if (applicationList != null && applicationList.Count(x => x.AppUserId == state.AppUserId && x.JobId == displayJobDetail.Id) > 0)
+                                            {
+                                                <p>You Have Applied For This Post</p>
+                                            }
+                                            else
+                                            {
+                                                <button class="default-button-style" type="button" @onclick="() => Apply(displayJobDetail.Id)">Apply</button> <!--class="btn detail-button-colour rounded-pill"-->
+                                            }
                                         }
                                     </div>
                                 </div>
