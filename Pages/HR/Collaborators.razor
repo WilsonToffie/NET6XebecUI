@@ -436,15 +436,15 @@ else if (prevPage)
 
         token = await localStorage.GetItemAsync<string>("jwt_token");
 
-        AppUserList = await HttpClient.GetListJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user", new AuthenticationHeaderValue("Bearer", token));
+        AppUserList = await HttpClient.GetListJsonAsync<List<AppUser>>("user", new AuthenticationHeaderValue("Bearer", token));
         AppUserList = AppUserList.Where(x => x.role != "Candidate").ToList();
 
-        collaborator = await HttpClient.GetListJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", new AuthenticationHeaderValue("Bearer", token));
+        collaborator = await HttpClient.GetListJsonAsync<List<AppUser>>("collaboratorsassigned", new AuthenticationHeaderValue("Bearer", token));
         collaborator = collaborator.Where(x => x.role == "Collaborator").ToList();
 
-        collaborators = await HttpClient.GetListJsonAsync<List<CollaboratorsAssigned>>("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", new AuthenticationHeaderValue("Bearer", token));
+        collaborators = await HttpClient.GetListJsonAsync<List<CollaboratorsAssigned>>("collaboratorsassigned", new AuthenticationHeaderValue("Bearer", token));
 
-        CollabQuestions = await HttpClient.GetListJsonAsync<List<CollaboratorQuestion>>("https://xebecapi.azurewebsites.net/api/collaboratorquestion", new AuthenticationHeaderValue("Bearer", token));
+        CollabQuestions = await HttpClient.GetListJsonAsync<List<CollaboratorQuestion>>("collaboratorquestion", new AuthenticationHeaderValue("Bearer", token));
 
         //check for hiring lead, if it exists, load it
         //try
@@ -515,10 +515,10 @@ else if (prevPage)
             }
             foreach (var saved in collaboratorsToSave)
             {
-                await HttpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", saved, new AuthenticationHeaderValue("Bearer", token));
+                await HttpClient.PostJsonAsync("collaboratorsassigned", saved, new AuthenticationHeaderValue("Bearer", token));
             };
 
-            //var addcollaborator = await HttpClient.PostJsonAsync("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", collaboratorsToSave, new AuthenticationHeaderValue("Bearer", token));
+            //var addcollaborator = await HttpClient.PostJsonAsync("collaboratorsassigned", collaboratorsToSave, new AuthenticationHeaderValue("Bearer", token));
 
             //if (addcollaborator.IsSuccessStatusCode)
             //{

@@ -1242,15 +1242,15 @@
         try
         {
 
-            tempAppUsers = await httpClient.GetListJsonAsync<List<AppUser>>("https://xebecapi.azurewebsites.net/api/user", new AuthenticationHeaderValue("Bearer", token));
-            AppPhases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
-            Unsuccessful = await httpClient.GetListJsonAsync<List<UnsuccessfulReason>>("https://xebecapi.azurewebsites.net/api/unsuccessfulreason", new AuthenticationHeaderValue("Bearer", token));
-            RejectedUsers = await httpClient.GetListJsonAsync<List<RejectedCandidate>>("https://xebecapi.azurewebsites.net/api/rejectedcandidate", new AuthenticationHeaderValue("Bearer", token));
-            AllJobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job", new AuthenticationHeaderValue("Bearer", token));
+            tempAppUsers = await httpClient.GetListJsonAsync<List<AppUser>>("user", new AuthenticationHeaderValue("Bearer", token));
+            AppPhases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("applicationphase", new AuthenticationHeaderValue("Bearer", token));
+            Unsuccessful = await httpClient.GetListJsonAsync<List<UnsuccessfulReason>>("unsuccessfulreason", new AuthenticationHeaderValue("Bearer", token));
+            RejectedUsers = await httpClient.GetListJsonAsync<List<RejectedCandidate>>("rejectedcandidate", new AuthenticationHeaderValue("Bearer", token));
+            AllJobs = await httpClient.GetListJsonAsync<List<Job>>("job", new AuthenticationHeaderValue("Bearer", token));
 
 
 
-            CurrentApplications = await httpClient.GetListJsonAsync<List<Application>>($"https://xebecapi.azurewebsites.net/api/application", new AuthenticationHeaderValue("Bearer", token));
+            CurrentApplications = await httpClient.GetListJsonAsync<List<Application>>($"application", new AuthenticationHeaderValue("Bearer", token));
 
             if (AllJobs.Count>0)
             {
@@ -1432,14 +1432,14 @@
             temp = CurrentApplications.Single(i => i.Id == CurrentItem.ApplicationId);
             temp.ApplicationPhaseId = phase;
 
-            await httpClient.PutJsonAsync<Application>($"https://xebecapi.azurewebsites.net/api/application/{CurrentItem.ApplicationId}", temp, new AuthenticationHeaderValue("Bearer", token));
+            await httpClient.PutJsonAsync<Application>($"application/{CurrentItem.ApplicationId}", temp, new AuthenticationHeaderValue("Bearer", token));
 
             ApplicationPhasesHelper tempHelper = new ApplicationPhasesHelper();
             tempHelper.ApplicationId = CurrentItem.ApplicationId;
             tempHelper.ApplicationPhaseId = phase;
             tempHelper.TimeMoved = DateTime.Now;
 
-            await httpClient.PostJsonAsync<ApplicationPhasesHelper>("https://xebecapi.azurewebsites.net/api/applicationphasehelper", tempHelper, new AuthenticationHeaderValue("Bearer", token));
+            await httpClient.PostJsonAsync<ApplicationPhasesHelper>("applicationphasehelper", tempHelper, new AuthenticationHeaderValue("Bearer", token));
 
             HrEmailModel test = new HrEmailModel();
             test.CandidateName = CurrentItem.Name;
@@ -1677,10 +1677,10 @@
 
 
                 //this will change when we are back to one jobid
-                Job FilledJob = await httpClient.GetListJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/job/{CurrentItem.JobId}", new AuthenticationHeaderValue("Bearer", token));
+                Job FilledJob = await httpClient.GetListJsonAsync<Job>($"job/{CurrentItem.JobId}", new AuthenticationHeaderValue("Bearer", token));
                 FilledJob.Status = "Filled";
 
-                await httpClient.PutJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/job/{FilledJob.Id}", FilledJob, new AuthenticationHeaderValue("Bearer", token));
+                await httpClient.PutJsonAsync<Job>($"job/{FilledJob.Id}", FilledJob, new AuthenticationHeaderValue("Bearer", token));
             }
         }
 
@@ -1697,7 +1697,7 @@
             temp = CurrentApplications.Single(i => i.Id == CurrentItem.ApplicationId);
             temp.ApplicationPhaseId = i;
 
-            await httpClient.PutJsonAsync<Application>($"https://xebecapi.azurewebsites.net/api/application/{CurrentItem.ApplicationId}", temp, new AuthenticationHeaderValue("Bearer", token));
+            await httpClient.PutJsonAsync<Application>($"application/{CurrentItem.ApplicationId}", temp, new AuthenticationHeaderValue("Bearer", token));
         }
 
 
@@ -1706,7 +1706,7 @@
         tempHelper.ApplicationPhaseId = i;
         tempHelper.TimeMoved = DateTime.Now;
 
-        await httpClient.PostJsonAsync<ApplicationPhasesHelper>("https://xebecapi.azurewebsites.net/api/applicationphasehelper", tempHelper, new AuthenticationHeaderValue("Bearer", token));
+        await httpClient.PostJsonAsync<ApplicationPhasesHelper>("applicationphasehelper", tempHelper, new AuthenticationHeaderValue("Bearer", token));
 
 
         HrEmailModel test = new HrEmailModel();
@@ -1748,8 +1748,8 @@
             temp.ApplicationId = CurrentItem.ApplicationId;
             temp.UnsuccessfulReasonId = tempReasonId;
 
-            await httpClient.PostJsonAsync<RejectedCandidate>("https://xebecapi.azurewebsites.net/api/rejectedcandidate", temp, new AuthenticationHeaderValue("Bearer", token));
-            RejectedUsers = await httpClient.GetListJsonAsync<List<RejectedCandidate>>("https://xebecapi.azurewebsites.net/api/rejectedcandidate", new AuthenticationHeaderValue("Bearer", token));
+            await httpClient.PostJsonAsync<RejectedCandidate>("rejectedcandidate", temp, new AuthenticationHeaderValue("Bearer", token));
+            RejectedUsers = await httpClient.GetListJsonAsync<List<RejectedCandidate>>("rejectedcandidate", new AuthenticationHeaderValue("Bearer", token));
 
             await MovePhase(36);
         }

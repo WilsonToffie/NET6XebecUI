@@ -665,7 +665,7 @@
             user.Link = "https://xebechumancapital.azurewebsites.net/confirmation";
             //user.Link = "https://localhost:44364/confirmation";
             //Post model to dB
-            using (var msg = await HttpClient.PostAsJsonAsync<UserModel>("https://xebecapi.azurewebsites.net/api/auth/registernew", user))
+            using (var msg = await HttpClient.PostAsJsonAsync<UserModel>("auth/registernew", user))
             {
                 if (msg.IsSuccessStatusCode)
                 {

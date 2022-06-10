@@ -55,8 +55,8 @@ namespace XebecPortal.UI.Pages.HR
             prevPage = false;
             Console.WriteLine("TempjobId :" + TempJob.Id);
             token = await localStorage.GetItemAsync<string>("jwt_token");
-            profiles = await httpClient.GetListJsonAsync<List<JobPlatform>>("https://xebecapi.azurewebsites.net/api/jobplatform", new AuthenticationHeaderValue("Bearer", token));
-            getJobInfo = await httpClient.GetListJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/Job/{TempJob.Id}", new AuthenticationHeaderValue("Bearer", token));
+            profiles = await httpClient.GetListJsonAsync<List<JobPlatform>>("jobplatform", new AuthenticationHeaderValue("Bearer", token));
+            getJobInfo = await httpClient.GetListJsonAsync<Job>($"Job/{TempJob.Id}", new AuthenticationHeaderValue("Bearer", token));
         }
 
         private async Task Save()
@@ -72,7 +72,7 @@ namespace XebecPortal.UI.Pages.HR
                 Console.WriteLine("JobPlatformID: " + item);
                 
             }
-            await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/JobPlatformHelper/list", jobPlatformHelper, new AuthenticationHeaderValue("Bearer", token));
+            await httpClient.PostJsonAsync($"JobPlatformHelper/list", jobPlatformHelper, new AuthenticationHeaderValue("Bearer", token));
             
             changeJobStatus.Add(new()
             {
@@ -97,7 +97,7 @@ namespace XebecPortal.UI.Pages.HR
             {
                 item.Id = TempJob.Id;
 
-                var validNewUpload = await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Job/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
+                var validNewUpload = await httpClient.PutJsonAsync($"Job/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
                 if (validNewUpload.IsSuccessStatusCode)
                 {
                     validUpdate = true;
@@ -161,7 +161,7 @@ namespace XebecPortal.UI.Pages.HR
                 {
 
                     // Departments.Remove(value);
-                    var removePlatform = await httpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/JobPlatform/{platform.id}", new AuthenticationHeaderValue("Bearer", token));
+                    var removePlatform = await httpClient.DeleteJsonAsync($"JobPlatform/{platform.id}", new AuthenticationHeaderValue("Bearer", token));
                     if (removePlatform.IsSuccessStatusCode)
                     {
                         await jsRuntime.InvokeAsync<object>("alert", "Department has successfully been removed!");
@@ -189,7 +189,7 @@ namespace XebecPortal.UI.Pages.HR
             {
                 foreach (var item in recentlyAdded)
                 {
-                    var newDepAdded = await httpClient.PostJsonAsync($"https://xebecapi.azurewebsites.net/api/JobPlatform", item, new AuthenticationHeaderValue("Bearer", token));
+                    var newDepAdded = await httpClient.PostJsonAsync($"JobPlatform", item, new AuthenticationHeaderValue("Bearer", token));
                     if (newDepAdded.IsSuccessStatusCode)
                     {
                         addedNewPlatform = true;

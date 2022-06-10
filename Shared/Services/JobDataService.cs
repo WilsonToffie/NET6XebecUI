@@ -22,7 +22,7 @@ namespace XebecPortal.UI.Services
         public async Task<IEnumerable<Job>> GetAllJobs()
         {
             return await JsonSerializer.DeserializeAsync<IEnumerable<Job>>
-            (await _httpClient.GetStreamAsync($"https://xebecapi.azurewebsites.net/api/job"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            (await _httpClient.GetStreamAsync($"job"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             //var mocks = new MockJobDataService();
 
             //return await mocks.GetAllJobs();

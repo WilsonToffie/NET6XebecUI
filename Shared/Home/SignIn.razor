@@ -421,7 +421,7 @@
 
         Console.WriteLine("Sign in email " + signIn.Email);
         Console.WriteLine("Sign In password " + signIn.Password);
-        using (var msg = await HttpClient.PostAsJsonAsync<SignInModel>("https://xebecapi.azurewebsites.net/api/auth/loginnew", signIn)) // Checking to see if the user exists in our system
+        using (var msg = await HttpClient.PostAsJsonAsync<SignInModel>("auth/loginnew", signIn)) // Checking to see if the user exists in our system
         {
             if (msg.IsSuccessStatusCode)
             {
@@ -540,7 +540,7 @@
         signIn.Password = this.Password;
 
         // authenticating the request
-        var httpMessageResponse = await HttpClient.PostAsJsonAsync<SignInModel>($"https://xebecapi.azurewebsites.net/api/auth/loginnew", signIn); // The api will need to be different since it needs to actually validate the Token on the back-end site. This is where Tshego's API endpoint will be entered
+        var httpMessageResponse = await HttpClient.PostAsJsonAsync<SignInModel>($"auth/loginnew", signIn); // The api will need to be different since it needs to actually validate the Token on the back-end site. This is where Tshego's API endpoint will be entered
 
 
 

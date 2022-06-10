@@ -50,7 +50,7 @@ namespace XebecPortal.UI.Services.Models
 
             HttpClient client = new HttpClient();
             var applicationPhaseHelpers = await JsonSerializer.DeserializeAsync<IEnumerable<ApplicationPhaseHelper>>
-             (await client.GetStreamAsync($"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/UserId={appUserId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+             (await client.GetStreamAsync($"ApplicationPhaseHelper/UserId={appUserId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             //Use ApplicationPhaseHelper.ApplicationModel id get user's applications
             //->api/ApplicationModel/{applicationId}
             if (applicationPhaseHelpers != null)
@@ -71,11 +71,11 @@ namespace XebecPortal.UI.Services.Models
                     //From database
                     // var applicationModel = ApplicationDataService.GetApplicationById(phaseHelper.ApplicationId).Result;
                     // var jobAppliedFor = JobDataService.GetJobDetails(applicationModel.JobId).Result;
-                    var application = await client.GetFromJsonAsync<ApplicationModel>($"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/api/applicationModel/{phaseHelper.ApplicationId}");
+                    var application = await client.GetFromJsonAsync<ApplicationModel>($"ApplicationPhaseHelper/api/applicationModel/{phaseHelper.ApplicationId}");
                     if (application != null)
                     {
                         jobInfo.ApplicationDate = application.BeginApplication;
-                        var jobAppliedFor = await client.GetFromJsonAsync<Job>($"https://xebecapi.azurewebsites.net/api/ApplicationPhaseHelper/api/job/{application.JobId}");
+                        var jobAppliedFor = await client.GetFromJsonAsync<Job>($"ApplicationPhaseHelper/api/job/{application.JobId}");
                         if (jobAppliedFor != null) jobInfo.Position = jobAppliedFor.Title;
                     }
 

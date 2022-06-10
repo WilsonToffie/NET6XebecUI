@@ -21,7 +21,7 @@ namespace XebecPortal.UI.Services
         public async Task<List<Education>> GetEducations(int appUserId)
         {
             return await JsonSerializer.DeserializeAsync<List<Education>>
-                (await altClient.GetStreamAsync($"https://xebecapi.azurewebsites.net/api/Education/all/{appUserId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                (await altClient.GetStreamAsync($"Education/all/{appUserId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 
         }
     }

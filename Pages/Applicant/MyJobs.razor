@@ -508,10 +508,10 @@ else
     {
         token = await localStorage.GetItemAsync<string>("jwt_token");
 
-        jobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
-        applications = await httpClient.GetListJsonAsync<List<ApplicationModel>>($"https://xebecapi.azurewebsites.net/api/application/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
-        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/ApplicationPhase", new AuthenticationHeaderValue("Bearer", token));
-        rejectedCandidates = await httpClient.GetListJsonAsync<List<RejectedCandidate>>("https://xebecapi.azurewebsites.net/api/RejectedCandidate", new AuthenticationHeaderValue("Bearer", token));
+        jobs = await httpClient.GetListJsonAsync<List<Job>>("Job", new AuthenticationHeaderValue("Bearer", token));
+        applications = await httpClient.GetListJsonAsync<List<ApplicationModel>>($"application/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("ApplicationPhase", new AuthenticationHeaderValue("Bearer", token));
+        rejectedCandidates = await httpClient.GetListJsonAsync<List<RejectedCandidate>>("RejectedCandidate", new AuthenticationHeaderValue("Bearer", token));
     }
 
     private void FindApplications()
