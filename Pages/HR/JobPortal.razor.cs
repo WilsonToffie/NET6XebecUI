@@ -48,7 +48,7 @@ namespace XebecPortal.UI.Pages.HR
         private bool ShowingPhaseManager;
 
         private IJSObjectReference _jsModule;
-        private string defaultCollaboratorImage = "https://xebecstorage.blob.core.windows.net/profile-images/0";
+        private string defaultCollaboratorImage = "https://xebecstorage.blob.core.windows.net/profile-images/placeholderprofilePic";
         protected override async Task OnInitializedAsync()
         {
             token = await localStorage.GetItemAsync<string>("jwt_token");
