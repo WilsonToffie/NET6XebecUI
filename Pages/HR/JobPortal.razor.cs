@@ -48,13 +48,13 @@ namespace XebecPortal.UI.Pages.HR
         private bool ShowingPhaseManager;
 
         private IJSObjectReference _jsModule;
-
+        private string defaultCollaboratorImage = "https://xebecstorage.blob.core.windows.net/profile-images/placeholderprofilePic";
         protected override async Task OnInitializedAsync()
         {
             token = await localStorage.GetItemAsync<string>("jwt_token");
 
             ShowJobPortal();
-
+ 
             JobTypes = await httpClient.GetListJsonAsync<List<JobType>>($"JobType", new AuthenticationHeaderValue("Bearer", token));
             jobList = await httpClient.GetListJsonAsync<List<Job>>($"Job", new AuthenticationHeaderValue("Bearer", token));
             jobPlatforms = await httpClient.GetListJsonAsync<List<JobPlatform>>($"jobplatform", new AuthenticationHeaderValue("Bearer", token));
@@ -66,6 +66,7 @@ namespace XebecPortal.UI.Pages.HR
 
             //status = await httpClient.GetFromJsonAsync<List<Status>>("/mockData/Status.json");
             departments = await httpClient.GetFromJsonAsync<List<Department>>("department");
+
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/jsPages/HR/JobPortalv3.js");
 
             jobListFilter = jobList;
@@ -73,6 +74,8 @@ namespace XebecPortal.UI.Pages.HR
             displayJobDetail = jobListFilter.FirstOrDefault();
             DisplayJobDetail(displayJobDetail.Id);
             OpenJobCollabToolTip(displayJobDetail.Id);
+
+
         }
 
         protected override Task OnAfterRenderAsync(bool firstRender)
