@@ -34,7 +34,7 @@ namespace XebecPortal.UI.Services
             // return await JsonSerializer.DeserializeAsync<IEnumerable<Applicant>>
             //     (await _httpClient.GetStreamAsync($"api/applicant/"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
               _applicants = await JsonSerializer.DeserializeAsync<IEnumerable<Applicant>>
-              (await altClient.GetStreamAsync($"https://xebecapi.azurewebsites.net/api/applicant"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+              (await altClient.GetStreamAsync($"applicant"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
               ApplicantDataService.InitAppl = _applicants;
               
               _applicants.ToList().ForEach(a => a.Avatar = new Faker().Person.Avatar);
@@ -49,7 +49,7 @@ namespace XebecPortal.UI.Services
             // (await _httpClient.GetStreamAsync($"api/applicant/{jobId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             
             return await JsonSerializer.DeserializeAsync<IEnumerable<Applicant>>
-            (await altClient.GetStreamAsync($"https://xebecapi.azurewebsites.net/api/applicant/{jobId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            (await altClient.GetStreamAsync($"applicant/{jobId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             
             // var mocks = new MockApplicantDataService();
             // return await mocks.GetAllApplicants();
@@ -82,7 +82,7 @@ namespace XebecPortal.UI.Services
             //
             // await _httpClient.PutAsync("api/applicant", applicantJson);
             // var _applicants2 = (await JsonSerializer.DeserializeAsync<IEnumerable<Applicant>>
-            //     (await altClient.GetStreamAsync($"https://xebecapi.azurewebsites.net/api/applicant"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })).ToList();
+            //     (await altClient.GetStreamAsync($"applicant"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true })).ToList();
             // _applicants2 = _applicants2.FindAll(a => a.Id != applicant.Id);
             // _applicants2.Add(applicant);
             // return _applicants2;

@@ -708,9 +708,9 @@ else
         CurrentJobId = TempJob.Id;
         token = await localStorage.GetItemAsync<string>("jwt_token");
 
-        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
+        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("applicationphase", new AuthenticationHeaderValue("Bearer", token));
 
-        jobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job", new AuthenticationHeaderValue("Bearer", token));
+        jobs = await httpClient.GetListJsonAsync<List<Job>>("job", new AuthenticationHeaderValue("Bearer", token));
     }
 
 
@@ -718,8 +718,8 @@ else
     private async Task DeletePhase(ApplicationPhase phase)
     {
         //this deletes from the db
-        await httpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/applicationphase/{phase.id}", new AuthenticationHeaderValue("Bearer", token));
-        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
+        await httpClient.DeleteJsonAsync($"applicationphase/{phase.id}", new AuthenticationHeaderValue("Bearer", token));
+        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("applicationphase", new AuthenticationHeaderValue("Bearer", token));
     }
 
     private async Task AddPhase()
@@ -727,8 +727,8 @@ else
         if (string.IsNullOrWhiteSpace(addPhaseValue) == false)
         {
             tempPhaseValue = new() { description = addPhaseValue };
-            await httpClient.PostJsonAsync<ApplicationPhase>("https://xebecapi.azurewebsites.net/api/applicationphase", tempPhaseValue, new AuthenticationHeaderValue("Bearer", token));
-            phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("https://xebecapi.azurewebsites.net/api/applicationphase", new AuthenticationHeaderValue("Bearer", token));
+            await httpClient.PostJsonAsync<ApplicationPhase>("applicationphase", tempPhaseValue, new AuthenticationHeaderValue("Bearer", token));
+            phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("applicationphase", new AuthenticationHeaderValue("Bearer", token));
             addPhaseValue = "";
 
             isDialogAddPhaseVisible = !isDialogAddPhaseVisible;
@@ -742,7 +742,7 @@ else
             JobApplicationPhase temp = new JobApplicationPhase();
             temp.JobId = CurrentJobId;
             temp.ApplicationPhaseId = phase.id;
-            await httpClient.PostJsonAsync<JobApplicationPhase>("https://xebecapi.azurewebsites.net/api/jobapplicationphase", temp, new AuthenticationHeaderValue("Bearer", token));
+            await httpClient.PostJsonAsync<JobApplicationPhase>("jobapplicationphase", temp, new AuthenticationHeaderValue("Bearer", token));
         }
 
     }
@@ -799,7 +799,7 @@ else
         Console.WriteLine(job.DueDate);
         Console.WriteLine(job.CreationDate);
 
-        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/job", job);
+        await httpClient.PostAsJsonAsync("job", job);
         job = null;
 
         job = await GetJob();
@@ -809,7 +809,7 @@ else
 
     private async Task<Job> GetJob()
     {
-        List<Job> ListOfJobs = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/job", new AuthenticationHeaderValue("Bearer", token));
+        List<Job> ListOfJobs = await httpClient.GetListJsonAsync<List<Job>>("job", new AuthenticationHeaderValue("Bearer", token));
         return ListOfJobs.LastOrDefault(x => x.Title == TempJob.Title);
     }
 
@@ -824,7 +824,7 @@ else
         Console.WriteLine("JobTypeHelper ID: " + job.Id);
         Console.WriteLine("JobTypeHelper JobTypeId: " + TempJob.JobType.Id);
 
-        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobtypehelper", jobTypeHelper);
+        await httpClient.PostAsJsonAsync("jobtypehelper", jobTypeHelper);
 
         //Add selected platforms to JobPlatformHelpers
         foreach (var platform in TempJob.JobPlatforms)
@@ -833,7 +833,7 @@ else
             jobPlatformHelper.JobId = job.Id;
             jobPlatformHelper.JobPlatformId = platform.id;
 
-            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/jobplatformhelper", jobPlatformHelper);
+            await httpClient.PostAsJsonAsync("jobplatformhelper", jobPlatformHelper);
         }
 
         //Add collaborators to CollaboratorsAssigned
@@ -844,7 +844,7 @@ else
             collaborator.JobId = job.Id;
             collaborator.AppUserId = Collaborator.id;
 
-            await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/collaboratorsassigned", collaborator);
+            await httpClient.PostAsJsonAsync("collaboratorsassigned", collaborator);
         }
 
         //Add form questions
@@ -852,7 +852,7 @@ else
         {
             formQuestion.jobId = job.Id;
         }
-        await httpClient.PostAsJsonAsync("https://xebecapi.azurewebsites.net/api/Questionnaire/lst", TempJob.formQuestions);
+        await httpClient.PostAsJsonAsync("Questionnaire/lst", TempJob.formQuestions);
 
         //Add Application Phases
         foreach (var phase in phasesAdded)
@@ -865,7 +865,7 @@ else
             Console.WriteLine(JobApplicationPhase_.Id);
             Console.WriteLine(JobApplicationPhase_.JobId);
             Console.WriteLine(JobApplicationPhase_.ApplicationPhaseId);
-            await httpClient.PostAsJsonAsync($"https://xebecapi.azurewebsites.net/api/jobapplicationphase/{job.Id}", JobApplicationPhase_);
+            await httpClient.PostAsJsonAsync($"jobapplicationphase/{job.Id}", JobApplicationPhase_);
         }
 
         //await TempJobChanged.InvokeAsync(TempJob);

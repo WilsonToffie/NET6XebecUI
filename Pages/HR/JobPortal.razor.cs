@@ -54,19 +54,19 @@ namespace XebecPortal.UI.Pages.HR
             token = await localStorage.GetItemAsync<string>("jwt_token");
 
             ShowJobPortal();
-            
-            JobTypes = await httpClient.GetListJsonAsync<List<JobType>>($"https://xebecapi.azurewebsites.net/api/JobType", new AuthenticationHeaderValue("Bearer", token));
-            jobList = await httpClient.GetListJsonAsync<List<Job>>($"https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
-            jobPlatforms = await httpClient.GetListJsonAsync<List<JobPlatform>>($"https://xebecapi.azurewebsites.net/api/jobplatform", new AuthenticationHeaderValue("Bearer", token));
-            jobPlatformHelpers = await httpClient.GetListJsonAsync<List<JobPlatformHelper>>($"https://xebecapi.azurewebsites.net/api/jobplatformhelper", new AuthenticationHeaderValue("Bearer", token));
-            jobTypeHelper = await httpClient.GetListJsonAsync<List<JobTypeHelper>>($"https://xebecapi.azurewebsites.net/api/JobTypeHelper", new AuthenticationHeaderValue("Bearer", token));
-            appUser = await httpClient.GetListJsonAsync<List<AppUser>>($"https://xebecapi.azurewebsites.net/api/User", new AuthenticationHeaderValue("Bearer", token));
-            collaboratorsAssigned = await httpClient.GetListJsonAsync<List<CollaboratorsAssigned>>($"https://xebecapi.azurewebsites.net/api/CollaboratorsAssigned", new AuthenticationHeaderValue("Bearer", token));
-            personalInformation = await httpClient.GetListJsonAsync<List<PersonalInformation>>("https://xebecapi.azurewebsites.net/api/PersonalInformation", new AuthenticationHeaderValue("Bearer", token));
+ 
+            JobTypes = await httpClient.GetListJsonAsync<List<JobType>>($"JobType", new AuthenticationHeaderValue("Bearer", token));
+            jobList = await httpClient.GetListJsonAsync<List<Job>>($"Job", new AuthenticationHeaderValue("Bearer", token));
+            jobPlatforms = await httpClient.GetListJsonAsync<List<JobPlatform>>($"jobplatform", new AuthenticationHeaderValue("Bearer", token));
+            jobPlatformHelpers = await httpClient.GetListJsonAsync<List<JobPlatformHelper>>($"jobplatformhelper", new AuthenticationHeaderValue("Bearer", token));
+            jobTypeHelper = await httpClient.GetListJsonAsync<List<JobTypeHelper>>($"JobTypeHelper", new AuthenticationHeaderValue("Bearer", token));
+            appUser = await httpClient.GetListJsonAsync<List<AppUser>>($"User", new AuthenticationHeaderValue("Bearer", token));
+            collaboratorsAssigned = await httpClient.GetListJsonAsync<List<CollaboratorsAssigned>>($"CollaboratorsAssigned", new AuthenticationHeaderValue("Bearer", token));
+            personalInformation = await httpClient.GetListJsonAsync<List<PersonalInformation>>("PersonalInformation", new AuthenticationHeaderValue("Bearer", token));
 
+            //status = await httpClient.GetFromJsonAsync<List<Status>>("/mockData/Status.json");
+            departments = await httpClient.GetFromJsonAsync<List<Department>>("department");
 
-            status = await httpClient.GetFromJsonAsync<List<Status>>("/mockData/Status.json");
-            departments = await httpClient.GetFromJsonAsync<List<Department>>("/mockData/departmentMockDatav1.json");
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/jsPages/HR/JobPortalv3.js");
 
             jobListFilter = jobList;
@@ -122,8 +122,8 @@ namespace XebecPortal.UI.Pages.HR
         {
             if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Delete This Item?"))
             {
-                await httpClient.DeleteJsonAsync($"https://xebecapi.azurewebsites.net/api/Job/{id}", new AuthenticationHeaderValue("Bearer", token));
-                jobList = await httpClient.GetListJsonAsync<List<Job>>("https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
+                await httpClient.DeleteJsonAsync($"Job/{id}", new AuthenticationHeaderValue("Bearer", token));
+                jobList = await httpClient.GetListJsonAsync<List<Job>>("Job", new AuthenticationHeaderValue("Bearer", token));
                 jobListFilter = jobList;
                 pageNum.Clear();
                 jobPagedList = jobListFilter.ToPagedList(1, 17);
@@ -139,8 +139,8 @@ namespace XebecPortal.UI.Pages.HR
                 await _jsModule.InvokeVoidAsync("CursorWait");
                 var newJobTypeHelper = jobTypeHelper.Find(x => x.JobId == jobValue.Id);
                 newJobTypeHelper.JobTypeId = JobTypes.Find(x => x.Type == jobTypeHelperValue).Id;
-                await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/Job/{jobValue.Id}", jobValue, new AuthenticationHeaderValue("Bearer", token));
-                await httpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/JobTypeHelper/{newJobTypeHelper.Id}", newJobTypeHelper, new AuthenticationHeaderValue("Bearer", token));
+                await httpClient.PutJsonAsync($"Job/{jobValue.Id}", jobValue, new AuthenticationHeaderValue("Bearer", token));
+                await httpClient.PutJsonAsync($"JobTypeHelper/{newJobTypeHelper.Id}", newJobTypeHelper, new AuthenticationHeaderValue("Bearer", token));
                 changeForm = boolValue;
                 await _jsModule.InvokeVoidAsync("CursorDefault");
             }

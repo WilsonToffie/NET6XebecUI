@@ -21,7 +21,7 @@ namespace XebecPortal.UI.Services
         public async Task<List<WorkHistory>> GetWorkHistories(int appUserId)
         {
             return await JsonSerializer.DeserializeAsync<List<WorkHistory>>
-                (await altClient.GetStreamAsync($"https://xebecapi.azurewebsites.net/api/WorkHistory/all/{appUserId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                (await altClient.GetStreamAsync($"WorkHistory/all/{appUserId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
     }
 }

@@ -22,13 +22,13 @@ namespace XebecPortal.UI.Services
         public async Task<PersonalInformation> GetPersonalDetails(int appUserId)
         {
             return await JsonSerializer.DeserializeAsync<PersonalInformation>
-                (await altClient.GetStreamAsync($"https://xebecapi.azurewebsites.net/api/PersonalInformation/single/{appUserId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });   
+                (await altClient.GetStreamAsync($"PersonalInformation/single/{appUserId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });   
         }
 
         public async Task<ProfilePortfolioLink> GetPortfolio(int appUserId)
         {
             return await JsonSerializer.DeserializeAsync<ProfilePortfolioLink>
-                (await altClient.GetStreamAsync($"https://xebecapi.azurewebsites.net/api/ProfilePortfolioLink/{appUserId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });   
+                (await altClient.GetStreamAsync($"ProfilePortfolioLink/{appUserId}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });   
         }
     }
 }

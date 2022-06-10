@@ -461,7 +461,7 @@
                             </div>
                             <div class="col-12">
                                 <!--Status-->
-                                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Status" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextStatus)" Label="Status" SelectedValuesChanged="SearchListStatus">
+@*                                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Status" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextStatus)" Label="Status" SelectedValuesChanged="SearchListStatus">
                                     @if (jobListFilter?.Any() == true)
                                     {
                                         @foreach (var item in status.Select(x => x.name))
@@ -470,7 +470,7 @@
                                         }
 
                                     }
-                                </MudSelect>
+                                </MudSelect>*@
                             </div>
                         </div>
                     </div>

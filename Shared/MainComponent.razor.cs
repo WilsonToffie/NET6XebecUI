@@ -44,11 +44,11 @@ namespace XebecPortal.UI.Shared
             {
                 token = await localStorage.GetItemAsync<string>("jwt_token");
 
-                jobs = await HttpClient.GetListJsonAsync<IList<Job>>($"https://xebecapi.azurewebsites.net/api/Job", new AuthenticationHeaderValue("Bearer", token));
+                jobs = await HttpClient.GetListJsonAsync<IList<Job>>($"Job", new AuthenticationHeaderValue("Bearer", token));
 
-                jobTypes = await HttpClient.GetListJsonAsync<IList<JobType>>("https://xebecapi.azurewebsites.net/api/JobType", new AuthenticationHeaderValue("Bearer", token));
+                jobTypes = await HttpClient.GetListJsonAsync<IList<JobType>>("JobType", new AuthenticationHeaderValue("Bearer", token));
 
-                personalInfoStuff = await HttpClient.GetListJsonAsync<List<PersonalInformation>>($"https://xebecapi.azurewebsites.net/api/personalinformation", new AuthenticationHeaderValue("Bearer", token)); // !!!!!! Change the ID to be the userID later 
+                personalInfoStuff = await HttpClient.GetListJsonAsync<List<PersonalInformation>>($"personalinformation", new AuthenticationHeaderValue("Bearer", token)); // !!!!!! Change the ID to be the userID later 
                 personalInfoList = personalInfoStuff.Where(x => x.AppUserId == state.AppUserId).ToList();
 
                 if (personalInfoList.Count > 0)
@@ -63,7 +63,7 @@ namespace XebecPortal.UI.Shared
                 {
                     newUser = true;
                 }
-                departments = await HttpClient.GetFromJsonAsync<List<Department>>("/mockData/departmentMockDatav1.json");
+                departments = await HttpClient.GetFromJsonAsync<List<Department>>("department");
 
                 if (state.Role.Equals("Candidate"))
                 {
@@ -215,10 +215,10 @@ namespace XebecPortal.UI.Shared
                                     new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
                                 });
                 //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
-                // var resp = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/User/{state.AppUserId}", state, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
+                // var resp = await HttpClient.PutJsonAsync($"User/{state.AppUserId}", state, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
 
-                var resp = await HttpClient.PutJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
-                // var newresp = await HttpClient.PutAsJsonAsync($"https://xebecapi.azurewebsites.net/api/personalinformation/{personalInfo.Id}", personalInfo); //{personalInfo.Id}
+                var resp = await HttpClient.PutJsonAsync($"personalinformation/{personalInfo.Id}", personalInfo, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
+                // var newresp = await HttpClient.PutAsJsonAsync($"personalinformation/{personalInfo.Id}", personalInfo); //{personalInfo.Id}
             }
             else
             {
