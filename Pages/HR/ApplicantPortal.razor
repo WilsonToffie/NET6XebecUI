@@ -424,6 +424,42 @@
         font-size: 25px;
     }
 
+
+    .mydialog-final {
+        width: 450px;
+        height: 350px;
+        background-color: white;
+        border-radius: 12px;
+    }
+
+    .mydialog-final-title {
+        width: 100%;
+        height: 20%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: opensans-bold;
+        font-size: 1em;
+        color: black;
+        text-align: center;
+    }
+
+    .mydialog-final-body {
+        width: 100%;
+        height: 60%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .mydialog-final-button {
+        width: 100%;
+        height: 20%;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+
 </style>
 
     <div class="search-wrapper-container" style=" width: 40%; left: 30%;">
@@ -521,6 +557,22 @@
 
             </tbody>
         </table>
+
+    <MatDialog @bind-IsOpen="@showEmail">
+        <div class="mydialog-final">
+            <div class="mydialog-final-title">
+                <h2>Email Applicant</h2>
+            </div>
+            <div class="mydialog-final-body">
+
+            </div>
+            <div class="mydialog-final-button">
+                <button class="default-button-style">Confirm</button>
+                <button class="default-button-style" @onclick="() => { showEmail = false; }">Cancel</button>
+            </div>
+        </div>
+    </MatDialog>
+
     }
     else
     {
@@ -855,6 +907,7 @@
                 </tbody>
             </table>
         </div>
+
     </div>
 }
 
@@ -871,6 +924,9 @@
     bool showAdditionalInformation = false;
     bool showDocuments = false;
     bool showMagnifiedDocument = false;
+
+
+    bool showEmail;
 
     string currentPhase;
     int phaseId;
@@ -910,6 +966,8 @@
     string token;
     protected override async Task OnInitializedAsync()
     {
+        showEmail = false;
+
         token = await localStorage.GetItemAsync<string>("jwt_token");
 
         jobs = await httpClient.GetListJsonAsync<List<Job>>("Job", new AuthenticationHeaderValue("Bearer", token));
@@ -950,7 +1008,8 @@
 
     private void updatePhase(ChangeEventArgs e)
     {
-        phaseId = phases.Where(x => x.description.ToLower() == e.Value.ToString().ToLower()).FirstOrDefault().id;
+        showEmail = true;
+        //phaseId = phases.Where(x => x.description.ToLower() == e.Value.ToString().ToLower()).FirstOrDefault().id;
     }
 
     private void toggleMagnifiedDocument(string documentType)
