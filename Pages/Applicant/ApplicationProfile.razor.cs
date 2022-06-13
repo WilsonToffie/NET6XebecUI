@@ -104,6 +104,8 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool updateReferences = false;
         private bool enterMatricMarks = false;
         private bool enterNewMark = false;
+        // This is used to prevent the users from uploading documents before the system has actually processed it
+        private bool enableUploadButtons = true;
         
         // private CustomHandler cust = new CustomHandler();
         string token;
@@ -970,6 +972,7 @@ namespace XebecPortal.UI.Pages.Applicant
 
         async Task OnInputFileChangedAsync(InputFileChangeEventArgs e)
         {
+            enableUploadButtons = false;
 
             //https://xebecstorage.blob.core.windows.net/linkedincv
             fileNames = e.File;
@@ -1076,15 +1079,17 @@ namespace XebecPortal.UI.Pages.Applicant
                 if (validUpload)
                 {
                     //await OnInitializedAsync();
-                    await jsRuntime.InvokeAsync<object>("alert", "Your CV has successfully been uploaded");
+                    await jsRuntime.InvokeAsync<object>("alert", "Your CV has successfully been uploaded");                    
                 }                
             }
+            enableUploadButtons = true;
         }        
 
         // Uploading of the matric certificate
         private string matricCertContainer = "matric-certificates";//"images";        
         private async Task OnInputMatricCertChangedAsync(InputFileChangeEventArgs e)
         {
+            enableUploadButtons = false;
             //https://xebecstorage.blob.core.windows.net/matric-certificates
             // Getting the file
             fileNames = e.File;
@@ -1156,17 +1161,20 @@ namespace XebecPortal.UI.Pages.Applicant
                 {
                     await jsRuntime.InvokeAsync<object>("alert", "Your Matric Certificate has successfully been uploaded");
                     await retrieveDocuments();
+                    
                 }
             }
             else
             {
                 Console.WriteLine("result is false :(");
-            }        
-    }
+            }
+            enableUploadButtons = true;
+        }
         // Uploading of the Transcript
         private string transcriptContainer = "transcripts";       
         private async Task OnInputTranscriptChangedAsync(InputFileChangeEventArgs e)
         {
+            enableUploadButtons = false;
             var fileName = state.AppUserId;
             var fileInfo = e.File;
             
@@ -1230,18 +1238,21 @@ namespace XebecPortal.UI.Pages.Applicant
                 {
                     await jsRuntime.InvokeAsync<object>("alert", "Your Academic Transcript has successfully been uploaded");
                     await OnInitializedAsync();
+                    
                 }
             }
             else
             {
                 Console.WriteLine("result is false :(");
             }
+            enableUploadButtons = true;
         }
 
         // Uploading of the First Certificate
         private string firstCertContainer = "additional-documents-1";
         private async Task OnInputFirstDocumentChangedAsync(InputFileChangeEventArgs e)
-        {            
+        {
+            enableUploadButtons = false;
             var fileName = state.AppUserId;
             var fileInfo = e.File;            
 
@@ -1309,19 +1320,21 @@ namespace XebecPortal.UI.Pages.Applicant
                 {
                     await jsRuntime.InvokeAsync<object>("alert", "Your first Additional Certificate has successfully been uploaded");
                     await OnInitializedAsync();
+                    enableUploadButtons = true;
                 }
             }
             else
             {
                 Console.WriteLine("result is false :(");
             }
+            enableUploadButtons = true;
         }
 
         // Uploading of the Second Certificate
         private string secondCertContainer = "additional-documents-2";
         private async Task OnInputSecondDocumentChangedAsync(InputFileChangeEventArgs e)
         {
-            
+            enableUploadButtons = false;
             var fileName = state.AppUserId;
             var fileInfo = e.File;
             
@@ -1387,19 +1400,22 @@ namespace XebecPortal.UI.Pages.Applicant
                 if (validUpload)
                 {
                     await jsRuntime.InvokeAsync<object>("alert", "Your second Additional Certificate has successfully been uploaded");
-                    await OnInitializedAsync();                    
+                    await OnInitializedAsync();
+                    
                 }                    
             }
             else
             {
                 Console.WriteLine("result is false :(");
             }
+            enableUploadButtons = true;
         }
 
         // Uploading of the Third Certificate
         private string thirdCertContainer = "additional-documents-3";
         private async Task OnInputThirdDocumentChangedAsync(InputFileChangeEventArgs e)
-        {            
+        {
+            enableUploadButtons = false;
             var fileName = state.AppUserId;//fileArray[0] + Guid.NewGuid().ToString().Substring(0, 5) + "." + fileArray[1]; // change file name to be their appUserID
             var fileInfo = e.File;            
             var blobUri = new Uri("https://"
@@ -1463,12 +1479,13 @@ namespace XebecPortal.UI.Pages.Applicant
                 {
                     await jsRuntime.InvokeAsync<object>("alert", "Your third Additional Certificate has successfully been uploaded");
                     await OnInitializedAsync();                    
-                }
+                }                
             }
             else
             {
                 Console.WriteLine("result is false :(");
             }
+            enableUploadButtons = true;
         }
 
         private void ResetFileNames()

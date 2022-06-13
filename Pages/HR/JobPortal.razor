@@ -351,11 +351,10 @@
             width:40px;
             height:40px;
             border-radius:50%;
-           
+            outline: 2px solid #828282;           
         }
-    .tooltip-c{
-        
-       
+
+    .tooltip-c{          
         position:relative;
         display: inline-block;
     }
@@ -370,8 +369,6 @@
         position:absolute;
         top:100%;
         right:90%;
-        
-        
         z-index: 1;
     }
     .tooltip-text::after{
@@ -379,21 +376,18 @@
         position: absolute;
         top: 100%;
         left: 50%;
-
     }
     .tooltip-c:hover .tooltip-text {
         visibility: visible;
     }
-    .tooltip-c:hover .collab-image {
-        outline: 2px solid #828282;
-        width:42px;
-        height:42px;
+    .tooltip-c:hover .collab-image {        
+        width:40px;
+        height:40px;
     }
     
     .image-div{
         display: flex;
-        gap: 5px;
-        
+        gap: 5px;       
     }
 </style>
 
@@ -601,18 +595,22 @@
                                                         {
                                                             <div class="image-div">
                                                                
-                                                                    <div class="tooltip-c">
                                                                    
+                                                                       @* @foreach (var item in appUserFilter)
+                                                                        {
+                                                                            <img src="@item.imageUrl" alt="image" class="collab-image" /> 
+
+                                                                             <span class="tooltip-text">@item.name @item.surname</span>
+                                                                        }*@
                                                                         @for(var i = 0; i < appUserFilter.Count; i++)
                                                                         {
-                                                                              <img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" /> 
-
-                                                                              <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname @collaboratorsAssigned2[i].Name </span>                                                                                  
-                                                                        }
-                                                                      
+                                                                             <div class="tooltip-c">
+                                                                                <img src="@defaultCollaboratorImage" alt="image" class="collab-image" /> 
+                                                                                <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname @collaboratorsAssigned2[i].Name </span>                                                                                  
+                                                                             </div>
+                                                                          }                                                                      
                                                                         @*<img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" />*@                                                                      
-                                                                  
-                                                                    </div>                                                                
+                                                                                                                              
                                                             </div>                                                             
                                                         }                      
                                                 </div>
@@ -624,7 +622,7 @@
                                                              @for (var i = 0; i < 3; i++)
                                                             {                                                                
                                                                 <div class="tooltip-c">                                                                   
-                                                                      <img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" />
+                                                                      <img src="@defaultCollaboratorImage" alt="image" class="collab-image" />
                                                                        <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname @collaboratorsAssigned2[i].Name </span>
                                                                      @*<img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image " /> 
                                                                      <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname</span>*@ 

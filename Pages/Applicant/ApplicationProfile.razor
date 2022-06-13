@@ -1006,11 +1006,21 @@
                                                     }
                                                 </MudPaper>
                                                 <br>
-                                                <div class="upload-button-location" style="margin-top: -14px;">
-                                                    <label class="default-button-style" style="padding-top: 7px;">
-                                                        <InputFile OnChange="OnInputFileChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
-                                                    </label>
-                                                </div>
+                                                @if (enableUploadButtons)
+                                               {
+                                                   <div class="upload-button-location" style="margin-top: -14px;">
+                                                        <label class="default-button-style" style="padding-top: 7px;">
+                                                            <InputFile OnChange="OnInputFileChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
+                                                        </label>
+                                                    </div>
+                                               }else
+                                                {
+                                                    <div class="upload-button-location">
+                                                        <label class="default-button-style" style="background-color: #A9ABA7">
+                                                            Upload
+                                                        </label>
+                                                    </div>       
+                                                }                                                
                                             </div>
 
                                             <!--<MudGrid Justify="Justify.Center" Spacing="4">-->
@@ -1472,11 +1482,22 @@
                                                 </div>
                                             }
                                         </MudPaper>
-                                        <div class="upload-button-location">
-                                            <label class="btn formButton">
-                                                <InputFile OnChange="OnInputMatricCertChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
-                                            </label>                                            
-                                        </div>
+                                        @if (enableUploadButtons)
+                                        {
+                                            <div class="upload-button-location" style="margin-top: 6px;">
+                                                <label class="default-button-style" style="padding-top: 7px;">
+                                                    <InputFile OnChange="OnInputMatricCertChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
+                                                </label>                                            
+                                            </div>
+                                        }else
+                                        {
+                                            <div class="upload-button-location" style="margin-top: 6px;">
+                                                <label class="default-button-style" style="padding-top: 7px;background-color: #A9ABA7">
+                                                    Upload
+                                                </label>
+                                            </div>       
+                                        }
+                                        
                                     </div>
 
                                     <div class="createjob-form-individual">
@@ -1504,13 +1525,24 @@
                                                 </div>
                                             }
                                         </MudPaper>
-                                        <div class="upload-button-location">
-                                            <label class="btn formButton">
-                                                <InputFile OnChange="OnInputTranscriptChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
-                                            </label>
-                                        </div>
+                                        @if(enableUploadButtons)
+                                        {
+                                            <div class="upload-button-location" style="margin-top: 6px;">
+                                                <label class="default-button-style" style="padding-top: 7px;">
+                                                    <InputFile OnChange="OnInputTranscriptChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
+                                                </label>
+                                            </div>
+                                        }else
+                                        {
+                                            <div class="upload-button-location" style="margin-top: 6px;">
+                                                <label class="default-button-style" style="background-color: #A9ABA7; padding-top: 7px;">
+                                                    Upload
+                                                </label>
+                                            </div>       
+                                        }
                                     </div>
                                 </div>
+
                                 <div class="spacing-between-dragable-items">
                                     <div class="form-group createjob-form-group">
                                         <div class="createjob-form-individual">
@@ -1537,11 +1569,21 @@
                                                     </div>
                                                 }
                                             </MudPaper>
-                                            <div class="upload-button-location">
-                                                <label class="btn formButton">
-                                                    <InputFile OnChange="OnInputFirstDocumentChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
-                                                </label>
-                                            </div>
+                                            @if(enableUploadButtons)
+                                            {
+                                                <div class="upload-button-location" style="margin-top: 6px;">
+                                                    <label class="default-button-style" style="padding-top: 7px;">
+                                                        <InputFile OnChange="OnInputFirstDocumentChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
+                                                    </label>
+                                                </div>
+                                            }else
+                                            {
+                                                <div class="upload-button-location" style="margin-top: 6px;">
+                                                    <label class="default-button-style" style="background-color: #A9ABA7; padding-top: 7px;">
+                                                        Upload
+                                                    </label>
+                                                </div>
+                                            }                                       
                                         </div>
 
                                         <div class="createjob-form-individual">
@@ -1569,11 +1611,22 @@
                                                     </div>
                                                 }
                                             </MudPaper>
-                                            <div class="upload-button-location">
-                                                <label class="btn formButton">
-                                                    <InputFile OnChange="OnInputSecondDocumentChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
-                                                </label>
-                                            </div>
+                                            @if(enableUploadButtons)
+                                            {                                                
+                                                <div class="upload-button-location" style="margin-top: 6px;">
+                                                    <label class="default-button-style" style="padding-top: 7px;">
+                                                        <InputFile OnChange="OnInputSecondDocumentChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
+                                                    </label>
+                                                </div>
+                                            }else
+                                            {
+                                                <div class="upload-button-location" style="margin-top: 6px;">
+                                                    <label class="default-button-style" style="background-color: #A9ABA7; padding-top: 7px;">
+                                                        Upload
+                                                    </label>
+                                                </div>
+                                            }
+                                            
                                         </div>
 
                                         <div class="createjob-form-individual">
@@ -1601,11 +1654,22 @@
                                                     </div>
                                                 }
                                             </MudPaper>
-                                            <div class="upload-button-location">
-                                                <label class="btn formButton">
-                                                    <InputFile OnChange="OnInputThirdDocumentChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
-                                                </label>
-                                            </div>
+                                            @if(enableUploadButtons)
+                                            {
+                                                <div class="upload-button-location" style="margin-top: 6px;">
+                                                    <label class="default-button-style" style="padding-top: 7px;">
+                                                        <InputFile OnChange="OnInputThirdDocumentChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
+                                                    </label>
+                                                </div>
+                                            }else
+                                            {
+                                                <div class="upload-button-location" style="margin-top: 6px;">
+                                                    <label class="default-button-style" style="background-color: #A9ABA7; padding-top: 7px;">
+                                                        Upload
+                                                    </label>
+                                                </div>
+                                            }
+
                                         </div>
                                     </div>
                                 </div>
