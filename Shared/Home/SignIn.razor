@@ -264,13 +264,13 @@
                         <div class="index-form-icon">
                             <i class="fa fa-user"></i>
                         </div>
-                        <input type="email" required placeholder="Email address" @bind="@Email" @ref="SignInElementInFocus" /> <!-- -->
+                        <input type="email" required placeholder="Email address" @bind="@Email" @onfocusin="validationChanges" @ref="SignInElementInFocus" /> <!-- -->
                     </div>
                     <div class="form-group index-form-group index-group">
                         <div class="index-form-icon">
                             <i class="fa fa-lock "></i>
                         </div>
-                        <input type="password" placeholder="Password" @bind="@Password" @onkeydown="@SignInEnter">
+                        <input type="password" placeholder="Password" @bind="@Password" @onkeypress="@SignInEnter" @onfocusin="validationChanges">
                     </div>
                     <div class="form-group forgot-password">
                         <h3 class="forgotpassword" @onclick="GoToEmail" style="margin-left: 45px;">Forgot Password?</h3>
@@ -279,7 +279,7 @@
                         @if (invalidCredentials)
                         {
                             <h3 class="index-form-heading-3">Invalid credentials</h3>
-                        }
+                        } 
                         @if (successfullLogin)
                         {
                             <h3 class="index-form-heading-3">Successful login</h3>
@@ -287,6 +287,13 @@
                         @if (SubmitPressed)
                         {
                             <h3 class="index-form-heading-3">Submit pressed</h3>
+                        }
+                        @if (invalidPassword)
+                        {
+                             <h3 class="index-form-heading-3">Invalid Password</h3>
+                        }@if (emptyFields)
+                        {
+                             <h3 class="index-form-heading-3">Input areas are empty</h3>
                         }
                     </div>
                     <div class="form-group login-button-div">
@@ -327,6 +334,7 @@
                         {
                             <h3 class="index-form-heading-3">Submit Pressed</h3>
                         }
+                        
                     </div>
 
                     <div class="form-group login-button-div">
@@ -343,7 +351,7 @@
 
 
 @code{
-
+    @using System.Threading;
     // Sign In Form bind-values
     private string Email = "";
     private string Password = "";
@@ -352,10 +360,9 @@
     private string Key = "";
 
     // Validaion booleans
-    private bool successfullLogin, invalidCredentials;
+    private bool successfullLogin, invalidCredentials, invalidPassword, emptyFields;
     private bool validEmail, invalidEmail;
     private bool validKey, invalidKey;
-    private bool invalidPassword;
     private bool validReset, invalidReset;
 
     // View control booleans
@@ -423,6 +430,7 @@
         Console.WriteLine("Sign In password " + signIn.Password);
         using (var msg = await HttpClient.PostAsJsonAsync<SignInModel>("auth/loginnew", signIn)) // Checking to see if the user exists in our system
         {
+
             if (msg.IsSuccessStatusCode)
             {
                 SignInResult result = await msg.Content.ReadFromJsonAsync<SignInResult>();
@@ -448,7 +456,7 @@
                 }
 
                 message = result.Message;
-
+                Console.WriteLine("Message from API " + message);
                 if (result.Success)
                 {
                     successfullLogin = true;
@@ -462,23 +470,36 @@
                     invalidCredentials = true;
                     SubmitPressed = false;
                     successfullLogin = false;
+
+                } else if (message.Equals("Email/Password is Empty"))
+                {
+                    emptyFields = true;                    
+                    successfullLogin = false;
+                } else if (message.Equals("Password does not match."))
+                {
+                    invalidPassword = true;
+                    SubmitPressed = true;                    
                 }
-            }
+            }            
         }
     }
 
     public async Task SignInEnter(KeyboardEventArgs e)
     {
+        await OnAfterRenderAsync(true);
         if (e.Code == "Enter" || e.Code == "NumpadEnter")
         {
+            Console.WriteLine("Password value: " + Password);
             await JWTLogin();
         }
     }
 
     public async Task ForgotPasswordEnter(KeyboardEventArgs e)
     {
+
         if (e.Code == "Enter" || e.Code == "NumpadEnter")
         {
+            
             await SubmitEmail();
         }
     }
@@ -567,12 +588,13 @@
             state.Avator = thisUser.Avatar;
 
             message = thisUser.Message;
-
+            Console.WriteLine("Message from API " + message);
             if (thisUser.Success)
             {
                 successfullLogin = true;
                 state.isLoggedIn = true;
                 SubmitPressed = false;
+                invalidCredentials = false;
                 navmanager.NavigateTo("/main");
 
             }
@@ -581,6 +603,22 @@
                 invalidCredentials = true;
                 SubmitPressed = false;
                 successfullLogin = false;
+                invalidPassword = false;
+
+            }else if (message.Equals("Email/Password is Empty"))
+            {
+                invalidCredentials = true;
+                SubmitPressed = false;
+                successfullLogin = false;
+                invalidPassword = false;
+            } else 
+            if (message.Equals("Password does not match."))
+            {
+                //invalidPassword = true;   
+                successfullLogin = false;
+                SubmitPressed = false;
+                successfullLogin = false;
+                invalidCredentials = true;
             }
             //navmanager.NavigateTo("/main");// this is where you will start to transfer pages.
         }
@@ -590,6 +628,14 @@
             Console.WriteLine("Key is empty");
             //await localStorage.ClearAsync(); // Use this at log out
         }
+    }
+
+    private void validationChanges()
+    {
+        invalidCredentials = false;
+        SubmitPressed = false;
+        successfullLogin = false;
+        invalidPassword = false;
     }
     }
 }
