@@ -528,7 +528,7 @@
                     foreach (var formQuestion in FormQuestions)
                     {
                         <div class="right-list-item-preview">
-                            <div class="close-item-panel">
+                            <div class="btn-close">
                             </div>
                             <div class="summary-preview-item-body">
                                 <div class="summary-preview-item-description">
@@ -615,8 +615,8 @@
                                             <p class="-form-preview-question">
                                                 @formQuestion.question
                                             </p>
-                                            <span class="question-list" @onclick="() => DeleteFormQuestion(formQuestion)">
-                                                <i class="fas fa-times"></i>
+                                            <span class="btn-close" @onclick="() => DeleteFormQuestion(formQuestion)">
+                                                @*<i class="fas fa-times"></i>*@
                                             </span>
                                         </div>
                                         <div class="preview-item-control">
