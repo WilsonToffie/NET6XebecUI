@@ -3,6 +3,7 @@
 @inject HttpClient httpClient
 @inject HrJobState hrJobState
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject UserState userstate
 
 <style>
 
@@ -460,6 +461,13 @@
         justify-content: space-evenly;
     }
 
+    .mydialog-final-textarea{
+        width: 85%;
+        height: 90%;
+        padding: 5px;
+        resize: none;
+    }
+
 </style>
 
     <div class="search-wrapper-container" style=" width: 40%; left: 30%;">
@@ -564,10 +572,10 @@
                 <h2>Email Applicant</h2>
             </div>
             <div class="mydialog-final-body">
-
+                <textarea class="mydialog-final-textarea" @bind="emailContent"></textarea>
             </div>
             <div class="mydialog-final-button">
-                <button class="default-button-style">Confirm</button>
+                <button class="default-button-style" @onclick="SendEmail">Send</button>
                 <button class="default-button-style" @onclick="() => { showEmail = false; }">Cancel</button>
             </div>
         </div>
@@ -925,6 +933,7 @@
     bool showDocuments = false;
     bool showMagnifiedDocument = false;
 
+    string emailContent;
 
     bool showEmail;
 
@@ -960,6 +969,8 @@
     private IList<SkillsInformation> skills = new List<SkillsInformation>();
     private IList<References> references = new List<References>();
 
+    private EmailModel Email = new EmailModel();
+
     private currentPhase phase { get; set; }
     [Parameter] public int JobId { get; set; }
 
@@ -985,16 +996,42 @@
         applications = await httpClient.GetListJsonAsync<List<ApplicationModel>>("Application", new AuthenticationHeaderValue("Bearer", token));
         phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("ApplicationPhase", new AuthenticationHeaderValue("Bearer", token));
         personalInformation = await httpClient.GetListJsonAsync<List<PersonalInformation>>("PersonalInformation", new AuthenticationHeaderValue("Bearer", token));
+
+        tempJobTitle = jobs.FirstOrDefault(x => x.Id == JobId).Title;
     }
 
+
+    //marker
     private async Task setApplication(int id)
     {
+        Console.WriteLine("Calling setApplication");
+        emailContent = "";
         applicationId = id;
 
         Application temp = new Application();
 
         temp = Applications.FirstOrDefault(i => i.Id == applicationId);
         temp.ApplicationPhaseId = phaseId;
+
+
+        AppUser tempUser = users.FirstOrDefault(x => x.id == temp.AppUserId);
+
+
+        emailContent = phases.FirstOrDefault(x => x.id == phaseId).EmailTemplate;
+
+        if(emailContent == null)
+        {
+            emailContent = "";
+        }
+
+        emailContent = ConvertEmail(emailContent, tempUser);
+
+        //Email.CandidateEmail = tempUser.email;
+        Email.CandidateEmail = "bailiedaniel@gmail.com";
+        Email.CandidateFirstName = tempUser.name;
+        Email.CandidateLastName = tempUser.surname;
+        Email.Body = emailContent;
+        Email.JobName = tempJobTitle;
 
         await httpClient.PutJsonAsync<Application>($"application/{applicationId}", temp, new AuthenticationHeaderValue("Bearer", token));
 
@@ -1006,10 +1043,45 @@
         await httpClient.PostJsonAsync<ApplicationPhasesHelper>("applicationphasehelper", tempHelper, new AuthenticationHeaderValue("Bearer", token));
     }
 
+
     private void updatePhase(ChangeEventArgs e)
     {
         showEmail = true;
-        //phaseId = phases.Where(x => x.description.ToLower() == e.Value.ToString().ToLower()).FirstOrDefault().id;
+
+        phaseId = phases.Where(x => x.description.ToLower() == e.Value.ToString().ToLower()).FirstOrDefault().id;
+
+        Console.WriteLine(phaseId);
+    }
+
+    //replaces {fields} with the appropriate data
+    public string ConvertEmail(string email, AppUser user)
+    {
+        if (email != "" && email != null)
+        {
+            email = email.Replace("{firstname}", user.name);
+            email = email.Replace("{surname}", user.surname);
+
+            email = email.Replace("{jobtitle}", tempJobTitle);
+
+            email = email.Replace("{date}", DateTime.Now.ToString("MMM-dd"));
+            email = email.Replace("{time}", DateTime.Now.ToString("HH:mm:ss"));
+
+            email = email.Replace("{sentname}", userstate.Name);
+            email = email.Replace("{sentsurname}", userstate.Surname);
+            email = email.Replace("{senttitle}", userstate.Title);
+        }
+
+        return email;
+    }
+
+    private async Task SendEmail()
+    {
+        Console.WriteLine(Email.CandidateFirstName);
+        Console.WriteLine(Email.CandidateLastName);
+        Console.WriteLine(Email.CandidateEmail);
+        Console.WriteLine(Email.Body);
+        Console.WriteLine(Email.JobName);
+        await httpClient.PostAsJsonAsync<EmailModel>("https://prod-228.westeurope.logic.azure.com:443/workflows/420f0efb54134f0492fee22869c92bc6/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=GOWFYTIEtt84SYP1ZNP8ZIhoXJeq7S13FjBoYlAGVzE", Email);
     }
 
     private void toggleMagnifiedDocument(string documentType)
@@ -1134,5 +1206,7 @@
             return "background: #CCFF5A";
         }
     }
+
+
 
 }
