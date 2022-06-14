@@ -82,15 +82,21 @@ button {
         cursor: pointer;
     }
 
+input[type = "text"], input[type="email"], input[type="password"], select:-webkit-autofill {
+    background-color: transparent;    
+    font-size: 1em;
+    border: none;
+    font-weight: 800;
+    color: black;
+    font-family: opensans-condensed-light;
+}
 /*    
     input[type = "button"], input[type = "submit"]:hover {
         background-color: #d35bc9;
     }
 
 */
-
 /*Text formatting*/
-
 h1 {
     font-family: opensans-condensed-bold !important;
     font-weight: bold !important;
