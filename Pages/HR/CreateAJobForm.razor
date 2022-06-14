@@ -430,19 +430,6 @@ else
         @*<div class="summary-text">Summary</div>*@
     </div>
 
-    <!--This is the progress for the second page-->
-    @*<div class="top-Image-thing">
-            <div class="progressed-circle"></div>
-            <div class="progressed-circle"></div>
-            <div class="circle"></div>
-            <div class="circle"></div>
-            <div class="circle"></div>
-            <div class="circle"></div>
-            <div class="circle"></div>
-        </div>
-        <div class="selected-rod"></div>
-        <div class="progress-rod-page-2"></div>*@
-
     <div class="create-job-summary">
         <div class="page-title">
             <h1 style="font-size: 38px !important;">Summary</h1>
@@ -498,7 +485,7 @@ else
             {
                 @if (createNewDep)
                 {
-                    <EditForm Model="@department" OnValidSubmit="@saveDep" Context="Departments">
+                    <EditForm Model="@department" Context="Departments">
                         <div class="page-title">
                             <h1 style="font-size: 38px !important;">Create Department</h1>
                         </div>
@@ -526,7 +513,7 @@ else
                             </div>
                         </div>
                         <div class="createNew-buttton-function">
-                            <input type="button" value="Done" class="button-functions" @onclick="() => createDep(false)" /> <!-- @onclick="saveDep"-->
+                            <input type="button" value="Done" class="button-functions" @onclick="saveDep" /> <!-- @onclick="saveDep"-->
                             @*<input type="button" value="Save" class="button-functions" @onclick="saveDep" />*@
                         </div>
                     </EditForm>

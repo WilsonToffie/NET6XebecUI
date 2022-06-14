@@ -10,7 +10,7 @@
 <style>
     .nav1 {
         position: absolute;
-        left: 13%;
+        left: 250px;
         text-align: center;
         align-items: center;
         background-color: #FFFFFF !important;
@@ -301,7 +301,8 @@
         backdrop-filter: blur(10px);
         box-shadow: 20px 20px 40px -6px rgba(0, 0, 0, 0.2);*/
         text-align: center;
-        overflow: hidden;
+        overflow: auto;
+        height: 90%;
     }
 
 
@@ -429,10 +430,10 @@
 
     .history-container {
         width: 35vh;
-        height: 70vh;
+        height: 54vh;
         overflow: auto;
         background: rgba(255, 255, 255, 0.5);
-        left: 10%;
+        /* left: 10%; */
         margin-left: 21%;
     }
 
@@ -459,14 +460,14 @@
         position: relative;
         /* height: 60vh; */
         width: 90%;
-        left: 100px;
-        top: 11%;
+        left: 140px;
+        top: %;
         margin-top: 1vh;
     }
 
     .position-history-card {
         position: relative;
-        top: -4%;
+        top: 25px;
     }
 
     .nav-tab{
@@ -603,10 +604,27 @@
     }
 
     .work-history-icon {
+        /*text-align: right;
+        padding-top: 1em;
+        padding-right: 1em;*/
         text-align: right;
         padding-top: 1em;
         padding-right: 1em;
+        left: 85px;
+        top: 10px;
+        position: relative;
     }
+
+    .icon-colour{
+        color: #00BCAE
+    }
+
+    
+
+    .icon-colour:hover{
+        color: #D35BC9;
+    }
+
     .ref-contact-Num {
         text-align: left;
         padding-left: 1em;
@@ -623,7 +641,7 @@
         font-weight: 700;
         color: black;
         font-size: 1.8vh;
-        margin-bottom: 7px !important;
+        margin-top: 7px !important;
         cursor: pointer;
         width: 90%;
         margin-left: 1.75vh;
@@ -707,7 +725,7 @@
     .progress-bar-spot-size {
         height: 3vh;
         position: absolute;
-        left: 350px;
+        left: 390px;
         top: 160px;
         width: 49%;
     }
@@ -972,7 +990,7 @@
                 <!--Personal Information-->
                 <div id="personal-information" class="container tab-pane active">
                     <div class="d-flex">
-                        <EditForm Model="@personalInformation" OnValidSubmit="@AddPersonalInformation" style="width: 60%; margin-left: 150px;">
+                        <EditForm Model="@personalInformation" OnValidSubmit="@AddPersonalInformation" style="width: 60%; margin-left: 180px;">
                             <DataAnnotationsValidator />
                             <div class="row" style="margin-top: 50px; margin-left: -7%;">
                                 <div class="col-12 shadow-sm bg-body rounded-edges white-back" style=" margin-top: 5vh;">
@@ -1148,7 +1166,7 @@
                             <div class="col-12">
                                 <div class="row">
                                     <div class="col-9 p-5">
-                                        <div class="row shadow-sm bg-body rounded-edges white-back position-white">
+                                        <div class="row shadow-sm bg-body rounded-edges white-back position-white" style="top: 3%;">
                                             <div class="education-header">
                                                 <h1>Work History</h1>
                                             </div>
@@ -1200,21 +1218,20 @@
                                     </div>
                                     <div class="col-3 ">
                                         <div class="history-container position-history-card rounded-edges">
-                                            <div class="history">
-                                                <div class="text-center history-status-intransit">
+                                            <div class="text-center history-status-intransit">
                                                     <p class="history-status  text-tight">Work History</p>
-                                                </div>
-                                                <br />
+                                            </div>
+                                            <div class="history">                                                
+
                                                 @if (workHistoryList != null)
                                                 {
                                                     foreach (var item in workHistoryList)
                                                     {
-
                                                         <div class="text-card" @onclick="() => SelectWorkHistory(item)" style="@GetStyling(item)">
-                                                            <div class="work-history-icon">
-                                                                <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteWorkHistory(item)"></i>
+                                                            <span class="work-history-icon" @onclick="() => DeleteWorkHistory(item)">
+                                                                <i class="icon-colour fa fa-trash fa-2x" ></i>
                                                                 <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
-                                                            </div>
+                                                            </span>
 
                                                             <div class="work-history-comp-name">@item.CompanyName</div>
                                                             <div class="work-history-job-title">@item.JobTitle</div>
@@ -1244,7 +1261,7 @@
                             <div class="col-12">
                                 <div class="row">
                                     <div class="col-9 p-5">
-                                        <div class="row shadow-sm bg-body rounded-edges white-back position-white">
+                                        <div class="row shadow-sm bg-body rounded-edges white-back position-white" style=" top: -8px;">
                                             <div class="education-header">
                                                 <h1>Educational details</h1>
                                             </div>
@@ -1295,22 +1312,22 @@
                                     <div class="col-3">
                                         <!--<div class="row shadow-sm bg-body rounded-edges white-back">-->
                                         <!--<div class="col-12 overflow-auto" style="height: 47vh">-->
-                                        <div class="history-container position-history-card rounded-edges">
-                                            <div class="history">
-                                                <div class="text-center history-status-intransit ">
+                                        <div class="history-container position-history-card rounded-edges" style="top: 6px;">
+                                            <div class="text-center history-status-intransit ">
                                                     <p class="history-status  text-tight">Educational History</p>
-                                                </div>
-                                                <br />
+                                            </div>
+                                            <div class="history">                                               
+                                                
                                                 @if (educationList != null && educationList.Count > 0)
                                                 {
                                                     foreach (var item in educationList)
                                                     {
 
                                                         <div class="text-card" @onclick="() => SelectEducation(item)" style="@GetEduStyling(item)">
-                                                            <div class="work-history-icon">
-                                                                <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteEducation(item)"></i>
+                                                            <span class="work-history-icon" @onclick="() => DeleteEducation(item)">
+                                                                <i class="icon-colour fa fa-trash fa-2x" ></i>
                                                                 <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
-                                                            </div>
+                                                            </span>
                                                             <div class="work-history-comp-name">@item.Qualification</div>
                                                             <div class="work-history-job-title">@item.Insitution</div>
                                                             <div class="work-history-date" style="color: @SmallCardDate()">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</div>
@@ -1330,7 +1347,7 @@
 
                 <!--Matric marks-->
                 <div id="matricMarks" class="container tab-pane">                   
-                        <div class="d-flex" style="margin-left: 130px;">
+                        <div class="d-flex" style="margin-left: 170px;">
                             <div class="rounded-edges matric-white-back">
                                 <div class="personalInfo-header"> 
                                     <h1>Matric Marks</h1>
@@ -1388,7 +1405,7 @@
                             <div class="col-12">
                                 <div class="row">
                                     <div class="col-9 p-5">
-                                        <div class="row shadow-sm bg-body rounded-edges white-back position-white">
+                                        <div class="row shadow-sm bg-body rounded-edges white-back position-white" style="top: -8px;">
                                             <div class="education-header">
                                                 <h1>Skills</h1>
                                             </div>
@@ -1416,21 +1433,21 @@
                                     <div class="col-3">
                                         <!--<div class="row shadow-sm bg-body rounded-edges white-back">-->
                                         <!--<div class="col-12 overflow-auto" style="height: 47vh">-->
-                                        <div class="history-container position-history-card rounded-edges">
-                                            <div class="history">
-                                                <div class="text-center history-status-intransit ">
+                                        <div class="history-container position-history-card rounded-edges" style="top: 6px;">
+                                            <div class="text-center history-status-intransit ">
                                                     <p class="history-status  text-tight">Skills Information</p>
-                                                </div>
-                                                <br />
+                                            </div>
+                                            <div class="history">                                                
+                                                
                                                 @if (selectedSkillsList1 != null && selectedSkillsList1.Count > 0)
                                                 {
                                                     foreach (var item in selectedSkillsList1)
                                                     {
                                                         <div class="text-card" @onclick="() => SelectSkill(item)" style="@GetSkillStyling(item)">
-                                                            <div class="work-history-icon">
-                                                                <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => removeFromSelectedInfo(item)"></i> <!---->
+                                                            <span class="work-history-icon" @onclick="() => removeFromSelectedInfo(item)">
+                                                                <i class="icon-colour fa fa-trash fa-2x"></i> <!---->
                                                                 <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
-                                                            </div>
+                                                            </span>
                                                             <div class="work-history-comp-name">@item.Description</div>
                                                         </div>
                                                     }
@@ -1451,7 +1468,7 @@
                 <div id="additionalDocuments" class="container tab-pane">
                     <EditForm Model="@doc">
                         <DataAnnotationsValidator />
-                        <div class="d-flex " style="margin-left: 130px;">
+                        <div class="d-flex " style="margin-left: 170px;">
                             <div class="rounded-edges documents-white-back">
                                 <div class="personalInfo-header"> 
                                     <h1>Additional Documents</h1>
@@ -1687,7 +1704,7 @@
                             <div class="col-12">
                                 <div class="row">
                                     <div class="col-9 p-5">
-                                        <div class="row shadow-sm bg-body rounded-edges white-back position-white">
+                                        <div class="row shadow-sm bg-body rounded-edges white-back position-white" style=" top: -8px;">
                                             <div class="education-header">
                                                 <h1>References</h1>                                                
                                             </div>
@@ -1739,25 +1756,24 @@
                                         </div>
                                     </div>
                                     <div class="col-3">
-                                        <div class="history-container position-history-card rounded-edges">
-                                            <div class="history">
-                                                <div class="text-center history-status-intransit">
+                                        <div class="history-container position-history-card rounded-edges" style="top: 6px;">
+                                            <div class="text-center history-status-intransit">
                                                     <p class="history-status  text-tight">References</p>
-                                                </div>
-                                                <br />
+                                            </div>
+                                            <div class="history">
                                                 @if (referencesList != null && referencesList.Count > 0)
                                                 {
                                                     foreach (var items in referencesList)
                                                     {
 
                                                         <div class="text-card" @onclick="() => SelectReference(items)" style="@GetRefStyling(items)">
-                                                            <div class="work-history-icon">
-                                                                <i class="handPointer fa fa-trash fa-2x" style="color: #00BCAE" @onclick="() => DeleteReference(items)"></i> <!---->
-                                                                <div class="work-history-comp-name">@items.RefFirstName</div>
-                                                                <div class="work-history-job-title">@items.RefLastName</div>
-                                                                <div class="work-history-job-title">@items.RefEmail</div>
-                                                                <div class="work-history-job-title">@items.RefPhone</div>
-                                                            </div>
+                                                            <span class="work-history-icon" @onclick="() => DeleteReference(items)">
+                                                                <i class="icon-colour fa fa-trash fa-2x"  ></i> <!---->
+                                                            </span>
+                                                            <div class="work-history-comp-name">@items.RefFirstName</div>
+                                                            <div class="work-history-job-title">@items.RefLastName</div>
+                                                            <div class="work-history-job-title">@items.RefEmail</div>
+                                                            <div class="work-history-job-title">@items.RefPhone</div>                                                            
                                                         </div>
                                                     }
                                                 }
@@ -1772,9 +1788,9 @@
 
                 <!--Online Presence-->
                 <div id="online-profile" class="container tab-pane" style=" margin-top: 50px;">
-                    <form class="col-12 d-flex" style="margin-left: 110px;">
+                    <form class="col-12 d-flex" style="margin-left: 150px;">
                         <div class="row col-9">
-                            <div class="col-12 shadow-sm bg-body rounded-edges align-self-start white-back" style="margin-top: -9vh; width: 87.5%; " >
+                            <div class="col-12 shadow-sm bg-body rounded-edges align-self-start white-back" style="margin-top: -10vh; width: 87.5%; " >
                                 <div class="education-header">
                                     <h1>Online Presence</h1>
                                 </div>
