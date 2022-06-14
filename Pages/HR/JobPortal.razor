@@ -454,12 +454,12 @@
                             </div>
                             <div class="col-12">
                                 <!--Department-->
-                                <MudSelect T="int" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
+                                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
                                     @if (jobListFilter?.Any() == true)
                                     {
-                                        @foreach (var item in departments)
+                                        @foreach (var item in departments.Select(x => x.Name).OrderBy(x => x).Distinct())
                                         {
-                                            <MudSelectItem T="int" Value="item.Id">@item.Name</MudSelectItem>
+                                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
                                         }
 
                                     }
