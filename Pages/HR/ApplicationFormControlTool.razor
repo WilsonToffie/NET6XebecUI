@@ -460,7 +460,7 @@
 
     .bottom-buttons {
         margin-top: 3vh;
-        margin-left: 20%;
+        margin-left: 25% !important;
         position: absolute;
         bottom: 5vh;
     }
@@ -745,12 +745,14 @@
                 }
             </div>
         </div>
+
+        <div class="bottom-buttons">
+            <input type="button" value="Prev" class="button-functions" @onclick="Prev" />
+            <input type="submit" value="Save" class="button-functions" @onclick="SaveQuestion" />
+            <input type="button" value="Next" class="button-functions" @onclick="Next" />
+        </div>
     </div>
-    <div class="bottom-buttons">
-        <input type="button" value="Prev" class="button-functions" @onclick="Prev" />
-        <input type="submit" value="Save" class="button-functions" @onclick="SaveQuestion" />
-        <input type="button" value="Next" class="button-functions" @onclick="Next" />
-    </div>
+
 }
 else if (prevPage == true)
 {

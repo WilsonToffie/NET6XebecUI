@@ -430,6 +430,14 @@
     .headings {
         color: navy
     }
+
+    .bottom-buttons {
+        margin-top: 3vh;
+        margin-left: 25% !important;
+        position: absolute;
+        bottom: 5vh;
+    }
+
 </style>
 <!--The HTML for the progress bar-->
 @if(prevPage)
@@ -538,13 +546,15 @@ else
             </div>
         </div>
     </div>
+
+    <div class="bottom-buttons">
+        <button class="default-button-style " @onclick="Previous">Prev</button>
+        <button class="default-button-style " @onclick="SubmitPhases">Save</button>
+        <button class="default-button-style " @onclick="Next">Next</button>
+    </div>
 </div>
 
-<div class="bottom-buttons">
-    <button class="default-button-style " @onclick="Previous">Prev</button>
-    <button class="default-button-style " @onclick="SubmitPhases">Save</button>
-    <button class="default-button-style " @onclick="Next">Next</button>
-</div>
+
 }
 
 
