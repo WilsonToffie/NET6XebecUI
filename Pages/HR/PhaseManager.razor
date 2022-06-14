@@ -1063,7 +1063,7 @@
 
 
 
-    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasFilter">
+@*    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasFilter">
         <div class="offcanvas-header-alert offcanvas-header-color1">
             <div style="padding: 2em 0em 0em 2em">
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -1088,7 +1088,7 @@
             </div>
             <div class="col-12">
                 <!--Company-->
-                @*<MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Companies" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextCompany)" Label="Company" SelectedValuesChanged="SearchListCompany">
+                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Companies" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextCompany)" Label="Company" SelectedValuesChanged="SearchListCompany">
                     @if (jobListFilter?.Any() == true)
                     {
                         @foreach (var item in jobList.Select(x => x.Company).OrderBy(x => x).Distinct())
@@ -1097,11 +1097,11 @@
                         }
 
                     }
-                </MudSelect>*@
+                </MudSelect>
             </div>
             <div class="col-12">
                 <!--Department-->
-                @*<MudSelect T="int" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
+                <MudSelect T="int" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
                     @if (jobListFilter?.Any() == true)
                     {
                         @foreach (var item in departments)
@@ -1110,11 +1110,11 @@
                         }
 
                     }
-                </MudSelect>*@
+                </MudSelect>
             </div>
             <div class="col-12">
                 <!--Status-->
-                @*<MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Status" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextStatus)" Label="Status" SelectedValuesChanged="SearchListStatus">
+                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Status" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextStatus)" Label="Status" SelectedValuesChanged="SearchListStatus">
                     @if (jobListFilter?.Any() == true)
                     {
                         @foreach (var item in status.Select(x => x.name))
@@ -1123,7 +1123,7 @@
                         }
 
                     }
-                </MudSelect>*@
+                </MudSelect>
             </div>
         </div>
     </div>
@@ -1132,7 +1132,7 @@
         <div style="padding-top: 3em">
             <button class="detail-button-colour filter-button-trans rounded-pill" type="button" style="width: 8em; height: 3em" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilter">Filters</button>
         </div>
-    </div>
+    </div>*@
 
 </div>
 

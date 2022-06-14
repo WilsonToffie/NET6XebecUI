@@ -12,6 +12,9 @@
     .handPointer {
         cursor: pointer;
     }
+    .handPointer:hover{
+        color:red;
+    }
 
     input.smallerCheckBox {
         width: 15px;
@@ -324,9 +327,9 @@
 
     .configure-alerts-heading {
         font-family: opensans-condensed-light;
-        font-weight: bolder;
-        font-size: 3em;
-        color: rgba(0, 188, 174,1);
+        
+        
+        color: #004392;
         /*color: #FFFFFF;*/
         text-align: center;
         /*margin-top: 3vh;*/
@@ -389,16 +392,8 @@
         display: flex;
         gap: 5px;       
     }
-    .trash-can-location{
-        margin-top: 20px;
-    }
-
-    .icon-colour{
-        color: #00BCAE
-    }   
-
-    .icon-colour:hover{
-        color: #D35BC9;
+    .filter-heading{
+        color:#004392;
     }
 </style>
 
@@ -418,8 +413,8 @@
                                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                             </div>
                         </div>
-                        <div class="align-items-center">
-                            <p class="configure-alerts-heading">Filter</p>
+                        <div class="display-flex align-items-center" style="text-align:center;">
+                            <h2 class="filter-heading">Filter</h2>
                         </div>
                         <div class="offcanvas-body p-5 pt-0 d-grid gap-5">
                             <div class="col-12">
@@ -806,7 +801,13 @@
             {
                 <br />
             }
-            <h1 class="text-center align-middle">No Job Searches Are Available</h1>
+            <h1 class="text-center align-middle">No Jobs Available</h1>
+            <div class="col-12 d-flex justify-content-end pb-5" style="height: 44em !important">
+                <div style="padding-top: 3em">
+                   <button class="detail-button-colour filter-button-trans rounded-pill" type="button" style="width: 8em; height: 3em" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilter">Filter</button>
+                </div>
+             </div>
+           
         }
         else
         {
