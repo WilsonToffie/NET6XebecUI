@@ -575,8 +575,8 @@
                 <textarea class="mydialog-final-textarea" @bind="emailContent"></textarea>
             </div>
             <div class="mydialog-final-button">
-                <button class="default-button-style" @onclick="SendEmail">Send</button>
                 <button class="default-button-style" @onclick="() => { showEmail = false; }">Cancel</button>
+                <button class="default-button-style" @onclick="SendEmail">Send</button>
             </div>
         </div>
     </MatDialog>
@@ -1082,6 +1082,8 @@
         Console.WriteLine(Email.Body);
         Console.WriteLine(Email.JobName);
         await httpClient.PostAsJsonAsync<EmailModel>("https://prod-228.westeurope.logic.azure.com:443/workflows/420f0efb54134f0492fee22869c92bc6/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=GOWFYTIEtt84SYP1ZNP8ZIhoXJeq7S13FjBoYlAGVzE", Email);
+
+        showEmail = false;
     }
 
     private void toggleMagnifiedDocument(string documentType)
