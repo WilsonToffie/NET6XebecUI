@@ -242,7 +242,12 @@
             color: #d35bc9;
             cursor: pointer;
         }
-
+    .autofill-class{
+        height: 6.3vh !important;
+        margin-left: 10px;        
+        border-top-right-radius: 0.8em;
+        border-bottom-right-radius: 0.8em;
+    }
 </style>
 <head>
     
@@ -265,15 +270,13 @@
                         <div class="index-form-icon">
                             <i class="fa fa-user"></i>
                         </div>
-                        <input type="email" required placeholder="Email address" @bind="@Email" @onfocusin="validationChanges" @ref="SignInElementInFocus" /> <!-- -->
+                        <input class="autofill-class" type="email" required placeholder="Email address" @bind="@Email" @onfocusin="validationChanges" @ref="SignInElementInFocus" /> <!-- -->
                     </div>
                     <div class="form-group index-form-group index-group">
                         <div class="index-form-icon">
                             <i class="fa fa-lock "></i>
-                        </div>
-                        <div>
-                        <input type="password" placeholder="Password" @bind="@Password" @onkeypress="@SignInEnter" @onfocusin="validationChanges">
-                        </div>
+                        </div>                        
+                        <input class="autofill-class" type="password" placeholder="Password" @bind="@Password" @onkeypress="@SignInEnter" @onfocusin="validationChanges">
                     </div>
                     <div class="form-group forgot-password">
                         <h3 class="forgotpassword" @onclick="GoToEmail" style="margin-left: 45px;">Forgot Password?</h3>
@@ -319,7 +322,7 @@
                         <div class="index-form-icon">
                             <i class="fa fa-user"></i>
                         </div>
-                        <input type="email" required placeholder="Email address" @bind="@Email" @onkeydown="@ForgotPasswordEnter" @ref="EmailElementInFocus" > <!---->
+                        <input class="autofill-class" type="email" required placeholder="Email address" @bind="@Email" @onkeydown="@ForgotPasswordEnter" @ref="EmailElementInFocus" > <!---->
                     </div>
                     <div class="form-group forgot-password">
                         <h3 class="forgotpassword" @onclick="GoToLogin">Back</h3>
