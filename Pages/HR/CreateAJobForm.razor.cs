@@ -40,6 +40,7 @@ namespace XebecPortal.UI.Pages.HR
         private Policy policies = new Policy(); // this is mainly used for the Policy display 
         private List<JobPlatform> ListOfPlatforms = new List<JobPlatform>();
         private IList<Job> jobList = new List<Job>();
+        private List<Job> jobsThatExistAlready = new List<Job>();
         private List<JobTypeHelper> jobType = new List<JobTypeHelper>();
         private JobTypeHelper jobtype = new JobTypeHelper();
         private Department displayDepartment = new Department();
@@ -64,6 +65,7 @@ namespace XebecPortal.UI.Pages.HR
         private string departmentName;
         private int savedJobId;
         private int existJobId;
+        private bool departmentBeingUsedByAnotherJob;
 
         private bool addedNewDep;
         private bool addedNewComp;
@@ -79,9 +81,9 @@ namespace XebecPortal.UI.Pages.HR
             Company = await HttpClient.GetListJsonAsync<List<Company>>($"Company", new AuthenticationHeaderValue("Bearer", token));
             Locations = await HttpClient.GetListJsonAsync<List<Location>>($"Location", new AuthenticationHeaderValue("Bearer", token));
             Policies = await HttpClient.GetListJsonAsync<List<Policy>>($"Policy", new AuthenticationHeaderValue("Bearer", token));
-
             jobTypes = await HttpClient.GetListJsonAsync<List<JobType>>($"jobtype", new AuthenticationHeaderValue("Bearer", token));
             Departments = await HttpClient.GetListJsonAsync<List<Department>>($"Department", new AuthenticationHeaderValue("Bearer", token));
+            jobsThatExistAlready = await HttpClient.GetListJsonAsync<List<Job>>($"Job", new AuthenticationHeaderValue("Bearer", token));
             TempJob.DueDate = TempJob.CreationDate = DateTime.Now;
         }
 
@@ -144,20 +146,38 @@ namespace XebecPortal.UI.Pages.HR
             Console.WriteLine("Value received: " + value.Id);
             if (value.Id > 0)
             {
-                if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Remove This Department?"))
+
+                foreach (var item in jobsThatExistAlready)
                 {
-                
-                   // Departments.Remove(value);
-                    var removeDep = await HttpClient.DeleteJsonAsync($"Department/{value.Id}", new AuthenticationHeaderValue("Bearer", token));
-                    if (removeDep.IsSuccessStatusCode)
+                    if (item.DepartmentId == value.Id)
                     {
-                        await jsRuntime.InvokeAsync<object>("alert", "Department has successfully been removed!");
-                    }               
+                        departmentBeingUsedByAnotherJob = true;
+                        break;
+                    }                    
+                }
+
+                if (!departmentBeingUsedByAnotherJob)
+                {                
+                    if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Remove This Department?"))
+                    {              
+                        var removeDep = await HttpClient.DeleteJsonAsync($"Department/{value.Id}", new AuthenticationHeaderValue("Bearer", token));
+                        if (removeDep.IsSuccessStatusCode)
+                        {
+                            await jsRuntime.InvokeAsync<object>("alert", "Department has successfully been removed!");
+                            department.Id = 0;
+                        }               
+                    }
+                }
+                else
+                {
+                    await jsRuntime.InvokeAsync<object>("alert", "You are not able to Delete this department, due to it being used in other Job Applications!");
+                    department.Id = 0;
                 }
             }
             else
             {
                 await jsRuntime.InvokeAsync<object>("alert", "Please select a valid Department!");
+                department.Id = 0;
             }
 
             await OnInitializedAsync();
