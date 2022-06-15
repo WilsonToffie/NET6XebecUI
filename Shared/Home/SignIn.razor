@@ -413,7 +413,6 @@
     private async Task googleSignIn()
     {
         var result = await HttpClient.GetAsync("https://xebecapi.azurewebsites.net/account/googleSignIn");
-        Console.WriteLine("Whatever the result will be " + result);
 
         if (result.IsSuccessStatusCode)
         {
@@ -449,20 +448,10 @@
                 state.Avator = result.Avatar;
                 // state.Title = result.Title;
 
-                test = result.jwtBearer;
-
-                if (test != string.Empty)
-                {
-                    Console.WriteLine("Token has a value");
-                    Console.WriteLine("Token value: " + test);
-                }
-                else
-                {
-                    Console.WriteLine("Token Value is empty");
-                }
+                test = result.jwtBearer;               
 
                 message = result.Message;
-                Console.WriteLine("Message from API " + message);
+                
                 if (result.Success)
                 {
                     successfullLogin = true;
@@ -495,17 +484,15 @@
         await OnAfterRenderAsync(true);
         if (e.Code == "Enter" || e.Code == "NumpadEnter")
         {
-            Console.WriteLine("Password value: " + Password);
             await JWTLogin();
         }
     }
 
     public async Task ForgotPasswordEnter(KeyboardEventArgs e)
     {
-
+        await OnAfterRenderAsync(true);
         if (e.Code == "Enter" || e.Code == "NumpadEnter")
-        {
-            
+        {            
             await SubmitEmail();
         }
     }
@@ -594,7 +581,7 @@
             state.Avator = thisUser.Avatar;
 
             message = thisUser.Message;
-            Console.WriteLine("Message from API " + message);
+
             if (thisUser.Success)
             {
                 successfullLogin = true;
