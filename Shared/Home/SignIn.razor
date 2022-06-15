@@ -168,6 +168,10 @@
             background-color: #d35bc9;
         }
 
+        .index-form-button:disabled{
+            background-color: grey;
+        }
+
     .index-form-or {
         text-align: center;
         height: 3vh;
@@ -297,7 +301,7 @@
                         }
                     </div>
                     <div class="form-group login-button-div">
-                        <input type="button" class="index-form-button" @onclick="JWTLogin" value="Submit" />
+                        <input type="button" class="index-form-button" @onclick="JWTLogin" value="Submit" disabled="@buttonDisabled" />
                     </div>
                     @*<div>
                         <label>
@@ -381,6 +385,10 @@
     private SignInModel signIn = new SignInModel();
     private SignInResult thisUser = new SignInResult();
     private ForgotPasswordModel forgot = new ForgotPasswordModel();
+
+
+    //button disabled after press
+    private bool buttonDisabled = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -499,7 +507,7 @@
 
         if (e.Code == "Enter" || e.Code == "NumpadEnter")
         {
-            
+
             await SubmitEmail();
         }
     }
@@ -572,6 +580,7 @@
     string token = "";
     private async Task JWTLogin()
     {
+        buttonDisabled = true;
         thisUser = await AuthenticateJWT();
 
 
@@ -620,6 +629,8 @@
                 successfullLogin = false;
                 invalidCredentials = true;
             }
+
+
             //navmanager.NavigateTo("/main");// this is where you will start to transfer pages.
         }
         else
@@ -628,6 +639,9 @@
             Console.WriteLine("Key is empty");
             //await localStorage.ClearAsync(); // Use this at log out
         }
+
+        buttonDisabled = false;
+
     }
 
     private void validationChanges()
