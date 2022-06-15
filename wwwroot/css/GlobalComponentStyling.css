@@ -82,7 +82,7 @@ button {
         cursor: pointer;
     }
 
-input[type = "text"], input[type="email"], input[type="password"], select:-webkit-autofill {
+input[type="email"], input[type="password"], select:-webkit-autofill {
     background-color: transparent;    
     font-size: 1em;
     border: none;

@@ -609,7 +609,7 @@
         img = "https://xebecstorage.blob.core.windows.net/profile-images/0";
     }
 
-
+    <!--Work here - Andrew -->
 
     <div class="dimmed">
 
@@ -624,7 +624,8 @@
             <div class="modal-frame-documents-rows">
                 <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("linkedincv")'>
 
-                    <img src="https://xebecstorage.blob.core.windows.net/linkedincv/@selectedUser.id" alt="Avatar">
+                    <iframe src="@getUserDoc.CV" style="width: 80%; height: 80%;"></iframe>
+                    @*<img src="https://xebecstorage.blob.core.windows.net/linkedincv/@selectedUser.id" alt="Avatar">*@
 
                     <div style="color: #00bcae; font-family: opensans-condensed-bold">
                         CV
@@ -671,10 +672,69 @@
 <!--Magnified Document-->
 @if (showMagnifiedDocument)
 {
+    @switch(selectedDocument){
+        case "linkedincv":
+            <div class="dimmed">
+                <div class="img-magnified">
+                    <input type="button" class="btn-view-document" style="margin-left:70%; margin-bottom: 2%;" value="Close" @onclick='() => toggleMagnifiedDocument("")' />
+                    <iframe src="@getUserDoc.CV" style="width: 90%; height: 90%;" scrolling="no" ></iframe>
+                </div>
+            </div>
+
+            break;
+        case "matric-certificates":
+            <div class="dimmed">
+                <div class="img-magnified">
+                    <input type="button" class="btn-view-document" style="margin-left:70%; margin-bottom: 2%;" value="Close" @onclick='() => toggleMagnifiedDocument("")' />
+                    <iframe src="@getUserDoc.MatricCertificate" style="width: 90%; height: 90%;"></iframe>
+                </div>
+            </div>
+
+            break;
+        case "transcripts":
+            
+            <div class="dimmed">
+                <div class="img-magnified">
+                    <input type="button" class="btn-view-document" style="margin-left:70%; margin-bottom: 2%;" value="Close" @onclick='() => toggleMagnifiedDocument("")' />
+                    <iframe src="@getUserDoc.UniversityTranscript" style="width: 90%; height: 90%;"></iframe>
+                </div>
+            </div>
+
+            break;
+        case "additional-documents-1":
+
+            <div class="dimmed">
+                <div class="img-magnified">
+                    <input type="button" class="btn-view-document" style="margin-left:70%; margin-bottom: 2%;" value="Close" @onclick='() => toggleMagnifiedDocument("")' />
+                    <iframe src="@getUserDoc.AdditionalCert1" style="width: 90%; height: 90%;"></iframe>
+                </div>
+            </div>
+
+            break;
+        case "additional-documents-2":
+
+            <div class="dimmed">
+                <div class="img-magnified">
+                    <input type="button" class="btn-view-document" style="margin-left:70%; margin-bottom: 2%;" value="Close" @onclick='() => toggleMagnifiedDocument("")' />
+                    <iframe src="@getUserDoc.AdditionalCert2" style="width: 90%; height: 90%;"></iframe>
+                </div>
+            </div>
+
+            break;
+        case "additional-documents-3":
+            <div class="dimmed">
+                <div class="img-magnified">
+                    <input type="button" class="btn-view-document" style="margin-left:70%; margin-bottom: 2%;" value="Close" @onclick='() => toggleMagnifiedDocument("")' />
+                    <iframe src="@getUserDoc.AdditionalCert3" style="width: 90%; height: 90%;"></iframe>
+                </div>
+            </div>
+            break;
+
+    }
     <div class="dimmed">
         <div class="img-magnified">
             <input type="button" class="btn-view-document" style="margin-left:70%; margin-bottom: 2%;" value="Close" @onclick='() => toggleMagnifiedDocument("")' />
-            <img src="https://xebecstorage.blob.core.windows.net/@selectedDocument/@selectedUser.id" />
+            <iframe src="https://xebecstorage.blob.core.windows.net/@selectedDocument/@selectedUser.id" style="width: 90%; height: 90%;"></iframe>
         </div>
     </div>
 }
@@ -690,7 +750,8 @@
                 <table>
                     <thead>
                         <tr>
-                            <td class="title-modal">Application Form: </td>
+                            <td class="title-modal">Application Form:
+         </td>
                             <td class="close-modal" @onclick="toggleApplicationForm">x</td>
                         </tr>
                         <tr></tr>
@@ -970,6 +1031,10 @@
     private IList<References> references = new List<References>();
 
     private EmailModel Email = new EmailModel();
+    
+    private IList<Document> userDocuments { get; set; }
+    private List<Document> checkUserDoc = new List<Document>();
+    private Document getUserDoc = new Document();
 
     private currentPhase phase { get; set; }
     [Parameter] public int JobId { get; set; }
@@ -1090,11 +1155,22 @@
         selectedDocument = documentType;
     }
 
-    private void toggleDocuments(AppUser user)
+    private async Task toggleDocuments(AppUser user)
     {
         Console.WriteLine(user.id);
         showDocuments = !showDocuments;
         SetSelectedCandidate(user);
+
+        if (showDocuments)
+        {
+            userDocuments = await httpClient.GetListJsonAsync<List<Document>>($"Document/all/{user.id}", new AuthenticationHeaderValue("Bearer", token));
+            checkUserDoc = userDocuments.ToList();
+
+            foreach (var item in checkUserDoc)
+            {
+                getUserDoc = item;
+            }
+        }
     }
 
     private void toggleDocuments()

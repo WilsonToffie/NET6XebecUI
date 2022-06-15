@@ -67,11 +67,11 @@
     .drag-drop-input {
         position: absolute;
         background-color: pink;
-        left: 29.5%;
-        top: 34.7%;
-        width: 720px;
+        /* left: 405px; */
+        /* top: 276px; */
+        width: 697px;
         height: 140px;
-        opacity: 0;
+         opacity: 0; 
         cursor: pointer;
         z-index: 2;
         border: unset;
@@ -79,6 +79,10 @@
 
     .drop-corner {
         border: #00BCAE dashed 2px !important;
+        box-shadow: unset;
+    }
+    .drop-corner:hover {
+        border: #D35BC9 dashed 2px !important;
         box-shadow: unset;
     }
 
@@ -797,25 +801,20 @@
     .matric-drag-drop-input {
         position: absolute;
         background-color: pink;
-        left: 29%;
-        top: 34%;
         width: 305px;
         height: 144px;
-        opacity: 100;
-        opacity: 0;
+         opacity: 0; 
         cursor: pointer;
-        z-index: 2;
+        z-index: 1;
         border: unset;
     }
 
     .academic-drag-drop-input {
         position: absolute;
-        background-color: pink;
-        left: 54%;
-        top: 34%;
-        width: 318px;
+        background-color: pink;        
+        width: 313px;
         height: 144px;
-        opacity: 0;
+        opacity: 0;    
         cursor: pointer;
         z-index: 2;
         border: unset;
@@ -824,11 +823,9 @@
     .certificate-drag-drop-input {
         position: absolute;
         background-color: pink;
-        left: 29%;
-        top: 62%;
         width: 190px;
         height: 144px;
-        opacity: 0;
+        opacity: 0; 
         cursor: pointer;
         z-index: 2;
         border: unset;
@@ -920,16 +917,23 @@
     .matric-white-back{
         background: white;
         height: 40vh;
-        margin-top: -5.5vh;
+        margin-top: -6vh;
         width: 102vh;
         margin-left: -5vh;
     }
 
     .mark-input-container{
-        max-height: 10vh;
+        max-height: 7vh;
         overflow-y: auto;
     }
 
+    .upload-text{
+        color: #00BCAE
+    }
+
+    .upload-text:hover {
+        color: #D35BC9
+    }
     @@media screen and (max-width: 700px) {
         .nav1{
 
@@ -1010,16 +1014,18 @@
                                                     {
                                                         <InputFile OnChange="OnInputFileChangedAsync" multiple class="drag-drop-input" />
                                                         <MudText Typo="Typo.h3" Align="Align.Center">
-                                                            <i class="fa fa-upload"></i>
-                                                            <br />
-                                                            Upload File
+                                                            <div class="upload-text">
+                                                                <i class="fa fa-upload"></i>
+                                                                <br />
+                                                                Upload File
+                                                            </div>
                                                         </MudText>
                                                     }
                                                     else
                                                     {
                                                         <i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i>
                                                         <div class="document-preview">
-                                                            <a href="@getUserDoc.CV" target="_blank">CV</a>
+                                                            <a class="upload-text" href="@getUserDoc.CV" target="_blank">CV</a>
                                                         </div>
                                                     }
                                                 </MudPaper>
@@ -1367,7 +1373,7 @@
                                  }
                                  </div>
                                  @if (!enterNewMark)
-                                 {
+                                 { 
                                  <EditForm Model="@marks" OnValidSubmit="@insertMarks">
                                  <DataAnnotationsValidator />
                                     <div class="mark-input">
@@ -1375,21 +1381,26 @@
                                              <input class="form-control" type="text" placeholder="Subject's Name" @bind="marks.SubjectName">
                                          </div>
                                          <div style="width: 120px;">
-                                            <input class="form-control" type="text" placeholder="Mark" @bind="marks.SubjectMark">
-                                         </div>            
+                                            <input class="form-control" type="text" placeholder="Mark" @bind="marks.SubjectMark">                                           
+                                         </div>    
+                                         <div>
+                                             <button type="button" class="btn-close text-reset" @onclick="() => addAnotherMark(true)"></button>
+                                         </div>
                                     </div> 
-                                    <div style="text-align: center; margin-top: 20px;">
-                                        <input type="submit" value="Add mark"/>
+                                    <div style=" margin-top: 5px;">
+                                        <input style = "margin-left: 195px;" type="submit" value="Add"/>                                        
                                     </div>
                                  </EditForm>
                                  }
                                  else
                                  {
-                                     <div style="text-align: center;">
-                                         <input type="button" value="Add another" @onclick="() => addAnotherMark(false)"/>
-                                         <input type="button" value="Save" @onclick="SaveMarks"/>
-                                     </div>
+                                     <div style="margin-left: 195px;">
+                                         <input type="button" value="Add" @onclick="() => addAnotherMark(false)"/>                                        
+                                     </div>                                     
                                  }
+                                 <div style="text-align: center; margin-bottom: 10px;">
+                                      <input type="button" value="Save" @onclick="SaveMarks"/>
+                                 </div>
                             </div>
                         </div>
                     </div>               
@@ -1485,9 +1496,12 @@
                                                 <InputFile OnChange="OnInputMatricCertChangedAsync" multiple class="matric-drag-drop-input" />
 
                                                 <MudText Typo="Typo.h3" Align="Align.Center">
-                                                    <i class="fa fa-upload"></i>
-                                                    <br />
-                                                    Drop Matric Certificate
+                                                    <div class="upload-text">
+                                                        <i class="fa fa-upload"></i>
+                                                        <br />
+                                                        Drop Matric Certificate
+                                                    </div>
+                                                    
                                                 </MudText>
                                             }
                                             else
@@ -1495,7 +1509,7 @@
                                                 <i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i>
                                                 <div class="document-preview">
                                                     <!--@onclick="() => showDetailedDocumentPage(true)"-->                                                    
-                                                    <a href="@getUserDoc.MatricCertificate" target="_blank">Matric Certificate</a>
+                                                    <a class="upload-text" href="@getUserDoc.MatricCertificate" target="_blank">Matric Certificate</a>
                                                 </div>
                                             }
                                         </MudPaper>
@@ -1528,9 +1542,12 @@
                                                 <InputFile OnChange="OnInputTranscriptChangedAsync" multiple class="academic-drag-drop-input" />
 
                                                 <MudText Typo="Typo.h3" Align="Align.Center">
-                                                    <i class="fa fa-upload"></i>
-                                                    <br />
-                                                    Drop Academic Transcript
+                                                    <div class="upload-text">
+                                                         <i class="fa fa-upload"></i>
+                                                        <br />
+                                                        Drop Academic Transcript
+                                                    </div>
+                                                    
                                                 </MudText>
                                             }
                                             else
@@ -1538,7 +1555,7 @@
                                                 <i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i>
                                                 <div class="document-preview">
                                                     <!--@onclick="() => showDetailedDocumentPage(true)"-->                                                    
-                                                    <a href="@getUserDoc.UniversityTranscript" target="_blank">Academic Transcript</a>
+                                                    <a class="upload-text" href="@getUserDoc.UniversityTranscript" target="_blank">Academic Transcript</a>
                                                 </div>
                                             }
                                         </MudPaper>
@@ -1572,9 +1589,12 @@
                                                 {
                                                     <InputFile OnChange="OnInputFirstDocumentChangedAsync" multiple class="certificate-drag-drop-input" />
                                                     <MudText Typo="Typo.h3" Align="Align.Center">
-                                                        <i class="fa fa-upload"></i>
-                                                        <br />
-                                                        Drop Certificate
+                                                        <div class="upload-text">
+                                                            <i class="fa fa-upload"></i>
+                                                            <br />
+                                                            Drop Certificate
+                                                        </div>
+                                                        
                                                     </MudText>
                                                 }
                                                 else
@@ -1582,7 +1602,7 @@
                                                     <i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i>
                                                     <div class="document-preview">
                                                         <!--@onclick="() => showDetailedDocumentPage(true)"-->
-                                                        <a href="@getUserDoc.AdditionalCert1" target="_blank">Additional Document</a>
+                                                        <a class="upload-text" href="@getUserDoc.AdditionalCert1" target="_blank">Additional Document</a>
                                                     </div>
                                                 }
                                             </MudPaper>
@@ -1611,11 +1631,14 @@
 
                                                 @if (getUserDoc.AdditionalCert2 == null)
                                                 {
-                                                    <InputFile OnChange="OnInputSecondDocumentChangedAsync" multiple class="certificate-two-drag-drop-input" />
+                                                    <InputFile OnChange="OnInputSecondDocumentChangedAsync" multiple class="certificate-drag-drop-input" />
                                                     <MudText Typo="Typo.h3" Align="Align.Center">
-                                                        <i class="fa fa-upload"></i>
-                                                        <br />
-                                                        Drop Certificate
+                                                        <div class="upload-text">
+                                                            <i class="fa fa-upload"></i>
+                                                            <br />
+                                                            Drop Certificate
+                                                        </div>                                                       
+                                                        
                                                     </MudText>
                                                 }
                                                 else
@@ -1624,7 +1647,7 @@
                                                     <div class="document-preview">
                                                         <!--@onclick="() => showDetailedDocumentPage(true)"-->
 
-                                                        <a href="@getUserDoc.AdditionalCert2" target="_blank">Additional Document</a>
+                                                        <a class="upload-text" href="@getUserDoc.AdditionalCert2" target="_blank">Additional Document</a>
                                                     </div>
                                                 }
                                             </MudPaper>
@@ -1654,11 +1677,13 @@
 
                                                 @if (getUserDoc.AdditionalCert3 == null)
                                                 {
-                                                    <InputFile OnChange="OnInputThirdDocumentChangedAsync" multiple class="certificate-three-drag-drop-input" />
+                                                    <InputFile OnChange="OnInputThirdDocumentChangedAsync" multiple class="certificate-drag-drop-input" />
                                                     <MudText Typo="Typo.h3" Align="Align.Center">
-                                                        <i class="fa fa-upload"></i>
-                                                        <br />
-                                                        Drop Certificate
+                                                        <div class="upload-text">
+                                                            <i class="fa fa-upload"></i>
+                                                            <br />
+                                                            Drop Certificate
+                                                        </div>
                                                     </MudText>
                                                 }
                                                 else
@@ -1667,7 +1692,7 @@
                                                     <div class="document-preview">
                                                         <!--@onclick="() => showDetailedDocumentPage(true)"-->
 
-                                                        <a href="@getUserDoc.AdditionalCert3" target="_blank">Additional Document</a>
+                                                        <a class="upload-text" href="@getUserDoc.AdditionalCert3" target="_blank">Additional Document</a>
                                                     </div>
                                                 }
                                             </MudPaper>
