@@ -701,7 +701,7 @@
                                 <button class="btn-close" @onclick="CloseAddPopup"></button>
                             </div>
                             <div class="add-question-body">
-                                <textarea @bind="tempQuestion.questionDescription" style="width: 80%; border: 2px solid grey; height: 180px; background-color: white; border-radius: 5px;"></textarea>
+                                <textarea @bind="tempQuestion.questionDescription" style="width: 80%; border: 2px solid grey; height: 180px; background-color: white; border-radius: 5px; padding: 2px;"></textarea>
                             </div>
                             <div class="add-question-type">
                                 <p style="font-weight:600">answer type:</p>
@@ -735,7 +735,7 @@
 
                                                 <tr class="questions-div">
                                                     <td class=" appform-text pl-2">@question.questionDescription </td>
-                                                    <td class="btn-close delete-btn" @onclick="() => DeleteQuestion(question)"></td>
+                                                    <td class="btn-close" @onclick="() => DeleteQuestion(question)"></td>
                                                 </tr>
 
                                             }
@@ -927,22 +927,24 @@ else if (nextPage == true)
         await FormQuestionsChanged.InvokeAsync(FormQuestions);
     }
 
-    private async Task Save()
-    {
-        TempJob.formQuestions = FormQuestions;
-        if (FormQuestions.Count > 0)
-        {
-            Console.WriteLine("Questions Added");
-            //await TempJobChanged.InvokeAsync(TempJob);
-            await JSRuntime.InvokeAsync<object>("alert", "Questions saved successfully.");
 
-        }
-        else
-        {
-            await JSRuntime.InvokeAsync<object>("alert", "Please select at least one question.");
-        }
+    //this is replaced by SaveQuestion()
+    //private async Task Save()
+    //{
+    //    TempJob.formQuestions = FormQuestions;
+    //    if (FormQuestions.Count > 0)
+    //    {
+    //        Console.WriteLine("Questions Added");
+    //        //await TempJobChanged.InvokeAsync(TempJob);
+    //        await JSRuntime.InvokeAsync<object>("alert", "Questions saved successfully.");
 
-    }
+    //    }
+    //    else
+    //    {
+    //        await JSRuntime.InvokeAsync<object>("alert", "Please select at least one question.");
+    //    }
+
+    //}
 
     private string QuestionCardClass(CustomQuestion question)
     {
@@ -997,6 +999,7 @@ else if (nextPage == true)
             //    }
             Console.WriteLine("success!");
 
+            await JSRuntime.InvokeAsync<string>("alert", "Questions saved successfully.");
 
             savePressed = false;
         }

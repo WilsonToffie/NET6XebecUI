@@ -734,6 +734,7 @@ else
             isDialogAddPhaseVisible = !isDialogAddPhaseVisible;
         }
 
+        await jsr.InvokeAsync<string>("alert", "Phase saved successfully.");
         addPhasePressed = false;
     }
 
@@ -748,6 +749,7 @@ else
             await httpClient.PostJsonAsync<JobApplicationPhase>("jobapplicationphase", temp, new AuthenticationHeaderValue("Bearer", token));
         }
 
+        await jsr.InvokeAsync<string>("alert", "Phases successfully added to job.");
         saveButtonPressed = false;
     }
 
@@ -759,6 +761,8 @@ else
         {
             phasesAdded.Add(phase);
         }
+
+        await jsr.InvokeAsync<string>("alert", "Phase saved successfully.");
         addPhasePressed = false;
     }
 

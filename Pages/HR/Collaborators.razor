@@ -538,6 +538,8 @@ else if (prevPage)
 
         }
 
+        await jsRuntime.InvokeAsync<string>("alert", "Collaborators added successfully.");
+
         savePressed = false;
     }
 
