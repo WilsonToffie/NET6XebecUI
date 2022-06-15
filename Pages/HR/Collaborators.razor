@@ -149,6 +149,10 @@
             background-color: #d35bc9;
         }
 
+        .button-functions:disabled{
+            background-color: grey;
+        }
+
     .summary-section {
         color: #004392;
         font-weight: bold;
@@ -292,9 +296,9 @@
         </div>
 
             <div class="bottom-buttons">
-        <input type="button" value="Prev" class="button-functions" @onclick="Prev" />
-        <input type="button" value="Save" class="button-functions" @onclick="Save" />
-        <input type="button" value="Next" class="button-functions" @onclick="Next" />
+        <input type="button" value="Prev" class="button-functions" @onclick="Prev" disabled="@savePressed" />
+        <input type="button" value="Save" class="button-functions" @onclick="Save" disabled="@savePressed"/>
+        <input type="button" value="Next" class="button-functions" @onclick="Next" disabled="@savePressed"/>
     </div>
 
     </div>
@@ -382,6 +386,7 @@ else if (prevPage)
 }
 
 @code {
+    private bool savePressed = false;
 
     private string CurrentItem;
     private List<AppUser> AppUserList = new List<AppUser>();
@@ -496,6 +501,7 @@ else if (prevPage)
 
     public async Task Save()
     {
+        savePressed = true;
 
         if (ListOfCollaborators != null)
         {
@@ -531,12 +537,12 @@ else if (prevPage)
 
 
         }
+
+        await jsRuntime.InvokeAsync<string>("alert", "Collaborators added successfully.");
+
+        savePressed = false;
     }
 
-    private async Task testfunc(IEnumerable<AppUser> value)
-    {
-        //SelectedUsers = value;
-    }
 
     public async Task AddToCollab(AppUser user)
     {

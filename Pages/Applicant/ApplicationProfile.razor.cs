@@ -23,6 +23,15 @@ namespace XebecPortal.UI.Pages.Applicant
         private StringBuilder status = new StringBuilder("waiting");
         private ResumeResultModel resumeResultModel = new ResumeResultModel();
 
+
+        private bool savePersonalInfoPressed = false;
+        private bool addWorkhistoryPressed = false;
+        private bool addEducationPressed = false;
+        private bool addMatricMarksPressed = false;
+        private bool addSkillsPressed = false;
+        private bool addReferencesPressed = false;
+        private bool addLinksPressed = false;
+
         private int increment = 1;
         private bool workHistUpdate;
         private bool eduUpdate;
@@ -381,6 +390,8 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private async Task addToSelectedInfo()
         {
+            addSkillsPressed = true;
+
             selectedSkillsList1.Add(new()
             {
                 Description = skillInfo.Description,
@@ -400,7 +411,9 @@ namespace XebecPortal.UI.Pages.Applicant
             }
             addselectedSkillsList.Clear();// it immediately gets cleared after the POST.
             skillInfo = new();
-            await retrieveSkills();         
+            await retrieveSkills();
+
+            addSkillsPressed = false;
         }
 
 
@@ -461,6 +474,8 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private async Task AddPersonalInformation()
         {
+            savePersonalInfoPressed = true;
+
             if (newPersonalInfo && newAdditionalInfo) // This is a check to see if the user is a "new" user to the system or an old user
             {
                 personalInformationList.Add(new()
@@ -580,10 +595,14 @@ namespace XebecPortal.UI.Pages.Applicant
                 updateAdditionalInfo = false;
                 await retrievePersonalAndAdditionalInfo();
             }
+
+            savePersonalInfoPressed = false;
         }
 
         private async Task AddReferences()
         {
+            addReferencesPressed = true;
+
             referencesList.Add(new()
             {                
                 RefFirstName = references.RefFirstName,
@@ -610,6 +629,8 @@ namespace XebecPortal.UI.Pages.Applicant
             await retrieveReferences();
             
             references = new();
+
+            addReferencesPressed = false;
         }
 
         private References tempRef;
@@ -674,6 +695,8 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private async Task addWorkHistoryTest()
         {
+            addWorkhistoryPressed = true;
+
             workHistoryList.Add(new()
             {
                 AppUserId = state.AppUserId,
@@ -701,6 +724,8 @@ namespace XebecPortal.UI.Pages.Applicant
             await retrieveWorkHistory();
             addworkHistoryList.Clear();
             workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
+
+            addWorkhistoryPressed = false;
         }
 
         private async Task DeleteWorkHistory(WorkHistory workHistoryValues)
@@ -803,6 +828,8 @@ namespace XebecPortal.UI.Pages.Applicant
         private Education tempEducation;
         private async Task AddEducationTakeTwo()
         {
+            addEducationPressed = true;
+
             educationList.Add(new()
             {
                 AppUserId = state.AppUserId,
@@ -827,6 +854,8 @@ namespace XebecPortal.UI.Pages.Applicant
             addEducationList.Clear();
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             await retrieveEducationHistory();
+
+            addEducationPressed = false;
         }
 
         private async Task DeleteEducation(Education educationValues)
@@ -926,8 +955,10 @@ namespace XebecPortal.UI.Pages.Applicant
         }
 
         private async Task Submit()
-        {           
-
+        {
+            Console.WriteLine("The button should be disabled");
+            addLinksPressed = true;
+            StateHasChanged();
             // test if this will work, otherwise a for each is required            
 
             foreach (var item in profilePortfolioList)
@@ -962,6 +993,9 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 await jsRuntime.InvokeAsync<object>("alert", "Portfolio information has been saved!");
             }
+
+            addLinksPressed = false;
+            StateHasChanged();
         }
 
         private string storageAcc = "xebecstorage";
@@ -1534,15 +1568,28 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private async void SaveMarks()
         {
+            Console.WriteLine("disabling buttons");
+            addMatricMarksPressed = true;
+
             foreach(var mark in matricMarksAdded)
             {
                 await httpClient.PostJsonAsync($"matricMark", mark, new AuthenticationHeaderValue("Bearer", token));
             }
 
+            addMatricMarksPressed = false;
+            Console.WriteLine("enabling buttons");
+
+            //just trying this, for some reason the buttons would be stuck 'disabled' even when addMatricMarksPressed = false
+            StateHasChanged();
+
             matricMarksAdded.Clear();
             matricInputs.Clear();
 
+            
+
             matricInputs = await httpClient.GetListJsonAsync<List<matricMarks>>($"matricMark/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+
+            
         }
 
         private async void RemoveMark(matricMarks item)
