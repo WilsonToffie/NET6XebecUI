@@ -64,6 +64,10 @@
             background-color: #d35bc9;
         }
 
+        .subButton:disabled{
+            background-color: grey;
+        }
+
     .emailDisclaimer {
         position: relative;
         left: 50%;
@@ -259,7 +263,7 @@
 
 
                     <div style="text-align:center">
-                        <input class="subButton"  type="submit" value="Submit">
+                        <input class="subButton" type="button" value="Submit" disabled="@SubmitIsPressed" @onclick="temporaryButtonDisable">
                     </div>
                 </EditForm>
             </div>

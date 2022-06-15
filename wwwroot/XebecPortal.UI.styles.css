@@ -21,20 +21,23 @@
 .nav {
     background-color: white;
     top: 0vh;
-    height: 10vh;
+    /*height: 10vh;*/
+    height: 72.2px;
     width: 100vw;
     position: fixed;
     z-index: 1;
 }
 
 .mainlayout-xebec-heading {
-    height: 10vh;
+    /*height: 10vh;*/
+    height: 72.2px;
     width: 90px;
     margin-left: 15px;
 }
 
 .mainlayout-xebec-logo {
-    height: 10vh;
+    /*height: 10vh;*/
+    height: 72.2px;
     min-width: 100%;
     background-image: url(/Img/xebeclogoblack.png);
     background-size: cover;

@@ -430,6 +430,14 @@
     .headings {
         color: navy
     }
+
+    .bottom-buttons {
+        margin-top: 3vh;
+        margin-left: 25% !important;
+        position: absolute;
+        bottom: 5vh;
+    }
+
 </style>
 <!--The HTML for the progress bar-->
 @if(prevPage)
@@ -538,13 +546,15 @@ else
             </div>
         </div>
     </div>
+
+    <div class="bottom-buttons">
+        <button class="default-button-style " @onclick="Previous" disabled="@saveButtonPressed">Prev</button>
+        <button class="default-button-style " @onclick="SubmitPhases" disabled="@saveButtonPressed">Save</button>
+        <button class="default-button-style " @onclick="Next" disabled="@saveButtonPressed">Next</button>
+    </div>
 </div>
 
-<div class="bottom-buttons">
-    <button class="default-button-style " @onclick="Previous">Prev</button>
-    <button class="default-button-style " @onclick="SubmitPhases">Save</button>
-    <button class="default-button-style " @onclick="Next">Next</button>
-</div>
+
 }
 
 
@@ -630,7 +640,7 @@ else
                 <br />
             </div>
             <div class="col-12 d-flex justify-content-center">
-                <button class="btn rounded-3" type="button" style="background: #00bcae" @onclick="AddPhase">ADD</button>
+                <button class="default-button-style" type="button" @onclick="AddPhase" disabled="@addPhasePressed">ADD</button>
             </div>
         </div>
     </MatDialogContent>
@@ -674,19 +684,8 @@ else
     @using XebecPortal.UI.Utils.Handlers;
     @using System.Net.Http.Headers;
 
-    //[Parameter]
-    //public CreateJobPost TempJob { get; set; }
-
-    //[Parameter]
-    //public EventCallback<CreateJobPost> TempJobChanged { get; set; }
-
-    //[Parameter]
-    //public int CurrentJobId { get; set; }
-
-
-
-    //[Parameter]
-    //public EventCallback<int> JobIdChanged { get; set; }
+    private bool addPhasePressed = false;
+    private bool saveButtonPressed = false;
 
     private List<ApplicationPhase> phases = new List<ApplicationPhase>();
     private List<ApplicationPhase> phasesAdded = new List<ApplicationPhase>();
@@ -724,6 +723,7 @@ else
 
     private async Task AddPhase()
     {
+        addPhasePressed = true;
         if (string.IsNullOrWhiteSpace(addPhaseValue) == false)
         {
             tempPhaseValue = new() { description = addPhaseValue };
@@ -733,10 +733,14 @@ else
 
             isDialogAddPhaseVisible = !isDialogAddPhaseVisible;
         }
+
+        await jsr.InvokeAsync<string>("alert", "Phase saved successfully.");
+        addPhasePressed = false;
     }
 
     private async Task SubmitPhases()
     {
+        saveButtonPressed = true;
         foreach (var phase in phasesAdded)
         {
             JobApplicationPhase temp = new JobApplicationPhase();
@@ -745,15 +749,21 @@ else
             await httpClient.PostJsonAsync<JobApplicationPhase>("jobapplicationphase", temp, new AuthenticationHeaderValue("Bearer", token));
         }
 
+        await jsr.InvokeAsync<string>("alert", "Phases successfully added to job.");
+        saveButtonPressed = false;
     }
 
     private void AddPhase(ApplicationPhase phase)
     {
+        addPhasePressed = true;
 
         if (!phasesAdded.Contains(phase))
         {
             phasesAdded.Add(phase);
         }
+
+        await jsr.InvokeAsync<string>("alert", "Phase saved successfully.");
+        addPhasePressed = false;
     }
 
     private void AddAllPhases()

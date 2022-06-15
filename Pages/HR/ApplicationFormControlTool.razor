@@ -460,7 +460,7 @@
 
     .bottom-buttons {
         margin-top: 3vh;
-        margin-left: 20%;
+        margin-left: 25% !important;
         position: absolute;
         bottom: 5vh;
     }
@@ -481,6 +481,10 @@
 
         .button-functions:hover {
             background-color: #d35bc9;
+        }
+
+        .button-functions:disabled{
+            background-color: grey;
         }
 </style>
 
@@ -528,8 +532,8 @@
                     foreach (var formQuestion in FormQuestions)
                     {
                         <div class="right-list-item-preview">
-                            <div class="close-item-panel">
-                            </div>
+                            @*<div class="btn-close">
+                            </div>*@
                             <div class="summary-preview-item-body">
                                 <div class="summary-preview-item-description">
                                     <p style="margin:0 0 0px;">@formQuestion.question</p>
@@ -615,8 +619,8 @@
                                             <p class="-form-preview-question">
                                                 @formQuestion.question
                                             </p>
-                                            <span class="question-list" @onclick="() => DeleteFormQuestion(formQuestion)">
-                                                <i class="fas fa-times"></i>
+                                            <span class="btn-close" @onclick="() => DeleteFormQuestion(formQuestion)">
+                                                @*<i class="fas fa-times"></i>*@
                                             </span>
                                         </div>
                                         <div class="preview-item-control">
@@ -697,7 +701,7 @@
                                 <button class="btn-close" @onclick="CloseAddPopup"></button>
                             </div>
                             <div class="add-question-body">
-                                <textarea @bind="tempQuestion.questionDescription" style="width: 80%; border: 2px solid grey; height: 180px; background-color: white; border-radius: 5px;"></textarea>
+                                <textarea @bind="tempQuestion.questionDescription" style="width: 80%; border: 2px solid grey; height: 180px; background-color: white; border-radius: 5px; padding: 2px;"></textarea>
                             </div>
                             <div class="add-question-type">
                                 <p style="font-weight:600">answer type:</p>
@@ -710,7 +714,7 @@
                                 </select>
                             </div>
                             <div class="add-question-button">
-                                <button class="btn appform-main-button" @onclick="AddQuestion">Submit question</button>
+                                <button class="btn appform-main-button" @onclick="AddQuestion" disabled="@submitQuestionPressed">Submit question</button>
                             </div>
                         </div>
                     }
@@ -731,7 +735,7 @@
 
                                                 <tr class="questions-div">
                                                     <td class=" appform-text pl-2">@question.questionDescription </td>
-                                                    <td class="btn-close delete-btn" @onclick="() => DeleteQuestion(question)"></td>
+                                                    <td class="btn-close" @onclick="() => DeleteQuestion(question)"></td>
                                                 </tr>
 
                                             }
@@ -745,12 +749,14 @@
                 }
             </div>
         </div>
+
+        <div class="bottom-buttons">
+            <input type="button" value="Prev" class="button-functions" @onclick="Prev" disabled="@savePressed"/>
+            <input type="submit" value="Save" class="button-functions" @onclick="SaveQuestion" disabled="@savePressed"/>
+            <input type="button" value="Next" class="button-functions" @onclick="Next" disabled="@savePressed"/>
+        </div>
     </div>
-    <div class="bottom-buttons">
-        <input type="button" value="Prev" class="button-functions" @onclick="Prev" />
-        <input type="submit" value="Save" class="button-functions" @onclick="SaveQuestion" />
-        <input type="button" value="Next" class="button-functions" @onclick="Next" />
-    </div>
+
 }
 else if (prevPage == true)
 {
@@ -787,6 +793,9 @@ else if (nextPage == true)
     public CustomQuestion tempQuestion = new CustomQuestion();
 
     public List<QuestionnaireHrForm> questionnaireHrForms = new List<QuestionnaireHrForm>();
+
+    private bool savePressed = false;
+    private bool submitQuestionPressed = false;
 
 
     protected override async Task OnInitializedAsync()
@@ -873,6 +882,7 @@ else if (nextPage == true)
 
     public async Task AddQuestion()
     {
+        submitQuestionPressed = true;
         Console.WriteLine(tempQuestion.questionDescription);
         if (!String.IsNullOrEmpty(tempQuestion.questionDescription))
         {
@@ -895,6 +905,8 @@ else if (nextPage == true)
         {
             await JSRuntime.InvokeAsync<object>("alert", "Please enter a question.");
         }
+
+        submitQuestionPressed = false;
     }
 
     public void CloseAddPopup()
@@ -915,22 +927,24 @@ else if (nextPage == true)
         await FormQuestionsChanged.InvokeAsync(FormQuestions);
     }
 
-    private async Task Save()
-    {
-        TempJob.formQuestions = FormQuestions;
-        if (FormQuestions.Count > 0)
-        {
-            Console.WriteLine("Questions Added");
-            //await TempJobChanged.InvokeAsync(TempJob);
-            await JSRuntime.InvokeAsync<object>("alert", "Questions saved successfully.");
 
-        }
-        else
-        {
-            await JSRuntime.InvokeAsync<object>("alert", "Please select at least one question.");
-        }
+    //this is replaced by SaveQuestion()
+    //private async Task Save()
+    //{
+    //    TempJob.formQuestions = FormQuestions;
+    //    if (FormQuestions.Count > 0)
+    //    {
+    //        Console.WriteLine("Questions Added");
+    //        //await TempJobChanged.InvokeAsync(TempJob);
+    //        await JSRuntime.InvokeAsync<object>("alert", "Questions saved successfully.");
 
-    }
+    //    }
+    //    else
+    //    {
+    //        await JSRuntime.InvokeAsync<object>("alert", "Please select at least one question.");
+    //    }
+
+    //}
 
     private string QuestionCardClass(CustomQuestion question)
     {
@@ -950,6 +964,7 @@ else if (nextPage == true)
 
     public async Task SaveQuestion()
     {
+        savePressed = true;
         if (FormQuestions != null)
         {
             foreach (var question in FormQuestions)
@@ -983,9 +998,10 @@ else if (nextPage == true)
             //        await JSRuntime.InvokeAsync<object>("alert", "Questions saved successfully");
             //    }
             Console.WriteLine("success!");
-            
 
+            await JSRuntime.InvokeAsync<string>("alert", "Questions saved successfully.");
 
+            savePressed = false;
         }
         //await httpClient.PostJsonAsync<List<FormQuestion>>("questionnaire/lst", FormQuestions, new AuthenticationHeaderValue("Bearer", token));
         //Console.WriteLine("success!");

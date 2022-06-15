@@ -30,19 +30,27 @@ input[type = "button"], input[type = "submit"], button {
     border-radius: 0.4em;
 }
 
-.default-button-style {
-    background-color: rgba(0, 188, 174,1);
-    color: white;
-    width: 100px;
-    height: 5vh;
-    border: none;
-    text-align: center;
-    font-size: 1em;
-    font-family: opensans-condensed-bold;
-    font-weight: 600;
-    border: none;
-    border-radius: 0.4em;
-    cursor: pointer;
+    input[type = "button"]:disabled, input[type = "submit"]:disabled, button:disabled{
+        background-color: grey;
+    }
+
+    .default-button-style {
+        background-color: rgba(0, 188, 174,1);
+        color: white;
+        width: 100px;
+        height: 5vh;
+        border: none;
+        text-align: center;
+        font-size: 1em;
+        font-family: opensans-condensed-bold;
+        font-weight: 600;
+        border: none;
+        border-radius: 0.4em;
+        cursor: pointer;
+    }
+
+.default-button-style:disabled{
+    background-color: grey;
 }
 
 button {
@@ -57,6 +65,10 @@ button {
     font-weight: 600;
     border: none;
     border-radius: 0.4em;
+}
+
+button:disabled{
+    background-color: grey;
 }
 
 /* Global scroll bar changes */
@@ -82,15 +94,21 @@ button {
         cursor: pointer;
     }
 
+input[type = "text"], input[type="email"], input[type="password"], select:-webkit-autofill {
+    background-color: transparent;    
+    font-size: 1em;
+    border: none;
+    font-weight: 800;
+    color: black;
+    font-family: opensans-condensed-light;
+}
 /*    
     input[type = "button"], input[type = "submit"]:hover {
         background-color: #d35bc9;
     }
 
 */
-
 /*Text formatting*/
-
 h1 {
     font-family: opensans-condensed-bold !important;
     font-weight: bold !important;

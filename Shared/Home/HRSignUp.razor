@@ -431,16 +431,37 @@
         font-weight: 900;
         font-family: opensans-bold;
     }
+
+    .redirect-to-applicant{
+        display:flex;
+        justify-content:center;
+        margin-bottom: 30px;
+        color: #00bcae;
+    }
+
+        .redirect-to-applicant:hover{
+        color: #d35bc9;
+        cursor: pointer;
+    }
+
+        .index-form-heading-2 {
+        font-size: 3em;
+        font-weight: 800;
+        height: 6vh;
+        line-height: 10vh;
+        color: #004393;
+        font-family: opensans-condensed-bold;
+    }
    
 </style>
 <div class="overlay-register">
     <div class="register-page">
         <div class="register-left"></div>
         <div class="register-right">
-            
-            <form class="index-form-register" style="margin-top: 5vh;">
+            <form class="index-form-register" style="margin-top: 10vh;">
                 <div class="form-group index-form-heading">
-                    <h1 class="index-form-heading-1">REGISTER</h1>
+                    <h1 class="index-form-heading-2">REGISTER</h1>
+                    <h3 class="redirect-to-applicant" @onclick="GoToApplicantSignup">Sign up as Applicant</h3>
                 </div>
                 <div class="form-group index-form-group">
                     <div class="index-group-register">
@@ -535,7 +556,7 @@
                     </div>
                 }
                 <div class="form-group login-button-div">
-                    <input type="button" class="index-form-button" @onclick="Register" value="Submit" />
+                    <input type="button" class="index-form-button" @onclick="Register" value="Submit" @*disabled="@SubmitPressed"*@/>
                 </div>
             </form>
        
@@ -582,6 +603,11 @@
     protected override async Task OnInitializedAsync()
     {
         await showRegistrationForm();
+    }
+
+        private async Task GoToApplicantSignup()
+    {
+        navmanager.NavigateTo("applicantsignup");
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -662,7 +688,7 @@
             user.Surname = Surname;
             user.Email = Email;
             user.Password = Password;
-            user.Link = "https://xebechumancapital.azurewebsites.net/confirmation";
+            user.Link = "https://xebecnet6.azurewebsites.net/confirmation";
             //user.Link = "https://localhost:44364/confirmation";
             //Post model to dB
             using (var msg = await HttpClient.PostAsJsonAsync<UserModel>("auth/registernew", user))
@@ -697,5 +723,6 @@
             invalidRegistration = true;
             SubmitPressed = registeredEmail = validRegistration = false;
         }
+
     }
 }

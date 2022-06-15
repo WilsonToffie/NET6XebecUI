@@ -22,7 +22,7 @@
         margin: 2px;
     }
 
-    ::-webkit-scrollbar {
+/*    ::-webkit-scrollbar {
         width: 10px;
     }
 
@@ -38,7 +38,7 @@
 
         ::-webkit-scrollbar-thumb:hover {
             background: #00BCAE;
-        }
+        }*/
 
     .hr-job-search-bar {
         /*width: 40%;
@@ -354,7 +354,8 @@
             width:40px;
             height:40px;
             border-radius:50%;
-            outline: 2px solid #828282;           
+            object-fit:cover;
+     		object-position:center;
         }
 
     .tooltip-c{          
@@ -392,15 +393,28 @@
         display: flex;
         gap: 5px;       
     }
+
     .filter-heading{
         color:#004392;
+    }
+
+    .trash-can-location{
+        margin-top: 20px;
+    }
+
+    .icon-colour{
+        color: #00BCAE
+    }   
+
+    .icon-colour:hover{
+        color: #D35BC9;
     }
 </style>
 
 
 @if (ShowingJobPortal)
 {
-    <div class="container-fluid" style="width: 100%; height: 100%">
+   <div class="container-fluid" style="width: 100%; height: 100%">
 
         <div>
             <div class="row">
@@ -454,12 +468,12 @@
                             </div>
                             <div class="col-12">
                                 <!--Department-->
-                                <MudSelect T="int" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
+                                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
                                     @if (jobListFilter?.Any() == true)
                                     {
-                                        @foreach (var item in departments)
+                                        @foreach (var item in departments.Select(x => x.Name).OrderBy(x => x).Distinct())
                                         {
-                                            <MudSelectItem T="int" Value="item.Id">@item.Name</MudSelectItem>
+                                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
                                         }
 
                                     }
@@ -467,16 +481,16 @@
                             </div>
                             <div class="col-12">
                                 <!--Status-->
-@*                                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Status" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextStatus)" Label="Status" SelectedValuesChanged="SearchListStatus">
+                                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Status" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextStatus)" Label="Status" SelectedValuesChanged="SearchListStatus">
                                     @if (jobListFilter?.Any() == true)
                                     {
-                                        @foreach (var item in status.Select(x => x.name))
+                                        @foreach (var item in jobList.Select(x => x.Status).OrderBy(x => x).Distinct())
                                         {
                                             <MudSelectItem T="string" Value="item">@item</MudSelectItem>
                                         }
 
                                     }
-                                </MudSelect>*@
+                                </MudSelect>
                             </div>
                         </div>
                     </div>
@@ -489,8 +503,7 @@
         {
             <div class="row">
                 <div class="col-2 job-portal-left">
-                    <MudTooltip Class="shades white shades-text text-black" Placement="Placement.Right">
-                        <ChildContent>
+
                             <!--Card list for jobs-->
                             <div id="small-cards" class="col-12 overflow-auto p-3" style="height: 44em !important; margin-top: 1vh">
                                 @foreach (var item in jobListFilter)
@@ -499,7 +512,7 @@
                                         <div class="card-body job-portal-card-body">
                                             <div class="row">
                                                 <div class="col-10"><h3 class="card-title" style="color: @SmallCardFontTitleColour(item.Id)">@item.Title</h3></div>
-                                                <div class="col-2"> <h3 class="card-title"><i class="handPointer fa fa-trash" style="color: @SmallCardTrashColour(item.Id); font-size: x-large; margin-left: -0.5em;" @onclick="() => DeleteData(item.Id)"></i></h3></div>
+                                                <span class="col-2 trash-can-location" @onclick="() => DeleteData(item.Id)"><i class="icon-colour fa fa-trash" style="font-size: x-large; margin-left: -0.5em;" @onclick="() => DeleteData(item.Id)"></i></span>
                                                 <div class="col-12"><h5 class="card-subtitle text-muted small-card-company" style="color: @SmallCardFontColour(item.Id)"><b>@item.Company.Name</b></h5></div>
                                                 <div class="col-12"><h5 class="card-text small-card-location" style="color: @SmallCardFontColour(item.Id)">@item.Location.Name</h5></div>
                                                 <div class="col-12"><h5 class="card-text" style="color: @SmallCardFontColour(item.Id)">Status: <b>@item.Status</b></h5></div>
@@ -510,45 +523,6 @@
                                     <br />
                                 }
                             </div>
-                        </ChildContent>
-                        @*<TooltipContent>
-                            @if (appUserFilter?.Any() == true)
-                            {
-                                <MudGrid Style="background-color: azure">
-                                    <MudItem lg="12" md="12">
-                                        <h3 class="text-center"><u><i><b>Hiring Lead</b></i></u></h3>
-                                        <MudGrid Spacing="0">
-                                            <MudItem Class="mt-2" lg="6" md="6">
-                                                <img class="img-fluid rounded" width="120" src="@appUserFilter.FirstOrDefault().imageUrl" />
-                                            </MudItem>
-                                            <MudItem lg="6" md="6" Class="flex-wrap">
-                                                <MudItem lg="12" md="12">
-                                                    <label class="text-muted">Full Name:</label>
-                                                </MudItem>
-                                                <MudItem lg="12" md="12">
-                                                    <h4><b>@appUserFilter.FirstOrDefault().name @appUserFilter.FirstOrDefault().surname</b></h4>
-                                                </MudItem>
-                                                <MudItem lg="12" md="12">
-                                                    <label class="text-muted">Role:</label>
-                                                </MudItem>
-                                                <MudItem lg="12" md="12">
-                                                    <h4><b>@appUserFilter.FirstOrDefault().role</b></h4>
-                                                </MudItem>
-                                            </MudItem>
-                                        </MudGrid>
-                                    </MudItem>
-                                </MudGrid>
-                            }
-                            else
-                            {
-                                <MudGrid Style="background-color: azure">
-                                    <MudItem lg="12" md="12">
-                                        <h4 class="text-center">There Are No Hiring Lead For This Job.</h4>
-                                    </MudItem>
-                                </MudGrid>
-                            }
-                        </TooltipContent>*@
-                    </MudTooltip>
                 </div>
 
                 <div class="col-9 job-portal-right-main">
@@ -576,10 +550,10 @@
                                             @if (changeForm)
                                             {
                                                 <div class="col mt-5">
-                                                    <button class="btn detail-button-colour rounded-pill" type="button" style="width: 8em" @onclick="() => FormType(false)">Cancel</button>
+                                                    <button class="default-button-style" type="button" @onclick="() => FormType(false)">Cancel</button>
                                                 </div>
                                                 <div class="col mt-5">
-                                                    <button class="btn detail-button-colour rounded-pill" type="button" style="width: 8em" @onclick="() => SaveData(displayJobDetail, GetJobType(displayJobDetail.Id), false)">Save</button>
+                                                    <button class="default-button-style" type="button" @onclick="() => SaveData(displayJobDetail, GetJobType(displayJobDetail.Id), false)">Save</button>
                                                 </div>
                                             }
                                             else
@@ -651,7 +625,7 @@
                                                 @if (state.Role == "Super Admin")
                                                 {
                                                     <div class="col mt-5">
-                                                        <button class="btn detail-button-colour rounded-pill" type="button" style="width: 8em" @onclick="() => FormType(true)">Edit</button>
+                                                        <button class="default-button-style" type="button"  @onclick="() => FormType(true)">Edit</button>
                                                     </div>
                                                 }
                                             }
@@ -677,7 +651,7 @@
                                             <div class="col-12">
                                                 <label for="status">Status</label>
                                                 <select id="status" class="form-select inputDefaults" @bind="displayJobDetail.Status">
-                                                    @foreach (var item in status.Select(x => x.name))
+                                                    @foreach (var item in jobList.Select(x => x.Status))
                                                     {
                                                         <option value="@item">@item</option>
                                                     }
@@ -840,7 +814,7 @@
         <div class="row job-portal-inner-top">
             <div class="col-2"></div>
             <div class="col-2">
-                <input type="button" value="Job Portal" @onclick="ShowJobPortal" class="job-portal-nav-btn" style="margin-left: 100px; width: 50%" />
+                <input type="button" value="Back" @onclick="ShowJobPortal" class="job-portal-nav-btn" style="margin-left: 100px; width: 50%" />
             </div>
             <div class="col-4 hr-job-name">@displayJobDetail.Title</div>
             @*            <div class="col-2">
