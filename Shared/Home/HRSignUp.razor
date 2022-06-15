@@ -662,7 +662,7 @@
             user.Surname = Surname;
             user.Email = Email;
             user.Password = Password;
-            user.Link = "https://xebechumancapital.azurewebsites.net/confirmation";
+            user.Link = "https://xebecnet6.azurewebsites.net/confirmation";
             //user.Link = "https://localhost:44364/confirmation";
             //Post model to dB
             using (var msg = await HttpClient.PostAsJsonAsync<UserModel>("auth/registernew", user))
