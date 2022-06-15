@@ -263,7 +263,7 @@
 
 
                     <div style="text-align:center">
-                        <input class="subButton" type="button" value="Submit" disabled="@SubmitIsPressed" @onclick="temporaryButtonDisable">
+                        <input class="subButton" type="button" value="Submit" disabled="@SubmitIsPressed" >
                     </div>
                 </EditForm>
             </div>
@@ -328,7 +328,9 @@
 
 @code{
     public List<ContactUsModel> contactUs = new();
-    public ContactUsModel Temp = new(); 
+    public ContactUsModel Temp = new();
+    bool SubmitIsPressed = false;
+
 
     public async void Add()
     {
