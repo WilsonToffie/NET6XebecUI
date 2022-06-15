@@ -467,12 +467,12 @@
                             </div>
                             <div class="col-12">
                                 <!--Department-->
-                                <MudSelect T="int" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
+                                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Departments" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextDepartment)" Label="Department" SelectedValuesChanged="SearchListDepartment">
                                     @if (jobListFilter?.Any() == true)
                                     {
-                                        @foreach (var item in departments)
+                                        @foreach (var item in departments.Select(x => x.Name).OrderBy(x => x).Distinct())
                                         {
-                                            <MudSelectItem T="int" Value="item.Id">@item.Name</MudSelectItem>
+                                            <MudSelectItem T="string" Value="item">@item</MudSelectItem>
                                         }
 
                                     }
@@ -480,16 +480,16 @@
                             </div>
                             <div class="col-12">
                                 <!--Status-->
-@*                                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Status" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextStatus)" Label="Status" SelectedValuesChanged="SearchListStatus">
+                                <MudSelect T="string" Class="form-control hr-jobportal-mudselect rounded-pill" DisableUnderLine="true" Style="cursor:pointer" AnchorOrigin="Origin.BottomCenter" SelectAll="true" SelectAllText="Select All Status" MultiSelection="true" MultiSelectionTextFunc="new Func<List<string>, string>(GetMultiSelectionTextStatus)" Label="Status" SelectedValuesChanged="SearchListStatus">
                                     @if (jobListFilter?.Any() == true)
                                     {
-                                        @foreach (var item in status.Select(x => x.name))
+                                        @foreach (var item in jobList.Select(x => x.Status).OrderBy(x => x).Distinct())
                                         {
                                             <MudSelectItem T="string" Value="item">@item</MudSelectItem>
                                         }
 
                                     }
-                                </MudSelect>*@
+                                </MudSelect>
                             </div>
                         </div>
                     </div>
@@ -549,10 +549,10 @@
                                             @if (changeForm)
                                             {
                                                 <div class="col mt-5">
-                                                    <button class="btn detail-button-colour rounded-pill" type="button" style="width: 8em" @onclick="() => FormType(false)">Cancel</button>
+                                                    <button class="default-button-style" type="button" @onclick="() => FormType(false)">Cancel</button>
                                                 </div>
                                                 <div class="col mt-5">
-                                                    <button class="btn detail-button-colour rounded-pill" type="button" style="width: 8em" @onclick="() => SaveData(displayJobDetail, GetJobType(displayJobDetail.Id), false)">Save</button>
+                                                    <button class="default-button-style" type="button" @onclick="() => SaveData(displayJobDetail, GetJobType(displayJobDetail.Id), false)">Save</button>
                                                 </div>
                                             }
                                             else
@@ -624,7 +624,7 @@
                                                 @if (state.Role == "Super Admin")
                                                 {
                                                     <div class="col mt-5">
-                                                        <button class="btn detail-button-colour rounded-pill" type="button" style="width: 8em" @onclick="() => FormType(true)">Edit</button>
+                                                        <button class="default-button-style" type="button"  @onclick="() => FormType(true)">Edit</button>
                                                     </div>
                                                 }
                                             }
@@ -650,7 +650,7 @@
                                             <div class="col-12">
                                                 <label for="status">Status</label>
                                                 <select id="status" class="form-select inputDefaults" @bind="displayJobDetail.Status">
-                                                    @foreach (var item in status.Select(x => x.name))
+                                                    @foreach (var item in jobList.Select(x => x.Status))
                                                     {
                                                         <option value="@item">@item</option>
                                                     }

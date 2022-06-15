@@ -460,7 +460,7 @@
 
     .bottom-buttons {
         margin-top: 3vh;
-        margin-left: 20%;
+        margin-left: 25% !important;
         position: absolute;
         bottom: 5vh;
     }
@@ -528,7 +528,7 @@
                     foreach (var formQuestion in FormQuestions)
                     {
                         <div class="right-list-item-preview">
-                            <div class="close-item-panel">
+                            <div class="btn-close">
                             </div>
                             <div class="summary-preview-item-body">
                                 <div class="summary-preview-item-description">
@@ -615,8 +615,8 @@
                                             <p class="-form-preview-question">
                                                 @formQuestion.question
                                             </p>
-                                            <span class="question-list" @onclick="() => DeleteFormQuestion(formQuestion)">
-                                                <i class="fas fa-times"></i>
+                                            <span class="btn-close" @onclick="() => DeleteFormQuestion(formQuestion)">
+                                                @*<i class="fas fa-times"></i>*@
                                             </span>
                                         </div>
                                         <div class="preview-item-control">
@@ -745,12 +745,14 @@
                 }
             </div>
         </div>
+
+        <div class="bottom-buttons">
+            <input type="button" value="Prev" class="button-functions" @onclick="Prev" />
+            <input type="submit" value="Save" class="button-functions" @onclick="SaveQuestion" />
+            <input type="button" value="Next" class="button-functions" @onclick="Next" />
+        </div>
     </div>
-    <div class="bottom-buttons">
-        <input type="button" value="Prev" class="button-functions" @onclick="Prev" />
-        <input type="submit" value="Save" class="button-functions" @onclick="SaveQuestion" />
-        <input type="button" value="Next" class="button-functions" @onclick="Next" />
-    </div>
+
 }
 else if (prevPage == true)
 {
