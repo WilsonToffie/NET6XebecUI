@@ -72,6 +72,11 @@ namespace XebecPortal.UI.Pages.HR
         private bool validUpload;
         private bool allowedToRedirect = false;
 
+        private bool saveButtonPressed = false;
+        private bool nextButtonPressed = false;
+        private bool saveDepPressed = false;
+        private bool saveCompanyPressed = false;
+
         public List<FormQuestion> ChosenQuestions { get; set; }
 
         protected override async Task OnInitializedAsync()
@@ -185,6 +190,7 @@ namespace XebecPortal.UI.Pages.HR
 
         private async Task saveDep()
         {
+            saveDepPressed = true;
             foreach (var item in NewDepartments)
             {
                 var newDepAdded = await HttpClient.PostJsonAsync($"Department", item, new AuthenticationHeaderValue("Bearer", token));
@@ -206,6 +212,8 @@ namespace XebecPortal.UI.Pages.HR
             NewDepartments.Clear();
             
             await createDep(false);
+
+            saveDepPressed = false;
         }
         private void addCompany(Company value)
         {
@@ -241,6 +249,8 @@ namespace XebecPortal.UI.Pages.HR
 
         private async Task saveCompany()
         {
+            saveCompanyPressed = true;
+
             foreach (var item in NewCompanies)
             {
                 var newCompAdded = await HttpClient.PostJsonAsync($"Company", item, new AuthenticationHeaderValue("Bearer", token));
@@ -262,6 +272,8 @@ namespace XebecPortal.UI.Pages.HR
             NewCompanies.Clear();
 
             await createDep(false);
+
+            saveCompanyPressed = false;
         }
 
 
@@ -277,6 +289,9 @@ namespace XebecPortal.UI.Pages.HR
 
         private async Task saveJobState()
         {
+            nextButtonPressed = true;
+            saveButtonPressed = true;
+
             Console.WriteLine("policies.Id When entering saveJobState" + policies.Id);
             jobType.Add(new()
             {
@@ -370,12 +385,22 @@ namespace XebecPortal.UI.Pages.HR
             jobType.Clear();
             jobList.Clear();            
             checkJobList.Clear();
+
+            nextButtonPressed = false;
+            saveButtonPressed = false;
         }
 
         private bool redirectpage;
         private async Task RedirectToNextPage(bool value)
         {
+            nextButtonPressed = true;
+            saveButtonPressed = true;
+
             await saveJobState();
+
+            nextButtonPressed = false;
+            saveButtonPressed = false;
+
             redirectpage = value;
         }
 

@@ -50,6 +50,10 @@ namespace XebecPortal.UI.Pages.HR
         private bool addedNewPlatform;
 
         bool prevPage;
+
+        private bool addPlatformPressed = false;
+        private bool savePressed = false;
+        private bool deletePlatformPressed = false;
         protected override async Task OnInitializedAsync()
         {
             prevPage = false;
@@ -61,6 +65,8 @@ namespace XebecPortal.UI.Pages.HR
 
         private async Task Save()
         {
+            savePressed = true;
+
             foreach (var item in selectedValue)
             {
                 jobPlatformHelper.Add(new()
@@ -111,6 +117,8 @@ namespace XebecPortal.UI.Pages.HR
             {
                 await jsRuntime.InvokeAsync<object>("alert", "The current state of the job creation process has been saved!");
             }
+
+            savePressed = false;
         }
     
         private void CheckboxClicked(JobPlatform platformId, object checkedValue)
@@ -155,24 +163,32 @@ namespace XebecPortal.UI.Pages.HR
 
         private async Task removePlatform(JobPlatform platform)
         {
+            deletePlatformPressed = true;
+
             if (platform.id > 0)
             {
-                if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Remove This Department?"))
+                if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Remove This Platform?"))
                 {
 
                     // Departments.Remove(value);
                     var removePlatform = await httpClient.DeleteJsonAsync($"JobPlatform/{platform.id}", new AuthenticationHeaderValue("Bearer", token));
                     if (removePlatform.IsSuccessStatusCode)
                     {
-                        await jsRuntime.InvokeAsync<object>("alert", "Department has successfully been removed!");
+                        await jsRuntime.InvokeAsync<object>("alert", "Platform has successfully been removed!");
                     }
                 }
             }
             else
             {
-                await jsRuntime.InvokeAsync<object>("alert", "Please select a valid Department!");
+                await jsRuntime.InvokeAsync<object>("alert", "Please select a valid Platform!");
             }
+
+            //not sure if this should be after OnInitializedAsync()
+            deletePlatformPressed = false;
+
             await OnInitializedAsync();
+
+            
         }
 
         private void addJobPlatform(JobPlatform platform)
@@ -185,6 +201,8 @@ namespace XebecPortal.UI.Pages.HR
         }
         private async Task savePlatform()
         {
+            addPlatformPressed = true;
+
             if (recentlyAdded.Count > 0)
             {
                 foreach (var item in recentlyAdded)
@@ -212,6 +230,8 @@ namespace XebecPortal.UI.Pages.HR
             recentlyAdded.Clear();
             //await OnInitializedAsync();
             await createPlatform(false);
+
+            addPlatformPressed = false;
         }
 
         private void Prev()

@@ -482,6 +482,10 @@
         .button-functions:hover {
             background-color: #d35bc9;
         }
+
+        .button-functions:disabled{
+            background-color: grey;
+        }
 </style>
 
     <div class="top-Image-thing">
@@ -528,8 +532,8 @@
                     foreach (var formQuestion in FormQuestions)
                     {
                         <div class="right-list-item-preview">
-                            <div class="btn-close">
-                            </div>
+                            @*<div class="btn-close">
+                            </div>*@
                             <div class="summary-preview-item-body">
                                 <div class="summary-preview-item-description">
                                     <p style="margin:0 0 0px;">@formQuestion.question</p>
@@ -710,7 +714,7 @@
                                 </select>
                             </div>
                             <div class="add-question-button">
-                                <button class="btn appform-main-button" @onclick="AddQuestion">Submit question</button>
+                                <button class="btn appform-main-button" @onclick="AddQuestion" disabled="@submitQuestionPressed">Submit question</button>
                             </div>
                         </div>
                     }
@@ -747,9 +751,9 @@
         </div>
 
         <div class="bottom-buttons">
-            <input type="button" value="Prev" class="button-functions" @onclick="Prev" />
-            <input type="submit" value="Save" class="button-functions" @onclick="SaveQuestion" />
-            <input type="button" value="Next" class="button-functions" @onclick="Next" />
+            <input type="button" value="Prev" class="button-functions" @onclick="Prev" disabled="@savePressed"/>
+            <input type="submit" value="Save" class="button-functions" @onclick="SaveQuestion" disabled="@savePressed"/>
+            <input type="button" value="Next" class="button-functions" @onclick="Next" disabled="@savePressed"/>
         </div>
     </div>
 
@@ -789,6 +793,9 @@ else if (nextPage == true)
     public CustomQuestion tempQuestion = new CustomQuestion();
 
     public List<QuestionnaireHrForm> questionnaireHrForms = new List<QuestionnaireHrForm>();
+
+    private bool savePressed = false;
+    private bool submitQuestionPressed = false;
 
 
     protected override async Task OnInitializedAsync()
@@ -875,6 +882,7 @@ else if (nextPage == true)
 
     public async Task AddQuestion()
     {
+        submitQuestionPressed = true;
         Console.WriteLine(tempQuestion.questionDescription);
         if (!String.IsNullOrEmpty(tempQuestion.questionDescription))
         {
@@ -897,6 +905,8 @@ else if (nextPage == true)
         {
             await JSRuntime.InvokeAsync<object>("alert", "Please enter a question.");
         }
+
+        submitQuestionPressed = false;
     }
 
     public void CloseAddPopup()
@@ -952,6 +962,7 @@ else if (nextPage == true)
 
     public async Task SaveQuestion()
     {
+        savePressed = true;
         if (FormQuestions != null)
         {
             foreach (var question in FormQuestions)
@@ -985,9 +996,9 @@ else if (nextPage == true)
             //        await JSRuntime.InvokeAsync<object>("alert", "Questions saved successfully");
             //    }
             Console.WriteLine("success!");
-            
 
 
+            savePressed = false;
         }
         //await httpClient.PostJsonAsync<List<FormQuestion>>("questionnaire/lst", FormQuestions, new AuthenticationHeaderValue("Bearer", token));
         //Console.WriteLine("success!");
