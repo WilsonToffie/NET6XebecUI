@@ -63,6 +63,10 @@
             background-color: #d35bc9;
         }
 
+        .subButton:disabled{
+            background-color: grey;
+        }
+
     .emailDisclaimer {
         position: relative;
         left: 50%;
@@ -251,7 +255,7 @@
 
 
                     <div style="text-align:center">
-                        <input class="subButton" type="button" value="Submit">
+                        <input class="subButton" type="button" value="Submit" disabled="@SubmitIsPressed" @onclick="temporaryButtonDisable">
                     </div>
                 </form>
             </div>
@@ -312,3 +316,24 @@
         </div>
     </div>
 </div>
+
+@code{
+    bool SubmitIsPressed = false;
+
+    private async Task temporaryButtonDisable()
+    {
+
+
+        SubmitIsPressed = true;
+
+        Console.WriteLine("Submit pressed");
+
+        //await some task
+
+        SubmitIsPressed = false;
+    }
+
+
+
+
+}
