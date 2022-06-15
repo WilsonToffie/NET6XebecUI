@@ -1,4 +1,5 @@
 ﻿@page "/contact"
+@inject IJSRuntime JSRuntime
 <style>
     .overlay-contact {
         height: 90vh;
@@ -132,11 +133,12 @@
     }
 
     .linkStyle {
-        color: #000000;
+        color: #00BCAE;
     }
 
         .linkStyle:hover {
-            color: #00bcae;
+            color: #d35bc9;
+            cursor: pointer;
             text-decoration: none;
         }
 
@@ -185,6 +187,10 @@
         font-family: opensans-condensed-light;
         font-weight: 800;
     }
+    ::placeholder{
+        color:#000000; 
+        font-weight:600;
+    }
 </style>
 
 <div class="overlay-contact">
@@ -216,44 +222,46 @@
             <div class="secondDiv">
                 <h1 class="contact-form-heading">Drop us a message.</h1>
 
-                <form>
-                    <select name="contactUsAbout" required>
-                        <option value="" disabled selected hidden>Select Department</option>
-                        <option value="sales">Nebula Sales</option>
-                        <option value="demoRequest">I'd like a demo</option>
-                        <option value="careers">Nebula Careers</option>
-                        <option value="support">Nebula Support</option>
-                        <option value="other">Other</option>
-                    </select>
+                <EditForm Model="@contactUs" OnValidSubmit="@Add" >
+                    <DataAnnotationsValidator />
+                    <ValidationMessage For="@(() => Temp.career)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
+                    <InputSelect @bind-Value="Temp.career" >
+                        
+                        <option style="color:#000000; font-weight:600" value="" disabled selected hidden>Select Department</option>
+                        <option   style="color:#000000; font-weight:600" value="sales">Nebula Sales</option>
+                        <option  style="color:#000000; font-weight:600" value="demoRequest">I'd like a demo</option>
+                        <option  style="color:#000000; font-weight:600" value="careers">Nebula Careers</option>
+                        <option  style="color:#000000; font-weight:600" value="support">Nebula Support</option>
+                        <option  style="color:#000000; font-weight:600" value="other">Other</option>
+                       
+                    </InputSelect>
+                    <ValidationMessage For="@(() => Temp.email)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
+                    <InputText @bind-Value="Temp.email" style="color:#000000; font-weight:600" placeholder="Email" type="text" name="email" id="userEmail" />
+
+                    <ValidationMessage For="@(() => Temp.name)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
+                    <InputText @bind-Value="Temp.name"  style="color:#000000; font-weight:600"  placeholder="First Name" type="text" name="firstName" id="fName" />
 
 
-
-                    <input placeholder="Email" type="text" name="email" id="userEmail" required>
-
-
-
-                    <input placeholder="First Name" type="text" name="firstName" id="fName" required>
+                    <ValidationMessage For="@(() => Temp.surname)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
+                    <InputText @bind-Value="Temp.surname"  style="color:#000000; font-weight:600"  placeholder="Last Name" type="text" name="lastName" id="lName" />
 
 
+                    <ValidationMessage For="@(() => Temp.demo)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
+                    <InputSelect @bind-Value="Temp.demo"  style="color:#000000; font-weight:600" name="querySelect" >
+                        <option  style="color:#000000; font-weight:600" value="" disabled selected hidden>Select Query</option>
+                        <option  style="color:#000000; font-weight:600" value="sales">OneView Demo</option>
+                        <option  style="color:#000000; font-weight:600" value="demoRequest">Stactize Demo</option>
+                        <option  style="color:#000000; font-weight:600" value="careers">Other</option>
+                    </InputSelect>
 
-                    <input placeholder="Last Name" type="text" name="lastName" id="lName" required>
-
-
-
-                    <select name="querySelect" required>
-                        <option value="" disabled selected hidden>Select Query</option>
-                        <option value="sales">OneView Demo</option>
-                        <option value="demoRequest">Stactize Demo</option>
-                        <option value="careers">Other</option>
-                    </select>
-
-                    <textarea name="userMessage" id="userMessage" rows="3" style="width: 70%; margin-left: 15%; margin-right: 15%; padding: 1em 1em 1em 1em; display: inline-block; border: 0.2em solid #00bcae; border-radius: 2em; box-sizing: border-box; background-color: transparent; font-family: opensans-condensed-light; font-weight: 800; font-size: 1em;"></textarea>
+                    <ValidationMessage For="@(() => Temp.query)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
+                    <InputTextArea @bind-Value="Temp.query"  name="userMessage" id="userMessage"  style="width: 70%; height:100px; margin-left: 15%; margin-right: 15%; padding: 1em 1em 1em 1em; display: inline-block; border: 0.2em solid #00bcae; border-radius: 1.5em; box-sizing: border-box; background-color: transparent; font-family: opensans-condensed-light; font-weight: 800; font-size: 1em;  "></InputTextArea>
 
 
                     <div style="text-align:center">
-                        <input class="subButton" type="button" value="Submit">
+                        <input class="subButton"  type="submit" value="Submit">
                     </div>
-                </form>
+                </EditForm>
             </div>
         </div>
         <div class="col-4">
@@ -312,3 +320,29 @@
         </div>
     </div>
 </div>
+
+
+@code{
+    public List<ContactUsModel> contactUs = new();
+    public ContactUsModel Temp = new(); 
+
+    public async void Add()
+    {
+        contactUs.Add(new()
+            {
+                career = Temp.career,
+                email = Temp.email,
+                name = Temp.name,
+                surname = Temp.surname,
+                demo = Temp.demo,
+                query = Temp.query,
+            });
+        
+        foreach(var temp in contactUs)
+        {
+            Console.WriteLine($"{temp.career}, {temp.email}, {temp.name}, {temp.surname}, {temp.demo}, {temp.query}");
+        }
+        await JSRuntime.InvokeAsync<object>("alert", "Questions saved successfully.");
+    }
+
+}
