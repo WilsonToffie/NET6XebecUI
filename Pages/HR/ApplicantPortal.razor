@@ -258,7 +258,7 @@
         height: 20px;
         border-radius: 1em;
         font-weight: bold;
-        border-color: black;
+        border: 1px solid grey;
         text-align: center;
     }
 
@@ -408,22 +408,21 @@
         border-radius: 1.5em;
     }
 
-    .additional-information
-    {
+    .additional-information {
         color: #00bcae;
         margin-top: 5px;
     }
 
-    .additional-information:hover
-    {
-        color: #d35bc9;
-        cursor: pointer;
-    }
+        .additional-information:hover {
+            color: #d35bc9;
+            cursor: pointer;
+        }
 
-    .additional-information-title
-    {
+    .additional-information-title {
         font: extra-bold;
         font-size: 25px;
+        text-align: center;
+        border-bottom: 1px solid rgba(238, 238, 238, 0.6);
     }
 
 
@@ -462,30 +461,30 @@
         justify-content: space-evenly;
     }
 
-    .mydialog-final-textarea{
+    .mydialog-final-textarea {
         width: 85%;
         height: 90%;
         padding: 5px;
         resize: none;
     }
 
-    .btn-view-applicationform{
-        font-family: opensans-condensed-bold; 
+    .btn-view-applicationform {
+        font-family: opensans-condensed-bold;
         color: #00bcae;
     }
 
-        .btn-view-applicationform:hover{
-        text-decoration: underline; 
-        font-family: opensans-condensed-bold; 
-        color: #d35bc9;
-    }
+        .btn-view-applicationform:hover {
+            text-decoration: underline;
+            font-family: opensans-condensed-bold;
+            color: #d35bc9;
+        }
 
 </style>
 
-    <div class="search-wrapper-container" style=" width: 40%; left: 30%;">
-        <input class="search-bar-input" placeholder="Search For Applicants" type="text" @oninput="SearchApplicants" />
-        <img class="search-bar-pic" src="/Img/search.svg"/>
-    </div>
+<div class="search-wrapper-container" style=" width: 40%; left: 30%;">
+    <input class="search-bar-input" placeholder="Search For Applicants" type="text" @oninput="SearchApplicants" />
+    <img class="search-bar-pic" src="/Img/search.svg" />
+</div>
 
 <div class="table-applicants-container">
 
@@ -499,7 +498,7 @@
                     <td>Application Match</td>
                     <td>Position</td>
                     <td>Application Phase</td>
-                    <td>Application Date</td>
+                    <td style="text-align:center; padding-left: 30px">Application Date</td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -561,7 +560,7 @@
                                     }
                                 </select>
                             </td>
-                            <td style="font-weight: 400; font-family: opensans-condensed-bold; font-size: 1em; color: #d35bc9">@($"{application.TimeApplied:dd MMM yyyy}")</td>
+                            <td style="font-weight: 400; font-family: opensans-condensed-bold; font-size: 1em; color: #d35bc9; text-align: center; padding-left: 30px">@($"{application.TimeApplied:dd MMM yyyy}")</td>
                             <td><a class="btn-view-applicationform" @onclick="() => toggleApplicationForm(user, JobId)">View Application Form</a></td>
                             <td><input type="button" class="btn-view-documents" value="View Documents" @onclick="() => toggleDocuments(user)" /></td>
                         </tr>
@@ -578,20 +577,20 @@
             </tbody>
         </table>
 
-    <MatDialog @bind-IsOpen="@showEmail">
-        <div class="mydialog-final">
-            <div class="mydialog-final-title">
-                <h2>Email Applicant</h2>
+        <MatDialog @bind-IsOpen="@showEmail">
+            <div class="mydialog-final">
+                <div class="mydialog-final-title">
+                    <h2>Email Applicant</h2>
+                </div>
+                <div class="mydialog-final-body">
+                    <textarea class="mydialog-final-textarea" @bind="emailContent"></textarea>
+                </div>
+                <div class="mydialog-final-button">
+                    <button class="default-button-style" @onclick="() => { showEmail = false; }">Cancel</button>
+                    <button class="default-button-style" @onclick="SendEmail">Send</button>
+                </div>
             </div>
-            <div class="mydialog-final-body">
-                <textarea class="mydialog-final-textarea" @bind="emailContent"></textarea>
-            </div>
-            <div class="mydialog-final-button">
-                <button class="default-button-style" @onclick="() => { showEmail = false; }">Cancel</button>
-                <button class="default-button-style" @onclick="SendEmail">Send</button>
-            </div>
-        </div>
-    </MatDialog>
+        </MatDialog>
 
     }
     else
@@ -785,142 +784,199 @@
                     <!--Education-->
                     <tr>
                         <td>
-                            <div class="additional-information-title">Education:</div>
+                            <div class="additional-information-title">Education</div>
                         </td>
                     </tr>
-                    @foreach (var education in educations)
+                    @if (educations.Where(x => x.AppUserId == selectedUser.id).FirstOrDefault() != null)
                     {
-                        @if (education.AppUserId == selectedUser.id)
+                        @foreach (var education in educations)
                         {
 
-                            <tr>
-                                <td class="form-label" for="last-name">Institution</td>
-                                <td id="last-name" class="form-control name">@education.Insitution</td>
-                            </tr>
-                            <tr>
-                                <td class="form-label" for="last-name">Qualification</td>
-                                <td id="last-name" class="form-control name">@education.Qualification</td>
-                            </tr>
-                            <tr>
-                                <td class="form-label" for="last-name">Start & Completion</td>
-                                <td id="last-name" class="form-control name">@($"{education.StartDate:dd MMM yyyy}") - @($"{education.EndDate:dd MMM yyyy}")</td>
-                            </tr>
-                            <tr>
-                                <td> </td>
-                            </tr>
+                            @if (education.AppUserId == selectedUser.id)
+                            {
+
+                                <tr>
+                                    <td class="form-label" for="last-name">Institution</td>
+                                    <td id="last-name" class="form-control name">@education.Insitution</td>
+                                </tr>
+                                <tr>
+                                    <td class="form-label" for="last-name">Qualification</td>
+                                    <td id="last-name" class="form-control name">@education.Qualification</td>
+                                </tr>
+                                <tr>
+                                    <td class="form-label" for="last-name">Start & Completion</td>
+                                    <td id="last-name" class="form-control name">@($"{education.StartDate:dd MMM yyyy}") - @($"{education.EndDate:dd MMM yyyy}")</td>
+                                </tr>
+                                <tr>
+                                    <td>@empty</td>
+                                </tr>
+                            }
                         }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td style="text-align:center">
+                                No Education
+                            </td>
+                        </tr>
                     }
 
 
                     <!--Matric Marks-->
                     <tr>
                         <td>
-                            <div class="additional-information-title">Matric Marks:</div>
+                            <div class="additional-information-title">Matric Marks</div>
                         </td>
                     </tr>
-                    @foreach (var mark in marks)
+                    @if (marks.Where(x => x.AppUserId == selectedUser.id).FirstOrDefault() != null)
                     {
-                        @if (mark.AppUserId == selectedUser.id)
+                        @foreach (var mark in marks)
                         {
 
-                            <tr>
-                                <td class="form-label" for="last-name">Subject</td>
-                                <td id="last-name" class="form-control name">@mark.SubjectName</td>
-                            </tr>
-                            <tr>
-                                <td class="form-label" for="last-name">Mark Obtained</td>
-                                <td id="last-name" class="form-control name">@mark.SubjectMark</td>
-                            </tr>
-                            <tr>
-                                <td> </td>
-                            </tr>
+                            @if (mark.AppUserId == selectedUser.id)
+                            {
+
+                                <tr>
+                                    <td class="form-label" for="last-name">Subject</td>
+                                    <td id="last-name" class="form-control name">@mark.SubjectName</td>
+                                </tr>
+                                <tr>
+                                    <td class="form-label" for="last-name">Mark Obtained</td>
+                                    <td id="last-name" class="form-control name">@mark.SubjectMark</td>
+                                </tr>
+                                <tr>
+                                    <td>@empty</td>
+                                </tr>
+                            }
                         }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td style="text-align:center">
+                                No Marks
+                            </td>
+                        </tr>
                     }
 
 
                     <!--Work Histories-->
                     <tr>
                         <td>
-                            <div class="additional-information-title">Work Experience:</div>
+                            <div class="additional-information-title">Work Experience</div>
                         </td>
                     </tr>
-                    @foreach (var workHistory in workHistories)
+                    @if (workHistories.Where(x => x.AppUserId == selectedUser.id).FirstOrDefault() != null)
                     {
-                        @if (workHistory.AppUserId == selectedUser.id)
+                        @foreach (var workHistory in workHistories)
                         {
 
-                            <tr>
-                                <td class="form-label" for="last-name">Company</td>
-                                <td id="last-name" class="form-control name">@workHistory.CompanyName</td>
-                            </tr>
-                            <tr>
-                                <td class="form-label" for="last-name">Title</td>
-                                <td id="last-name" class="form-control name">@workHistory.JobTitle</td>
-                            </tr>
-                            <tr>
-                                <td class="form-label" for="last-name">Start & Completion</td>
-                                <td id="last-name" class="form-control name">@($"{workHistory.StartDate:dd MMM yyyy}") - @($"{workHistory.EndDate:dd MMM yyyy}")</td>
-                            </tr>
-                            <tr>
-                                <td> </td>
-                            </tr>
+                            @if (workHistory.AppUserId == selectedUser.id)
+                            {
+
+                                <tr>
+                                    <td class="form-label" for="last-name">Company</td>
+                                    <td id="last-name" class="form-control name">@workHistory.CompanyName</td>
+                                </tr>
+                                <tr>
+                                    <td class="form-label" for="last-name">Title</td>
+                                    <td id="last-name" class="form-control name">@workHistory.JobTitle</td>
+                                </tr>
+                                <tr>
+                                    <td class="form-label" for="last-name">Start & Completion</td>
+                                    <td id="last-name" class="form-control name">@($"{workHistory.StartDate:dd MMM yyyy}") - @($"{workHistory.EndDate:dd MMM yyyy}")</td>
+                                </tr>
+                                <tr>
+                                    <td>@empty</td>
+                                </tr>
+                            }
                         }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td style="text-align:center">
+                                No Work Histories
+                            </td>
+                        </tr>
                     }
 
 
                     <!--Skills-->
                     <tr>
                         <td>
-                            <div class="additional-information-title">Skills:</div>
+                            <div class="additional-information-title">Skills</div>
                         </td>
                     </tr>
-                    @foreach (var skill in skills)
+                    @if (skills.Where(x => x.AppUserId == selectedUser.id).FirstOrDefault() != null)
                     {
-                        @if (skill.AppUserId == selectedUser.id)
+                        @foreach (var skill in skills)
                         {
 
-                            <tr>
-                                <td class="form-label" for="last-name">Skill</td>
-                                <td id="last-name" class="form-control name">@skill.Description</td>
-                            </tr>
-                            <tr>
-                                <td> </td>
-                            </tr>
+
+                            @if (skill.AppUserId == selectedUser.id)
+                            {
+
+                                <tr>
+                                    <td class="form-label" for="last-name">Skill</td>
+                                    <td id="last-name" class="form-control name">@skill.Description</td>
+                                </tr>
+                                <tr>
+                                    <td>@empty</td>
+                                </tr>
+                            }
                         }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td style="text-align:center">
+                                No skills
+                            </td>
+                        </tr>
                     }
 
 
                     <!--References-->
                     <tr>
                         <td>
-                            <div class="additional-information-title">References:</div>
+                            <div class="additional-information-title">References</div>
                         </td>
                     </tr>
-                    @foreach (var reference in references)
+                    @if (references.Where(x => x.appUserId == selectedUser.id).FirstOrDefault() != null)
                     {
-                        @if (reference.appUserId == selectedUser.id)
+                        @foreach (var reference in references)
                         {
 
-                            <tr>
-                                <td class="form-label" for="last-name">Name</td>
-                                <td id="last-name" class="form-control name">@reference.refFirstName @empty @reference.refLastName</td>
-                            </tr>
-                            <tr>
-                                <td class="form-label" for="last-name">Relationship</td>
-                                <td id="last-name" class="form-control name">@reference.relationship</td>
-                            </tr>
-                            <tr>
-                                <td class="form-label" for="last-name">Phone</td>
-                                <td id="last-name" class="form-control name">@reference.refPhone</td>
-                            </tr>
-                            <tr>
-                                <td class="form-label" for="last-name">Email</td>
-                                <td id="last-name" class="form-control name">@reference.refEmail</td>
-                            </tr>
-                            <tr>
-                                <td> </td>
-                            </tr>
+                            @if (reference.appUserId == selectedUser.id)
+                            {
+
+                                <tr>
+                                    <td class="form-label" for="last-name">Name</td>
+                                    <td id="last-name" class="form-control name">@reference.refFirstName @empty @reference.refLastName</td>
+                                </tr>
+                                <tr>
+                                    <td class="form-label" for="last-name">Phone</td>
+                                    <td id="last-name" class="form-control name">@reference.refPhone</td>
+                                </tr>
+                                <tr>
+                                    <td class="form-label" for="last-name">Email</td>
+                                    <td id="last-name" class="form-control name">@reference.refEmail</td>
+                                </tr>
+                                <tr>
+                                    <td>@empty</td>
+                                </tr>
+                            }
                         }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td style="text-align:center">
+                                No References
+                            </td>
+                        </tr>
                     }
 
 
@@ -1002,6 +1058,7 @@
         marks = await httpClient.GetListJsonAsync<List<matricMarks>>("MatricMark", new AuthenticationHeaderValue("Bearer", token));
         skills = await httpClient.GetListJsonAsync<List<SkillsInformation>>("Skill", new AuthenticationHeaderValue("Bearer", token));
         references = await httpClient.GetListJsonAsync<List<References>>("Reference", new AuthenticationHeaderValue("Bearer", token));
+        workHistories = await httpClient.GetListJsonAsync<List<WorkHistory>>("WorkHistory", new AuthenticationHeaderValue("Bearer", token));
 
         users = await httpClient.GetListJsonAsync<List<AppUser>>("user", new AuthenticationHeaderValue("Bearer", token));
         phasesHelpers = await httpClient.GetListJsonAsync<List<ApplicationPhaseHelper>>("ApplicationPhaseHelper", new AuthenticationHeaderValue("Bearer", token));
@@ -1031,7 +1088,7 @@
 
         emailContent = phases.FirstOrDefault(x => x.id == phaseId).EmailTemplate;
 
-        if(emailContent == null)
+        if (emailContent == null)
         {
             emailContent = "";
         }
@@ -1193,31 +1250,31 @@
     {
         if (match < 30)
         {
-            return "background: rgba(255,0,0,0.7)";
+            return "background: rgba(255,0,0,0.6)";
         }
         else if (match <= 40)
         {
-            return "background: rgba(255,76,37,0.7)";
+            return "background: rgba(255,76,37,0.6)";
         }
         else if (match <= 50)
         {
-            return "background: rgba(255,182,90,0.7)";
+            return "background: rgba(255,182,90,0.6)";
         }
         else if (match <= 60)
         {
-            return "background: rgba(255,223,90,0.7)";
+            return "background: rgba(255,223,90,0.6)";
         }
         else if (match <= 70)
         {
-            return "background: rgba(224,255,90,0.7)";
+            return "background: rgba(224,255,90,0.6)";
         }
         else if (match <= 80)
         {
-            return "background: rgba(204,255,90, 0.7)";
+            return "background: rgba(204,255,90, 0.6)";
         }
         else
         {
-            return "background: rgba(204,255,90, 0.7)";
+            return "background: rgba(204,255,90, 0.6)";
         }
     }
 
