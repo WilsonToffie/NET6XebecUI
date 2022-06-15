@@ -403,7 +403,7 @@
 
                 @if (currentPhase.description.ToLower().Contains("final") && rejectedCandidates.Where(x => x.applicationId == application.Id).FirstOrDefault() == null && currentJob != null)
                 {
-                    <div class="job-card">
+                    <div class="job-card accepted">
                         <span class="position">@currentJob.Title</span>
                         <span class="company">@currentJob.Company.Name</span>
                         <small class="addition-details text-muted">@currentJob.Location.Name</small>

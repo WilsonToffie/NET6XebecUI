@@ -19,6 +19,7 @@
         align-items: center;
         flex-direction: column;
         height: 60vh;
+        margin-top: 15px;
     }
 
         .table-applicants-container td {
@@ -257,7 +258,7 @@
         height: 20px;
         border-radius: 1em;
         font-weight: bold;
-        border-color: #2f2f2f;
+        border-color: black;
         text-align: center;
     }
 
@@ -468,10 +469,21 @@
         resize: none;
     }
 
+    .btn-view-applicationform{
+        font-family: opensans-condensed-bold; 
+        color: #00bcae;
+    }
+
+        .btn-view-applicationform:hover{
+        text-decoration: underline; 
+        font-family: opensans-condensed-bold; 
+        color: #d35bc9;
+    }
+
 </style>
 
     <div class="search-wrapper-container" style=" width: 40%; left: 30%;">
-        <input class="search-bar-input" placeholder="Search For Jobs" type="text" @oninput="SearchApplicants" />
+        <input class="search-bar-input" placeholder="Search For Applicants" type="text" @oninput="SearchApplicants" />
         <img class="search-bar-pic" src="/Img/search.svg"/>
     </div>
 
@@ -483,7 +495,7 @@
             <thead>
                 <tr>
                     <td></td>
-                    <td>Personal Information</td>
+                    <td>Full Name</td>
                     <td>Application Match</td>
                     <td>Position</td>
                     <td>Application Phase</td>
@@ -540,7 +552,7 @@
                             <td style="display: flex; justify-content: center"><div class="total-match-pill" style="@setMatch(match)">@match</div></td>
                             <td>@jobTitle</td>
                             <td>
-                                <select @onblur="() => setApplication(application.Id)" @onchange="updatePhase">
+                                <select style="text-align: center" @onblur="() => setApplication(application.Id)" @onchange="updatePhase">
                                     <option selected>@FindCurrentPhase(@user.id, JobId)</option>
 
                                     @foreach (var phase in phases)
@@ -550,7 +562,7 @@
                                 </select>
                             </td>
                             <td style="font-weight: 400; font-family: opensans-condensed-bold; font-size: 1em; color: #d35bc9">@($"{application.TimeApplied:dd MMM yyyy}")</td>
-                            <td style="text-decoration: underline; font-family: opensans-condensed-bold"><a @onclick="() => toggleApplicationForm(user, JobId)">View Application Form</a></td>
+                            <td><a class="btn-view-applicationform" @onclick="() => toggleApplicationForm(user, JobId)">View Application Form</a></td>
                             <td><input type="button" class="btn-view-documents" value="View Documents" @onclick="() => toggleDocuments(user)" /></td>
                         </tr>
 
@@ -1179,31 +1191,31 @@
     {
         if (match < 30)
         {
-            return "background: red";
+            return "background: rgba(255,0,0,0.7)";
         }
         else if (match <= 40)
         {
-            return "background: #FF4C25";
+            return "background: rgba(255,76,37,0.7)";
         }
         else if (match <= 50)
         {
-            return "background: #FFB65A";
+            return "background: rgba(255,182,90,0.7)";
         }
         else if (match <= 60)
         {
-            return "background: #FFDF5A";
+            return "background: rgba(255,223,90,0.7)";
         }
         else if (match <= 70)
         {
-            return "background: #E0FF5A";
+            return "background: rgba(224,255,90,0.7)";
         }
         else if (match <= 80)
         {
-            return "background: #CCFF5A";
+            return "background: rgba(204,255,90, 0.7)";
         }
         else
         {
-            return "background: #CCFF5A";
+            return "background: rgba(204,255,90, 0.7)";
         }
     }
 
