@@ -45,7 +45,7 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private IEnumerable<string> mudSelectLocation;
         private IEnumerable<string> mudSelectCompany;
-        private IEnumerable<int> mudSelectDepartment;
+        private IEnumerable<string> mudSelectDepartment;
         private IEnumerable<string> mudSelectJobType;
 
         private IJSObjectReference _jsModule;
@@ -155,7 +155,7 @@ namespace XebecPortal.UI.Pages.Applicant
             await _jsModule.InvokeVoidAsync("Scroll");
         }
 
-        private async Task SearchListDepartment(IEnumerable<int> value)
+        private async Task SearchListDepartment(IEnumerable<string> value)
         {
             mudSelectDepartment = value;
             jobListFilter = jobList;
@@ -216,7 +216,7 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private string GetMultiSelectionTextDepartment(List<string> selectedValues)
         {
-            return $"Selected Department{(selectedValues.Count > 1 ? "s" : " ")}: {string.Join(", ", selectedValues.Select(x => departments.Find(y => y.Id == Convert.ToInt32(x)).Name))}";
+            return $"Selected Department{(selectedValues.Count > 1 ? "s" : " ")}: {string.Join(", ", selectedValues.Select(x => x))}";
         }
 
         private static string GetMultiSelectionTextJobType(List<string> selectedValues)
@@ -245,8 +245,8 @@ namespace XebecPortal.UI.Pages.Applicant
 
             if (mudSelectDepartment?.Any() == true)
             {
-                var listDepartments = jobListFilter.Select(x => x.DepartmentId).Except(mudSelectDepartment).ToList();
-                jobListFilter = jobListFilter.Where(x => !listDepartments.Contains(x.DepartmentId)).ToList();
+                var listDepartments = jobListFilter.Select(x => x.Department.Name).Except(mudSelectDepartment).ToList();
+                jobListFilter = jobListFilter.Where(x => !listDepartments.Contains(x.Department.Name)).ToList();
             }
 
             if (mudSelectJobType?.Any() == true)
