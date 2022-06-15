@@ -413,7 +413,7 @@
 
 @if (ShowingJobPortal)
 {
-    <div class="container-fluid" style="width: 100%; height: 100%">
+   <div class="container-fluid" style="width: 100%; height: 100%">
 
         <div>
             <div class="row">
@@ -502,8 +502,7 @@
         {
             <div class="row">
                 <div class="col-2 job-portal-left">
-                    <MudTooltip Class="shades white shades-text text-black" Placement="Placement.Right">
-                        <ChildContent>
+
                             <!--Card list for jobs-->
                             <div id="small-cards" class="col-12 overflow-auto p-3" style="height: 44em !important; margin-top: 1vh">
                                 @foreach (var item in jobListFilter)
@@ -523,45 +522,6 @@
                                     <br />
                                 }
                             </div>
-                        </ChildContent>
-                        @*<TooltipContent>
-                            @if (appUserFilter?.Any() == true)
-                            {
-                                <MudGrid Style="background-color: azure">
-                                    <MudItem lg="12" md="12">
-                                        <h3 class="text-center"><u><i><b>Hiring Lead</b></i></u></h3>
-                                        <MudGrid Spacing="0">
-                                            <MudItem Class="mt-2" lg="6" md="6">
-                                                <img class="img-fluid rounded" width="120" src="@appUserFilter.FirstOrDefault().imageUrl" />
-                                            </MudItem>
-                                            <MudItem lg="6" md="6" Class="flex-wrap">
-                                                <MudItem lg="12" md="12">
-                                                    <label class="text-muted">Full Name:</label>
-                                                </MudItem>
-                                                <MudItem lg="12" md="12">
-                                                    <h4><b>@appUserFilter.FirstOrDefault().name @appUserFilter.FirstOrDefault().surname</b></h4>
-                                                </MudItem>
-                                                <MudItem lg="12" md="12">
-                                                    <label class="text-muted">Role:</label>
-                                                </MudItem>
-                                                <MudItem lg="12" md="12">
-                                                    <h4><b>@appUserFilter.FirstOrDefault().role</b></h4>
-                                                </MudItem>
-                                            </MudItem>
-                                        </MudGrid>
-                                    </MudItem>
-                                </MudGrid>
-                            }
-                            else
-                            {
-                                <MudGrid Style="background-color: azure">
-                                    <MudItem lg="12" md="12">
-                                        <h4 class="text-center">There Are No Hiring Lead For This Job.</h4>
-                                    </MudItem>
-                                </MudGrid>
-                            }
-                        </TooltipContent>*@
-                    </MudTooltip>
                 </div>
 
                 <div class="col-9 job-portal-right-main">
