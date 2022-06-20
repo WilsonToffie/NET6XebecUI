@@ -704,7 +704,7 @@
                                 <textarea @bind="tempQuestion.questionDescription" style="width: 80%; border: 2px solid grey; height: 180px; background-color: white; border-radius: 5px; padding: 2px;"></textarea>
                             </div>
                             <div class="add-question-type">
-                                <p style="font-weight:600">answer type:</p>
+                                <p style="font-weight:600">Answer Type:</p>
                                 <select style="height:20px;" @bind="tempType">
 
                                     @foreach (var option in Types)
@@ -714,7 +714,7 @@
                                 </select>
                             </div>
                             <div class="add-question-button">
-                                <button class="btn appform-main-button" @onclick="AddQuestion" disabled="@submitQuestionPressed">Submit question</button>
+                                <button class="default-button-style" @onclick="AddQuestion" disabled="@submitQuestionPressed">Submit question</button>
                             </div>
                         </div>
                     }
