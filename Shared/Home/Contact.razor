@@ -226,10 +226,10 @@
             <div class="secondDiv">
                 <h1 class="contact-form-heading">Drop us a message.</h1>
 
-                <EditForm Model="@contactUs" OnValidSubmit="@Add" >
+                <EditForm Model="@Temp" OnValidSubmit="@Add" >
                     <DataAnnotationsValidator />
-                    <ValidationMessage For="@(() => Temp.career)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                    <InputSelect @bind-Value="Temp.career" >
+                    <ValidationMessage For="@(() => Temp.career)"/>
+                    <InputSelect @bind-Value="Temp.career" @onchange="Test" >
                         
                         <option style="color:#000000; font-weight:600" value="" disabled selected hidden>Select Department</option>
                         <option   style="color:#000000; font-weight:600" value="sales">Nebula Sales</option>
@@ -239,31 +239,34 @@
                         <option  style="color:#000000; font-weight:600" value="other">Other</option>
                        
                     </InputSelect>
-                    <ValidationMessage For="@(() => Temp.email)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                    <InputText @bind-Value="Temp.email" style="color:#000000; font-weight:600" placeholder="Email" type="text" name="email" id="userEmail" />
+                    <ValidationMessage For="@(() => Temp.email)" />
+                    <InputText @bind-Value="Temp.email"  style="color:#000000; font-weight:600" placeholder="Email" type="text" name="email" id="userEmail" />
 
-                    <ValidationMessage For="@(() => Temp.name)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                    <InputText @bind-Value="Temp.name"  style="color:#000000; font-weight:600"  placeholder="First Name" type="text" name="firstName" id="fName" />
-
-
-                    <ValidationMessage For="@(() => Temp.surname)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                    <InputText @bind-Value="Temp.surname"  style="color:#000000; font-weight:600"  placeholder="Last Name" type="text" name="lastName" id="lName" />
+                    <ValidationMessage For="@(() => Temp.name)" />
+                    <InputText @bind-Value="Temp.name"   style="color:#000000; font-weight:600"  placeholder="First Name" type="text" name="firstName" id="fName" />
 
 
-                    <ValidationMessage For="@(() => Temp.demo)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                    <InputSelect @bind-Value="Temp.demo"  style="color:#000000; font-weight:600" name="querySelect" >
+                    <ValidationMessage For="@(() => Temp.surname)" />
+                    <InputText @bind-Value="Temp.surname"    style="color:#000000; font-weight:600"  placeholder="Last Name" type="text" name="lastName" id="lName" />
+
+
+                    <ValidationMessage For="@(() => Temp.demo)" />
+                    <InputSelect @bind-Value="Temp.demo"   style="color:#000000; font-weight:600" name="querySelect" >
                         <option  style="color:#000000; font-weight:600" value="" disabled selected hidden>Select Query</option>
                         <option  style="color:#000000; font-weight:600" value="sales">OneView Demo</option>
                         <option  style="color:#000000; font-weight:600" value="demoRequest">Stactize Demo</option>
                         <option  style="color:#000000; font-weight:600" value="careers">Other</option>
                     </InputSelect>
 
-                    <ValidationMessage For="@(() => Temp.query)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                    <InputTextArea @bind-Value="Temp.query"  name="userMessage" id="userMessage"  style="width: 70%; height:100px; margin-left: 15%; margin-right: 15%; padding: 1em 1em 1em 1em; display: inline-block; border: 0.2em solid #00bcae; border-radius: 1.5em; box-sizing: border-box; background-color: transparent; font-family: opensans-condensed-light; font-weight: 800; font-size: 1em;  "></InputTextArea>
+                    <ValidationMessage For="@(() => Temp.query)" />
+                       
+                    <InputTextArea @bind-Value="Temp.query"    name="userMessage" id="userMessage"  style="width: 70%; height:100px; margin-left: 15%; margin-right: 15%; padding: 1em 1em 1em 1em; display: inline-block; border: 0.2em solid #00bcae; border-radius: 1.5em; box-sizing: border-box; background-color: transparent; font-family: opensans-condensed-light; font-weight: 800; font-size: 1em;  "></InputTextArea>
+                       
+                   
 
 
                     <div style="text-align:center">
-                        <input class="subButton" type="button" value="Submit" disabled="@SubmitIsPressed" >
+                        <input class="subButton" type="submit" value="Submit" disabled="@SubmitIsPressed" >
                     </div>
                 </EditForm>
             </div>
@@ -343,12 +346,15 @@
                 demo = Temp.demo,
                 query = Temp.query,
             });
-        
+
         foreach(var temp in contactUs)
         {
             Console.WriteLine($"{temp.career}, {temp.email}, {temp.name}, {temp.surname}, {temp.demo}, {temp.query}");
         }
+        Temp = new();
         await JSRuntime.InvokeAsync<object>("alert", "Questions saved successfully.");
+        
     }
+   
 
 }
