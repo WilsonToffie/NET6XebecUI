@@ -30,9 +30,10 @@ input[type = "button"], input[type = "submit"], button {
     border-radius: 0.4em;
 }
 
-    input[type = "button"]:disabled, input[type = "submit"]:disabled, button:disabled{
-        background-color: grey;
-    }
+/*    input[type = "button"], input[type = "submit"]:hover {
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        color: rgba(0,0,0,0.6);
+    }*/
 
     .default-button-style {
         background-color: rgba(0, 188, 174,1);
@@ -49,28 +50,30 @@ input[type = "button"], input[type = "submit"], button {
         cursor: pointer;
     }
 
-.default-button-style:disabled{
-    background-color: grey;
-}
+    .default-button-style:hover {
+        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        color: rgba(0,0,0,0.6);
+    }
 
-button {
-    background-color: rgba(0, 188, 174,1);
-    color: white;
-    width: 100px;
-    height: 5vh;
-    border: none;
-    text-align: center;
-    font-size: 1em;
-    font-family: opensans-condensed-bold;
-    font-weight: 600;
-    border: none;
-    border-radius: 0.4em;
-}
+    button {
+        background-color: rgba(0, 188, 174,1);
+        color: white;
+        width: 100px;
+        height: 5vh;
+        border: none;
+        text-align: center;
+        font-size: 1em;
+        font-family: opensans-condensed-bold;
+        font-weight: 600;
+        border: none;
+        border-radius: 0.4em;
+    }
 
-button:disabled{
-    background-color: grey;
-}
-
+        button:hover {
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            color: rgba(0,0,0,0.6);
+        }
+/**/
 /* Global scroll bar changes */
 
 ::-webkit-scrollbar {
@@ -94,7 +97,7 @@ button:disabled{
         cursor: pointer;
     }
 
-input[type = "text"], input[type="email"], input[type="password"], select:-webkit-autofill {
+input[type="email"], input[type="password"], select:-webkit-autofill {
     background-color: transparent;    
     font-size: 1em;
     border: none;

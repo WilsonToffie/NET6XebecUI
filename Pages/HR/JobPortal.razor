@@ -512,7 +512,7 @@
                                         <div class="card-body job-portal-card-body">
                                             <div class="row">
                                                 <div class="col-10"><h3 class="card-title" style="color: @SmallCardFontTitleColour(item.Id)">@item.Title</h3></div>
-                                                <span class="col-2 trash-can-location" @onclick="() => DeleteData(item.Id)"><i class="icon-colour fa fa-trash" style="font-size: x-large; margin-left: -0.5em;" @onclick="() => DeleteData(item.Id)"></i></span>
+                                                <span class="col-2 trash-can-location" @onclick="() => DeleteData(item.Id)"><i class="icon-colour fa fa-trash" style="font-size: x-large; margin-left: -0.5em;"></i></span>
                                                 <div class="col-12"><h5 class="card-subtitle text-muted small-card-company" style="color: @SmallCardFontColour(item.Id)"><b>@item.Company.Name</b></h5></div>
                                                 <div class="col-12"><h5 class="card-text small-card-location" style="color: @SmallCardFontColour(item.Id)">@item.Location.Name</h5></div>
                                                 <div class="col-12"><h5 class="card-text" style="color: @SmallCardFontColour(item.Id)">Status: <b>@item.Status</b></h5></div>
