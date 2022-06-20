@@ -30,9 +30,9 @@ input[type = "button"], input[type = "submit"], button {
     border-radius: 0.4em;
 }
 
-/*    input[type = "button"], input[type = "submit"] :hover {
+/*    input[type = "button"], input[type = "submit"]:hover {
         transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-        color: black;
+        color: rgba(0,0,0,0.6);
     }*/
 
     .default-button-style {

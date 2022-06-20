@@ -113,6 +113,7 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool updateReferences = false;
         private bool enterMatricMarks = false;
         private bool enterNewMark = false;
+        private bool validMarkUpload = false;
         // This is used to prevent the users from uploading documents before the system has actually processed it
         private bool enableUploadButtons = true;
         
@@ -1566,16 +1567,29 @@ namespace XebecPortal.UI.Pages.Applicant
 
         }
 
-        private async void SaveMarks()
+        private async Task SaveMarks()
         {
             Console.WriteLine("disabling buttons");
             addMatricMarksPressed = true;
 
             foreach(var mark in matricMarksAdded)
             {
-                await httpClient.PostJsonAsync($"matricMark", mark, new AuthenticationHeaderValue("Bearer", token));
+               var validUpload = await httpClient.PostJsonAsync($"matricMark", mark, new AuthenticationHeaderValue("Bearer", token));
+
+                if (validUpload.IsSuccessStatusCode)
+                {
+                    validMarkUpload = true;
+                }
+                else
+                {
+                    validMarkUpload = false;
+                }
             }
 
+            if (validMarkUpload)
+            {
+                await jsRuntime.InvokeAsync<object>("alert", "Your Marks has successfully been captured");
+            }
             addMatricMarksPressed = false;
             Console.WriteLine("enabling buttons");
 

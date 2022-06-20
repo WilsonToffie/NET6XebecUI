@@ -923,7 +923,7 @@
     }
 
     .mark-input-container{
-        max-height: 7vh;
+        max-height: 12vh;
         overflow-y: auto;
     }
 
@@ -1039,8 +1039,8 @@
                                                     </div>
                                                }else
                                                 {
-                                                    <div class="upload-button-location">
-                                                        <label class="default-button-style" style="background-color: #A9ABA7">
+                                                    <div class="upload-button-location" style="margin-top: -14px;">
+                                                        <label class="default-button-style" style="background-color: #A9ABA7; padding-top: 7px;">
                                                             Upload
                                                         </label>
                                                     </div>       
@@ -1204,7 +1204,7 @@
                                                     <div class="col-12" style="position: relative">
                                                         <!--<label class="form-label" for="description">Description</label>-->
                                                         <ValidationMessage For="@(() => workHistory.Description)" style="font-size: 0.8em; position: absolute; bottom: 70px;"/>
-                                                        <InputTextArea id="description" class="form-control shadow bg-body rounded" placeholder="Description" @bind-Value="workHistory.Description" rows="3" @onfocusout="completion"></InputTextArea> <!--@onfocusout="completion" -->
+                                                        <InputTextArea style="resize:none;" id="description" class="form-control shadow bg-body rounded" placeholder="Description" @bind-Value="workHistory.Description" rows="3" @onfocusout="completion"></InputTextArea> <!--@onfocusout="completion" -->
                                                     </div>
                                                     @*<div class="validation-message"><ValidationSummary /></div>*@
                                                     <div class="col-12 d-flex justify-content-around">
@@ -1378,29 +1378,28 @@
                                  <DataAnnotationsValidator />
                                     <div class="mark-input">
                                          <div style="width: 120px; margin-right: 100px;">
-                                             <input class="form-control" type="text" placeholder="Subject's Name" @bind="marks.SubjectName">
+                                             <input class="form-control" style="height: 3vh;" type="text" placeholder="Subject's Name" @bind="marks.SubjectName">
                                          </div>
                                          <div style="width: 120px;">
-                                            <input class="form-control" type="text" placeholder="Mark" @bind="marks.SubjectMark">                                           
+                                            <input class="form-control" style="height: 3vh;" type="text" placeholder="Mark" @bind="marks.SubjectMark">                                           
                                          </div>    
                                          <div>
                                              <button type="button" class="btn-close text-reset" @onclick="() => addAnotherMark(true)"></button>
                                          </div>
                                     </div> 
-                                    <div style=" margin-top: 5px;">
-                                        <input style = "margin-left: 195px;" type="submit" value="Add"/>                                        
+                                    <div style=" margin-top: 5px; text-align: center;">
+                                        <input class="default-button-style"  type="submit" value="Add"/>     <!--style = "margin-left: 195px;"-->
+                                        <input class="default-button-style" type="button" value="Save" @onclick="SaveMarks"/>
                                     </div>
                                  </EditForm>
                                  }
                                  else
                                  {
-                                     <div style="margin-left: 195px;">
-                                         <input type="button" value="Add" @onclick="() => addAnotherMark(false)"/>                                        
+                                     <div style="text-align: center;"> <!--margin-left: 195px;-->
+                                         <input class="default-button-style" type="button" value="Add" @onclick="() => addAnotherMark(false)"/>
+                                         <input class="default-button-style" type="button" value="Save" @onclick="SaveMarks"/>
                                      </div>                                     
-                                 }
-                                 <div style="text-align: center; margin-bottom: 10px;">
-                                      <input type="button" value="Save" @onclick="SaveMarks"/>
-                                 </div>
+                                 }                                 
                             </div>
                         </div>
                     </div>               
@@ -1860,7 +1859,7 @@
                                     {*@
                                 <div class="row p-3">
                                     <div class="col-12 d-flex justify-content-center">
-                                        <input type="button" value="Save" @onclick="Submit" />
+                                        <input class="default-button-style" type="button" value="Save" @onclick="Submit" />
                                     </div>
                                 </div>
                                 @*}*@

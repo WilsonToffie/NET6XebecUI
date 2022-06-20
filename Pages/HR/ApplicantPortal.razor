@@ -1194,7 +1194,12 @@
     private IList<References> references = new List<References>();
 
     private EmailModel Email = new EmailModel();
-
+    private IList<Document> userDocuments { get; set; }
+    private List<Document> checkUserDoc = new List<Document>();
+    private List<Document> UserDocumentsList = new List<Document>();
+    private Document getUserDoc = new Document();
+    private bool noDocuments = false;
+    private bool documentsHasBeenAdded = false;
     private bool sendEmailPressed = false;
 
     private currentPhase phase { get; set; }
