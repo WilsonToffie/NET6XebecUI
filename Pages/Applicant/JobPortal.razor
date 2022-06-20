@@ -274,15 +274,12 @@
     }
 
     .applicant-application-form-questions {
-        display: flex;
+        /*display: flex;*/
         justify-content: center;
         height: 60vh;
+        width: 80%;
         overflow-y: auto;
     }
-
-        .applicant-application-form-questions td {
-            width: 300px;
-        }
 
     .applicant-application-form-container {
         background: #fff;
@@ -555,57 +552,51 @@
         </div>
     }
 </div>
+
 <div class="applicant-application-form" hidden="@applicationFormIsHidden">
     <div class="applicant-application-form-container">
         <div class="applicant-application-form-title">
-            <h4 class="collaborators-heading-text">Application Form</h4>
+            <h1 >Application Form</h1> <!--class="collaborators-heading-text"-->
         </div>
-        <div class="applicant-application-form-questions">
-            <table>
-                <tbody>
+        <div class="applicant-application-form-questions">           
                     @if (Questions != null)
                     {
                         @foreach (var customquestion in Questions)
                         {
-                            <tr class="appform-right-row">
-                                <td class="collaborators-left-td">
-                                    <div class="application-form-question">
-                                        <h6 class="appform-text" style="word-wrap: break-word">@customquestion.HRQuestion</h6>
+                            <div class="application-form-question">
+                                        <p class="appform-text" style="word-wrap: break-word">@customquestion.HRQuestion</p>
                                         @switch (customquestion.TypeId)
                                         {
                                             case 1:
-                                                <input type="number" class="form-control" @bind="customquestion.Applicantanswer">
+                                                <input type="number" class="form-control" style=" margin-bottom: 20px; width: 50%;" @bind="customquestion.Applicantanswer">
                                                 break;
                                             case 2:
-                                                <textarea type="text" class="form-control" placeholder="Answer..." @bind="customquestion.Applicantanswer"></textarea>
+                                                <textarea type="text" class="form-control" style="margin-bottom: 20px; width: 50%;" placeholder="Answer..." @bind="customquestion.Applicantanswer"></textarea>
                                                 break;
                                             case 3:
-                                                <input type="text" class="form-control" placeholder="Answer..." @bind="customquestion.Applicantanswer">
+                                                <input type="text" class="form-control" style="margin-bottom: 20px; width: 50%;" placeholder="Answer..." @bind="customquestion.Applicantanswer">
                                                 break;
                                             case 4:
-                                                <input type="date" id="test" class="form-control" @onchange="(e) => { customquestion.Applicantanswer = e.Value.ToString(); }">
+                                                <input type="date" id="test" class="form-control" style=" margin-bottom: 20px; width: 50%;" @onchange="(e) => { customquestion.Applicantanswer = e.Value.ToString(); }">
                                                 break;
                                             case 5:
-                                                <select @bind="customquestion.Applicantanswer">
+                                                <select @bind="customquestion.Applicantanswer" style=" margin-bottom: 20px; width: 50%;">
+                                                    <option selected disabled>Please select an answer</option>
                                                     <option value="yes">Yes</option>
                                                     <option value="no">No</option>
                                                 </select>
                                                 break;
                                             case 6:
-                                                <input type="file" class="form-control" @bind="customquestion.Applicantanswer">
+                                                <input type="file" class="form-control" style="margin-bottom: 20px; width: 50%;" @bind="customquestion.Applicantanswer">
                                                 break;
                                         }
-                                    </div>
-                                </td>
-                            </tr>
+                            </div>                            
                         }
-                    }
-                </tbody>
-            </table>
+                    }               
         </div>
         <div class="applicant-application-form-button">
-            <button class="btn applicant-appform-button" @onclick="ToJobPortal">Job Portal</button>
-            <button class="btn applicant-appform-button" @onclick="SaveAnswers">Submit</button>
+            <button class="default-button-style" @onclick="ToJobPortal">Job Portal</button>
+            <button class="default-button-style" @onclick="SaveAnswers">Submit</button>
         </div>
     </div>
 </div>
