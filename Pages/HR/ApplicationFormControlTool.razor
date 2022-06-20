@@ -33,12 +33,12 @@
         }
 
     /* ::-webkit-scrollbar-button:single-button {
-        background-color: #bbbbbb;
-        display: block;
-        border-style: solid;
-        height: 12px;
-        width: 12px;
-    }*/
+                        background-color: #bbbbbb;
+                        display: block;
+                        border-style: solid;
+                        height: 12px;
+                        width: 12px;
+                    }*/
 
     ::-webkit-scrollbar-button:single-button:vertical:increment {
         border-width: 8px 8px 0 8px;
@@ -483,40 +483,40 @@
             background-color: #d35bc9;
         }
 
-        .button-functions:disabled{
+        .button-functions:disabled {
             background-color: grey;
         }
 </style>
 
-    <div class="top-Image-thing">
-        <div class="progressed-circle"></div>
-        <div class="progressed-circle"></div>
-        <div class="circle"></div>
-        <div class="circle"></div>
-        <div class="circle"></div>
-        @*<div class="circle"></div>
-        <div class="circle"></div>*@
-    </div>
-    <div class="selected-rod"></div>
-    <div class="progress-rod" style="width: 50%; left: 40%;"></div>
-    <div class="NumberDisplay">
-        <div>1</div>
-        <div>2</div>
-        <div>3</div>
-        <div>4</div>
-        <div>5</div>
-        @*<div>6</div>
-        <div>7</div>*@
-    </div>
-    <div class="TextDisplay">
-        <div class="selected-create-a-job-text-page">Create A Job</div>
-        <div class="selected-application-form-text">Build Application Form</div>
-        <div class="collaboration-text">Select Collaboration</div>
-        @*<div class="collaboration-text-part-2">Select Collaboration Part 2</div>*@
-        <div class="phases-text">Select Phases</div>
-        <div class="post-a-job-text">Post Job</div>
-        @*<div class="summary-text">Summary</div>*@
-    </div>
+<div class="top-Image-thing">
+    <div class="progressed-circle"></div>
+    <div class="progressed-circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+    @*<div class="circle"></div>
+    <div class="circle"></div>*@
+</div>
+<div class="selected-rod"></div>
+<div class="progress-rod" style="width: 50%; left: 40%;"></div>
+<div class="NumberDisplay">
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <div>4</div>
+    <div>5</div>
+    @*<div>6</div>
+    <div>7</div>*@
+</div>
+<div class="TextDisplay">
+    <div class="selected-create-a-job-text-page">Create A Job</div>
+    <div class="selected-application-form-text">Build Application Form</div>
+    <div class="collaboration-text">Select Collaboration</div>
+    @*<div class="collaboration-text-part-2">Select Collaboration Part 2</div>*@
+    <div class="phases-text">Select Phases</div>
+    <div class="post-a-job-text">Post Job</div>
+    @*<div class="summary-text">Summary</div>*@
+</div>
 @if (prevPage == false && nextPage == false)
 {
 
@@ -533,13 +533,13 @@
                     {
                         <div class="right-list-item-preview">
                             @*<div class="btn-close">
-                            </div>*@
+                </div>*@
                             <div class="summary-preview-item-body">
                                 <div class="summary-preview-item-description">
                                     <p style="margin:0 0 0px;">@formQuestion.question</p>
                                     @*<span @onclick="() => DeleteFormQuestion(formQuestion)">
-                                            <i class="fas fa-times"></i>
-                                        </span>*@
+                        <i class="fas fa-times"></i>
+                        </span>*@
                                 </div>
                                 <div class="preview-item-control">
                                     @{
@@ -584,14 +584,14 @@
     </div>
 
     <div class="createjob-form-container">
-        <div class="page-title" style="text-align:center;">                        
-             <h1 style="font-size: 38px !important;">Question Selection</h1>     
+        <div class="page-title" style="text-align:center;">
+            <h1 style="font-size: 38px !important;">Question Selection</h1>
         </div>
         <div class="form-main">
             <div class="form-right">
 
                 <div class="options">
-                    
+
                     <select @onchange="AddToForm" class="select-form">
                         <option>Select Question</option>
                         @foreach (var question in Questions)
@@ -615,6 +615,10 @@
                                 <div class="right-list-item-preview">
 
                                     <div class="preview-item-body">
+                                                                                    @if (FormQuestionsEmptyWrong.Contains(formQuestion.question))
+                                            {
+                                                <div style="color:red; font-weight:lighter">Please fill in a expected answer</div>
+                                            }
                                         <div class="preview-item-description">
                                             <p class="-form-preview-question">
                                                 @formQuestion.question
@@ -643,6 +647,7 @@
                                                     break;
                                                 case 5:
                                                     <select class="answer-options" @bind="formQuestion.answer">
+                                                        <option value="default" selected>-</option>
                                                         <option value="yes" selected>Yes</option>
                                                         <option value="no">No</option>
                                                     </select>
@@ -669,11 +674,11 @@
                 {
 
                     @*@if (!ShowManage)
-                        {
-                            <div>
-                                <button class="btn appform-main-button" @onclick="OpenButtons">Manage Questions</button>
-                            </div>
-                        }*@
+            {
+            <div>
+            <button class="btn appform-main-button" @onclick="OpenButtons">Manage Questions</button>
+            </div>
+            }*@
 
                     @if (ShowAddDeleteButtons)
                     {
@@ -687,8 +692,8 @@
                             </div>
 
                             @*<div class="delete-button">
-                                    <button class="btn-close" @onclick="ShowmanageButton"></button>
-                                </div>*@
+                <button class="btn-close" @onclick="ShowmanageButton"></button>
+                </div>*@
                         </div>
 
                     }
@@ -751,9 +756,9 @@
         </div>
 
         <div class="bottom-buttons">
-            <input type="button" value="Prev" class="button-functions" @onclick="Prev" disabled="@savePressed"/>
-            <input type="submit" value="Save" class="button-functions" @onclick="SaveQuestion" disabled="@savePressed"/>
-            <input type="button" value="Next" class="button-functions" @onclick="Next" disabled="@savePressed"/>
+            <input type="button" value="Prev" class="button-functions" @onclick="Prev" disabled="@savePressed" />
+            <input type="submit" value="Save" class="button-functions" @onclick="SaveQuestion" disabled="@savePressed" />
+            <input type="button" value="Next" class="button-functions" @onclick="Next" disabled="@savePressed" />
         </div>
     </div>
 
@@ -772,6 +777,7 @@ else if (nextPage == true)
     bool nextPage;
     string token;
     public List<FormQuestion> FormQuestions = new();
+    public List<string> FormQuestionsEmptyWrong = new();
 
     public EventCallback<List<FormQuestion>> FormQuestionsChanged { get; set; }
 
@@ -964,6 +970,8 @@ else if (nextPage == true)
 
     public async Task SaveQuestion()
     {
+        FormQuestionsEmptyWrong.Clear();
+
         savePressed = true;
         if (FormQuestions != null)
         {
@@ -975,33 +983,46 @@ else if (nextPage == true)
                         Answer = question.answer,
                         AnswerTypeId = question.answerTypeId,
                         JobId = jobId
-            };
+                    };
 
                 Console.WriteLine(tempForm.Question);
                 Console.WriteLine(tempForm.Answer);
                 Console.WriteLine(tempForm.AnswerTypeId);
                 Console.WriteLine(tempForm.JobId);
 
+                if (String.IsNullOrEmpty(question.answer))
+                {
+                    FormQuestionsEmptyWrong.Add(question.question);
+                }
 
                 questionnaireHrForms.Add(tempForm);
             };
 
-
-            foreach(var question in questionnaireHrForms)
+            if (FormQuestionsEmptyWrong.Count == 0)
             {
-                await httpClient.PostJsonAsync<QuestionnaireHrForm>("questionnaire", question, new AuthenticationHeaderValue("Bearer", token));
+                foreach (var question in questionnaireHrForms)
+                {
+                    await httpClient.PostJsonAsync<QuestionnaireHrForm>("questionnaire", question, new AuthenticationHeaderValue("Bearer", token));
+                }
+
+                Console.WriteLine("success!");
+
+                await JSRuntime.InvokeAsync<string>("alert", "Questions saved successfully.");
+
+                savePressed = false;
+            }
+            else
+            {
+                savePressed = false;
             }
 
+            
             //var post = await httpClient.PostJsonAsync("questionnaire/lst", questionnaireHrForms, new AuthenticationHeaderValue("Bearer", token));
             //    if (post.IsSuccessStatusCode)
             //    {
             //        await JSRuntime.InvokeAsync<object>("alert", "Questions saved successfully");
             //    }
-            Console.WriteLine("success!");
 
-            await JSRuntime.InvokeAsync<string>("alert", "Questions saved successfully.");
-
-            savePressed = false;
         }
         //await httpClient.PostJsonAsync<List<FormQuestion>>("questionnaire/lst", FormQuestions, new AuthenticationHeaderValue("Bearer", token));
         //Console.WriteLine("success!");
