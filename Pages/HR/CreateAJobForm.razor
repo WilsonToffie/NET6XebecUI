@@ -228,6 +228,11 @@
             background-color: #d35bc9;
         }
 
+        .form-buttons:disabled{
+            background-color: grey;
+        }
+
+
     .createNew-buttton-function {
         text-align: center;
         margin-top: 15vh;
@@ -249,6 +254,10 @@
 
         .button-functions:hover {
             background-color: #d35bc9;
+        }
+        
+        .button-functions:disabled{
+            background-color: grey;
         }
 
     .button-functions-not-redirectable {
@@ -513,7 +522,7 @@ else
                             </div>
                         </div>
                         <div class="createNew-buttton-function">
-                            <input type="button" value="Done" class="button-functions" @onclick="saveDep" /> <!-- @onclick="saveDep"-->
+                            <input type="button" value="Done" class="button-functions" @onclick="saveDep" disabled="@saveDepPressed"/> <!-- @onclick="saveDep"-->
                             @*<input type="button" value="Save" class="button-functions" @onclick="saveDep" />*@
                         </div>
                     </EditForm>
@@ -611,8 +620,8 @@ else
                             </div>
                         </div>
                         <div class="createNew-buttton-function">
-                            <input type="button" value="Cancel" class="button-functions" @onclick="() => createComp(false)" />
-                            <input type="button" value="Save" class="button-functions" @onclick="() => saveCompany()"/>
+                            <input type="button" value="Cancel" class="button-functions" @onclick="() => createComp(false)" disabled="@saveCompanyPressed"/>
+                            <input type="button" value="Save" class="button-functions" @onclick="() => saveCompany()" disabled="@saveCompanyPressed"/>
                         </div>
                     </EditForm>
                 }
@@ -791,16 +800,16 @@ else
             {
                 <div class="bottom-buttons">
                     @*<input type="button" value="Prev" class="button-functions" />*@
-                    <input type="submit" value="Save"/>
-                    <input type="button" value="Next" @onclick="() => RedirectToNextPage(true)" />
+                    <input type="submit" value="Save" disabled="@saveButtonPressed"/>
+                    <input type="button" value="Next" @onclick="() => RedirectToNextPage(true)" disabled="@nextButtonPressed"/>
                 </div>
             }
             else
             {
                 <div class="bottom-buttons">
                     @*<input type="button" value="Prev" class="button-functions" />*@
-                    <input type="submit" value="Save"/>
-                    <input type="button" value="Next" disabled class="button-functions-not-redirectable" />
+                    <input type="submit" value="Save" disabled="@saveButtonPressed"/>
+                    <input type="button" value="Next" disabled class="button-functions-not-redirectable"/>
                 </div>
             }
 

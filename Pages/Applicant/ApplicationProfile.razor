@@ -1156,7 +1156,7 @@
                                     </div>
                                     @*<div class="validation-message"><ValidationSummary /></div>*@
                                     <div style="text-align: center;">
-                                        <button class="default-button-style" style="margin-bottom: 10px;" type="submit" value="Save">Save</button>
+                                        <button class="default-button-style" style="margin-bottom: 10px;" type="submit" value="Save" disabled="@savePersonalInfoPressed">Save</button>
                                     </div>
                                 </div>
                             </div>
@@ -1210,12 +1210,12 @@
                                                     <div class="col-12 d-flex justify-content-around">
                                                         @if (workEditMode)
                                                         {
-                                                            <input style="margin-top: 2vh;" type="button" value="Save" @onclick="() => SaveWorkHistory(workHistory)" />
-                                                            <input style="margin-top: 2vh;" type="button" value="Cancel" @onclick="() => CancelWorkHistory(workHistory)" />
+                                                            <input style="margin-top: 2vh;" type="button" value="Save" @onclick="() => SaveWorkHistory(workHistory)" disabled="@addWorkhistoryPressed"/>
+                                                            <input style="margin-top: 2vh;" type="button" value="Cancel" @onclick="() => CancelWorkHistory(workHistory)" disabled="@addWorkhistoryPressed"/>
                                                         }
                                                         else
                                                         {
-                                                            <button class="default-button-style" style="margin-top: 10px;" type="submit" value="Add">Add</button>
+                                                            <button class="default-button-style" style="margin-top: 10px;" type="submit" value="Add" disabled="@addWorkhistoryPressed">Add</button>
                                                         }
                                                     </div>
                                                 </div>
@@ -1301,12 +1301,12 @@
                                                     <div class="col-12 d-flex justify-content-around">
                                                         @if (eduEditMode)
                                                         {
-                                                            <input type="button" value="Save" @onclick="() => SaveEducation(education)" />
-                                                            <input type="button" value="Cancel" @onclick="() => CancelEducation(education)" />
+                                                            <input type="button" value="Save" @onclick="() => SaveEducation(education)" disabled="@addEducationPressed"/>
+                                                            <input type="button" value="Cancel" @onclick="() => CancelEducation(education)" disabled="@addEducationPressed"/>
                                                         }
                                                         else
                                                         {
-                                                            <button class="default-button-style" type="submit" value="Add">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
+                                                            <button class="default-button-style" type="submit" value="Add" disabled="@addEducationPressed">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
                                                         }
 
 
@@ -1428,13 +1428,13 @@
 
                                                 @if (skillEditMode)
                                                 {
-                                                    <input style=" margin-left: 20%;" type="button" value="Save" @onclick="() => SaveSkill(skillInfo)" />
-                                                    <input style=" margin-left: 40%;" type="button" value="Cancel" @onclick="() => CancelSkill(skillInfo)" />
+                                                    <input style=" margin-left: 20%;" type="button" value="Save" @onclick="() => SaveSkill(skillInfo)" disabled="@addSkillsPressed"/>
+                                                    <input style=" margin-left: 40%;" type="button" value="Cancel" @onclick="() => CancelSkill(skillInfo)" disabled="@addSkillsPressed"/>
                                                 }
                                                 else
                                                 {
                                                     <div style="text-align:center;">
-                                                        <button class="default-button-style" type="submit" value="Add">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
+                                                        <button class="default-button-style" type="submit" value="Add" disabled="@addSkillsPressed">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
                                                     </div>
                                                 }
 
@@ -1766,12 +1766,12 @@
 
                                                         @if (editMode)
                                                         {
-                                                            <input type="button" value="Save" @onclick="() => Save(references)" />
-                                                            <input type="button" value="Cancel" @onclick="() => Cancel(references)" />
+                                                            <input type="button" value="Save" @onclick="() => Save(references)" disabled="@addReferencesPressed"/>
+                                                            <input type="button" value="Cancel" @onclick="() => Cancel(references)" disabled="@addReferencesPressed"/>
                                                         }
                                                         else
                                                         {
-                                                            <button class="default-button-style" type="submit" value="Add">Add</button> <!--@onclick="() => AddReferences()"-->
+                                                            <button class="default-button-style" type="submit" value="Add"  disabled="@addReferencesPressed">Add</button> <!--@onclick="() => AddReferences()"-->
                                                         }
 
                                                     </div>

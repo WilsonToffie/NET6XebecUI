@@ -16,6 +16,7 @@ namespace XebecPortal.UI.Pages.HR
         public string interview_comment { get; set; }
         public string phase { get; set; }
     }
+   
 
     public class SkillsInformation : ICloneable
     {
