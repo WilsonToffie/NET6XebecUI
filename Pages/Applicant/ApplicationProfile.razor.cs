@@ -978,7 +978,7 @@ namespace XebecPortal.UI.Pages.Applicant
             fileNames = e.File;
             progressBar = 0.ToString("0");
             status = new StringBuilder($"Uploading file {num++}");
-
+            var fileName = state.AppUserId;
 
             //Upload to blob - start
             status = new StringBuilder($"current file {fileNames.Name}");
@@ -991,7 +991,7 @@ namespace XebecPortal.UI.Pages.Applicant
                                   + ".blob.core.windows.net/" 
                                   + imgContainer
                                   + "/"
-                                  + fileNames.Name);
+                                  + fileName);
             Console.WriteLine("fileName " + fileNames.Name);
 
             AzureSasCredential credential = new AzureSasCredential(azureCredentials);

@@ -1150,7 +1150,7 @@
                                         <div class="col-8" style="position: relative">
                                             @*<label class="form-label" for="address">Address</label>*@
                                             <ValidationMessage For="@(() => personalInformation.Address)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                                            <InputTextArea id="address" class="form-control shadow bg-body rounded" @bind-Value="personalInformation.Address" placeholder="Address" rows="1" @onfocusout="completion"></InputTextArea>
+                                            <InputTextArea id="address" style="resize:none;" class="form-control shadow bg-body rounded" @bind-Value="personalInformation.Address" placeholder="Address" rows="1" resi @onfocusout="completion"></InputTextArea>
                                             
                                         </div>
                                     </div>
@@ -1421,7 +1421,7 @@
                                                 <h1>Skills</h1>
                                             </div>
                                             <div style="text-align:center;"> 
-                                                <InputText id="skill" class="skill-input form-control shadow bg-body rounded" @bind-Value="skillInfo.Description" placeholder="Enter your skills" @onfocusout="completion" />
+                                                <InputText id="skill" class="skill-input form-control shadow bg-body rounded" @bind-Value="skillInfo.Description" placeholder="Enter skills" @onfocusout="completion" />
                                             </div>
                                             <div style="margin-top: 10px; margin-bottom: 10px;">
                                                 <div class="validation-message"><ValidationSummary /></div>
@@ -1860,7 +1860,7 @@
                                     {*@
                                 <div class="row p-3">
                                     <div class="col-12 d-flex justify-content-center">
-                                        <input type="button" value="Done" @onclick="Submit" />
+                                        <input type="button" value="Save" @onclick="Submit" />
                                     </div>
                                 </div>
                                 @*}*@

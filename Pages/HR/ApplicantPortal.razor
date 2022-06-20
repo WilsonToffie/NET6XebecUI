@@ -368,7 +368,7 @@
     }
 
     .img-magnified {
-        height: 90vh;
+        height: 95vh;
         width: 35vw;
         display: flex;
         flex-direction: column;
@@ -478,6 +478,31 @@
         text-decoration: underline; 
         font-family: opensans-condensed-bold; 
         color: #d35bc9;
+    }
+
+    .zoom-documunts-onclick{
+        width: 165px;
+        height: 130px;
+        margin-top: -35px;
+        position: absolute;
+    }
+    .documents-size{
+        width: 100%;
+        height: 100%;
+        border-radius: 1em;
+    }
+
+    .maginified-documents-close{
+        position: absolute;
+        top: 13px;
+        left: 90%;
+        background-color: transparent !important;
+        opacity: 1;
+        font-size: xxx-large !important;
+    }
+
+    .maginified-documents-close:checked{
+        border: none;
     }
 
 </style>
@@ -634,46 +659,115 @@
                 <input type="button" class="btn-view-documents" style="width: 100px; margin-right: 25px; margin-left:245px" value="Close" @onclick="toggleDocuments" />
             </div>
             <div class="modal-frame-documents-rows">
-                <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("linkedincv")'>
+                <div class="mini-modal-frame-documents">
+                    @if(  @getUserDoc.CV.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false)
+                    {
+                        <div>
+                        No CV's found
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="zoom-documunts-onclick" @onclick='() => toggleMagnifiedDocument("linkedincv",true)'></div>
+                        <iframe src="@getUserDoc.CV" style="width: 80%; height: 80%;"></iframe>
 
-                    <iframe src="@getUserDoc.CV" style="width: 80%; height: 80%;"></iframe>
-                    @*<img src="https://xebecstorage.blob.core.windows.net/linkedincv/@selectedUser.id" alt="Avatar">*@
+                        <div style="color: #00bcae; font-family: opensans-condensed-bold">
+                            CV
+                        </div>
+                        
+                        @*<div style="color: #00bcae; font-family: opensans-condensed-bold">
+                            CV
+                        </div>*@
+                    }
 
-                    <div style="color: #00bcae; font-family: opensans-condensed-bold">
-                        CV
-                    </div>
                 </div>
-                <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("matric-certificates")'>
-                    <img src="https://xebecstorage.blob.core.windows.net/matric-certificates/@selectedUser.id" alt="Avatar">
-                    <div style="color: #00bcae; font-family: opensans-condensed-bold">
-                        Matric Certificate
-                    </div>
+                <div class="mini-modal-frame-documents" >
+                    @if (@getUserDoc.MatricCertificate.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false)
+                    {
+
+                        <div>
+                            No Matric Certificate found
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="zoom-documunts-onclick" @onclick='() => toggleMagnifiedDocument("matric-certificates", true)'>  </div>
+                        <iframe src="@getUserDoc.MatricCertificate" style="width: 80%; height: 80%;"></iframe>
+                        <div style="color: #00bcae; font-family: opensans-condensed-bold">
+                            Matric Certificate
+                        </div>
+                        
+                    }
+
+                    
                 </div>
-                <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("transcripts")'>
-                    <img src="https://xebecstorage.blob.core.windows.net/transcripts/@selectedUser.id" alt="Avatar">
-                    <div style="color: #00bcae; font-family: opensans-condensed-bold">
-                        Academic Transcript
-                    </div>
+                <div class="mini-modal-frame-documents" >
+                    @if (@getUserDoc.UniversityTranscript.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false)
+                    {
+                        <div>
+                            No University Transcript found
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="zoom-documunts-onclick" @onclick='() => toggleMagnifiedDocument("transcripts", true)'>  </div>
+                        <iframe src="@getUserDoc.UniversityTranscript" style="width: 80%; height: 80%;"></iframe>
+                        <div style="color: #00bcae; font-family: opensans-condensed-bold">
+                            Academic Transcript
+                        </div>
+                    }
                 </div>
             </div>
             <div class="modal-frame-documents-rows">
-                <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("additional-documents-1")'>
-                    <img src="https://xebecstorage.blob.core.windows.net/additional-documents-1/@selectedUser.id" alt="Avatar">
-                    <div style="color: #00bcae; font-family: opensans-condensed-bold">
-                        Certificate A
-                    </div>
+                <div class="mini-modal-frame-documents">
+                    @if (@getUserDoc.AdditionalCert1.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false)
+                    {
+                        <div>
+                            No Certificate found
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="zoom-documunts-onclick" @onclick='() => toggleMagnifiedDocument("additional-documents-1" , true)'>  </div>
+                        <iframe src="@getUserDoc.AdditionalCert1" style="width: 80%; height: 80%;"></iframe>
+                        <div style="color: #00bcae; font-family: opensans-condensed-bold">
+                            Certificate A
+                        </div>
+                     }
                 </div>
-                <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("additional-documents-2")'>
-                    <img src="https://xebecstorage.blob.core.windows.net/additional-documents-2/@selectedUser.id" alt="Avatar">
-                    <div style="color: #00bcae; font-family: opensans-condensed-bold">
-                        Certificate B
-                    </div>
+                <div class="mini-modal-frame-documents" >
+                    @if (@getUserDoc.AdditionalCert2.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false )
+                    {
+                        <div>
+                            No Certificate found
+                        </div>
+                    }
+                    else
+                    {
+                       <div class="zoom-documunts-onclick" @onclick='() => toggleMagnifiedDocument("additional-documents-2" , true)'>  </div>
+                        <iframe src="@getUserDoc.AdditionalCert2" style="width: 80%; height: 80%;"></iframe>
+                        <div style="color: #00bcae; font-family: opensans-condensed-bold">
+                            Certificate B
+                        </div> 
+                    }
+                    
                 </div>
-                <div class="mini-modal-frame-documents" @onclick='() => toggleMagnifiedDocument("additional-documents-3")'>
-                    <img src="https://xebecstorage.blob.core.windows.net/additional-documents-3/@selectedUser.id" alt="Avatar">
-                    <div style="color: #00bcae; font-family: opensans-condensed-bold">
-                        Certificate C
-                    </div>
+                <div class="mini-modal-frame-documents">
+                    @if (@getUserDoc.AdditionalCert2.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false)
+                    {
+                        <div>
+                            No Certificate found
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="zoom-documunts-onclick" @onclick='() => toggleMagnifiedDocument("additional-documents-3" , true)'>  </div>
+                        <iframe src="@getUserDoc.AdditionalCert3" style="width: 80%; height: 80%;"></iframe>
+                        <div style="color: #00bcae; font-family: opensans-condensed-bold">
+                            Certificate C
+                        </div>
+                    }
+                    
                 </div>
             </div>
         </div>
@@ -687,19 +781,19 @@
     @switch(selectedDocument){
         case "linkedincv":
             <div class="dimmed">
-                <div class="img-magnified">
-                    <input type="button" class="btn-view-document" style="margin-left:70%; margin-bottom: 2%;" value="Close" @onclick='() => toggleMagnifiedDocument("")' />
-                    <iframe src="@getUserDoc.CV" style="width: 90%; height: 90%;" scrolling="no" ></iframe>
-                </div>
+                <div class="img-magnified">                    
+                    <iframe src="@getUserDoc.CV" class="documents-size"></iframe>
+                </div>                            
             </div>
+            <input type="button" class="btn-close maginified-documents-close"  @onclick='() => toggleMagnifiedDocument("", false)'/>
 
             break;
         case "matric-certificates":
             <div class="dimmed">
                 <div class="img-magnified">
-                    <input type="button" class="btn-view-document" style="margin-left:70%; margin-bottom: 2%;" value="Close" @onclick='() => toggleMagnifiedDocument("")' />
-                    <iframe src="@getUserDoc.MatricCertificate" style="width: 90%; height: 90%;"></iframe>
+                    <iframe src="@getUserDoc.MatricCertificate" class="documents-size"></iframe>
                 </div>
+                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)'/>
             </div>
 
             break;
@@ -707,9 +801,9 @@
             
             <div class="dimmed">
                 <div class="img-magnified">
-                    <input type="button" class="btn-view-document" style="margin-left:70%; margin-bottom: 2%;" value="Close" @onclick='() => toggleMagnifiedDocument("")' />
-                    <iframe src="@getUserDoc.UniversityTranscript" style="width: 90%; height: 90%;"></iframe>
+                    <iframe src="@getUserDoc.UniversityTranscript" class="documents-size"></iframe>
                 </div>
+                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)'/>
             </div>
 
             break;
@@ -717,9 +811,9 @@
 
             <div class="dimmed">
                 <div class="img-magnified">
-                    <input type="button" class="btn-view-document" style="margin-left:70%; margin-bottom: 2%;" value="Close" @onclick='() => toggleMagnifiedDocument("")' />
-                    <iframe src="@getUserDoc.AdditionalCert1" style="width: 90%; height: 90%;"></iframe>
+                    <iframe src="@getUserDoc.AdditionalCert1" class="documents-size"></iframe>
                 </div>
+                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)'/>
             </div>
 
             break;
@@ -727,28 +821,28 @@
 
             <div class="dimmed">
                 <div class="img-magnified">
-                    <input type="button" class="btn-view-document" style="margin-left:70%; margin-bottom: 2%;" value="Close" @onclick='() => toggleMagnifiedDocument("")' />
-                    <iframe src="@getUserDoc.AdditionalCert2" style="width: 90%; height: 90%;"></iframe>
+                    <iframe src="@getUserDoc.AdditionalCert2" class="documents-size"></iframe>
                 </div>
+                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)'/>
             </div>
 
             break;
         case "additional-documents-3":
             <div class="dimmed">
                 <div class="img-magnified">
-                    <input type="button" class="btn-view-document" style="margin-left:70%; margin-bottom: 2%;" value="Close" @onclick='() => toggleMagnifiedDocument("")' />
-                    <iframe src="@getUserDoc.AdditionalCert3" style="width: 90%; height: 90%;"></iframe>
+                    <iframe src="@getUserDoc.AdditionalCert3" class="documents-size"></iframe>
                 </div>
+                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)'/>
             </div>
             break;
 
     }
-    <div class="dimmed">
+    @*<div class="dimmed">
         <div class="img-magnified">
             <input type="button" class="btn-view-document" style="margin-left:70%; margin-bottom: 2%;" value="Close" @onclick='() => toggleMagnifiedDocument("")' />
             <iframe src="https://xebecstorage.blob.core.windows.net/@selectedDocument/@selectedUser.id" style="width: 90%; height: 90%;"></iframe>
         </div>
-    </div>
+    </div>*@
 }
 
 
@@ -1043,11 +1137,13 @@
     private IList<References> references = new List<References>();
 
     private EmailModel Email = new EmailModel();
-    
+
     private IList<Document> userDocuments { get; set; }
     private List<Document> checkUserDoc = new List<Document>();
+    private List<Document> UserDocumentsList = new List<Document>();
     private Document getUserDoc = new Document();
-
+    private bool noDocuments = false;
+    private bool documentsHasBeenAdded = false;
     private currentPhase phase { get; set; }
     [Parameter] public int JobId { get; set; }
 
@@ -1073,6 +1169,8 @@
         applications = await httpClient.GetListJsonAsync<List<ApplicationModel>>("Application", new AuthenticationHeaderValue("Bearer", token));
         phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("ApplicationPhase", new AuthenticationHeaderValue("Bearer", token));
         personalInformation = await httpClient.GetListJsonAsync<List<PersonalInformation>>("PersonalInformation", new AuthenticationHeaderValue("Bearer", token));
+
+        UserDocumentsList = await httpClient.GetListJsonAsync<List<Document>>("Document", new AuthenticationHeaderValue("Bearer", token));
 
         tempJobTitle = jobs.FirstOrDefault(x => x.Id == JobId).Title;
     }
@@ -1163,26 +1261,51 @@
         showEmail = false;
     }
 
-    private void toggleMagnifiedDocument(string documentType)
+    private void toggleMagnifiedDocument(string documentType, bool val)
     {
-        showMagnifiedDocument = !showMagnifiedDocument;
+        showMagnifiedDocument = val;
         selectedDocument = documentType;
     }
 
     private async Task toggleDocuments(AppUser user)
     {
-        Console.WriteLine(user.id);
+        Console.WriteLine("User ID: " + user.id);
         showDocuments = !showDocuments;
         SetSelectedCandidate(user);
+        getUserDoc = new Document();
+
+        foreach (var item in UserDocumentsList)
+        {
+            if (item.AppUserId == user.id)
+            {
+                documentsHasBeenAdded = true;
+                break;
+            }
+            Console.WriteLine("check if user has added documents " + documentsHasBeenAdded );
+        }
+
 
         if (showDocuments)
         {
-            userDocuments = await httpClient.GetListJsonAsync<List<Document>>($"Document/all/{user.id}", new AuthenticationHeaderValue("Bearer", token));
-            checkUserDoc = userDocuments.ToList();
-
-            foreach (var item in checkUserDoc)
+            if (documentsHasBeenAdded)
             {
-                getUserDoc = item;
+                userDocuments = await httpClient.GetListJsonAsync<List<Document>>($"Document/all/{user.id}", new AuthenticationHeaderValue("Bearer", token));
+
+                checkUserDoc = userDocuments.ToList();
+                Console.WriteLine("Document count " + checkUserDoc.Count());
+                if (checkUserDoc.Count == 0)
+                {
+                    noDocuments = true;
+                }
+                else
+                {
+                    noDocuments = false;
+                    foreach (var item in checkUserDoc)
+                    {
+                        getUserDoc = item;
+                    }
+                }
+                Console.WriteLine("No Documents status: " + noDocuments);
             }
         }
     }

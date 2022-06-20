@@ -443,19 +443,19 @@ namespace XebecPortal.UI.Pages.HR
 
     public class Document
     {
-        public int Id { get; set; }
+        public int Id { get; set; } = 0;
 
-        public string CV { get; set; }
+        public string CV { get; set; } = String.Empty;
 
-        public string MatricCertificate { get; set; }
+        public string MatricCertificate { get; set; } = String.Empty;
 
-        public string UniversityTranscript { get; set; }
+        public string UniversityTranscript { get; set; } = String.Empty;
 
-        public string AdditionalCert1 { get; set; }
+        public string AdditionalCert1 { get; set; } = String.Empty;
 
-        public string AdditionalCert2 { get; set; }
+        public string AdditionalCert2 { get; set; } = String.Empty;
 
-        public string AdditionalCert3 { get; set; }
+        public string AdditionalCert3 { get; set; } = String.Empty;
 
 
         //Foreign Key: AppUser
