@@ -5,6 +5,7 @@
         height: 90vh;
         width: 100%;
         animation: ease-in 0.15s;
+        overflow-x:hidden;
     }
 
     .contact-top {
@@ -31,6 +32,7 @@
         background-color: transparent;
         height: 7vh;
         margin-bottom: 1vh;
+        margin-bottom:1vh;
         /*Newly added, if need to change, then change the width to 100%*/
         display: block;
         margin-left: 15%;
@@ -228,8 +230,10 @@
 
                 <EditForm Model="@Temp" OnValidSubmit="@Add" >
                     <DataAnnotationsValidator />
-                    <ValidationMessage For="@(() => Temp.career)" style="align-self:center;"/>
-                    <InputSelect @bind-Value="Temp.career"  >
+                    
+                    
+                    <ValidationMessage For="@(() => Temp.career)" style="text-align:center;" />
+                        <InputSelect @bind-Value="Temp.career"  >
                         
                         <option style="color:#000000; font-weight:600" value="" disabled selected hidden>Select Department</option>
                         <option   style="color:#000000; font-weight:600" value="sales">Nebula Sales</option>
@@ -239,18 +243,30 @@
                         <option  style="color:#000000; font-weight:600" value="other">Other</option>
                        
                     </InputSelect>
-                    <ValidationMessage For="@(() => Temp.email)" />
-                    <InputText @bind-Value="Temp.email"  style="color:#000000; font-weight:600" placeholder="Email" type="text" name="email" id="userEmail" />
 
-                    <ValidationMessage For="@(() => Temp.name)" />
+                   
+
+                  
+                    <ValidationMessage For="@(() => Temp.email)" style="text-align:center;" />
+                    <InputText @bind-Value="Temp.email"  style="color:#000000; font-weight:600" placeholder="Email" type="text" name="email" id="userEmail" />
+                  
+                    
+                   
+
+                    <ValidationMessage For="@(() => Temp.name)" style="text-align:center;"  />
                     <InputText @bind-Value="Temp.name"   style="color:#000000; font-weight:600"  placeholder="First Name" type="text" name="firstName" id="fName" />
 
+                  
+                   
 
-                    <ValidationMessage For="@(() => Temp.surname)" />
+                  
+                    <ValidationMessage For="@(() => Temp.surname)" style="text-align:center;" />
                     <InputText @bind-Value="Temp.surname"    style="color:#000000; font-weight:600"  placeholder="Last Name" type="text" name="lastName" id="lName" />
+                   
+                    
 
-
-                    <ValidationMessage For="@(() => Temp.demo)" />
+                   
+                    <ValidationMessage For="@(() => Temp.demo)" style="text-align:center;"  />
                     <InputSelect @bind-Value="Temp.demo"   style="color:#000000; font-weight:600" name="querySelect" >
                         <option  style="color:#000000; font-weight:600" value="" disabled selected hidden>Select Query</option>
                         <option  style="color:#000000; font-weight:600" value="sales">OneView Demo</option>
@@ -258,9 +274,14 @@
                         <option  style="color:#000000; font-weight:600" value="careers">Other</option>
                     </InputSelect>
 
-                    <ValidationMessage For="@(() => Temp.query)" />
+                   
+                    
+                   
+                    <ValidationMessage For="@(() => Temp.query)" style="text-align:center;"  />
                        
                     <InputTextArea @bind-Value="Temp.query"    name="userMessage" id="userMessage"  style="width: 70%; height:100px; margin-left: 15%; margin-right: 15%; padding: 1em 1em 1em 1em; display: inline-block; border: 0.2em solid #00bcae; border-radius: 1.5em; box-sizing: border-box; background-color: transparent; font-family: opensans-condensed-light; font-weight: 800; font-size: 1em;  "></InputTextArea>
+                   
+                    
                        
                    
 
