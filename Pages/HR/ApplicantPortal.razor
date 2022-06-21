@@ -480,19 +480,20 @@
             color: #d35bc9;
         }
 
-    .zoom-documunts-onclick{
+    .zoom-documunts-onclick {
         width: 165px;
         height: 130px;
         margin-top: -35px;
         position: absolute;
     }
-    .documents-size{
+
+    .documents-size {
         width: 100%;
         height: 100%;
         border-radius: 1em;
     }
 
-    .maginified-documents-close{
+    .maginified-documents-close {
         position: absolute;
         top: 13px;
         left: 90%;
@@ -501,9 +502,9 @@
         font-size: xxx-large !important;
     }
 
-    .maginified-documents-close:checked{
-        border: none;
-    }
+        .maginified-documents-close:checked {
+            border: none;
+        }
 
 </style>
 
@@ -514,7 +515,7 @@
 
 <div class="table-applicants-container">
 
-    @if (candidates != null && candidates.Count != 0)
+    @if (applications != null)
     {
         <table>
             <thead>
@@ -594,32 +595,31 @@
                     }
                 }
 
-
-                @if (candidates == null || candidates.Count == 0)
+                @if (applications.Count() == 0 || applications == null)
                 {
-                    <p style="text-align: center">No applicants for this job.</p>
+                <div style="text-align: center">No Applications found</div>
                 }
 
             </tbody>
         </table>
 
-    <MatDialog @bind-IsOpen="@showEmail">
-        <div class="mydialog-final">
-            <div class="mydialog-final-title">
-                <h2>Email Applicant</h2>
+        <MatDialog @bind-IsOpen="@showEmail">
+            <div class="mydialog-final">
+                <div class="mydialog-final-title">
+                    <h2>Email Applicant</h2>
+                </div>
+                <div class="mydialog-final-body">
+                    <textarea class="mydialog-final-textarea" @bind="emailContent" placeholder="Email applicant"></textarea>
+                </div>
+                <div class="mydialog-final-button">
+                    <button class="default-button-style" @onclick="() => { showEmail = false; }" disabled="@sendEmailPressed">Cancel</button>
+                    <button class="default-button-style" @onclick="SendEmail" disabled="@sendEmailPressed">Send</button>
+                </div>
             </div>
-            <div class="mydialog-final-body">
-                <textarea class="mydialog-final-textarea" @bind="emailContent" placeholder="Email applicant"></textarea>
-            </div>
-            <div class="mydialog-final-button">
-                <button class="default-button-style" @onclick="() => { showEmail = false; }" disabled="@sendEmailPressed">Cancel</button>
-                <button class="default-button-style" @onclick="SendEmail" disabled="@sendEmailPressed">Send</button>
-            </div>
-        </div>
-    </MatDialog>
+        </MatDialog>
 
     }
-    else
+    else if (applications == null)
     {
         <MudProgressCircular Class="loading-icon" Size="Size.Large" Indeterminate="true" />
     }
@@ -662,42 +662,44 @@
                 <div class="mini-modal-frame-documents">
                     @if (loadingDocumentInfo)
                     {
-                      <div>
-                                <MudProgressCircular Size="Size.Large" Indeterminate="true" />
-                      </div>                      
+                        <div>
+                            <MudProgressCircular Size="Size.Large" Indeterminate="true" />
+                        </div>
                     }
-                    else{
+                    else
+                    {
 
-                        @if(  @getUserDoc.CV.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false)
+                        @if (@getUserDoc.CV.Count() == 0 || noDocuments == true || documentsHasBeenAdded == false)
                         {
                             <div>
-                            No CV's found
+                                No CV's found
                             </div>
-                        }else
+                        }
+                        else
                         {
                             <div class="zoom-documunts-onclick" @onclick='() => toggleMagnifiedDocument("linkedincv",true)'></div>
                             <iframe src="@getUserDoc.CV" style="width: 80%; height: 80%;"></iframe>
                             <div style="color: #00bcae; font-family: opensans-condensed-bold">
                                 CV
                             </div>
-                        }                   
+                        }
                         @*<div style="color: #00bcae; font-family: opensans-condensed-bold">
-                            CV
-                        </div>*@
+                CV
+                </div>*@
                     }
 
                 </div>
-                <div class="mini-modal-frame-documents" >
-                   @if (loadingDocumentInfo)
+                <div class="mini-modal-frame-documents">
+                    @if (loadingDocumentInfo)
                     {
-                      <div>
-                                <MudProgressCircular Size="Size.Large" Indeterminate="true" />
-                      </div>                      
+                        <div>
+                            <MudProgressCircular Size="Size.Large" Indeterminate="true" />
+                        </div>
                     }
                     else
-                    {                    
-                    
-                        @if (@getUserDoc.MatricCertificate.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false)
+                    {
+
+                        @if (@getUserDoc.MatricCertificate.Count() == 0 || noDocuments == true || documentsHasBeenAdded == false)
                         {
 
                             <div>
@@ -713,19 +715,19 @@
                             </div>
                         }
                     }
-                    
+
                 </div>
-                <div class="mini-modal-frame-documents" >
+                <div class="mini-modal-frame-documents">
 
                     @if (loadingDocumentInfo)
                     {
-                      <div>
-                                <MudProgressCircular Size="Size.Large" Indeterminate="true" />
-                      </div>                      
+                        <div>
+                            <MudProgressCircular Size="Size.Large" Indeterminate="true" />
+                        </div>
                     }
                     else
                     {
-                        @if (@getUserDoc.UniversityTranscript.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false)
+                        @if (@getUserDoc.UniversityTranscript.Count() == 0 || noDocuments == true || documentsHasBeenAdded == false)
                         {
                             <div>
                                 No University Transcript found
@@ -746,13 +748,13 @@
                 <div class="mini-modal-frame-documents">
                     @if (loadingDocumentInfo)
                     {
-                      <div>
-                                <MudProgressCircular Size="Size.Large" Indeterminate="true" />
-                      </div>                      
+                        <div>
+                            <MudProgressCircular Size="Size.Large" Indeterminate="true" />
+                        </div>
                     }
                     else
                     {
-                        @if (@getUserDoc.AdditionalCert1.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false)
+                        @if (@getUserDoc.AdditionalCert1.Count() == 0 || noDocuments == true || documentsHasBeenAdded == false)
                         {
                             <div>
                                 No Certificate found
@@ -765,20 +767,20 @@
                             <div style="color: #00bcae; font-family: opensans-condensed-bold">
                                 Certificate A
                             </div>
-                         }
-                     }
+                        }
+                    }
                 </div>
-                <div class="mini-modal-frame-documents" >
+                <div class="mini-modal-frame-documents">
                     @if (loadingDocumentInfo)
                     {
-                      <div>
-                                <MudProgressCircular Size="Size.Large" Indeterminate="true" />
-                      </div>                      
+                        <div>
+                            <MudProgressCircular Size="Size.Large" Indeterminate="true" />
+                        </div>
                     }
                     else
                     {
-                    
-                        @if (@getUserDoc.AdditionalCert2.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false )
+
+                        @if (@getUserDoc.AdditionalCert2.Count() == 0 || noDocuments == true || documentsHasBeenAdded == false)
                         {
                             <div>
                                 No Certificate found
@@ -786,25 +788,25 @@
                         }
                         else
                         {
-                           <div class="zoom-documunts-onclick" @onclick='() => toggleMagnifiedDocument("additional-documents-2" , true)'>  </div>
+                            <div class="zoom-documunts-onclick" @onclick='() => toggleMagnifiedDocument("additional-documents-2" , true)'>  </div>
                             <iframe src="@getUserDoc.AdditionalCert2" style="width: 80%; height: 80%;"></iframe>
                             <div style="color: #00bcae; font-family: opensans-condensed-bold">
                                 Certificate B
-                            </div> 
+                            </div>
                         }
                     }
-                    
+
                 </div>
                 <div class="mini-modal-frame-documents">
                     @if (loadingDocumentInfo)
                     {
-                      <div>
-                                <MudProgressCircular Size="Size.Large" Indeterminate="true" />
-                      </div>                      
+                        <div>
+                            <MudProgressCircular Size="Size.Large" Indeterminate="true" />
+                        </div>
                     }
                     else
                     {
-                        @if (@getUserDoc.AdditionalCert2.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false)
+                        @if (@getUserDoc.AdditionalCert2.Count() == 0 || noDocuments == true || documentsHasBeenAdded == false)
                         {
                             <div>
                                 No Certificate found
@@ -819,7 +821,7 @@
                             </div>
                         }
                     }
-                    
+
                 </div>
             </div>
         </div>
@@ -830,14 +832,15 @@
 <!--Magnified Document-->
 @if (showMagnifiedDocument)
 {
-    @switch(selectedDocument){
+    @switch (selectedDocument)
+    {
         case "linkedincv":
             <div class="dimmed">
-                <div class="img-magnified">                    
+                <div class="img-magnified">
                     <iframe src="@getUserDoc.CV" class="documents-size"></iframe>
-                </div>                            
+                </div>
             </div>
-            <input type="button" class="btn-close maginified-documents-close"  @onclick='() => toggleMagnifiedDocument("", false)'/>
+            <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)' />
 
             break;
         case "matric-certificates":
@@ -845,17 +848,17 @@
                 <div class="img-magnified">
                     <iframe src="@getUserDoc.MatricCertificate" class="documents-size"></iframe>
                 </div>
-                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)'/>
+                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)' />
             </div>
 
             break;
         case "transcripts":
-            
+
             <div class="dimmed">
                 <div class="img-magnified">
                     <iframe src="@getUserDoc.UniversityTranscript" class="documents-size"></iframe>
                 </div>
-                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)'/>
+                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)' />
             </div>
 
             break;
@@ -865,7 +868,7 @@
                 <div class="img-magnified">
                     <iframe src="@getUserDoc.AdditionalCert1" class="documents-size"></iframe>
                 </div>
-                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)'/>
+                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)' />
             </div>
 
             break;
@@ -875,7 +878,7 @@
                 <div class="img-magnified">
                     <iframe src="@getUserDoc.AdditionalCert2" class="documents-size"></iframe>
                 </div>
-                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)'/>
+                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)' />
             </div>
 
             break;
@@ -884,7 +887,7 @@
                 <div class="img-magnified">
                     <iframe src="@getUserDoc.AdditionalCert3" class="documents-size"></iframe>
                 </div>
-                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)'/>
+                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)' />
             </div>
             break;
 
@@ -908,8 +911,9 @@
                 <table>
                     <thead>
                         <tr>
-                            <td class="title-modal">Application Form:
-         </td>
+                            <td class="title-modal">
+                                Application Form:
+                            </td>
                             <td class="close-modal" @onclick="toggleApplicationForm">x</td>
                         </tr>
                         <tr></tr>
@@ -1235,7 +1239,7 @@
     private IList<CandidateRecommender> candidates = null;
     private IList<AppUser> users = new List<AppUser>();
     private IList<ApplicationPhaseHelper> phasesHelpers = new List<ApplicationPhaseHelper>();
-    private IList<ApplicationModel> applications = new List<ApplicationModel>();
+    private IList<ApplicationModel> applications = null;
     private IList<Application> Applications = new List<Application>();
     private IList<ApplicationPhase> phases = new List<ApplicationPhase>();
     private IList<PersonalInformation> personalInformation = new List<PersonalInformation>();
@@ -1278,7 +1282,7 @@
 
         users = await httpClient.GetListJsonAsync<List<AppUser>>("user", new AuthenticationHeaderValue("Bearer", token));
         phasesHelpers = await httpClient.GetListJsonAsync<List<ApplicationPhaseHelper>>("ApplicationPhaseHelper", new AuthenticationHeaderValue("Bearer", token));
-        applications = await httpClient.GetListJsonAsync<List<ApplicationModel>>("Application", new AuthenticationHeaderValue("Bearer", token));
+        applications = await httpClient.GetListJsonAsync<List<ApplicationModel>>($"Application/job/{JobId}", new AuthenticationHeaderValue("Bearer", token));
         phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("ApplicationPhase", new AuthenticationHeaderValue("Bearer", token));
         personalInformation = await httpClient.GetListJsonAsync<List<PersonalInformation>>("PersonalInformation", new AuthenticationHeaderValue("Bearer", token));
 
@@ -1401,7 +1405,7 @@
                 documentsHasBeenAdded = true;
                 break;
             }
-            Console.WriteLine("check if user has added documents " + documentsHasBeenAdded );
+            Console.WriteLine("check if user has added documents " + documentsHasBeenAdded);
         }
 
 

@@ -34,6 +34,7 @@ namespace XebecPortal.UI.Pages.HR
         private List<CollaboratorsAssigned> collaboratorsAssigned;
         private List<CollaboratorsAssigned> collaboratorsAssigned2;
         private List<PersonalInformation> personalInformation;
+        private List<string> statuses = new() { "Draft", "Open", "Closed"};
         private List<Department> departments;
         private List<string> locations = new() { "Eastern Cape", "Free State", " Gauteng", "KwaZulu-Natal", "Limpopo", "Mpumalanga", "Northen Cape", "North West", "Western Cape" };
         private MudBlazor.DialogOptions options = new() { CloseButton = true, FullWidth = true};
