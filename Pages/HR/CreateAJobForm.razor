@@ -1,4 +1,6 @@
-﻿@inject HttpClient HttpClient
+﻿@using System.Net.Http.Headers
+@using XebecPortal.UI.Utils.Handlers
+@inject HttpClient HttpClient
 @inject IJSRuntime jsRuntime
 @inject NavigationManager nav
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
@@ -488,7 +490,7 @@ else
     </div>
 
     <div class="createjob-form-container">
-        <EditForm Model="@TempJob" class="createjob-form" OnValidSubmit="@saveJobState">
+        <EditForm EditContext="@EC" class="createjob-form" OnValidSubmit="@saveJobState">
             <DataAnnotationsValidator />
             @if (manageDep)
             {
@@ -691,18 +693,20 @@ else
                     <h1 style="font-size: 38px !important;">Create a job form</h1>
                 </div>
 
-                <div class="createjob-form-individual">
+                <div class="createjob-form-individual" style="position: relative;">
                     <div class="text-font-styling"> Job Name</div>
-                    <InputText class="create-form-text" id="job-name" placeholder="" @bind-Value="TempJob.Title" />
+                    <InputText class="create-form-text" id="job-name" placeholder="" @bind-Value="TempJob.Title"/>
+                    <ValidationMessage For="@(() => TempJob.Title)" style="font-size: 0.8em; position: absolute; bottom: 0; bottom: 16px;"/>
                 </div>
 
                 <div class="spacing-for-stuff">
                     <div class="form-group createjob-form-group">
                         <!--Find out how departments is null and jobtypes isn't-->
-                        <div class="createjob-form-individual">
+                        <div class="createjob-form-individual" style="position: relative;">
                             <!--style="width: 200%;"-->
                             <div class="text-font-styling">Department Information</div>
-                            <InputSelect class="createjob-select" @bind-Value="departments.Id" @onfocusout="() => displayDepName(departments.Id)">                                
+                            <ValidationMessage For="@(() => TempJob.DepartmentId)" style="font-size: 0.8em; position: absolute; bottom: 16px;"/>
+                            <InputSelect class="createjob-select" @bind-Value="departments.Id" @onfocusout="() => displayDepName(departments.Id)">                             
                                 <option selected disabled value="0">Select Department</option>
                                 @foreach (var item in Departments)
                                 {
@@ -721,9 +725,10 @@ else
 
                 <div class="spacing-for-stuff">
                     <div class="form-group createjob-form-group">
-                        <div class="createjob-form-individual">
+                        <div class="createjob-form-individual" style="position: relative;">
                             <!--style="width: 200%;"-->
                             <div class="text-font-styling">Company Information</div>
+                            <ValidationMessage For="@(() => TempJob.CompanyId)" style="font-size: 0.8em; position: absolute; bottom: 16px;"/>
                             <InputSelect class="createjob-select" @bind-Value="companies.Id" @onfocusout="() => displayCompName(companies.Id)">
                                 <!--style="width: 107%;"--> 
                                 <option selected disabled value="0">Select Company</option>
@@ -744,8 +749,9 @@ else
 
                 <div class="spacing-for-stuff">
                     <div class="form-group createjob-form-group">
-                        <div class="createjob-form-individual">
+                        <div class="createjob-form-individual" style="position: relative;">
                             <div class="text-font-styling">Location Information</div>
+                            <ValidationMessage For="@(() => TempJob.PolicyId)" style="font-size: 0.8em; position: absolute; bottom: 16px;"/>
                             <InputSelect class="createjob-select" @bind-Value="policies.Id" @onfocusout="() => displayPolicyName(policies.Id)">
                                 <option selected disabled value="0">Select WFH Policy</option>
                                 @foreach (var policy in Policies)
@@ -754,7 +760,8 @@ else
                                 }
                             </InputSelect>
                         </div>
-                        <div class="createjob-form-individual">
+                        <div class="createjob-form-individual" style="position: relative;">
+                        <ValidationMessage For="@(() => TempJob.LocationId)" style="font-size: 0.8em; position: absolute; bottom: 16px;"/>
                             <InputSelect class="createjob-select" style="margin-top: 2.8vh;" @bind-Value="locations.Id" @onfocusout="() => displayLocationName(locations.Id)">
                                 <option selected disabled value="0">Select Office Location</option>
                                 @foreach (var location in Locations)
@@ -767,8 +774,9 @@ else
                 </div>
 
                 <div class="spacing-for-stuff">
-                    <div class="createjob-form-individual">
+                    <div class="createjob-form-individual" style="position: relative;">
                         <div class="text-font-styling">Job Type Information</div>
+                        <ValidationMessage For="@(() => TempJob.JobTypeId)" style="font-size: 0.8em; position: absolute; bottom: 16px;"/>
                         <InputSelect class="createjob-select" @bind-Value="@jobtype.JobTypeId" @onblur="() => displayTypeName(jobtype.JobTypeId)">
                             <option selected disabled value="0">Select Job Type</option>
                             @foreach (var item in jobTypes)
@@ -781,20 +789,22 @@ else
                 </div>
 
                 <div class="spacing-for-stuff">
-                    <div class="createjob-form-individual">
+                    <div class="createjob-form-individual" style="position: relative;">
                         <div class="text-font-styling">Application Due Date:</div>
+                        <ValidationMessage For="@(() => TempJob.DueDate)" style="font-size: 0.8em; position: absolute; bottom: 16px;"/>
                         <InputDate class="createjob-form-date" @bind-Value="TempJob.DueDate" style="padding-right: 5px;" />
                     </div>
                 </div>
 
                 <div class="spacing-for-stuff">
-                    <div class="createjob-form-individual">
+                    <div class="createjob-form-individual" style="position: relative;">
                         <div class="text-font-styling">Job Advert Description:</div>
+                        <ValidationMessage For="@(() => TempJob.Description)" style="font-size: 0.8em; position: absolute; bottom: 16px;"/>
                         <InputTextArea rows="3" style="padding-right: 5px;" @bind-Value="TempJob.Description" />
                     </div>
                 </div>
             }
-            <div class="validation-message"><ValidationSummary /></div>
+            @*<div class="validation-message"><ValidationSummary /></div>*@
 
             @if (allowedToRedirect)
             {
@@ -904,9 +914,14 @@ else
 
     private Task OnLocationChanged(ChangeEventArgs e)
     {
+        
+
+
+        Console.WriteLine("testtestettestet");
         TempJob.Location.Name = e.Value.ToString();
         return ValueChanged.InvokeAsync(TempJob.LocationId.ToString());
     }
+
 
 
 
@@ -925,6 +940,10 @@ else
         TempJob.Status = e.Value.ToString();
         return ValueChanged.InvokeAsync(TempJob.Status);
     }
+
+
+
+
 
     //private async Task Save()
     //{

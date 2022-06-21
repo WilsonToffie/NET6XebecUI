@@ -30,11 +30,13 @@ input[type = "button"], input[type = "submit"], button {
     border-radius: 0.4em;
 }
 
-/*    input[type = "button"], input[type = "submit"]:hover {
+    input[type = "button"]:disabled, input[type = "submit"]:disabled{
+        background-color: grey;
+    }
+    /*    input[type = "button"], input[type = "submit"]:hover {
         transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
         color: rgba(0,0,0,0.6);
     }*/
-
     .default-button-style {
         background-color: rgba(0, 188, 174,1);
         color: white;
@@ -55,23 +57,31 @@ input[type = "button"], input[type = "submit"], button {
         color: rgba(0,0,0,0.6);
     }
 
-    button {
-        background-color: rgba(0, 188, 174,1);
-        color: white;
-        width: 100px;
-        height: 5vh;
-        border: none;
-        text-align: center;
-        font-size: 1em;
-        font-family: opensans-condensed-bold;
-        font-weight: 600;
-        border: none;
-        border-radius: 0.4em;
-    }
+        .default-button-style:disabled{
+            background-color: grey;
+        }
+
+        button {
+            background-color: rgba(0, 188, 174,1);
+            color: white;
+            width: 100px;
+            height: 5vh;
+            border: none;
+            text-align: center;
+            font-size: 1em;
+            font-family: opensans-condensed-bold;
+            font-weight: 600;
+            border: none;
+            border-radius: 0.4em;
+        }
 
         button:hover {
             transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
             color: rgba(0,0,0,0.6);
+        }
+
+        button:disabled{
+            background-color: grey;
         }
 /**/
 /* Global scroll bar changes */
