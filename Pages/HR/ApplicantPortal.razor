@@ -660,21 +660,27 @@
             </div>
             <div class="modal-frame-documents-rows">
                 <div class="mini-modal-frame-documents">
-                    @if(  @getUserDoc.CV.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false)
+                    @if (loadingDocumentInfo)
                     {
-                        <div>
-                        No CV's found
-                        </div>
+                      <div>
+                                <MudProgressCircular Size="Size.Large" Indeterminate="true" />
+                      </div>                      
                     }
-                    else
-                    {
-                        <div class="zoom-documunts-onclick" @onclick='() => toggleMagnifiedDocument("linkedincv",true)'></div>
-                        <iframe src="@getUserDoc.CV" style="width: 80%; height: 80%;"></iframe>
+                    else{
 
-                        <div style="color: #00bcae; font-family: opensans-condensed-bold">
-                            CV
-                        </div>
-                        
+                        @if(  @getUserDoc.CV.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false)
+                        {
+                            <div>
+                            No CV's found
+                            </div>
+                        }else
+                        {
+                            <div class="zoom-documunts-onclick" @onclick='() => toggleMagnifiedDocument("linkedincv",true)'></div>
+                            <iframe src="@getUserDoc.CV" style="width: 80%; height: 80%;"></iframe>
+                            <div style="color: #00bcae; font-family: opensans-condensed-bold">
+                                CV
+                            </div>
+                        }                   
                         @*<div style="color: #00bcae; font-family: opensans-condensed-bold">
                             CV
                         </div>*@
@@ -682,90 +688,136 @@
 
                 </div>
                 <div class="mini-modal-frame-documents" >
-                    @if (@getUserDoc.MatricCertificate.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false)
+                   @if (loadingDocumentInfo)
                     {
-
-                        <div>
-                            No Matric Certificate found
-                        </div>
+                      <div>
+                                <MudProgressCircular Size="Size.Large" Indeterminate="true" />
+                      </div>                      
                     }
                     else
-                    {
-                        <div class="zoom-documunts-onclick" @onclick='() => toggleMagnifiedDocument("matric-certificates", true)'>  </div>
-                        <iframe src="@getUserDoc.MatricCertificate" style="width: 80%; height: 80%;"></iframe>
-                        <div style="color: #00bcae; font-family: opensans-condensed-bold">
-                            Matric Certificate
-                        </div>
-                        
-                    }
+                    {                    
+                    
+                        @if (@getUserDoc.MatricCertificate.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false)
+                        {
 
+                            <div>
+                                No Matric Certificate found
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="zoom-documunts-onclick" @onclick='() => toggleMagnifiedDocument("matric-certificates", true)'>  </div>
+                            <iframe src="@getUserDoc.MatricCertificate" style="width: 80%; height: 80%;"></iframe>
+                            <div style="color: #00bcae; font-family: opensans-condensed-bold">
+                                Matric Certificate
+                            </div>
+                        }
+                    }
                     
                 </div>
                 <div class="mini-modal-frame-documents" >
-                    @if (@getUserDoc.UniversityTranscript.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false)
+
+                    @if (loadingDocumentInfo)
                     {
-                        <div>
-                            No University Transcript found
-                        </div>
+                      <div>
+                                <MudProgressCircular Size="Size.Large" Indeterminate="true" />
+                      </div>                      
                     }
                     else
                     {
-                        <div class="zoom-documunts-onclick" @onclick='() => toggleMagnifiedDocument("transcripts", true)'>  </div>
-                        <iframe src="@getUserDoc.UniversityTranscript" style="width: 80%; height: 80%;"></iframe>
-                        <div style="color: #00bcae; font-family: opensans-condensed-bold">
-                            Academic Transcript
-                        </div>
+                        @if (@getUserDoc.UniversityTranscript.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false)
+                        {
+                            <div>
+                                No University Transcript found
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="zoom-documunts-onclick" @onclick='() => toggleMagnifiedDocument("transcripts", true)'>  </div>
+                            <iframe src="@getUserDoc.UniversityTranscript" style="width: 80%; height: 80%;"></iframe>
+                            <div style="color: #00bcae; font-family: opensans-condensed-bold">
+                                Academic Transcript
+                            </div>
+                        }
                     }
                 </div>
             </div>
             <div class="modal-frame-documents-rows">
                 <div class="mini-modal-frame-documents">
-                    @if (@getUserDoc.AdditionalCert1.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false)
+                    @if (loadingDocumentInfo)
                     {
-                        <div>
-                            No Certificate found
-                        </div>
+                      <div>
+                                <MudProgressCircular Size="Size.Large" Indeterminate="true" />
+                      </div>                      
                     }
                     else
                     {
-                        <div class="zoom-documunts-onclick" @onclick='() => toggleMagnifiedDocument("additional-documents-1" , true)'>  </div>
-                        <iframe src="@getUserDoc.AdditionalCert1" style="width: 80%; height: 80%;"></iframe>
-                        <div style="color: #00bcae; font-family: opensans-condensed-bold">
-                            Certificate A
-                        </div>
+                        @if (@getUserDoc.AdditionalCert1.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false)
+                        {
+                            <div>
+                                No Certificate found
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="zoom-documunts-onclick" @onclick='() => toggleMagnifiedDocument("additional-documents-1" , true)'>  </div>
+                            <iframe src="@getUserDoc.AdditionalCert1" style="width: 80%; height: 80%;"></iframe>
+                            <div style="color: #00bcae; font-family: opensans-condensed-bold">
+                                Certificate A
+                            </div>
+                         }
                      }
                 </div>
                 <div class="mini-modal-frame-documents" >
-                    @if (@getUserDoc.AdditionalCert2.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false )
+                    @if (loadingDocumentInfo)
                     {
-                        <div>
-                            No Certificate found
-                        </div>
+                      <div>
+                                <MudProgressCircular Size="Size.Large" Indeterminate="true" />
+                      </div>                      
                     }
                     else
                     {
-                       <div class="zoom-documunts-onclick" @onclick='() => toggleMagnifiedDocument("additional-documents-2" , true)'>  </div>
-                        <iframe src="@getUserDoc.AdditionalCert2" style="width: 80%; height: 80%;"></iframe>
-                        <div style="color: #00bcae; font-family: opensans-condensed-bold">
-                            Certificate B
-                        </div> 
+                    
+                        @if (@getUserDoc.AdditionalCert2.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false )
+                        {
+                            <div>
+                                No Certificate found
+                            </div>
+                        }
+                        else
+                        {
+                           <div class="zoom-documunts-onclick" @onclick='() => toggleMagnifiedDocument("additional-documents-2" , true)'>  </div>
+                            <iframe src="@getUserDoc.AdditionalCert2" style="width: 80%; height: 80%;"></iframe>
+                            <div style="color: #00bcae; font-family: opensans-condensed-bold">
+                                Certificate B
+                            </div> 
+                        }
                     }
                     
                 </div>
                 <div class="mini-modal-frame-documents">
-                    @if (@getUserDoc.AdditionalCert2.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false)
+                    @if (loadingDocumentInfo)
                     {
-                        <div>
-                            No Certificate found
-                        </div>
+                      <div>
+                                <MudProgressCircular Size="Size.Large" Indeterminate="true" />
+                      </div>                      
                     }
                     else
                     {
-                        <div class="zoom-documunts-onclick" @onclick='() => toggleMagnifiedDocument("additional-documents-3" , true)'>  </div>
-                        <iframe src="@getUserDoc.AdditionalCert3" style="width: 80%; height: 80%;"></iframe>
-                        <div style="color: #00bcae; font-family: opensans-condensed-bold">
-                            Certificate C
-                        </div>
+                        @if (@getUserDoc.AdditionalCert2.Count() == 0 || noDocuments == true  || documentsHasBeenAdded == false)
+                        {
+                            <div>
+                                No Certificate found
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="zoom-documunts-onclick" @onclick='() => toggleMagnifiedDocument("additional-documents-3" , true)'>  </div>
+                            <iframe src="@getUserDoc.AdditionalCert3" style="width: 80%; height: 80%;"></iframe>
+                            <div style="color: #00bcae; font-family: opensans-condensed-bold">
+                                Certificate C
+                            </div>
+                        }
                     }
                     
                 </div>
@@ -1201,6 +1253,7 @@
     private bool noDocuments = false;
     private bool documentsHasBeenAdded = false;
     private bool sendEmailPressed = false;
+    private bool loadingDocumentInfo = false;
 
     private currentPhase phase { get; set; }
     [Parameter] public int JobId { get; set; }
@@ -1335,6 +1388,7 @@
 
     private async Task toggleDocuments(AppUser user)
     {
+        loadingDocumentInfo = true;
         Console.WriteLine("User ID: " + user.id);
         showDocuments = !showDocuments;
         SetSelectedCandidate(user);
@@ -1374,6 +1428,7 @@
                 Console.WriteLine("No Documents status: " + noDocuments);
             }
         }
+        loadingDocumentInfo = false;
     }
 
     private void toggleDocuments()
