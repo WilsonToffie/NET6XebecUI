@@ -105,9 +105,10 @@
     .crown {
         display: flex;
         justify-content: flex-end;
-        background-image: url(/Img/golden-crown-logo.jpg);
+        background: url(/Img/golden-crown-logo.jpg); 
         margin: 5px;
         width: 30px;
+        height: 20px;
         margin-left: 200px;
         position: absolute;
     }
@@ -199,6 +200,12 @@
         justify-content: space-evenly;
         color: #FFFFFF;
     }
+
+    .crown-position{
+        justify-content: flex-end;
+        display: flex;
+
+    }
 </style>
 
 
@@ -268,19 +275,19 @@
                     <div class="collaborators-select">
 
                         <select class="collaborator-select" @onchange="AddToCollaborator">
-                            <option>Select collaborator</option>
+                            <option value="0" selected disabled>Select collaborator</option>
                             @foreach (var colab in AppUserList)
                             {
-                                <option>@colab.name</option>
+                                <option>@colab.name </option>
                             }
                         </select>
                     </div>
                     <div class="hiring-lead-select">
                         <select @onchange="TestClick" class="collaborator-select">
-                            <option>Select Hiring Lead</option>
+                            <option value="0" selected disabled>Select Hiring Lead</option>
                             @foreach (var lead in ListOfCollaborators)
                             {
-                                <option value="@lead.id">@lead.name  @lead.surname </option>
+                                <option value="@lead.id">@lead.name @lead.surname </option>
                             }
                         </select>
                     </div>
@@ -291,25 +298,47 @@
                         <div class="inner-selected-collaborators">
                             @*<img src="/Img/golden-crown-logo.jpg" alt="avator" class="crown" />*@
                             <div class="collaborator-details">
-                                <img src="@collab.imageUrl" alt="avator" class="colab-image" />
-                                <div class="colab-name">
-                                    <p>@collab.name</p><p>@collab.surname</p>
-                                </div>
+                                @if (string.IsNullOrEmpty(@collab.imageUrl))
+                                {
+                                    <img src="@defaultCollaboratorImage" alt="avator" class="colab-image" />
+                                    <div class="colab-name">
+                                        <p>@collab.name</p> &nbsp; <p>@collab.surname</p>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <img src="@collab.imageUrl" alt="avator" class="colab-image" />
+                                    <div class="colab-name">
+                                        <p>@collab.name</p> &nbsp; <p>@collab.surname</p>
+                                    </div>                                   
+                                }                                
                             </div>
                             <div class="collab-remove">
-                                <input type="button" value="Remove" class="button-functions" @onclick="() => RemoveCollab(collab)" style="margin-top:0px; height:23px;" />
+                                <input type="button" value="Remove" class="default-button-style" @onclick="() => RemoveCollab(collab)" style="margin-top:0px; height:23px;" />
                             </div>
                         </div>
                     }
                     @foreach (var hiringLead in hiringLeads)
                     {
                         <div class="inner-selected-collaborators">
-                            <img src="/Img/golden-crown-logo.jpg" alt="avator" class="crown" />
+                            @*<img src="/Img/golden-crown-logo.jpg" style="width: 30px;" alt="avator" class="crown"/> *@<!---->
+                            <div class="crown"></div>
                             <div class="collaborator-details">
-                                <img src="@hiringLead.imageUrl" alt="avator" class="colab-image" />
-                                <div class="colab-name">
-                                    <p>@hiringLead.name</p><p>@hiringLead.surname</p>
-                                </div>
+                                @if (string.IsNullOrEmpty(@hiringLead.imageUrl))
+                                {
+                                    <img src="@defaultCollaboratorImage" alt="avator" class="colab-image" />
+                                    <div class="colab-name">
+                                        @hiringLead.name &nbsp; @hiringLead.surname
+                                    </div>
+                                }
+                                else
+                                {
+                                    <img src="@hiringLead.imageUrl" alt="avator" class="colab-image" />
+                                    <div class="colab-name">
+                                        <p>@hiringLead.name</p><p>@hiringLead.surname</p>
+                                    </div>
+                                }
+                                
                             </div>
                             <div class="collab-remove">
                                 <input type="button" value="Remove" class="button-functions" @onclick="() => RemoveLead(hiringLead)" style="margin-top:0px; height:23px;" />
@@ -455,6 +484,7 @@ else if (prevPage)
 
     AppUser currentHiringLead;
 
+    private string defaultCollaboratorImage = "https://xebecstorage.blob.core.windows.net/profile-images/0";
 
     string token;
 

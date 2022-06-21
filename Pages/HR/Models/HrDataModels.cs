@@ -254,24 +254,24 @@ namespace XebecPortal.UI.Pages.HR
 
     public class AppUser
     {
-        public int id { get; set; }
+        public int id { get; set; } = 0;
 
-        public string email { get; set; }
+        public string email { get; set; } = String.Empty;
 
-        public string role { get; set; }
+        public string role { get; set; } = String.Empty;
 
-        public string passwordhash { get; set; }
+        public string passwordhash { get; set; } = String.Empty;
 
-        public string name { get; set; }
+        public string name { get; set; } = String.Empty;
 
-        public string surname { get; set; }
+        public string surname { get; set; } = String.Empty;
 
-        public string key { get; set; }
+        public string key { get; set; } = String.Empty;
 
         public bool registered { get; set; }
 
-        public int linkVisits { get; set; }
-        public string imageUrl { get; set; }
+        public int linkVisits { get; set; } = 0;
+        public string imageUrl { get; set; } = String.Empty;
     }
 
     public class JobPlatformHelper
