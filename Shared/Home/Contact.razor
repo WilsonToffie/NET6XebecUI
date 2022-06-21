@@ -228,8 +228,8 @@
 
                 <EditForm Model="@Temp" OnValidSubmit="@Add" >
                     <DataAnnotationsValidator />
-                    <ValidationMessage For="@(() => Temp.career)"/>
-                    <InputSelect @bind-Value="Temp.career" @onchange="Test" >
+                    <ValidationMessage For="@(() => Temp.career)" style="align-self:center;"/>
+                    <InputSelect @bind-Value="Temp.career"  >
                         
                         <option style="color:#000000; font-weight:600" value="" disabled selected hidden>Select Department</option>
                         <option   style="color:#000000; font-weight:600" value="sales">Nebula Sales</option>
@@ -352,7 +352,7 @@
             Console.WriteLine($"{temp.career}, {temp.email}, {temp.name}, {temp.surname}, {temp.demo}, {temp.query}");
         }
         Temp = new();
-        await JSRuntime.InvokeAsync<object>("alert", "Questions saved successfully.");
+        await JSRuntime.InvokeAsync<object>("alert", $"Thank you for contacting us. A response will be sent to you soon.");
         
     }
    
