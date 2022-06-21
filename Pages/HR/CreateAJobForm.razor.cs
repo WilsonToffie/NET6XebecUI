@@ -9,6 +9,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Components;
 using System.Net.Http.Headers;
 using XebecPortal.UI.Utils.Handlers;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace XebecPortal.UI.Pages.HR
 {
@@ -80,8 +81,12 @@ namespace XebecPortal.UI.Pages.HR
 
         public List<FormQuestion> ChosenQuestions { get; set; }
 
+        EditContext EC;
+
         protected override async Task OnInitializedAsync()
-        {            
+        {
+            EC = new EditContext(TempJob);
+
             token = await localStorage.GetItemAsync<string>("jwt_token");
 
             Company = await HttpClient.GetListJsonAsync<List<Company>>($"Company", new AuthenticationHeaderValue("Bearer", token));
@@ -409,8 +414,7 @@ namespace XebecPortal.UI.Pages.HR
         private async Task displayDepName(int depNameID)
         {
             TempJob.DepartmentId = depNameID;
-
-            
+            EC.Validate();
 
             if (depNameID > 0)
             {
@@ -418,11 +422,13 @@ namespace XebecPortal.UI.Pages.HR
                 departments.Id = displayDepartment.Id;
                 departments.Name = displayDepartment.Name;
             }
+
         }
 
         private async Task displayTypeName(int jobTypeId)
         {
             TempJob.JobTypeId = jobTypeId;
+            EC.Validate();
 
             if (jobTypeId > 0)
             {
@@ -435,6 +441,7 @@ namespace XebecPortal.UI.Pages.HR
         private async Task displayCompName(int compID)
         {
             TempJob.CompanyId = compID;
+            EC.Validate();
 
             if (compID > 0)
             {
@@ -447,6 +454,7 @@ namespace XebecPortal.UI.Pages.HR
         private async Task displayPolicyName(int policyID)
         {
             TempJob.PolicyId = policyID;
+            EC.Validate();
 
             if (policyID > 0)
             {
@@ -460,6 +468,7 @@ namespace XebecPortal.UI.Pages.HR
         private async Task displayLocationName(int locationId)
         {
             TempJob.LocationId = locationId;
+            EC.Validate();
 
             if (locationId > 0)
             {
