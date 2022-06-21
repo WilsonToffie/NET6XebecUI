@@ -72,10 +72,16 @@ namespace XebecPortal.UI.Pages.HR
             jobListFilter = jobList;
             jobPagedList = jobListFilter.ToPagedList(1, 17);
             displayJobDetail = jobListFilter.FirstOrDefault();
-            DisplayJobDetail(displayJobDetail.Id);
-            OpenJobCollabToolTip(displayJobDetail.Id);
-
-
+            Console.WriteLine("JobList count: " + jobList.Count);
+            Console.WriteLine("JobList Filter count: " + jobListFilter.Count);
+            if (jobList.Count == 0)
+            {
+            }
+            else 
+            { 
+                DisplayJobDetail(displayJobDetail.Id);
+                OpenJobCollabToolTip(displayJobDetail.Id);
+            }          
         }
 
         protected override Task OnAfterRenderAsync(bool firstRender)
