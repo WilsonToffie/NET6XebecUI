@@ -26,17 +26,17 @@
 
     .collaborators-form-title {
         /*height: 15%;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        font-family: opensans-condensed-bold;
-        font-size: 2em;
-        font-weight: 900;
-        color: #004393;
-        margin-top: 0.5vh;
-        text-transform: uppercase;*/
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-family: opensans-condensed-bold;
+            font-size: 2em;
+            font-weight: 900;
+            color: #004393;
+            margin-top: 0.5vh;
+            text-transform: uppercase;*/
         text-align: center;
     }
 
@@ -73,7 +73,7 @@
         padding: 0 25px 0 25px;
         overflow-y: scroll;
         /*display: grid;
-        grid-template-columns: repeat(auto-fill,minmax(30%, 1fr));*/
+            grid-template-columns: repeat(auto-fill,minmax(30%, 1fr));*/
     }
 
         .selected-collaborators > * {
@@ -83,14 +83,16 @@
     .inner-selected-collaborators {
         background-color: rgba(255,255,255,1);
         border: solid white 0.1em;
-        box-shadow: 0 2px 5px 0 rgb(0 0 0 / 20%), 0 2px 10px 0 rgb(0 0 0 / 10%);
+        /*        box-shadow: 0 2px 5px 0 rgb(0 0 0 / 20%), 0 2px 10px 0 rgb(0 0 0 / 10%);*/
+        box-shadow: 0 3px 3px 3px rgb(0 0 0 / 20%);
         border-radius: 5px;
         height: 78px;
+        margin: 3px;
     }
 
     .collaborator-details {
         display: flex;
-        justify-content: space-around;
+        /*justify-content: space-around;*/
         height: 35%;
     }
 
@@ -103,12 +105,19 @@
     .crown {
         display: flex;
         justify-content: flex-end;
+        background-image: url(/Img/golden-crown-logo.jpg);
+        margin: 5px;
+        width: 30px;
+        margin-left: 200px;
+        position: absolute;
     }
 
     .colab-image {
-        width: 40px;
-        height: 40px;
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
+        margin-top: 8px;
+        margin-left: 5px;
     }
 
     .colab-name {
@@ -116,12 +125,13 @@
         color: #004392;
         font-weight: 700;
         display: flex;
-        justify-content: space-around;
+        margin-left: 10px;
+        margin-top: 15px;
     }
 
     .collab-remove {
-        display: flex;
-        justify-content: flex-end;
+        margin-left: 75px;
+        margin-top: 15px;
     }
 
     .bottom-buttons {
@@ -149,7 +159,7 @@
             background-color: #d35bc9;
         }
 
-        .button-functions:disabled{
+        .button-functions:disabled {
             background-color: grey;
         }
 
@@ -202,8 +212,8 @@
         <div class="progressed-circle"></div>
         <div class="circle"></div>
         @*<div class="circle"></div>
-        <div class="circle"></div>*@
- </div>
+    <div class="circle"></div>*@
+    </div>
     <div class="selected-rod" style="width: 72%;"></div>
     <div class="progress-rod" style="left: 80%; width: 10%;"></div>
     <div class="NumberDisplay">
@@ -213,14 +223,14 @@
         <div>4</div>
         <div>5</div>
         @*<div>6</div>
-        <div>7</div>*@
+    <div>7</div>*@
     </div>
     <div class="TextDisplay">
         <div class="selected-create-a-job-text-page">Create A Job</div>
         <div class="selected-application-form-text">Build Application Form</div>
         <div class="selected-phases-text">Select Phases</div>
         <div class="selected-collaboration-text">Select Collaboration</div>
-        @*<div class="collaboration-text-part-2">Select Collaboration Part 2</div> *@       
+        @*<div class="collaboration-text-part-2">Select Collaboration Part 2</div> *@
         <div class="post-a-job-text">Post Job</div>
         @*<div class="summary-text">Summary</div>*@
     </div>
@@ -279,7 +289,7 @@
                     @foreach (var collab in ListOfCollaborators)
                     {
                         <div class="inner-selected-collaborators">
-                            <div class="crown"><i class="fa-solid fa-crown"></i></div>
+                            @*<img src="/Img/golden-crown-logo.jpg" alt="avator" class="crown" />*@
                             <div class="collaborator-details">
                                 <img src="@collab.imageUrl" alt="avator" class="colab-image" />
                                 <div class="colab-name">
@@ -291,15 +301,30 @@
                             </div>
                         </div>
                     }
+                    @foreach (var hiringLead in hiringLeads)
+                    {
+                        <div class="inner-selected-collaborators">
+                            <img src="/Img/golden-crown-logo.jpg" alt="avator" class="crown" />
+                            <div class="collaborator-details">
+                                <img src="@hiringLead.imageUrl" alt="avator" class="colab-image" />
+                                <div class="colab-name">
+                                    <p>@hiringLead.name</p><p>@hiringLead.surname</p>
+                                </div>
+                            </div>
+                            <div class="collab-remove">
+                                <input type="button" value="Remove" class="button-functions" @onclick="() => RemoveLead(hiringLead)" style="margin-top:0px; height:23px;" />
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
 
-            <div class="bottom-buttons">
-        <input type="button" value="Prev" class="button-functions" @onclick="Prev" disabled="@savePressed" />
-        <input type="button" value="Save" class="button-functions" @onclick="Save" disabled="@savePressed"/>
-        <input type="button" value="Next" class="button-functions" @onclick="Next" disabled="@savePressed"/>
-    </div>
+        <div class="bottom-buttons">
+            <input type="button" value="Prev" class="button-functions" @onclick="Prev" disabled="@savePressed" />
+            <input type="button" value="Save" class="button-functions" @onclick="Save" disabled="@savePressed" />
+            <input type="button" value="Next" class="button-functions" @onclick="Next" disabled="@savePressed" />
+        </div>
 
     </div>
 
@@ -391,6 +416,7 @@ else if (prevPage)
     private string CurrentItem;
     private List<AppUser> AppUserList = new List<AppUser>();
     private List<CollaboratorsAssigned> collaborators = new List<CollaboratorsAssigned>();
+    private List<AppUser> hiringLeads = new List<AppUser>();
     AppUser HiringLead = new();
     Func<AppUser, string> converter = x => x?.name;
 
@@ -555,11 +581,12 @@ else if (prevPage)
 
     private async Task TestClick(ChangeEventArgs e)
     {
+        hiringLeads.Clear();
         int temp = int.Parse(e.Value.ToString());
         currentHiringLead = ListOfCollaborators.FirstOrDefault(x => temp == x.id);
 
         hiringLead = currentHiringLead.name + " " + currentHiringLead.surname;
-
+        hiringLeads.Add(currentHiringLead);
 
         Console.WriteLine(e.Value);
 
@@ -626,6 +653,13 @@ else if (prevPage)
     private void RemoveCollab(AppUser user)
     {
         ListOfCollaborators.RemoveAll(q => q.id == user.id);
+        Console.WriteLine("Removed");
+
+    }
+
+        private void RemoveLead(AppUser user)
+    {
+        hiringLeads.RemoveAll(q => q.id == user.id);
         Console.WriteLine("Removed");
 
     }

@@ -50,6 +50,7 @@ namespace XebecPortal.UI.Pages.Applicant
 
         private IJSObjectReference _jsModule;
 
+        private bool invalidAnswers = false;
         protected override async Task OnInitializedAsync()
         {
             token = await localStorage.GetItemAsync<string>("jwt_token");
@@ -272,67 +273,79 @@ namespace XebecPortal.UI.Pages.Applicant
 
             double tempScore;
             double tempMatches = 0;
-
+            
             foreach (var q in Questions)
             {
-                ApplicantAnswer tempAnswer = new()
+                if (q.Applicantanswer == null)
                 {
-                    applicantAnswer = q.Applicantanswer,
-                    questionnaireHRFormId = q.HRQuestionId,
-                    appUserId = state.AppUserId
+                    await jsRuntime.InvokeAsync<object>("alert", "Please ensure that all of the answers are answered correctly!");
+                    invalidAnswers = true;
+                    break;
+                }
+                else
+                {
+                    ApplicantAnswer tempAnswer = new()
+                    {
+                        applicantAnswer = q.Applicantanswer,
+                        questionnaireHRFormId = q.HRQuestionId,
+                        appUserId = state.AppUserId
+                    };
+
+                    AnswerList.Add(tempAnswer);
+                    }
+            }
+
+            if (!invalidAnswers)            
+            {
+                for (int i = 0; i < QuestionList.Count; i++)
+                {
+                    Console.WriteLine(QuestionList[i].answer + " " + AnswerList[i].applicantAnswer);
+                    if (QuestionList[i].answer == AnswerList[i].applicantAnswer)
+                    {
+                        tempMatches++;
+                    }
+                }
+
+                tempScore = tempMatches / QuestionList.Count * 100;
+                Console.WriteLine(tempMatches + " / " + QuestionList.Count + " * " + 100);
+
+                CandidateRecommender candidateRecommender = new CandidateRecommender();
+
+                candidateRecommender.AppUserId = state.AppUserId;
+                candidateRecommender.jobId = jobId;
+                candidateRecommender.TotalMatch = tempScore;
+
+                await httpClient.PostJsonAsync("CandidateRecommender", candidateRecommender, new AuthenticationHeaderValue("Bearer", token));
+
+                await httpClient.PostJsonAsync("applicantquestionnaire/list", AnswerList, new AuthenticationHeaderValue("Bearer", token));
+
+                application.BeginApplication = DateTime.Now;
+
+                await httpClient.PostJsonAsync("Application", application, new AuthenticationHeaderValue("Bearer", token));
+
+                List<ApplicationModel> applications = await httpClient.GetListJsonAsync<List<ApplicationModel>>("Application", new AuthenticationHeaderValue("Bearer", token));
+
+                applications = applications.Where(x => x.AppUserId == application.AppUserId).ToList();
+                applications = applications.OrderByDescending(x => x.BeginApplication).ToList();
+
+                ApplicationPhasesHelper phaseHelper = new()
+                {
+                    TimeMoved = DateTime.Now,
+                    Comments = "None",
+                    Rating = 1,
+                    ApplicationId = applications.FirstOrDefault().Id,
+                    ApplicationPhaseId = 1
                 };
 
-                AnswerList.Add(tempAnswer);
+                await httpClient.PostJsonAsync("ApplicationPhaseHelper", phaseHelper, new AuthenticationHeaderValue("Bearer", token));
+
+                jobList = await httpClient.GetListJsonAsync<List<Job>>("Job", new AuthenticationHeaderValue("Bearer", token));
+                applicationList = await httpClient.GetListJsonAsync<List<Application>>($"Application", new AuthenticationHeaderValue("Bearer", token));
+                jobList = jobList.Where(x => x.Status == "Open").ToList();
+                jobListFilter = jobList;
+                ToJobPortal();
             }
-
-            for (int i = 0; i < QuestionList.Count; i++)
-            {
-                Console.WriteLine(QuestionList[i].answer + " " + AnswerList[i].applicantAnswer);
-                if (QuestionList[i].answer == AnswerList[i].applicantAnswer)
-                {
-                    tempMatches++;
-                }
-            }
-
-            tempScore = tempMatches / QuestionList.Count * 100;
-            Console.WriteLine(tempMatches + " / " + QuestionList.Count + " * " + 100);
-
-            CandidateRecommender candidateRecommender = new CandidateRecommender();
-
-            candidateRecommender.AppUserId = state.AppUserId;
-            candidateRecommender.jobId = jobId;
-            candidateRecommender.TotalMatch = tempScore;
-
-            await httpClient.PostJsonAsync("CandidateRecommender", candidateRecommender, new AuthenticationHeaderValue("Bearer", token));
-
-            await httpClient.PostJsonAsync("applicantquestionnaire/list", AnswerList, new AuthenticationHeaderValue("Bearer", token));
-
-            application.BeginApplication = DateTime.Now;
-
-            await httpClient.PostJsonAsync("Application", application, new AuthenticationHeaderValue("Bearer", token));
-
-            List<ApplicationModel> applications = await httpClient.GetListJsonAsync<List<ApplicationModel>>("Application", new AuthenticationHeaderValue("Bearer", token));
-
-            applications = applications.Where(x => x.AppUserId == application.AppUserId).ToList();
-            applications = applications.OrderByDescending(x => x.BeginApplication).ToList();
-
-            ApplicationPhasesHelper phaseHelper = new()
-            {
-                TimeMoved = DateTime.Now,
-                Comments = "None",
-                Rating = 1,
-                ApplicationId = applications.FirstOrDefault().Id,
-                ApplicationPhaseId = 1
-            };
-
-            await httpClient.PostJsonAsync("ApplicationPhaseHelper", phaseHelper, new AuthenticationHeaderValue("Bearer", token));
-
-            jobList = await httpClient.GetListJsonAsync<List<Job>>("Job", new AuthenticationHeaderValue("Bearer", token));
-            applicationList = await httpClient.GetListJsonAsync<List<Application>>($"Application", new AuthenticationHeaderValue("Bearer", token));
-            jobList = jobList.Where(x => x.Status == "Open").ToList();
-            jobListFilter = jobList;
-
-            ToJobPortal();
+            invalidAnswers = false;
             submitModal = false;
         }
     }
