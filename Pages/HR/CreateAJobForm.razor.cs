@@ -34,6 +34,7 @@ namespace XebecPortal.UI.Pages.HR
         private Company company = new Company();
         private Location location = new Location();
         private Policy policy = new Policy();
+
         private Department departments = new Department(); // this is mainly used for the department display 
         private Company companies = new Company(); // this is mainly used for the Company display 
         private Location locations = new Location(); // this is mainly used for the Location display 
@@ -404,19 +405,25 @@ namespace XebecPortal.UI.Pages.HR
             redirectpage = value;
         }
 
-        
+
         private async Task displayDepName(int depNameID)
         {
+            TempJob.DepartmentId = depNameID;
+
+            
+
             if (depNameID > 0)
             {
                 displayDepartment = await HttpClient.GetListJsonAsync<Department>($"Department/single/{depNameID}", new AuthenticationHeaderValue("Bearer", token));
                 departments.Id = displayDepartment.Id;
                 departments.Name = displayDepartment.Name;
-            }            
+            }
         }
 
         private async Task displayTypeName(int jobTypeId)
         {
+            TempJob.JobTypeId = jobTypeId;
+
             if (jobTypeId > 0)
             {
                 displayJobType = await HttpClient.GetListJsonAsync<JobType>($"JobType/{jobTypeId}", new AuthenticationHeaderValue("Bearer", token));
@@ -427,6 +434,8 @@ namespace XebecPortal.UI.Pages.HR
 
         private async Task displayCompName(int compID)
         {
+            TempJob.CompanyId = compID;
+
             if (compID > 0)
             {
                 displayCompany = await HttpClient.GetListJsonAsync<Company>($"Company/single/{compID}", new AuthenticationHeaderValue("Bearer", token));
@@ -437,6 +446,8 @@ namespace XebecPortal.UI.Pages.HR
 
         private async Task displayPolicyName(int policyID)
         {
+            TempJob.PolicyId = policyID;
+
             if (policyID > 0)
             {
                 Console.WriteLine("Policy ID when selected: " + policyID);
@@ -448,6 +459,8 @@ namespace XebecPortal.UI.Pages.HR
 
         private async Task displayLocationName(int locationId)
         {
+            TempJob.LocationId = locationId;
+
             if (locationId > 0)
             {
                 displayLocations = await HttpClient.GetListJsonAsync<Location>($"Location/single/{locationId}", new AuthenticationHeaderValue("Bearer", token));
