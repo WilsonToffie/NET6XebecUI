@@ -651,7 +651,7 @@
                                             <div class="col-12">
                                                 <label for="status">Status</label>
                                                 <select id="status" class="form-select inputDefaults" @bind="displayJobDetail.Status">
-                                                    @foreach (var item in jobList.Select(x => x.Status))
+                                                    @foreach (var item in statuses)
                                                     {
                                                         <option value="@item">@item</option>
                                                     }
