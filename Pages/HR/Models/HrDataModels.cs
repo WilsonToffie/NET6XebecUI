@@ -88,37 +88,36 @@ namespace XebecPortal.UI.Pages.HR
 
     public class Job
     {
-        public int Id { get; set; }
+        public int Id { get; set; } = 0;
         [Required]
-        public string Title { get; set; }
+        public string Title { get; set; } = String.Empty;
         [Required]
-        public string Description { get; set; }
+        public string Description { get; set; } = String.Empty;
         [Required]
-        public int CompanyId { get; set; }
-        public Company Company { get; set; }
+        public int CompanyId { get; set; } = 0;
+        public Company Company { get; set; } = new();
         [Required]
-        public int PolicyId { get; set; }
-        public Policy Policy { get; set; }
-        public decimal? Compensation { get; set; }
-        public int? MinimumExperience { get; set; }
+        public int PolicyId { get; set; } = 0;
+        public Policy Policy { get; set; } = new();
+        public decimal? Compensation { get; set; } = 0;
+        public int? MinimumExperience { get; set; } = 0;
         [Required]
-        public int LocationId { get; set; }
+        public int LocationId { get; set; } = 0;
 
-        public Location Location { get; set; }
-        public int DepartmentId { get; set; }
+        public Location Location { get; set; } = new();
+        public int DepartmentId { get; set; } = 0;
         public Department Department { get; set; } // Dont have to fill in this info when sending it to the DB
-        public string Status { get; set; }
+        public string Status { get; set; } = String.Empty;
         [Required]
-        public DateTime DueDate { get; set; }
-        public DateTime CreationDate { get; set; }
+        public DateTime DueDate { get; set; } = new();
+        public DateTime CreationDate { get; set; } = new();
         //[Required]
-        public List<JobTypeHelper> JobTypes { get; set; }
-        public List<JobPlatformHelper> JobPlatforms { get; set; }
-        public List<JobApplicationPhase> JobPhases { get; set; }
+        public List<JobTypeHelper> JobTypes { get; set; } = new();
+        public List<JobPlatformHelper> JobPlatforms { get; set; } = new();
+        public List<JobApplicationPhase> JobPhases { get; set; } = new();
 
-        public List<Application> Applications { get; set; }
+        public List<Application> Applications { get; set; } = new();
 
-        
     }
 
     public class Department
