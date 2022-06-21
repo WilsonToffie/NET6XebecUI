@@ -65,13 +65,23 @@ namespace XebecPortal.UI.Pages.Applicant
             jobListFilter = jobList;
             jobPagedList = jobListFilter.ToPagedList(1, 17);
             displayJobDetail = jobListFilter.FirstOrDefault();
-            DisplayJobDetail(displayJobDetail.Id);
+            if (jobList.Count == 0)
+            {
+            }
+            else
+            {
+                DisplayJobDetail(displayJobDetail.Id);
+
+            }
             jobPortalIsHidden = false;
             applicationFormIsHidden = true;
             //JobTypes = await httpClient.GetListJsonAsync<List<JobType>>("JobType", new AuthenticationHeaderValue("Bearer", token));
             departments = await httpClient.GetListJsonAsync<List<Department>>("Department", new AuthenticationHeaderValue("Bearer", token));
 
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/JobPortalv1.js");
+
+            
+
         }
 
         protected override Task OnAfterRenderAsync(bool firstRender)
