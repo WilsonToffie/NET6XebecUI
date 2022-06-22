@@ -448,7 +448,7 @@
 
     .mydialog-final-body {
         width: 100%;
-        height: 60%;
+        height: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -467,6 +467,14 @@
         height: 90%;
         padding: 5px;
         resize: none;
+    }
+
+    .mydialog-final-rejection-area{
+        width: 100%;
+        height: 10%;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
     }
 
     .btn-view-applicationform {
@@ -608,10 +616,16 @@
                 <div class="mydialog-final-title">
                     <h2>Email Applicant</h2>
                 </div>
-                <div class="mydialog-final-body">
-                    <select hidden="@rejectionEmailHidden">
-                        <option>test option</option>
+                <div class="mydialog-final-rejection-area">
+                    <select hidden="@rejectionEmailHidden" @onchange="SetRejectionReason">
+                        <option disabled>Select a reason</option>
+                        @foreach(var reason in reasons)
+                        {
+                            <option value="@reason.Id">@reason.Reason</option>
+                        }
                     </select>
+                </div>
+                <div class="mydialog-final-body">
                     <textarea class="mydialog-final-textarea" @bind="emailContent" placeholder="Email applicant"></textarea>
                 </div>
                 <div class="mydialog-final-button">
@@ -1217,6 +1231,7 @@
     bool showMagnifiedDocument = false;
 
     string emailContent;
+    int rejectionId;
 
     bool showEmail;
     bool rejectionEmailHidden;
@@ -1252,6 +1267,7 @@
     private IList<WorkHistory> workHistories = new List<WorkHistory>();
     private IList<SkillsInformation> skills = new List<SkillsInformation>();
     private IList<References> references = new List<References>();
+    private IList<UnsuccessfulReason> reasons = new List<UnsuccessfulReason>();
 
     private EmailModel Email = new EmailModel();
     private IList<Document> userDocuments { get; set; }
@@ -1273,6 +1289,7 @@
     {
         showEmail = false;
         rejectionEmailHidden = true;
+        rejectionId = 0;
 
         token = await localStorage.GetItemAsync<string>("jwt_token");
 
@@ -1292,6 +1309,7 @@
         applications = await httpClient.GetListJsonAsync<List<ApplicationModel>>($"Application/job/{JobId}", new AuthenticationHeaderValue("Bearer", token));
         phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("ApplicationPhase", new AuthenticationHeaderValue("Bearer", token));
         personalInformation = await httpClient.GetListJsonAsync<List<PersonalInformation>>("PersonalInformation", new AuthenticationHeaderValue("Bearer", token));
+        reasons = await httpClient.GetListJsonAsync<List<UnsuccessfulReason>>("UnsuccessfulReason", new AuthenticationHeaderValue("Bearer", token));
 
         UserDocumentsList = await httpClient.GetListJsonAsync<List<Document>>("Document", new AuthenticationHeaderValue("Bearer", token));
 
@@ -1316,6 +1334,7 @@
         AppUser tempUser = users.FirstOrDefault(x => x.id == temp.AppUserId);
 
 
+
         emailContent = phases.FirstOrDefault(x => x.id == phaseId).EmailTemplate;
 
         if (emailContent == null)
@@ -1325,8 +1344,8 @@
 
         emailContent = ConvertEmail(emailContent, tempUser);
 
-        //Email.CandidateEmail = tempUser.email;
-        Email.CandidateEmail = "bailiedaniel@gmail.com";
+
+        Email.CandidateEmail = tempUser.email;
         Email.CandidateFirstName = tempUser.name;
         Email.CandidateLastName = tempUser.surname;
         Email.Body = emailContent;
@@ -1347,18 +1366,47 @@
     {
         string phaseName = phases.Where(x => x.description.ToLower() == e.Value.ToString().ToLower()).FirstOrDefault().description;
 
+
         showEmail = true;
 
-        //logic to change thing
 
         if(phaseName == "Rejected")
         {
             rejectionEmailHidden = false;
         }
+        else
+        {
+            rejectionId = 0;
+            rejectionEmailHidden = true;
+        }
 
         phaseId = phases.Where(x => x.description.ToLower() == e.Value.ToString().ToLower()).FirstOrDefault().id;
 
         Console.WriteLine(phaseId);
+    }
+
+    private async Task SetRejectionReason(ChangeEventArgs e)
+    {
+        rejectionId = Convert.ToInt32(e.Value);
+
+        Application temp = Applications.FirstOrDefault(x => x.Id == applicationId);
+        AppUser tempUser = users.FirstOrDefault(x => x.id == temp.AppUserId);
+
+
+        emailContent = reasons.FirstOrDefault(x => x.Id == rejectionId).EmailTemplate;
+
+        if (emailContent == null)
+        {
+            emailContent = "";
+        }
+
+        emailContent = ConvertEmail(emailContent, tempUser);
+
+        Email.CandidateEmail = tempUser.email;
+        Email.CandidateFirstName = tempUser.name;
+        Email.CandidateLastName = tempUser.surname;
+        Email.Body = emailContent;
+        Email.JobName = tempJobTitle;
     }
 
     //replaces {fields} with the appropriate data
