@@ -324,6 +324,7 @@
         padding: 2px 0px 5px 5px;
         border: solid #00968B;
         border-radius: 5px;
+        width: 100%;
     }
 
     .answer-heading {
@@ -551,7 +552,7 @@
                                             <input type="number" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
                                             break;
                                         case 2:
-                                            <textarea type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer"></textarea>
+                                            <textarea type="text" class="form-input" placeholder="@placeholder" style="width: 100%; resize:none;" @bind="formQuestion.answer"></textarea>
                                             break;
                                         case 3:
                                             <input type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
@@ -593,7 +594,7 @@
                 <div class="options">
 
                     <select @onchange="AddToForm" class="select-form">
-                        <option>Select Question</option>
+                        <option disabled selected value="0">Select Question</option>
                         @foreach (var question in Questions)
                         {
                             <option> @question.questionDescription</option>
@@ -615,7 +616,7 @@
                                 <div class="right-list-item-preview">
 
                                     <div class="preview-item-body">
-                                                                                    @if (FormQuestionsEmptyWrong.Contains(formQuestion.question))
+                                            @if (FormQuestionsEmptyWrong.Contains(formQuestion.question))
                                             {
                                                 <div style="color:red; font-weight:lighter">Please fill in a expected answer</div>
                                             }
@@ -637,7 +638,7 @@
                                                     <input type="number" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
                                                     break;
                                                 case 2:
-                                                    <textarea type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer"></textarea>
+                                                    <textarea type="text" class="form-input" placeholder="@placeholder" style="width: 100%; resize:none;" @bind="formQuestion.answer"></textarea>
                                                     break;
                                                 case 3:
                                                     <input type="text" class="form-input" placeholder="@placeholder" style="width: 100%" @bind="formQuestion.answer">
@@ -706,15 +707,15 @@
                                 <button class="btn-close" @onclick="CloseAddPopup"></button>
                             </div>
                             <div class="add-question-body">
-                                <textarea @bind="tempQuestion.questionDescription" style="width: 80%; border: 2px solid grey; height: 180px; background-color: white; border-radius: 5px; padding: 2px;"></textarea>
+                                <textarea @bind="tempQuestion.questionDescription" style="width: 80%; border: 2px solid grey; height: 180px; background-color: white; border-radius: 5px; padding: 2px; resize:none; "></textarea>
                             </div>
                             <div class="add-question-type">
                                 <p style="font-weight:600">Answer Type:</p>
                                 <select style="height:20px;" @bind="tempType">
-
+                                        <option selected disabled value="">Please select a type</option>
                                     @foreach (var option in Types)
                                     {
-                                        <option selected value="@option.Type">@option.Type</option>
+                                        <option value="@option.Type">@option.Type</option>
                                     }
                                 </select>
                             </div>
@@ -787,7 +788,7 @@ else if (nextPage == true)
     List<CustomQuestion> Questions = new List<CustomQuestion>();
 
     List<QuestionType> Types = new List<QuestionType>();
-    string tempType = null;
+    string tempType = String.Empty;
     //temporary
     List<Job> Jobs = null;
     int CurrentJobId = 0;
@@ -890,7 +891,7 @@ else if (nextPage == true)
     {
         submitQuestionPressed = true;
         Console.WriteLine(tempQuestion.questionDescription);
-        if (!String.IsNullOrEmpty(tempQuestion.questionDescription))
+        if (!String.IsNullOrEmpty(tempQuestion.questionDescription) && !String.IsNullOrEmpty(tempType))
         {
             if (await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to add this question?"))
             {
