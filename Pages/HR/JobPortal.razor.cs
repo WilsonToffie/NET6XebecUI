@@ -35,6 +35,7 @@ namespace XebecPortal.UI.Pages.HR
         private List<CollaboratorsAssigned> collaboratorsAssigned;
         private List<CollaboratorsAssigned> collaboratorsAssigned2;
         private List<PersonalInformation> personalInformation;
+        //private JobTypeHelper newJobTypeHelper = new JobTypeHelper();
         private List<string> statuses = new() { "Draft", "Open", "Closed"};
         private List<Department> departments;
         private List<string> locations = new() { "Eastern Cape", "Free State", " Gauteng", "KwaZulu-Natal", "Limpopo", "Mpumalanga", "Northen Cape", "North West", "Western Cape" };
@@ -147,7 +148,13 @@ namespace XebecPortal.UI.Pages.HR
             if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Override This Item?"))
             {
                 await _jsModule.InvokeVoidAsync("CursorWait");
-                var newJobTypeHelper = jobTypeHelper.Find(x => x.JobId == jobValue.Id);
+
+                if (jobTypeString == null)
+                {
+                    jobTypeString = GetJobType(displayJobDetail.Id);
+                }
+
+                var newJobTypeHelper = jobTypeHelper.Find(x => x.JobId == displayJobDetail.Id);
                 newJobTypeHelper.JobTypeId = JobTypes.Find(x => x.Type == jobTypeString).Id;
                 newJobTypeHelper.JobType = JobTypes.Find(x => x.Type == jobTypeString);
 

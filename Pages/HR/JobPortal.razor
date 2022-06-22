@@ -516,7 +516,7 @@
                         <div id="small-cards" class="col-12 overflow-auto p-3" style="height: 44em !important; margin-top: 1vh">
                             @foreach (var item in jobListFilter)
                             {
-                                <div class="card job-portal-card m-1 small-card-colour-change" @onclick="() => DisplayJobDetail(item.Id)" style="@GetStyling(item) background-color: @SmallCardActive(item.Id)">
+                                <div class="card job-portal-card m-1 small-card-colour-change" @onclick="() => DisplayJobDetail(item.Id)" style="@GetStyling(item) background-color: @SmallCardActive(item.Id)" >
                                     <!--@onmouseover="() => OpenJobCollabToolTip(item.Id)"-->
                                     <div class="card-body job-portal-card-body">
                                         <div class="row">
@@ -923,10 +923,8 @@
 
     private void OnTypeChanged(ChangeEventArgs e)
     {
-
         jobTypeString = e.Value.ToString();
-
-
     }
 
+    
 }
