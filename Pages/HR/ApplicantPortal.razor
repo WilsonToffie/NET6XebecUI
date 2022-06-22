@@ -626,7 +626,7 @@
                     </select>
                 </div>
                 <div class="mydialog-final-body">
-                    <textarea class="mydialog-final-textarea" @bind="emailContent" placeholder="Email applicant"></textarea>
+                    <textarea class="mydialog-final-textarea" @bind="emailContent" @bind:event="oninput" placeholder="Email applicant"></textarea>
                 </div>
                 <div class="mydialog-final-button">
                     <button class="default-button-style" @onclick="() => { showEmail = false; }" disabled="@sendEmailPressed">Cancel</button>
@@ -1385,7 +1385,7 @@
         Console.WriteLine(phaseId);
     }
 
-    private async Task SetRejectionReason(ChangeEventArgs e)
+    private void SetRejectionReason(ChangeEventArgs e)
     {
         rejectionId = Convert.ToInt32(e.Value);
 
@@ -1433,6 +1433,8 @@
     private async Task SendEmail()
     {
         sendEmailPressed = true;
+
+        Email.Body = emailContent;
 
         Console.WriteLine(Email.CandidateFirstName);
         Console.WriteLine(Email.CandidateLastName);
