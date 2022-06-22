@@ -108,7 +108,7 @@
         background: url(/Img/golden-crown-logo.jpg); 
         margin: 5px;
         width: 30px;
-        height: 20px;
+        /*height: 20px;*/
         margin-left: 200px;
         position: absolute;
     }
@@ -320,9 +320,8 @@
                     }
                     @foreach (var hiringLead in hiringLeads)
                     {
-                        <div class="inner-selected-collaborators">
-                            @*<img src="/Img/golden-crown-logo.jpg" style="width: 30px;" alt="avator" class="crown"/> *@<!---->
-                            <div class="crown"></div>
+                        <div class="inner-selected-collaborators">                           
+                            <img src="/Img/golden-crown-logo.jpg" style="width: 30px;" alt="avator" class="crown"/>
                             <div class="collaborator-details">
                                 @if (string.IsNullOrEmpty(@hiringLead.imageUrl))
                                 {
@@ -341,7 +340,7 @@
                                 
                             </div>
                             <div class="collab-remove">
-                                <input type="button" value="Remove" class="button-functions" @onclick="() => RemoveLead(hiringLead)" style="margin-top:0px; height:23px;" />
+                                <input type="button" value="Remove" class="default-button-style" @onclick="() => RemoveLead(hiringLead)" style="margin-top:0px; height:23px;" />
                             </div>
                         </div>
                     }
@@ -350,9 +349,9 @@
         </div>
 
         <div class="bottom-buttons">
-            <input type="button" value="Prev" class="button-functions" @onclick="Prev" disabled="@savePressed" />
-            <input type="button" value="Save" class="button-functions" @onclick="Save" disabled="@savePressed" />
-            <input type="button" value="Next" class="button-functions" @onclick="Next" disabled="@savePressed" />
+            <input type="button" value="Prev" class="default-button-style" @onclick="Prev" disabled="@savePressed" />
+            <input type="button" value="Save" class="default-button-style" @onclick="Save" disabled="@savePressed" />
+            <input type="button" value="Next" class="default-button-style" @onclick="Next" disabled="@savePressed" />
         </div>
 
     </div>

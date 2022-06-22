@@ -306,6 +306,7 @@
         font-weight: 600;
         color: white;
         font-family: opensans-condensed-light;
+        width: 285px;
     }
 
     .summary-container {
@@ -324,11 +325,11 @@
     }
 
     .summary-individual {
-        width: 45%;
         margin-left: 2.5%;
         margin-right: 2.5%;
-        height: 5vh;
-        margin-bottom: 1em;
+        min-height: 5vh;
+        margin-bottom: 0.6em;
+
     }
 
     .create-form-text {
@@ -509,7 +510,7 @@ else
                                 </div>
                             </div>
                             <div class="createjob-form-individual">         
-                                <input type="button" value="Add Department" style="width: 100%" class="form-buttons" @onclick="() => addDepartment(department)" />
+                                <input type="button" value="Add Department" style="width: 100%" class="default-button-style" @onclick="() => addDepartment(department)" />
                             </div>
                         </div>
                         <div class="spacing-for-creating-stuff">
@@ -524,7 +525,7 @@ else
                             </div>
                         </div>
                         <div class="createNew-buttton-function">
-                            <input type="button" value="Done" class="button-functions" @onclick="saveDep" disabled="@saveDepPressed"/> <!-- @onclick="saveDep"-->
+                            <input type="button" value="Done" class="default-button-style" @onclick="saveDep" disabled="@saveDepPressed"/> <!-- @onclick="saveDep"-->
                             @*<input type="button" value="Save" class="button-functions" @onclick="saveDep" />*@
                         </div>
                     </EditForm>
@@ -550,11 +551,11 @@ else
                             </div>
                         </div>
                         <div class="createjob-form-individual">
-                            <input type="button" value="Delete Department" style="width: 100%" class="form-buttons" @onclick="() => removeDepartment(department)" />
+                            <input type="button" value="Delete Department" style="width: 100%" class="default-button-style" @onclick="() => removeDepartment(department)" />
                         </div>
                     </div>
                     <div class="createNew-buttton-function">
-                        <input type="button" value="Done" class="button-functions" @onclick="() => deleteDepartment(false)" />
+                        <input type="button" value="Done" class="default-button-style" @onclick="() => deleteDepartment(false)" />
                     </div>
 
                 }
@@ -565,10 +566,10 @@ else
                     </div>
                     <div class="form-group createjob-form-group">
                         <div class="createjob-form-individual">
-                            <input type="button" value="Add Department" style="width: 100%;" class="form-buttons" @onclick="() => createDep(true)" />
+                            <input type="button" value="Add Department" style="width: 100%;" class="default-button-style" @onclick="() => createDep(true)" />
                         </div>
                         <div class="createjob-form-individual">
-                            <input type="button" value="Delete Department" style="width: 100%;" class="form-buttons" @onclick="() => deleteDepartment(true)" />
+                            <input type="button" value="Delete Department" style="width: 100%;" class="default-button-style" @onclick="() => deleteDepartment(true)" />
                         </div>
                     </div>
 
@@ -584,7 +585,7 @@ else
                         </div>
                     </div>
                     <div class="createNew-buttton-function">
-                        <input type="button" value="Done" class="button-functions" @onclick="() => manageDepartment(false)" />
+                        <input type="button" value="Done" class="default-button-style" @onclick="() => manageDepartment(false)" />
                     </div>
                 }
 
@@ -607,7 +608,7 @@ else
                                 </div>
                             </div>
                             <div class="createjob-form-individual">
-                                <input type="button" value="Add Company" style="width: 100%;" class="form-buttons" @onclick="() => addCompany(company)"/> <!--@onclick="() => addCompany(companyToAdd)" -->
+                                <input type="button" value="Add Company" style="width: 100%;" class="default-button-style" @onclick="() => addCompany(company)"/> <!--@onclick="() => addCompany(companyToAdd)" -->
                             </div>
                         </div>
                         <div class="spacing-for-creating-stuff">
@@ -622,8 +623,8 @@ else
                             </div>
                         </div>
                         <div class="createNew-buttton-function">
-                            <input type="button" value="Cancel" class="button-functions" @onclick="() => createComp(false)" disabled="@saveCompanyPressed"/>
-                            <input type="button" value="Save" class="button-functions" @onclick="() => saveCompany()" disabled="@saveCompanyPressed"/>
+                            <input type="button" value="Cancel" class="default-button-style" @onclick="() => createComp(false)" disabled="@saveCompanyPressed"/>
+                            <input type="button" value="Save" class="default-button-style" @onclick="() => saveCompany()" disabled="@saveCompanyPressed"/>
                         </div>
                     </EditForm>
                 }
@@ -648,11 +649,11 @@ else
                             </div>
                         </div>
                         <div class="createjob-form-individual">
-                            <input type="button" value="Delete Company" style="width: 100%;" class="form-buttons" @onclick="() => removeCompany(company)" /> <!--@onclick="() => removeCompany(TempJob.Company)"-->
+                            <input type="button" value="Delete Company" style="width: 100%;" class="default-button-style" @onclick="() => removeCompany(company)" /> <!--@onclick="() => removeCompany(TempJob.Company)"-->
                         </div>
                     </div>
                     <div class="createNew-buttton-function">                        
-                        <input type="button" value="Done" class="button-functions" @onclick="() => deleteCompany(false)" />
+                        <input type="button" value="Done" class="default-button-style"  @onclick="() => deleteCompany(false)" />
                     </div>
                 }
                 else
@@ -663,10 +664,10 @@ else
 
                     <div class="form-group createjob-form-group">
                         <div class="createjob-form-individual">
-                            <input type="button" value="Add Company" style="width: 100%;" class="form-buttons" @onclick="() => createComp(true)" />
+                            <input type="button" value="Add Company" style="width: 100%;" class="default-button-style" @onclick="() => createComp(true)" />
                         </div>
                         <div class="createjob-form-individual">
-                            <input type="button" value="Delete Company" style="width: 100%;" class="form-buttons" @onclick="() => deleteCompany(true)" />
+                            <input type="button" value="Delete Company" style="width: 100%;" class="default-button-style" @onclick="() => deleteCompany(true)" />
                         </div>
                     </div>
 
@@ -683,7 +684,7 @@ else
                     </div>
 
                     <div class="createNew-buttton-function">
-                        <input type="button" value="Save" class="button-functions" @onclick="() => manageCompany(false)" />
+                        <input type="button" value="Done" class="default-button-style" @onclick="() => manageCompany(false)" />
                     </div>
                 }
             }
@@ -715,7 +716,7 @@ else
                             </InputSelect>
                         </div>
                         <div class="createjob-form-individual">
-                            <input style="width: 100%;" type="button" value="Manage Department" class="form-buttons" @onclick="() => manageDepartment(true)" />
+                            <input style="width: 100%;" type="button" value="Manage Department" class="default-button-style" @onclick="() => manageDepartment(true)" />
                         </div>
                         @*<div class="createjob-form-individual">
                                 <input type="button" value="Delete Departement" class="form-buttons" />
@@ -739,7 +740,7 @@ else
                             </InputSelect>
                         </div>
                         <div class="createjob-form-individual">
-                            <input style="width: 100%;" type="button" value="Manage Company" class="form-buttons" @onclick="() => manageCompany(true)" />
+                            <input style="width: 100%;" type="button" value="Manage Company" class="default-button-style" @onclick="() => manageCompany(true)" />
                         </div>
                         @*<div class="createjob-form-individual">
                                 <input type="button" value="   Delete Company  " class="form-buttons" />
@@ -800,7 +801,7 @@ else
                     <div class="createjob-form-individual" style="position: relative;">
                         <div class="text-font-styling">Job Advert Description:</div>
                         <ValidationMessage For="@(() => TempJob.Description)" style="font-size: 0.8em; position: absolute; bottom: 16px;"/>
-                        <InputTextArea rows="3" style="padding-right: 5px;" @bind-Value="TempJob.Description" />
+                        <InputTextArea rows="3" style="padding-right: 5px; resize:none;" @bind-Value="TempJob.Description" />
                     </div>
                 </div>
             }
@@ -810,15 +811,15 @@ else
             {
                 <div class="bottom-buttons">
                     @*<input type="button" value="Prev" class="button-functions" />*@
-                    <input type="submit" value="Save" disabled="@saveButtonPressed"/>
-                    <input type="button" value="Next" @onclick="() => RedirectToNextPage(true)" disabled="@nextButtonPressed"/>
+                    <input type="submit" class="default-button-style" value="Save" disabled="@saveButtonPressed"/>
+                    <input type="button" class="default-button-style" value="Next" @onclick="() => RedirectToNextPage(true)" disabled="@nextButtonPressed"/>
                 </div>
             }
             else
             {
                 <div class="bottom-buttons">
                     @*<input type="button" value="Prev" class="button-functions" />*@
-                    <input type="submit" value="Save" disabled="@saveButtonPressed"/>
+                    <input type="submit" class="default-button-style" value="Save" disabled="@saveButtonPressed"/>
                     <input type="button" value="Next" disabled class="button-functions-not-redirectable"/>
                 </div>
             }
