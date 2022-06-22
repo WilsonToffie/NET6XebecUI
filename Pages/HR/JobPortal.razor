@@ -24,31 +24,31 @@
     }
 
     /*    ::-webkit-scrollbar {
-                    width: 10px;
-                }
+                        width: 10px;
+                    }
 
-                ::-webkit-scrollbar-track {
-                    background: transparent;
-                    border-radius: 10px;
-                }
+                    ::-webkit-scrollbar-track {
+                        background: transparent;
+                        border-radius: 10px;
+                    }
 
-                ::-webkit-scrollbar-thumb {
-                    background: #fff;
-                    border-radius: 5px;
-                }
+                    ::-webkit-scrollbar-thumb {
+                        background: #fff;
+                        border-radius: 5px;
+                    }
 
-                    ::-webkit-scrollbar-thumb:hover {
-                        background: #00BCAE;
-                    }*/
+                        ::-webkit-scrollbar-thumb:hover {
+                            background: #00BCAE;
+                        }*/
 
     .hr-job-search-bar {
         /*width: 40%;
-                        height: 5vh;
-                        margin-bottom: 2.5vh;*/
+                            height: 5vh;
+                            margin-bottom: 2.5vh;*/
         margin-top: 1vh;
         /*margin-left: 30%;
-                        margin-right: 30%;
-                        border: none;*/
+                            margin-right: 30%;
+                            border: none;*/
     }
 
     .hr-job-filters {
@@ -255,9 +255,9 @@
         .hr-job-search-bar-input::placeholder {
             color: #666666;
             /*font-weight: 900;
-                            font-size: 0.8em;
-                            padding-left: 1em;
-                            padding-top: 1em;*/
+                                font-size: 0.8em;
+                                padding-left: 1em;
+                                padding-top: 1em;*/
         }
 
         .hr-job-search-bar-input:hover {
@@ -692,10 +692,13 @@
                                             {
                                                 <div class="col-12">
                                                     <label for="jobType">Job Type</label>
-                                                    <select id="jobType" class="form-select inputDefaults">
-                                                        <option>Full-time</option>
-                                                        <option>Part-time</option>
-                                                        <option>Contract</option>
+                                                    <select id="jobType" class="form-select inputDefaults" @onblur="() => GetTypeId(displayJobDetail.Id)" @onchange="@OnTypeChanged">
+                                                        <option selected>@GetJobType(displayJobDetail.Id)</option>
+                                                        @foreach (var type in JobTypes)
+                                                        {
+                                                            <option>@type.Type.ToString()</option>
+                                                        }
+
                                                     </select>
                                                 </div>
                                             }
@@ -918,5 +921,12 @@
 
 @code {
 
+    private void OnTypeChanged(ChangeEventArgs e)
+    {
+
+        jobTypeString = e.Value.ToString();
+
+
+    }
 
 }

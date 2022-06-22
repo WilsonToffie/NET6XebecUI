@@ -323,6 +323,7 @@ namespace XebecPortal.UI.Pages.HR
 
             Console.WriteLine("Title " + TempJob.Title);
             Console.WriteLine("Description " + TempJob.Description);
+            Console.WriteLine("Company:  " + TempJob.CompanyId);
             Console.WriteLine("LocationId " + locations.Id);
             Console.WriteLine("DepartmentID " + departments.Id);
             Console.WriteLine("Policies ID " + policies.Id);
