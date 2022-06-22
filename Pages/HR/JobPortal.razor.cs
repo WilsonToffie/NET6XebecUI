@@ -20,7 +20,7 @@ namespace XebecPortal.UI.Pages.HR
         private bool isFilterContainAnyVal;
         private List<int> pageNum = new List<int>();
         private IList<Job> jobList = new List<Job>();
-        private IList<Job> jobListFilter = new List<Job>();
+        private IList<Job> jobListFilter = null;
         private Job displayJobDetail = new Job();
         private IPagedList<Job> jobPagedList = new List<Job>().ToPagedList();
         private IList<JobPlatform> jobPlatforms = new List<JobPlatform>();
@@ -70,7 +70,7 @@ namespace XebecPortal.UI.Pages.HR
 
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/jsPages/HR/JobPortalv3.js");
 
-            jobListFilter = jobList;
+            jobListFilter = await httpClient.GetListJsonAsync<List<Job>>($"Job", new AuthenticationHeaderValue("Bearer", token));
             jobPagedList = jobListFilter.ToPagedList(1, 17);
             displayJobDetail = jobListFilter.FirstOrDefault();
             Console.WriteLine("JobList count: " + jobList.Count);
