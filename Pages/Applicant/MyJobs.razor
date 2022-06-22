@@ -339,7 +339,7 @@
 
                 ApplicationPhase currentPhase = phases.Where(x => x.id == application.ApplicationPhaseId).FirstOrDefault();
 
-                @if (currentPhase.description.ToLower() != "applied" && !currentPhase.description.ToLower().Contains("final") && currentJob != null)
+                @if (currentPhase.description.ToLower() != "rejected" && currentPhase.description.ToLower() != "hired" && !currentPhase.description.ToLower().Contains("final") && !currentPhase.description.ToLower().Contains("applied") && currentJob != null)
                 {
 
                     <div class="job-card">
@@ -371,9 +371,13 @@
 
             ApplicationPhase currentPhase = phases.Where(x => x.id == application.ApplicationPhaseId).FirstOrDefault();
 
-            @if (currentPhase.description.ToLower().Contains("final") && rejectedCandidates.Where(x => x.applicationId == application.Id).FirstOrDefault() == null && currentJob != null)
+            @if (currentPhase.description.ToLower().Contains("hired") @* && rejectedCandidates.Where(x => x.applicationId == application.Id).FirstOrDefault() == null*@&& currentJob != null)
             {
                 countSuccesfull.Add(application);
+                foreach(var counts in countSuccesfull)
+                {
+                    Console.WriteLine(counts.ApplicationPhase);
+                }
             }
         }
 
@@ -400,8 +404,9 @@
                 }
 
                 ApplicationPhase currentPhase = phases.Where(x => x.id == application.ApplicationPhaseId).FirstOrDefault();
+                Console.WriteLine(currentPhase.description);
 
-                @if (currentPhase.description.ToLower().Contains("final") && rejectedCandidates.Where(x => x.applicationId == application.Id).FirstOrDefault() == null && currentJob != null)
+                @if (currentPhase.description.ToLower().Contains("hired") @*&& rejectedCandidates.Where(x => x.applicationId == application.Id).FirstOrDefault() == null*@ && currentJob != null)
                 {
                     <div class="job-card accepted">
                         <span class="position">@currentJob.Title</span>
@@ -433,7 +438,7 @@
 
             ApplicationPhase currentPhase = phases.Where(x => x.id == application.ApplicationPhaseId).FirstOrDefault();
 
-            @if (rejectedCandidates.Where(x => x.applicationId == application.Id).FirstOrDefault() != null && currentJob != null)
+            @if ( currentPhase.description.ToLower().Contains("rejected") && rejectedCandidates.Where(x => x.applicationId == application.Id).FirstOrDefault() == null && currentJob != null @*rejectedCandidates.Where(x => x.applicationId == application.Id).FirstOrDefault() != null && currentJob != null*@)
             {
                 countUnsuccessfull.Add(application);
             }
@@ -463,7 +468,7 @@
 
             ApplicationPhase currentPhase = phases.Where(x => x.id == application.ApplicationPhaseId).FirstOrDefault();
 
-            @if (rejectedCandidates.Where(x => x.applicationId == application.Id).FirstOrDefault() != null && currentJob != null)
+            @if ( currentPhase.description.ToLower().Contains("rejected") && rejectedCandidates.Where(x => x.applicationId == application.Id).FirstOrDefault() == null && currentJob != null  @*rejectedCandidates.Where(x => x.applicationId == application.Id).FirstOrDefault() != null && currentJob != null*@)
             {
                 <div class="job-card rejection">
                     <span class="position">@currentJob.Title</span>
