@@ -134,7 +134,7 @@ namespace XebecPortal.UI.Pages.HR
         [Required]
         public string Description { get; set; } = string.Empty;
         [Required]
-        [Range(1, 1000, ErrorMessage = "Company required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Company required")]
         public int CompanyId { get; set; } = 0; // Remember to change this to string.Empty
 
         public Company Company { get; set; } = new();
@@ -147,17 +147,17 @@ namespace XebecPortal.UI.Pages.HR
         public Location Location { get; set; } = new();
 
         [Required]
-        [Range(1, 1000, ErrorMessage = "Policy required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Policy required")]
         public int PolicyId { get; set; } = 0;//string.Empty;// Not sure what data type it should be, but policy is a required field
                                               //
         public Policy Policy { get; set; } = new();
 
         [Required]
-        [Range(1, 1000, ErrorMessage = "Job Type required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Job Type required")]
         public int JobTypeId { get; set; } = 0;
 
         [Required]
-        [Range(1, 1000, ErrorMessage = "Department required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Department required")]
         public int DepartmentId { get; set; } = 0;// testing problem
         public string Status { get; set; }  = string.Empty;
         [Required]

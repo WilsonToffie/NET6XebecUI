@@ -448,7 +448,7 @@
 
     .mydialog-final-body {
         width: 100%;
-        height: 60%;
+        height: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -467,6 +467,14 @@
         height: 90%;
         padding: 5px;
         resize: none;
+    }
+
+    .mydialog-final-rejection-area{
+        width: 100%;
+        height: 10%;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
     }
 
     .btn-view-applicationform {
@@ -607,6 +615,15 @@
             <div class="mydialog-final">
                 <div class="mydialog-final-title">
                     <h2>Email Applicant</h2>
+                </div>
+                <div class="mydialog-final-rejection-area">
+                    <select hidden="@rejectionEmailHidden" @onchange="SetRejectionReason">
+                        <option disabled>Select a reason</option>
+                        @foreach(var reason in reasons)
+                        {
+                            <option value="@reason.Id">@reason.Reason</option>
+                        }
+                    </select>
                 </div>
                 <div class="mydialog-final-body">
                     <textarea class="mydialog-final-textarea" @bind="emailContent" placeholder="Email applicant"></textarea>
@@ -1214,8 +1231,10 @@
     bool showMagnifiedDocument = false;
 
     string emailContent;
+    int rejectionId;
 
     bool showEmail;
+    bool rejectionEmailHidden;
 
     string currentPhase;
     int phaseId;
@@ -1248,6 +1267,7 @@
     private IList<WorkHistory> workHistories = new List<WorkHistory>();
     private IList<SkillsInformation> skills = new List<SkillsInformation>();
     private IList<References> references = new List<References>();
+    private IList<UnsuccessfulReason> reasons = new List<UnsuccessfulReason>();
 
     private EmailModel Email = new EmailModel();
     private IList<Document> userDocuments { get; set; }
@@ -1262,10 +1282,14 @@
     private currentPhase phase { get; set; }
     [Parameter] public int JobId { get; set; }
 
+    private HttpClient emailClient = new HttpClient();
+
     string token;
     protected override async Task OnInitializedAsync()
     {
         showEmail = false;
+        rejectionEmailHidden = true;
+        rejectionId = 0;
 
         token = await localStorage.GetItemAsync<string>("jwt_token");
 
@@ -1285,10 +1309,12 @@
         applications = await httpClient.GetListJsonAsync<List<ApplicationModel>>($"Application/job/{JobId}", new AuthenticationHeaderValue("Bearer", token));
         phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("ApplicationPhase", new AuthenticationHeaderValue("Bearer", token));
         personalInformation = await httpClient.GetListJsonAsync<List<PersonalInformation>>("PersonalInformation", new AuthenticationHeaderValue("Bearer", token));
+        reasons = await httpClient.GetListJsonAsync<List<UnsuccessfulReason>>("UnsuccessfulReason", new AuthenticationHeaderValue("Bearer", token));
 
         UserDocumentsList = await httpClient.GetListJsonAsync<List<Document>>("Document", new AuthenticationHeaderValue("Bearer", token));
 
         tempJobTitle = jobs.FirstOrDefault(x => x.Id == JobId).Title;
+
     }
 
 
@@ -1308,6 +1334,7 @@
         AppUser tempUser = users.FirstOrDefault(x => x.id == temp.AppUserId);
 
 
+
         emailContent = phases.FirstOrDefault(x => x.id == phaseId).EmailTemplate;
 
         if (emailContent == null)
@@ -1317,8 +1344,8 @@
 
         emailContent = ConvertEmail(emailContent, tempUser);
 
-        //Email.CandidateEmail = tempUser.email;
-        Email.CandidateEmail = "bailiedaniel@gmail.com";
+
+        Email.CandidateEmail = tempUser.email;
         Email.CandidateFirstName = tempUser.name;
         Email.CandidateLastName = tempUser.surname;
         Email.Body = emailContent;
@@ -1337,11 +1364,49 @@
 
     private void updatePhase(ChangeEventArgs e)
     {
+        string phaseName = phases.Where(x => x.description.ToLower() == e.Value.ToString().ToLower()).FirstOrDefault().description;
+
+
         showEmail = true;
+
+
+        if(phaseName == "Rejected")
+        {
+            rejectionEmailHidden = false;
+        }
+        else
+        {
+            rejectionId = 0;
+            rejectionEmailHidden = true;
+        }
 
         phaseId = phases.Where(x => x.description.ToLower() == e.Value.ToString().ToLower()).FirstOrDefault().id;
 
         Console.WriteLine(phaseId);
+    }
+
+    private async Task SetRejectionReason(ChangeEventArgs e)
+    {
+        rejectionId = Convert.ToInt32(e.Value);
+
+        Application temp = Applications.FirstOrDefault(x => x.Id == applicationId);
+        AppUser tempUser = users.FirstOrDefault(x => x.id == temp.AppUserId);
+
+
+        emailContent = reasons.FirstOrDefault(x => x.Id == rejectionId).EmailTemplate;
+
+        if (emailContent == null)
+        {
+            emailContent = "";
+        }
+
+        emailContent = ConvertEmail(emailContent, tempUser);
+
+        Email.CandidateEmail = tempUser.email;
+        Email.CandidateFirstName = tempUser.name;
+        Email.CandidateLastName = tempUser.surname;
+        Email.Body = emailContent;
+        Email.JobName = tempJobTitle;
     }
 
     //replaces {fields} with the appropriate data
@@ -1375,8 +1440,11 @@
         Console.WriteLine(Email.Body);
         Console.WriteLine(Email.JobName);
 
+
         //add error handling here
-        await httpClient.PostAsJsonAsync<EmailModel>("https://prod-228.westeurope.logic.azure.com:443/workflows/420f0efb54134f0492fee22869c92bc6/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=GOWFYTIEtt84SYP1ZNP8ZIhoXJeq7S13FjBoYlAGVzE", Email);
+        await emailClient.PostAsJsonAsync<EmailModel>("https://prod-228.westeurope.logic.azure.com:443/workflows/420f0efb54134f0492fee22869c92bc6/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=GOWFYTIEtt84SYP1ZNP8ZIhoXJeq7S13FjBoYlAGVzE", Email);
+
+
 
         await JSRuntime.InvokeAsync<string>("alert", "Email Sent");
 
