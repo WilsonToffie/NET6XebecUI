@@ -33,8 +33,6 @@ namespace XebecPortal.UI.Pages.HR
         //private Department tempDepartment = new Department();
         private Department department = new Department();
         private Company company = new Company();
-        private Location location = new Location();
-        private Policy policy = new Policy();
 
         private Department departments = new Department(); // this is mainly used for the department display 
         private Company companies = new Company(); // this is mainly used for the Company display 
@@ -318,21 +316,21 @@ namespace XebecPortal.UI.Pages.HR
                 Status = "Draft",
                 DueDate = TempJob.DueDate,
                 CreationDate = DateTime.Today,                
-                JobTypes = jobType,                
+                JobTypes = jobType, 
+                
         });
 
-            Console.WriteLine("Title " + TempJob.Title);
-            Console.WriteLine("Description " + TempJob.Description);
-            Console.WriteLine("Company:  " + TempJob.CompanyId);
+           // Console.WriteLine("Title " + TempJob.Title);
+           // Console.WriteLine("Description " + TempJob.Description);
             Console.WriteLine("LocationId " + locations.Id);
             Console.WriteLine("DepartmentID " + departments.Id);
             Console.WriteLine("Policies ID " + policies.Id);
-            Console.WriteLine("JobTypes " + jobType);
+           // Console.WriteLine("JobTypes " + jobType);
 
             checkJobList = await HttpClient.GetListJsonAsync<List<Job>>($"Job", new AuthenticationHeaderValue("Bearer", token));
             //checkJob = checkJobList.Where(x => x.Title == TempJob.Title).ToList();
             // Please find a better way....
-            Console.WriteLine("JOb count" + checkJobList.Count());
+            //Console.WriteLine("JOb count" + checkJobList.Count());
             foreach (var item in checkJobList)
             {                
 
@@ -347,9 +345,10 @@ namespace XebecPortal.UI.Pages.HR
                     createJobExists = false;
                 }
             }
-
+            Console.WriteLine("Info that exists within the jobList:");
             foreach (var item in jobList)
             {
+
                 if (createJobExists)
                 {
                     Console.WriteLine("Job exists already with ID of: " + existJobId);
@@ -371,7 +370,8 @@ namespace XebecPortal.UI.Pages.HR
                     Console.WriteLine("Job Doesnt exist yet");
                     //var validExistingUpload = await HttpClient.PutJsonAsync($"Job/213", item, new AuthenticationHeaderValue("Bearer", token));
                     var validExistingUpload = await HttpClient.PostJsonAsync($"Job", item, new AuthenticationHeaderValue("Bearer", token));
-                    if (validExistingUpload.IsSuccessStatusCode)
+               
+                if (validExistingUpload.IsSuccessStatusCode)
                     {
                         validUpload = true;
                     }
