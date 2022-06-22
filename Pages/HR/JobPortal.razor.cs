@@ -20,13 +20,14 @@ namespace XebecPortal.UI.Pages.HR
         private bool isFilterContainAnyVal;
         private List<int> pageNum = new List<int>();
         private IList<Job> jobList = new List<Job>();
-        private IList<Job> jobListFilter = new List<Job>();
+        private IList<Job> jobListFilter = null;
         private Job displayJobDetail = new Job();
         private IPagedList<Job> jobPagedList = new List<Job>().ToPagedList();
         private IList<JobPlatform> jobPlatforms = new List<JobPlatform>();
         private IList<JobPlatformHelper> jobPlatformHelpers = new List<JobPlatformHelper>();
         private List<JobPlatform> platformsUsed = new List<JobPlatform>();
         private List<JobType> JobTypes;
+        private List<JobTypeHelper> JobType;
         private List<JobTypeHelper> jobTypeHelper;
         private List<Status> status;
         private List<AppUser> appUser;
@@ -34,6 +35,7 @@ namespace XebecPortal.UI.Pages.HR
         private List<CollaboratorsAssigned> collaboratorsAssigned;
         private List<CollaboratorsAssigned> collaboratorsAssigned2;
         private List<PersonalInformation> personalInformation;
+        private List<string> statuses = new() { "Draft", "Open", "Closed"};
         private List<Department> departments;
         private List<string> locations = new() { "Eastern Cape", "Free State", " Gauteng", "KwaZulu-Natal", "Limpopo", "Mpumalanga", "Northen Cape", "North West", "Western Cape" };
         private MudBlazor.DialogOptions options = new() { CloseButton = true, FullWidth = true};
@@ -46,6 +48,8 @@ namespace XebecPortal.UI.Pages.HR
         private bool ShowingJobPortal = true;
         private bool ShowingApplicantPortal;
         private bool ShowingPhaseManager;
+
+        private string jobTypeString;
 
         private IJSObjectReference _jsModule;
         private string defaultCollaboratorImage = "https://xebecstorage.blob.core.windows.net/profile-images/placeholderprofilePic";
@@ -69,7 +73,7 @@ namespace XebecPortal.UI.Pages.HR
 
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/jsPages/HR/JobPortalv3.js");
 
-            jobListFilter = jobList;
+            jobListFilter = await httpClient.GetListJsonAsync<List<Job>>($"Job", new AuthenticationHeaderValue("Bearer", token));
             jobPagedList = jobListFilter.ToPagedList(1, 17);
             displayJobDetail = jobListFilter.FirstOrDefault();
             Console.WriteLine("JobList count: " + jobList.Count);
@@ -144,7 +148,11 @@ namespace XebecPortal.UI.Pages.HR
             {
                 await _jsModule.InvokeVoidAsync("CursorWait");
                 var newJobTypeHelper = jobTypeHelper.Find(x => x.JobId == jobValue.Id);
-                newJobTypeHelper.JobTypeId = JobTypes.Find(x => x.Type == jobTypeHelperValue).Id;
+                newJobTypeHelper.JobTypeId = JobTypes.Find(x => x.Type == jobTypeString).Id;
+                newJobTypeHelper.JobType = JobTypes.Find(x => x.Type == jobTypeString);
+
+                jobValue.JobTypes.Add(newJobTypeHelper);
+
                 await httpClient.PutJsonAsync($"Job/{jobValue.Id}", jobValue, new AuthenticationHeaderValue("Bearer", token));
                 await httpClient.PutJsonAsync($"JobTypeHelper/{newJobTypeHelper.Id}", newJobTypeHelper, new AuthenticationHeaderValue("Bearer", token));
                 changeForm = boolValue;

@@ -42,6 +42,7 @@ namespace XebecPortal.UI
             //builder.HostEnvironment.BaseAddress
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseAddress) });
+
             builder.Services.AddScoped<IApplicantDataService, ApplicantDataService>();
             builder.Services.AddScoped<IApplicationDataService, ApplicationDataService>();
             builder.Services.AddScoped<IJobDataService, JobDataService>();

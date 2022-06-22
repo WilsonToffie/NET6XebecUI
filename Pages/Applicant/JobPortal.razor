@@ -16,14 +16,15 @@
         height: 15px;
         margin: 2px;
     }
+
     .hr-job-search-bar {
         /*width: 40%;
-        height: 5vh;
-        margin-bottom: 2.5vh;*/
+                        height: 5vh;
+                        margin-bottom: 2.5vh;*/
         margin-top: 1vh;
         /*margin-left: 30%;
-        margin-right: 30%;
-        border: none;*/
+                        margin-right: 30%;
+                        border: none;*/
     }
 
     .hr-job-filters {
@@ -98,7 +99,7 @@
     }
 
     .small-card-company {
-        color: rgba(0,0,0,0.5) !important;        
+        color: rgba(0,0,0,0.5) !important;
     }
 
     .small-card-location {
@@ -106,7 +107,7 @@
     }
 
     .small-card-date {
-        color: #D35BC9 !important;        
+        color: #D35BC9 !important;
     }
 
     .job-portal-right {
@@ -212,9 +213,9 @@
         .hr-job-search-bar-input::placeholder {
             color: #666666 !important;
             /*font-weight: 900;
-            font-size: 0.8em;
-            padding-left: 1em;
-            padding-top: 1em;*/
+                            font-size: 0.8em;
+                            padding-left: 1em;
+                            padding-top: 1em;*/
         }
 
         .hr-job-search-bar-input:hover {
@@ -239,7 +240,7 @@
 
     .hr-job-search-bar-input {
         /*z-index: -1;
-        border-radius: 1em;*/
+                        border-radius: 1em;*/
         padding-left: 3em;
         background-color: white;
         height: 7vh;
@@ -374,11 +375,11 @@
                     <div class="offcanvas-body p-5 pt-0 d-grid gap-5">
                         <div class="col-12">
                             @*<div class="hr-job-search-bar">
-                                <input class="search-image hr-job-search-bar-input rounded-pill" style="padding-left: 4em;" type="text" placeholder="Search For Jobs" @oninput="SearchListJob" />
+                            <input class="search-image hr-job-search-bar-input rounded-pill" style="padding-left: 4em;" type="text" placeholder="Search For Jobs" @oninput="SearchListJob" />
                             </div>*@
                             <div class="search-wrapper-container">
                                 <input class="search-bar-input" placeholder="Search For Jobs" type="text" @oninput="SearchListJob" />
-                                <img class="search-bar-pic" src="/Img/search.svg"/>
+                                <img class="search-bar-pic" src="/Img/search.svg" />
                             </div>
                         </div>
                         <div class="col-12">
@@ -439,104 +440,128 @@
     </div>
     <br />
 
-    @if (jobListFilter?.Any() == true)
+    @if (jobListFilter != null)
     {
-        <div class="row">
-            <div id="small-cards" class="col-2 job-portal-left overflow-auto">
+        @if (jobListFilter.Count != 0)
+        {
 
-                <!--Card list for jobs-->
-                <div class="col-12" style="height: 44em !important; margin-top: 1vh">
-                    @foreach (var item in jobListFilter)
-                    {
-                        <div class="card job-portal-card small-card-colour-change" @onclick="() => DisplayJobDetail(item.Id)" style="@GetStyling(item) background-color: @SmallCardActive(item.Id)">
-                            <div class="card-body job-portal-card-body">
-                                <h3 class="card-title" style="color: @SmallCardFontTitleColour(item.Id)">@item.Title</h3>
-                                <h5 class="card-subtitle text-muted small-card-company" style="color: @SmallCardFontColour(item.Id)"><b>@item.Company.Name</b></h5>
-                                <h5 class="card-text small-card-location" style="color: @SmallCardFontColour(item.Id)">@item.Location.Name</h5>
-                                <h5 class="card-text small-card-date" style="color: @SmallCardFontColour(item.Id)">Closing Date: @item.DueDate.ToString("dd MMM yyyy")</h5>
+
+
+            <div class="row">
+                <div id="small-cards" class="col-2 job-portal-left overflow-auto">
+
+                    <!--Card list for jobs-->
+                    <div class="col-12" style="height: 44em !important; margin-top: 1vh">
+                        @foreach (var item in jobListFilter)
+                        {
+                            <div class="card job-portal-card small-card-colour-change" @onclick="() => DisplayJobDetail(item.Id)" style="@GetStyling(item) background-color: @SmallCardActive(item.Id)">
+                                <div class="card-body job-portal-card-body">
+                                    <h3 class="card-title" style="color: @SmallCardFontTitleColour(item.Id)">@item.Title</h3>
+                                    <h5 class="card-subtitle text-muted small-card-company" style="color: @SmallCardFontColour(item.Id)"><b>@item.Company.Name</b></h5>
+                                    <h5 class="card-text small-card-location" style="color: @SmallCardFontColour(item.Id)">@item.Location.Name</h5>
+                                    <h5 class="card-text small-card-date" style="color: @SmallCardFontColour(item.Id)">Closing Date: @item.DueDate.ToString("dd MMM yyyy")</h5>
+                                </div>
+                            </div>
+                            <br />
+                        }
+                    </div>
+                </div>
+
+                <div class="col-9 job-portal-right-main">
+
+                    <!--The Form for applying a job-->
+                    <div>
+                        <div class="col-12" style="height: 44em !important; margin-top: 1vh">
+                            <div class="col-12 job-portal-right">
+                                <form class="job-portal-form">
+                                    <div class="row">
+                                        <div class="col-6 p-2">
+                                            <h3 class="big-card-name" style="color: #004393 !important">@displayJobDetail.Title</h3>
+                                        </div>
+                                        <div class="col-6 p-2 mt-5 d-flex justify-content-end">
+                                            <h5 class="small-card-date">Closing Date: @displayJobDetail.DueDate.ToString("d MMMM yyyy")</h5>
+                                        </div>
+                                        <div class="col-6 p-2 d-flex justify-content-start">
+                                            <h5 class="card-text">Company:</h5> &nbsp;
+                                            <h5 class="text-muted small-card-company"><b>@displayJobDetail.Company.Name</b></h5>
+                                        </div>
+                                        <div class="col-6 p-2 d-flex justify-content-end">
+                                            <h5 class="card-text">Location:</h5> &nbsp;
+                                            <h5 class="text-muted small-card-company">@displayJobDetail.Location.Name</h5>
+                                        </div>
+                                        <div class="col-6 p-2 d-flex justify-content-start">
+
+                                            @if (displayJobDetail.JobTypes?.Any() == true)
+                                            {
+                                                <h5 class="card-text">Job Type:</h5>
+
+                                                <span>&nbsp;</span>
+                                                <h5 class="text-muted small-card-company">@GetJobType(displayJobDetail.Id)</h5>
+                                            }
+                                        </div>
+                                        <div class="col-6 p-2 d-flex justify-content-end">
+                                            <h5 class="card-text">Department:</h5> &nbsp;
+                                            <h5 class="text-muted small-card-company">@displayJobDetail.Department.Name</h5>
+                                        </div>
+                                        <div class="col-12 p-2">
+                                            <textarea readonly class="form-control p-2 description-text border border-2" @bind="displayJobDetail.Description"></textarea>
+                                        </div>
+                                        <div class="col-6 p-2">
+                                            @* <p>@displayJobDetail.JobPlatforms</p> *@
+                                        </div>
+                                        <div class="col-6 p-2 d-flex justify-content-end">
+                                            @if (@state.isLoggedIn)
+                                            {
+                                                @if (applicationList != null && applicationList.Count(x => x.AppUserId == state.AppUserId && x.JobId == displayJobDetail.Id) > 0)
+                                                {
+                                                    <p>You Have Applied For This Post</p>
+                                                }
+                                                else
+                                                {
+                                                    <button class="default-button-style" type="button" @onclick="() => Apply(displayJobDetail.Id)">Apply</button> <!--class="btn detail-button-colour rounded-pill"-->
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+
+
+
+                                </form>
                             </div>
                         </div>
-                        <br />
-                    }
+                    </div>
                 </div>
-            </div>
 
-            <div class="col-9 job-portal-right-main">
-
-                <!--The Form for applying a job-->
-                <div>
-                    <div class="col-12" style="height: 44em !important; margin-top: 1vh">
-                        <div class="col-12 job-portal-right">
-                            <form class="job-portal-form">
-                                <div class="row">
-                                    <div class="col-6 p-2">
-                                        <h3 class="big-card-name" style="color: #004393 !important">@displayJobDetail.Title</h3>
-                                    </div>
-                                    <div class="col-6 p-2 mt-5 d-flex justify-content-end">
-                                        <h5 class="small-card-date">Closing Date: @displayJobDetail.DueDate.ToString("d MMMM yyyy")</h5>
-                                    </div>
-                                    <div class="col-6 p-2 d-flex justify-content-start">
-                                        <h5 class="card-text">Company:</h5> &nbsp;
-                                        <h5 class="text-muted small-card-company"><b>@displayJobDetail.Company.Name</b></h5>
-                                    </div>
-                                    <div class="col-6 p-2 d-flex justify-content-end">
-                                        <h5 class="card-text">Location:</h5> &nbsp;
-                                        <h5 class="text-muted small-card-company">@displayJobDetail.Location.Name</h5>
-                                    </div>
-                                    <div class="col-6 p-2 d-flex justify-content-start">
-
-                                        @if (displayJobDetail.JobTypes?.Any() == true)
-                                        {
-                                            <h5 class="card-text">Job Type:</h5><span>&nbsp;</span>
-                                            <h5 class="text-muted small-card-company">@GetJobType(displayJobDetail.Id)</h5>
-                                        }
-                                    </div>
-                                    <div class="col-6 p-2 d-flex justify-content-end">
-                                        <h5 class="card-text">Department:</h5> &nbsp;
-                                        <h5 class="text-muted small-card-company">@displayJobDetail.Department.Name</h5>
-                                    </div>
-                                    <div class="col-12 p-2">
-                                        <textarea readonly class="form-control p-2 description-text border border-2" @bind="displayJobDetail.Description"></textarea>
-                                    </div>
-                                    <div class="col-6 p-2">
-                                        @* <p>@displayJobDetail.JobPlatforms</p> *@
-                                    </div>
-                                    <div class="col-6 p-2 d-flex justify-content-end">
-                                        @if (@state.isLoggedIn)
-                                        {                                          
-                                            @if (applicationList != null && applicationList.Count(x => x.AppUserId == state.AppUserId && x.JobId == displayJobDetail.Id) > 0)
-                                            {
-                                                <p>You Have Applied For This Post</p>
-                                            }
-                                            else
-                                            {
-                                                <button class="default-button-style" type="button" @onclick="() => Apply(displayJobDetail.Id)">Apply</button> <!--class="btn detail-button-colour rounded-pill"-->
-                                            }
-                                        }
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+                <div class="col-1 d-flex justify-content-end" style="height: 44em !important">
+                    <div style="padding-top: 3em">
+                        <button class="detail-button-colour filter-button-trans rounded-pill" type="button" style="width: 8em; height: 3em" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilter">Filters</button>
                     </div>
                 </div>
             </div>
 
-            <div class="col-1 d-flex justify-content-end" style="height: 44em !important">
-                <div style="padding-top: 3em">
-                    <button class="detail-button-colour filter-button-trans rounded-pill" type="button" style="width: 8em; height: 3em" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilter">Filters</button>
-                </div>
-            </div>
-        </div>
-    }
-    else if (jobListFilter?.Any() == false)
-    {
-        @for (int i = 0; i < 5; i++)
-        {
-            <br />
         }
-        <h1 class="text-center align-middle">No Job Searches Are Available</h1>
+        else if (jobListFilter.Count == 0)
+        {
+
+            @for (int i = 0; i < 5; i++)
+            {
+                <br />
+            }
+            <h1 class="text-center align-middle" style="margin-top: 150px">No Job Are Available</h1>
+
+
+            @if (jobList.Count != 0)
+            {
+                <div class="col-12 d-flex justify-content-end pb-5" style="height: 100% !important;">
+
+                    <div style=" height:100%; margin-top:-19em;">
+                        <button class="detail-button-colour filter-button-trans rounded-pill" type="button" style="width: 8em; height: 3em" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilter">Filter</button>
+                    </div>
+                </div>
+            }
+        }
     }
-    else
+    else if (jobListFilter == null)
     {
         @for (int i = 0; i < 5; i++)
         {
@@ -544,8 +569,8 @@
         }
         <div class="row">
             @*<div class="col-12 d-flex justify-content-center">
-                <MudProgressCircular Color="Color.Info" Style="height:140px;width:140px;" Indeterminate="true" />
-            </div>*@
+        <MudProgressCircular Color="Color.Info" Style="height:140px;width:140px;" Indeterminate="true" />
+        </div>*@
             <div class="appform-submit-modal">
                 <MudProgressCircular Size="Size.Large" Indeterminate="true" />
             </div>
@@ -556,43 +581,43 @@
 <div class="applicant-application-form" hidden="@applicationFormIsHidden">
     <div class="applicant-application-form-container">
         <div class="applicant-application-form-title">
-            <h1 >Application Form</h1> <!--class="collaborators-heading-text"-->
+            <h1>Application Form</h1> <!--class="collaborators-heading-text"-->
         </div>
-        <div class="applicant-application-form-questions">           
-                    @if (Questions != null)
-                    {
-                        @foreach (var customquestion in Questions)
+        <div class="applicant-application-form-questions">
+            @if (Questions != null)
+            {
+                @foreach (var customquestion in Questions)
+                {
+                    <div class="application-form-question">
+                        <p class="appform-text" style="word-wrap: break-word">@customquestion.HRQuestion</p>
+                        @switch (customquestion.TypeId)
                         {
-                            <div class="application-form-question">
-                                        <p class="appform-text" style="word-wrap: break-word">@customquestion.HRQuestion</p>
-                                        @switch (customquestion.TypeId)
-                                        {
-                                            case 1:
-                                                <input type="number" class="form-control" style=" margin-bottom: 20px; width: 50%;" @bind="customquestion.Applicantanswer">
-                                                break;
-                                            case 2:
-                                                <textarea type="text" class="form-control" style="margin-bottom: 20px; width: 50%;" placeholder="Answer..." @bind="customquestion.Applicantanswer"></textarea>
-                                                break;
-                                            case 3:
-                                                <input type="text" class="form-control" style="margin-bottom: 20px; width: 50%;" placeholder="Answer..." @bind="customquestion.Applicantanswer">
-                                                break;
-                                            case 4:
-                                                <input type="date" id="test" class="form-control" style=" margin-bottom: 20px; width: 50%;" @onchange="(e) => { customquestion.Applicantanswer = e.Value.ToString(); }">
-                                                break;
-                                            case 5:
-                                                <select @bind="customquestion.Applicantanswer" style=" margin-bottom: 20px; width: 50%;">
-                                                    <option selected disabled>Please select an answer</option>
-                                                    <option value="yes">Yes</option>
-                                                    <option value="no">No</option>
-                                                </select>
-                                                break;
-                                            case 6:
-                                                <input type="file" class="form-control" style="margin-bottom: 20px; width: 50%;" @bind="customquestion.Applicantanswer">
-                                                break;
-                                        }
-                            </div>                            
+                            case 1:
+                                <input type="number" class="form-control" style=" margin-bottom: 20px; width: 50%;" @bind="customquestion.Applicantanswer">
+                                break;
+                            case 2:
+                                <textarea type="text" class="form-control" style="margin-bottom: 20px; width: 50%;" placeholder="Answer..." @bind="customquestion.Applicantanswer"></textarea>
+                                break;
+                            case 3:
+                                <input type="text" class="form-control" style="margin-bottom: 20px; width: 50%;" placeholder="Answer..." @bind="customquestion.Applicantanswer">
+                                break;
+                            case 4:
+                                <input type="date" id="test" class="form-control" style=" margin-bottom: 20px; width: 50%;" @onchange="(e) => { customquestion.Applicantanswer = e.Value.ToString(); }">
+                                break;
+                            case 5:
+                                <select @bind="customquestion.Applicantanswer" style=" margin-bottom: 20px; width: 50%;">
+                                    <option selected disabled>Please select an answer</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                                break;
+                            case 6:
+                                <input type="file" class="form-control" style="margin-bottom: 20px; width: 50%;" @bind="customquestion.Applicantanswer">
+                                break;
                         }
-                    }               
+                    </div>
+                }
+            }
         </div>
         <div class="applicant-application-form-button">
             <button class="default-button-style" @onclick="ToJobPortal">Job Portal</button>
