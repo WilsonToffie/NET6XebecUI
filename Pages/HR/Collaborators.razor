@@ -69,9 +69,11 @@
         flex-wrap: wrap;
         width: 100%;
         gap: 10px;
-        justify-content: flex-start;
-        padding: 0 25px 0 25px;
+        justify-content: space-between;
+        padding: 0 50px 0 50px;
         overflow-y: scroll;
+    /* padding-left: 55px; */
+    /* text-align: center;
         /*display: grid;
             grid-template-columns: repeat(auto-fill,minmax(30%, 1fr));*/
     }
@@ -86,8 +88,9 @@
         /*        box-shadow: 0 2px 5px 0 rgb(0 0 0 / 20%), 0 2px 10px 0 rgb(0 0 0 / 10%);*/
         box-shadow: 0 3px 3px 3px rgb(0 0 0 / 20%);
         border-radius: 5px;
-        height: 78px;
+        min-height: 78px;
         margin: 3px;
+        display:flex;
     }
 
     .collaborator-details {
@@ -103,14 +106,15 @@
     }
 
     .crown {
-        display: flex;
+        /*display: flex;
         justify-content: flex-end;
         background: url(/Img/golden-crown-logo.jpg); 
         margin: 5px;
         width: 30px;
-        /*height: 20px;*/
         margin-left: 200px;
-        position: absolute;
+        position: absolute;*/
+        margin: 5px;
+        width: 30px;
     }
 
     .colab-image {
@@ -131,9 +135,11 @@
     }
 
     .collab-remove {
-        margin-left: 75px;
-        margin-top: 15px;
+        display: flex;
+        align-items: center;
+        padding-right: 2px;
     }
+    
 
     .bottom-buttons {
         margin-top: 3vh;
@@ -206,6 +212,8 @@
         display: flex;
 
     }
+
+
 </style>
 
 
@@ -297,22 +305,28 @@
                     {
                         <div class="inner-selected-collaborators">
                             @*<img src="/Img/golden-crown-logo.jpg" alt="avator" class="crown" />*@
-                            <div class="collaborator-details">
+                            @*<div class="collaborator-details">*@
                                 @if (string.IsNullOrEmpty(@collab.imageUrl))
                                 {
-                                    <img src="@defaultCollaboratorImage" alt="avator" class="colab-image" />
-                                    <div class="colab-name">
-                                        <p>@collab.name</p> &nbsp; <p>@collab.surname</p>
+                                    <div style="width: 50%;height: 100%; display: flex; align-items: center;" >
+                                        <img src="@defaultCollaboratorImage" alt="avator" class="colab-image" />
+                                    </div>
+                                    <div style=" width: 105px; display: flex; align-items: center;">                                            
+                                            <div>@collab.name @collab.surname</div>
+                                             @*<div>@collab.surname</div>*@                                            
+                                        @*</div>*@
                                     </div>
                                 }
                                 else
                                 {
-                                    <img src="@collab.imageUrl" alt="avator" class="colab-image" />
-                                    <div class="colab-name">
-                                        <p>@collab.name</p> &nbsp; <p>@collab.surname</p>
+                                    <div style="width: 50%;height: 100%; display: flex; align-items: center;" >
+                                        <img src="@collab.imageUrl" alt="avator" class="colab-image" />
+                                    </div>
+                                    <div style=" width: 105px; display: flex; align-items: center;">
+                                        <div>@collab.name  @collab.surname</div>
                                     </div>                                   
                                 }                                
-                            </div>
+                            @*</div>*@
                             <div class="collab-remove">
                                 <input type="button" value="Remove" class="default-button-style" @onclick="() => RemoveCollab(collab)" style="margin-top:0px; height:23px;" />
                             </div>
@@ -321,25 +335,32 @@
                     @foreach (var hiringLead in hiringLeads)
                     {
                         <div class="inner-selected-collaborators">                           
-                            <img src="/Img/golden-crown-logo.jpg" style="width: 30px;" alt="avator" class="crown"/>
-                            <div class="collaborator-details">
+                            @*<img src="/Img/golden-crown-logo.jpg" style="width: 30px;" alt="avator" class="crown"/>*@
+                            @*<div class="collaborator-details">*@
                                 @if (string.IsNullOrEmpty(@hiringLead.imageUrl))
                                 {
-                                    <img src="@defaultCollaboratorImage" alt="avator" class="colab-image" />
-                                    <div class="colab-name">
-                                        @hiringLead.name &nbsp; @hiringLead.surname
+                                    <div style="width: 50%;height: 100%; display: flex; align-items: center;" >
+                                        <img src="@defaultCollaboratorImage" alt="avator" class="colab-image" />
+                                    </div>
+                                    <div style=" width: 105px; display: flex; align-items: center;">
+                                        <div>@hiringLead.name  @hiringLead.surname</div>
                                     </div>
                                 }
                                 else
                                 {
-                                    <img src="@hiringLead.imageUrl" alt="avator" class="colab-image" />
-                                    <div class="colab-name">
-                                        <p>@hiringLead.name</p><p>@hiringLead.surname</p>
+                                    <div style="width: 50%;height: 100%; display: flex; align-items: center;" >
+                                        <img src="@hiringLead.imageUrl" alt="avator" class="colab-image" />
+                                    </div>
+                                    <div style=" width: 105px; display: flex; align-items: center;">
+                                        <div>@hiringLead.name  @hiringLead.surname</div>
                                     </div>
                                 }
                                 
-                            </div>
-                            <div class="collab-remove">
+                            @*</div>*@
+                            <div class="collab-remove" style="display: inline;">
+                                <div style=" display: flex; justify-content: end;">
+                                    <img src="/Img/golden-crown-logo.jpg" alt="avator" class="crown"/>
+                                </div>
                                 <input type="button" value="Remove" class="default-button-style" @onclick="() => RemoveLead(hiringLead)" style="margin-top:0px; height:23px;" />
                             </div>
                         </div>

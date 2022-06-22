@@ -648,8 +648,8 @@
                                                     break;
                                                 case 5:
                                                     <select class="answer-options" @bind="formQuestion.answer">
-                                                        <option value="default" selected>-</option>
-                                                        <option value="yes" selected>Yes</option>
+                                                        <option selected disabled value="">Please select an option</option>
+                                                        <option value="yes">Yes</option>
                                                         <option value="no">No</option>
                                                     </select>
                                                     break;
@@ -757,9 +757,9 @@
         </div>
 
         <div class="bottom-buttons">
-            <input type="button" value="Prev" class="button-functions" @onclick="Prev" disabled="@savePressed" />
-            <input type="submit" value="Save" class="button-functions" @onclick="SaveQuestion" disabled="@savePressed" />
-            <input type="button" value="Next" class="button-functions" @onclick="Next" disabled="@savePressed" />
+            <input type="button" value="Prev" class="default-button-style" @onclick="Prev" disabled="@savePressed" />
+            <input type="submit" value="Save" class="default-button-style" @onclick="SaveQuestion" disabled="@savePressed" />
+            <input type="button" value="Next" class="default-button-style" @onclick="Next" disabled="@savePressed" />
         </div>
     </div>
 
