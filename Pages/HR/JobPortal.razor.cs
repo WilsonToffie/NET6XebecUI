@@ -27,6 +27,7 @@ namespace XebecPortal.UI.Pages.HR
         private IList<JobPlatformHelper> jobPlatformHelpers = new List<JobPlatformHelper>();
         private List<JobPlatform> platformsUsed = new List<JobPlatform>();
         private List<JobType> JobTypes;
+        private List<JobTypeHelper> JobType;
         private List<JobTypeHelper> jobTypeHelper;
         private List<Status> status;
         private List<AppUser> appUser;
@@ -47,6 +48,8 @@ namespace XebecPortal.UI.Pages.HR
         private bool ShowingJobPortal = true;
         private bool ShowingApplicantPortal;
         private bool ShowingPhaseManager;
+
+        private string jobTypeString;
 
         private IJSObjectReference _jsModule;
         private string defaultCollaboratorImage = "https://xebecstorage.blob.core.windows.net/profile-images/placeholderprofilePic";
@@ -145,7 +148,11 @@ namespace XebecPortal.UI.Pages.HR
             {
                 await _jsModule.InvokeVoidAsync("CursorWait");
                 var newJobTypeHelper = jobTypeHelper.Find(x => x.JobId == jobValue.Id);
-                newJobTypeHelper.JobTypeId = JobTypes.Find(x => x.Type == jobTypeHelperValue).Id;
+                newJobTypeHelper.JobTypeId = JobTypes.Find(x => x.Type == jobTypeString).Id;
+                newJobTypeHelper.JobType = JobTypes.Find(x => x.Type == jobTypeString);
+
+                jobValue.JobTypes.Add(newJobTypeHelper);
+
                 await httpClient.PutJsonAsync($"Job/{jobValue.Id}", jobValue, new AuthenticationHeaderValue("Bearer", token));
                 await httpClient.PutJsonAsync($"JobTypeHelper/{newJobTypeHelper.Id}", newJobTypeHelper, new AuthenticationHeaderValue("Bearer", token));
                 changeForm = boolValue;
