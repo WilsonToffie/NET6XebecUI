@@ -402,7 +402,7 @@ namespace XebecPortal.UI.Pages.HR
             nextButtonPressed = true;
             saveButtonPressed = true;
 
-            await saveJobState();
+            //await saveJobState();
 
             nextButtonPressed = false;
             saveButtonPressed = false;
