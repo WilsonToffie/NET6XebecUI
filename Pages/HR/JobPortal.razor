@@ -692,7 +692,7 @@
                                             {
                                                 <div class="col-12">
                                                     <label for="jobType">Job Type</label>
-                                                    <select id="jobType" class="form-select inputDefaults" @onblur="() => GetTypeId(displayJobDetail.Id)" @onchange="@OnTypeChanged">
+                                                    <select id="jobType" class="form-select inputDefaults" @onchange="@OnTypeChanged">
                                                         <option selected>@GetJobType(displayJobDetail.Id)</option>
                                                         @foreach (var type in JobTypes)
                                                         {
