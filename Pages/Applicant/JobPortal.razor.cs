@@ -62,7 +62,8 @@ namespace XebecPortal.UI.Pages.Applicant
             jobTypeHelper = await httpClient.GetListJsonAsync<List<JobTypeHelper>>("JobTypeHelper", new AuthenticationHeaderValue("Bearer", token));
             candidates = await httpClient.GetListJsonAsync<List<CandidateRecommender>>("CandidateRecommender", new AuthenticationHeaderValue("Bearer", token));
             jobList = jobList.Where(x => x.Status == "Open").ToList();
-            jobListFilter = await httpClient.GetListJsonAsync<List<Job>>("Job", new AuthenticationHeaderValue("Bearer", token)); ;
+            jobListFilter = await httpClient.GetListJsonAsync<List<Job>>("Job", new AuthenticationHeaderValue("Bearer", token)); 
+            jobListFilter = jobListFilter.Where(x => x.Status == "Open").ToList();
             jobPagedList = jobListFilter.ToPagedList(1, 17);
             displayJobDetail = jobListFilter.FirstOrDefault();
             if (jobList.Count == 0)
