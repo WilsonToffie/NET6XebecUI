@@ -95,16 +95,16 @@ namespace XebecPortal.UI.Pages.HR
         public string Description { get; set; } = String.Empty;
         [Required]
         public int CompanyId { get; set; } = 0;
-        public Company Company { get; set; } = new();
+        public Company Company { get; set; } 
         [Required]
         public int PolicyId { get; set; } = 0;
-        public Policy Policy { get; set; } = new();
+        public Policy Policy { get; set; }
         public decimal? Compensation { get; set; } = 0;
         public int? MinimumExperience { get; set; } = 0;
         [Required]
         public int LocationId { get; set; } = 0;
 
-        public Location Location { get; set; } = new();
+        public Location Location { get; set; }
         public int DepartmentId { get; set; } = 0;
         public Department Department { get; set; } // Dont have to fill in this info when sending it to the DB
         public string Status { get; set; } = String.Empty;
@@ -203,13 +203,13 @@ namespace XebecPortal.UI.Pages.HR
 
     public class FormQuestion
     {
-        public int id { get; set; }
-        public string question { get; set; }
-        public string answer { get; set; }
-        public int jobId { get; set; }
-        public Job job { get; set; }
-        public int answerTypeId { get; set; }
-        public AnswerType answerType { get; set; }
+        public int id { get; set; } = 0;
+        public string question { get; set; } = String.Empty;
+        public string answer { get; set; } = String.Empty;
+        public int jobId { get; set; } = 0;
+        public Job job { get; set; } = new();
+        public int answerTypeId { get; set; } = 0;
+        public AnswerType answerType { get; set; } = new();
     }
 
     public class AnswerType
@@ -220,10 +220,10 @@ namespace XebecPortal.UI.Pages.HR
 
     public class CustomQuestion
     {
-        public int Id { get; set; }
-        public string questionDescription { get; set; }
-        public int answerTypeId { get; set; }
-        public string answerType { get; set; }
+        public int Id { get; set; } = 0;
+        public string questionDescription { get; set; } = String.Empty;
+        public int answerTypeId { get; set; } = 0;
+        public string answerType { get; set; } = String.Empty;
     }
 
     public class JobType
@@ -254,24 +254,24 @@ namespace XebecPortal.UI.Pages.HR
 
     public class AppUser
     {
-        public int id { get; set; }
+        public int id { get; set; } = 0;
 
-        public string email { get; set; }
+        public string email { get; set; } = String.Empty;
 
-        public string role { get; set; }
+        public string role { get; set; } = String.Empty;
 
-        public string passwordhash { get; set; }
+        public string passwordhash { get; set; } = String.Empty;
 
-        public string name { get; set; }
+        public string name { get; set; } = String.Empty;
 
-        public string surname { get; set; }
+        public string surname { get; set; } = String.Empty;
 
-        public string key { get; set; }
+        public string key { get; set; } = String.Empty;
 
         public bool registered { get; set; }
 
-        public int linkVisits { get; set; }
-        public string imageUrl { get; set; }
+        public int linkVisits { get; set; } = 0;
+        public string imageUrl { get; set; } = String.Empty;
     }
 
     public class JobPlatformHelper
