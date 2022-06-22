@@ -686,7 +686,7 @@
                     else
                     {
 
-                        @if (@getUserDoc.CV.Count() == 0 || noDocuments == true || documentsHasBeenAdded == false)
+                        @if (String.IsNullOrEmpty(@getUserDoc.CV)|| noDocuments == true || documentsHasBeenAdded == false)
                         {
                             <div>
                                 No CV's found
@@ -716,7 +716,7 @@
                     else
                     {
 
-                        @if (@getUserDoc.MatricCertificate.Count() == 0 || noDocuments == true || documentsHasBeenAdded == false)
+                        @if (String.IsNullOrEmpty(@getUserDoc.MatricCertificate)|| noDocuments == true || documentsHasBeenAdded == false)
                         {
 
                             <div>
@@ -744,7 +744,7 @@
                     }
                     else
                     {
-                        @if (@getUserDoc.UniversityTranscript.Count() == 0 || noDocuments == true || documentsHasBeenAdded == false)
+                        @if (String.IsNullOrEmpty(@getUserDoc.UniversityTranscript)|| noDocuments == true || documentsHasBeenAdded == false)
                         {
                             <div>
                                 No University Transcript found
@@ -771,7 +771,7 @@
                     }
                     else
                     {
-                        @if (@getUserDoc.AdditionalCert1.Count() == 0 || noDocuments == true || documentsHasBeenAdded == false)
+                        @if (String.IsNullOrEmpty(@getUserDoc.AdditionalCert1) || noDocuments == true || documentsHasBeenAdded == false)
                         {
                             <div>
                                 No Certificate found
@@ -797,7 +797,7 @@
                     else
                     {
 
-                        @if (@getUserDoc.AdditionalCert2.Count() == 0 || noDocuments == true || documentsHasBeenAdded == false)
+                        @if (String.IsNullOrEmpty(@getUserDoc.AdditionalCert2) || noDocuments == true || documentsHasBeenAdded == false)
                         {
                             <div>
                                 No Certificate found
@@ -823,7 +823,7 @@
                     }
                     else
                     {
-                        @if (@getUserDoc.AdditionalCert2.Count() == 0 || noDocuments == true || documentsHasBeenAdded == false)
+                        @if (String.IsNullOrEmpty(@getUserDoc.AdditionalCert3) || noDocuments == true || documentsHasBeenAdded == false)
                         {
                             <div>
                                 No Certificate found
