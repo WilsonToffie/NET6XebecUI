@@ -280,7 +280,7 @@
                         </div>
                     </div>
                     <div class="createjob-form-individual">
-                        <input type="button" value="Add Platform" style="width: 100%"class="form-buttons" @onclick="() => addJobPlatform(addPlatform)" />
+                        <input type="button"  value="Add Platform" style="width: 100%" class="default-button-style" @onclick="() => addJobPlatform(addPlatform)" />
                     </div>
                 </div>
                 <div class="spacing-for-creating-stuff">
@@ -295,7 +295,7 @@
                     </div>
                 </div>
                 <div class="createNew-buttton-function">
-                    <input type="button" value="Done" class="button-functions" @onclick="savePlatform" disabled="@addPlatformPressed"/>
+                    <input type="button" value="Done" class="default-button-style" @onclick="savePlatform" disabled="@addPlatformPressed"/>
                     @*<input type="button" value="Save" class="button-functions" @onclick="saveDep" />*@
                 </div>
             }
@@ -316,11 +316,11 @@
                         </div>
                     </div>
                     <div class="createjob-form-individual">
-                        <input type="button" value="Delete Platform" style="width: 100%" class="form-buttons" @onclick="() => removePlatform(platform)" disabled="@deletePlatformPressed"/>
+                        <input type="button" value="Delete Platform" style="width: 100%" class="default-button-style" @onclick="() => removePlatform(platform)" disabled="@deletePlatformPressed"/>
                     </div>
                 </div>
                 <div class="createNew-buttton-function">
-                    <input type="button" value="Done" class="button-functions" @onclick="() => deletePlatform(false)" />
+                    <input type="button" value="Done" class="default-button-style" @onclick="() => deletePlatform(false)" />
                 </div>
             }
             else
@@ -329,10 +329,10 @@
 
                 <div class="form-group createjob-form-group">
                     <div class="createjob-form-individual">
-                        <input type="button" value="Add Platform" style="width: 100%" class="form-buttons" @onclick="() => createPlatform(true)" />
+                        <input type="button" value="Add Platform" style="width: 100%" class="default-button-style" @onclick="() => createPlatform(true)" />
                     </div>
                     <div class="createjob-form-individual">
-                        <input type="button"  style="width: 100%" value="Delete Platform" class="form-buttons" @onclick="() => deletePlatform(true)" />
+                        <input type="button"  style="width: 100%" value="Delete Platform" class="default-button-style" @onclick="() => deletePlatform(true)" />
                     </div>
                 </div>
 
@@ -349,7 +349,7 @@
                 </div>
 
                 <div class="createNew-buttton-function">
-                    <input type="button" value="Done" class="button-functions" @onclick="() => managePlatform(false)" />
+                    <input type="button" value="Done" class="default-button-style" @onclick="() => managePlatform(false)" />
                 </div>
             }
 
@@ -387,15 +387,15 @@
 
                     </div>
                     <div class="createjob-form-individual">
-                        <input type="button" value="Manage Platform" style="width: 100%;" @onclick="() => managePlatform(true)" />
+                        <input type="button" class="default-button-style" value="Manage Platform" style="width: 100%;" @onclick="() => managePlatform(true)" />
                     </div>
                 </div>
             </div>
             <div class="validation-message"><ValidationSummary /></div>
 
             <div class="bottom-buttons">
-                <input type="button" value="Prev" class="button-functions" @onclick="Prev" disabled="@savePressed"/>
-                <input type="button" value="Save" class="button-functions" @onclick="Save" disabled="@savePressed"/>
+                <input type="button" value="Prev" class="default-button-style" @onclick="Prev" disabled="@savePressed"/>
+                <input type="button" value="Save" class="default-button-style" @onclick="Save" disabled="@savePressed"/>
                 @*<input type="button" value="Next" class="button-functions" />*@
             </div>
         }
