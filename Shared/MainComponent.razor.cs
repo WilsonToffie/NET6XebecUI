@@ -230,7 +230,6 @@ namespace XebecPortal.UI.Shared
             {
                 profilePic.AppUserId = state.AppUserId; 
                 profilePic.profilePic = blobUri.ToString();
-                Console.WriteLine("Result is true whooooo");
                 var content = new FormUrlEncodedContent(new[]
                                 {
                                     new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")

@@ -809,10 +809,10 @@ else if (nextPage == true)
     {
         jobId = TempJob.Id;
 
-        Console.WriteLine("jobId " + jobId);
+
         prevPage = false;
         nextPage = false;
-        Console.WriteLine("JobID passed: " + jobId);
+
         token = await localStorage.GetItemAsync<string>("jwt_token");
         if (FormQuestions == null)
             FormQuestions = new();
@@ -844,7 +844,6 @@ else if (nextPage == true)
 
     public async Task DeleteQuestion(CustomQuestion q)
     {
-        Console.WriteLine(q);
         if (q.questionDescription != null)
         {
             if (await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to delete this question"))
@@ -890,7 +889,7 @@ else if (nextPage == true)
     public async Task AddQuestion()
     {
         submitQuestionPressed = true;
-        Console.WriteLine(tempQuestion.questionDescription);
+
         if (!String.IsNullOrEmpty(tempQuestion.questionDescription) && !String.IsNullOrEmpty(tempType))
         {
             if (await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure you want to add this question?"))
@@ -935,23 +934,6 @@ else if (nextPage == true)
     }
 
 
-    //this is replaced by SaveQuestion()
-    //private async Task Save()
-    //{
-    //    TempJob.formQuestions = FormQuestions;
-    //    if (FormQuestions.Count > 0)
-    //    {
-    //        Console.WriteLine("Questions Added");
-    //        //await TempJobChanged.InvokeAsync(TempJob);
-    //        await JSRuntime.InvokeAsync<object>("alert", "Questions saved successfully.");
-
-    //    }
-    //    else
-    //    {
-    //        await JSRuntime.InvokeAsync<object>("alert", "Please select at least one question.");
-    //    }
-
-    //}
 
     private string QuestionCardClass(CustomQuestion question)
     {
@@ -986,10 +968,6 @@ else if (nextPage == true)
                         JobId = jobId
                     };
 
-                Console.WriteLine(tempForm.Question);
-                Console.WriteLine(tempForm.Answer);
-                Console.WriteLine(tempForm.AnswerTypeId);
-                Console.WriteLine(tempForm.JobId);
 
                 if (String.IsNullOrEmpty(question.answer))
                 {
@@ -1006,8 +984,6 @@ else if (nextPage == true)
                     await httpClient.PostJsonAsync<QuestionnaireHrForm>("questionnaire", question, new AuthenticationHeaderValue("Bearer", token));
                 }
 
-                Console.WriteLine("success!");
-
                 await JSRuntime.InvokeAsync<string>("alert", "Questions saved successfully.");
 
                 savePressed = false;
@@ -1018,15 +994,9 @@ else if (nextPage == true)
             }
 
             
-            //var post = await httpClient.PostJsonAsync("questionnaire/lst", questionnaireHrForms, new AuthenticationHeaderValue("Bearer", token));
-            //    if (post.IsSuccessStatusCode)
-            //    {
-            //        await JSRuntime.InvokeAsync<object>("alert", "Questions saved successfully");
-            //    }
 
         }
-        //await httpClient.PostJsonAsync<List<FormQuestion>>("questionnaire/lst", FormQuestions, new AuthenticationHeaderValue("Bearer", token));
-        //Console.WriteLine("success!");
+
     }
 
 }
