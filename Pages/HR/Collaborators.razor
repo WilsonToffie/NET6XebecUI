@@ -115,6 +115,7 @@
         position: absolute;*/
         margin: 5px;
         width: 30px;
+
     }
 
     .colab-image {
@@ -123,6 +124,7 @@
         border-radius: 50%;
         margin-top: 8px;
         margin-left: 5px;
+        object-fit: cover;
     }
 
     .colab-name {
@@ -138,6 +140,7 @@
         display: flex;
         align-items: center;
         padding-right: 2px;
+        object-fit: cover;
     }
     
 
@@ -213,6 +216,13 @@
 
     }
 
+    .image-container{
+        width: 50%;
+        height: 100%; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+    }
 
 </style>
 
@@ -306,10 +316,10 @@
                         <div class="inner-selected-collaborators">
                             @*<img src="/Img/golden-crown-logo.jpg" alt="avator" class="crown" />*@
                             @*<div class="collaborator-details">*@
-                                @if (string.IsNullOrEmpty(@collab.imageUrl))
+                                @if (string.IsNullOrEmpty(@collab.imageUrl) || onErrorEvent)
                                 {
-                                    <div style="width: 50%;height: 100%; display: flex; align-items: center;" >
-                                        <img src="@defaultCollaboratorImage" alt="avator" class="colab-image" />
+                                    <div class="image-container" >
+                                        <img src="@defaultCollaboratorImage" alt="avator" class="colab-image"/> <!---->
                                     </div>
                                     <div style=" width: 105px; display: flex; align-items: center;">                                            
                                             <div>@collab.name @collab.surname</div>
@@ -319,8 +329,8 @@
                                 }
                                 else
                                 {
-                                    <div style="width: 50%;height: 100%; display: flex; align-items: center;" >
-                                        <img src="@collab.imageUrl " alt="avator" class="colab-image" />
+                                    <div class="image-container" >
+                                        <img src="@collab.imageUrl " alt="avator" class="colab-image" onerror="imageHandling()"/>
                                     </div>
                                     <div style=" width: 105px; display: flex; align-items: center;">
                                         <div>@collab.name  @collab.surname</div>
@@ -337,9 +347,9 @@
                         <div class="inner-selected-collaborators">                           
                             @*<img src="/Img/golden-crown-logo.jpg" style="width: 30px;" alt="avator" class="crown"/>*@
                             @*<div class="collaborator-details">*@
-                                @if (string.IsNullOrEmpty(@hiringLead.imageUrl))
+                                @if (string.IsNullOrEmpty(@hiringLead.imageUrl) || onErrorEvent)
                                 {
-                                    <div style="width: 50%;height: 100%; display: flex; align-items: center;" >
+                                    <div class="image-container" >
                                         <img src="@defaultCollaboratorImage" alt="avator" class="colab-image" />
                                     </div>
                                     <div style=" width: 105px; display: flex; align-items: center;">
@@ -348,8 +358,8 @@
                                 }
                                 else
                                 {
-                                    <div style="width: 50%;height: 100%; display: flex; align-items: center;" >
-                                        <img src="@hiringLead.imageUrl" alt="avator" class="colab-image" />
+                                    <div class="image-container" >
+                                        <img src="@hiringLead.imageUrl" alt="avator" class="colab-image" onerror="imageHandling()"/>
                                     </div>
                                     <div style=" width: 105px; display: flex; align-items: center;">
                                         <div>@hiringLead.name  @hiringLead.surname</div>
@@ -506,15 +516,16 @@ else if (prevPage)
     private List<ProfilePicture> userProfilePicture = new List<ProfilePicture>();
     AppUser currentHiringLead;
 
-    private string defaultCollaboratorImage = "https://xebecstorage.blob.core.windows.net/profile-images/0";
+    private string defaultCollaboratorImage = "/Img/DefaultImage.png";// "https://xebecstorage.blob.core.windows.net/profile-images/0";
 
     string token;
 
     string hiringLead;
     private string profilePicValue = String.Empty;
-
+    private bool onErrorEvent = false;
     protected override async Task OnInitializedAsync()
     {
+        onErrorEvent = false;
         //jobId = TempJob.Id;
         JobId = TempJob.Id;
 
@@ -703,5 +714,11 @@ else if (prevPage)
             }            
         }
         return profilePicValue;
+    }
+
+    private async Task imageHandling()
+    {
+        onErrorEvent = true;
+        await jsRuntime.InvokeAsync<string>("alert", "Error at loading user images, default image will be used!");
     }
 }

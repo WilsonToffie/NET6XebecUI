@@ -446,7 +446,7 @@ namespace XebecPortal.UI.Pages.HR
         {
             nextButtonPressed = true;
             saveButtonPressed = true;
-
+            await saveJobState();
             nextButtonPressed = false;
             saveButtonPressed = false;
 
