@@ -139,7 +139,7 @@ namespace XebecPortal.UI.Pages.HR
         }
         private void addDepartment(Department value)
         {
-            if (!value.Equals(string.Empty))
+            if (!value.Name.Equals(string.Empty))
             {
                 // The reason for the new Departments is to make posting easier, by adding new departments to a new list and just posting that list
                 NewDepartments.Add(new()
@@ -221,7 +221,7 @@ namespace XebecPortal.UI.Pages.HR
         }
         private void addCompany(Company value)
         {
-            if (!value.Equals(string.Empty))
+            if (!value.Name.Equals(string.Empty))
             {
                 NewCompanies.Add(new() { 
                     Name = value.Name
