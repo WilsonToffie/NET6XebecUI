@@ -53,9 +53,12 @@ namespace XebecPortal.UI.Pages.HR
         private string jobTypeString;
 
         private IJSObjectReference _jsModule;
-        private string defaultCollaboratorImage = "https://xebecstorage.blob.core.windows.net/profile-images/0";
+        private string defaultCollaboratorImage = "/Img/DefaultImage.png";
+
+        private bool onErrorEvent = false;
         protected override async Task OnInitializedAsync()
         {
+            onErrorEvent = false;
             token = await localStorage.GetItemAsync<string>("jwt_token");
 
             ShowJobPortal();
@@ -327,5 +330,13 @@ namespace XebecPortal.UI.Pages.HR
             var collabId = collaboratorsAssigned.Where(x => x.JobId == id).Select(x => x.AppUserId);
             appUserFilter = appUser.Where(x => collabId.Contains(x.id) && x.role != "Candidate").ToList();
         }
+        private async Task imageHandling()
+        {
+            onErrorEvent = true;
+            await jsRuntime.InvokeAsync<string>("alert", "Error at loading user images, default image will be used!");
+        }
+
     }
+
+
 }

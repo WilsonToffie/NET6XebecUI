@@ -586,12 +586,12 @@
                                                                 
                                                                 @for (var i = 0; i < appUserFilter.Count; i++)
                                                                 {
-                                                                    if (String.IsNullOrEmpty(@appUserFilter[i].imageUrl))
+                                                                    if (String.IsNullOrEmpty(@appUserFilter[i].imageUrl) || onErrorEvent)
                                                                     {
                                                                        appUserFilter[i].imageUrl = defaultCollaboratorImage;
                                                                     }
                                                                     <div class="tooltip-c">
-                                                                        <img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" />
+                                                                        <img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" onerror="imageHandling()" />
                                                                         <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname @collaboratorsAssigned2[i].Name </span>
                                                                     </div>
                                                                 }

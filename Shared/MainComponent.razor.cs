@@ -34,6 +34,7 @@ namespace XebecPortal.UI.Shared
         private List<ProfilePicture> userProfilePicture = new List<ProfilePicture>();
 
         private string Initials = "";
+        private string userPic = String.Empty;
         private bool applicantApplicationProfile, applicantJobPortal, applicantMyJobs, profilePictureExists;
 
         private bool hrDataAnalyticsTool, hrJobPortal, hrCreateAJob,hrApplicantPortal, hrPhaseManager;
@@ -63,11 +64,13 @@ namespace XebecPortal.UI.Shared
                     foreach (var item in userProfilePicture)
                     {
                         profilePic = item;
+                        userPic = item.profilePic;
                     }
                 }
                 else
                 {
                     profilePictureExists = false;
+                    userPic = defaultProfileImage;
                 }
 
                 Console.WriteLine("User profile pic status: " + profilePictureExists);
@@ -218,6 +221,7 @@ namespace XebecPortal.UI.Shared
             {
                 profilePic.AppUserId = state.AppUserId; 
                 profilePic.profilePic = blobUri.ToString();
+                userPic = blobUri.ToString();
                 Console.WriteLine("Result is true whooooo");
                 var content = new FormUrlEncodedContent(new[]
                                 {
