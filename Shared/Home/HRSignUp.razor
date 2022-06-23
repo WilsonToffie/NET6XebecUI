@@ -508,7 +508,6 @@
                 <div class="form-group index-select-register">
                     <select @onchange="OnRoleChanged">
                         <option class="select-role-words">Select Role</option>
-                        <option class="selecting-role" value="Collaborator">Collaborator</option>
                         <option class="selecting-role" value="HRAdmin">HR Administrator</option>
                         <option class="selecting-role" value="Super Admin">Super Admin</option>
                     </select>
@@ -605,7 +604,7 @@
         await showRegistrationForm();
     }
 
-        private async Task GoToApplicantSignup()
+    private async Task GoToApplicantSignup()
     {
         navmanager.NavigateTo("applicantsignup");
     }
@@ -663,7 +662,7 @@
 
     private bool RegisterCheckbox()
     {
-        if (user.Role.Equals(null) || user.Role.Equals(""))
+        if (String.IsNullOrEmpty(user.Role))
         {
             invalidRole = true;
             return false;
