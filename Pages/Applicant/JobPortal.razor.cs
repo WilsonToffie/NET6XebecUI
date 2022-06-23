@@ -62,7 +62,8 @@ namespace XebecPortal.UI.Pages.Applicant
             jobTypeHelper = await httpClient.GetListJsonAsync<List<JobTypeHelper>>("JobTypeHelper", new AuthenticationHeaderValue("Bearer", token));
             candidates = await httpClient.GetListJsonAsync<List<CandidateRecommender>>("CandidateRecommender", new AuthenticationHeaderValue("Bearer", token));
             jobList = jobList.Where(x => x.Status == "Open").ToList();
-            jobListFilter = await httpClient.GetListJsonAsync<List<Job>>("Job", new AuthenticationHeaderValue("Bearer", token)); ;
+            jobListFilter = await httpClient.GetListJsonAsync<List<Job>>("Job", new AuthenticationHeaderValue("Bearer", token)); 
+            jobListFilter = jobListFilter.Where(x => x.Status == "Open").ToList();
             jobPagedList = jobListFilter.ToPagedList(1, 17);
             displayJobDetail = jobListFilter.FirstOrDefault();
             if (jobList.Count == 0)
@@ -309,7 +310,6 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 for (int i = 0; i < QuestionList.Count; i++)
                 {
-                    Console.WriteLine(QuestionList[i].answer + " " + AnswerList[i].applicantAnswer);
                     if (QuestionList[i].answer == AnswerList[i].applicantAnswer)
                     {
                         tempMatches++;
@@ -317,7 +317,6 @@ namespace XebecPortal.UI.Pages.Applicant
                 }
 
                 tempScore = tempMatches / QuestionList.Count * 100;
-                Console.WriteLine(tempMatches + " / " + QuestionList.Count + " * " + 100);
 
                 CandidateRecommender candidateRecommender = new CandidateRecommender();
 

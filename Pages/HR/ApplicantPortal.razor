@@ -502,12 +502,11 @@
     }
 
     .maginified-documents-close {
-        position: absolute;
-        top: 13px;
-        left: 90%;
-        background-color: transparent !important;
-        opacity: 1;
-        font-size: xxx-large !important;
+    position: absolute;
+    top: 5px;
+    left: 67%;
+    background-color: transparent !important;
+    opacity: 1;
     }
 
         .maginified-documents-close:checked {
@@ -626,7 +625,7 @@
                     </select>
                 </div>
                 <div class="mydialog-final-body">
-                    <textarea class="mydialog-final-textarea" @bind="emailContent" placeholder="Email applicant"></textarea>
+                    <textarea class="mydialog-final-textarea" @bind="emailContent" @bind:event="oninput" placeholder="Email applicant"></textarea>
                 </div>
                 <div class="mydialog-final-button">
                     <button class="default-button-style" @onclick="() => { showEmail = false; }" disabled="@sendEmailPressed">Cancel</button>
@@ -686,7 +685,7 @@
                     else
                     {
 
-                        @if (@getUserDoc.CV.Count() == 0 || noDocuments == true || documentsHasBeenAdded == false)
+                        @if (String.IsNullOrEmpty(@getUserDoc.CV)|| noDocuments == true || documentsHasBeenAdded == false)
                         {
                             <div>
                                 No CV's found
@@ -716,7 +715,7 @@
                     else
                     {
 
-                        @if (@getUserDoc.MatricCertificate.Count() == 0 || noDocuments == true || documentsHasBeenAdded == false)
+                        @if (String.IsNullOrEmpty(@getUserDoc.MatricCertificate)|| noDocuments == true || documentsHasBeenAdded == false)
                         {
 
                             <div>
@@ -744,7 +743,7 @@
                     }
                     else
                     {
-                        @if (@getUserDoc.UniversityTranscript.Count() == 0 || noDocuments == true || documentsHasBeenAdded == false)
+                        @if (String.IsNullOrEmpty(@getUserDoc.UniversityTranscript)|| noDocuments == true || documentsHasBeenAdded == false)
                         {
                             <div>
                                 No University Transcript found
@@ -771,7 +770,7 @@
                     }
                     else
                     {
-                        @if (@getUserDoc.AdditionalCert1.Count() == 0 || noDocuments == true || documentsHasBeenAdded == false)
+                        @if (String.IsNullOrEmpty(@getUserDoc.AdditionalCert1) || noDocuments == true || documentsHasBeenAdded == false)
                         {
                             <div>
                                 No Certificate found
@@ -797,7 +796,7 @@
                     else
                     {
 
-                        @if (@getUserDoc.AdditionalCert2.Count() == 0 || noDocuments == true || documentsHasBeenAdded == false)
+                        @if (String.IsNullOrEmpty(@getUserDoc.AdditionalCert2) || noDocuments == true || documentsHasBeenAdded == false)
                         {
                             <div>
                                 No Certificate found
@@ -823,7 +822,7 @@
                     }
                     else
                     {
-                        @if (@getUserDoc.AdditionalCert2.Count() == 0 || noDocuments == true || documentsHasBeenAdded == false)
+                        @if (String.IsNullOrEmpty(@getUserDoc.AdditionalCert3) || noDocuments == true || documentsHasBeenAdded == false)
                         {
                             <div>
                                 No Certificate found
@@ -938,7 +937,7 @@
                     <tbody>
                         <tr>
                             <td>
-                                <div class="additional-information" @onclick="toggleAdditionalInformation">Show Additional Information</div>
+                                <input type="button" class="btn-view-documents" style="width: 175px; height: 25px; margin-top: 8px;" value="Show Additional Information" @onclick="toggleAdditionalInformation" />
                             </td>
                         </tr>
                         @foreach (var answer in AnswerList)
@@ -1321,7 +1320,6 @@
     //marker
     private async Task setApplication(int id)
     {
-        Console.WriteLine("Calling setApplication");
         emailContent = "";
         applicationId = id;
 
@@ -1381,11 +1379,9 @@
         }
 
         phaseId = phases.Where(x => x.description.ToLower() == e.Value.ToString().ToLower()).FirstOrDefault().id;
-
-        Console.WriteLine(phaseId);
     }
 
-    private async Task SetRejectionReason(ChangeEventArgs e)
+    private void SetRejectionReason(ChangeEventArgs e)
     {
         rejectionId = Convert.ToInt32(e.Value);
 
@@ -1434,11 +1430,7 @@
     {
         sendEmailPressed = true;
 
-        Console.WriteLine(Email.CandidateFirstName);
-        Console.WriteLine(Email.CandidateLastName);
-        Console.WriteLine(Email.CandidateEmail);
-        Console.WriteLine(Email.Body);
-        Console.WriteLine(Email.JobName);
+        Email.Body = emailContent;
 
 
         //add error handling here
@@ -1461,7 +1453,6 @@
     private async Task toggleDocuments(AppUser user)
     {
         loadingDocumentInfo = true;
-        Console.WriteLine("User ID: " + user.id);
         showDocuments = !showDocuments;
         SetSelectedCandidate(user);
         getUserDoc = new Document();
@@ -1473,7 +1464,6 @@
                 documentsHasBeenAdded = true;
                 break;
             }
-            Console.WriteLine("check if user has added documents " + documentsHasBeenAdded);
         }
 
 
@@ -1484,7 +1474,6 @@
                 userDocuments = await httpClient.GetListJsonAsync<List<Document>>($"Document/all/{user.id}", new AuthenticationHeaderValue("Bearer", token));
 
                 checkUserDoc = userDocuments.ToList();
-                Console.WriteLine("Document count " + checkUserDoc.Count());
                 if (checkUserDoc.Count == 0)
                 {
                     noDocuments = true;
@@ -1497,7 +1486,6 @@
                         getUserDoc = item;
                     }
                 }
-                Console.WriteLine("No Documents status: " + noDocuments);
             }
         }
         loadingDocumentInfo = false;

@@ -511,7 +511,7 @@ else
                         <option @onclick="AddAllPhases" value="50">Add All Phases</option>
                     </optgroup>
                     <optgroup label="Phase Options">
-                        @foreach (var item in phases)
+                        @foreach (var item in phases.Where(x => x.description!="Applied" && x.description!="Hired" && x.description != "Rejected"))
                         {
                             <option value="@item.id">@item.description</option>
                         }
@@ -528,7 +528,7 @@ else
                 <div class="overflow-auto" style="width: 15em; height: 21em">
                     @if (phasesAdded?.Any() == true)
                     {
-                        foreach (var item in phasesAdded)
+                        foreach (var item in phasesAdded.Where(x => x.description!="Applied" && x.description!="Hired" && x.description!="Rejected"))
                         {
                             <br />
                             <div class="card" style="width: 14em">
@@ -658,7 +658,7 @@ else
                     <div class="overflow-auto" style="height: 22em">
                         @if (phases?.Any() == true)
                         {
-                            foreach (var item in phases)
+                            foreach (var item in phases.Where(x => x.description != "Applied" && x.description != "Hired" && x.description != "Rejected"))
                             {
                                 <br />
                                 <div class="card">
@@ -710,6 +710,10 @@ else
         phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("applicationphase", new AuthenticationHeaderValue("Bearer", token));
 
         jobs = await httpClient.GetListJsonAsync<List<Job>>("job", new AuthenticationHeaderValue("Bearer", token));
+
+        phasesAdded.Add(phases.FirstOrDefault(x => x.description == "Applied"));
+        phasesAdded.Add(phases.FirstOrDefault(x => x.description == "Hired"));
+        phasesAdded.Add(phases.FirstOrDefault(x => x.description == "Rejected"));
     }
 
 
@@ -717,8 +721,12 @@ else
     private async Task DeletePhase(ApplicationPhase phase)
     {
         //this deletes from the db
-        await httpClient.DeleteJsonAsync($"applicationphase/{phase.id}", new AuthenticationHeaderValue("Bearer", token));
-        phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("applicationphase", new AuthenticationHeaderValue("Bearer", token));
+        if(phase.description!="Applied" && phase.description!="Hired" && phase.description!="Rejection")
+        {
+            await httpClient.DeleteJsonAsync($"applicationphase/{phase.id}", new AuthenticationHeaderValue("Bearer", token));
+            phases = await httpClient.GetListJsonAsync<List<ApplicationPhase>>("applicationphase", new AuthenticationHeaderValue("Bearer", token));
+        }
+
     }
 
     private async Task AddPhase()
@@ -762,7 +770,7 @@ else
             phasesAdded.Add(phase);
         }
 
-        await jsr.InvokeAsync<string>("alert", "Phase saved successfully.");
+        //await jsr.InvokeAsync<string>("alert", "Phase saved successfully.");
         addPhasePressed = false;
     }
 
@@ -783,7 +791,13 @@ else
     private void DeletePhaseOrderPhase(ApplicationPhase phase)
     {
         //this just removes from the list
-        phasesAdded.Remove(phase);
+        Console.WriteLine(phase.description);
+
+        if(phase.description!="Applied" && phase.description!="Hired" && phase.description!="Rejected")
+        {
+            phasesAdded.Remove(phase);
+        }
+        
     }
 
     private async Task Submit()

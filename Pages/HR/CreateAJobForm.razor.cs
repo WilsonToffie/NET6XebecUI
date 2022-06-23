@@ -45,7 +45,7 @@ namespace XebecPortal.UI.Pages.HR
         private JobTypeHelper jobtype = new JobTypeHelper();
         private Department displayDepartment = new Department();
         private JobType displayJobType = new JobType();
-        private Company displayCompany= new Company();
+        private Company displayCompany = new Company();
         private Location displayLocations = new Location();
         private Policy displayPolicy = new Policy();
         private Job checkJob = new Job();
@@ -71,6 +71,7 @@ namespace XebecPortal.UI.Pages.HR
         private bool addedNewComp;
         private bool validUpload;
         private bool allowedToRedirect = false;
+        private bool validity = false;
 
         private bool saveButtonPressed = false;
         private bool nextButtonPressed = false;
@@ -139,13 +140,13 @@ namespace XebecPortal.UI.Pages.HR
         }
         private void addDepartment(Department value)
         {
-            if (!value.Equals(string.Empty))
+            if (!value.Name.Equals(string.Empty))
             {
                 // The reason for the new Departments is to make posting easier, by adding new departments to a new list and just posting that list
                 NewDepartments.Add(new()
                 {
                     Name = value.Name,
-                });                
+                });
                 department.Name = string.Empty;
             }
         }
@@ -162,19 +163,19 @@ namespace XebecPortal.UI.Pages.HR
                     {
                         departmentBeingUsedByAnotherJob = true;
                         break;
-                    }                    
+                    }
                 }
 
                 if (!departmentBeingUsedByAnotherJob)
-                {                
+                {
                     if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Remove This Department?"))
-                    {              
+                    {
                         var removeDep = await HttpClient.DeleteJsonAsync($"Department/{value.Id}", new AuthenticationHeaderValue("Bearer", token));
                         if (removeDep.IsSuccessStatusCode)
                         {
                             await jsRuntime.InvokeAsync<object>("alert", "Department has successfully been removed!");
                             department.Id = 0;
-                        }               
+                        }
                     }
                 }
                 else
@@ -206,7 +207,7 @@ namespace XebecPortal.UI.Pages.HR
                 {
                     addedNewDep = false;
                 }
-               
+
             }
 
             if (addedNewDep)
@@ -214,16 +215,17 @@ namespace XebecPortal.UI.Pages.HR
                 await jsRuntime.InvokeAsync<object>("alert", "Newly added departments has been saved!");
             }
             NewDepartments.Clear();
-            
+
             await createDep(false);
 
             saveDepPressed = false;
         }
         private void addCompany(Company value)
         {
-            if (!value.Equals(string.Empty))
+            if (!value.Name.Equals(string.Empty))
             {
-                NewCompanies.Add(new() { 
+                NewCompanies.Add(new()
+                {
                     Name = value.Name
                 });
                 company.Name = string.Empty;
@@ -315,29 +317,22 @@ namespace XebecPortal.UI.Pages.HR
                 PolicyId = policies.Id,
                 Status = "Draft",
                 DueDate = TempJob.DueDate,
-                CreationDate = DateTime.Today,                
-                JobTypes = jobType, 
-                
-        });
+                CreationDate = DateTime.Today,
+                JobTypes = jobType,
+            });
 
-           // Console.WriteLine("Title " + TempJob.Title);
-           // Console.WriteLine("Description " + TempJob.Description);
-            Console.WriteLine("LocationId " + locations.Id);
-            Console.WriteLine("DepartmentID " + departments.Id);
-            Console.WriteLine("Policies ID " + policies.Id);
-           // Console.WriteLine("JobTypes " + jobType);
 
             checkJobList = await HttpClient.GetListJsonAsync<List<Job>>($"Job", new AuthenticationHeaderValue("Bearer", token));
             //checkJob = checkJobList.Where(x => x.Title == TempJob.Title).ToList();
             // Please find a better way....
             //Console.WriteLine("JOb count" + checkJobList.Count());
             foreach (var item in checkJobList)
-            {                
+            {
 
                 if (item.Title.Equals(TempJob.Title) && item.Description.Equals(TempJob.Description) && (item.DepartmentId == departments.Id) && (item.LocationId == locations.Id)) //) && item.PolicyId == policies.Id item.PolicyId == policies.Id && item.DueDate.Equals(TempJob.DueDate) && item.JobTypes.Equals(jobType)
                 {
                     TempJob.Id = item.Id;
-                    existJobId = item.Id; 
+                    existJobId = item.Id;
                     createJobExists = true;
                 }
                 else
@@ -346,6 +341,9 @@ namespace XebecPortal.UI.Pages.HR
                 }
             }
             Console.WriteLine("Info that exists within the jobList:");
+
+
+
             foreach (var item in jobList)
             {
 
@@ -369,17 +367,27 @@ namespace XebecPortal.UI.Pages.HR
                 {
                     Console.WriteLine("Job Doesnt exist yet");
                     //var validExistingUpload = await HttpClient.PutJsonAsync($"Job/213", item, new AuthenticationHeaderValue("Bearer", token));
-                    var validExistingUpload = await HttpClient.PostJsonAsync($"Job", item, new AuthenticationHeaderValue("Bearer", token));
-               
-                if (validExistingUpload.IsSuccessStatusCode)
+
+                    if (checkValidity(TempJob.Title, TempJob.Description, companies.Id, locations.Id, departments.Id, policies.Id, jobtype.JobTypeId))
                     {
-                        validUpload = true;
+
+
+                        var validExistingUpload = await HttpClient.PostJsonAsync($"Job", item, new AuthenticationHeaderValue("Bearer", token));
+
+                        if (validExistingUpload.IsSuccessStatusCode)
+                        {
+                            validUpload = true;
+                        }
+                        else
+                        {
+                            validUpload = false;
+                        }
+                        await OnInitializedAsync();
                     }
                     else
                     {
-                        validUpload = false;
+                        await jsRuntime.InvokeAsync<object>("alert", "Please check that all fields are filled.");
                     }
-                    await OnInitializedAsync();
                 }
 
             }
@@ -388,13 +396,53 @@ namespace XebecPortal.UI.Pages.HR
             {
                 await jsRuntime.InvokeAsync<object>("alert", "The current state of the job creation process has been saved!");
             }
+            else
+            {
+                await jsRuntime.InvokeAsync<object>("alert", "We had a problem saving!");
+            }
             allowedToRedirect = true;
             jobType.Clear();
-            jobList.Clear();            
+            jobList.Clear();
             checkJobList.Clear();
+
 
             nextButtonPressed = false;
             saveButtonPressed = false;
+        }
+
+
+        private bool checkValidity(string title, string description, int companyId, int locationId, int departmentId, int policyId, int jobTypesId)
+        {
+            if (String.IsNullOrEmpty(title))
+            {
+                return false;
+            }
+            if (String.IsNullOrEmpty(description))
+            {
+                return false;
+            }
+            if (companyId == 0)
+            {
+                return false;
+            }
+            if (locationId == 0)
+            {
+                return false;
+            }
+            if (departmentId == 0)
+            {
+                return false;
+            }
+            if (policyId == 0)
+            {
+                return false;
+            }
+            if (jobTypesId == null || jobTypesId == 0)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private bool redirectpage;
@@ -403,7 +451,7 @@ namespace XebecPortal.UI.Pages.HR
             nextButtonPressed = true;
             saveButtonPressed = true;
 
-            //await saveJobState();
+            await saveJobState();
 
             nextButtonPressed = false;
             saveButtonPressed = false;
@@ -436,7 +484,7 @@ namespace XebecPortal.UI.Pages.HR
                 displayJobType = await HttpClient.GetListJsonAsync<JobType>($"JobType/{jobTypeId}", new AuthenticationHeaderValue("Bearer", token));
                 TempJob.JobType.Id = displayJobType.Id;
                 TempJob.JobType.Type = displayJobType.Type;
-            }            
+            }
         }
 
         private async Task displayCompName(int compID)
