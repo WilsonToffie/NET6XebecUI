@@ -212,22 +212,42 @@
         height: 18vh;
         width: 18vh;
         margin: auto;
-        background: url(@personalInfo.ImageUrl);
-        background-size: cover;
+        border-radius: 100%;
+        background-size: cover !important;
+        background: url(@profilePic.profilePic);
+        
         /*background-repeat: no-repeat;*
         /*background-color: none;*/
 
-        border-radius: 100%;
+       
+
+        /*width: 150px;
+        height: 150px;
+        overflow: hidden;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        -ms-border-radius: 50%;
+        -o-border-radius: 50%;
+        border-radius: 50%;*/
     }
+
+/*    .profile-image-div-cover img {
+        width: 100%;
+        height: 100%;
+        border-radius: 100%;
+}
+    }*/
+
     .profile-image-div-cover-empty {
         height: 18vh;
         width: 18vh;
         margin: auto;
-        background-color: #A9ABA7; /*background-color: rgba(128,128,128,0.8);*/
+       /* background-color: #A9ABA7;*/ /*background-color: rgba(128,128,128,0.8);*/
+        background: url(@defaultProfileImage);
         background-size: cover;
         /*background-repeat: no-repeat;*
         /*background-color: none;*/
-        border: 0.4em rgba(0,0,0,0.2) solid;
+        /*border: 0.4em rgba(0,0,0,0.2) solid;*/
         border-radius: 100%;
     }
     .profile-image-div {
@@ -485,17 +505,21 @@
             </div>
             <div class="mainlayout-profile">
                 <div class="profile-div">
-                    @if (newUser)
+                    @if (!profilePictureExists)
                     {
-                        <div class="profile-image-div-cover-empty">
-                            <div class="default-image-location"> 
-                                <i class="fas fa-user fa-6x"></i>                                
-                            </div>                 
+                        <div class="profile-image-div-cover-empty">                                            
+                            <div class="upload-profile-btn">
+                                <label class="to-top">
+                                    <InputFile OnChange="@UploadingProfilePic" class="drag-drop-input-image" id="fileInput" />
+                                </label>
+                            </div>
                         </div>
                     }
                     else
-                    {
+                    {                        
                         <div class="profile-image-div-cover">
+                            @*<MudImage Src="@profilePic.profilePic"/> <!-- Alt="Mony the dog" Elevation="25" Class="rounded-lg"-->*@
+                            @*<image id="profileImage" src="@profilePic.profilePic" />*@
                             <div class="upload-profile-btn">
                                 <label class="to-top">
                                     <InputFile OnChange="@UploadingProfilePic" class="drag-drop-input-image" id="fileInput" />
@@ -643,17 +667,19 @@
             </div>
             <div class="mainlayout-profile">
                 <div class="profile-div">
-                    @if (newUser)
-                    {
-                    <div class="profile-image-div-cover-empty">
-                        <div class="default-image-location">
-                            <i class="fas fa-user fa-6x"></i>
+                @if (!profilePictureExists)
+                {
+                    <div class="profile-image-div-cover-empty">                        
+                        <div class="upload-profile-btn">
+                            <label class="to-top">
+                                <InputFile OnChange="@UploadingProfilePic" class="drag-drop-input-image" id="fileInput" />
+                            </label>
                         </div>
                     </div>
                 }
                 else
                 {
-                <div class="profile-image-div-cover">
+                <div class="profile-image-div-cover">                    
                     <div class="upload-profile-btn">
                         <label class="to-top">
                             <InputFile OnChange="@UploadingProfilePic" class="drag-drop-input-image" id="fileInput" />
