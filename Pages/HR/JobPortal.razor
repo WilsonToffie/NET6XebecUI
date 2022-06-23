@@ -577,24 +577,21 @@
                                                             personalInformation = personalInformation.Where(x => collabId.Contains(x.Id)).ToList();
                                                             collaboratorsAssigned2 = collaboratorsAssigned.Where(x => x.JobId == displayJobDetail.Id).ToList();
                                                             appUserFilter = appUser.Where(x => collabId.Contains(x.id)).ToList();
-
+                                                            Console.WriteLine("amount of collaborators: " + appUserFilter.Count());
                                                         }
 
-                                                        @if (appUserFilter.Count < 3 && appUserFilter.Count > 0)
+                                                        @if (appUserFilter.Count > 0)
                                                         {
                                                             <div class="image-div">
-
-
-                                                                @* @foreach (var item in appUserFilter)
-                                            {
-                                            <img src="@item.imageUrl" alt="image" class="collab-image" />
-
-                                            <span class="tooltip-text">@item.name @item.surname</span>
-                                            }*@
+                                                                
                                                                 @for (var i = 0; i < appUserFilter.Count; i++)
                                                                 {
+                                                                    if (String.IsNullOrEmpty(@appUserFilter[i].imageUrl))
+                                                                    {
+                                                                       appUserFilter[i].imageUrl = defaultCollaboratorImage;
+                                                                    }
                                                                     <div class="tooltip-c">
-                                                                        <img src="@defaultCollaboratorImage" alt="image" class="collab-image" />
+                                                                        <img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" />
                                                                         <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname @collaboratorsAssigned2[i].Name </span>
                                                                     </div>
                                                                 }
@@ -602,25 +599,31 @@
 
                                                             </div>
                                                         }
+                                                        @*else @if (appUserFilter.Count >= 3)
+                                                        {
+                                                       
+                                                            <div class="image-div">
+                                                                                                                         
+                                                                @for (var i = 0; i < appUserFilter.Count(); i++)
+                                                                {
+                                                                    if (String.IsNullOrEmpty(@appUserFilter[i].imageUrl))
+                                                                    {
+                                                                       appUserFilter[i].imageUrl = defaultCollaboratorImage;
+                                                                    }
+                                                                    <div class="tooltip-c">
+                                                                        <img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image" />
+                                                                        <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname @collaboratorsAssigned2[i].Name </span>
+                                                                      *@  @*<img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image " />
+                                                                        <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname</span>*@
+                                                                    @*</div>
+                                                                }*@
+                                                                @*<p class="plus">+ @((@appUserFilter.Count)-3)</p>*@
+                                                               @* 
+                                                            </div>                                                       
+                                                        }*@
                                                     </div>
 
-                                                    @if (appUserFilter.Count > 3)
-                                                    {
-                                                        <div class="col mt-5">
-                                                            <div class="image-div">
-                                                                @for (var i = 0; i < 3; i++)
-                                                                {
-                                                                    <div class="tooltip-c">
-                                                                        <img src="@defaultCollaboratorImage" alt="image" class="collab-image" />
-                                                                        <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname @collaboratorsAssigned2[i].Name </span>
-                                                                        @*<img src="@appUserFilter[i].imageUrl" alt="image" class="collab-image " />
-                                                <span class="tooltip-text">@appUserFilter[i].name @appUserFilter[i].surname</span>*@
-                                                                    </div>
-                                                                }
-                                                                @*<p class="plus">+ @((@appUserFilter.Count)-3)</p>*@
-                                                            </div>
-                                                        </div>
-                                                    }
+                                                    
 
 
                                                     @* <div class="col mt-5">

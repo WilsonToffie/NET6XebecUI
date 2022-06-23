@@ -40,7 +40,6 @@ namespace XebecPortal.UI.Shared
         private string token;
         private List<Department> departments;
 
-        private bool newUser = false;
         private string defaultProfileImage = "https://xebecstorage.blob.core.windows.net/profile-images/0";
         protected override async Task OnInitializedAsync()
         {
@@ -48,12 +47,12 @@ namespace XebecPortal.UI.Shared
             {
                 token = await localStorage.GetItemAsync<string>("jwt_token");
 
-                jobs = await HttpClient.GetListJsonAsync<IList<Job>>($"Job", new AuthenticationHeaderValue("Bearer", token));
+               // jobs = await HttpClient.GetListJsonAsync<IList<Job>>($"Job", new AuthenticationHeaderValue("Bearer", token));
 
-                jobTypes = await HttpClient.GetListJsonAsync<IList<JobType>>("JobType", new AuthenticationHeaderValue("Bearer", token));
+               // jobTypes = await HttpClient.GetListJsonAsync<IList<JobType>>("JobType", new AuthenticationHeaderValue("Bearer", token));
 
-                personalInfoStuff = await HttpClient.GetListJsonAsync<List<PersonalInformation>>($"personalinformation", new AuthenticationHeaderValue("Bearer", token)); // !!!!!! Change the ID to be the userID later 
-                personalInfoList = personalInfoStuff.Where(x => x.AppUserId == state.AppUserId).ToList();
+                //personalInfoStuff = await HttpClient.GetListJsonAsync<List<PersonalInformation>>($"personalinformation", new AuthenticationHeaderValue("Bearer", token)); // !!!!!! Change the ID to be the userID later 
+                //personalInfoList = personalInfoStuff.Where(x => x.AppUserId == state.AppUserId).ToList();
                 //userProfilePicture = await HttpClient.GetListJsonAsync<List<ProfilePicture>>($"ProfilePicture/appUser/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
                 profilePicStuff = await HttpClient.GetListJsonAsync<List<ProfilePicture>>($"ProfilePicture", new AuthenticationHeaderValue("Bearer", token));
                 userProfilePicture = profilePicStuff.Where(x => x.AppUserId == state.AppUserId).ToList();
@@ -72,18 +71,7 @@ namespace XebecPortal.UI.Shared
                 }
 
                 Console.WriteLine("User profile pic status: " + profilePictureExists);
-                //if (personalInfoList.Count > 0)
-                //{
-                //    foreach (var item in personalInfoList)
-                //    {
-                //        personalInfo = item;
-                //        newUser = false;
-                //    }
-                //}
-                //else
-                //{
-                //    newUser = true;
-                //}
+               
                 departments = await HttpClient.GetFromJsonAsync<List<Department>>("department");
 
                 if (state.Role.Equals("Candidate"))
@@ -235,8 +223,7 @@ namespace XebecPortal.UI.Shared
                                 {
                                     new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
                                 });
-                //state.Avator = blobUri.ToString(); This displays whooooooooooooooooooo
-                // var resp = await HttpClient.PutJsonAsync($"User/{state.AppUserId}", state, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
+
                 if (profilePictureExists)
                 {
                     var resp = await HttpClient.PutJsonAsync($"ProfilePicture/{profilePic.Id}", profilePic, new AuthenticationHeaderValue("Bearer", token)); 

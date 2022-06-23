@@ -40,7 +40,7 @@ namespace XebecPortal.UI.Pages.HR
         private List<Department> departments;
         private List<string> locations = new() { "Eastern Cape", "Free State", " Gauteng", "KwaZulu-Natal", "Limpopo", "Mpumalanga", "Northen Cape", "North West", "Western Cape" };
         private MudBlazor.DialogOptions options = new() { CloseButton = true, FullWidth = true};
-
+        private List<ProfilePicture> userProfilePicture = new List<ProfilePicture>();
         private IEnumerable<string> mudSelectLocation;
         private IEnumerable<string> mudSelectCompany;
         private IEnumerable<string> mudSelectDepartment;
@@ -53,7 +53,7 @@ namespace XebecPortal.UI.Pages.HR
         private string jobTypeString;
 
         private IJSObjectReference _jsModule;
-        private string defaultCollaboratorImage = "https://xebecstorage.blob.core.windows.net/profile-images/placeholderprofilePic";
+        private string defaultCollaboratorImage = "https://xebecstorage.blob.core.windows.net/profile-images/0";
         protected override async Task OnInitializedAsync()
         {
             token = await localStorage.GetItemAsync<string>("jwt_token");
@@ -68,9 +68,22 @@ namespace XebecPortal.UI.Pages.HR
             appUser = await httpClient.GetListJsonAsync<List<AppUser>>($"User", new AuthenticationHeaderValue("Bearer", token));
             collaboratorsAssigned = await httpClient.GetListJsonAsync<List<CollaboratorsAssigned>>($"CollaboratorsAssigned", new AuthenticationHeaderValue("Bearer", token));
             personalInformation = await httpClient.GetListJsonAsync<List<PersonalInformation>>("PersonalInformation", new AuthenticationHeaderValue("Bearer", token));
-
+            userProfilePicture = await httpClient.GetListJsonAsync<List<ProfilePicture>>($"ProfilePicture", new AuthenticationHeaderValue("Bearer", token));
             //status = await httpClient.GetFromJsonAsync<List<Status>>("/mockData/Status.json");
             departments = await httpClient.GetFromJsonAsync<List<Department>>("department");
+
+            foreach (var item in appUser)
+            {
+                foreach (var profilepic in userProfilePicture)
+                {
+                    if (item.id == profilepic.AppUserId)
+                    {
+                        item.imageUrl = profilepic.profilePic;
+                        break;
+                    }
+                }
+                
+            }
 
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/jsPages/HR/JobPortalv3.js");
 
@@ -112,6 +125,7 @@ namespace XebecPortal.UI.Pages.HR
 
         private void ShowJobPortal()
         {
+            
             ShowingApplicantPortal = false;
             ShowingJobPortal = true;
             ShowingPhaseManager = false;
