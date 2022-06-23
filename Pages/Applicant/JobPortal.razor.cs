@@ -310,7 +310,6 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 for (int i = 0; i < QuestionList.Count; i++)
                 {
-                    Console.WriteLine(QuestionList[i].answer + " " + AnswerList[i].applicantAnswer);
                     if (QuestionList[i].answer == AnswerList[i].applicantAnswer)
                     {
                         tempMatches++;
@@ -318,7 +317,6 @@ namespace XebecPortal.UI.Pages.Applicant
                 }
 
                 tempScore = tempMatches / QuestionList.Count * 100;
-                Console.WriteLine(tempMatches + " / " + QuestionList.Count + " * " + 100);
 
                 CandidateRecommender candidateRecommender = new CandidateRecommender();
 
