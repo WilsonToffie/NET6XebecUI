@@ -312,7 +312,7 @@
                         <small class="phase left-text">
                             <span class="phase-pill" style="@(GetColor(currentPhase.description))">@currentPhase.description</span>
                         </small>
-                        <small class="addition-details text-muted">Date Advertised: @currentJob.CreationDate</small>
+                        <small class="addition-details text-muted">Date Advertised: @currentJob.CreationDate.ToString("MM/dd/yyyy")</small>
                     </div>
                 }
             }
@@ -349,7 +349,7 @@
                         <small class="phase left-text">
                             <span class="phase-pill" style="@(GetColor(currentPhase.description))">@currentPhase.description</span>
                         </small>
-                        <small class="addition-details text-muted">Date Advertised: @currentJob.CreationDate</small>
+                        <small class="addition-details text-muted">Date Advertised: @currentJob.CreationDate.ToString("MM/dd/yyyy")</small>
                     </div>
 
                 }
@@ -411,7 +411,7 @@
                         <small class="phase left-text">
                             <span class="phase-pill" style="@(GetColor(currentPhase.description))">@currentPhase.description</span>
                         </small>
-                        <small class="addition-details text-muted">Date Advertised: @currentJob.CreationDate</small>
+                        <small class="addition-details text-muted">Date Advertised: @currentJob.CreationDate.ToString("MM/dd/yyyy")</small>
                     </div>
 
 
@@ -452,8 +452,8 @@
         @foreach (var application in applications)
         {
             Job currentJob;
-
-            if(jobsFiltered!=null)
+                
+                if(jobsFiltered!=null)
             {
                 currentJob = jobsFiltered.Where(x => x.Id == application.JobId).FirstOrDefault();
             }
@@ -473,8 +473,8 @@
                     <small class="phase left-text">Last Phase : 
                         <span class="phase-pill rejection-phase" style="@(GetColor(currentPhase.description))">@currentPhase.description</span>
                     </small>
-                    <small class="addition-details">Date Advertised: @currentJob.CreationDate</small>
-                    <small class="addition-details">Date Closed : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@currentJob.DueDate</small>
+                    <small class="addition-details">Date Advertised: @currentJob.CreationDate.ToString("MM/dd/yyyy")</small>
+                    <small class="addition-details">Date Closed : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@currentJob.DueDate.ToString("MM/dd/yyyy")</small>
                 </div>
             }
         }
