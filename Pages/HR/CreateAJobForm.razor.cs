@@ -153,7 +153,6 @@ namespace XebecPortal.UI.Pages.HR
 
         private async Task removeDepartment(Department value)
         {
-            Console.WriteLine("Value received: " + value.Id);
             if (value.Id > 0)
             {
 
@@ -298,12 +297,10 @@ namespace XebecPortal.UI.Pages.HR
             nextButtonPressed = true;
             saveButtonPressed = true;
 
-            Console.WriteLine("policies.Id When entering saveJobState" + policies.Id);
             jobType.Add(new()
             {
                 JobTypeId = jobtype.JobTypeId,
             });
-            Console.WriteLine("Joblist count: " + jobList.Count);
 
             jobList.Add(new()
             {
@@ -340,7 +337,6 @@ namespace XebecPortal.UI.Pages.HR
                     createJobExists = false;
                 }
             }
-            Console.WriteLine("Info that exists within the jobList:");
 
 
 
@@ -505,7 +501,6 @@ namespace XebecPortal.UI.Pages.HR
 
             if (policyID > 0)
             {
-                Console.WriteLine("Policy ID when selected: " + policyID);
                 displayPolicy = await HttpClient.GetListJsonAsync<Policy>($"Policy/single/{policyID}", new AuthenticationHeaderValue("Bearer", token));
                 TempJob.Policy.Id = displayPolicy.Id;
                 TempJob.Policy.Name = displayPolicy.Name;

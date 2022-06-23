@@ -374,10 +374,7 @@
             @if (currentPhase.description.ToLower().Contains("hired") @* && rejectedCandidates.Where(x => x.applicationId == application.Id).FirstOrDefault() == null*@&& currentJob != null)
             {
                 countSuccesfull.Add(application);
-                foreach(var counts in countSuccesfull)
-                {
-                    Console.WriteLine(counts.ApplicationPhase);
-                }
+
             }
         }
 
@@ -404,7 +401,6 @@
                 }
 
                 ApplicationPhase currentPhase = phases.Where(x => x.id == application.ApplicationPhaseId).FirstOrDefault();
-                Console.WriteLine(currentPhase.description);
 
                 @if (currentPhase.description.ToLower().Contains("hired") @*&& rejectedCandidates.Where(x => x.applicationId == application.Id).FirstOrDefault() == null*@ && currentJob != null)
                 {
