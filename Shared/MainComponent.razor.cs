@@ -41,7 +41,7 @@ namespace XebecPortal.UI.Shared
         private string token;
         private List<Department> departments;
 
-        private string defaultProfileImage = "https://xebecstorage.blob.core.windows.net/profile-images/0";
+        private string defaultProfileImage = "/Img/DefaultImage.png";// "https://xebecstorage.blob.core.windows.net/profile-images/0";
         protected override async Task OnInitializedAsync()
         {
             try
