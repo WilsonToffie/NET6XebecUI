@@ -77,8 +77,6 @@ namespace XebecPortal.UI.Pages.HR
             jobListFilter = await httpClient.GetListJsonAsync<List<Job>>($"Job", new AuthenticationHeaderValue("Bearer", token));
             jobPagedList = jobListFilter.ToPagedList(1, 17);
             displayJobDetail = jobListFilter.FirstOrDefault();
-            Console.WriteLine("JobList count: " + jobList.Count);
-            Console.WriteLine("JobList Filter count: " + jobListFilter.Count);
             if (jobList.Count == 0)
             {
             }

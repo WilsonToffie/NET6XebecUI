@@ -493,7 +493,7 @@ else
 
     <div class="createjob-form-container">
         <EditForm EditContext="@EC" class="createjob-form" OnValidSubmit="@saveJobState">
-            <DataAnnotationsValidator />
+           @* <DataAnnotationsValidator />*@
             @if (manageDep)
             {
                 @if (createNewDep)
@@ -698,7 +698,7 @@ else
                 <div class="createjob-form-individual" style="position: relative;">
                     <div class="text-font-styling"> Job Name</div>
                     <InputText class="create-form-text" id="job-name" placeholder="" @bind-Value="TempJob.Title" />
-                    <ValidationMessage For="@(() => TempJob.Title)" style="font-size: 0.8em; position: absolute; bottom: 0; bottom: 16px;" />
+                    @*<ValidationMessage For="@(() => TempJob.Title)" style="font-size: 0.8em; position: absolute; bottom: 0; bottom: 16px;" />*@
                 </div>
 
                 <div class="spacing-for-stuff">
@@ -707,7 +707,7 @@ else
                         <div class="createjob-form-individual" style="position: relative;">
                             <!--style="width: 200%;"-->
                             <div class="text-font-styling">Department Information</div>
-                            <ValidationMessage For="@(() => TempJob.DepartmentId)" style="font-size: 0.8em; position: absolute; bottom: 16px;" />
+                            @*<ValidationMessage For="@(() => TempJob.DepartmentId)" style="font-size: 0.8em; position: absolute; bottom: 16px;" />*@
                             <InputSelect class="createjob-select" @bind-Value="departments.Id" @onfocusout="() => displayDepName(departments.Id)">
                                 <option selected disabled value="0">Select Department</option>
                                 @foreach (var item in Departments)
@@ -730,7 +730,7 @@ else
                         <div class="createjob-form-individual" style="position: relative;">
                             <!--style="width: 200%;"-->
                             <div class="text-font-styling">Company Information</div>
-                            <ValidationMessage For="@(() => TempJob.CompanyId)" style="font-size: 0.8em; position: absolute; bottom: 16px;" />
+                            @*<ValidationMessage For="@(() => TempJob.CompanyId)" style="font-size: 0.8em; position: absolute; bottom: 16px;" />*@
                             <InputSelect class="createjob-select" @bind-Value="companies.Id" @onfocusout="() => displayCompName(companies.Id)">
                                 <!--style="width: 107%;"-->
                                 <option selected disabled value="0">Select Company</option>
@@ -753,7 +753,7 @@ else
                     <div class="form-group createjob-form-group">
                         <div class="createjob-form-individual" style="position: relative;">
                             <div class="text-font-styling">Location Information</div>
-                            <ValidationMessage For="@(() => TempJob.PolicyId)" style="font-size: 0.8em; position: absolute; bottom: 16px;" />
+                            @*<ValidationMessage For="@(() => TempJob.PolicyId)" style="font-size: 0.8em; position: absolute; bottom: 16px;" />*@
                             <InputSelect class="createjob-select" @bind-Value="policies.Id" @onfocusout="() => displayPolicyName(policies.Id)">
                                 <option selected disabled value="0">Select WFH Policy</option>
                                 @foreach (var policy in Policies)
@@ -763,7 +763,7 @@ else
                     </InputSelect>
                 </div>
                 <div class="createjob-form-individual" style="position: relative;">
-                    <ValidationMessage For="@(() => TempJob.LocationId)" style="font-size: 0.8em; position: absolute; bottom: 16px;" />
+                    @*<ValidationMessage For="@(() => TempJob.LocationId)" style="font-size: 0.8em; position: absolute; bottom: 16px;" />*@
                     <InputSelect class="createjob-select" style="margin-top: 2.8vh;" @bind-Value="locations.Id" @onfocusout="() => displayLocationName(locations.Id)">
                         <option selected disabled value="0">Select Office Location</option>
                         @foreach (var location in Locations)
@@ -778,7 +778,7 @@ else
                 <div class="spacing-for-stuff">
                     <div class="createjob-form-individual" style="position: relative;">
                         <div class="text-font-styling">Job Type Information</div>
-                        <ValidationMessage For="@(() => TempJob.JobTypeId)" style="font-size: 0.8em; position: absolute; bottom: 16px;" />
+                        @*<ValidationMessage For="@(() => TempJob.JobTypeId)" style="font-size: 0.8em; position: absolute; bottom: 16px;" />*@
                         <InputSelect class="createjob-select" @bind-Value="@jobtype.JobTypeId" @onblur="() => displayTypeName(jobtype.JobTypeId)">
                             <option selected disabled value="0">Select Job Type</option>
                             @foreach (var item in jobTypes)
@@ -793,7 +793,7 @@ else
                 <div class="spacing-for-stuff">
                     <div class="createjob-form-individual" style="position: relative;">
                         <div class="text-font-styling">Application Due Date:</div>
-                        <ValidationMessage For="@(() => TempJob.DueDate)" style="font-size: 0.8em; position: absolute; bottom: 16px;" />
+                        @*<ValidationMessage For="@(() => TempJob.DueDate)" style="font-size: 0.8em; position: absolute; bottom: 16px;" />*@
                         <InputDate class="createjob-form-date" @bind-Value="TempJob.DueDate" style="padding-right: 5px;" />
                     </div>
                 </div>
@@ -801,7 +801,7 @@ else
                 <div class="spacing-for-stuff">
                     <div class="createjob-form-individual" style="position: relative;">
                         <div class="text-font-styling">Job Advert Description:</div>
-                        <ValidationMessage For="@(() => TempJob.Description)" style="font-size: 0.8em; position: absolute; bottom: 16px;"/>
+                        @*<ValidationMessage For="@(() => TempJob.Description)" style="font-size: 0.8em; position: absolute; bottom: 16px;"/>*@
                         <InputTextArea rows="3" style="padding-right: 5px; resize:none;" @bind-Value="TempJob.Description" />
                     </div>
                 </div>
