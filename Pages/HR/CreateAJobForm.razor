@@ -916,10 +916,6 @@ else
 
     private Task OnLocationChanged(ChangeEventArgs e)
     {
-
-
-
-        Console.WriteLine("testtestettestet");
         TempJob.Location.Name = e.Value.ToString();
         return ValueChanged.InvokeAsync(TempJob.LocationId.ToString());
     }

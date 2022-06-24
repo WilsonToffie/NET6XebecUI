@@ -547,49 +547,6 @@ else if (prevPage)
         userProfilePicture = await HttpClient.GetListJsonAsync<List<ProfilePicture>>($"ProfilePicture", new AuthenticationHeaderValue("Bearer", token));
 
 
-        //check for hiring lead, if it exists, load it
-        //try
-        //{
-        //    HiringLead = AppUserList.Find(y => y.id == collaborators.Find(x => x.JobId == JobId && x.Name == "Hiring Manager").AppUserId);
-        //}
-        //catch
-        //{
-        //    Console.WriteLine("No hiring lead for this job");
-        //}
-
-        //same for collaborators
-        //try
-        //{
-        //    foreach (var collab in collaborators.Where(x => x.JobId == JobId && x.Name == "Collaborator"))
-        //    {
-        //        ListOfCollaborators.Add(AppUserList.Find(x => x.id == collab.AppUserId));
-        //    }
-        //}
-        //catch
-        //{
-        //    Console.WriteLine("No collaborators");
-
-        //}
-
-        //questions and their collabs
-
-        //try
-        //{
-        //    foreach (var question in ChosenQuestions)
-        //    {
-        //        QuestionsDictionary.Add(question, new List<AppUser>());
-
-        //        foreach (var k in CollabQuestions.Where(x => x.FormQuestionId == question.id))
-        //        {
-        //            QuestionsDictionary[question].Add(AppUserList.FirstOrDefault(x => x.id == k.AppUserId));
-        //        }
-        //    }
-        //}
-        //catch
-        //{
-        //    Console.WriteLine("Problem loading questions");
-        //}
-
     }
 
     public async Task Save()
@@ -622,11 +579,7 @@ else if (prevPage)
 
             //var addcollaborator = await HttpClient.PostJsonAsync("collaboratorsassigned", collaboratorsToSave, new AuthenticationHeaderValue("Bearer", token));
 
-            //if (addcollaborator.IsSuccessStatusCode)
-            //{
-            //    await jsRuntime.InvokeAsync<object>("alert", "Collaboratos saved successfully");
-            //    Console.WriteLine("Added");
-            //}
+
 
 
         }
@@ -654,9 +607,6 @@ else if (prevPage)
 
         hiringLead = currentHiringLead.name + " " + currentHiringLead.surname;
         hiringLeads.Add(currentHiringLead);
-
-        Console.WriteLine(e.Value);
-
     }
 
     private void Prev()
@@ -675,7 +625,6 @@ else if (prevPage)
         AppUser collab = new AppUser();
         collab = AppUserList.FirstOrDefault(x => e.Value.ToString() == x.name);
         //string x = e.Value.ToString();
-        //Console.WriteLine(x);
 
         AppUser temp = new AppUser();
         temp.id = collab.id;
@@ -688,7 +637,6 @@ else if (prevPage)
         temp.linkVisits = collab.linkVisits;
         foreach (var item in userProfilePicture)
         {
-            Console.WriteLine("Gets into the foreach");
             if (item.AppUserId == temp.id)
             {
                 temp.imageUrl = item.profilePic;
@@ -738,14 +686,12 @@ else if (prevPage)
     private void RemoveCollab(AppUser user)
     {
         ListOfCollaborators.RemoveAll(q => q.id == user.id);
-        Console.WriteLine("Removed");
 
     }
 
     private void RemoveLead(AppUser user)
     {
         hiringLeads.RemoveAll(q => q.id == user.id);
-        Console.WriteLine("Removed");
 
     }
 

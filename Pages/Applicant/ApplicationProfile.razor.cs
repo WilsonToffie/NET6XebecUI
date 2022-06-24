@@ -959,9 +959,9 @@ namespace XebecPortal.UI.Pages.Applicant
         {
             Console.WriteLine("The button should be disabled");
             addLinksPressed = true;
-            StateHasChanged();
+            //StateHasChanged();
             // test if this will work, otherwise a for each is required            
-
+            AddProfilePortfolio();
             foreach (var item in profilePortfolioList)
             {                
                 if (newPortFolioInfo)
@@ -996,7 +996,7 @@ namespace XebecPortal.UI.Pages.Applicant
             }
 
             addLinksPressed = false;
-            StateHasChanged();
+            //StateHasChanged();
         }
 
         private string storageAcc = "xebecstorage";

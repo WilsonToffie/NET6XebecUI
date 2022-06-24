@@ -791,7 +791,6 @@ else
     private void DeletePhaseOrderPhase(ApplicationPhase phase)
     {
         //this just removes from the list
-        Console.WriteLine(phase.description);
 
         if(phase.description!="Applied" && phase.description!="Hired" && phase.description!="Rejected")
         {
@@ -816,12 +815,6 @@ else
         job.DueDate = TempJob.DueDate;
         job.CreationDate = TempJob.CreationDate;
 
-        Console.WriteLine(job.Title);
-        Console.WriteLine(job.Description);
-        Console.WriteLine(job.CompanyId);
-        Console.WriteLine(job.LocationId);
-        Console.WriteLine(job.DueDate);
-        Console.WriteLine(job.CreationDate);
 
         await httpClient.PostAsJsonAsync("job", job);
         job = null;
@@ -843,10 +836,6 @@ else
         JobTypeHelper jobTypeHelper = new JobTypeHelper();
         jobTypeHelper.JobId = job.Id;
         jobTypeHelper.JobTypeId = TempJob.JobType.Id;
-
-        Console.WriteLine("JobType that should post.");
-        Console.WriteLine("JobTypeHelper ID: " + job.Id);
-        Console.WriteLine("JobTypeHelper JobTypeId: " + TempJob.JobType.Id);
 
         await httpClient.PostAsJsonAsync("jobtypehelper", jobTypeHelper);
 
@@ -881,14 +870,10 @@ else
         //Add Application Phases
         foreach (var phase in phasesAdded)
         {
-            Console.WriteLine("Phases that should post.");
             JobApplicationPhase JobApplicationPhase_ = new JobApplicationPhase();
             JobApplicationPhase_.JobId = job.Id;
             JobApplicationPhase_.ApplicationPhaseId = phase.id;
 
-            Console.WriteLine(JobApplicationPhase_.Id);
-            Console.WriteLine(JobApplicationPhase_.JobId);
-            Console.WriteLine(JobApplicationPhase_.ApplicationPhaseId);
             await httpClient.PostAsJsonAsync($"jobapplicationphase/{job.Id}", JobApplicationPhase_);
         }
 

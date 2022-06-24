@@ -145,26 +145,18 @@
 
     protected override async Task OnInitializedAsync()
     {
-        //Console.WriteLine($">>>>>>>>Applicant Portal OnInitialized");
         _applicants = (await _applicantDataService.GetAllApplicants()).OrderBy(a => a.Id).ToList();
 
         if (_applicants != null)
         {
             if (_applicants.Any())
             {
-                //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = setting focus applicant");
                 FocusApplicant = _applicants[0];
             }
-            //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Associating map");
             _map = await AssociateApplicantsToJobs(_applicants);
             if (_map != null)
             {
-                //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Associating map > Done!!!");
-                //Console.WriteLine();
-                //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Creating Focus Value pair");
                 focusPair = _map.FirstOrDefault(a => _applicants.FirstOrDefault(a => a.Id > -1) == a.Key);
-                //Console.WriteLine($">>>>>>>>Applicant Portal :OnInitialized = Creating Focus Value pair> Done!!!");
-                //Console.WriteLine();
             }
             Task.WaitAll();
         }
@@ -180,7 +172,6 @@
         foreach (var app in applicants)
         {
             List<ApplicationPhaseHelper> temp = (await _phaseHelperDataService.GetAssApplicationPhaseHelpers(app, _applicants));
-            //Console.WriteLine($">>>>>>>>Applicant Portal :AssociateApplicantsToJobs = tempMap.Add({app.Id}, count: {temp.Count});");
             tempMap.Add(app, temp);
         }
         return tempMap;
@@ -207,11 +198,9 @@
 
     private void Edit(ApplicationPhaseHelper applicationPhaseHelper)
     {
-        Console.WriteLine("Inside Edit");
 
         if (applicationPhaseHelper == null)
         {
-            Console.WriteLine("application helper is null.");
             applicationPhaseHelper = new ApplicationPhaseHelper();
         }
         helperToChange = applicationPhaseHelper;
@@ -234,7 +223,6 @@
 
     private void Cancel()
     {
-        Console.WriteLine("canceling");
         helperToChange = new ApplicationPhaseHelper();
     }
 
