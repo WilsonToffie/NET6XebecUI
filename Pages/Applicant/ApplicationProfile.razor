@@ -1381,7 +1381,7 @@
                                              <input class="form-control" style="height: 3vh;" type="text" placeholder="Subject's Name" @bind="marks.SubjectName">
                                          </div>
                                          <div style="width: 120px;">
-                                            <input class="form-control" style="height: 3vh;" type="text" placeholder="Mark" @bind="marks.SubjectMark">                                           
+                                            <input class="form-control" style="height: 3vh;" type="number" placeholder="Mark" min="0" max="100" @bind="marks.SubjectMark">                                           
                                          </div>    
                                          <div>
                                              <button type="button" class="btn-close text-reset" @onclick="() => addAnotherMark(true)"></button>
