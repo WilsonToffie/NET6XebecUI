@@ -75,7 +75,6 @@ namespace XebecPortal.UI.Pages.HR
                     //Job = getJobInfo,
                     JobPlatformId = item.id,
                 });
-                Console.WriteLine("JobPlatformID: " + item);
                 
             }
             await httpClient.PostJsonAsync($"JobPlatformHelper/list", jobPlatformHelper, new AuthenticationHeaderValue("Bearer", token));
@@ -127,7 +126,6 @@ namespace XebecPortal.UI.Pages.HR
             {
                 if (!selectedValue.Contains(platformId))
                 {
-                    Console.WriteLine("Plat ID when selecting" + platformId.id);
                     selectedValue.Add(platformId);
                     displaySelectedValues.Add(new()
                     {

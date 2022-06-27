@@ -69,6 +69,9 @@
         .table-applicants-container img {
             height: 7vh;
             width: 7vh;
+                            object-fit: cover;
+    object-position: center;
+    border-radius: 50px;
         }
 
     .dimmed {
@@ -311,6 +314,9 @@
             height: 80%;
             width: 60%;
             margin-top: 10px;
+                object-fit: cover;
+    object-position: center;
+    border-radius: 50px;
         }
 
     .mini-modal-frame-documents {
@@ -362,6 +368,9 @@
         .modal-document-profile img {
             width: 90px;
             height: 90px;
+                            object-fit: cover;
+    object-position: center;
+    border-radius: 50px;
         }
 
 
@@ -562,26 +571,44 @@
                         }
 
                         string jobTitle = jobs.Where(x => x.Id == JobId).FirstOrDefault().Title;
-                        string img;
+                        @*string img;*@
                         //Checks that the profile picture exists
-                        if (personalInformation.Where(x => x.AppUserId == user.id).FirstOrDefault() != null)
+
+                        @*foreach (var item in userProfilePicture)
                         {
-                            if (personalInformation.Where(x => x.AppUserId == user.id).FirstOrDefault().ImageUrl != null)
+                            if (item.AppUserId == user.id)
                             {
-                                img = personalInformation.Where(x => x.AppUserId == user.id).FirstOrDefault().ImageUrl;
+                                if (!String.IsNullOrEmpty(item.profilePic))
+                                {
+                                    userImage = item.profilePic;
+                                    break;
+                                }
+                                else
+                                {
+                                    userImage = defaultImage;
+                                    break;
+                                }            
+                            }
+                        }*@
+
+                        if (userProfilePicture.Where(x => x.AppUserId == user.id).FirstOrDefault() != null)
+                        {
+                            if (userProfilePicture.Where(x => x.AppUserId == user.id).FirstOrDefault().profilePic != null)
+                            {
+                                userImage = userProfilePicture.Where(x => x.AppUserId == user.id).FirstOrDefault().profilePic;
                             }
                             else
                             {
-                                img = "https://xebecstorage.blob.core.windows.net/profile-images/0";
+                                userImage = defaultImage;
                             }
                         }
                         else
                         {
-                            img = "https://xebecstorage.blob.core.windows.net/profile-images/0";
+                            userImage = defaultImage;//"https://xebecstorage.blob.core.windows.net/profile-images/0";
                         }
 
                         <tr>
-                            <td><img src="@img" alt="Avatar"></td>
+                            <td><img src="@userImage" alt="Avatar"></td>
                             <td style="font-size: 1.2em; font-family: opensans-condensed-bold">@user.name @empty @user.surname</td>
                             <td style="display: flex; justify-content: center"><div class="total-match-pill" style="@setMatch(match)">@match</div></td>
                             <td>@jobTitle</td>
@@ -646,22 +673,38 @@
 
 @if (showDocuments)
 {
-    string img;
-    if (personalInformation.Where(x => x.AppUserId == selectedUser.id).FirstOrDefault() != null)
+    foreach (var item in userProfilePicture)
     {
-        if (personalInformation.Where(x => x.AppUserId == selectedUser.id).FirstOrDefault().ImageUrl != null)
+        if (item.AppUserId == selectedUser.id)
         {
-            img = personalInformation.Where(x => x.AppUserId == selectedUser.id).FirstOrDefault().ImageUrl;
+            if (!String.IsNullOrEmpty(item.profilePic))
+            {
+                userImage = item.profilePic;
+                break;
+            }
+            else
+            {
+                userImage = defaultImage;
+                break;
+            }            
+        }
+    }
+   @* if (userProfilePicture.Where(x => x.AppUserId == selectedUser.id).FirstOrDefault() != null)
+    {
+        if (userProfilePicture.Where(x => x.AppUserId == selectedUser.id).FirstOrDefault().profilePic != null)
+        {
+            img = userProfilePicture.Where(x => x.AppUserId == selectedUser.id).FirstOrDefault().profilePic;
+            Console.WriteLine("User image result");
         }
         else
         {
-            img = "https://xebecstorage.blob.core.windows.net/profile-images/0";
+            img = defaultImage;
         }
     }
     else
     {
-        img = "https://xebecstorage.blob.core.windows.net/profile-images/0";
-    }
+        img = defaultImage;
+    }*@
 
     <!--Work here - Andrew -->
 
@@ -670,7 +713,7 @@
         <div class="modal-frame-documents">
             <div class="modal-document-header">
                 <div class="modal-document-profile">
-                    <div class="modal-frame-documents-rows"><img src="@img" alt="Avatar"></div>
+                    <div class="modal-frame-documents-rows"><img src="@userImage" alt="Avatar"></div>
                     <div class="modal-frame-documents-rows" style="color: #004393; font-family: opensans-condensed-bold">@selectedUser.name @empty @selectedUser.surname @empty Documents </div>
                 </div>
                 <input type="button" class="btn-view-documents" style="width: 100px; margin-right: 25px; margin-left:245px" value="Close" @onclick="toggleDocuments" />
@@ -1279,7 +1322,9 @@
     private bool documentsHasBeenAdded = false;
     private bool sendEmailPressed = false;
     private bool loadingDocumentInfo = false;
-
+    private List<ProfilePicture> userProfilePicture = new List<ProfilePicture>();
+    private string defaultImage = "/Img/DefaultImage.png";
+    private string userImage;
     private currentPhase phase { get; set; }
     [Parameter] public int JobId { get; set; }
 
@@ -1316,6 +1361,8 @@
 
         tempJobTitle = jobs.FirstOrDefault(x => x.Id == JobId).Title;
 
+        userProfilePicture = await httpClient.GetListJsonAsync<List<ProfilePicture>>($"ProfilePicture", new AuthenticationHeaderValue("Bearer", token));
+       // userProfilePicture = profilePicStuff.Where(x => x.AppUserId == state.AppUserId).ToList();
     }
 
 

@@ -214,7 +214,7 @@
         margin: auto;
         border-radius: 100%;
         background-size: cover !important;
-        background: url(@profilePic.profilePic);
+        background: url(@userPic);
         
         /*background-repeat: no-repeat;*
         /*background-color: none;*/
@@ -505,7 +505,7 @@
             </div>
             <div class="mainlayout-profile">
                 <div class="profile-div">
-                    @if (!profilePictureExists)
+                    @*@if (!profilePictureExists)
                     {
                         <div class="profile-image-div-cover-empty">                                            
                             <div class="upload-profile-btn">
@@ -516,7 +516,7 @@
                         </div>
                     }
                     else
-                    {                        
+                    {*@                        
                         <div class="profile-image-div-cover">
                             @*<MudImage Src="@profilePic.profilePic"/> <!-- Alt="Mony the dog" Elevation="25" Class="rounded-lg"-->*@
                             @*<image id="profileImage" src="@profilePic.profilePic" />*@
@@ -526,7 +526,7 @@
                                 </label>
                             </div>
                         </div>
-                    }
+                    @*}*@
 
                     <div class="profile-name-div">
                         <h3 style="color: white !important;">@state.Name &nbsp @state.Surname</h3>
