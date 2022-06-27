@@ -84,7 +84,7 @@
     }
 
     .modal-frame {
-        width: 35%;
+        width: 40%;
         height: 48%;
         border-radius: 15px;
         background: white;
@@ -154,6 +154,7 @@
         overflow-x: hidden;
         padding-right: 10px;
         padding-bottom: 5px;
+        padding-left:10px;
     }
 
     .show-more-td {
@@ -1066,13 +1067,14 @@
                             {
 
                                 <tr>
-                                    <td class="form-label" for="last-name">Subject</td>
-                                    <td id="last-name" class="form-control name">@mark.SubjectName</td>
+                                    <td class="form-label" for="last-name">@mark.SubjectName</td>
+                                    <td id="last-name" class="form-control name">@mark.SubjectMark</td>
+                                    
                                 </tr>
-                                <tr>
+                                @*<tr>
                                     <td class="form-label" for="last-name">Mark Obtained</td>
                                     <td id="last-name" class="form-control name">@mark.SubjectMark</td>
-                                </tr>
+                                </tr>*@
                                 <tr>
                                     <td>@empty</td>
                                 </tr>
