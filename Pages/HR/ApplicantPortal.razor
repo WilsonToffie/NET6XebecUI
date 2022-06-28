@@ -87,8 +87,8 @@
     }
 
     .modal-frame {
-        width: 35%;
-        height: 48%;
+        width: 40%;
+        height: 60%;
         border-radius: 15px;
         background: white;
         position: relative;
@@ -157,6 +157,7 @@
         overflow-x: hidden;
         padding-right: 10px;
         padding-bottom: 5px;
+        padding-left:10px;
     }
 
     .show-more-td {
@@ -437,8 +438,8 @@
 
 
     .mydialog-final {
-        width: 450px;
-        height: 350px;
+        width: 480px;
+        height: 400px;
         background-color: white;
         border-radius: 12px;
     }
@@ -473,9 +474,11 @@
 
     .mydialog-final-textarea {
         width: 85%;
-        height: 90%;
+        height: 100%;
         padding: 5px;
         resize: none;
+        border: solid 2px;
+        border-radius: 10px;
     }
 
     .mydialog-final-rejection-area{
@@ -1109,13 +1112,14 @@
                             {
 
                                 <tr>
-                                    <td class="form-label" for="last-name">Subject</td>
-                                    <td id="last-name" class="form-control name">@mark.SubjectName</td>
+                                    <td class="form-label" for="last-name">@mark.SubjectName</td>
+                                    <td id="last-name" class="form-control name">@mark.SubjectMark</td>
+                                    
                                 </tr>
-                                <tr>
+                                @*<tr>
                                     <td class="form-label" for="last-name">Mark Obtained</td>
                                     <td id="last-name" class="form-control name">@mark.SubjectMark</td>
-                                </tr>
+                                </tr>*@
                                 <tr>
                                     <td>@empty</td>
                                 </tr>
