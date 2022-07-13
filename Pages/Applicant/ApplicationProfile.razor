@@ -8,52 +8,171 @@
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <style>
-    .nav1 {
-        position: absolute;
-        left: 250px;
-        text-align: center;
+    .personal-info-container{
+        -webkit-box-pack: center;
+        -moz-box-pack: center;
+        -o-box-pack: center;
+        -ms-flex-pack: center;
+        display: flex;
+        -webkit-justify-content: center;
+        justify-content: center;
+        width: 100%;
+        margin-top: 50px;
+        padding-left: 80px;
+        padding-right: 80px;
+        gap: 30px;
+        margin-bottom: 20px;
+    }
+
+    .left-side-content{
+        /* -webkit-box-flex: 1; */
+        /*-moz-box-flex: 1;
+        -o-box-flex: 1;
+        box-flex: 1;*/
+        /* -webkit-box-orient: vertical; */
+        /*-moz-box-orient: vertical;
+        -o-box-orient: vertical;*/
+        /* display: -webkit-box; */
+        display: -moz-box;
+        /* display: -webkit-flex; */
+        display: -ms-flexbox;
+        display: box;
+        /* display: flex; */
+        /* -webkit-flex: 1; */
+        -ms-flex: 1;
+        /* flex: 1; */
+        /* flex-direction: column; */
+        margin-left: 7px;
+        padding: 0 3px;
+        /* position: relative; */
+        right: -3px;
+        /* width: 67.5%; */
+        /* width: 400px; */
+        justify-content: center;
+    }
+    .right-side-content{       
+        /*-webkit-box-orient: vertical;
+        -moz-box-orient: vertical;
+        -o-box-orient: vertical;
+        display: -webkit-box;
+        display: -moz-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: box;
+        display: flex;*/
+        /*-webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;*/
+
+        /*left: -3px;
+        margin-right: 7px;
+        padding: 0 3px;*/
+       /* position: relative;*/
+        /*width: 31.1%;*/
+        /*justify-content: center;
+        margin-left: 40px;*/
+
+        padding: 0 3px;
+        justify-content: center;       
+        width: 220px;
+    }
+
+    .left-side-content-container{
+        /*width: 100%;*/
+        /*width: 750px*/
+        width: 800px;
+        min-height: 40px;
+        background-color: #FFFFFF;
+        display: flex;
         align-items: center;
-        background-color: #FFFFFF !important;
-        width: auto !important;
-        height: auto !important;
-        top: auto !important;
-        justify-content: normal !important;
-        justify-items: normal !important;
-        box-shadow: rgb(6 24 44 / 40%) 0px 0px 0px 2px, rgb(6 24 44 / 65%) 0px 4px 6px -1px, rgb(255 255 255 / 8%) 0px 1px 0px inset;
-        border-radius: 5px;
+        padding-left: 15px;
+        justify-content: space-between;
+        padding-right: 15px;
+    }
+    .left-side-content-container-header-styling{
+        border-bottom: 1px solid #00bcae;
+        height: 50px;
     }
 
-    .nav-link1 {
-        width: auto !important;
-        height: auto !important;
-        margin-bottom: auto !important;
-        display: normal !important;
-        vertical-align: auto !important;
-        border-radius: 0px;
-        background-color: white;
+    .right-side-content-container{
+        /*background-color: #ffffff;
+        padding-left: 15px;
+        padding-right: 15px;*/
+        position: fixed;
+        background-color: #ffffff;
+        padding-left: 15px;
+        padding-right: 15px;
+        width: 200px;
+    }
+
+    .content-title{
+        text-transform: uppercase;
+        Color: #00bcae !important;
+        margin-left: 10px;
+    }
+
+    .content-edit-design{        
+        font-size: 29px;
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
         color: #00bcae;
+    }
+
+    .content-collapse-icon{
+       width: 15px;
+       font-size: 30px;
+       color: #00bcae;
+    }
+
+    .content-user-info-container{
+        display: flex;
+        /* justify-content: space-between; */
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .content-user-cv-info-container{
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .user-image {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        margin-top: 8px;
+        margin-left: 5px;
+        object-fit: cover;
+    }
+
+    .image-container{
+        /* width: 50%; */
+        width: 120px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .upload-image-text-style{
         cursor: pointer;
+        color: #666666;
+        text-decoration: underline;
     }
 
-    .nav-link-text1 {
-        display: normal !important;
-        padding-top: 0px;
-        width: auto !important;
-        height: auto !important;
+    .personal-Info-container{
+        width: 290px;
+        margin-left: 20px;
     }
 
-    select {
-        font-size: medium !important
-    }
-
-    .formButton {
-        background-color: #00BCAE;
-        color: white;
-        font-weight: 600;
-        height: 5vh;
-        margin-top: 2vh;
-        width: auto;
-        margin-bottom: 1vh;
+    .drop-corner {
+        border: #00BCAE dashed 2px !important;
+        box-shadow: unset;
     }
 
     .drag-drop-zone {
@@ -61,2064 +180,1123 @@
         align-items: center;
         justify-content: center;
         transition: all .4s;
-        height: 140px;
+        height: 85px;
     }
+
 
     .drag-drop-input {
         position: absolute;
         background-color: pink;
-        /* left: 405px; */
-        /* top: 276px; */
-        width: 697px;
-        height: 140px;
-         opacity: 0; 
+        /* left: 113px; */
+       /* top: 342px;*/
+        width: 746px;
+        height: 83px;
+        opacity: 0; 
         cursor: pointer;
-        z-index: 2;
         border: unset;
     }
 
-    .drop-corner {
-        border: #00BCAE dashed 2px !important;
-        box-shadow: unset;
-    }
-    .drop-corner:hover {
-        border: #D35BC9 dashed 2px !important;
-        box-shadow: unset;
-    }
-
-    .drag-enter {
-        box-shadow: var(--mud-elevation-10);
-    }
-
-    .list {
-        padding: 2em;
-        min-width: 100%;
-    }
-
-    .card:hover {
-        border: 4px solid #d0d0d0;
-        background: #e1e1e1;
-        box-shadow: 0 0 0 4px #d0d0d0;
-    }
-
-    .cardBorderChange {
-        border: 4px solid #00BCAE;
-        background: #00BCAE;
-        box-shadow: 0 0 0 4px #00BCAE;
-    }
-
-        .cardBorderChange:hover {
-            border: 4px solid #00BCAE;
-            background: #00BCAE;
-            box-shadow: 0 0 0 4px #00BCAE;
-        }
-
-    .form-check-label:hover {
-        cursor: pointer;
-    }
-
-    .form-check-input {
-        display: none;
-    }
-
-    .row-style {
-        /*background: linear-gradient(110deg, rgba(0,51,64,0.8) 40%, rgba(0,188,174,0.53) 40%, #00BCAE);*/
-        /*background-color: white;*/
-        border-radius: 20px;
-        padding: 10px;
-        min-height: 75vh;
-    }
-
-    .rounded-edges {
-        border-radius: 20px;
-        /*box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgb(209, 213, 219) 0px 0px 0px 1px inset;*/
-    }
-
-    .nav-item > .active {
-        background-color: #00bcae !important;
-        border: none;
-        border-radius: 1em;
-        color: white !important;
-        font-family: opensans-condensed-bold;
-        font-size: 1em;
-        font-weight: 600 !important;
-        word-wrap: break-word !important;
-        max-width: 100px !important;
-        /* background: #00bcae !important;
-        color: white;
-        font-weight: 800;
-        font-size: 2vh;*/
-    }
-
-    .nav-item > .nav-link1 {
-        font-size: 1em;
-        font-weight: 600 !important;
-        color: #004393;
-        word-wrap: break-word;
-        max-width: 120px;
-    }
-
-    .work-card {
-        color: black !important;
-    }
-
-        .work-card:hover {
-            background-color: pink;
-        }
-
-    .white-back {
-        background: white !important;
-        /*height: 100% !important;*/
-        /*box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px !important;*/
-    }
-
-    .text-color-primary {
-        color: rgba(0,51,64,0.76);
-        text-decoration: underline;
-    }
-
-    /*Newly added stuffs*/
-    .main-page-overflow {
-        overflow: hidden;
-    }
-
-    .space-below-nav-bar-for-progress-bar {
-        height: 5vh;
-    }
-
-    .progress-layout {
-        position: absolute;
-        height: 60vh;
-        background-color: rgba(0,0,0,0.5);
-        left: 92%;
-        border-radius: 20px;
-        width: 10vh;
-    }
-
-    .progress-text-layout {
-        color: #00bcae;
-    }
-
-    .rocket-layout {
-        position: relative;
-        /*z-index: 1;*/
-        height: 60px;
-        bottom: 0%;
-        transition: all 1s;
-        left: 9%;
-    }
-
-    .progress-layout-side {
-        position: relative;
-        left: 30%;
-        height: 4vh;
-        /*background-image: url(/Img/space.png);
-        background-size: cover;*/
-        border-radius: 20px;
-        width: 40%;
-        margin-top: 0.5%;
-    }
-
-    .progress-text-layout-side {
-        position: absolute;
-        /*color: #00bcae;*/
-        top: 35%;
-    }
-    .progress-bar-indicator{
-        height:100%;
-        -webkit-mask: linear-gradient(#fff 0 0);
-        mask: linear-gradient(#fff 0 0);
-    }
-
-        .progress-bar-indicator::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 10px;
-            /*Dark blue #004393*/
-            /*Pink #d35bc9*/
-            /*Green-ish #00bcae*/
-            /*Light-blue #49E5EF*/
-            /*Medium-blue #2294E3*/
-            /*Grey #666666*/
-            /*Combo light blue, dark blue, pink, green-ish*/
-            background-image: linear-gradient(to right, #49E5EF 0%, #2294E3 20%, #d35bc9 45%, #00bcae 100%); /* your gradient here */
-        }
-
-    .rocket-layout-side {
-        position: relative;
-        /*z-index: 1;*/
-        height: 60px;
-        bottom: 0%;
-        transition: all 1s;
-        left: 9%;
-        transform: rotate(90deg);
-        animation: vibrate-1 0.1s 0s 50 linear, vibrate-2 0.1s 0.5s 150 linear, vibrate-1 0.1s 4s infinite linear;
-    }
-    .gradient-background {
-        position: relative;
-        width: 0%;
-    }
-
-    /*animation for space */
-    .stars-display-effects {
-    }
-
-    /* Vibrate effect*/
-    @@keyframes vibrate-1 {
-        0% {
-            transform: rotate(90deg) translate3d(0, 0, 0);
-        }
-
-        50% {
-            transform: rotate(90deg) translate3d(-0.1rem, 0, 0);
-        }
-
-        100% {
-            transform: rotate(90deg) translate3d(0.1rem, 0, 0);
-        }
-    }
-
-    @@keyframes vibrate-2 {
-        0% {
-            transform: rotate(90deg) translate3d(0, 0, 0);
-        }
-
-        50% {
-            transform: rotate(90deg) translate3d(-0.3rem, 0, 0);
-        }
-
-        100% {
-            transform: rotate(90deg) translate3d(0.3rem, 0, 0);
-        }
-    }
-
-
-    /*new designs from promise*/
-
-    .history {
-        /*border-left: 1px solid rgba(255, 255, 255, 0.3);
-        border-top: 1px solid rgba(255, 255, 255, 0.3);
-        backdrop-filter: blur(10px);
-        box-shadow: 20px 20px 40px -6px rgba(0, 0, 0, 0.2);*/
-        text-align: center;
-        overflow: auto;
-        height: 90%;
-    }
-
-
-    [class*=history-status-] p {
-        margin: 0;
-        font-size: 2vh;
-        color: #fff;
-        text-transform: uppercase;
-        text-align: center;
-    }
-
-    [class*=history-status-] {
-        line-height: 5vh;
-    }
-
-    /*the heading*/
-    .history-status-intransit {
-        /*background: rgba(255, 255, 255, 0.5);*/
-        /*background: rgba(0, 0, 0, 0.5); This is the header colour*/
-        background: linear-gradient(to right, #00bcae 0%, #2294E3 100%);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(5.6px);
-        -webkit-backdrop-filter: blur(5.6px);
-        border: 1px solid rgba(255, 255, 255, 0.04);
-        font-weight: 700;
-        color: #fff;
-        opacity: 0.7;
-        font-size: 1.4rem;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
-    .history-list {
-        /* From https://css.glass */
-        background: rgba(255, 255, 255);
-        /*box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);*/
-        /*backdrop-filter: blur(5.6px);
-        -webkit-backdrop-filter: blur(5.6px);*/
-        border: 1px solid rgba(255, 255, 255, 0.04);
-        /* min-height: 40vh;*/
-        max-height: 60vh;
-        overflow-y: auto;
-    }
-
-    .history-item {
-        position: relative;
-        padding: 2rem 1.5rem 0rem 2.5rem ;
-        font-size: .9rem;
-        /*min-height: 2rem;*/
-        height: 20vh;
-        border-radius: 12px;
-        background-color: rgba(250, 250, 250, 0.9);
-        /*border-radius: 10px;*/
-    }
-        .history-item:hover {
-            box-shadow: inset 0px -50px 36px -28px #49E5EF, inset 0px -50px 36px -28px #2294E3, inset 0px -50px 36px -28px #d35bc9, inset 0px -50px 36px -28px #00bcae;
-            /*box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;*/
-            background: rgba(255, 255, 255,0);
-            /*box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);*/
-            backdrop-filter: blur(5.6px);
-            -webkit-backdrop-filter: blur(5.6px);
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            /* min-height: 40vh;*/
-            max-height: 20vh;
-            /*overflow-y: auto;*/
-        }
-
-        .history-item:last-child {
-            padding-bottom: 4rem;
-        }
-
-        /*        start and end date*/
-        .history-item .history-date {
-            margin-bottom: .5rem;
-            font-weight: 700;
-            color: black;
-            opacity: 0.7;
-            font-size: 2vh;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-
-        }
-
-        /*        Scholl*/
-
-        .history-item .history-content {
-            position: relative;
-            left: 2.5rem;
-            padding: .5rem .8rem;
-            background-color: #f4f4f4;
-            border-radius: .5rem;
-            font-size: 1.5em;
-            width: 22vh;
-            min-height: 8vh;
-            max-height: 12.2vh;
-            overflow: auto;
-        }
-
-            .history-item .history-content span {
-                display: block;
-                color: #888;
-                font-size: 85%
-            }
-
-            .history-item .history-content p {
-                display: block;
-                /*color: #888;*/
-                font-size: 80%;
-                margin: 0;
-            }
-
-        .history-item .history-icon {
-            line-height: 2.6rem;
-            /*position: absolute;*/
-            left: 1.5rem;
-            width: 2.6rem;
-            height: 2.6rem;
-            text-align: center;
-            border-radius: 50%;
-            font-size: 1.1rem;
-            /*background-color: #fff;*/
-        }
-
-            .history-item .history-icon .status-inforeceived {
-                background-color: #214977;
-            }
-
-    .history-container {
-        width: 35vh;
-        height: 54vh;
-        overflow: auto;
-        background: rgba(255, 255, 255, 0.5);
-        /* left: 10%; */
-        margin-left: 21%;
-    }
-
-    .education-header {
-        text-align: center;
-        margin-top: 2vh;
-        margin-bottom: 2vh;        
-    }
-    .personalInfo-header {
-        text-align: center;
-        font-family: opensans-condensed-bold;
-        font-size: 3em;
-        font-weight: 900;
+    .uploaded-documents-headings{
         color: #004393;
     }
-    .validation-message {
-        position: relative;
-        left: 10%;
-        bottom: 10%;
-    }
 
-    .position-white {
-        display: inline-block;
-        position: relative;
-        /* height: 60vh; */
-        width: 90%;
-        left: 140px;
-        top: %;
-        margin-top: 1vh;
-    }
-
-    .position-history-card {
-        position: relative;
-        top: 25px;
-    }
-
-    .nav-tab{
-        position: relative;
-        width: 60vw;
-    }
-
-    .child {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-    }
-    .progress {
-        /* Old browsers */
-        background: -moz-linear-gradient(to right, #49E5EF 0%, #2294E3 20%, #d35bc9 45%, #00bcae 100%);
-        /* FF3.6-15 */
-        background: -webkit-linear-gradient(to right, #49E5EF 0%, #2294E3 20%, #d35bc9 45%, #00bcae 100%);
-        /* Chrome10-25,Safari5.1-6 */
-        background: linear-gradient(to right, #49E5EF 0%, #2294E3 20%, #d35bc9 45%, #00bcae 100%);
-    }
-    .shrinker {
-        background-color: white;
-        top: 0;
-        right: 0;
-        width: calc(100% - @completionVar);
-    }
-    .nav-link-background{
-        background: white !important;
-    }
-
-    .card-class-for-skills {
-        /*height: 7vh;*/
+    .upload-document-background{
+        /*width: 720px;*/
+        background-color: rgba(0,0,0,0.1);
         display: flex;
+        justify-content: space-between;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        height: 44px;
         align-items: center;
-        justify-content: center;
-        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px, rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
-        border-radius: 20px !important;
-        min-height: 5vh;
-        color: black;
-        font-family: opensans-condensed-bold;
-        font-weight: 900;
-        font-size: 1em;
-        min-width: 100%;
-        margin-bottom: 5px;
-        background-color: rgba(255,255,255,1);
-        padding: 5px !important;
-    }
-        .card-class-for-skills:hover {
-            box-shadow: 0 2px 5px 0 rgba(0,0,0,1), 0 2px 10px 0 rgba(0,0,0,1);
-            color: #00bcae;
-            font-family: opensans-condensed-bold;
-            font-weight: 900;
-            font-size: 1em;
-            margin-bottom: 5px;
-            background-color: rgb(243,242,242);
-            min-width: 100%;
-            transition: 0.1s;
-            cursor: pointer;
-        }
-
-    .skill-table-size {
-        height: 35vh;
-        width:50%;
-        padding-left: 3em;
-        padding-bottom: 3em;
     }
 
-    .skill-table-size-right {
-        height: 35vh;
-        width: 50%;
-        padding-left: 2em;
-        padding-bottom: 3em;
-    }
-    .content-size-left {
-        position: absolute;
-        height: 35vh;
-        width: 40%;
-        overflow-y: auto;
-        padding-left: 2vh;
-        padding-right: 2vh;
-        padding-top: 1vh;
-    }
-
-    .skills-heading {
-        text-align: center;
-        width:100%;
-        margin-bottom: 10px;
-        font-family: opensans-condensed-bold;
-        font-weight: 800;
-        font-size: 1.5em;
+    .skill-content-style{        
+        border-radius: 4px;
+        background-color: rgba(0,188,174,0.45);
+        padding-left: 10px;
+        font-size: 18px;
+        padding-right: 10px;
+        margin-right: 5px;
         color: #00bcae;
+        font-weight: 700;
     }
+    .icon-styling{
+        cursor: pointer;
 
-    .skills-selected-heading {
-        position: relative;
-        left: 25%;
-        margin-bottom: 10px;
-        font-family: opensans-condensed-bold;
-        font-weight: 800;
-        font-size: 1.5em;
-        color: #00bcae;
     }
-
-    .work-history-comp-name {
-        text-align: left;
-        padding-left: 1em;
-        font-weight: bold;
-        font-size: 1em;
-        font-family: opensans-condensed-bold;
-    }
-
-    .work-history-job-title {
-        text-align: left;
-        padding-left: 1em;
-        font-weight: bold;
-        font-size: 1em;
-    }
-
-    .work-history-desc {
-        text-align: left;
-        padding-left: 1em;
-        max-height: 5vh;
-        overflow-y: auto;
-        /*color: rgba(0,0,0,0.5);*/
-        font-weight: lighter;
-        font-size: 1em;
-        font-family: opensans-condensed-bold;
-    }
-
-    .work-history-date {
-        text-align: right;
-        padding-right: 1em;
-        padding-bottom: 1em;
-    }
-
-    .work-history-icon {
-        /*text-align: right;
-        padding-top: 1em;
-        padding-right: 1em;*/
-        text-align: right;
-        padding-top: 1em;
-        padding-right: 1em;
-        left: 85px;
-        top: 10px;
-        position: relative;
-    }
-
-    .icon-colour{
-        color: #00BCAE
-    }
-
-    
-
-    .icon-colour:hover{
+    .icon-styling:hover{
         color: #D35BC9;
     }
 
-    .ref-contact-Num {
-        text-align: left;
-        padding-left: 1em;
-        padding-bottom: 1em;
+    .online-presence-icon-style{
+        margin-right: 5px;
+        width: 37px;
+        font-size: 30px;
     }
-
-    .text-card {
-        background-color: rgba(255,255,255,1);
-        /*border: solid white 0.25em;*/
-        box-shadow: rgb(9 30 66 / 25%) 0px 1px 1px, rgb(9 30 66 / 13%) 0px 0px 1px 1px;
-        border-radius: 20px;
-        min-height: 10vh;
-        font-family: opensans-condensed-bold;
-        font-weight: 700;
-        color: black;
-        font-size: 1.8vh;
-        margin-top: 7px !important;
-        cursor: pointer;
-        width: 90%;
-        margin-left: 1.75vh;
-    }
-
-        .text-card:hover {
-            background-color: rgba(102,102,102,0.5);
-            box-shadow: rgb(9 30 66 / 25%) 0px 1px 1px, rgb(9 30 66 / 13%) 0px 0px 1px 1px;
-            border-radius: 20px;
-            min-height: 10vh;
-            font-family: opensans-condensed-bold;
-            font-weight: 700;
-            color: white;
-            font-size: 1.8vh;
-            margin-bottom: 7px;
-            cursor: pointer;
-            margin-left: 1.75vh;
-        }
-
-
-        /*Search bar CSS*/
-    .hr-job-search-bar {
-        width: 43%;
-        height: 5vh;
-        margin-bottom: 2.5vh;
-        margin-top: 2.5vh;
-        margin-left: 30%;
-        margin-right: 30%;
-        border: none;
-    }
-    .search-image {
-        background: url(/Img/search.svg) no-repeat left;
-        background-size: 30px;
-    }
-
-    .search-bar-input {
-        border-radius: 1em;
-        padding-left: 2.5em;
-        background-color: white;
-        height: 6vh;
-        width: 100%;
-        box-shadow: 0 2px 5px 0 rgba(0,0,0,0.2), 0 2px 10px 0 rgba(0,0,0,0.2);
-        border: white solid 0.1em;
-    }
-        .search-bar-input::placeholder {
-            color: #666666;
-            font-family: opensans-condensed-bold;
-        }
-        .search-bar-input:hover {
-            border-radius: 1em;
-            border: 0.1em solid black;
-        }
-
-    .skill-input {
-        margin-top: 2em;
-        width: 40%;
-        margin-left: 15em;
-    }
-
-    .skill-button {
-        background-color: #00BCAE;
-        color: white;
+    .online-presence-heading-style{
         font-weight: 600;
-        margin-top: 2vh;
-        height: 5vh;
-        width: auto;
-        margin-bottom: 1vh;
-        left: 48%;
     }
-    .appform-submit-modal {
-        width: 100%;
-        height: 100%;
-        position: absolute;
+
+    .circle-style{
+        width: 30px;
+        height: 30px;
+        background-color: #D35BC9;
+        border-radius: 100%;
+        /*This is used to center the check mark on the circle*/
+        align-items: center;
         display: flex;
         justify-content: center;
+    }
+    .not-filled-circle-style{
+        width: 30px;
+        height: 30px;
+        background-color: #A9ABA7;
+        border-radius: 100%;
+        /*This is used to center the check mark on the circle*/
         align-items: center;
+        display: flex;
+        justify-content: center;
+    }
+    .check-list-circle-style{
+        width: 20px;
+        height: 20px;
+        background-color: #D35BC9;
+        border-radius: 100%;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        margin-right: 10px;
+    }
+    .check-list-not-filled-circle-style{
+        width: 20px;
+        height: 20px;
+        background-color: #A9ABA7;
+        border-radius: 100%;
+        /*This is used to center the check mark on the circle*/
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        margin-right: 10px;
+    }
+    h2{
+        margin-top: 0px !important;
+        margin-bottom: 0px !important;
+    }
+
+    .upload-icon-style{
+        color: #00BCAE; 
+        font-size: 30px;
+        /*background-image: linear-gradient(right, #00BCAE,#49E5EF);*/
+        
+    }
+
+    /*.gradient{	    
+        background: -webkit-gradient(linear, left top, left bottom, from(#f00), to(#333));
+	    -webkit-background-clip: text;
+	    -webkit-text-fill-color: transparent;
+
+    }*/
+    .upload-heading-style{
+        margin-top:5px;
+        margin-bottom: 5px;
+    }
+    .check-list-content{
+        display: flex;
+        margin-top: 10px;
+    }
+
+    .dimmed {
+        background: rgb(0 0 0 / 0.20);
+        width: 100%;
+        height: 100%;
+        position: fixed;
         top: 0;
         left: 0;
-    }
-
-    .progress-bar-spot-size {
-        height: 3vh;
-        position: absolute;
-        left: 390px;
-        top: 160px;
-        width: 49%;
-    }
-
-    .progress-bar-progression {
-    /*background-color: pink;*/
-        height: 100%;
-        border-radius: 20px;
-        width: calc( @completionVar );
-        /* Old browsers */
-        -webkit-mask: linear-gradient(#fff 0 0);
-        mask: linear-gradient(#fff 0 0);
-    }
-
-        .progress-bar-progression::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 10px;
-            /*Dark blue #004393*/
-            /*Pink #d35bc9*/
-            /*Green-ish #00bcae*/
-            /*Light-blue #49E5EF*/
-            /*Medium-blue #2294E3*/
-            /*Grey #666666*/
-            /*Combo light blue, dark blue, pink, green-ish*/
-            background-image: linear-gradient(to right, #49E5EF 0%, #2294E3 20%, #d35bc9 45%, #00bcae 100%); /* your gradient here */
-            margin-top: 1px;
-            margin-bottom: 1px;
-        }
-
-        @*@media only screen and (max-width: 600px) { Mobile View Presentation
-        body {
-             background-color: lightblue;
-        }*@
-
-    .progress-bar-text {
-        position: absolute;
-        color: black;
-        top: 1px;
-    }
-        /*Draggable items*/
-    .dragable-spot {
-        width: 10vh;
-        height: 2vh;
-        background-color: pink;
-    }
-
-    .createjob-form-group {
-        width: 100%;
-        /*margin-left: 5%;*/
-        margin-right: 5%;
-        height: 5vh;
-        margin-top: 2vh;
-        margin-bottom: 2vh;
-        display: flex;
-    }
-
-    .createjob-form-individual {
-        width: 45%;
-        margin-left: 2.5%;
-        margin-right: 2.5%;
-        height: 5vh;
-    }
-
-    .matric-drag-drop-input {
-        position: absolute;
-        background-color: pink;
-        width: 305px;
-        height: 144px;
-         opacity: 0; 
-        cursor: pointer;
-        z-index: 1;
-        border: unset;
-    }
-
-    .academic-drag-drop-input {
-        position: absolute;
-        background-color: pink;        
-        width: 313px;
-        height: 144px;
-        opacity: 0;    
-        cursor: pointer;
-        z-index: 2;
-        border: unset;
-    }
-
-    .certificate-drag-drop-input {
-        position: absolute;
-        background-color: pink;
-        width: 190px;
-        height: 144px;
-        opacity: 0; 
-        cursor: pointer;
-        z-index: 2;
-        border: unset;
-    }
-    .certificate-two-drag-drop-input {
-        position: absolute;
-        background-color: pink;
-        left: 43.5%;
-        top: 62%;
-        width: 190px;
-        height: 144px;
-        opacity: 0;
-        cursor: pointer;
-        z-index: 2;
-        border: unset;
-    }
-
-    .certificate-three-drag-drop-input {
-        position: absolute;
-        background-color: pink;
-        left: 58.5%;
-        top: 62%;
-        width: 190px;
-        height: 144px;
-         opacity: 0;
-        cursor: pointer;
-        z-index: 2;
-        border: unset;
-    }
-
-    .spacing-between-dragable-items {
-        margin-top: 23vh;
-    }
-
-    .documents-white-back {
-        background: white !important;
-        height: 66vh !important;
-        margin-top: 12vh;
-        width: 98vh;
-        margin-left: -5vh;
-    }
-
-    .matric-cert-image {
-        width: 305px;
-        height: 144px;
-    }
-
-    .upload-button-location {
-        
         display: flex;
         justify-content: center;
-        align-content: center;
         align-items: center;
     }
 
-    .documents-styling {
-        width: 90%;
-        height: 90%;
-        margin-top: 7px;
-    }
-    .document-preview {
-        text-align: center;
-        align-content: center;
-    }
-
-
-    .enter-matric-mark-page{
-        position: absolute;
-        margin-top: 0%;
-        top: 40%;
-        left: 30%;
-        width: 45%;
-        height: 40%;
-        background-color: white;
-    }
-
-    .subjects{
+    .img-magnified {
+        height: 95vh;
+        width: 35vw;
         display: flex;
-        justify-content: space-around;
-        width: 80%;
-        margin-left: 10%;
-    }
-
-    .mark-input{
-        display: flex;
+        flex-direction: column;
         justify-content: center;
-    }
-
-    .matric-white-back{
+        align-items: center;
         background: white;
-        height: 40vh;
-        margin-top: -6vh;
-        width: 102vh;
-        margin-left: -5vh;
+        border-radius: 1em;
     }
 
-    .mark-input-container{
-        max-height: 12vh;
-        overflow-y: auto;
-    }
-
-    .upload-text{
-        color: #00BCAE
-    }
-
-    .upload-text:hover {
-        color: #D35BC9
-    }
-    @@media screen and (max-width: 700px) {
-        .nav1{
-
+        .img-magnified img {
+            width: 90%;
+            height: 90%;
         }
 
+   .maginified-documents-close {
+        position: fixed;
+        top: 5px;
+        left: 67%;
+        background-color: transparent !important;
+        opacity: 1;
+   }
 
+   .maginified-documents-close:checked {
+        border: none;
+   }  
+   
+   .documents-size {
+        width: 100%;
+        height: 100%;
+        border-radius: 1em;
     }
 
-}
+    .skill-add-icon-style{
+        display: flex;
+        justify-content: right;
+        margin-right: 9px;
+        font-size: 25px;
+        color: #00bcae;
+        margin-bottom: 15px;
+    }
+
+    .skill-add-icon-style:hover{        
+        color: #D35BC9;
+        cursor: pointer;
+    }
+
+    .skill-input-container {
+        height: 200px;
+        width: 650px;
+        display: flex;
+        flex-direction: column;
+        background: white;
+        border-radius: 16px;
+    }
+    .skill-container-header
+    {
+        border-bottom: 1px solid #00bcae;
+        height: 50px;
+        display: flex;        
+        align-items: center;
+        justify-content: space-between;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
 </style>
-
-<div class="h-95 container-fluid d-flex justify-content-center align-items-center overflow-hidden">
-    <div class="col-1"></div>
-    <div class="row d-flex justify-content-center row-style">
-        
-        <div class="col-12 nav-tab" style="width: 100vw">
-
-            <ul class="nav nav1 nav-tabs" role="tablist">
-                @*<div class="child progress"></div>
-                    <div class="child shrinker timelapse"></div>*@
-                <!--Container-->
-                <li class="nav-item p-1">
-                    <a id="personal-tab" class="nav-link-background nav-link1 active" data-bs-toggle="tab" href="#personal-information" @onclick="progressCheck">Personal Information</a>
-                </li>
-                <li class="nav-item p-1">
-                    <a class="nav-link-background nav-link1" data-bs-toggle="tab" href="#work-history" @onclick="progressCheck">Work History</a>
-                </li>
-                <li class="nav-item p-1">
-                    <a class="nav-link-background nav-link1" data-bs-toggle="tab" href="#education" @onclick="progressCheck">Education</a>
-                </li>
-                <li class="nav-item p-1">
-                    <a class="nav-link-background nav-link1" data-bs-toggle="tab" href="#matricMarks" @onclick="progressCheck">Matric Marks</a>
-                </li>
-                <li class="nav-item p-1">
-                    <a class="nav-link-background nav-link1" data-bs-toggle="tab" href="#skills" @onclick="progressCheck">Skills</a>
-                </li>
-                <li class="nav-item p-1">
-                    <a class="nav-link-background nav-link1" data-bs-toggle="tab" href="#references" @onclick="progressCheck">References</a>
-                </li>
-                <li class="nav-item p-1">
-                    <a class="nav-link-background nav-link1" data-bs-toggle="tab" href="#additionalDocuments" @onclick="progressCheck">Additional Documents</a>
-                </li>
-                <li class="nav-item p-1">
-                    <a id="online-tag" class="nav-link-background nav-link1" data-bs-toggle="tab" href="#online-profile" @onclick="progressCheck">Online Presence</a>
-                </li>
-            </ul>
-        </div>
-        <div class="progress-bar-spot-size">
-            <div class="progress-bar-progression">
-            </div>
-            <div class="progress-bar-text"style="left: -3%; ">0%</div>
-            <div class="progress-bar-text" style="left: 100%;">100%</div>
-        </div>
-        <!--Content Panel-->
-        <div class="col-12 d-flex justify-content-center align-items-start ">
-            <div class="tab-content">
-                <br />
-                <!--Personal Information-->
-                <div id="personal-information" class="container tab-pane active">
-                    <div class="d-flex">
-                        <EditForm Model="@personalInformation" OnValidSubmit="@AddPersonalInformation" style="width: 60%; margin-left: 180px;">
-                            <DataAnnotationsValidator />
-                            <div class="row" style="margin-top: 50px; margin-left: -7%;">
-                                <div class="col-12 shadow-sm bg-body rounded-edges white-back" style=" margin-top: 5vh;">
-                                    @*<div class="personalInfo-header">Personal Information</div>*@
-                                    <div style="text-align: center;">
-                                        <h1>Personal Information</h1>
-                                        </div>
-                                    <div class="row p-3">
-                                        <div class="col-12">
-                                            <div class="rounded-edges">
-                                                <MudPaper @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
-                                                          @ondragleave="@(() => _dragEnterStyle = null)"
-                                                          @ondragend="@(() => _dragEnterStyle = null)"
-                                                          Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
-
-                                                    @if (getUserDoc.CV == null)
-                                                    {
-                                                        <InputFile OnChange="OnInputFileChangedAsync" multiple class="drag-drop-input" />
-                                                        <MudText Typo="Typo.h3" Align="Align.Center">
-                                                            <div class="upload-text">
-                                                                <i class="fa fa-upload"></i>
-                                                                <br />
-                                                                Upload CV
-                                                            </div>
-                                                        </MudText>
-                                                    }
-                                                    else
-                                                    {
-                                                        <i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i>
-                                                        <div class="document-preview">
-                                                            <a class="upload-text" href="@getUserDoc.CV" target="_blank">CV</a>
-                                                        </div>
-                                                    }
-                                                </MudPaper>
-                                                <br>
-                                                @if (enableUploadButtons)
-                                               {
-                                                   <div class="upload-button-location" style="margin-top: -14px;">
-                                                        <label class="default-button-style" style="padding-top: 7px;">
-                                                            <InputFile OnChange="OnInputFileChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
-                                                        </label>
-                                                    </div>
-                                               }else
-                                                {
-                                                    <div class="upload-button-location" style="margin-top: -14px;">
-                                                        <label class="default-button-style" style="background-color: #A9ABA7; padding-top: 7px;">
-                                                            Upload
-                                                        </label>
-                                                    </div>       
-                                                }                                                
-                                            </div>
-
-                                            <!--<MudGrid Justify="Justify.Center" Spacing="4">-->
-                                                @*<MudItem>
-                                                    <MudButton OnClick="Upload" Disabled="@(!(fileNames == null))" Style="color: white; background-color: #00BCAE; font-size: small; margin-top: 5px;" Variant="Variant.Filled">Upload</MudButton>
-                                                </MudItem>*@
-                                                @*<MudItem>
-                                                    <MudButton OnClick="@ResetFileNames" Disabled="@(fileNames == null)" Style="color: white; background-color: #00BCAE; font-size: small; margin-top: 5px;" Variant="Variant.Filled">Clear</MudButton>
-                                                </MudItem>*@
-                                            <!--</MudGrid>-->
-                                        </div>
-                                    </div>
-                                    <div class="row p-3">
-                                        <div class="col-4" style="position: relative">
-                                            @*<label class="form-label" for="first-name">First Name</label>*@
-                                            <ValidationMessage For="@(() => personalInformation.FirstName)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                                            <InputText id="first-name" class="form-control shadow bg-body rounded" @bind-Value="personalInformation.FirstName" placeholder="First Name" @onfocusout="completion" /> <!--@onfocusout="completion" -->
-                                            
-                                        </div>
-                                        <div class="col-4" style="position: relative">
-                                            @*<label class="form-label" for="last-name">Last Name</label>*@
-                                            <ValidationMessage For="@(() => personalInformation.LastName)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                                            <InputText id="last-name" class="form-control shadow bg-body rounded" @bind-Value="personalInformation.LastName" placeholder="Last Name" @onfocusout="completion" /> <!--@onfocusout="completion" -->
-                                            
-                                        </div>
-                                        <div class="col-4" style="position: relative">
-                                            @*<label class="form-label" for="email-address">Email Address</label>*@
-                                            <ValidationMessage For="@(() => personalInformation.Email)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                                            <InputText id="email-address" class="form-control shadow bg-body rounded" type="email" @bind-Value="personalInformation.Email" placeholder="Email Address" @onfocusout="completion" /> <!--@onfocusout="completion" -->
-                                            
-                                        </div>
-                                    </div>
-                                    <div class="row p-3">
-                                        <div class="col-4" style="position: relative">
-                                            @*<label class="form-label" for="phone-number">Phone Number</label>*@
-                                            <ValidationMessage For="@(() => personalInformation.PhoneNumber)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                                            <InputText id="phone-number" class="form-control shadow bg-body rounded" style="margin-top: 3.7vh;" @bind-Value="personalInformation.PhoneNumber" placeholder="Contact Number" @onfocusout="completion" /> <!--@onfocusout="completion" -->
-                                            
-                                        </div>
-                                        <div class="col-4" style="position: relative">
-                                            <label class="form-label" for="ethnicity">Ethnicity</label>
-                                            <ValidationMessage For="@(() => additionalInformation.Ethnicity)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                                            <InputSelect id="ethnicity" class="form-select shadow bg-body rounded" @bind-Value="additionalInformation.Ethnicity" @onfocusout="completion">
-                                                <!--@onfocusout="completion" -->
-
-                                                @if (newAdditionalInfo)
-                                                {
-                                                    <option value="" disabled selected>Ethnicity</option>
-                                                    <option value="African">African</option>
-                                                    <option value="Asain">Asain</option>
-                                                    <option value="Coloured">Coloured</option>
-                                                    <option value="Indian">Indian</option>
-                                                    <option value="White">White</option>
-                                                }
-                                                else
-                                                {
-                                                    @foreach (var item in additionalInfoList)
-                                                    {
-                                                        <option value="@item.Ethnicity" selected>@item.Ethnicity</option>
-                                                        <option value="African">African</option>
-                                                        <option value="Asian">Asian</option>
-                                                        <option value="Coloured">Coloured</option>
-                                                        <option value="Indian">Indian</option>
-                                                        <option value="White">White</option>
-                                                    }
-                                                }
-                                            </InputSelect>
-                                            
-                                        </div>
-                                        <div class="col-4" style="position: relative">
-                                            <label class="form-label" for="gender">Gender</label>
-                                            <ValidationMessage For="@(() => additionalInformation.Gender)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                                            <InputSelect id="gender" class="form-select shadow bg-body rounded" @bind-Value="additionalInformation.Gender" @onfocusout="completion">
-                                                <!--@onfocusout="completion" -->
-                                                @if (newAdditionalInfo)
-                                                {
-                                                    <option value="" disabled selected>Select Gender</option>
-                                                    <option value="Male">Male</option>
-                                                    <option value="Female">Female</option>
-                                                    <option value="Prefer Not To Answer">Prefer not to answer</option>
-                                                }
-                                                else
-                                                {
-                                                    @foreach (var item in additionalInfoList)
-                                                    {
-                                                        <option value="@item.Gender" selected>@item.Gender</option>
-                                                        <option value="Male">Male</option>
-                                                        <option value="Female">Female</option>
-                                                        <option value="Prefer Not To Answer">Prefer not to answer</option>
-                                                    }
-                                                }
-                                            </InputSelect>
-                                            
-                                        </div>
-                                    </div>
-                                    <div class="row p-3">
-                                        <div class="col-4" style="position: relative">
-                                            @*<label class="form-label" for="id-number">ID Number</label>*@
-                                            <ValidationMessage For="@(() => personalInformation.IdNumber)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                                            <InputText id="id-number" class="form-control shadow bg-body rounded" min="13" max="13" @bind-Value="personalInformation.IdNumber" placeholder="ID Number" @onfocusout="completion" /> <!--@onfocusout="completion" -->
-                                            
-                                        </div>
-                                        <div class="col-8" style="position: relative">
-                                            @*<label class="form-label" for="address">Address</label>*@
-                                            <ValidationMessage For="@(() => personalInformation.Address)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                                            <InputTextArea id="address" style="resize:none;" class="form-control shadow bg-body rounded" @bind-Value="personalInformation.Address" placeholder="Address" rows="1" resi @onfocusout="completion"></InputTextArea>
-                                            
-                                        </div>
-                                    </div>
-                                    @*<div class="validation-message"><ValidationSummary /></div>*@
-                                    <div style="text-align: center;">
-                                        <button class="default-button-style" style="margin-bottom: 10px;" type="submit" value="Save" disabled="@savePersonalInfoPressed">Save</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </EditForm>
-                    </div>
-                </div>
-
-                <!--Work History-->
-                <div id="work-history" class="container tab-pane">
-                    <EditForm Model="@workHistory" OnValidSubmit="@addWorkHistoryTest">
-                        <DataAnnotationsValidator />
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="row">
-                                    <div class="col-9 p-5">
-                                        <div class="row shadow-sm bg-body rounded-edges white-back position-white" style="top: 3%;">
-                                            <div class="education-header">
-                                                <h1>Work History</h1>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="row p-3">
-                                                    <div class="col-6" style="position: relative">
-                                                        <!--<label class="form-label" for="company-name">Company Name</label>-->
-                                                        <ValidationMessage For="@(() => workHistory.CompanyName)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                                                        <InputText id="company-name" class="form-control shadow bg-body rounded" @bind-Value="workHistory.CompanyName" placeholder="Company Name" @onfocusout="completion" />
-                                                    </div>
-                                                    <div class="col-6" style="position: relative">
-                                                        <!--<label class="form-label" for="job-title">Job Title</label>-->
-                                                        <ValidationMessage For="@(() => workHistory.JobTitle)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                                                        <InputText id="job-title" class="form-control shadow bg-body rounded" @bind-Value="workHistory.JobTitle" placeholder="Job Title" @onfocusout="completion" />
-                                                    </div>
-                                                </div>
-                                                <div class="row p-3">
-                                                    <div class="col-6">
-                                                        <label class="form-label" for="start-date">Start Date</label>
-                                                        <InputDate id="start-date" class="form-control shadow bg-body rounded" @bind-Value="workHistory.StartDate" placeholder="Date" @onblur="StartDateCheck" />
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <label class="form-label" for="end-date">End Date</label>
-                                                        <InputDate id="end-date" class="form-control shadow bg-body rounded" @bind-Value="workHistory.EndDate" placeholder="Date" @onblur="EndDateCheck" />
-                                                    </div>
-
-                                                </div>
-                                                <div class="row p-3">
-                                                    <div class="col-12" style="position: relative">
-                                                        <!--<label class="form-label" for="description">Description</label>-->
-                                                        <ValidationMessage For="@(() => workHistory.Description)" style="font-size: 0.8em; position: absolute; bottom: 70px;"/>
-                                                        <InputTextArea style="resize:none;" id="description" class="form-control shadow bg-body rounded" placeholder="Description" @bind-Value="workHistory.Description" rows="3" @onfocusout="completion"></InputTextArea> <!--@onfocusout="completion" -->
-                                                    </div>
-                                                    @*<div class="validation-message"><ValidationSummary /></div>*@
-                                                    <div class="col-12 d-flex justify-content-around">
-                                                        @if (workEditMode)
-                                                        {
-                                                            <input style="margin-top: 2vh;" type="button" value="Save" @onclick="() => SaveWorkHistory(workHistory)" disabled="@addWorkhistoryPressed"/>
-                                                            <input style="margin-top: 2vh;" type="button" value="Cancel" @onclick="() => CancelWorkHistory(workHistory)" disabled="@addWorkhistoryPressed"/>
-                                                        }
-                                                        else
-                                                        {
-                                                            <button class="default-button-style" style="margin-top: 10px;" type="submit" value="Add" disabled="@addWorkhistoryPressed">Add</button>
-                                                        }
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-3 ">
-                                        <div class="history-container position-history-card rounded-edges">
-                                            <div class="text-center history-status-intransit">
-                                                    <p class="history-status  text-tight">Work History</p>
-                                            </div>
-                                            <div class="history">                                                
-
-                                                @if (workHistoryList != null)
-                                                {
-                                                    foreach (var item in workHistoryList)
-                                                    {
-                                                        <div class="text-card" @onclick="() => SelectWorkHistory(item)" style="@GetStyling(item)">
-                                                            <span class="work-history-icon" @onclick="() => DeleteWorkHistory(item)">
-                                                                <i class="icon-colour fa fa-trash fa-2x" ></i>
-                                                                <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
-                                                            </span>
-
-                                                            <div class="work-history-comp-name">@item.CompanyName</div>
-                                                            <div class="work-history-job-title">@item.JobTitle</div>
-                                                            <div class="work-history-desc">@item.Description</div>
-                                                            <div class="work-history-date" style="color: @SmallCardDate()">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</div>
-                                                        </div>
-
-
-                                                    }
-                                                }
-                                                <!--To display to the user which card has been chosen-->
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </EditForm>
-                </div>
-
-                <!--Education-->
-                <div id="education" class="container tab-pane">
-                    <EditForm Model="@education" OnValidSubmit="@AddEducationTakeTwo">
-                        <DataAnnotationsValidator />
-                        <!--education-form  this is using JS-->
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="row">
-                                    <div class="col-9 p-5">
-                                        <div class="row shadow-sm bg-body rounded-edges white-back position-white" style=" top: -8px;">
-                                            <div class="education-header">
-                                                <h1>Educational details</h1>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="row p-3">
-                                                    <div class="col-6" style="position: relative">
-                                                        <!--<label class="form-label" for="institution">Institution</label>-->
-                                                        <ValidationMessage For="@(() => education.Qualification)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                                                        <InputText id="qualification" class="form-control shadow bg-body rounded" @bind-Value="education.Qualification" placeholder="Qualification" @onfocusout="completion" /> <!--@onfocusout="completion" -->
-
-                                                    </div>
-                                                    <div class="col-6" style="position: relative">
-                                                        <!--<label class="form-label" for="qualification">Qualification</label>-->
-                                                        <ValidationMessage For="@(() => education.Insitution)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                                                        <InputText id="Institution" class="form-control shadow bg-body rounded" @bind-Value="education.Insitution" placeholder="Institution" @onfocusout="completion" /> <!--@onfocusout="completion" -->
-                                                    </div>
-                                                </div>
-                                                <div class="row p-3">
-                                                    <div class="col-6">
-                                                        <label class="form-label" for="start-date">Start Date</label>
-                                                        <InputDate id="start-date" class="form-control shadow bg-body rounded" @bind-Value="education.StartDate" @onblur="StartDateCheck" />
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <label class="form-label" for="end-date">End Date</label>
-                                                        <InputDate id="end-date" class="form-control shadow bg-body rounded" @bind-Value="education.EndDate" @onblur="EndDateCheck" />
-                                                    </div>
-                                                </div>
-
-                                                <div class="row p-3">
-                                                    @*<div class="validation-message"><ValidationSummary /></div>*@
-                                                    <div class="col-12 d-flex justify-content-around">
-                                                        @if (eduEditMode)
-                                                        {
-                                                            <input type="button" value="Save" @onclick="() => SaveEducation(education)" disabled="@addEducationPressed"/>
-                                                            <input type="button" value="Cancel" @onclick="() => CancelEducation(education)" disabled="@addEducationPressed"/>
-                                                        }
-                                                        else
-                                                        {
-                                                            <button class="default-button-style" type="submit" value="Add" disabled="@addEducationPressed">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
-                                                        }
-
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <!--<div class="row shadow-sm bg-body rounded-edges white-back">-->
-                                        <!--<div class="col-12 overflow-auto" style="height: 47vh">-->
-                                        <div class="history-container position-history-card rounded-edges" style="top: 6px;">
-                                            <div class="text-center history-status-intransit ">
-                                                    <p class="history-status  text-tight">Educational History</p>
-                                            </div>
-                                            <div class="history">                                               
-                                                
-                                                @if (educationList != null && educationList.Count > 0)
-                                                {
-                                                    foreach (var item in educationList)
-                                                    {
-
-                                                        <div class="text-card" @onclick="() => SelectEducation(item)" style="@GetEduStyling(item)">
-                                                            <span class="work-history-icon" @onclick="() => DeleteEducation(item)">
-                                                                <i class="icon-colour fa fa-trash fa-2x" ></i>
-                                                                <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
-                                                            </span>
-                                                            <div class="work-history-comp-name">@item.Qualification</div>
-                                                            <div class="work-history-job-title">@item.Insitution</div>
-                                                            <div class="work-history-date" style="color: @SmallCardDate()">@($"{item.StartDate:yyyy MMMM} - {item.EndDate:yyyy MMMM}")</div>
-                                                        </div>
-                                                    }
-                                                }
-                                                <!--</div>-->
-                                                <!--</div>-->
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </EditForm>
-                </div>
-
-                <!--Matric marks-->
-                <div id="matricMarks" class="container tab-pane">                   
-                        <div class="d-flex" style="margin-left: 170px;">
-                            <div class="rounded-edges matric-white-back">
-                                <div class="personalInfo-header"> 
-                                    <h1>Matric Marks</h1>
-                                </div>  
-                                <div class="subjects"> 
-                                    <h3>Subject</h3>
-                                    <h3>Mark(%)</h3>
-                                </div>
-                                <div class="mark-input-container">
-                                 @foreach (var item in matricInputs)
-                                 {                                     
-                                         <div style="display: flex; justify-content: center; margin-left: 10px;">
-                                            <div style="width: 150px;margin-right: 142px;">@item.SubjectName</div>
-                                            <div style="width: 40px;">@item.SubjectMark </div>  
-                                            <button type="button" class="btn-close text-reset" @onclick="() => RemoveMark(item)"></button>
-                                         </div>                                      
-                                 }
-                                 </div>
-                                 @if (!enterNewMark)
-                                 { 
-                                 <EditForm Model="@marks" OnValidSubmit="@insertMarks">
-                                 <DataAnnotationsValidator />
-                                    <div class="mark-input">
-                                         <div style="width: 120px; margin-right: 100px;">
-                                             <input class="form-control" style="height: 3vh;" type="text" placeholder="Subject's Name" @bind="marks.SubjectName">
-                                         </div>
-                                         <div style="width: 120px;">
-                                            <input class="form-control" style="height: 3vh;" type="number" placeholder="Mark" min="0" max="100" @bind="marks.SubjectMark">                                           
-                                         </div>    
-                                         <div>
-                                             <button type="button" class="btn-close text-reset" @onclick="() => addAnotherMark(true)"></button>
-                                         </div>
-                                    </div> 
-                                    <div style=" margin-top: 5px; text-align: center;">
-                                        <input class="default-button-style"  type="submit" value="Add"/>     <!--style = "margin-left: 195px;"-->
-                                        <input class="default-button-style" type="button" value="Save" @onclick="SaveMarks"/>
-                                    </div>
-                                 </EditForm>
-                                 }
-                                 else
-                                 {
-                                     <div style="text-align: center;"> <!--margin-left: 195px;-->
-                                         <input class="default-button-style" type="button" value="Add" @onclick="() => addAnotherMark(false)"/>
-                                         <input class="default-button-style" type="button" value="Save" @onclick="SaveMarks"/>
-                                     </div>                                     
-                                 }                                 
-                            </div>
-                        </div>
-                    </div>               
-
-                <!--Skills tab-->
-
-                <div id="skills" class="container tab-pane">
-                    <EditForm Model="@skillInfo" OnValidSubmit="@addToSelectedInfo">
-                        <DataAnnotationsValidator />
-                        <!--Remember to test add the model-->
-                        <!--<DataAnnotationsValidator />  -->
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="row">
-                                    <div class="col-9 p-5">
-                                        <div class="row shadow-sm bg-body rounded-edges white-back position-white" style="top: -8px;">
-                                            <div class="education-header">
-                                                <h1>Skills</h1>
-                                            </div>
-                                            <div style="text-align:center;"> 
-                                                <InputText id="skill" class="skill-input form-control shadow bg-body rounded" @bind-Value="skillInfo.Description" placeholder="Enter skills" @onfocusout="completion" />
-                                            </div>
-                                            <div style="margin-top: 10px; margin-bottom: 10px;">
-                                                <div class="validation-message"><ValidationSummary /></div>
-
-                                                @if (skillEditMode)
-                                                {
-                                                    <input style=" margin-left: 20%;" type="button" value="Save" @onclick="() => SaveSkill(skillInfo)" disabled="@addSkillsPressed"/>
-                                                    <input style=" margin-left: 40%;" type="button" value="Cancel" @onclick="() => CancelSkill(skillInfo)" disabled="@addSkillsPressed"/>
-                                                }
-                                                else
-                                                {
-                                                    <div style="text-align:center;">
-                                                        <button class="default-button-style" type="submit" value="Add" disabled="@addSkillsPressed">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
-                                                    </div>
-                                                }
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <!--<div class="row shadow-sm bg-body rounded-edges white-back">-->
-                                        <!--<div class="col-12 overflow-auto" style="height: 47vh">-->
-                                        <div class="history-container position-history-card rounded-edges" style="top: 6px;">
-                                            <div class="text-center history-status-intransit ">
-                                                    <p class="history-status  text-tight">Skills Information</p>
-                                            </div>
-                                            <div class="history">                                                
-                                                
-                                                @if (selectedSkillsList1 != null && selectedSkillsList1.Count > 0)
-                                                {
-                                                    foreach (var item in selectedSkillsList1)
-                                                    {
-                                                        <div class="text-card" @onclick="() => SelectSkill(item)" style="@GetSkillStyling(item)">
-                                                            <span class="work-history-icon" @onclick="() => removeFromSelectedInfo(item)">
-                                                                <i class="icon-colour fa fa-trash fa-2x"></i> <!---->
-                                                                <!--<i class="fa fa-times-circle fa-2x" style="color: red"></i>-->
-                                                            </span>
-                                                            <div class="work-history-comp-name">@item.Description</div>
-                                                        </div>
-                                                    }
-                                                }
-                                                <!--</div>-->
-                                                <!--</div>-->
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </EditForm>
-                </div>
-
-                <!--Additional Documents Tab-->
-
-                <div id="additionalDocuments" class="container tab-pane">
-                    <EditForm Model="@doc">
-                        <DataAnnotationsValidator />
-                        <div class="d-flex " style="margin-left: 170px;">
-                            <div class="rounded-edges documents-white-back">
-                                <div class="personalInfo-header"> 
-                                    <h1>Additional Documents</h1>
-                                </div>
-
-                                <div class="form-group createjob-form-group">
-                                    <div class="createjob-form-individual">
-                                        <MudPaper @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
-                                                  @ondragleave="@(() => _dragEnterStyle = null)"
-                                                  @ondragend="@(() => _dragEnterStyle = null)"
-                                                  Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
-                                            @if (getUserDoc.MatricCertificate == null)
-                                            {
-                                                <InputFile OnChange="OnInputMatricCertChangedAsync" multiple class="matric-drag-drop-input" />
-
-                                                <MudText Typo="Typo.h3" Align="Align.Center">
-                                                    <div class="upload-text">
-                                                        <i class="fa fa-upload"></i>
-                                                        <br />
-                                                        Drop Matric Certificate
-                                                    </div>
-                                                    
-                                                </MudText>
-                                            }
-                                            else
-                                            {
-                                                <i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i>
-                                                <div class="document-preview">
-                                                    <!--@onclick="() => showDetailedDocumentPage(true)"-->                                                    
-                                                    <a class="upload-text" href="@getUserDoc.MatricCertificate" target="_blank">Matric Certificate</a>
-                                                </div>
-                                            }
-                                        </MudPaper>
-                                        @if (enableUploadButtons)
-                                        {
-                                            <div class="upload-button-location" style="margin-top: 6px;">
-                                                <label class="default-button-style" style="padding-top: 7px;">
-                                                    <InputFile OnChange="OnInputMatricCertChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
-                                                </label>                                            
-                                            </div>
-                                        }else
-                                        {
-                                            <div class="upload-button-location" style="margin-top: 6px;">
-                                                <label class="default-button-style" style="padding-top: 7px;background-color: #A9ABA7">
-                                                    Upload
-                                                </label>
-                                            </div>       
-                                        }
-                                        
-                                    </div>
-
-                                    <div class="createjob-form-individual">
-                                        <MudPaper @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
-                                                  @ondragleave="@(() => _dragEnterStyle = null)"
-                                                  @ondragend="@(() => _dragEnterStyle = null)"
-                                                  Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
-
-                                            @if (getUserDoc.UniversityTranscript == null)
-                                            {
-                                                <InputFile OnChange="OnInputTranscriptChangedAsync" multiple class="academic-drag-drop-input" />
-
-                                                <MudText Typo="Typo.h3" Align="Align.Center">
-                                                    <div class="upload-text">
-                                                         <i class="fa fa-upload"></i>
-                                                        <br />
-                                                        Drop Academic Transcript
-                                                    </div>
-                                                    
-                                                </MudText>
-                                            }
-                                            else
-                                            {
-                                                <i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i>
-                                                <div class="document-preview">
-                                                    <!--@onclick="() => showDetailedDocumentPage(true)"-->                                                    
-                                                    <a class="upload-text" href="@getUserDoc.UniversityTranscript" target="_blank">Academic Transcript</a>
-                                                </div>
-                                            }
-                                        </MudPaper>
-                                        @if(enableUploadButtons)
-                                        {
-                                            <div class="upload-button-location" style="margin-top: 6px;">
-                                                <label class="default-button-style" style="padding-top: 7px;">
-                                                    <InputFile OnChange="OnInputTranscriptChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
-                                                </label>
-                                            </div>
-                                        }else
-                                        {
-                                            <div class="upload-button-location" style="margin-top: 6px;">
-                                                <label class="default-button-style" style="background-color: #A9ABA7; padding-top: 7px;">
-                                                    Upload
-                                                </label>
-                                            </div>       
-                                        }
-                                    </div>
-                                </div>
-
-                                <div class="spacing-between-dragable-items">
-                                    <div class="form-group createjob-form-group">
-                                        <div class="createjob-form-individual">
-                                            <MudPaper @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
-                                                      @ondragleave="@(() => _dragEnterStyle = null)"
-                                                      @ondragend="@(() => _dragEnterStyle = null)"
-                                                      Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
-
-                                                @if (getUserDoc.AdditionalCert1 == null)
-                                                {
-                                                    <InputFile OnChange="OnInputFirstDocumentChangedAsync" multiple class="certificate-drag-drop-input" />
-                                                    <MudText Typo="Typo.h3" Align="Align.Center">
-                                                        <div class="upload-text">
-                                                            <i class="fa fa-upload"></i>
-                                                            <br />
-                                                            Drop Certificate
-                                                        </div>
-                                                        
-                                                    </MudText>
-                                                }
-                                                else
-                                                {
-                                                    <i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i>
-                                                    <div class="document-preview">
-                                                        <!--@onclick="() => showDetailedDocumentPage(true)"-->
-                                                        <a class="upload-text" href="@getUserDoc.AdditionalCert1" target="_blank">Additional Document</a>
-                                                    </div>
-                                                }
-                                            </MudPaper>
-                                            @if(enableUploadButtons)
-                                            {
-                                                <div class="upload-button-location" style="margin-top: 6px;">
-                                                    <label class="default-button-style" style="padding-top: 7px;">
-                                                        <InputFile OnChange="OnInputFirstDocumentChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
-                                                    </label>
-                                                </div>
-                                            }else
-                                            {
-                                                <div class="upload-button-location" style="margin-top: 6px;">
-                                                    <label class="default-button-style" style="background-color: #A9ABA7; padding-top: 7px;">
-                                                        Upload
-                                                    </label>
-                                                </div>
-                                            }                                       
-                                        </div>
-
-                                        <div class="createjob-form-individual">
-                                            <MudPaper @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
-                                                      @ondragleave="@(() => _dragEnterStyle = null)"
-                                                      @ondragend="@(() => _dragEnterStyle = null)"
-                                                      Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
-
-                                                @if (getUserDoc.AdditionalCert2 == null)
-                                                {
-                                                    <InputFile OnChange="OnInputSecondDocumentChangedAsync" multiple class="certificate-drag-drop-input" />
-                                                    <MudText Typo="Typo.h3" Align="Align.Center">
-                                                        <div class="upload-text">
-                                                            <i class="fa fa-upload"></i>
-                                                            <br />
-                                                            Drop Certificate
-                                                        </div>                                                       
-                                                        
-                                                    </MudText>
-                                                }
-                                                else
-                                                {
-                                                    <i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i>
-                                                    <div class="document-preview">
-                                                        <!--@onclick="() => showDetailedDocumentPage(true)"-->
-
-                                                        <a class="upload-text" href="@getUserDoc.AdditionalCert2" target="_blank">Additional Document</a>
-                                                    </div>
-                                                }
-                                            </MudPaper>
-                                            @if(enableUploadButtons)
-                                            {                                                
-                                                <div class="upload-button-location" style="margin-top: 6px;">
-                                                    <label class="default-button-style" style="padding-top: 7px;">
-                                                        <InputFile OnChange="OnInputSecondDocumentChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
-                                                    </label>
-                                                </div>
-                                            }else
-                                            {
-                                                <div class="upload-button-location" style="margin-top: 6px;">
-                                                    <label class="default-button-style" style="background-color: #A9ABA7; padding-top: 7px;">
-                                                        Upload
-                                                    </label>
-                                                </div>
-                                            }
-                                            
-                                        </div>
-
-                                        <div class="createjob-form-individual">
-                                            <MudPaper @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
-                                                      @ondragleave="@(() => _dragEnterStyle = null)"
-                                                      @ondragend="@(() => _dragEnterStyle = null)"
-                                                      Class="@("drag-drop-zone rounded-edges drop-corner " + _dragEnterStyle)">
-
-                                                @if (getUserDoc.AdditionalCert3 == null)
-                                                {
-                                                    <InputFile OnChange="OnInputThirdDocumentChangedAsync" multiple class="certificate-drag-drop-input" />
-                                                    <MudText Typo="Typo.h3" Align="Align.Center">
-                                                        <div class="upload-text">
-                                                            <i class="fa fa-upload"></i>
-                                                            <br />
-                                                            Drop Certificate
-                                                        </div>
-                                                    </MudText>
-                                                }
-                                                else
-                                                {
-                                            <i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i>
-                                                    <div class="document-preview">
-                                                        <!--@onclick="() => showDetailedDocumentPage(true)"-->
-
-                                                        <a class="upload-text" href="@getUserDoc.AdditionalCert3" target="_blank">Additional Document</a>
-                                                    </div>
-                                                }
-                                            </MudPaper>
-                                            @if(enableUploadButtons)
-                                            {
-                                                <div class="upload-button-location" style="margin-top: 6px;">
-                                                    <label class="default-button-style" style="padding-top: 7px;">
-                                                        <InputFile OnChange="OnInputThirdDocumentChangedAsync" class="drag-drop-input-image" id="fileInput" />Upload
-                                                    </label>
-                                                </div>
-                                            }else
-                                            {
-                                                <div class="upload-button-location" style="margin-top: 6px;">
-                                                    <label class="default-button-style" style="background-color: #A9ABA7; padding-top: 7px;">
-                                                        Upload
-                                                    </label>
-                                                </div>
-                                            }
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </EditForm>
-                </div>
-
-                <!--References tab-->
-
-                <div id="references" class="container tab-pane">
-                    <EditForm Model="@references" OnValidSubmit="@AddReferences">
-                        <DataAnnotationsValidator />
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="row">
-                                    <div class="col-9 p-5">
-                                        <div class="row shadow-sm bg-body rounded-edges white-back position-white" style=" top: -8px;">
-                                            <div class="education-header">
-                                                <h1>References</h1>                                                
-                                            </div>
-                                            <div class="col-12">
-
-                                                <div class="row p-3">
-                                                    <div class="col-6" style="position: relative">
-                                                        <!--<label class="form-label" for="referenceName">Name</label>-->
-                                                        <ValidationMessage For="@(() => references.RefFirstName)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                                                        <InputText id="referenceName" class="form-control shadow bg-body rounded" placeholder="Name" @bind-Value="references.RefFirstName" @onfocusout="completion" /> <!--@onfocusout="completion" -->
-                                                    </div>
-                                                    <div class="col-6" style="position: relative">
-                                                        <!--<label class="form-label" for="referenceSurname">Surname</label>-->
-                                                        <ValidationMessage For="@(() => references.RefLastName)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                                                        <InputText id="referenceSurname" class="form-control shadow bg-body rounded" placeholder="Surname" @bind-Value="references.RefLastName" @onfocusout="completion" /> <!--@onfocusout="completion" -->
-                                                    </div>
-                                                </div>
-
-                                                <div class="row p-3">
-                                                    <div class="col-6" style="position: relative">
-                                                        <!--<label class="form-label" for="referenceEmail">Email</label>-->
-                                                        <ValidationMessage For="@(() => references.RefEmail)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                                                        <InputText id="referenceEmail" class="form-control shadow bg-body rounded" placeholder="Email" @bind-Value="references.RefEmail" @onfocusout="completion" /> <!--@onfocusout="completion" -->
-                                                    </div>
-                                                    <div class="col-6" style="position: relative">
-                                                        <!--<label class="form-label" for="referenceContactNum">Phone Number</label>-->
-                                                        <ValidationMessage For="@(() => references.RefPhone)" style="font-size: 0.8em; position: absolute; bottom: 32px;"/>
-                                                        <InputText id="referenceContactNum" class="form-control shadow bg-body rounded" placeholder="Phone Number" @bind-Value="references.RefPhone" @onfocusout="completion" /> <!--@onfocusout="completion" -->
-                                                    </div>
-                                                </div>
-                                                <div class="row p-3">
-                                                    @*<div class="validation-message"><ValidationSummary /></div>*@
-                                                    <div class="col-12 d-flex justify-content-around">
-
-                                                        @if (editMode)
-                                                        {
-                                                            <input type="button" value="Save" @onclick="() => Save(references)" disabled="@addReferencesPressed"/>
-                                                            <input type="button" value="Cancel" @onclick="() => Cancel(references)" disabled="@addReferencesPressed"/>
-                                                        }
-                                                        else
-                                                        {
-                                                            <button class="default-button-style" type="submit" value="Add"  disabled="@addReferencesPressed">Add</button> <!--@onclick="() => AddReferences()"-->
-                                                        }
-
-                                                    </div>
-                                                    <div id="demo"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <div class="history-container position-history-card rounded-edges" style="top: 6px;">
-                                            <div class="text-center history-status-intransit">
-                                                    <p class="history-status  text-tight">References</p>
-                                            </div>
-                                            <div class="history">
-                                                @if (referencesList != null && referencesList.Count > 0)
-                                                {
-                                                    foreach (var items in referencesList)
-                                                    {
-
-                                                        <div class="text-card" @onclick="() => SelectReference(items)" style="@GetRefStyling(items)">
-                                                            <span class="work-history-icon" @onclick="() => DeleteReference(items)">
-                                                                <i class="icon-colour fa fa-trash fa-2x"  ></i> <!---->
-                                                            </span>
-                                                            <div class="work-history-comp-name">@items.RefFirstName</div>
-                                                            <div class="work-history-job-title">@items.RefLastName</div>
-                                                            <div class="work-history-job-title">@items.RefEmail</div>
-                                                            <div class="work-history-job-title">@items.RefPhone</div>                                                            
-                                                        </div>
-                                                    }
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </EditForm>
-                </div>
-
-                <!--Online Presence-->
-                <div id="online-profile" class="container tab-pane" style=" margin-top: 50px;">
-                    <form class="col-12 d-flex" style="margin-left: 150px;">
-                        <div class="row col-9">
-                            <div class="col-12 shadow-sm bg-body rounded-edges align-self-start white-back" style="margin-top: -10vh; width: 87.5%; " >
-                                <div class="education-header">
-                                    <h1>Online Presence</h1>
-                                </div>
-                                <div class="row p-3">
-                                    <div class="col-6">
-                                        <div>
-                                            <label class="form-label" for="github">Github</label>
-                                            &ensp;
-                                            <i class="fab fa-github fa-2x"></i>
-                                        </div>
-                                        <input id="github" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.GitHubLink" placeholder="github.com/1Nebula" />
-                                    </div>
-                                    <div class="col-6">
-                                        <div>
-                                            <label class="form-label" for="linkedin">LinkedIn</label>
-                                            &ensp;
-                                            <i class="fab fa-linkedin-in fa-2x" style="color: #0077b5"></i>
-                                        </div>
-                                        <input id="linkedin" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.LinkedInLink" placeholder="linkedin.com/company/nebula" />
-                                    </div>
-                                </div>
-                                <div class="row p-3">
-                                    <div class="col-6">
-                                        <div>
-                                            <label class="form-label" for="twitter">Twitter</label>
-                                            &ensp;
-                                            <i class="fab fa-twitter-square fa-2x" style="color: #00acee"></i>
-                                        </div>
-                                        <input id="twitter" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.TwitterLink" placeholder="twitter.com/1nebula_global" />
-                                    </div>
-                                    <div class="col-6">
-                                        <div>
-                                            <label class="form-label" for="personal-website">Personal Website</label>
-                                            &ensp;
-                                            <i class="fas fa-globe fa-2x" style="color: #35afc0"></i>
-                                        </div>
-                                        <input id="personal-website" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.PersonalWebsiteUrl" placeholder="1nebula.com" />
-                                    </div>
-                                </div>
-                                <!--Validation to ensure that the page is 100% completed-->
-                                @*@if (calc == 100)
-                                    {*@
-                                <div class="row p-3">
-                                    <div class="col-12 d-flex justify-content-center">
-                                        <input class="default-button-style" type="button" value="Save" @onclick="Submit" />
-                                    </div>
-                                </div>
-                                @*}*@
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 @if (loadInfo)
 {
     <div class="appform-submit-modal">
         <MudProgressCircular Size="Size.Large" Indeterminate="true" />
     </div>
-
 }
+else
+{
+    <div class="personal-info-container">
+        <div class="left-side-content">
+
+            <!--Personal Information Content-->
+
+            <div style="margin-bottom: 30px;">
+                <div class="left-side-content-container left-side-content-container-header-styling">                    
+                    <div style="display: flex; ">
+                       @if (true)
+                        {
+                            <div style="display: flex; align-items: center; margin-left: -30px;">
+                                <div class="circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="display: flex; align-items: center; margin-left: -30px;">
+                                <div class="not-filled-circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+
+                        <div><h2 class="content-title">Personal Information</h2></div>
+                    </div>
+                    <div style="display: flex;">
+                        <div class="content-edit-design"><div @onclick="() => changePersonalInfoEditableStatus(true)" class="icon-styling"><i class="fas fa-edit" ></i></div></div>
+                        <button type="button" class="content-collapse-icon" data-toggle="collapse" data-target="#personalInfo"><div class="icon-styling"><i class="fas fa-minus"></i></div></button>
+                    </div>
+                </div>
+                <div id="personalInfo" class="collapse in left-side-content-container">
+                    <!--This is the div that will be collapsoble-->
+                    @if (editable)
+                    {
+                        <EditForm Model="@personalInformation" OnValidSubmit="@newAddPersonalInformation">
+                        <DataAnnotationsValidator />
+                            <div class=" content-user-info-container">
+                                <div class="image-container" >
+                                    <img src="@userPic?userDate=@updatedUserPic" class="user-image"/> <!---->  
+                                    <div class="upload-button-location" style="text-align: center;">
+                                        <label class="upload-image-text-style" >
+                                        <InputFile OnChange="UploadingProfilePic" class="drag-drop-input-image" id="fileInput" />Upload Image
+                                        </label>
+                                    </div>
+                                    @*<label class="upload-image-text-style">
+                                    <InputFile OnChange="OnInputFileChangedAsync"  id="fileInput" />Upload Image
+                                    </label>*@
+                                </div>                     
+                        
+                                 <div class="personal-Info-container">                        
+                                        <div style="display: flex;">
+                                            <InputText id="first-name" @bind-Value="personalInformation.FirstName" placeholder="First Name"/>
+                                            <InputText id="last-name"  @bind-Value="personalInformation.LastName" placeholder="Last Name"/>
+                                        </div>
+                                        <div>
+                                            <InputText id="email-address" type="email" @bind-Value="personalInformation.Email" placeholder="Email Address" />
+                                        </div>
+                                        <div>
+                                            <InputText id="phone-number" @bind-Value="personalInformation.PhoneNumber" placeholder="Contact Number"/>
+                                        </div>
+                                        <div>
+                                            <InputSelect id="ethnicity" @bind-Value="additionalInformation.Ethnicity">
+                                                        <!--@onfocusout="completion" -->
+
+                                                        @if (newAdditionalInfo)
+                                                        {
+                                                            <option value="" disabled selected>Ethnicity</option>
+                                                            <option value="African">African</option>
+                                                            <option value="Asain">Asain</option>
+                                                            <option value="Coloured">Coloured</option>
+                                                            <option value="Indian">Indian</option>
+                                                            <option value="White">White</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            @foreach (var item in additionalInfoList)
+                                                            {
+                                                                <option value="@item.Ethnicity" disabled selected>@item.Ethnicity</option>
+                                                                <option value="African">African</option>
+                                                                <option value="Asian">Asian</option>
+                                                                <option value="Coloured">Coloured</option>
+                                                                <option value="Indian">Indian</option>
+                                                                <option value="White">White</option>
+                                                            }
+                                                        }
+                                            </InputSelect>
+                                        </div>
+                                 </div>
+                                 <div class="personal-Info-container">
+                                        <div>Region doesn't exist</div>
+                                        <div>
+                                            <InputTextArea id="address" style="resize:none;" @bind-Value="personalInformation.Address" placeholder="Address" rows="1"></InputTextArea>
+                                        </div>
+                                        <div>
+                                            <InputSelect id="gender" @bind-Value="additionalInformation.Gender">                                                
+                                                    @if (newAdditionalInfo)
+                                                    {
+                                                        <option value="" disabled selected>Select Gender</option>
+                                                        <option value="Male">Male</option>
+                                                        <option value="Female">Female</option>
+                                                        <option value="Prefer Not To Answer">Prefer not to answer</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        @foreach (var item in additionalInfoList)
+                                                        {
+                                                            <option value="@item.Gender" selected>@item.Gender</option>
+                                                            <option value="Male">Male</option>
+                                                            <option value="Female">Female</option>
+                                                            <option value="Prefer Not To Answer">Prefer not to answer</option>
+                                                        }
+                                                    }
+                                            </InputSelect>
+                                        </div>
+                                        <div>
+                                            <InputText id="id-number" min="13" max="13" @bind-Value="personalInformation.IdNumber" placeholder="ID Number"/> 
+                                        </div>                                          
+                                 </div>  
+                                 <div>
+                                    <button class="default-button-style" style="margin-bottom: 10px;" type="submit" value="Save" disabled="@savePersonalInfoPressed">Save</button>
+                                 </div>
+                            </div>
+                        </EditForm>
+                    }
+                    else
+                    {
+                        <div class=" content-user-info-container">
+                            <div class="image-container" >
+                                <img src="@userPic?userDate=@updatedUserPic" class="user-image"/> <!---->  
+                                <div class="upload-button-location" style="text-align: center;">
+                                    <label class="upload-image-text-style" >
+                                    <InputFile OnChange="UploadingProfilePic" class="drag-drop-input-image" id="fileInput" />Upload Image
+                                    </label>
+                                </div>
+                                @*<label class="upload-image-text-style">
+                                <InputFile OnChange="OnInputFileChangedAsync"  id="fileInput" />Upload Image
+                                </label>*@
+                            </div>
+                            @if (newPersonalInfo)
+                            {
+                                <div class="personal-Info-container">                        
+                                    <div>UserName + Surname</div>
+                                    <div>User Email Address</div>
+                                    <div>User Contact Number </div>
+                                    <div>User Selected Race </div>
+                                </div>
+                                <div class="personal-Info-container">
+                                    <div>Region doesn't exist</div>
+                                    <div>Address</div>
+                                    <div>Gender</div>
+                                    <div>ID Number</div>
+                                </div>
+                            }
+                            else
+                            {
+                        
+                                <div class="personal-Info-container">                        
+                                    <div>@personalInformation.FirstName @personalInformation.LastName</div>
+                                    <div>@personalInformation.Email</div>
+                                    <div>@personalInformation.PhoneNumber</div>
+                                    <div> @additionalInformation.Ethnicity</div>
+                                </div>
+                                <div class="personal-Info-container">
+                                    <div>Region doesn't exist</div>
+                                    <div>@personalInformation.Address</div>
+                                    <div>@additionalInformation.Gender</div>
+                                    <div>@personalInformation.IdNumber</div>        
+                                </div>                        
+                            }
+                        </div> 
+                    }       
+                </div>
+            </div>
+
+            <!--Cv Upload Content-->
+
+            <div style="margin-bottom: 30px;">
+                <div class="left-side-content-container left-side-content-container-header-styling">
+                    <div style="display: flex; ">
+                        <div style="display: flex; align-items: center; margin-left: -30px;">
+                            <div class="circle-style" ><i class="fas fa-check"></i></div>
+                        </div>
+                        <div><h2 class="content-title">Import CV</h2></div>
+                    </div>
+                    
+                    @*<div class="content-edit-design"><div @onclick="() => changeCvUploadEditableStatus(true)"><i class="fas fa-edit" ></i></div></div>*@
+                    <div>
+                    <button type="button" class="content-collapse-icon" data-toggle="collapse" data-target="#cvContent"><div class="icon-styling"><i class="fas fa-minus"></i></div></button>
+                    </div>
+                </div>
+                <div id="cvContent" class="collapse in left-side-content-container">
+                    <div class="content-user-cv-info-container" >
+                        <div >
+                            <MudPaper 
+                                @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
+                                @ondragleave="@(() => _dragEnterStyle = null)"
+                                @ondragend="@(() => _dragEnterStyle = null)"
+                                Class="@("drag-drop-zone drop-corner " + _dragEnterStyle)" Style="background-color: rgba(0,0,0,0.1)"> 
+                                                                           
+                                <InputFile OnChange="OnInputFileChangedAsync" multiple class="drag-drop-input" />
+                                       
+                                <MudText Typo="Typo.h3" Align="Align.Center">
+                                    <div class="upload-text">
+                                        <i class="fa fa-upload upload-icon-style"></i>    <!---->                                    
+                                        <div style="font-size: 18px;">Upload CV</div>                                        
+                                        <div style="color: #A9ABA7">Drag and Drop your document here or just click to browse files</div>
+                                    </div>
+                                </MudText>
+                                    
+                                        @*<i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i>
+                                        <div class="document-preview">
+                                            <a class="upload-text" href="@getUserDoc.CV" target="_blank">CV</a>
+                                        </div>*@
+                                    
+                            </MudPaper>
+                        </div>
+                        <div class="upload-heading-style"><h2 class="uploaded-documents-headings" style="font-size: 23px !important;">Uploaded CV</h2></div>
+                        <div>
+                            @if (cvDocumentExist)
+                            {
+                                <div>No CV found!</div>
+                            }
+                            else
+                            {
+                                <div class="upload-document-background" style="display:flex; color: #00BCAE">
+                                    <div style="display: flex; align-items: center;">
+                                        <div style="font-size: 13px;">
+                                        <i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i> 
+                                        </div>
+                                        <div>
+                                        <a class="upload-text" href="@getUserDoc.CV" target="_blank">CV</a> 
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; font-size: 16px;">
+                                        <div class="icon-styling" style="margin-right: 5px;" @onclick='() => toggleMagnifiedDocument("linkedincv", true)'><i class="fas fa-eye"></i></div>
+                                        <div class="icon-styling" @onclick="() => DeleteCV(getUserDoc.CV)" ><i class="fas fa-trash"></i></div>                                      
+                                     </div>       
+                                        
+                                        <!--
+                                            Still need to do: 
+                                            Change the database to store the CV name as well,                                                
+                                        -->                                    
+                                </div>
+                            }
+                        </div>
+                    </div>                        
+                </div>
+            </div>
+
+            <!--Work Experience-->
+             <div style="margin-bottom: 30px;">
+                <div class="left-side-content-container left-side-content-container-header-styling">
+                    <div style="display: flex; ">
+                        <div style="display: flex; align-items: center; margin-left: -30px;">
+                            <div class="circle-style" ><i class="fas fa-check"></i></div>
+                        </div>
+                        <div><h2 class="content-title">Work Experience</h2></div>
+                    </div>
+                    
+                    @*<div class="content-edit-design"><div @onclick="() => changeCvUploadEditableStatus(true)"><i class="fas fa-edit" ></i></div></div>*@
+                    <div>
+                        <button type="button" class="content-collapse-icon" data-toggle="collapse" data-target="#workExperienceContent"><div class="icon-styling"><i class="fas fa-minus"></i></div></button>
+                    </div>
+                </div>
+                <div id="workExperienceContent" class="collapse in left-side-content-container">
+                    <div class="content-user-cv-info-container" > 
+                        @if (workHistUpdate)
+                        {
+                            <EditForm Model="@selectedWorkHistory" OnValidSubmit="@UpdateWorkHistory">
+                                <DataAnnotationsValidator />
+                                <div style="color: #666666; border-bottom: #00bcae 2px solid; margin-bottom: 5px;">
+                                    <div style="display: flex;"> 
+                                        <div> 
+                                            <InputDate id="start-date" class="form-control shadow bg-body rounded" @bind-Value="selectedWorkHistory.StartDate" placeholder="Start Date" />
+                                        </div>
+                                        <div>
+                                            <InputDate id="end-date" class="form-control shadow bg-body rounded" @bind-Value="selectedWorkHistory.EndDate" placeholder="End Date" />
+                                        </div>                                    
+                                    </div>                                
+                                    <div style="font-weight: 800;">
+                                        <InputText class="form-control shadow bg-body rounded" @bind-Value="selectedWorkHistory.JobTitle" placeholder="Job Title"/>                                
+                                    </div>
+                                    <div style="font-weight: 600;">
+                                        <InputText class="form-control shadow bg-body rounded" @bind-Value="selectedWorkHistory.CompanyName" placeholder="Company Name"/>
+                                    </div>
+                                    <div>
+                                        <InputTextArea style="resize:none;" id="description" class="form-control shadow bg-body rounded" placeholder="Description" @bind-Value="selectedWorkHistory.Description" rows="3"></InputTextArea> <!--@onfocusout="completion" -->
+                                    </div>
+                                    <div style=" display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px; gap: 120px;">
+                                        <div>
+                                            <button class="default-button-style" type="submit" value="Save" disabled="@addWorkhistoryPressed">Save</button> 
+                                        </div>                                   
+                                        <div>
+                                             <input class="default-button-style" type="button" value="Cancel" @onclick="() => editWorkHistoryStatus(0, false)" disabled="@addWorkhistoryPressed"/>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </EditForm>
+                        }
+                        else
+                        {
+                            @foreach (var item in workHistoryList)
+                            {
+                                <div style="color: #666666; border-bottom: #00bcae 2px solid; margin-bottom: 5px;">
+                                    <div style="display: flex; justify-content: space-between"> 
+                                        <div>@item.StartDate.ToString("MMMM yyyy") - @item.EndDate.ToString("MMMM yyyy")</div>
+                                        <div style="display: flex; font-size: 16px; color: #00bcae">
+                                            <div class="icon-styling" style="margin-right: 5px;" @onclick="() => DeleteWorkHistory(item)"><i class="fas fa-trash"></i></div>
+                                            <div class="icon-styling" @onclick="() => editWorkHistoryStatus(item.Id , true)"><i class="fas fa-edit" ></i></div>                                        
+                                        </div>
+                                    </div>                                
+                                    <div style="font-weight: 800;">@item.JobTitle</div>
+                                    <div style="font-weight: 600;">@item.CompanyName</div>
+                                    <div>@item.Description</div>
+                                </div> 
+                            }       
+                        }
+                                         
+                    </div>                        
+                </div>
+            </div>
+
+            <!--Education History-->
+
+            <div style="margin-bottom: 30px;">
+                <div class="left-side-content-container left-side-content-container-header-styling">
+                    <div style="display: flex; ">
+                        <div style="display: flex; align-items: center; margin-left: -30px;">
+                            <div class="circle-style" ><i class="fas fa-check"></i></div>
+                        </div>
+                        <div><h2 class="content-title">Education</h2></div>
+                    </div>
+                    
+                    @*<div class="content-edit-design"><div @onclick="() => changeCvUploadEditableStatus(true)"><i class="fas fa-edit" ></i></div></div>*@
+                    <div>
+                    <button type="button" class="content-collapse-icon" data-toggle="collapse" data-target="#educationContent"><div class="collapse-icon-styling"><i class="fas fa-minus"></i></div></button>
+                    </div>
+                </div>
+                <div id="educationContent" class="collapse in left-side-content-container">
+                    <div class="content-user-cv-info-container" > 
+                        @if (eduUpdate)
+                        {
+                            <EditForm Model="@selectedEducation" OnValidSubmit="@UpdateEducation">
+                            <DataAnnotationsValidator />
+                                <div style="color: #666666; border-bottom: #00bcae 2px solid; margin-bottom: 5px;">
+                                    <div style="display: flex;">                                           
+                                        <div>
+                                            <InputDate id="start-date" class="form-control shadow bg-body rounded" @bind-Value="selectedEducation.StartDate"/>
+                                            <InputDate id="end-date" class="form-control shadow bg-body rounded" @bind-Value="selectedEducation.EndDate" />
+                                        </div>                                       
+                                            
+                                    </div>    
+
+                                    <div> 
+                                        <div style="font-weight: 800;">
+                                            <InputText id="qualification" class="form-control shadow bg-body rounded" @bind-Value="selectedEducation.Qualification" placeholder="Qualification" />
+                                        </div>                                            
+                                    </div> 
+                                        
+                                    <div>
+                                        <InputText id="Institution" class="form-control shadow bg-body rounded" @bind-Value="selectedEducation.Insitution" placeholder="Institution" /> 
+                                    </div>
+                                        
+                                    <div style=" display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px; gap: 120px;">
+                                        <div>
+                                            <button class="default-button-style" type="submit" value="Save" disabled="@addWorkhistoryPressed">Save</button> 
+                                        </div>                                   
+                                        <div>
+                                            <input class="default-button-style" type="button" value="Cancel" @onclick="() => editEducationStatus(0, false)" disabled="@addWorkhistoryPressed"/>
+                                        </div> 
+                                    </div>
+                                </div>
+                            </EditForm>
+                        }
+                        else
+                        {                            
+                            @foreach (var item in educationList)
+                            {
+                                <div style="color: #666666; border-bottom: #00bcae 2px solid; margin-bottom: 5px;">
+                                    <div style="display: flex; justify-content: space-between"> 
+                                        <div style="font-weight: 800;">@item.Qualification</div>
+                                        <div style="display: flex; font-size: 16px; color: #00bcae">
+                                            <div class="icon-styling" style="margin-right: 5px;" @onclick="() => DeleteEducation(item)"><i class="fas fa-trash"></i></div>
+                                            <div class="icon-styling" @onclick="() => editEducationStatus(item.Id, true)"><i class="fas fa-edit" ></i></div>                                        
+                                        </div>
+                                    </div> 
+                                    <div style="display: flex;">
+                                        <div>@item.Insitution,</div>
+                                        <div >
+                                            <div>@item.StartDate.ToString("MMMM yyyy") - @item.EndDate.ToString("MMMM yyyy")</div>                                       
+                                        </div>
+                                    </div>
+                                </div> 
+                            }
+                        }
+                    </div>                        
+                </div>
+            </div>
+
+            <!--Skills-->
+
+            <div style="margin-bottom: 30px;">
+                <div class="left-side-content-container left-side-content-container-header-styling">
+                    <div style="display: flex; ">
+                        <div style="display: flex; align-items: center; margin-left: -30px;">
+                            <div class="circle-style" ><i class="fas fa-check"></i></div>
+                        </div>
+                        <div><h2 class="content-title">Skills</h2></div>
+                    </div>
+                    
+                    <div style="display: flex;">
+                        <div class="content-edit-design" @onclick="() => changeSkillEditStatus(true)"><div class="icon-styling"><i class="fas fa-edit" ></i></div></div>
+                        <button type="button" class="content-collapse-icon" data-toggle="collapse" data-target="#skillContent"><div class="icon-styling"><i class="fas fa-minus"></i></div></button>
+                    </div>                   
+                </div>
+                <div id="skillContent" class="collapse in left-side-content-container">
+                    <div class="content-user-cv-info-container" > 
+                        @if(skillEditMode){                                                          
+                                <div>You are in edit mode</div>
+                                <div class="skill-add-icon-style" @onclick="() => addSkillInfoPage(true)"><i class="fas fa-plus"></i></div>
+                                @foreach (var item in selectedSkillsList)
+                                {
+                                    <div style="color: #666666; border-bottom: #00bcae 2px solid; margin-bottom: 5px;">
+                                        <div style="display: flex; justify-content: space-between">
+                                            <div class="skill-content-style" style="margin-bottom: 5px;  margin-left: 10px;">@item.Description</div>
+                                            <div style="display: flex; font-size: 16px; color: #00bcae">
+                                                <div class="icon-styling" style="margin-right: 5px;" @onclick="() => deleteSkill(item.Id)"><i class="fas fa-trash"></i></div>
+                                                <div class="icon-styling" @onclick="() => editSkill(item.Id, true)"><i class="fas fa-edit" ></i></div>                                        
+                                            </div>
+                                        </div>                                     
+                                    </div>
+                                }
+                            
+                            <!--
+                                Once users click on edit skills it will display their list of skills (similar to how work history and education looks), 
+                                then there will be an edit button to edit the existing skill, 
+                                and a + button to add a skill, 
+                            -->
+                        }else{
+                            <div style="display: flex;"> 
+                            @foreach (var item in selectedSkillsList)
+                            {
+                                <div class="skill-content-style">@item.Description</div>  
+                            } 
+                            </div>
+                            }
+                    </div>                        
+                </div>
+            </div>
+
+            <!--Additional Document Upload Content-->
+
+            <div style="margin-bottom: 30px;">
+                <div class="left-side-content-container left-side-content-container-header-styling" >
+                    <div style="display: flex; ">
+                        <div style="display: flex; align-items: center; margin-left: -30px;">
+                            <div class="circle-style" ><i class="fas fa-check"></i></div>
+                        </div>
+                        <div><h2 class="content-title">Additional Documents</h2></div>
+                    </div>                    
+
+                    <div>
+                        <button type="button" class="content-collapse-icon" data-toggle="collapse" data-target="#additionalDocumentContent"><div class="icon-styling"><i class="fas fa-minus"></i></div></button>
+                    </div>
+                </div>
+                <div id="additionalDocumentContent" class="collapse in left-side-content-container">
+                    <div class="content-user-cv-info-container" >
+                        <div >
+                            <MudPaper 
+                                @ondragenter="@(() => _dragEnterStyle = "drag-enter")"
+                                @ondragleave="@(() => _dragEnterStyle = null)"
+                                @ondragend="@(() => _dragEnterStyle = null)"
+                                Class="@("drag-drop-zone drop-corner " + _dragEnterStyle)" Style="background-color: rgba(0,0,0,0.1)">
+                                                                           
+                                <InputFile OnChange="OnInputFileChangedAsync" multiple class="drag-drop-input" />
+                                       
+                                <MudText Typo="Typo.h3" Align="Align.Center">
+                                    <div class="upload-text">
+                                        <i class="fa fa-upload upload-icon-style"></i>                                        
+                                        <div style="font-size: 18px;">Upload Additional Documents</div>                                        
+                                        <div style="color: #A9ABA7">Drag and Drop your document here or just click to browse files</div>
+                                    </div>
+                                </MudText>
+                                    
+                                        @*<i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i>
+                                        <div class="document-preview">
+                                            <a class="upload-text" href="@getUserDoc.CV" target="_blank">CV</a>
+                                        </div>*@
+                                    
+                            </MudPaper>
+                        </div>
+                        <div class="upload-heading-style"><h2 class="uploaded-documents-headings" style="font-size: 23px !important;">Uploaded Documents</h2></div>
+                        <div>
+                            @if (!newDocumentInfo  && !additionalDocuments)
+                           {
+                               <div class="upload-document-background" style="display:flex; color: #00BCAE">
+                                    
+                                        @foreach (var item in checkUserDoc)
+                                        {                                           
+                                                <div style="display: flex; align-items: center;">
+                                                    <div style="font-size: 13px;">
+                                                    <i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i> 
+                                                    </div>
+                                                    <div>
+                                                        @if(!string.IsNullOrEmpty(@item.MatricCertificate))
+                                                        {
+                                                            <a class="upload-text" href="@item.MatricCertificate" target="_blank">Matric</a> 
+                                                        }
+                                                        @if(!string.IsNullOrEmpty(@item.UniversityTranscript))
+                                                        {
+                                                            <a class="upload-text" href="@item.UniversityTranscript" target="_blank">University</a>
+                                                        }
+                                                        @if(!string.IsNullOrEmpty(@item.AdditionalCert1))
+                                                        {
+                                                            <a class="upload-text" href="@item.AdditionalCert1" target="_blank">Additional Cert 1</a>
+                                                        }
+                                                        @if(!string.IsNullOrEmpty(@item.AdditionalCert2))
+                                                        {
+                                                            <a class="upload-text" href="@item.AdditionalCert2" target="_blank">Additional Cert 2</a> 
+                                                        }
+                                                        @if(!string.IsNullOrEmpty(@item.AdditionalCert3))
+                                                        {
+                                                            <a class="upload-text" href="@item.AdditionalCert3" target="_blank">Addicitonal Cert 3</a> 
+                                                        }                                                    
+                                                    </div>
+                                                </div>
+                                        }                                        
+                                    
+                                    <div style="display: flex; font-size: 16px;">
+                                        <div class="icon-styling" style="margin-right: 5px;"><i class="fas fa-eye"></i></div>
+                                        <div class="icon-styling"><i class="fas fa-trash"></i> </div>                                       
+                                     </div>                                              
+                                </div>
+                            }
+                            else
+                            {
+                                <div>No documents has been uploaded</div>
+                            }                          
+                        </div>
+                    </div>                        
+                </div>
+            </div>
+
+             <!--Online Presence -->
+             <div style="margin-bottom: 30px;">
+                <div class="left-side-content-container left-side-content-container-header-styling">
+                    <div style="display: flex; ">
+                        <div style="display: flex; align-items: center; margin-left: -30px;">
+                            <div class="circle-style" ><i class="fas fa-check"></i></div>
+                        </div>
+                        <div><h2 class="content-title">Online Presence</h2></div>
+                    </div> 
+                    
+                    <div style="display: flex;">
+                        <div class="content-edit-design"><div class="icon-styling" @onclick="() => profilePortfolioEditStatus(true)"><i class="fas fa-edit" ></i></div></div>
+                        <button type="button" class="content-collapse-icon" data-toggle="collapse" data-target="#onlinePresence"><div class="icon-styling"><i class="fas fa-minus"></i></div></button>
+                    </div> 
+                </div>
+                <div id="onlinePresence" class="collapse in left-side-content-container">
+                    <div class="content-user-cv-info-container" > 
+                       
+                    <div style="color: #666666; margin-bottom: 5px;">
+                        <div>                                    
+                            <div style="display: flex; font-size: 16px;">
+                                <div class="online-presence-icon-style"><i class="fab fa-linkedin"></i></div>
+                                <div>
+                                    <div>
+                                        <div class="online-presence-heading-style">LinkedIn</div>
+                                    </div> 
+                                        @if (profilePortfolioUpdate)
+                                        {
+                                            <div>
+                                                <input id="linkedin" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.LinkedInLink" placeholder="linkedin.com/company/nebula" />
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                             <div>
+                                                @if (string.IsNullOrEmpty(@profilePortfolio.LinkedInLink))
+                                                {
+                                                    <div><br/></div>
+                                                }
+                                                else
+                                                {
+                                                    <div><a class="upload-text" href="@profilePortfolio.LinkedInLink" target="_blank">@profilePortfolio.LinkedInLink</a></div>
+                                                }                                        
+                                            </div> 
+                                        }
+                                       
+                                </div>                                                                            
+                            </div>
+                            <div style="display: flex; font-size: 16px;">
+                                <div class="online-presence-icon-style"><i class="fab fa-github"></i></div>
+                                <div>
+                                    <div>
+                                        <div class="online-presence-heading-style">Github</div>
+                                    </div>
+                                        @if (profilePortfolioUpdate)
+                                        {
+                                            <div> 
+                                                <input id="github" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.GitHubLink" placeholder="github.com/1Nebula" />
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div>
+                                                @if (string.IsNullOrEmpty(@profilePortfolio.GitHubLink))
+                                                {
+                                                    <div><br/></div>
+                                                }
+                                                else
+                                                {
+                                                    <div><a class="upload-text" href="@profilePortfolio.GitHubLink" target="_blank">@profilePortfolio.GitHubLink</a></div>                                                    
+                                                }                                        
+                                            </div>
+                                        }
+                                     
+                                </div>                                                                            
+                            </div>
+                            <div style="display: flex; font-size: 16px;">
+                                <div class="online-presence-icon-style"><i class="fab fa-twitter"></i></div>
+                                <div>
+                                    <div>
+                                        <div class="online-presence-heading-style">Twitter</div>
+                                    </div> 
+                                        @if (profilePortfolioUpdate)
+                                        {
+                                            <div>
+                                                <input id="twitter" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.TwitterLink" placeholder="twitter.com/1nebula_global" />
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div>
+                                                @if (string.IsNullOrEmpty(@profilePortfolio.TwitterLink))
+                                                {
+                                                    <div><br/></div>
+                                                }
+                                                else
+                                                {
+                                                    <div><a class="upload-text" href="@profilePortfolio.TwitterLink" target="_blank">@profilePortfolio.TwitterLink</a></div>                                                    
+                                                }                                            
+                                            </div>
+                                        }
+                                     
+                                </div>                                                                            
+                            </div>
+                            <div style="display: flex; font-size: 16px;">
+                                <div class="online-presence-icon-style"><i class="fas fa-globe"></i></div>
+                                <div>
+                                    <div>
+                                        <div class="online-presence-heading-style">Personal Website</div>
+                                    </div> 
+                                        @if (profilePortfolioUpdate)
+                                        {
+                                            <div>
+                                                <input id="personal-website" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.PersonalWebsiteUrl" placeholder="1nebula.com" />                                    
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div>
+                                                @if (string.IsNullOrEmpty(@profilePortfolio.PersonalWebsiteUrl))
+                                                {
+                                                    <div><br/></div>
+                                                }
+                                                else
+                                                {
+                                                    <div><a class="upload-text" href="@profilePortfolio.PersonalWebsiteUrl" target="_blank">@profilePortfolio.PersonalWebsiteUrl</a></div>                                                    
+                                                }                                        
+                                            </div>
+                                        }                                         
+                                </div>                                                                            
+                            </div>
+                        </div>                                
+                    </div> 
+                                                
+                    </div>                        
+                </div>
+            </div>                                                                       
+        </div>
+        <div class="right-side-content">          
+            <div class="right-side-content-container " >
+                <div class="left-side-content-container-header-styling" style=" display: flex; align-items: center;">
+                    <div style="padding-top: 1px;"> <h2 class="content-title" style="margin-left: 0px;">Checklist</h2></div>
+                </div>  
+                
+                    <div class="check-list-content" >
+                       @if (true)
+                        {
+                            <div>
+                                <div class="check-list-circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                                <div class="check-list-not-filled-circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+                        <div class="uploaded-documents-headings">Personal Information</div>
+                    </div>
+                    
+                    <div class="check-list-content">
+                       @if (true)
+                        {
+                            <div>
+                                <div class="check-list-circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                                <div class="check-list-not-filled-circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+                        <div class="uploaded-documents-headings">Import CV</div> 
+                    </div>
+
+                    <div class="check-list-content">
+                       @if (true)
+                        {
+                            <div>
+                                <div class="check-list-circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                                <div class="check-list-not-filled-circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+                        <div class="uploaded-documents-headings">Work Experience</div> 
+                    </div>     
+                    
+                    <div class="check-list-content">
+                       @if (true)
+                        {
+                            <div>
+                                <div class="check-list-circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                                <div class="check-list-not-filled-circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+                        <div class="uploaded-documents-headings">Education </div>    
+                    </div>
+
+                    <div class="check-list-content">
+                       @if (true)
+                        {
+                            <div>
+                                <div class="check-list-circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                                <div class="check-list-not-filled-circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+                        <div class="uploaded-documents-headings"> Skills </div> 
+                    </div> 
+                         
+                    <div class="check-list-content">
+                       @if (true)
+                        {
+                            <div>
+                                <div class="check-list-circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                                <div class="check-list-not-filled-circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+                        <div class="uploaded-documents-headings">Additional Documents</div>
+                    </div> 
+                     
+                    <div class="check-list-content" style="margin-bottom: 10px;">
+                       @if (true)
+                        {
+                            <div>
+                                <div class="check-list-circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div>
+                                <div class="check-list-not-filled-circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+                        <div class="uploaded-documents-headings"> Online Presence</div> 
+                    </div>                                   
+            </div>
+        </div>
+    </div>
+}
+
+@if (showMagnifiedDocument)
+{
+    @switch (selectedDocument)
+    {
+        case "linkedincv":
+            <div class="dimmed">
+                <div class="img-magnified">
+                    <iframe src="@getUserDoc.CV" class="documents-size"></iframe>
+                </div>
+            </div>
+            <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)' />
+            break;
+
+        case "matric-certificates":
+            <div class="dimmed">
+                <div class="img-magnified">
+                    <iframe src="@getUserDoc.MatricCertificate" class="documents-size"></iframe>
+                </div>
+                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)' />
+            </div>
+
+            break;
+        case "transcripts":
+
+            <div class="dimmed">
+                <div class="img-magnified">
+                    <iframe src="@getUserDoc.UniversityTranscript" class="documents-size"></iframe>
+                </div>
+                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)' />
+            </div>
+
+            break;
+        case "additional-documents-1":
+
+            <div class="dimmed">
+                <div class="img-magnified">
+                    <iframe src="@getUserDoc.AdditionalCert1" class="documents-size"></iframe>
+                </div>
+                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)' />
+            </div>
+
+            break;
+        case "additional-documents-2":
+
+            <div class="dimmed">
+                <div class="img-magnified">
+                    <iframe src="@getUserDoc.AdditionalCert2" class="documents-size"></iframe>
+                </div>
+                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)' />
+            </div>
+
+            break;
+        case "additional-documents-3":
+            <div class="dimmed">
+                <div class="img-magnified">
+                    <iframe src="@getUserDoc.AdditionalCert3" class="documents-size"></iframe>
+                </div>
+                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)' />
+            </div>
+            break;
+
+    }
+    @*<div class="dimmed">
+        <div class="img-magnified">
+            <input type="button" class="btn-view-document" style="margin-left:70%; margin-bottom: 2%;" value="Close" @onclick='() => toggleMagnifiedDocument("")' />
+            <iframe src="https://xebecstorage.blob.core.windows.net/@selectedDocument/@selectedUser.id" style="width: 90%; height: 90%;"></iframe>
+        </div>
+    </div>*@
+}
+@if (addSkillPage)
+{
+    <EditForm Model="@selectedSkill" OnValidSubmit="@addSkill">
+        <DataAnnotationsValidator />
+        <div class="dimmed">
+            <div class="skill-input-container">               
+                <div class="skill-container-header">
+                    <div><h2 class="content-title">Add skill</h2></div>                                       
+                    <div style="display: flex;">
+                        <div class="content-edit-design" @onclick="() => addSkillInfoPage(false)"><div class="icon-styling"><i class="fas fa-times"></i></div></div>                        
+                    </div>                   
+                </div>
+                <div style="padding-left: 20px; padding-right: 20px;">
+                    <div>
+                        Skill
+                    </div>
+                    <div style=" margin-bottom: 25px;">
+                        <InputText id="skill" class="skill-input form-control shadow bg-body rounded" @bind-Value="skillInfo.Description" placeholder="Enter skills"/>                                            
+                    </div>
+                </div>
+                <div style="text-align:center;">
+                    <button class="default-button-style" type="submit" value="Add">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
+                </div>
+            </div>
+        </div>
+    </EditForm>
+}
+
+                            
+
 @code {
 
-    // The following is required for the progress visualization feature
-    // First page testing if input is empty/null;
-    private int firstName = 0;
-    private int lastName = 0;
-    private int emailAddress = 0;
-    private int phoneNum = 0;
-    private int ethnicity = 0;
-    private int gender = 0;
-    private int idNum = 0;
-    private int address = 0;
 
-    // Work history / page 2 inputs is empty/null
-
-    private int compName = 0;
-    private int jobTitle = 0;
-    private int desc = 0;
-
-    // Education history inputs is empty / null
-    private int institution = 0;
-    private int qualification = 0;
-
-    // References history inputs is empty / null
-    private int refName = 0;
-    private int refSurname = 0;
-    private int refEmail = 0;
-    private int refContactNum = 0;
-
-
-    // Skill list input empty / null
-
-    private int skillsInput = 0;
-
-    private int count = 0;
-    private double totalInputs = 18.0;
-    private string completionVar = "0%";
-    private double calc = 0.00;
-
-    private int workCount = 0;
-    private int eduCount = 0;
-    private int refCount = 0;
-    private int skillCount = 0;
-
-
-    private void progressCheck()
-    {
-        completion();
-        if (workHistoryList.Count >= 1 && workCount == 0)
-        {
-            count = count + 3;
-            workCount = 1;
-        }
-        else if (workHistoryList.Count == 0 && workCount == 1)
-        {
-            workCount = 0;
-        }
-
-        if (educationList.Count >= 1 && eduCount == 0)
-        {
-            count = count + 2;
-            eduCount = 1;
-        }
-        else if (educationList.Count == 0 && eduCount == 1)
-        {
-            eduCount = 0;
-        }
-
-        if (referencesList.Count >= 1 && refCount == 0)
-        {
-            count = count + 4;
-            refCount = 1;
-        }
-        else if (referencesList.Count == 0 && refCount == 1)
-        {
-            refCount = 0;
-        }
-
-        if (selectedSkillsList1.Count >= 1 && skillCount == 0)
-        {
-            count++;
-            skillCount = 1;
-        }
-        else if (selectedSkillsList1.Count == 0 && skillCount == 1)
-        {
-            skillCount = 0;
-        }
-
-        if (workProgressVal == true)
-        {
-            if (count >= 3)
-            {
-                count = count - 3;
-                compName = 0;
-                jobTitle = 0;
-                desc = 0;
-                workProgressVal = false;
-            }
-        }
-
-        if (educationProgressVal == true)
-        {
-            if (count >= 2)
-            {
-                count = count - 2;
-                institution = 0;
-                qualification = 0;
-                educationProgressVal = false;
-            }
-        }
-
-        if (referenceProgressVal == true)
-        {
-            if (count >= 4)
-            {
-                count = count - 4;
-                refName = 0;
-                refSurname = 0;
-                refEmail = 0;
-                refContactNum = 0;
-                referenceProgressVal = false;
-            }
-        }
-
-        if (skillProgressVal == true)
-        {
-            if (count >= 1)
-            {
-                count--;
-                skillProgressVal = false;
-            }
-        }
-
-
-        //This is the check that is used on the "Personal Information" page
-
-        calc = Math.Round(((count / totalInputs) * 100));
-
-        if (calc <= 100)
-        {
-            completionVar = calc.ToString() + "%";
-
-        }
-        else
-        {
-            completionVar = "100%";
-        }
-    }
-
-    private void completion()
-    {
-
-        //This is the check that is used on the "Personal Information" page
-
-    @if (!string.IsNullOrEmpty(personalInformation.FirstName) && firstName != 1)
-        {
-            count++;
-            firstName = 1;
-        }
-        else if (string.IsNullOrEmpty(personalInformation.FirstName) && firstName == 1)
-        {
-            count--;
-            firstName = 0;
-        }
-
-        if (!string.IsNullOrEmpty(personalInformation.LastName) && lastName != 1)
-        {
-            count++;
-            lastName = 1;
-        }
-        else if (string.IsNullOrEmpty(personalInformation.LastName) && lastName == 1)
-        {
-            count--;
-            lastName = 0;
-        }
-
-        if (!string.IsNullOrEmpty(personalInformation.Email) && emailAddress != 1)
-        {
-            count++;
-            emailAddress = 1;
-        }
-        else if (string.IsNullOrEmpty(personalInformation.Email) && emailAddress == 1)
-        {
-            count--;
-            emailAddress = 0;
-        }
-
-        if (!string.IsNullOrEmpty(personalInformation.PhoneNumber) && phoneNum != 1)
-        {
-            count++;
-            phoneNum = 1;
-        }
-        else if (string.IsNullOrEmpty(personalInformation.PhoneNumber) && phoneNum == 1)
-        {
-            count--;
-            phoneNum = 0;
-        }
-
-        if (!string.IsNullOrEmpty(additionalInformation.Ethnicity) && ethnicity != 1)
-        {
-            count++;
-            ethnicity = 1;
-        }
-        else if (string.IsNullOrEmpty(additionalInformation.Ethnicity) && ethnicity == 1)
-        {
-            count--;
-            ethnicity = 0;
-        }
-
-        if (!string.IsNullOrEmpty(additionalInformation.Gender) && gender != 1)
-        {
-            count++;
-            gender = 1;
-        }
-        else if (string.IsNullOrEmpty(additionalInformation.Gender) && gender == 1)
-        {
-            count--;
-            gender = 0;
-        }
-
-        if (!string.IsNullOrEmpty(personalInformation.IdNumber) && idNum != 1)
-        {
-            count++;
-            idNum = 1;
-        }
-        else if (string.IsNullOrEmpty(personalInformation.IdNumber) && idNum == 1)
-        {
-            count--;
-            idNum = 0;
-        }
-
-        if (!string.IsNullOrEmpty(personalInformation.Address) && address != 1)
-        {
-            count++;
-            address = 1;
-        }
-        else if (string.IsNullOrEmpty(personalInformation.Address) && address == 1)
-        {
-            count--;
-            address = 0;
-        }
-    }
 }

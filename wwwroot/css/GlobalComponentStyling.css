@@ -19,7 +19,7 @@ input[type = "button"], input[type = "submit"], button {
     background-color: rgba(0, 188, 174,1);
     color: white;
     width: 100px;
-    height: 5vh;
+    height: 36px;
     border: none;
     text-align: center;
     font-size: 1em;
@@ -37,20 +37,21 @@ input[type = "button"], input[type = "submit"], button {
         transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
         color: rgba(0,0,0,0.6);
     }*/
-    .default-button-style {
-        background-color: rgba(0, 188, 174,1);
-        color: white;
-        width: 100px;
-        height: 5vh;
-        border: none;
-        text-align: center;
-        font-size: 1em;
-        font-family: opensans-condensed-bold;
-        font-weight: 600;
-        border: none;
-        border-radius: 0.4em;
-        cursor: pointer;
-    }
+.default-button-style {
+    background-color: rgba(0, 188, 174,1);
+    color: white;
+    width: 100px;
+    height: 36px;
+    border: none;
+    text-align: center;
+    font-size: 1em;
+    font-family: opensans-condensed-bold;
+    font-weight: 600;
+    border: none;
+    border-radius: 0.4em;
+    cursor: pointer;
+    height: 36px;
+}
 
     .default-button-style:hover {
         transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -61,19 +62,20 @@ input[type = "button"], input[type = "submit"], button {
             background-color: grey;
         }
 
-        button {
-            background-color: rgba(0, 188, 174,1);
-            color: white;
-            width: 100px;
-            height: 5vh;
-            border: none;
-            text-align: center;
-            font-size: 1em;
-            font-family: opensans-condensed-bold;
-            font-weight: 600;
-            border: none;
-            border-radius: 0.4em;
-        }
+    button {
+        background-color: rgba(0, 188, 174,1);
+        color: white;
+        width: 100px;
+        height: 36px;
+        border: none;
+        text-align: center;
+        font-size: 1em;
+        font-family: opensans-condensed-bold;
+        font-weight: 600;
+        border: none;
+        border-radius: 0.4em;
+        height: 36px;
+    }
 
         button:hover {
             transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -84,9 +86,9 @@ input[type = "button"], input[type = "submit"], button {
             background-color: grey;
         }
 /**/
-/* Global scroll bar changes */
+    /* Global scroll bar changes */
 
-::-webkit-scrollbar {
+    :: -webkit-scrollbar {
     width: 10px;
 }
 
@@ -387,3 +389,32 @@ p {
             <MudProgressCircular Size="Size.Large" Indeterminate="true" />
         </div>
 */
+
+/* Select styling Class*/
+
+.default-select-style {
+    border: 2px solid;
+    border-color: gray;
+    cursor: pointer;    
+}
+
+/*    .default-select-style::before {
+        content: "\f13a";
+        font-family: FontAwesome;
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 20%;
+        height: 100%;
+        text-align: center;
+        font-size: 28px;
+        line-height: 45px;
+        color: rgba(255, 255, 255, 0.5);
+        background-color: rgba(255, 255, 255, 0.1);
+        pointer-events: none;
+    }
+
+    .default-select-style:hover::before {
+        color: rgba(255, 255, 255, 0.6);
+        background-color: rgba(255, 255, 255, 0.2);
+    }*/
