@@ -125,9 +125,11 @@ namespace XebecPortal.UI.Pages.HR
             loadInfo = false;
         }
 
-        private void filterJobStatus(string filterValue)
+        private void filterJobStatus(ChangeEventArgs e)
         {
-            Console.WriteLine("String value: " + filterValue.ToString());
+            var filterValue = e.Value.ToString();
+            Console.WriteLine("Val: " + e.Value.ToString());
+           
             if (filterValue.Equals("Draft & Open"))
             {
                 jobListFilter = jobList;

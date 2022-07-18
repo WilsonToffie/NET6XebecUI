@@ -109,7 +109,7 @@
         <div style="margin-left: 888px; display: flex; align-items: end; color: #666666">@openJobCounter of @totalJobs Open -&nbsp; Show&nbsp;</div>
         <div  style="display: flex; align-items: end;"> 
           
-            <select class="default-select-style" @bind="selectedFilterStatus" @onfocusout="() => filterJobStatus(selectedFilterStatus)">
+            <select class="default-select-style" @onchange="filterJobStatus" > <!--@onfocusout="() => filterJobStatus(selectedFilterStatus)"-->
                  <option value="Draft & Open">Draft & Open</option>
                  <option value="Draft">Draft</option>
                  <option value="Open">Open</option>

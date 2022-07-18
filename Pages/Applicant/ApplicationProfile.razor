@@ -203,13 +203,11 @@
     .upload-document-background{
         /*width: 720px;*/
         background-color: rgba(0,0,0,0.1);
-        display: flex;
         justify-content: space-between;
         padding-left: 10px;
         padding-right: 10px;
         padding-top: 10px;
-        padding-bottom: 10px;
-        height: 44px;
+        padding-bottom: 10px;        
         align-items: center;
     }
 
@@ -321,8 +319,9 @@
     }
 
     .img-magnified {
-        height: 95vh;
-        width: 35vw;
+        /*height: 685px;*/
+        height: 580px;
+        width: 350px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -369,7 +368,6 @@
     }
 
     .skill-input-container {
-        height: 200px;
         width: 650px;
         display: flex;
         flex-direction: column;
@@ -396,6 +394,7 @@
 }
 else
 {
+    <div>
     <div class="personal-info-container">
         <div class="left-side-content">
 
@@ -404,7 +403,7 @@ else
             <div style="margin-bottom: 30px;">
                 <div class="left-side-content-container left-side-content-container-header-styling">                    
                     <div style="display: flex; ">
-                       @if (true)
+                       @if (!newPersonalInfo || !newAdditionalInfo || profilePictureExists)
                         {
                             <div style="display: flex; align-items: center; margin-left: -30px;">
                                 <div class="circle-style" ><i class="fas fa-check"></i></div>
@@ -428,7 +427,7 @@ else
                     <!--This is the div that will be collapsoble-->
                     @if (editable)
                     {
-                        <EditForm Model="@personalInformation" OnValidSubmit="@newAddPersonalInformation">
+                        <EditForm Model="@personalInformation" OnValidSubmit="@AddPersonalInformation">
                         <DataAnnotationsValidator />
                             <div class=" content-user-info-container">
                                 <div class="image-container" >
@@ -511,10 +510,10 @@ else
                                         <div>
                                             <InputText id="id-number" min="13" max="13" @bind-Value="personalInformation.IdNumber" placeholder="ID Number"/> 
                                         </div>                                          
-                                 </div>  
-                                 <div>
-                                    <button class="default-button-style" style="margin-bottom: 10px;" type="submit" value="Save" disabled="@savePersonalInfoPressed">Save</button>
                                  </div>
+                            </div>
+                            <div style="text-align: center;">
+                                <button class="default-button-style" style="margin-bottom: 10px;" type="submit" value="Save" disabled="@savePersonalInfoPressed">Save</button>
                             </div>
                         </EditForm>
                     }
@@ -573,9 +572,18 @@ else
             <div style="margin-bottom: 30px;">
                 <div class="left-side-content-container left-side-content-container-header-styling">
                     <div style="display: flex; ">
-                        <div style="display: flex; align-items: center; margin-left: -30px;">
-                            <div class="circle-style" ><i class="fas fa-check"></i></div>
-                        </div>
+                        @if (cvDocumentExist)
+                        {
+                            <div style="display: flex; align-items: center; margin-left: -30px;">
+                                <div class="circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="display: flex; align-items: center; margin-left: -30px;">
+                                <div class="not-filled-circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }                        
                         <div><h2 class="content-title">Import CV</h2></div>
                     </div>
                     
@@ -612,31 +620,34 @@ else
                         </div>
                         <div class="upload-heading-style"><h2 class="uploaded-documents-headings" style="font-size: 23px !important;">Uploaded CV</h2></div>
                         <div>
-                            @if (cvDocumentExist)
+                            @if (!cvDocumentExist)
                             {
                                 <div>No CV found!</div>
                             }
                             else
                             {
-                                <div class="upload-document-background" style="display:flex; color: #00BCAE">
-                                    <div style="display: flex; align-items: center;">
-                                        <div style="font-size: 13px;">
-                                        <i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i> 
-                                        </div>
-                                        <div>
-                                        <a class="upload-text" href="@getUserDoc.CV" target="_blank">CV</a> 
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; font-size: 16px;">
-                                        <div class="icon-styling" style="margin-right: 5px;" @onclick='() => toggleMagnifiedDocument("linkedincv", true)'><i class="fas fa-eye"></i></div>
-                                        <div class="icon-styling" @onclick="() => DeleteCV(getUserDoc.CV)" ><i class="fas fa-trash"></i></div>                                      
-                                     </div>       
+                                @foreach (var item in userCVDocuments)
+                                        {    
+                                            <div class="upload-document-background" style="display:flex; color: #00BCAE">
+                                                <div style="display: flex; align-items: center;">
+                                                    <div style="font-size: 13px;">
+                                                    <i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i> 
+                                                    </div>
+                                                    <div>
+                                                    <a class="upload-text" href="@item.documentBlobLink" target="_blank">@item.documentName</a> 
+                                                    </div>
+                                                </div>
+                                                <div style="display: flex; font-size: 16px;">
+                                                    <div class="icon-styling" style="margin-right: 5px;" @onclick='() => toggleMagnifiedDocument("linkedincv", true)'><i class="fas fa-eye"></i></div>
+                                                    <div class="icon-styling" @onclick="() => DeleteCV(item)" ><i class="fas fa-trash"></i></div>                                      
+                                                 </div>       
                                         
-                                        <!--
-                                            Still need to do: 
-                                            Change the database to store the CV name as well,                                                
-                                        -->                                    
-                                </div>
+                                                    <!--
+                                                        Still need to do: 
+                                                        Change the database to store the CV name as well,                                                
+                                                    -->                                    
+                                            </div>                                          
+                                        }                                 
                             }
                         </div>
                     </div>                        
@@ -647,24 +658,35 @@ else
              <div style="margin-bottom: 30px;">
                 <div class="left-side-content-container left-side-content-container-header-styling">
                     <div style="display: flex; ">
-                        <div style="display: flex; align-items: center; margin-left: -30px;">
-                            <div class="circle-style" ><i class="fas fa-check"></i></div>
-                        </div>
+                        @if (workHistoryDataExist)
+                        {
+                            <div style="display: flex; align-items: center; margin-left: -30px;">
+                                <div class="circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="display: flex; align-items: center; margin-left: -30px;">
+                                <div class="not-filled-circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }                        
                         <div><h2 class="content-title">Work Experience</h2></div>
                     </div>
                     
                     @*<div class="content-edit-design"><div @onclick="() => changeCvUploadEditableStatus(true)"><i class="fas fa-edit" ></i></div></div>*@
-                    <div>
+                    <div style="display: flex; align-items:center;">
+                        <div class="skill-add-icon-style" style="margin-bottom: 0;" @onclick="() => addWorkHistoryPage(true)"><i class="fas fa-plus"></i></div>
                         <button type="button" class="content-collapse-icon" data-toggle="collapse" data-target="#workExperienceContent"><div class="icon-styling"><i class="fas fa-minus"></i></div></button>
                     </div>
                 </div>
                 <div id="workExperienceContent" class="collapse in left-side-content-container">
                     <div class="content-user-cv-info-container" > 
+                        <!--This is for updating work history, if you want to see the code for adding, it is at the bottom of the page-->
                         @if (workHistUpdate)
                         {
                             <EditForm Model="@selectedWorkHistory" OnValidSubmit="@UpdateWorkHistory">
                                 <DataAnnotationsValidator />
-                                <div style="color: #666666; border-bottom: #00bcae 2px solid; margin-bottom: 5px;">
+                                <div style="color: #666666; border-bottom: #00bcae 2px solid; margin-bottom: 5px;">                                    
                                     <div style="display: flex;"> 
                                         <div> 
                                             <InputDate id="start-date" class="form-control shadow bg-body rounded" @bind-Value="selectedWorkHistory.StartDate" placeholder="Start Date" />
@@ -694,7 +716,7 @@ else
                             </EditForm>
                         }
                         else
-                        {
+                        {                            
                             @foreach (var item in workHistoryList)
                             {
                                 <div style="color: #666666; border-bottom: #00bcae 2px solid; margin-bottom: 5px;">
@@ -707,7 +729,7 @@ else
                                     </div>                                
                                     <div style="font-weight: 800;">@item.JobTitle</div>
                                     <div style="font-weight: 600;">@item.CompanyName</div>
-                                    <div>@item.Description</div>
+                                    <div style="max-height: 50px; overflow-y: auto; margin-bottom: 5px;">@item.Description</div>
                                 </div> 
                             }       
                         }
@@ -721,15 +743,25 @@ else
             <div style="margin-bottom: 30px;">
                 <div class="left-side-content-container left-side-content-container-header-styling">
                     <div style="display: flex; ">
-                        <div style="display: flex; align-items: center; margin-left: -30px;">
-                            <div class="circle-style" ><i class="fas fa-check"></i></div>
-                        </div>
+                        @if (educationHistoryDataExist)
+                        {
+                            <div style="display: flex; align-items: center; margin-left: -30px;">
+                                <div class="circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="display: flex; align-items: center; margin-left: -30px;">
+                                <div class="not-filled-circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }                        
                         <div><h2 class="content-title">Education</h2></div>
                     </div>
                     
                     @*<div class="content-edit-design"><div @onclick="() => changeCvUploadEditableStatus(true)"><i class="fas fa-edit" ></i></div></div>*@
-                    <div>
-                    <button type="button" class="content-collapse-icon" data-toggle="collapse" data-target="#educationContent"><div class="collapse-icon-styling"><i class="fas fa-minus"></i></div></button>
+                    <div style="display: flex; align-items:center;">
+                        <div class="skill-add-icon-style" style="margin-bottom: 0;" @onclick="() => addEducationHistoryPage(true)"><i class="fas fa-plus"></i></div>
+                        <button type="button" class="content-collapse-icon" data-toggle="collapse" data-target="#educationContent"><div class="collapse-icon-styling"><i class="fas fa-minus"></i></div></button>
                     </div>
                 </div>
                 <div id="educationContent" class="collapse in left-side-content-container">
@@ -769,7 +801,7 @@ else
                             </EditForm>
                         }
                         else
-                        {                            
+                        {                             
                             @foreach (var item in educationList)
                             {
                                 <div style="color: #666666; border-bottom: #00bcae 2px solid; margin-bottom: 5px;">
@@ -798,22 +830,30 @@ else
             <div style="margin-bottom: 30px;">
                 <div class="left-side-content-container left-side-content-container-header-styling">
                     <div style="display: flex; ">
-                        <div style="display: flex; align-items: center; margin-left: -30px;">
-                            <div class="circle-style" ><i class="fas fa-check"></i></div>
-                        </div>
+                        @if (skillDataExist)
+                        {
+                            <div style="display: flex; align-items: center; margin-left: -30px;">
+                                <div class="circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="display: flex; align-items: center; margin-left: -30px;">
+                                <div class="not-filled-circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }                        
                         <div><h2 class="content-title">Skills</h2></div>
                     </div>
                     
                     <div style="display: flex;">
-                        <div class="content-edit-design" @onclick="() => changeSkillEditStatus(true)"><div class="icon-styling"><i class="fas fa-edit" ></i></div></div>
+                        <div class="content-edit-design" ><div class="icon-styling" @onclick="() => changeSkillEditStatus(true)"><i class="fas fa-edit" ></i></div></div>
                         <button type="button" class="content-collapse-icon" data-toggle="collapse" data-target="#skillContent"><div class="icon-styling"><i class="fas fa-minus"></i></div></button>
                     </div>                   
                 </div>
                 <div id="skillContent" class="collapse in left-side-content-container">
                     <div class="content-user-cv-info-container" > 
-                        @if(skillEditMode){                                                          
-                                <div>You are in edit mode</div>
-                                <div class="skill-add-icon-style" @onclick="() => addSkillInfoPage(true)"><i class="fas fa-plus"></i></div>
+                        @if(skillEditMode){                                                       
+                                <div style="display: flex; justify-content: right;"><div class="skill-add-icon-style" @onclick="() => addSkillInfoPage(true)"><i class="fas fa-plus"></i></div></div>
                                 @foreach (var item in selectedSkillsList)
                                 {
                                     <div style="color: #666666; border-bottom: #00bcae 2px solid; margin-bottom: 5px;">
@@ -849,9 +889,18 @@ else
             <div style="margin-bottom: 30px;">
                 <div class="left-side-content-container left-side-content-container-header-styling" >
                     <div style="display: flex; ">
-                        <div style="display: flex; align-items: center; margin-left: -30px;">
-                            <div class="circle-style" ><i class="fas fa-check"></i></div>
-                        </div>
+                        @if (!newAdditionalDocumentInfo)
+                        {
+                            <div style="display: flex; align-items: center; margin-left: -30px;">
+                                <div class="circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="display: flex; align-items: center; margin-left: -30px;">
+                                <div class="not-filled-circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }                        
                         <div><h2 class="content-title">Additional Documents</h2></div>
                     </div>                    
 
@@ -868,7 +917,7 @@ else
                                 @ondragend="@(() => _dragEnterStyle = null)"
                                 Class="@("drag-drop-zone drop-corner " + _dragEnterStyle)" Style="background-color: rgba(0,0,0,0.1)">
                                                                            
-                                <InputFile OnChange="OnInputFileChangedAsync" multiple class="drag-drop-input" />
+                                <InputFile OnChange="uploadAdditionalDocuments"  class="drag-drop-input" />
                                        
                                 <MudText Typo="Typo.h3" Align="Align.Center">
                                     <div class="upload-text">
@@ -887,45 +936,27 @@ else
                         </div>
                         <div class="upload-heading-style"><h2 class="uploaded-documents-headings" style="font-size: 23px !important;">Uploaded Documents</h2></div>
                         <div>
-                            @if (!newDocumentInfo  && !additionalDocuments)
-                           {
-                               <div class="upload-document-background" style="display:flex; color: #00BCAE">
-                                    
-                                        @foreach (var item in checkUserDoc)
-                                        {                                           
+                            @if (!newAdditionalDocumentInfo)
+                            {
+                                <div class="upload-document-background" style="padding-top: 0px;color: #00BCAE">
+                                        @foreach (var item in additionalUserDocuments)
+                                        {        
+                                            <div style="display: flex; justify-content: space-between; padding-top: 10px;">
                                                 <div style="display: flex; align-items: center;">
                                                     <div style="font-size: 13px;">
                                                     <i class="fas fa-file-pdf fa-2x" style="margin-right: 5px;"></i> 
                                                     </div>
-                                                    <div>
-                                                        @if(!string.IsNullOrEmpty(@item.MatricCertificate))
-                                                        {
-                                                            <a class="upload-text" href="@item.MatricCertificate" target="_blank">Matric</a> 
-                                                        }
-                                                        @if(!string.IsNullOrEmpty(@item.UniversityTranscript))
-                                                        {
-                                                            <a class="upload-text" href="@item.UniversityTranscript" target="_blank">University</a>
-                                                        }
-                                                        @if(!string.IsNullOrEmpty(@item.AdditionalCert1))
-                                                        {
-                                                            <a class="upload-text" href="@item.AdditionalCert1" target="_blank">Additional Cert 1</a>
-                                                        }
-                                                        @if(!string.IsNullOrEmpty(@item.AdditionalCert2))
-                                                        {
-                                                            <a class="upload-text" href="@item.AdditionalCert2" target="_blank">Additional Cert 2</a> 
-                                                        }
-                                                        @if(!string.IsNullOrEmpty(@item.AdditionalCert3))
-                                                        {
-                                                            <a class="upload-text" href="@item.AdditionalCert3" target="_blank">Addicitonal Cert 3</a> 
-                                                        }                                                    
+                                                    <div>                                                        
+                                                        <a class="upload-text" href="@item.documentBlobLink" target="_blank">@item.documentName</a>                                                                                                                                                                
                                                     </div>
                                                 </div>
-                                        }                                        
-                                    
-                                    <div style="display: flex; font-size: 16px;">
-                                        <div class="icon-styling" style="margin-right: 5px;"><i class="fas fa-eye"></i></div>
-                                        <div class="icon-styling"><i class="fas fa-trash"></i> </div>                                       
-                                     </div>                                              
+                                                <div style="display: flex; font-size: 16px;">
+                                                    <div class="icon-styling" style="margin-right: 5px;" @onclick="() => toggleMagnifiedAdditionalDocuments(item.documentBlobLink, true)" ><i class="fas fa-eye"></i></div>
+                                                    <div class="icon-styling" @onclick="() => DeleteAdditionalDocuments(item)"><i class="fas fa-trash"></i> </div>                                       
+                                                 </div>  
+                                            </div>  
+                                              
+                                        } 
                                 </div>
                             }
                             else
@@ -941,9 +972,18 @@ else
              <div style="margin-bottom: 30px;">
                 <div class="left-side-content-container left-side-content-container-header-styling">
                     <div style="display: flex; ">
-                        <div style="display: flex; align-items: center; margin-left: -30px;">
-                            <div class="circle-style" ><i class="fas fa-check"></i></div>
-                        </div>
+                        @if (!newPortFolioInfo)
+                        {
+                            <div style="display: flex; align-items: center; margin-left: -30px;">
+                                <div class="circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="display: flex; align-items: center; margin-left: -30px;">
+                                <div class="not-filled-circle-style" ><i class="fas fa-check"></i></div>
+                            </div>
+                        }                        
                         <div><h2 class="content-title">Online Presence</h2></div>
                     </div> 
                     
@@ -959,14 +999,14 @@ else
                         <div>                                    
                             <div style="display: flex; font-size: 16px;">
                                 <div class="online-presence-icon-style"><i class="fab fa-linkedin"></i></div>
-                                <div>
+                                <div style="width: 50%;">
                                     <div>
                                         <div class="online-presence-heading-style">LinkedIn</div>
                                     </div> 
                                         @if (profilePortfolioUpdate)
                                         {
                                             <div>
-                                                <input id="linkedin" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.LinkedInLink" placeholder="linkedin.com/company/nebula" />
+                                                <input id="linkedin" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.LinkedInLink" placeholder="Ex: www.linkedin.com/company/nebula" />
                                             </div>
                                         }
                                         else
@@ -987,14 +1027,14 @@ else
                             </div>
                             <div style="display: flex; font-size: 16px;">
                                 <div class="online-presence-icon-style"><i class="fab fa-github"></i></div>
-                                <div>
+                                <div style="width: 50%;">
                                     <div>
                                         <div class="online-presence-heading-style">Github</div>
                                     </div>
                                         @if (profilePortfolioUpdate)
                                         {
                                             <div> 
-                                                <input id="github" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.GitHubLink" placeholder="github.com/1Nebula" />
+                                                <input id="github" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.GitHubLink" placeholder="Ex: www.github.com/1Nebula" />
                                             </div>
                                         }
                                         else
@@ -1015,14 +1055,14 @@ else
                             </div>
                             <div style="display: flex; font-size: 16px;">
                                 <div class="online-presence-icon-style"><i class="fab fa-twitter"></i></div>
-                                <div>
+                                <div style="width: 50%;">
                                     <div>
                                         <div class="online-presence-heading-style">Twitter</div>
                                     </div> 
                                         @if (profilePortfolioUpdate)
                                         {
                                             <div>
-                                                <input id="twitter" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.TwitterLink" placeholder="twitter.com/1nebula_global" />
+                                                <input id="twitter" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.TwitterLink" placeholder="Ex: www.twitter.com/1nebula_global" />
                                             </div>
                                         }
                                         else
@@ -1043,14 +1083,14 @@ else
                             </div>
                             <div style="display: flex; font-size: 16px;">
                                 <div class="online-presence-icon-style"><i class="fas fa-globe"></i></div>
-                                <div>
+                                <div style="width: 50%;">
                                     <div>
                                         <div class="online-presence-heading-style">Personal Website</div>
                                     </div> 
                                         @if (profilePortfolioUpdate)
                                         {
                                             <div>
-                                                <input id="personal-website" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.PersonalWebsiteUrl" placeholder="1nebula.com" />                                    
+                                                <input id="personal-website" class="form-control shadow bg-body rounded" type="text" @bind="profilePortfolio.PersonalWebsiteUrl" placeholder="Ex: www.1nebula.com" />                                    
                                             </div>
                                         }
                                         else
@@ -1082,7 +1122,7 @@ else
                 </div>  
                 
                     <div class="check-list-content" >
-                       @if (true)
+                       @if (!newPersonalInfo || !newAdditionalInfo || profilePictureExists)
                         {
                             <div>
                                 <div class="check-list-circle-style" ><i class="fas fa-check"></i></div>
@@ -1098,7 +1138,7 @@ else
                     </div>
                     
                     <div class="check-list-content">
-                       @if (true)
+                       @if (cvDocumentExist)
                         {
                             <div>
                                 <div class="check-list-circle-style" ><i class="fas fa-check"></i></div>
@@ -1114,7 +1154,7 @@ else
                     </div>
 
                     <div class="check-list-content">
-                       @if (true)
+                       @if (workHistoryDataExist)
                         {
                             <div>
                                 <div class="check-list-circle-style" ><i class="fas fa-check"></i></div>
@@ -1130,7 +1170,7 @@ else
                     </div>     
                     
                     <div class="check-list-content">
-                       @if (true)
+                       @if (educationHistoryDataExist)
                         {
                             <div>
                                 <div class="check-list-circle-style" ><i class="fas fa-check"></i></div>
@@ -1146,7 +1186,7 @@ else
                     </div>
 
                     <div class="check-list-content">
-                       @if (true)
+                       @if (skillDataExist)
                         {
                             <div>
                                 <div class="check-list-circle-style" ><i class="fas fa-check"></i></div>
@@ -1162,7 +1202,7 @@ else
                     </div> 
                          
                     <div class="check-list-content">
-                       @if (true)
+                       @if (!newAdditionalDocumentInfo)
                         {
                             <div>
                                 <div class="check-list-circle-style" ><i class="fas fa-check"></i></div>
@@ -1178,7 +1218,7 @@ else
                     </div> 
                      
                     <div class="check-list-content" style="margin-bottom: 10px;">
-                       @if (true)
+                       @if (!newPortFolioInfo)
                         {
                             <div>
                                 <div class="check-list-circle-style" ><i class="fas fa-check"></i></div>
@@ -1195,70 +1235,31 @@ else
             </div>
         </div>
     </div>
+    </div>
 }
 
 @if (showMagnifiedDocument)
 {
-    @switch (selectedDocument)
-    {
-        case "linkedincv":
-            <div class="dimmed">
-                <div class="img-magnified">
-                    <iframe src="@getUserDoc.CV" class="documents-size"></iframe>
-                </div>
-            </div>
-            <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)' />
-            break;
-
-        case "matric-certificates":
-            <div class="dimmed">
-                <div class="img-magnified">
-                    <iframe src="@getUserDoc.MatricCertificate" class="documents-size"></iframe>
-                </div>
-                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)' />
-            </div>
-
-            break;
-        case "transcripts":
-
-            <div class="dimmed">
-                <div class="img-magnified">
-                    <iframe src="@getUserDoc.UniversityTranscript" class="documents-size"></iframe>
-                </div>
-                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)' />
-            </div>
-
-            break;
-        case "additional-documents-1":
-
-            <div class="dimmed">
-                <div class="img-magnified">
-                    <iframe src="@getUserDoc.AdditionalCert1" class="documents-size"></iframe>
-                </div>
-                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)' />
-            </div>
-
-            break;
-        case "additional-documents-2":
-
-            <div class="dimmed">
-                <div class="img-magnified">
-                    <iframe src="@getUserDoc.AdditionalCert2" class="documents-size"></iframe>
-                </div>
-                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)' />
-            </div>
-
-            break;
-        case "additional-documents-3":
-            <div class="dimmed">
-                <div class="img-magnified">
-                    <iframe src="@getUserDoc.AdditionalCert3" class="documents-size"></iframe>
-                </div>
-                <input type="button" class="btn-close maginified-documents-close" @onclick='() => toggleMagnifiedDocument("", false)' />
-            </div>
-            break;
-
+    @if (selectedDocument.Equals("linkedincv"))
+   {
+        <div class="dimmed">
+            <div class="img-magnified">
+                <iframe src="@getUserCVDoc.documentBlobLink?userDate=@updatedUserPic" class="documents-size"></iframe>                
+            </div>           
+            <div style="font-size: 25px; margin-bottom: 560px; padding-left: 10px; cursor: pointer;" @onclick='() => toggleMagnifiedDocument("", false)'><i class="fas fa-times"></i></div>
+        </div>
+        
+                              
     }
+    else
+    {
+        <div class="dimmed">
+            <div class="img-magnified">
+                <iframe src="@selectedDocument" class="documents-size"></iframe>
+            </div>
+            <div style="font-size: 25px; margin-bottom: 560px; padding-left: 10px; cursor: pointer;" @onclick='() => toggleMagnifiedDocument("", false)'><i class="fas fa-times"></i></div>
+        </div>
+    }    
     @*<div class="dimmed">
         <div class="img-magnified">
             <input type="button" class="btn-view-document" style="margin-left:70%; margin-bottom: 2%;" value="Close" @onclick='() => toggleMagnifiedDocument("")' />
@@ -1275,24 +1276,114 @@ else
                 <div class="skill-container-header">
                     <div><h2 class="content-title">Add skill</h2></div>                                       
                     <div style="display: flex;">
-                        <div class="content-edit-design" @onclick="() => addSkillInfoPage(false)"><div class="icon-styling"><i class="fas fa-times"></i></div></div>                        
+                        <div class="content-edit-design" ><div class="icon-styling" @onclick="() => addSkillInfoPage(false)"><i class="fas fa-times"></i></div></div>                        
                     </div>                   
                 </div>
-                <div style="padding-left: 20px; padding-right: 20px;">
-                    <div>
-                        Skill
-                    </div>
-                    <div style=" margin-bottom: 25px;">
-                        <InputText id="skill" class="skill-input form-control shadow bg-body rounded" @bind-Value="skillInfo.Description" placeholder="Enter skills"/>                                            
+                <div style="padding-left: 20px; padding-right: 20px;">                    
+                    <div style="margin-top: 10px;">
+                        <div>Skill</div>
+                        <InputText id="skill" class="skill-input form-control shadow bg-body rounded" @bind-Value="skillInfo.Description" placeholder="Ex: C#"/>                                            
                     </div>
                 </div>
-                <div style="text-align:center;">
-                    <button class="default-button-style" type="submit" value="Add">Add</button> <!--@onclick=" ()=>AddEducationTakeTwo(education)"-->
+                <div style="text-align:center; margin-top: 10px; margin-bottom: 10px;">
+                    <button class="default-button-style" type="submit" value="Add">Add</button> 
                 </div>
             </div>
         </div>
     </EditForm>
 }
+
+@if (addWorkPage)
+{
+    <EditForm Model="@workHistory" OnValidSubmit="@addWorkHistory">
+        <DataAnnotationsValidator />
+        <div class="dimmed">
+            <div class="skill-input-container">               
+                <div class="skill-container-header">
+                    <div><h2 class="content-title">Add Work Experience</h2></div>                                       
+                    <div style="display: flex;">
+                        <div class="content-edit-design"><div class="icon-styling" @onclick="() => addWorkHistoryPage(false)"><i class="fas fa-times"></i></div></div>                        
+                    </div>                   
+                </div>
+                <div style="padding-left: 20px; padding-right: 20px;">                    
+                    <div style="margin-top: 10px;">
+                        <div>Title</div>
+                        <InputText id="job-title" class="skill-input form-control shadow bg-body rounded" @bind-Value="workHistory.JobTitle" placeholder="Ex: Software Engineer"/>                                            
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <div>Company Name</div>
+                        <InputText id="company-title" class="skill-input form-control shadow bg-body rounded" @bind-Value="workHistory.CompanyName" placeholder="Ex: 1Nebula"/>                                            
+                    </div>
+
+                    <div>
+                        <input type="checkbox" value="" id="flexCheckDefault">
+                        <label for="flexCheckDefault">I am currently still working in this role</label>                               
+                    </div>
+
+                    <div style="display: flex; width: 100%; gap: 10px; margin-top: 10px;">
+                        <div style="width: 50%">
+                            <div>Start Date</div>
+                            <InputDate id="start-date" class="form-control shadow bg-body rounded" @bind-Value="workHistory.StartDate" placeholder="Date" />
+                        </div>
+                        <div style="width: 50%">
+                            <div>End Date</div>
+                            <InputDate id="end-date" class="form-control shadow bg-body rounded" @bind-Value="workHistory.EndDate" placeholder="Date"/>
+                        </div>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <div>Description</div>
+                        <InputTextArea style="resize:none;" id="description" class="form-control shadow bg-body rounded" @bind-Value="workHistory.Description" rows="3" ></InputTextArea> <!--@onfocusout="completion" -->
+                    </div>
+                </div>
+                <div style="text-align:center; margin-top: 10px; margin-bottom: 10px;">
+                    <button class="default-button-style" type="submit" value="Add">Add</button>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+}
+
+@if (addEducationPage)
+{
+    <EditForm Model="@education" OnValidSubmit="@addEducation">
+        <DataAnnotationsValidator />
+        <div class="dimmed">
+            <div class="skill-input-container">               
+                <div class="skill-container-header">
+                    <div><h2 class="content-title">Add Education</h2></div>                                       
+                    <div style="display: flex;">
+                        <div class="content-edit-design"><div class="icon-styling" @onclick="() => addEducationHistoryPage(false)"><i class="fas fa-times"></i></div></div>                        
+                    </div>                   
+                </div>
+                <div style="padding-left: 20px; padding-right: 20px;">                    
+                    <div style="margin-top: 10px;">
+                        <div>Institution</div>
+                        <InputText id="Institution" class="form-control shadow bg-body rounded" @bind-Value="education.Insitution" placeholder="Ex: Stellenbosch University"/>
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <div>Qualification</div>
+                        <InputText id="qualification" class="form-control shadow bg-body rounded" @bind-Value="education.Qualification" placeholder="Ex: Bachelors of Science in Information Technology"/>
+                    </div>
+                    <div style="display: flex; width: 100%; gap: 10px; margin-top: 10px;">
+                        <div style="width: 50%">
+                            <div>Start Date</div>
+                            <InputDate id="education-start-date" class="form-control shadow bg-body rounded" @bind-Value="education.StartDate" placeholder="Date" />
+                        </div>
+                        <div style="width: 50%">
+                            <div>End Date</div>
+                            <InputDate id="education-end-date" class="form-control shadow bg-body rounded" @bind-Value="education.EndDate" placeholder="Date"/>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align:center; margin-top: 10px; margin-bottom: 10px;">
+                    <button class="default-button-style" type="submit" value="Add">Add</button>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+}
+
+
 
                             
 
