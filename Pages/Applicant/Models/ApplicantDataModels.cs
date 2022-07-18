@@ -471,4 +471,28 @@ namespace XebecPortal.UI.Pages.Applicant
         public int AppUserId { get; set; }
         public AppUser AppUser { get; set; }
     }
+
+    public class AdditionalDocument
+    {
+        public int Id { get; set; }
+        public string documentName { get; set; }
+        public string documentBlobLink { get; set; }
+        //Foreign Key: AppUser
+        public int AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
+    }
+
+    public class CVDocument
+    {
+        public int Id { get; set; }
+
+        public string documentName { get; set; }
+
+        public string documentBlobLink { get; set; }
+
+        //Foreign Key: AppUser
+        public int AppUserId { get; set; }
+
+        public AppUser AppUser { get; set; }
+    }
 }

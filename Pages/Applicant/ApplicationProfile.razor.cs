@@ -4,6 +4,9 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.Azure.Storage;
+using Microsoft.Azure.Storage.Auth;
+using Microsoft.Azure.Storage.Blob;
 using Microsoft.JSInterop;
 using Newtonsoft.Json;
 using System;
@@ -11,7 +14,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using XebecPortal.UI.Pages.Model;
 using XebecPortal.UI.Utils.Handlers;
@@ -31,39 +36,57 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool addSkillsPressed = false;
         private bool addReferencesPressed = false;
         private bool addLinksPressed = false;
+        private bool fileAlreadyExists = false;
 
-        private int increment = 1;
         private bool workHistUpdate;
         private bool eduUpdate;
         private bool editMode;
         private bool workEditMode;
         private bool eduEditMode;
         private bool skillEditMode;
+        private bool updateSkillValue;
+        private bool addSkillPage;
+        private bool addWorkPage;
+        private bool addEducationPage;
         private bool loadInfo;
+        private bool profilePortfolioUpdate;
+        private bool workHistoryDataExist;
+        private bool educationHistoryDataExist;
+        private bool skillDataExist;
 
         private bool addPersInfo;
         private bool updatedPersInfo;
         private bool addAdditionalInfo;
         private bool updateAdditionalInfo;
 
+        private bool checkTestVal;
+
         private List<WorkHistory> workHistoryList = new List<WorkHistory>();
         private List<WorkHistory> addworkHistoryList = new();
+        private WorkHistory selectedWorkHistory = new(); 
         private WorkHistory workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
+        
+
         private List<Education> educationList = new List<Education>();
         private List<Education> addEducationList = new();
         private Education education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
+        private Education selectedEducation = new();
+        
         private ProfilePortfolioLink profilePortfolio = new();
         private List<ProfilePortfolioLink> profilePortfolioList = new();
+       
         private AdditionalInformation additionalInformation = new();
         private PersonalInformation personalInformation = new(); // Not sure if it even stores the information correctly
         private List<PersonalInformation> personalInformationList = new();
         private List<AdditionalInformation> additionalInfoList = new();
+        
 
         private References references = new();
         private List<References> referencesList = new List<References>();
         private List<References> addReferencesList = new List<References>();
 
-        private List<SkillsInformation> selectedSkillsList1 = new List<SkillsInformation>();
+        private List<SkillsInformation> selectedSkillsList = new List<SkillsInformation>();
+        private SkillsInformation selectedSkill = new();
         private List<SkillsInformation> addselectedSkillsList = new();
         SkillsInformation skillInfo = new SkillsInformation();
 
@@ -74,10 +97,18 @@ namespace XebecPortal.UI.Pages.Applicant
         private List<Document> checkUserDoc = new List<Document>();
         private Document getUserDoc = new Document();
 
+        private List<AdditionalDocument> additionalUserDocuments = new List<AdditionalDocument>();
+        private AdditionalDocument additionalDocUploadInfo = new AdditionalDocument();
+
+        private List<CVDocument> userCVDocuments= new List<CVDocument>();
+        private CVDocument userCVDocUploadInfo = new CVDocument();
+        private CVDocument getUserCVDoc = new CVDocument();
+        //private CVDocument userCVDocUploadInfo = new CVDocument();
+
         private IJSObjectReference _jsModule;
         string _dragEnterStyle;
         IBrowserFile fileNames;
-        private int maxAllowedSize = 10 * 1024 * 1024;
+        private int maxAllowedSize = 1024 * 1024;
         private string progressBar = 0.ToString("0");
 
 
@@ -85,8 +116,6 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool workProgressVal = false;
         private bool referenceProgressVal = false;
         private bool skillProgressVal = false;
-
-        private APIRoot apiroot = new APIRoot();
 
         // This is used to place the information into the lists, if the user still exists
         private IList<WorkHistory> workHistories { get; set; }
@@ -96,16 +125,18 @@ namespace XebecPortal.UI.Pages.Applicant
         private IList<ProfilePortfolioLink> profilePortfolioInfo { get; set; }
         private IList<References> referencesHistory{ get; set; }
         private IList<SkillsInformation> skillHistory { get; set; }
+        private IList<ProfilePicture> profilePicStuff { get; set; }
+        private List<ProfilePicture> userProfilePicture = new List<ProfilePicture>();
         private IList<Document> userDocuments { get; set; }
+        private IList<CVDocument> cvDocuments { get; set; }
+        private IList<AdditionalDocument> additionalUserDocs { get; set; }
+        private ProfilePicture profilePic = new ProfilePicture();
 
         private bool newPersonalInfo = false;
         private bool newAdditionalInfo = false;
-        private bool newWorkHistoryInfo = false;
-        private bool newEduInfo = false;
-        private bool newSkillInfo = false;
-        private bool newRefInfo = false;
         private bool newPortFolioInfo = false;
         private bool newDocumentInfo = false;
+        private bool newAdditionalDocumentInfo = false;
         private bool validUpload = false;
         private bool updateWorkHistory = false;
         private bool updateEducation = false;
@@ -116,113 +147,63 @@ namespace XebecPortal.UI.Pages.Applicant
         private bool validMarkUpload = false;
         // This is used to prevent the users from uploading documents before the system has actually processed it
         private bool enableUploadButtons = true;
+        private bool additionalDocuments = false;
         
         // private CustomHandler cust = new CustomHandler();
-        string token;
-        private string cvContent;
-        private string martricCertContent;
-        private string transcriptContent;
-        private string cert1Content;
-        private string cert2Content;
-        private string cert3Content;
+        string token;        
+        private string userPic = String.Empty;
+        private string updatedUserPic = String.Empty;
         private bool onlineProfileValidPost;
+        private bool profilePictureExists;
+        private bool editable;
+        private bool showMagnifiedDocument;
+        private bool cvDocumentExist;
+
+        private int workHistoryId;
+        private int eduHistoryId;
+        private int existingSkillId;
 
         private Document doc = new Document();
 
         private List<matricMarks> matricInputs = new();
         private List<matricMarks> matricMarksAdded = new();
         private matricMarks marks = new();
+        private string defaultCollaboratorImage = "/Img/DefaultImage.png";// "https://xebecstorage.blob.core.windows.net/profile-images/0";
+        private string selectedDocument = String.Empty;
         protected override async Task OnInitializedAsync()
         {
-            loadInfo = true;
-            _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/ApplicationProfile.js");
             try
-            {                
-                token = await localStorage.GetItemAsync<string>("jwt_token");      
-                
-                personalInfoHistory = await httpClient.GetListJsonAsync<List<PersonalInformation>>($"PersonalInformation/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));//await httpClient.GetFromJsonAsync<List<PersonalInformation>>($"PersonalInformation");
-                personalInformationList = personalInfoHistory.ToList();                                                                                                                                                                                                        //personalInfoHistory = await httpClient.GetListJsonAsync<List<PersonalInformation>>($"PersonalInformation", new AuthenticationHeaderValue("Bearer", token));//await httpClient.GetFromJsonAsync<List<PersonalInformation>>($"PersonalInformation");
+            {
+                loadInfo = true;
 
-                if (personalInformationList.Count == 0)
-                {
-                    newPersonalInfo = true;
-                }
-                else
-                {
-                    foreach (var item in personalInformationList)
-                    {
-                        personalInformation = item;
-                    }
-                }
+                editable = false;
 
+            
+                token = await localStorage.GetItemAsync<string>("jwt_token");
+                Console.WriteLine("App user ID: " + state.AppUserId);
+                await retrieveProfilePic();            
+                await retrievePersonalAndAdditionalInfo();
+                //_jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "./jsPages/Applicant/ApplicationProfile.js");
+                await retrieveWorkHistory();
+            
+                await retrieveEducationHistory();
+            
+                await retrieveSkills();
 
-                //additionalInformation = await httpClient.GetListJsonAsync<AdditionalInformation>($"AdditionalInformation/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
-               
-                additionalInfoHistory = await httpClient.GetListJsonAsync<List<AdditionalInformation>>($"AdditionalInformation/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
-                additionalInfoList = additionalInfoHistory.ToList();
-
-                // AdditionalInformation/{state.AppUserId}
-                if (additionalInfoList.Count == 0)
-                {
-                    newAdditionalInfo = true;
-                }
-                else
-                {
-                    foreach (var item in additionalInfoList)
-                    {
-                        additionalInformation = item;
-                    }
-                }
-
-                workHistoryList = await httpClient.GetListJsonAsync<List<WorkHistory>>($"WorkHistory/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
-                //workHistoryList = workHistories.Where(x => x.AppUserId == state.AppUserId).ToList();
-
-                educationList = await httpClient.GetListJsonAsync<List<Education>>($"Education/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
-                //educationList = educationHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
-
-                selectedSkillsList1 = await httpClient.GetListJsonAsync<List<SkillsInformation>>($"Skill/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
-               // selectedSkillsList1 = skillHistory.ToList();
-
-                referencesList = await httpClient.GetListJsonAsync<List<References>>($"Reference/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
-                //referencesList = referencesHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
+                await retrieveReferences();
 
                 matricInputs = await httpClient.GetListJsonAsync<List<matricMarks>>($"MatricMark/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
 
+                await retrievecvDocuments();
+                await retrieveAdditionalDocuments();
 
-                userDocuments = await httpClient.GetListJsonAsync<List<Document>>($"Document/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
-                checkUserDoc = userDocuments.ToList();
-                if (checkUserDoc.Count == 0)
-                {
-                    newDocumentInfo = true;
-                }
-                else
-                {
-                    Console.WriteLine("user already has documents");
-                    foreach (var item in checkUserDoc)
-                    {
-                        getUserDoc = item;
-                    }
-                }
+                await retrieveProfilePortfolio();           
 
-                profilePortfolioList = await httpClient.GetListJsonAsync<List<ProfilePortfolioLink>>($"ProfilePortfolioLink/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
-                //profilePortfolioList = profilePortfolioInfo.ToList();
-
-                if (profilePortfolioList.Count == 0)
-                {
-                    newPortFolioInfo = true;
-                }
-                else
-                {
-                    foreach (var item in profilePortfolioList)
-                    {
-                        profilePortfolio = item;
-                    }
-                }
-
+                loadInfo = false;
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error at pulling information from API " + e);
+                Console.WriteLine("Could not pull information from API, please try again: " + e);
             }
 
             //selectedSkillsList1 = await httpClient.GetFromJsonAsync<List<SkillsInformation>>($"WorkHistory/{state.AppUserId}");
@@ -241,13 +222,35 @@ namespace XebecPortal.UI.Pages.Applicant
             //request.AddHeader("Authorization", "Bearer <ACCESS_TOKEN>");
             //IRestResponse response = client.Execute(request);
 
-            progressCheck();
-            completion();
-            loadInfo = false;
+            //progressCheck();
+            //completion();
+
         }
 
         // Reasons for these retrieval methods, is to improve response of the web page and to reduce slow downs, etc. Instead of calling the OnInitializedAsync() and it taking years to update, etc.
-        
+        private void changePersonalInfoEditableStatus(bool val)
+        {
+            if (editable)
+            {
+                editable = false;
+            }
+            else
+            {
+                editable = true;
+            }            
+        }
+        private void changeSkillEditStatus(bool val)
+        {
+            if (skillEditMode)
+            {
+                skillEditMode = false;
+            }
+            else
+            {
+                skillEditMode = true;
+            }
+        }
+
         private async Task retrievePersonalAndAdditionalInfo()
         {
             personalInfoHistory = await httpClient.GetListJsonAsync<List<PersonalInformation>>($"PersonalInformation/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));//await httpClient.GetFromJsonAsync<List<PersonalInformation>>($"PersonalInformation");
@@ -261,10 +264,11 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 foreach (var item in personalInformationList)
                 {
+                    newPersonalInfo = false;
                     personalInformation = item;
                 }
             }
-            
+
             additionalInfoHistory = await httpClient.GetListJsonAsync<List<AdditionalInformation>>($"AdditionalInformation/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
             additionalInfoList = additionalInfoHistory.ToList();
 
@@ -277,14 +281,44 @@ namespace XebecPortal.UI.Pages.Applicant
             {
                 foreach (var item in additionalInfoList)
                 {
+                    newAdditionalInfo = false;
                     additionalInformation = item;
                 }
             }
         }
+        private async Task retrieveProfilePic()
+        {
+            profilePicStuff = await httpClient.GetListJsonAsync<List<ProfilePicture>>($"ProfilePicture", new AuthenticationHeaderValue("Bearer", token));
+            userProfilePicture = profilePicStuff.Where(x => x.AppUserId == state.AppUserId).ToList();
 
+            if (userProfilePicture.Count > 0)
+            {
+                profilePictureExists = true;
+                foreach (var item in userProfilePicture)
+                {
+                    profilePic = item;
+                    userPic = item.profilePic;
+                    updatedUserPic = DateTime.Now.ToString();
+                }
+            }
+            else
+            {
+                profilePictureExists = false;
+                userPic = defaultCollaboratorImage;
+            }
+        }
         private async Task retrieveWorkHistory()
         {
             workHistoryList = await httpClient.GetListJsonAsync<List<WorkHistory>>($"WorkHistory/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+
+            if (workHistoryList.Count == 0)
+            {
+                workHistoryDataExist = false;
+            }
+            else
+            {
+                workHistoryDataExist = true;
+            }
             //workHistoryList = workHistories.Where(x => x.AppUserId == state.AppUserId).ToList();
         }
 
@@ -293,12 +327,30 @@ namespace XebecPortal.UI.Pages.Applicant
             educationList = await httpClient.GetListJsonAsync<List<Education>>($"Education/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
             //educationList = educationHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
 
+            if (educationList.Count == 0)
+            {
+                educationHistoryDataExist = false;
+
+            }
+            else
+            {
+                educationHistoryDataExist = true;
+            }
         }
 
         private async Task retrieveSkills()
         {
-            selectedSkillsList1 = await httpClient.GetListJsonAsync<List<SkillsInformation>>($"Skill/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+            selectedSkillsList = await httpClient.GetListJsonAsync<List<SkillsInformation>>($"Skill/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
             // selectedSkillsList1 = skillHistory.ToList();
+
+            if (selectedSkillsList.Count == 0)
+            {
+                skillDataExist = false;
+            }
+            else
+            {
+                skillDataExist = true;
+            }
         }
 
         private async Task retrieveReferences()
@@ -306,154 +358,203 @@ namespace XebecPortal.UI.Pages.Applicant
             referencesList = await httpClient.GetListJsonAsync<List<References>>($"Reference/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
             //referencesList = referencesHistory.Where(x => x.AppUserId == state.AppUserId).ToList();
         }
-        private async Task retrieveDocuments()
+        private async Task retrievecvDocuments()
         {
-            userDocuments = await httpClient.GetListJsonAsync<List<Document>>($"Document/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
-            checkUserDoc = userDocuments.ToList();
-            if (checkUserDoc.Count == 0)
+            cvDocuments = await httpClient.GetListJsonAsync<List<CVDocument>>($"CVDocument/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+            userCVDocuments = cvDocuments.ToList();
+
+            if (userCVDocuments.Count == 0)
             {
-                newDocumentInfo = true;
+                cvDocumentExist = false;
             }
             else
             {
-                Console.WriteLine("user already has documents");
-                foreach (var item in checkUserDoc)
+                cvDocumentExist = true;
+                foreach (var item in userCVDocuments)
                 {
-                    getUserDoc = item;
+                    getUserCVDoc = item;                   
                 }
+            }
+            //userDocuments = await httpClient.GetListJsonAsync<List<Document>>($"Document/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+            //checkUserDoc = userDocuments.ToList();
+            //if (checkUserDoc.Count == 0)
+            //{
+            //    newDocumentInfo = true;
+            //    cvDocumentExist = true;
+            //}
+            //else
+            //{
+            //    Console.WriteLine("user already has documents");
+            //    foreach (var item in checkUserDoc)
+            //    {
+            //        getUserDoc = item;
+            //        Console.WriteLine("RetrieveDoc Method CV val: " + getUserDoc.CV);
+            //        if (string.IsNullOrEmpty(getUserDoc.CV))
+            //        {
+            //            cvDocumentExist = true;
+            //        }
+            //        else
+            //        {
+            //            cvDocumentExist = false;
+            //        }
+
+            //        if (string.IsNullOrEmpty(@item.MatricCertificate) && string.IsNullOrEmpty(@item.UniversityTranscript) && string.IsNullOrEmpty(@item.AdditionalCert1) && string.IsNullOrEmpty(@item.AdditionalCert2) && string.IsNullOrEmpty(@item.AdditionalCert3))
+            //        {
+            //            additionalDocuments = true;
+            //        }
+            //        else
+            //        {
+            //            additionalDocuments = false;
+            //        }
+
+            //    }
+            //}
+        }
+
+        private async Task retrieveAdditionalDocuments()
+        {
+            additionalUserDocs = await httpClient.GetListJsonAsync<List<AdditionalDocument>>($"AdditionalDocument/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+            additionalUserDocuments = additionalUserDocs.ToList();
+            if (additionalUserDocuments.Count == 0)
+            {
+                newAdditionalDocumentInfo = true;
+                //cvDocumentExist = true;
+            }
+            else
+            {
+                newAdditionalDocumentInfo = false;
+                Console.WriteLine("user already has additional documents");
             }
         }
 
+        private async Task retrieveProfilePortfolio()
+        {
+            profilePortfolioList = await httpClient.GetListJsonAsync<List<ProfilePortfolioLink>>($"ProfilePortfolioLink/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
+            //profilePortfolioList = profilePortfolioInfo.ToList();
 
-        //public async Task<string> testJTW(string apiEndpoint ,string Token)
-        //{
-        //    // Can get token here to prevent devs from getting the token on their page
-
-        //    using (var request = new HttpRequestMessage(HttpMethod.Get, apiEndpoint))
-        //    {
-        //        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", Token);
-        //        var response = await httpClient.SendAsync(request);
-
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            Console.WriteLine("It was successfull");
-        //        }
-        //       // response.EnsureSuccessStatusCode();
-
-        //        return await response.Content.ReadAsStringAsync();
-        //    }
-        //}
-
+            if (profilePortfolioList.Count == 0)
+            {
+                newPortFolioInfo = true;
+            }
+            else
+            {
+                foreach (var item in profilePortfolioList)
+                {
+                    profilePortfolio = item;
+                }
+            }
+        }
         private string skillWarning = "";
         private bool warning;
 
         string searchedSkill;
 
-        private async Task SearchSkillList(ChangeEventArgs e)
-        {
-            searchedSkill = e.Value.ToString(); // this value will be passed to the API to return the results
-            Console.WriteLine("searchedSkill: " + searchedSkill);
-            await Task.Delay(1500); // This delay will prevent the API call spam  when the the user types in the search values
-            Console.WriteLine("text after delay: " + searchedSkill);
-            skillListFilter = apiSkills; // apiSkill will be replaced with the new API link that will be called.
-
-            if (string.IsNullOrEmpty(searchedSkill) && searchedSkill == " ")
-            {
-                // This will mainly be used to display most popular skills that users has chosen, still need to create a DB Table for that
-                skillListFilter = skillListFilter.Where(x => x.Description.Contains(searchedSkill, StringComparison.CurrentCultureIgnoreCase)).ToList();
-            }
-
-            if (searchedSkill?.Any() == true)
-            {
-                // This will display the requested search result.
-                skillListFilter = skillListFilter.Where(x => x.Description.Contains(searchedSkill, StringComparison.CurrentCultureIgnoreCase)).ToList();
-            }
-        }
-
-        //private void addToSelectedInfo(SkillBank info)
+        //private async Task SearchSkillList(ChangeEventArgs e)
         //{
-        //    warning = false;
-        //    var validCheck = selectedSkillsList1.FindAll(r => r.Description.Equals(info.Description));
-        //    if (validCheck.Count == 0)
+        //    searchedSkill = e.Value.ToString(); // this value will be passed to the API to return the results
+        //    Console.WriteLine("searchedSkill: " + searchedSkill);
+        //    await Task.Delay(1500); // This delay will prevent the API call spam  when the the user types in the search values
+        //    Console.WriteLine("text after delay: " + searchedSkill);
+        //    skillListFilter = apiSkills; // apiSkill will be replaced with the new API link that will be called.
+
+        //    if (string.IsNullOrEmpty(searchedSkill) && searchedSkill == " ")
         //    {
-        //        selectedSkillsList1.Add(new()
-        //        {
-        //            Description = info.Description,
-        //            AppUserId = 1,
-        //        });
+        //        // This will mainly be used to display most popular skills that users has chosen, still need to create a DB Table for that
+        //        skillListFilter = skillListFilter.Where(x => x.Description.Contains(searchedSkill, StringComparison.CurrentCultureIgnoreCase)).ToList();
         //    }
-        //    else
+
+        //    if (searchedSkill?.Any() == true)
         //    {
-        //        warning = true;
-        //        skillWarning = "Skill has already been added!";
+        //        // This will display the requested search result.
+        //        skillListFilter = skillListFilter.Where(x => x.Description.Contains(searchedSkill, StringComparison.CurrentCultureIgnoreCase)).ToList();
         //    }
         //}
 
-        private async Task addToSelectedInfo()
+        //private SkillsInformation skillTemp;
+        //private void SelectSkill(SkillsInformation value)
+        //{
+        //    skillEditMode = true;
+        //    int index = selectedSkillsList1.FindIndex(x => x.Equals(value));
+        //    skillInfo = selectedSkillsList1[index];
+        //    skillTemp = (SkillsInformation)skillInfo.Clone();
+        //}
+
+        private async Task editSkill(int skillId , bool val)
         {
-            addSkillsPressed = true;
-
-            selectedSkillsList1.Add(new()
+            updateSkillValue = val;
+            existingSkillId = skillId;
+            if (updateSkillValue && (skillId > 0))
             {
-                Description = skillInfo.Description,
-                AppUserId = state.AppUserId,
-            });
-            // This list is mainly used for POST requests as soon as the info is added, to ensure that there isn't duplicate info
-            addselectedSkillsList.Add(new()
-            {
-                Description = skillInfo.Description,
-                AppUserId = state.AppUserId,
-            });
-
-            foreach (var item in addselectedSkillsList)
-            {                
-                await httpClient.PostJsonAsync($"Skill", item, new AuthenticationHeaderValue("Bearer", token));
-                
+                foreach (var item in selectedSkillsList)
+                {
+                    if (item.Id == skillId)
+                    {
+                        selectedSkill.Id = item.Id;
+                        selectedSkill.Description = item.Description;
+                        selectedSkill.AppUserId = item.AppUserId;                        
+                    }
+                }
             }
-            addselectedSkillsList.Clear();// it immediately gets cleared after the POST.
-            skillInfo = new();
+        } 
+        private void addSkillInfoPage( bool val)
+        {
+            addSkillPage = val;            
+        }
+        private void addWorkHistoryPage( bool val)
+        {
+            addWorkPage = val;            
+        }
+        private void addEducationHistoryPage( bool val)
+        {
+            addEducationPage = val;            
+        }
+
+        private async Task addSkill()
+        {
+            skillInfo.AppUserId = state.AppUserId;            
+            var addSkillInfo = await httpClient.PostJsonAsync($"Skill", skillInfo, new AuthenticationHeaderValue("Bearer", token));
+            if (addSkillInfo.IsSuccessStatusCode)
+            {
+                await jsRuntime.InvokeAsync<object>("alert", "Skill information has successfully been added!");
+                skillInfo = new();
+            }
             await retrieveSkills();
-
-            addSkillsPressed = false;
         }
-
-
-        private async Task removeFromSelectedInfo(SkillsInformation info)
-        {            
-            selectedSkillsList1.Remove(info);
-            await httpClient.DeleteJsonAsync($"Skill/{info.Id}", new AuthenticationHeaderValue("Bearer", token));
-            skillInfo = new();
-            await retrieveSkills();            
-            skillEditMode = false;
-            if (selectedSkillsList1.Count == 0)
-            {
-                skillProgressVal = true;
-            }
-        }
-        private SkillsInformation skillTemp;
-        private void SelectSkill(SkillsInformation value)
+        private async Task updateSkillInfo()
         {
-            skillEditMode = true;
-            int index = selectedSkillsList1.FindIndex(x => x.Equals(value));
-            skillInfo = selectedSkillsList1[index];
-            skillTemp = (SkillsInformation)skillInfo.Clone();
-        }
+            //skillEditMode = false;
+            //int index = selectedSkillsList.FindIndex(x => x.Equals(skillValue));
+            //selectedSkillsList[index] = skillInfo;
+            //if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Override This Item?"))
+            //{
+            //    foreach (var item in selectedSkillsList)
+            //    {
+            //        var skillUpdate =  await httpClient.PutJsonAsync($"Skill/{skillValue.Id}", item, new AuthenticationHeaderValue("Bearer", token));
+            //        if (skillUpdate.IsSuccessStatusCode)
+            //        {
+            //            updateSkill = true;
 
-        private async Task SaveSkill(SkillsInformation skillValue)
-        {
-            skillEditMode = false;
-            int index = selectedSkillsList1.FindIndex(x => x.Equals(skillValue));
-            selectedSkillsList1[index] = skillInfo;
+            //        } 
+            //    }
+            //    if (updateSkill)
+            //    {
+            //        await jsRuntime.InvokeAsync<object>("alert", "Skill information has successfully been changed!");
+            //        updateSkill = false;
+            //    }
+            //}
+            //skillInfo = new();
+            //await retrieveSkills();
+            //
             if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Override This Item?"))
             {
-                foreach (var item in selectedSkillsList1)
+                foreach (var item in selectedSkillsList)
                 {
-                    var skillUpdate =  await httpClient.PutJsonAsync($"Skill/{skillValue.Id}", item, new AuthenticationHeaderValue("Bearer", token));
+                    var skillUpdate = await httpClient.PutJsonAsync($"Skill/{selectedSkill.Id}", item, new AuthenticationHeaderValue("Bearer", token));
                     if (skillUpdate.IsSuccessStatusCode)
                     {
                         updateSkill = true;
-                        
-                    } 
+
+                    }
                 }
                 if (updateSkill)
                 {
@@ -461,144 +562,87 @@ namespace XebecPortal.UI.Pages.Applicant
                     updateSkill = false;
                 }
             }
-            skillInfo = new();
-            await retrieveSkills();            
         }
-
-        private void CancelSkill(SkillsInformation skillValue)
+        private async Task deleteSkill(int skillId)
         {
-            int index = selectedSkillsList1.FindIndex(x => x.Equals(skillValue));
-            selectedSkillsList1[index] = skillTemp;
-            skillInfo = new();
-            skillEditMode = false;
+            selectedSkillsList.RemoveAll(x => x.Id == skillId);
+
+            if (selectedSkillsList.Count == 0)
+            {
+                skillDataExist = false;
+            }
+            await httpClient.DeleteJsonAsync($"Skill/{skillId}", new AuthenticationHeaderValue("Bearer", token));            
+          //  await retrieveSkills();            
         }
 
+        // This needs to be tested.. Since it isn't necessary to add the values to a list and post it
         private async Task AddPersonalInformation()
         {
-            savePersonalInfoPressed = true;
-
-            if (newPersonalInfo && newAdditionalInfo) // This is a check to see if the user is a "new" user to the system or an old user
+            
+            if (newPersonalInfo)
             {
-                personalInformationList.Add(new()
-                {
-                    FirstName = personalInformation.FirstName,
-                    LastName = personalInformation.LastName,
-                    PhoneNumber = personalInformation.PhoneNumber,
-                    IdNumber = personalInformation.IdNumber,
-                    Email = personalInformation.Email,
-                    Address = personalInformation.Address,
-                    AppUserId = state.AppUserId,
-                });
+                personalInformation.AppUserId = state.AppUserId;
+                var addedPersonalInfo = await httpClient.PostJsonAsync($"PersonalInformation", personalInformation, new AuthenticationHeaderValue("Bearer", token));
 
-                additionalInfoList.Add(new()
+                if (addedPersonalInfo.IsSuccessStatusCode)
                 {
-
-                    Disability = "No",
-                    Gender = additionalInformation.Gender,
-                    Ethnicity = additionalInformation.Ethnicity,
-                    AppUserId = state.AppUserId,
-                });
-            }
-            else // If they are an already existing user, the information gets updated
-            {
-                personalInformationList.Add(new()
-                {
-                    Id = personalInformation.Id,
-                    FirstName = personalInformation.FirstName,
-                    LastName = personalInformation.LastName,
-                    PhoneNumber = personalInformation.PhoneNumber,
-                    IdNumber = personalInformation.IdNumber,
-                    Email = personalInformation.Email,
-                    Address = personalInformation.Address,
-                    ImageUrl = personalInformation.ImageUrl,
-                    AppUserId = state.AppUserId,
-                });
-
-                additionalInfoList.Add(new()
-                {
-                    Id = additionalInformation.Id,
-                    Disability = "No",
-                    Gender = additionalInformation.Gender,
-                    Ethnicity = additionalInformation.Ethnicity,
-                    AppUserId = state.AppUserId,
-                });
-            }
-
-            if (newPersonalInfo && newAdditionalInfo)
-            {
-                foreach (var item in personalInformationList)
-                {
-                    if (newPersonalInfo)
-                    {
-                        var addedPersonalInfo = await httpClient.PostJsonAsync($"PersonalInformation", item, new AuthenticationHeaderValue("Bearer", token));
-                        if (addedPersonalInfo.IsSuccessStatusCode)
-                        {
-                            addPersInfo = true;
-                        }
-                        else
-                        {
-                            addPersInfo = false;
-                        }
-                    }
+                    addPersInfo = true;
                 }
-
-                foreach (var item in additionalInfoList)
+                else
                 {
-                    var addedAdditionalInfo = await httpClient.PostJsonAsync($"AdditionalInformation", item, new AuthenticationHeaderValue("Bearer", token));
-                    if (addedAdditionalInfo.IsSuccessStatusCode)
-                    {
-                        addAdditionalInfo = true;
-                    }
-                    else
-                    {
-                        addAdditionalInfo = false;
-                    }
+                    addPersInfo = false;
                 }
             }
             else
             {
-                if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Override your Personal Information?"))
-                {                
-                    foreach (var item in personalInformationList)
-                    {
+                var updatedPersonalInfo = await httpClient.PutJsonAsync($"PersonalInformation/{personalInformation.Id}", personalInformation, new AuthenticationHeaderValue("Bearer", token));
 
-                        var updatedPersonalInfo = await httpClient.PutJsonAsync($"PersonalInformation/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
-                        if (updatedPersonalInfo.IsSuccessStatusCode)
-                        {
-                            updatedPersInfo = true;
-                        }
-                        else
-                        {
-                            updatedPersInfo = false;
-                        }
-                    }
-                    foreach (var item in additionalInfoList)
-                    {
-                        var updatedAdditionalInfo = await httpClient.PutJsonAsync($"AdditionalInformation/{item.Id}", item, new AuthenticationHeaderValue("Bearer", token));
-                        if (updatedAdditionalInfo.IsSuccessStatusCode)
-                        {
-                            updateAdditionalInfo = true;
-                        }
-                        else
-                        {
-                            updateAdditionalInfo = false;
-                        }
-                    }
+                if (updatedPersonalInfo.IsSuccessStatusCode)
+                {
+                    addPersInfo = true;
                 }
-            }          
-                
-            if ((addPersInfo || updatedPersInfo) && (addAdditionalInfo || updateAdditionalInfo))
-            {
-                await jsRuntime.InvokeAsync<object>("alert", "Your information has been saved!");
-                addPersInfo = false;
-                updatedPersInfo = false;
-                addAdditionalInfo = false;
-                updateAdditionalInfo = false;
-                await retrievePersonalAndAdditionalInfo();
+                else
+                {
+                    addPersInfo = false;
+                }
             }
 
-            savePersonalInfoPressed = false;
+            if (newAdditionalInfo)
+            {
+                additionalInformation.AppUserId = state.AppUserId;
+
+                var addedAdditionalInfo = await httpClient.PostJsonAsync($"AdditionalInformation", additionalInformation, new AuthenticationHeaderValue("Bearer", token));
+                if (addedAdditionalInfo.IsSuccessStatusCode)
+                {
+                    addAdditionalInfo = true;
+                }
+                else
+                {
+                    addAdditionalInfo = false;
+                }
+            }
+            else
+            {
+                var updatedAdditionalInfo = await httpClient.PutJsonAsync($"AdditionalInformation/{additionalInformation.Id}", additionalInformation, new AuthenticationHeaderValue("Bearer", token));
+                if (updatedAdditionalInfo.IsSuccessStatusCode)
+                {
+                    addAdditionalInfo = true;
+                }
+                else
+                {
+                    addAdditionalInfo = false;
+                }
+            }
+
+            if (addPersInfo && addAdditionalInfo)
+            {
+                await jsRuntime.InvokeAsync<object>("alert", "Your information has been saved!");
+                addPersInfo = false;                
+                addAdditionalInfo = false;                
+                await retrievePersonalAndAdditionalInfo();
+            }
         }
+
 
         private async Task AddReferences()
         {
@@ -690,123 +734,73 @@ namespace XebecPortal.UI.Pages.Applicant
             int index = referencesList.FindIndex(x => x.Equals(referenceValues));
             references = referencesList[index];
             tempRef = (References)references.Clone();
-        }
+        }   
 
-        private WorkHistory tempWorkHistory;
-
-        private async Task addWorkHistoryTest()
-        {
-            addWorkhistoryPressed = true;
-
-            workHistoryList.Add(new()
+        private async Task addWorkHistory()
+        {            
+            try
             {
-                AppUserId = state.AppUserId,
-                CompanyName = workHistory.CompanyName,
-                JobTitle = workHistory.JobTitle,
-                StartDate = workHistory.StartDate,
-                EndDate = workHistory.EndDate,
-                Description = workHistory.Description
-            });
+                workHistory.AppUserId = state.AppUserId;
+                var addWorkHistory = await httpClient.PostJsonAsync($"WorkHistory", workHistory, new AuthenticationHeaderValue("Bearer", token));
 
-            addworkHistoryList.Add(new()
-            {
-                AppUserId = state.AppUserId,
-                CompanyName = workHistory.CompanyName,
-                JobTitle = workHistory.JobTitle,
-                StartDate = workHistory.StartDate,
-                EndDate = workHistory.EndDate,
-                Description = workHistory.Description                
-            });
-
-            foreach (var item in addworkHistoryList)
-            {
-                await httpClient.PostJsonAsync($"WorkHistory", item, new AuthenticationHeaderValue("Bearer", token));
+                if (addWorkHistory.IsSuccessStatusCode)
+                {
+                    await jsRuntime.InvokeAsync<object>("alert", "Work history has successfully been added");
+                    workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
+                    await retrieveWorkHistory();
+                }
             }
-            await retrieveWorkHistory();
-            addworkHistoryList.Clear();
-            workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
-
-            addWorkhistoryPressed = false;
+            catch(Exception e)
+            {
+                Console.WriteLine("Error at adding job to the db: " + e);
+            }
+                    
         }
-
         private async Task DeleteWorkHistory(WorkHistory workHistoryValues)
         {            
             workHistoryList.RemoveAll(x => x == (workHistoryValues));
-            await httpClient.DeleteJsonAsync($"WorkHistory/{workHistoryValues.Id}", new AuthenticationHeaderValue("Bearer", token));
-            await retrieveWorkHistory();
-            workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
-            workHistUpdate = false;
-            workEditMode = false;
             if (workHistoryList.Count == 0)
             {
-                workProgressVal = true;
+                workHistoryDataExist = false;
             }
+            await httpClient.DeleteJsonAsync($"WorkHistory/{workHistoryValues.Id}", new AuthenticationHeaderValue("Bearer", token));            
         }
 
-        private void SelectWorkHistory(WorkHistory workHistoryValues)
+        private void editWorkHistoryStatus(int workId, bool val)
         {
-            workEditMode = true;
-            int index = workHistoryList.FindIndex(x => x == (workHistoryValues));
-            workHistory = workHistoryList[index];
-            tempWorkHistory = (WorkHistory)workHistory.Clone();
-        }
-
-        // This is to display the selectedHistory tab
-        private object GetStyling(WorkHistory item)
-        {
-            if ((workHistory.CompanyName == item.CompanyName) && (workHistory.JobTitle == item.JobTitle) && (workHistory.Description == item.Description))
-                return "background-color: #004393; color: white;";
-            return "";
-        }
-        //#49E5EF
-        private object GetEduStyling(Education item)
-        {
-            if ((education.Insitution == item.Insitution) && (education.Qualification == item.Qualification))                
-                return "background-color: #004393; color: white;";
-            return "";
-        }
-        private object GetRefStyling(References item)
-        {
-            if ((references.RefFirstName == item.RefFirstName) && (references.RefLastName == item.RefLastName) && (references.RefPhone == item.RefPhone) && (references.RefEmail == item.RefEmail))
-                return "background-color: #004393; color: white;";
-            return "";
-        }
-
-        private object GetSkillStyling(SkillsInformation item)
-        {
-            if ((skillInfo.Description == item.Description))
-                return "background-color: #004393; color: white;";
-            return "";
-        }
-
-        private string SmallCardFontColour()
-        {
-            return "";
-        }
-
-        private string SmallCardDate()
-        {
-            return "#d35bc9;";
-        }
-
-        private async Task SaveWorkHistory(WorkHistory workHistoryValues)
-        {
-            if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Override This Item?"))
+            workHistUpdate = val;
+            workHistoryId = workId;
+            if (workHistUpdate && (workId > 0))
             {
-                workEditMode = false;
-                int index = workHistoryList.FindIndex(x => x.Equals(workHistoryValues));
-                workHistoryList[index] = workHistory;
                 foreach (var item in workHistoryList)
                 {
-                    var workHistoryState =  await httpClient.PutJsonAsync($"WorkHistory/{workHistoryValues.Id}", item, new AuthenticationHeaderValue("Bearer", token));
-                    if (workHistoryState.IsSuccessStatusCode)
+                    if (item.Id == workHistoryId)
                     {
-                        updateWorkHistory = true;
+                        selectedWorkHistory.Id = item.Id;
+                        selectedWorkHistory.CompanyName = item.CompanyName;
+                        selectedWorkHistory.JobTitle = item.JobTitle;
+                        selectedWorkHistory.Description = item.Description;
+                        selectedWorkHistory.StartDate = item.StartDate;
+                        selectedWorkHistory.EndDate = item.EndDate;
+                        selectedWorkHistory.AppUser = item.AppUser;
+                        selectedWorkHistory.AppUserId = item.AppUserId;
+
                     }
-                    else
-                    {
-                        updateWorkHistory = false; 
-                    }
+                }
+            }           
+        }
+        private async Task UpdateWorkHistory()
+        {
+            if (await jsRuntime.InvokeAsync<bool>("confirm","Are you certain that you want to override existing information?"))
+            {
+                var workHistoryState = await httpClient.PutJsonAsync($"WorkHistory/{selectedWorkHistory.Id}", selectedWorkHistory, new AuthenticationHeaderValue("Bearer", token));
+                if (workHistoryState.IsSuccessStatusCode)
+                {
+                    updateWorkHistory = true;
+                }
+                else
+                {
+                    updateWorkHistory = false; 
                 }
                 if (updateWorkHistory)
                 {
@@ -814,89 +808,56 @@ namespace XebecPortal.UI.Pages.Applicant
                     updateWorkHistory = false;
                 }
             }
-            workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             await retrieveWorkHistory();            
-        }
+        }       
 
-        private void CancelWorkHistory(WorkHistory workHistoryValues)
+        private async Task addEducation()
         {
-            int index = workHistoryList.FindIndex(x => x.Equals(workHistoryValues));
-            workHistoryList[index] = tempWorkHistory;
-            workHistory = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
-            workEditMode = false;
-        }
-
-        private Education tempEducation;
-        private async Task AddEducationTakeTwo()
-        {
-            addEducationPressed = true;
-
-            educationList.Add(new()
+            try
             {
-                AppUserId = state.AppUserId,
-                Insitution = education.Insitution,
-                Qualification = education.Qualification,
-                StartDate = education.StartDate,
-                EndDate = education.EndDate,
-            });
-            addEducationList.Add(new()
-            {
-                AppUserId = state.AppUserId,
-                Insitution = education.Insitution,
-                Qualification = education.Qualification,
-                StartDate = education.StartDate,
-                EndDate = education.EndDate,
-            });
+                education.AppUserId = state.AppUserId;
+                var addEducation = await httpClient.PostJsonAsync($"Education", education, new AuthenticationHeaderValue("Bearer", token));
 
-            foreach (var item in addEducationList)
-            {
-                await httpClient.PostJsonAsync($"Education", item, new AuthenticationHeaderValue("Bearer", token));
+                if (addEducation.IsSuccessStatusCode)
+                {
+                    await jsRuntime.InvokeAsync<object>("alert", "Education has successfully been added");
+                    education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
+                    await retrieveEducationHistory();
+                }                
             }
-            addEducationList.Clear();
-            education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
-            await retrieveEducationHistory();
-
-            addEducationPressed = false;
+            catch(Exception e)
+            {
+                Console.WriteLine("Error at adding education to the db: " + e);
+            }            
         }
-
         private async Task DeleteEducation(Education educationValues)
         {
-            educationList.RemoveAll(x => x.Equals(educationValues));
-            await httpClient.DeleteJsonAsync($"Education/{educationValues.Id}", new AuthenticationHeaderValue("Bearer", token));
-            await retrieveEducationHistory();
-            education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
-            eduUpdate = false;
-            eduEditMode = false;
-
-            if (educationList.Count == 0)
+            try
             {
-                educationProgressVal = true;
+                educationList.RemoveAll(x => x == (educationValues));
+                if (educationList.Count == 0)
+                {
+                    educationHistoryDataExist = false;
+                }
+                await httpClient.DeleteJsonAsync($"Education/{educationValues.Id}", new AuthenticationHeaderValue("Bearer", token));
             }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error at deleting education from the db: " + e);
+            }
+            
+            //await retrieveEducationHistory(); you dont have to recall it, since it isn't necessary
         }
-
-        private void SelectEducation(Education educationValues)
-        {
-            eduEditMode = true;
-            int index = educationList.FindIndex(x => x.Equals(educationValues));
-            education = educationList[index];
-            tempEducation = (Education)education.Clone();
-        }
-
-        private async Task SaveEducation(Education educationValues)
+        private async Task UpdateEducation()
         {
             if (await jsRuntime.InvokeAsync<bool>("confirm", "Are You Certain You Want To Override This Item?"))
-            {
-                eduEditMode = false;
-                int index = educationList.FindIndex(x => x.Equals(educationValues));
-                educationList[index] = education;
-                foreach (var item in educationList)
+            {                
+                var educationState = await httpClient.PutJsonAsync($"Education/{selectedEducation.Id}", selectedEducation, new AuthenticationHeaderValue("Bearer", token));
+                if (educationState.IsSuccessStatusCode)
                 {
-                   var educationState = await httpClient.PutJsonAsync($"Education/{educationValues.Id}", item, new AuthenticationHeaderValue("Bearer", token));
-                    if (educationState.IsSuccessStatusCode)
-                    {
-                        updateEducation = true;
-                    }
+                    updateEducation = true;
                 }
+
                 if (updateEducation)
                 {
                     await jsRuntime.InvokeAsync<object>("alert", "Education information has successfully been changed!");
@@ -906,28 +867,28 @@ namespace XebecPortal.UI.Pages.Applicant
             education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
             await retrieveEducationHistory();            
         }
-
-        private void CancelEducation(Education educationValues)
+        private void editEducationStatus(int eduId, bool val)
         {
-            int index = educationList.FindIndex(x => x.Equals(educationValues));
-            educationList[index] = tempEducation;
-            education = new() { StartDate = DateTime.Today, EndDate = DateTime.Today };
-            eduEditMode = false;
+            eduUpdate = val;
+            eduHistoryId = eduId;
+            if (eduUpdate && (eduId > 0))
+            {
+                foreach (var item in educationList)
+                {
+                    if (item.Id == eduHistoryId)
+                    {
+                        selectedEducation.Id = item.Id;
+                        selectedEducation.Insitution = item.Insitution;
+                        selectedEducation.Qualification = item.Qualification;
+                        selectedEducation.StartDate = item.StartDate;
+                        selectedEducation.EndDate = item.EndDate;
+                        selectedEducation.AppUserId = item.AppUserId;
+                        selectedEducation.AppUser = item.AppUser;
+                    }
+                }
+            }
         }
-
         
-        private void StartDateCheck()
-        {
-            workHistory.StartDate = workHistory.StartDate > workHistory.EndDate ? workHistory.EndDate : workHistory.StartDate;
-            education.StartDate = education.StartDate > education.EndDate ? education.EndDate : education.StartDate;
-        }
-
-        private void EndDateCheck()
-        {
-            workHistory.EndDate = workHistory.EndDate < workHistory.StartDate ? workHistory.StartDate : workHistory.EndDate;
-            education.EndDate = education.EndDate < education.StartDate ? education.StartDate : education.EndDate;
-        }
-
         private void AddProfilePortfolio()
         {
             if (newPortFolioInfo)
@@ -955,7 +916,7 @@ namespace XebecPortal.UI.Pages.Applicant
             }            
         }
 
-        private async Task Submit()
+        private async Task AddProfileLinks()
         {
             Console.WriteLine("The button should be disabled");
             addLinksPressed = true;
@@ -999,6 +960,21 @@ namespace XebecPortal.UI.Pages.Applicant
             //StateHasChanged();
         }
 
+        private void profilePortfolioEditStatus( bool val)
+        {
+            
+            if (profilePortfolioUpdate)
+            {
+                profilePortfolioUpdate = false;
+            }
+            else
+            {
+                profilePortfolioUpdate = true;
+            }
+        }
+
+
+
         private string storageAcc = "xebecstorage";
         private string imgContainer = "linkedincv";
         private string azureCredentials = "?sv=2020-08-04&ss=bfqt&srt=sco&sp=rwdlacupx&se=2022-09-11T22:04:48Z&st=2022-05-11T14:04:48Z&spr=https&sig=MTkK0ODHx%2Fj%2BBwTPXnhcauQN%2F8A1HPhfG0kA%2BGKklmE%3D";
@@ -1015,19 +991,107 @@ namespace XebecPortal.UI.Pages.Applicant
             status = new StringBuilder($"Uploading file {num++}");
             var fileName = state.AppUserId;
 
-            //Upload to blob - start
-            status = new StringBuilder($"current file {fileNames.Name}");
 
-            status.AppendLine("\n");
+            if (e.File.Size > maxAllowedSize)
+            {
+                await jsRuntime.InvokeAsync<object>("alert", "The document size is too large, please upload a document that is < 1mb");
+            }
+            else
+            {
+                //Upload to blob - start
+                status = new StringBuilder($"current file {fileNames.Name}");
 
-            // Change the blobStorage location still
+                status.AppendLine("\n");
+
+                // Change the blobStorage location still
+                var blobUri = new Uri("https://"
+                                      + storageAcc
+                                      + ".blob.core.windows.net/" 
+                                      + imgContainer
+                                      + "/"
+                                      + fileName);
+                Console.WriteLine("fileName " + fileNames.Name);
+
+                AzureSasCredential credential = new AzureSasCredential(azureCredentials);
+
+                BlobClient blobClient = new BlobClient(blobUri, credential, new BlobClientOptions());
+                status.AppendLine("Created blob client");
+
+                status.AppendLine("\n");
+                status.AppendLine("Sending to blob");
+                //displayProgress = true;
+                var res = await blobClient.UploadAsync(fileNames.OpenReadStream(maxAllowedSize), new BlobUploadOptions
+                {
+                    HttpHeaders = new BlobHttpHeaders { ContentType = fileNames.ContentType },
+                    TransferOptions = new StorageTransferOptions
+                    {
+                        InitialTransferSize = 1024 * 1024,
+                        MaximumConcurrency = 10
+                    },
+                    ProgressHandler = new Progress<long>((progress) =>
+                    {
+                        progressBar = (100.0 * progress / fileNames.Size).ToString("0");
+                    })
+                });
+
+                if (Convert.ToInt32(progressBar) == 100)
+                {
+                    //var content = new StringContent($"\"{blobUri.ToString()}\"",  Encoding.UTF8, "applicationModel/json");
+
+                    var content = new FormUrlEncodedContent(new[]
+                                    {
+                                        new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
+                                    });
+                    // var urlJson =
+                    //     new StringContent(JsonSerializer.Serialize("content"""), Encoding.UTF8, "applicationModel/json");
+
+                    //var response = await httpClient.GetAsync("ResumeParser");
+                    userCVDocUploadInfo.documentBlobLink = blobUri.ToString();
+                    userCVDocUploadInfo.documentName = e.File.Name;
+                    userCVDocUploadInfo.AppUserId = state.AppUserId;               
+                    if (!cvDocumentExist)
+                    {
+                        var resp = await httpClient.PostJsonAsync($"CVDocument", userCVDocUploadInfo, new AuthenticationHeaderValue("Bearer", token));
+                        if (resp.IsSuccessStatusCode)
+                        {
+                            validUpload = true;                                      
+                        }
+                    }
+                    else
+                    {
+                        userCVDocUploadInfo.Id = getUserCVDoc.Id;
+                        userCVDocUploadInfo.AppUserId = userCVDocUploadInfo.AppUserId;
+                        var resp = await httpClient.PutJsonAsync($"CVDocument/{getUserCVDoc.Id}", userCVDocUploadInfo, new AuthenticationHeaderValue("Bearer", token));
+
+                        if (resp.IsSuccessStatusCode)
+                        {
+                            userDoc.Clear();
+                            validUpload = true;
+                        }
+                    }
+                    if (validUpload)
+                    {
+                        //await OnInitializedAsync();
+                        await jsRuntime.InvokeAsync<object>("alert", "Your CV has successfully been uploaded");
+                        userCVDocUploadInfo = new();
+                        await retrievecvDocuments();
+                    }                
+                }                
+            }
+            enableUploadButtons = true;
+        }
+        // This is used to delete the CV from the Blob Storage
+
+        async Task DeleteCV(CVDocument e)
+        {
+            var fileName = state.AppUserId;
             var blobUri = new Uri("https://"
                                   + storageAcc
-                                  + ".blob.core.windows.net/" 
+                                  + ".blob.core.windows.net/"
                                   + imgContainer
                                   + "/"
                                   + fileName);
-            Console.WriteLine("fileName " + fileNames.Name);
+           // Console.WriteLine("fileName " + fileNames.Name);
 
             AzureSasCredential credential = new AzureSasCredential(azureCredentials);
 
@@ -1037,504 +1101,245 @@ namespace XebecPortal.UI.Pages.Applicant
             status.AppendLine("\n");
             status.AppendLine("Sending to blob");
             //displayProgress = true;
-            var res = await blobClient.UploadAsync(fileNames.OpenReadStream(maxAllowedSize), new BlobUploadOptions
+            var res = await blobClient.DeleteIfExistsAsync();            
+
+            if (res.GetRawResponse().Status <= 205)
             {
-                HttpHeaders = new BlobHttpHeaders { ContentType = fileNames.ContentType },
-                TransferOptions = new StorageTransferOptions
+                Console.WriteLine("Successfully deleted file from the blob");
+                var dbResp = await httpClient.DeleteJsonAsync($"CVDocument/{e.Id}", new AuthenticationHeaderValue("Bearer", token));
+                if (dbResp.IsSuccessStatusCode)
                 {
-                    InitialTransferSize = 1024 * 1024,
-                    MaximumConcurrency = 10
-                },
-                ProgressHandler = new Progress<long>((progress) =>
-                {
-                    progressBar = (100.0 * progress / fileNames.Size).ToString("0");
-                })
-            });
-
-            if (Convert.ToInt32(progressBar) == 100)
-            {
-                //var content = new StringContent($"\"{blobUri.ToString()}\"",  Encoding.UTF8, "applicationModel/json");
-
-                var content = new FormUrlEncodedContent(new[]
-                                {
-                                    new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
-                                });
-                // var urlJson =
-                //     new StringContent(JsonSerializer.Serialize("content"""), Encoding.UTF8, "applicationModel/json");
-
-                //var response = await httpClient.GetAsync("ResumeParser");
-                cvContent = blobUri.ToString();
-
-                doc.CV = cvContent;
-                doc.AppUserId = state.AppUserId;               
-                if (newDocumentInfo)
-                {
-
-                    var resp = await httpClient.PostJsonAsync($"Document", doc, new AuthenticationHeaderValue("Bearer", token));
-                    if (resp.IsSuccessStatusCode)
-                    {
-                        validUpload = true;
-                        //var respContent = await resp.Content.ReadAsStringAsync();
-
-                        //resumeResultModel = JsonConvert.DeserializeObject<ResumeResultModel>(respContent);
-
-                        //Console.WriteLine($"Content {respContent}");
-                        //Console.WriteLine($"Result model {resumeResultModel}");
-                        ////resumeResultModel =  System.Text.Json.JsonSerializer.Deserialize<ResumeResultModel>(respContent);
-
-
-                        //personalInformation.FirstName = resumeResultModel.Name;
-                        //personalInformation.Email = resumeResultModel.EmailAddress;
-
-                        //education.Insitution = resumeResultModel.CollegeName;
-                        //education.Qualification = resumeResultModel.CollegeName;
-
-                        //workHistory.CompanyName = resumeResultModel.CompaniesWorkedAt;
-                        //workHistory.JobTitle = resumeResultModel.Designation;                        
-                    }
+                    // Give a pop up
+                    Console.WriteLine("Entire Record has been deleted");
+                    await retrievecvDocuments();
                 }
-                else
-                {
-                    doc.Id = getUserDoc.Id;
-                    doc.CV = cvContent;
-                    doc.MatricCertificate = getUserDoc.MatricCertificate;
-                    doc.UniversityTranscript = getUserDoc.UniversityTranscript;
-                    doc.AdditionalCert1 = getUserDoc.AdditionalCert1;
-                    doc.AdditionalCert2 = getUserDoc.AdditionalCert2;
-                    doc.AdditionalCert3 = getUserDoc.AdditionalCert3;
-                    doc.AppUserId = getUserDoc.AppUserId;
-                    var resp = await httpClient.PutJsonAsync($"Document/{doc.Id}", doc, new AuthenticationHeaderValue("Bearer", token));
-
-                    if (resp.IsSuccessStatusCode)
-                    {
-                        userDoc.Clear();
-                        validUpload = true;
-                    }
-                }
-                if (validUpload)
-                {
-                    //await OnInitializedAsync();
-                    await jsRuntime.InvokeAsync<object>("alert", "Your CV has successfully been uploaded");                    
-                }                
+                ///api/Document/{id} 
             }
-            enableUploadButtons = true;
-        }        
-
-        // Uploading of the matric certificate
-        private string matricCertContainer = "matric-certificates";//"images";        
-        private async Task OnInputMatricCertChangedAsync(InputFileChangeEventArgs e)
+        }
+        private string matricCertContainer = "matric-certificates";//"images";
+        private async Task uploadAdditionalDocuments(InputFileChangeEventArgs e)
         {
-            enableUploadButtons = false;
-            //https://xebecstorage.blob.core.windows.net/matric-certificates
-            // Getting the file
+            // still need to check that files that has the same name aren't uploaded.
             fileNames = e.File;
+            progressBar = 0.ToString("0");
+            status = new StringBuilder($"Uploading file {num++}");
+            var fileName = state.AppUserId + e.File.Name;
+
+            foreach (var item in additionalUserDocuments)
+            {
+                if (item.documentName.Equals(e.File.Name))
+                {
+                    fileAlreadyExists = true;                    
+                    break;
+                }
+                else
+                {
+                    fileAlreadyExists = false;
+                }
+            }            
+            if (e.File.Size > maxAllowedSize)
+            {
+                await jsRuntime.InvokeAsync<object>("alert", "The document size is too large, please upload a document that is < 1mb");
+            }
+            else
+            {
+                if (fileAlreadyExists)
+                {
+                    await jsRuntime.InvokeAsync<object>("alert", "This Document already exists within our system");
+                }
+                else
+                {
+                    //Upload to blob - start
+                    status = new StringBuilder($"current file {fileNames.Name}");
+
+                    status.AppendLine("\n");
+
+                    // Change the blobStorage location still
+                    var blobUri = new Uri("https://"
+                                          + storageAcc
+                                          + ".blob.core.windows.net/"
+                                          + matricCertContainer
+                                          + "/"
+                                          + fileName);
+                    Console.WriteLine("fileName " + fileNames.Name);
+
+                    AzureSasCredential credential = new AzureSasCredential(azureCredentials);
+
+                    BlobClient blobClient = new BlobClient(blobUri, credential, new BlobClientOptions());
+                    status.AppendLine("Created blob client");
+
+                    status.AppendLine("\n");
+                    status.AppendLine("Sending to blob");
+                    //displayProgress = true;
+                    var res = await blobClient.UploadAsync(fileNames.OpenReadStream(maxAllowedSize), new BlobUploadOptions
+                    {
+                        HttpHeaders = new BlobHttpHeaders { ContentType = fileNames.ContentType },
+                        TransferOptions = new StorageTransferOptions
+                        {
+                            InitialTransferSize = 1024 * 1024,
+                            MaximumConcurrency = 10
+                        },
+                        ProgressHandler = new Progress<long>((progress) =>
+                        {
+                            progressBar = (100.0 * progress / fileNames.Size).ToString("0");
+                        })
+                    });
+
+                    if (Convert.ToInt32(progressBar) == 100)
+                    {
+                        //var content = new StringContent($"\"{blobUri.ToString()}\"",  Encoding.UTF8, "applicationModel/json");
+
+                        var content = new FormUrlEncodedContent(new[]
+                                        {
+                                    new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
+                                });
+                        // var urlJson =
+                        //     new StringContent(JsonSerializer.Serialize("content"""), Encoding.UTF8, "applicationModel/json");
+
+                        //var response = await httpClient.GetAsync("ResumeParser");
+                        // var documentLocation = blobUri.ToString();
+
+                        additionalDocUploadInfo.documentName = fileNames.Name;
+                        additionalDocUploadInfo.documentBlobLink = blobUri.ToString();
+                        additionalDocUploadInfo.AppUserId = state.AppUserId;
+
+
+                        var resp = await httpClient.PostJsonAsync($"AdditionalDocument", additionalDocUploadInfo, new AuthenticationHeaderValue("Bearer", token));
+                        if (resp.IsSuccessStatusCode)
+                        {
+                            //await OnInitializedAsync();
+                            await jsRuntime.InvokeAsync<object>("alert", "Your Document has successfully been uploaded");
+                            await retrieveAdditionalDocuments();
+                        }
+                    }
+                }
+            }
+            
+            
+            enableUploadButtons = true;
+        }
+
+        async Task DeleteAdditionalDocuments(AdditionalDocument val)
+        {
+            
+            var fileName = state.AppUserId + val.documentName;
+            var blobUri = new Uri("https://"
+                                  + storageAcc
+                                  + ".blob.core.windows.net/"
+                                  + matricCertContainer
+                                  + "/"
+                                  + fileName);
+            // Console.WriteLine("fileName " + fileNames.Name);
+
+            AzureSasCredential credential = new AzureSasCredential(azureCredentials);
+
+            BlobClient blobClient = new BlobClient(blobUri, credential, new BlobClientOptions());
+            status.AppendLine("Created blob client");
+
+            status.AppendLine("\n");
+            status.AppendLine("Sending to blob");
+            //displayProgress = true;
+            var res = await blobClient.DeleteIfExistsAsync();
+
+            if (res.GetRawResponse().Status <= 205)
+            {
+                Console.WriteLine("Successfully deleted file from the blob");
+                additionalUserDocuments.RemoveAll(x => x == val);
+                var dbResp = await httpClient.DeleteJsonAsync($"AdditionalDocument/{val.Id}", new AuthenticationHeaderValue("Bearer", token));
+                if (dbResp.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("Entire Record has been deleted");
+                    //await retrieveAdditionalDocuments();
+                    if (additionalUserDocuments.Count == 0)
+                    {
+                        newAdditionalDocumentInfo = true;
+                    }
+                    else
+                    {
+                        newAdditionalDocumentInfo = false;
+                    }
+                }
+                ///api/Document/{id} 
+            }
+        }
+
+
+        private string userPicInfo;
+        private string userImage = "profile-images";//"images";
+        private async Task UploadingProfilePic(InputFileChangeEventArgs e)
+        {
+            // Getting the file
+            var fileArray = e.File.Name.Split('.');
+            userPicInfo = e.File.Name;
             var fileName = state.AppUserId;//fileArray[0] + Guid.NewGuid().ToString().Substring(0, 5) + "." + fileArray[1]; // change file name to be their appUserID
             var fileInfo = e.File;
-            Console.WriteLine("FileType: " + fileInfo.ContentType);
-            var blobUri = new Uri("https://"
-                + storageAcc
-                + ".blob.core.windows.net/"
-                + matricCertContainer
-                + "/"
-                + fileName);
+            var fileType = e.File.ContentType;
 
-            AzureSasCredential credential = new AzureSasCredential(azureCredentials);
-            BlobClient blobClient = new BlobClient(blobUri, credential);
+            Console.WriteLine("File type: " + fileType);
 
-            var res = await blobClient.UploadAsync(fileInfo.OpenReadStream(1512000), new BlobUploadOptions
-            {
-                HttpHeaders = new BlobHttpHeaders { ContentType = fileInfo.ContentType },
-                TransferOptions = new StorageTransferOptions
-                {
-                    InitialTransferSize = 1024 * 1024,
-                    MaximumConcurrency = 1
-                }
-            });
-
-            if (res.GetRawResponse().Status <= 205)
-            {
-
-                // This is needs to change to the Model for matric stuffs
-                //personalInfo.Id = state.AppUserId; 
-                martricCertContent = blobUri.ToString(); // This will be where the link will be stored 
-                doc.AppUserId = state.AppUserId;               
-                doc.MatricCertificate = martricCertContent;
-                
-                Console.WriteLine("Result is true whooooo");
-                var content = new FormUrlEncodedContent(new[]
-                                {
-                                    new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
-                                });
-                
-                if (newDocumentInfo)
-                {
-                    var resp = await httpClient.PostJsonAsync($"Document", doc, new AuthenticationHeaderValue("Bearer", token));
-                    if (resp.IsSuccessStatusCode)
-                    {
-                        Console.WriteLine("it does get here");
-                        validUpload = true;
-                    }
-                }
-                else
-                {
-                    doc.Id = getUserDoc.Id;
-                    doc.CV = getUserDoc.CV;
-                    doc.MatricCertificate = martricCertContent;
-                    doc.UniversityTranscript = getUserDoc.UniversityTranscript;
-                    doc.AdditionalCert1 = getUserDoc.AdditionalCert1;
-                    doc.AdditionalCert2 = getUserDoc.AdditionalCert2;
-                    doc.AdditionalCert3 = getUserDoc.AdditionalCert3;
-                    doc.AppUserId = getUserDoc.AppUserId;
-                    var resp = await httpClient.PutJsonAsync($"Document/{doc.Id}", doc, new AuthenticationHeaderValue("Bearer", token)); //{personalInfo.Id}
-                    if (resp.IsSuccessStatusCode)
-                    {                        
-                        validUpload = true;
-                    }
-                    Console.WriteLine("Already uploaded");                    
-                }
-                if (validUpload)
-                {
-                    await jsRuntime.InvokeAsync<object>("alert", "Your Matric Certificate has successfully been uploaded");
-                    await retrieveDocuments();
-                    
-                }
-            }
-            else
-            {
-                Console.WriteLine("result is false :(");
-            }
-            enableUploadButtons = true;
-        }
-        // Uploading of the Transcript
-        private string transcriptContainer = "transcripts";       
-        private async Task OnInputTranscriptChangedAsync(InputFileChangeEventArgs e)
-        {
-            enableUploadButtons = false;
-            var fileName = state.AppUserId;
-            var fileInfo = e.File;
             
-            var blobUri = new Uri("https://"
-                + storageAcc
-                + ".blob.core.windows.net/"
-                + transcriptContainer
-                + "/"
-                + fileName);
+                // You require a azure account with a storage account. You use that link for below. The 'images' is the file that the file image is stored in in Azure.
+                // https://xebecstorage.blob.core.windows.net/profile-images
 
-            AzureSasCredential credential = new AzureSasCredential(azureCredentials);
-            BlobClient blobClient = new BlobClient(blobUri, credential);
+                var blobUri = new Uri("https://"
+                    + storageAcc
+                    + ".blob.core.windows.net/"
+                    + userImage
+                    + "/"
+                    + fileName);
 
-            var res = await blobClient.UploadAsync(fileInfo.OpenReadStream(1512000), new BlobUploadOptions
-            {
-                HttpHeaders = new BlobHttpHeaders { ContentType = fileInfo.ContentType },
-                TransferOptions = new StorageTransferOptions
+                AzureSasCredential credential = new AzureSasCredential(azureCredentials);
+                BlobClient blobClient = new BlobClient(blobUri, credential);
+
+                var res = await blobClient.UploadAsync(fileInfo.OpenReadStream(1512000), new BlobUploadOptions
                 {
-                    InitialTransferSize = 1024 * 1024,
-                    MaximumConcurrency = 1
-                }
-            });
-
-            if (res.GetRawResponse().Status <= 205)
-            {
-                var content = new FormUrlEncodedContent(new[]
-                                {
-                                    new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
-                                });
-                
-                transcriptContent = blobUri.ToString();
-                doc.AppUserId = state.AppUserId;                
-                doc.UniversityTranscript = transcriptContent;
-                
-                if (newDocumentInfo)
-                {
-                    var resp = await httpClient.PostJsonAsync($"Document", doc, new AuthenticationHeaderValue("Bearer", token));
-                    if (resp.IsSuccessStatusCode)
+                    HttpHeaders = new BlobHttpHeaders { ContentType = fileInfo.ContentType },
+                    TransferOptions = new StorageTransferOptions
                     {
-                        validUpload = true;
+                        InitialTransferSize = 1024 * 1024,
+                        MaximumConcurrency = 1
                     }
-                }
-                else
+                });
+
+                if (res.GetRawResponse().Status <= 205)
                 {
-                    doc.Id = getUserDoc.Id;
-                    doc.CV = getUserDoc.CV;
-                    doc.MatricCertificate = getUserDoc.MatricCertificate;
-                    doc.UniversityTranscript = transcriptContent;
-                    doc.AdditionalCert1 = getUserDoc.AdditionalCert1;
-                    doc.AdditionalCert2 = getUserDoc.AdditionalCert2;
-                    doc.AdditionalCert3 = getUserDoc.AdditionalCert3;
-                    doc.AppUserId = getUserDoc.AppUserId;
-                    var resp = await httpClient.PutJsonAsync($"Document/{doc.Id}", doc, new AuthenticationHeaderValue("Bearer", token));
-                    if (resp.IsSuccessStatusCode)
-                    {                        
-                        validUpload = true;
-                    }
-
-                }
-                if (validUpload)
-                {
-                    await jsRuntime.InvokeAsync<object>("alert", "Your Academic Transcript has successfully been uploaded");
-                    await OnInitializedAsync();
-                    
-                }
-            }
-            else
-            {
-                Console.WriteLine("result is false :(");
-            }
-            enableUploadButtons = true;
-        }
-
-        // Uploading of the First Certificate
-        private string firstCertContainer = "additional-documents-1";
-        private async Task OnInputFirstDocumentChangedAsync(InputFileChangeEventArgs e)
-        {
-            enableUploadButtons = false;
-            var fileName = state.AppUserId;
-            var fileInfo = e.File;            
-
-            var blobUri = new Uri("https://"
-                + storageAcc
-                + ".blob.core.windows.net/"
-                + firstCertContainer
-                + "/"
-                + fileName);
-
-            AzureSasCredential credential = new AzureSasCredential(azureCredentials);
-            BlobClient blobClient = new BlobClient(blobUri, credential);
-
-            var res = await blobClient.UploadAsync(fileInfo.OpenReadStream(1512000), new BlobUploadOptions
-            {
-                HttpHeaders = new BlobHttpHeaders { ContentType = fileInfo.ContentType },
-                TransferOptions = new StorageTransferOptions
-                {
-                    InitialTransferSize = 1024 * 1024,
-                    MaximumConcurrency = 1
-                }
-            });
-
-            if (res.GetRawResponse().Status <= 205)
-            {
-                var content = new FormUrlEncodedContent(new[]
-                                {
+                    profilePic.AppUserId = state.AppUserId;
+                    profilePic.profilePic = blobUri.ToString();
+                    userPic = blobUri.ToString();
+                    Console.WriteLine("Result is true whooooo");
+                    var content = new FormUrlEncodedContent(new[]
+                                    {
                                     new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
                                 });
 
-                cert1Content = blobUri.ToString();
-
-                doc.AppUserId = state.AppUserId;
-                doc.AdditionalCert1 = cert1Content;
-                
-                if (newDocumentInfo)
-                {
-                    var resp = await httpClient.PostJsonAsync($"Document", doc, new AuthenticationHeaderValue("Bearer", token));
-                    if (resp.IsSuccessStatusCode)
+                    if (profilePictureExists)
                     {
-                        validUpload = true;
+                        var req = await httpClient.PutJsonAsync($"ProfilePicture/{profilePic.Id}", profilePic, new AuthenticationHeaderValue("Bearer", token));
+                        var data = await req.Content.ReadAsStringAsync();
+                        var rep = data.ToString();
+                        Console.WriteLine("Value retrieved from uploading image: " + rep);
+                        //var resp = req.Content.ReadAsStringAsync().Result;                    
+                        //var returnVal = jsonResp.RootElement.GetProperty("profilePic");
+                        //var result = returnVal.ToString();                    
+
+                        await retrieveProfilePic();
                     }
+                    else
+                    {
+                        var resp = await httpClient.PostJsonAsync($"ProfilePicture", profilePic, new AuthenticationHeaderValue("Bearer", token));
+                        var data = await resp.Content.ReadFromJsonAsync<JsonElement>();
+                        var result = data.GetProperty("profilePic").ToString();
+                        Console.WriteLine("Value retrieved from uploading image: " + result);
+                        // Conclusion.. The above statements only work for POST requests... You do get the information as required. Quite useful instead of having to call a GET method to get the profile pic
+                        await retrieveProfilePic();
+                    }
+                    // var newresp = await HttpClient.PutAsJsonAsync($"personalinformation/{personalInfo.Id}", personalInfo); //{personalInfo.Id}                               
                 }
                 else
                 {
-                    doc.Id = getUserDoc.Id;
-                    doc.CV = getUserDoc.CV;
-                    doc.MatricCertificate = getUserDoc.MatricCertificate;
-                    doc.UniversityTranscript = getUserDoc.UniversityTranscript;
-                    doc.AdditionalCert1 = cert1Content;
-                    doc.AdditionalCert2 = getUserDoc.AdditionalCert2;
-                    doc.AdditionalCert3 = getUserDoc.AdditionalCert3;
-                    doc.AppUserId = getUserDoc.AppUserId;
-
-                    var resp = await httpClient.PutJsonAsync($"Document/{doc.Id}", doc, new AuthenticationHeaderValue("Bearer", token));
-
-                    if (resp.IsSuccessStatusCode)
-                    {
-                        userDoc.Clear();
-                        validUpload = true;
-                    }
+                    Console.WriteLine("result is false :(");
                 }
-
-                if (validUpload)
-                {
-                    await jsRuntime.InvokeAsync<object>("alert", "Your first Additional Certificate has successfully been uploaded");
-                    await OnInitializedAsync();
-                    enableUploadButtons = true;
-                }
-            }
-            else
-            {
-                Console.WriteLine("result is false :(");
-            }
-            enableUploadButtons = true;
         }
-
-        // Uploading of the Second Certificate
-        private string secondCertContainer = "additional-documents-2";
-        private async Task OnInputSecondDocumentChangedAsync(InputFileChangeEventArgs e)
-        {
-            enableUploadButtons = false;
-            var fileName = state.AppUserId;
-            var fileInfo = e.File;
-            
-            var blobUri = new Uri("https://"
-                + storageAcc
-                + ".blob.core.windows.net/"
-                + secondCertContainer
-                + "/"
-                + fileName);
-
-            AzureSasCredential credential = new AzureSasCredential(azureCredentials);
-            BlobClient blobClient = new BlobClient(blobUri, credential);
-
-            var res = await blobClient.UploadAsync(fileInfo.OpenReadStream(1512000), new BlobUploadOptions
-            {
-                HttpHeaders = new BlobHttpHeaders { ContentType = fileInfo.ContentType },
-                TransferOptions = new StorageTransferOptions
-                {
-                    InitialTransferSize = 1024 * 1024,
-                    MaximumConcurrency = 1
-                }
-            });
-
-            if (res.GetRawResponse().Status <= 205)
-            {                
-                var content = new FormUrlEncodedContent(new[]
-                                {
-                                    new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
-                                });            
-
-                cert2Content = blobUri.ToString();
-                
-                doc.AdditionalCert2 = cert2Content;
-                doc.AppUserId = state.AppUserId;
-
-                if (newDocumentInfo)
-                {
-                    var resp = await httpClient.PostJsonAsync($"Document", doc, new AuthenticationHeaderValue("Bearer", token));
-                    if (resp.IsSuccessStatusCode)
-                    {
-                        validUpload = true;
-                    }
-                }
-                else
-                {
-                    doc.Id = getUserDoc.Id;
-                    doc.CV = getUserDoc.CV;
-                    doc.MatricCertificate = getUserDoc.MatricCertificate;
-                    doc.UniversityTranscript = getUserDoc.UniversityTranscript;
-                    doc.AdditionalCert1 = getUserDoc.AdditionalCert1;
-                    doc.AdditionalCert2 = cert2Content;
-                    doc.AdditionalCert3 = getUserDoc.AdditionalCert3;
-                    doc.AppUserId = getUserDoc.AppUserId;
-
-                    var resp = await httpClient.PutJsonAsync($"Document/{doc.Id}", doc, new AuthenticationHeaderValue("Bearer", token));
-
-                    if (resp.IsSuccessStatusCode)
-                    {
-                        validUpload = true;
-                    }
-                }
-
-                if (validUpload)
-                {
-                    await jsRuntime.InvokeAsync<object>("alert", "Your second Additional Certificate has successfully been uploaded");
-                    await OnInitializedAsync();
-                    
-                }                    
-            }
-            else
-            {
-                Console.WriteLine("result is false :(");
-            }
-            enableUploadButtons = true;
-        }
-
-        // Uploading of the Third Certificate
-        private string thirdCertContainer = "additional-documents-3";
-        private async Task OnInputThirdDocumentChangedAsync(InputFileChangeEventArgs e)
-        {
-            enableUploadButtons = false;
-            var fileName = state.AppUserId;//fileArray[0] + Guid.NewGuid().ToString().Substring(0, 5) + "." + fileArray[1]; // change file name to be their appUserID
-            var fileInfo = e.File;            
-            var blobUri = new Uri("https://"
-                + storageAcc
-                + ".blob.core.windows.net/"
-                + thirdCertContainer
-                + "/"
-                + fileName);
-
-            AzureSasCredential credential = new AzureSasCredential(azureCredentials);
-            BlobClient blobClient = new BlobClient(blobUri, credential);
-
-            var res = await blobClient.UploadAsync(fileInfo.OpenReadStream(1512000), new BlobUploadOptions
-            {
-                HttpHeaders = new BlobHttpHeaders { ContentType = fileInfo.ContentType },
-                TransferOptions = new StorageTransferOptions
-                {
-                    InitialTransferSize = 1024 * 1024,
-                    MaximumConcurrency = 1
-                }
-            });
-
-            if (res.GetRawResponse().Status <= 205)
-            {                
-                var content = new FormUrlEncodedContent(new[]
-                                {
-                                    new KeyValuePair<string, string>("url", $"{blobUri.ToString()}")
-                                });
-                
-                cert3Content = blobUri.ToString();                
-                doc.AdditionalCert3 = cert3Content;
-                doc.AppUserId = state.AppUserId;
-
-                if (newDocumentInfo)
-                {
-                    var resp = await httpClient.PostJsonAsync($"Document", doc, new AuthenticationHeaderValue("Bearer", token));
-                    if (resp.IsSuccessStatusCode)
-                    {
-                        validUpload = true;
-                    }
-                }
-                else
-                {
-                    doc.Id = getUserDoc.Id;
-                    doc.CV = getUserDoc.CV;
-                    doc.MatricCertificate = getUserDoc.MatricCertificate;                    
-                    doc.UniversityTranscript = getUserDoc.UniversityTranscript;
-                    doc.AdditionalCert1 = getUserDoc.AdditionalCert1;
-                    doc.AdditionalCert2 = getUserDoc.AdditionalCert2;
-                    doc.AdditionalCert3 = cert3Content;
-                    doc.AppUserId = getUserDoc.AppUserId;
-
-                    var resp = await httpClient.PutJsonAsync($"Document/{doc.Id}", doc, new AuthenticationHeaderValue("Bearer", token));
-
-                    if (resp.IsSuccessStatusCode)
-                    {
-                        validUpload = true;
-                    }
-                }
-                if (validUpload)
-                {
-                    await jsRuntime.InvokeAsync<object>("alert", "Your third Additional Certificate has successfully been uploaded");
-                    await OnInitializedAsync();                    
-                }                
-            }
-            else
-            {
-                Console.WriteLine("result is false :(");
-            }
-            enableUploadButtons = true;
-        }
-
-        private void ResetFileNames()
-        {
-            fileNames = null;
-        }
-
-        void Upload()
-        {
-            //Upload the files here
-            /*Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopCenter;
-            Snackbar.Add("TODO: Upload your files!", Severity.Normal);*/
-        }
-
         private void enterMarksPage(bool value)
         {
             enterMatricMarks = value;
@@ -1597,13 +1402,9 @@ namespace XebecPortal.UI.Pages.Applicant
             StateHasChanged();
 
             matricMarksAdded.Clear();
-            matricInputs.Clear();
+            matricInputs.Clear();            
 
-            
-
-            matricInputs = await httpClient.GetListJsonAsync<List<matricMarks>>($"matricMark/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));
-
-            
+            matricInputs = await httpClient.GetListJsonAsync<List<matricMarks>>($"matricMark/all/{state.AppUserId}", new AuthenticationHeaderValue("Bearer", token));            
         }
 
         private async void RemoveMark(matricMarks item)
@@ -1620,5 +1421,22 @@ namespace XebecPortal.UI.Pages.Applicant
                 await httpClient.DeleteJsonAsync($"matricMark/{item.id}", new AuthenticationHeaderValue("Bearer", token));
             }            
         }
-    }
+
+        private void toggleMagnifiedDocument(string documentType, bool val)
+        {
+            showMagnifiedDocument = val;
+            selectedDocument = documentType;
+        }
+
+        private void toggleMagnifiedAdditionalDocuments(string documentLink, bool val)
+        {
+            showMagnifiedDocument = val;
+            selectedDocument = documentLink;
+        }
+
+        private void testCheckBox()
+        {
+            Console.WriteLine("Check box val: " + checkTestVal);
+        }
+    }    
 }

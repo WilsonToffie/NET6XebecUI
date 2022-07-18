@@ -20,7 +20,7 @@ namespace XebecPortal.UI.Pages.HR
         private bool isFilterContainAnyVal;
         private List<int> pageNum = new List<int>();
         private IList<Job> jobList = new List<Job>();
-        private IList<Job> jobListFilter = null;
+        private IList<Job> jobListFilter = new List<Job>();
         private Job displayJobDetail = new Job();
         private IPagedList<Job> jobPagedList = new List<Job>().ToPagedList();
         private IList<JobPlatform> jobPlatforms = new List<JobPlatform>();
@@ -35,9 +35,11 @@ namespace XebecPortal.UI.Pages.HR
         private List<CollaboratorsAssigned> collaboratorsAssigned;
         private List<CollaboratorsAssigned> collaboratorsAssigned2;
         private List<PersonalInformation> personalInformation;
+        private List<Application> applicantionLists;
         //private JobTypeHelper newJobTypeHelper = new JobTypeHelper();
         private List<string> statuses = new() { "Draft", "Open", "Closed"};
         private List<Department> departments;
+        private Department department;
         private List<string> locations = new() { "Eastern Cape", "Free State", " Gauteng", "KwaZulu-Natal", "Limpopo", "Mpumalanga", "Northen Cape", "North West", "Western Cape" };
         private MudBlazor.DialogOptions options = new() { CloseButton = true, FullWidth = true};
         private List<ProfilePicture> userProfilePicture = new List<ProfilePicture>();
@@ -49,60 +51,141 @@ namespace XebecPortal.UI.Pages.HR
         private bool ShowingJobPortal = true;
         private bool ShowingApplicantPortal;
         private bool ShowingPhaseManager;
-
+        private bool loadInfo = false;
         private string jobTypeString;
 
         private IJSObjectReference _jsModule;
         private string defaultCollaboratorImage = "/Img/DefaultImage.png";
-
+        private DateTime today = DateTime.Today;
         private bool onErrorEvent = false;
+        private int totalDays;
+        private int count;
+        private int openJobCounter;
+        private int totalJobs;
+        private string selectedFilterStatus;
         protected override async Task OnInitializedAsync()
         {
+            openJobCounter = 0;           
+            loadInfo = true;
             onErrorEvent = false;
             token = await localStorage.GetItemAsync<string>("jwt_token");
-
-            ShowJobPortal();
- 
-            JobTypes = await httpClient.GetListJsonAsync<List<JobType>>($"JobType", new AuthenticationHeaderValue("Bearer", token));
+           
             jobList = await httpClient.GetListJsonAsync<List<Job>>($"Job", new AuthenticationHeaderValue("Bearer", token));
-            jobPlatforms = await httpClient.GetListJsonAsync<List<JobPlatform>>($"jobplatform", new AuthenticationHeaderValue("Bearer", token));
-            jobPlatformHelpers = await httpClient.GetListJsonAsync<List<JobPlatformHelper>>($"jobplatformhelper", new AuthenticationHeaderValue("Bearer", token));
-            jobTypeHelper = await httpClient.GetListJsonAsync<List<JobTypeHelper>>($"JobTypeHelper", new AuthenticationHeaderValue("Bearer", token));
-            appUser = await httpClient.GetListJsonAsync<List<AppUser>>($"User", new AuthenticationHeaderValue("Bearer", token));
+            applicantionLists = await httpClient.GetListJsonAsync<List<Application>>($"Application", new AuthenticationHeaderValue("Bearer", token));
             collaboratorsAssigned = await httpClient.GetListJsonAsync<List<CollaboratorsAssigned>>($"CollaboratorsAssigned", new AuthenticationHeaderValue("Bearer", token));
-            personalInformation = await httpClient.GetListJsonAsync<List<PersonalInformation>>("PersonalInformation", new AuthenticationHeaderValue("Bearer", token));
-            userProfilePicture = await httpClient.GetListJsonAsync<List<ProfilePicture>>($"ProfilePicture", new AuthenticationHeaderValue("Bearer", token));
-            //status = await httpClient.GetFromJsonAsync<List<Status>>("/mockData/Status.json");
-            departments = await httpClient.GetFromJsonAsync<List<Department>>("department");
+            appUser = await httpClient.GetListJsonAsync<List<AppUser>>($"User", new AuthenticationHeaderValue("Bearer", token));
+            //JobTypes = await httpClient.GetListJsonAsync<List<JobType>>($"JobType", new AuthenticationHeaderValue("Bearer", token));
+            //ShowJobPortal();
+            //jobPlatforms = await httpClient.GetListJsonAsync<List<JobPlatform>>($"jobplatform", new AuthenticationHeaderValue("Bearer", token));
+            //jobPlatformHelpers = await httpClient.GetListJsonAsync<List<JobPlatformHelper>>($"jobplatformhelper", new AuthenticationHeaderValue("Bearer", token));
+            //jobTypeHelper = await httpClient.GetListJsonAsync<List<JobTypeHelper>>($"JobTypeHelper", new AuthenticationHeaderValue("Bearer", token));
 
-            foreach (var item in appUser)
-            {
-                foreach (var profilepic in userProfilePicture)
-                {
-                    if (item.id == profilepic.AppUserId)
-                    {
-                        item.imageUrl = profilepic.profilePic;
-                        break;
-                    }
-                }
-                
-            }
+
+            //personalInformation = await httpClient.GetListJsonAsync<List<PersonalInformation>>("PersonalInformation", new AuthenticationHeaderValue("Bearer", token));
+            //userProfilePicture = await httpClient.GetListJsonAsync<List<ProfilePicture>>($"ProfilePicture", new AuthenticationHeaderValue("Bearer", token));
+            ////status = await httpClient.GetFromJsonAsync<List<Status>>("/mockData/Status.json");
+            //departments = await httpClient.GetFromJsonAsync<List<Department>>("department");
+            //totalJobs = jobList.Count;
+
+            //foreach (var item in appUser)
+            //{
+            //    foreach (var profilepic in userProfilePicture)
+            //    {
+            //        if (item.id == profilepic.AppUserId)
+            //        {
+            //            item.imageUrl = profilepic.profilePic;
+            //            break;
+            //        }
+            //    }
+
+            //}
 
             _jsModule = await jsRuntime.InvokeAsync<IJSObjectReference>("import", "/jsPages/HR/JobPortalv3.js");
 
-            jobListFilter = await httpClient.GetListJsonAsync<List<Job>>($"Job", new AuthenticationHeaderValue("Bearer", token));
-            jobPagedList = jobListFilter.ToPagedList(1, 17);
-            displayJobDetail = jobListFilter.FirstOrDefault();
-            if (jobList.Count == 0)
+            jobListFilter = jobList; //await httpClient.GetListJsonAsync<List<Job>>($"Job", new AuthenticationHeaderValue("Bearer", token));
+            
+            //jobPagedList = jobListFilter.ToPagedList(1, 17);
+            totalJobs = jobListFilter.Count;
+            foreach (var item in jobListFilter)
             {
+                if (item.Status.Equals("Open"))
+                {
+                    openJobCounter++;
+                }
             }
-            else 
-            { 
-                DisplayJobDetail(displayJobDetail.Id);
-                OpenJobCollabToolTip(displayJobDetail.Id);
-            }          
+            //displayJobDetail = jobListFilter.FirstOrDefault();
+            //if (jobList.Count == 0)
+            //{
+            //}
+            //else 
+            //{ 
+            //    DisplayJobDetail(displayJobDetail.Id);
+            //    OpenJobCollabToolTip(displayJobDetail.Id);
+            //}
+            loadInfo = false;
         }
 
+        private void filterJobStatus(ChangeEventArgs e)
+        {
+            var filterValue = e.Value.ToString();
+            Console.WriteLine("Val: " + e.Value.ToString());
+           
+            if (filterValue.Equals("Draft & Open"))
+            {
+                jobListFilter = jobList;
+            }
+            else
+            {
+                jobListFilter = jobList.Where(x => x.Status.Equals(filterValue)).ToList();
+            } 
+            
+        }
+        private int calculateDays(DateTime value)
+        {
+            
+            // string val = value.ToString("d MMMM YYYY");
+            // (today - val).Total
+            return ((int)(today - value).TotalDays);
+        }
+
+        private int calculateTotalApplicants(int jobId)
+        {
+            count = 0;
+            foreach(var item in applicantionLists)
+            {
+                if (item.JobId == jobId)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        private void showJobDetails(int jobId)
+        {
+          // nav.NavigateTo("/applicantportal");
+        }
+
+        private string getHiringlead(int jobId)
+        {
+            foreach (var item in collaboratorsAssigned)
+            {
+                if (item.JobId == jobId)
+                {
+                    if (item.Name.Equals("Hiring Lead"))
+                    {                        
+                        foreach (var user in appUser)
+                        {
+                            if (user.id == item.AppUserId)
+                            {
+                                return user.name + " " + user.surname;                                
+                            }
+                        }
+                    }
+                }
+            }
+            return "There is no hiring lead for this job";
+        }
         protected override Task OnAfterRenderAsync(bool firstRender)
         {
             jsRuntime.InvokeVoidAsync("HrJobPortalJS");
